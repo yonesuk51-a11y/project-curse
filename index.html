@@ -1,47 +1,108 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Project Curse</title>
-<link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>U.A.C Secure Archive Server</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body data-page="main">
-<audio id="archive-ambience" src="assets/audio/archive_red_ambience.mp3" loop preload="auto"></audio>
-<audio id="boot-cassette" src="assets/audio/boot_cassette_reel.mp3" loop preload="auto"></audio>
-<div class="noise"></div><div class="scanlines"></div>
-<section class="boot-screen" data-boot>
-  <div class="boot-inner">
-    <div class="boot-title">PROJECT CURSE / ANALOG RESTRICTED BOOT SEQUENCE</div>
-    <div class="cassette-status" data-cassette-status><span class="reel left"></span><span class="tape-label">TAPE FEED: STANDBY</span><span class="reel right"></span></div>
-    <div class="boot-log"><div class="boot-line">&gt; INITIALIZING...</div></div>
-    <div class="loading-wrap">
-      <div class="loading-meta"><span>LOADING ARCHIVE ACCESS</span><span data-progress>000%</span></div>
-      <div class="loading-bar"><div class="loading-fill"></div></div>
-    </div>
-    <button class="skip-boot">SKIP BOOT</button>
-  </div>
-</section>
-<main class="main-screen">
-  <section class="logo-panel">
-    <img class="curse-logo" src="assets/images/project_curse_logo.png" alt="Project Curse">
-    <p class="system-text">U.A.C ANALOG ARCHIVE NODE / SIGNAL UNSTABLE / DOCUMENT FLOOR LOCKED</p>
-    <div class="analog-readout" aria-label="analog computer status">
-      <span>RELAY BANK: ARMED</span>
-      <span>MAGNETIC TAPE BUS: SYNC</span>
-      <span>VACUUM MEMORY: WARM</span>
-      <span>RED PHOSPHOR OUTPUT: ACTIVE</span>
-    </div>
-    <form class="password-gate" data-password-form autocomplete="off">
-      <label class="password-label" for="archive-password">Enter password</label>
-      <div class="password-row">
-        <input id="archive-password" class="password-input" data-password-input type="password" placeholder="INPUT PASSWORD" autocomplete="off" spellcheck="false">
-        <button class="password-submit" type="submit">ACCESS</button>
+<body>
+  <div class="grain"></div>
+  <div class="scanline"></div>
+  <div class="vignette"></div>
+
+  <section id="boot" class="boot-screen">
+    <div class="boot-frame">
+      <div class="boot-head">
+        <span>U.A.C SECURE INFORMATION SERVER</span>
+        <span>RELAY BOOT // 2026</span>
       </div>
-      <p class="password-status" data-password-status>RESTRICTED ARCHIVE // PASSWORD REQUIRED</p>
-    </form>
+      <div class="boot-body">
+        <div class="reel reel-left"></div>
+        <div class="boot-console">
+          <div class="boot-title">ANALOG NODE WAKE SEQUENCE</div>
+          <div id="bootLog" class="boot-log"></div>
+          <div class="boot-meter"><span id="bootBar"></span></div>
+          <div class="boot-foot"><span>MAGNETIC BUFFER // ACTIVE</span><span id="bootPct">000%</span></div>
+        </div>
+        <div class="reel reel-right"></div>
+      </div>
+    </div>
   </section>
-</main>
-<div class="access-flash">ACCESS GRANTED // OPENING ARCHIVE FLOOR</div>
-<script src="assets/js/main.js"></script>
+
+  <section id="auth" class="auth-screen">
+    <div class="server-topline">
+      <div class="server-brand">U.A.C</div>
+      <div class="server-sub">URBAN ANOMALY CONTAINMENT / SECURE INFORMATION SERVER</div>
+      <div class="server-stat">TERMINAL 2026-FIELDNODE / ENCRYPTED</div>
+    </div>
+    <div class="auth-grid">
+      <aside class="auth-side">
+        <div class="stamp">CLASSIFIED</div>
+        <div class="mini-leds"><span></span><span></span><span></span><span></span></div>
+        <p>NODE STATUS: STABLE</p>
+        <p>ARCHIVE INTEGRITY: CHECKED</p>
+        <p>GLOBAL MAP: PARTIAL</p>
+        <p>AUDIO LOGS: REMOVED</p>
+      </aside>
+      <main class="auth-main">
+        <div class="eyebrow">// AUTHENTICATION REQUIRED</div>
+        <h1>ACCESS NODE</h1>
+        <p class="auth-desc">This terminal opens compressed field records, faction charts, zone overlays, and recovered visual files.</p>
+        <div class="password-card">
+          <label for="password">ENTER PASSWORD</label>
+          <div class="password-line">
+            <input id="password" type="password" autocomplete="off" spellcheck="false" aria-label="Enter password">
+            <button id="submitPass">VERIFY</button>
+          </div>
+          <div id="authMsg" class="auth-msg">PASSWORD PHRASE REQUIRED // CASE-SENSITIVE</div>
+        </div>
+        <div class="auth-warnings">
+          <span>ACCESS LEVEL: FIELD OPS</span>
+          <span>COUNTERMEASURE LOGGING ACTIVE</span>
+          <span>INTERNAL USE ONLY</span>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <section id="app" class="app hide">
+    <header class="app-header">
+      <div class="app-title"><b>U.A.C</b><span>INFORMATION SERVER</span></div>
+      <nav id="tabs" class="tabs">
+        <button data-page="overview" class="active">OVERVIEW</button>
+        <button data-page="factions">FACTIONS</button>
+        <button data-page="relations">RELATIONS</button>
+        <button data-page="map">GLOBAL MAP</button>
+        <button data-page="records">ARCHIVE RECORDS</button>
+        <button data-page="entities">ENTITY INDEX</button>
+        <button data-page="images">RECOVERED FRAMES</button>
+      </nav>
+      <div class="session-box">SESSION: AUTHORIZED</div>
+    </header>
+    <main id="main" class="workbench"></main>
+  </section>
+
+  <div id="viewer" class="viewer">
+    <div class="viewer-shell">
+      <div class="viewer-head">
+        <div><div id="viewerCode" class="viewer-code"></div><div id="viewerOrigin" class="viewer-origin"></div></div>
+        <button id="closeViewer">CLOSE FILE</button>
+      </div>
+      <div id="slideArea" class="viewer-body"></div>
+      <div class="viewer-foot">
+        <button id="prevPage">PREV FILE PAGE</button>
+        <div id="pageCount" class="pagecount"></div>
+        <button id="nextPage">NEXT FILE PAGE</button>
+      </div>
+    </div>
+  </div>
+
+  <button id="soundBtn" class="soundbtn">SOUND OFF</button>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
