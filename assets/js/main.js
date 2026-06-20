@@ -7,13 +7,11 @@ const main = document.getElementById('main');
 const tabs = document.querySelectorAll('[data-page]');
 const soundBtn = document.getElementById('soundBtn');
 const bootAudio = new Audio('assets/audio/uac_boot_relay_loop.mp3'); bootAudio.loop = true; bootAudio.volume = .18;
-const humAudio = new Audio('assets/audio/uac_server_hum.wav'); humAudio.loop = true; humAudio.volume = .10;
 const slideAudio = new Audio('assets/audio/analog_slide_projector.mp3'); slideAudio.volume = .54;
 let sound = false;
 function playSlide(){ if(!sound) return; slideAudio.pause(); slideAudio.currentTime=0; slideAudio.play().catch(()=>{}); }
-function startHum(){ if(!sound) return; humAudio.play().catch(()=>{}); }
 function stopBoot(){ bootAudio.pause(); bootAudio.currentTime=0; }
-soundBtn.onclick=()=>{ sound=!sound; soundBtn.textContent=sound?'SOUND ON':'SOUND OFF'; if(sound){ if(!boot.classList.contains('hidden')) bootAudio.play().catch(()=>{}); else startHum(); } else { stopBoot(); humAudio.pause(); }};
+soundBtn.onclick=()=>{ sound=!sound; soundBtn.textContent=sound?'SOUND ON':'SOUND OFF'; if(sound){ if(!boot.classList.contains('hidden')) bootAudio.play().catch(()=>{}); } else { stopBoot(); }};
 function runBoot(){
   const lines = [
     'U.A.C FIELDNODE // SECURE BOOT REQUEST ACCEPTED',
@@ -40,7 +38,7 @@ document.getElementById('password').addEventListener('keydown',e=>{ if(e.key==='
 function checkPass(){
  const v=document.getElementById('password').value;
  const msg=document.getElementById('authMsg');
- if(v===PASS){ msg.textContent='ACCESS GRANTED // SERVER ROOM UNLOCKED'; msg.style.color='#ff756c'; sessionStorage.setItem('uac_auth','1'); playSlide(); setTimeout(()=>{auth.classList.remove('show'); app.classList.remove('hide'); render('overview'); startHum();},620); }
+ if(v===PASS){ msg.textContent='ACCESS GRANTED // SERVER ROOM UNLOCKED'; msg.style.color='#ff756c'; sessionStorage.setItem('uac_auth','1'); playSlide(); setTimeout(()=>{auth.classList.remove('show'); app.classList.remove('hide'); render('overview');},620); }
  else { msg.textContent='ACCESS DENIED // PASSWORD MISMATCH'; msg.style.color='#ff514b'; }
 }
 if(sessionStorage.getItem('uac_auth')==='1'){ boot.classList.add('hidden'); auth.classList.remove('show'); app.classList.remove('hide'); setTimeout(()=>render('overview'),0); }
@@ -69,7 +67,7 @@ function worldMapSvg(){ return `<svg class="worldsvg" viewBox="0 0 1000 580" pre
 function recordCard(r,i){ const rot=[-1.5,.8,-.4,1.4,-.9,.6,-1.2,1.1,0][i%9]; return `<div class="card record-card" style="--r:${rot}deg" data-label="FILE" onclick="openRecord(${i})"><div class="record-code">${r.code}</div><div class="record-origin">ORIGIN: ${r.origin}</div><div class="record-meta"><span class="tag">${r.cat}</span><span class="tag ${r.risk.includes('BLACK')||r.risk.includes('OMEGA')?'red':r.risk.includes('SECRET')?'amber':''}">${r.risk}</span></div><p>${r.summary}</p></div>`; }
 function records(){ main.innerHTML=head('ARCHIVE RECORDS','코드형 문서 보관소')+`<div class="grid three">`+DATA.records.map((r,i)=>recordCard(r,i)).join('')+`</div>`; }
 function entities(){ main.innerHTML=head('ENTITY INDEX','Feral / Superior-Type / Queen-Type / Returned Civilian')+`<div class="grid two">`+DATA.entities.map(e=>`<div class="card" data-label="ENTITY"><div class="card-title">${e[0]}</div><p>${e[1]}</p></div>`).join('')+`</div>`; }
-function imageIndex(){ main.innerHTML=head('RECOVERED FRAMES','이미지 첨부 / Audio Log 제거됨')+panel('FRAME INDEX',`<p>원본 Audio Log MP3는 제거되고, 이미지 자료만 WebP로 압축 보관된다.</p><div class="image-grid">${DATA.images.slice(0,83).map(src=>`<img src="${src}" loading="lazy">`).join('')}</div>`); }
+function imageIndex(){ main.innerHTML=head('RECOVERED FRAMES','이미지 첨부 / Audio Log 제거됨')+panel('FRAME INDEX',`<p>원본 Audio Log MP3와 지속 배경음은 제거되고, 이미지 자료만 WebP로 압축 보관된다.</p><div class="image-grid">${DATA.images.slice(0,83).map(src=>`<img src="${src}" loading="lazy">`).join('')}</div>`); }
 let currentRecord=null,currentPage=0;
 function openRecord(i){ currentRecord=DATA.records[i]; currentPage=0; playSlide(); document.getElementById('viewer').classList.add('show'); renderSlide(); }
 window.openRecord=openRecord;
