@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Curse</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="main">
+<audio id="archive-ambience" src="assets/audio/archive_red_ambience.mp3" loop preload="auto"></audio>
+<audio id="boot-cassette" src="assets/audio/boot_cassette_reel.mp3" loop preload="auto"></audio>
+<div class="noise"></div><div class="scanlines"></div>
+<section class="boot-screen" data-boot>
+  <div class="boot-inner">
+    <div class="boot-title">PROJECT CURSE / ANALOG RESTRICTED BOOT SEQUENCE</div>
+    <div class="cassette-status" data-cassette-status><span class="reel left"></span><span class="tape-label">TAPE FEED: STANDBY</span><span class="reel right"></span></div>
+    <div class="boot-log"><div class="boot-line">&gt; INITIALIZING...</div></div>
+    <div class="loading-wrap">
+      <div class="loading-meta"><span>LOADING ARCHIVE ACCESS</span><span data-progress>000%</span></div>
+      <div class="loading-bar"><div class="loading-fill"></div></div>
+    </div>
+    <button class="skip-boot">SKIP BOOT</button>
+  </div>
+</section>
+<main class="main-screen">
+  <section class="logo-panel">
+    <img class="curse-logo" src="assets/images/project_curse_logo.png" alt="Project Curse">
+    <p class="system-text">U.A.C ANALOG ARCHIVE NODE / SIGNAL UNSTABLE / DOCUMENT FLOOR LOCKED</p>
+    <div class="analog-readout" aria-label="analog computer status">
+      <span>RELAY BANK: ARMED</span>
+      <span>MAGNETIC TAPE BUS: SYNC</span>
+      <span>VACUUM MEMORY: WARM</span>
+      <span>RED PHOSPHOR OUTPUT: ACTIVE</span>
+    </div>
+    <form class="password-gate" data-password-form autocomplete="off">
+      <label class="password-label" for="archive-password">Enter password</label>
+      <div class="password-row">
+        <input id="archive-password" class="password-input" data-password-input type="password" placeholder="INPUT PASSWORD" autocomplete="off" spellcheck="false">
+        <button class="password-submit" type="submit">ACCESS</button>
+      </div>
+      <p class="password-status" data-password-status>RESTRICTED ARCHIVE // PASSWORD REQUIRED</p>
+    </form>
+  </section>
+</main>
+<div class="access-flash">ACCESS GRANTED // OPENING ARCHIVE FLOOR</div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
