@@ -1,20 +1,35 @@
 document.addEventListener('DOMContentLoaded',()=>{
   function rootPrefix(){const p=location.pathname; if(p.includes('/docs/'))return '../../'; if(p.includes('/archive/'))return '../'; return '';}
   const prefix=rootPrefix();
-  const loader=document.getElementById('loader'); const app=document.getElementById('app');
-  const audio={menu:new Audio(prefix+'assets/audio/menu_tick.mp3'),open:new Audio(prefix+'assets/audio/record_open.mp3'),page:new Audio(prefix+'assets/audio/page_turn.mp3'),boot:new Audio(prefix+'assets/audio/boot_legacy.mp3')};
-  audio.menu.volume=.26; audio.open.volume=.30; audio.page.volume=.28; audio.boot.volume=.30;
+  const loader=document.getElementById('loader');
+  const app=document.getElementById('app');
+  const audio={
+    menu:new Audio(prefix+'assets/audio/menu_tick.mp3'),
+    open:new Audio(prefix+'assets/audio/record_open.mp3'),
+    page:new Audio(prefix+'assets/audio/page_turn.mp3'),
+    boot:new Audio(prefix+'assets/audio/boot_legacy.mp3')
+  };
+  audio.menu.volume=.24; audio.open.volume=.28; audio.page.volume=.26; audio.boot.volume=.28;
   if(localStorage.getItem('pc_audio_legacy2003_fixed')===null) localStorage.setItem('pc_audio_legacy2003_fixed','on');
   function isOn(){return localStorage.getItem('pc_audio_legacy2003_fixed')!=='off'}
   function play(a){if(!isOn()||!a)return; try{a.currentTime=0; a.play().catch(()=>{});}catch(e){}}
   function syncBtns(){document.querySelectorAll('#audioToggle').forEach(b=>b.textContent=isOn()?'효과음: 켜짐':'효과음: 꺼짐')}
   syncBtns();
-  if(loader){setTimeout(()=>{loader.classList.add('hide'); if(app)app.classList.add('ready'); play(audio.boot);},1650);} else {if(app)app.classList.add('ready');}
-  document.querySelectorAll('#audioToggle').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem('pc_audio_legacy2003_fixed',isOn()?'off':'on'); syncBtns(); if(isOn())play(audio.menu);}));
+
+  const bootLines=Array.from(document.querySelectorAll('#bootLines p'));
+  bootLines.forEach((line,i)=>setTimeout(()=>line.classList.add('show'),220+i*260));
+  if(loader){setTimeout(()=>{loader.classList.add('hide'); if(app)app.classList.add('ready'); play(audio.boot);},2050);} else {if(app)app.classList.add('ready');}
+  document.querySelectorAll('#audioToggle').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem('pc_audio_legacy2003_fixed',isOn()?'off':'on'); syncBtns(); if(isOn())play(audio.menu);}))
 
   const pages=Array.from(document.querySelectorAll('.content-page'));
   const links=Array.from(document.querySelectorAll('.side-menu a[data-target]'));
-  function show(id){ if(!pages.length)return; if(!pages.some(p=>p.id===id)) id='history'; pages.forEach(p=>p.classList.toggle('active',p.id===id)); links.forEach(a=>a.classList.toggle('active',a.dataset.target===id)); const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; }
+  function show(id){
+    if(!pages.length)return;
+    if(!pages.some(p=>p.id===id)) id='history';
+    pages.forEach(p=>p.classList.toggle('active',p.id===id));
+    links.forEach(a=>a.classList.toggle('active',a.dataset.target===id));
+    const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
+  }
   links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault(); play(audio.menu); show(a.dataset.target); history.replaceState(null,'','#'+a.dataset.target);}));
   if(pages.length){show((location.hash||'#history').slice(1));}
   document.querySelectorAll('[data-open-record], .archive-list a, .backline a, .btn').forEach(a=>a.addEventListener('click',()=>play(audio.open)));
