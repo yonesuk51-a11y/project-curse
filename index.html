@@ -1,19 +1,131 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>U.A.C 기록 단말기</title><link rel="stylesheet" href="assets/css/style.css"></head><body class="scan">
-<div id="loader" class="loader"><div class="loader-box"><div class="sys-kicker">U.A.C 기록 단말기 / PC-03</div><div class="loader-title">기록 색인 확인 중</div><div class="loader-lines"><p>전원 인가</p><p>원본 기록 색인 확인</p><p>세계 개요 화면 준비</p></div><div class="loadbar"><span></span></div></div></div>
-<div id="app" class="app loading-target"><div class="legacy-layout"><aside class="legacy-sidebar"><div class="brand-side">U.A.C 기록 단말기<small>2003 레거시 모드</small></div><nav class="side-menu"><a href="#history" data-target="history" class="active">세계 역사</a><a href="#faction-info" data-target="faction-info">세력 정보</a><a href="#faction-relation" data-target="faction-relation">세력 관계</a><a href="#zone-map" data-target="zone-map">지역지도</a><a href="archive/">기록 보관소</a><button id="audioToggle" type="button">효과음: 켜짐</button></nav><div class="side-note">왼쪽 메뉴로만 화면 전환<br>효과음 기본 켜짐</div></aside><main class="legacy-content">
-<section id="history" class="panel content-page active"><div class="label">세계 개요</div><h2>세계 개요</h2><p>Project Curse는 도시 이상현상, 레드존 확산, 오컬트 감염, 군사 봉쇄, 강화 인간, 생체 병기 산업, 종교 의식, 기밀 연구와 은폐가 겹쳐진 오컬트 군사 재난 세계관이다. 이 기록 단말기는 원본 설정글을 중심으로 세계의 큰 흐름과 주요 기관, 위험 구역, 기록 문서를 정리한다.</p><div class="overview-stats"><div class="stat-card"><b>1986</b><span>피의 호수 사건과 불멸 실험 계열 기록의 기원</span></div><div class="stat-card"><b>U.A.C</b><span>도시 이상현상 격리와 기록 통제를 담당하는 상위 기관</span></div><div class="stat-card"><b>RED ZONE</b><span>괴이 출현과 오염 확산이 상시 확인되는 재난 구역</span></div><div class="stat-card"><b>BLACK ZONE</b><span>회수 금지와 정보 붕괴가 적용되는 심층 봉쇄 구역</span></div></div><h3>세계 역사 요약</h3><div class="timeline-list"><div><b>1986년 이전</b><p>우시노다교, 피의 호수, 인신공양 의식, 괴이 발생에 대한 산발적 기록이 확인된다.</p></div><div><b>1986년</b><p>불멸을 향해 작전과 피의 호수 사건이 발생한다. 이후 기존 법집행 체계만으로는 설명할 수 없는 괴이체, 변이, 오염 흔적이 확인된다.</p></div><div><b>U.A.C 설립 이후</b><p>도시 이상현상 격리국은 구역 분류, 기록 통제, 오염 은폐, 작전 조율을 담당하는 상위 기관으로 기능한다. S.I.D와 N.H.C는 이후 독립 기관으로 재편되어 협력 관계를 유지한다.</p></div><div><b>레드존 확산기</b><p>중국, 러시아, 북미 일부 지역에서 활성 재난 구역이 확대되고, 일부 지역은 Black Fringe 또는 Black Core로 분류된다.</p></div><div><b>2026년 기록 기준</b><p>세계 각지의 구역 분류, 세력 관계, 괴이 분류, N.H.C 현장 규정, 사쿠마 유타 실종 기록이 내부 기록 단말기에 복구되어 있다.</p></div></div></section>
-<section id="faction-info" class="panel content-page"><div class="label">세력 정보</div><h2>세력 정보</h2><p>세력 마크를 클릭하면 해당 세력의 설명만 표시된다. 기록 보관소 문서 이동 링크는 넣지 않았다.</p><div class="faction-terminal"><div class="faction-grid" id="factionGrid">
-<button class="faction-tile active" data-key="uac"><img src="assets/faction_marks/uac.webp" alt="U.A.C"><span>U.A.C</span><small>격리·통제</small></button>
-<button class="faction-tile" data-key="nhc"><img src="assets/faction_marks/nhc.webp" alt="N.H.C"><span>N.H.C</span><small>현장 작전</small></button>
-<button class="faction-tile" data-key="sid"><img src="assets/faction_marks/sid.webp" alt="S.I.D"><span>S.I.D</span><small>조사</small></button>
-<button class="faction-tile" data-key="arf"><img src="assets/faction_marks/arf.svg" alt="A.R.F"><span>A.R.F</span><small>회수</small></button>
-<button class="faction-tile" data-key="fhc"><img src="assets/faction_marks/fhc.webp" alt="F.H.C"><span>F.H.C</span><small>연구</small></button>
-<button class="faction-tile" data-key="amarion"><img src="assets/faction_marks/amarion.webp" alt="Amarion"><span>Amarion</span><small>제약·기술</small></button>
-<button class="faction-tile" data-key="syndicate"><img src="assets/faction_marks/syndicate.webp" alt="Syndicate"><span>Syndicate</span><small>이탈·비인가</small></button>
-<button class="faction-tile" data-key="ushinoda"><img src="assets/faction_marks/ushinoda.webp" alt="우시노다교"><span>우시노다교</span><small>타락교·혈교 통합</small></button>
-<button class="faction-tile" data-key="haimun"><img src="assets/faction_marks/haimun.webp" alt="Haimun"><span>Haimun</span><small>도심 침투</small></button>
-</div><div class="faction-detail" id="factionDetail"></div></div></section>
-<section id="faction-relation" class="panel content-page"><div class="label">세력 관계</div><h2>세력 관계</h2><p>선이 화면 밖으로 벗어나는 관계도 대신, 우호·감시·적대 기준으로 정리했다.</p><table class="relation-table"><thead><tr><th>분류</th><th>관계</th><th>상태</th><th>설명</th></tr></thead><tbody><tr><td class="friendly">우호</td><td>U.A.C / N.H.C</td><td>작전 협력</td><td>U.A.C가 구역 정보와 봉쇄 명령을 제공하고 N.H.C가 현장 전투와 봉쇄를 수행한다.</td></tr><tr><td class="friendly">우호</td><td>U.A.C / S.I.D</td><td>정보 공유</td><td>실종, 오컬트 범죄, 우시노다교 관련 조사를 위해 사건 기록을 공유한다.</td></tr><tr><td class="friendly">우호</td><td>N.H.C / A.R.F</td><td>회수 지원</td><td>N.H.C가 현장을 확보하면 A.R.F가 기록, 시료, 생존자 자료를 회수한다.</td></tr><tr><td class="neutral">감시</td><td>U.A.C / F.H.C</td><td>연구 의존과 불신</td><td>F.H.C의 연구 자료는 필요하지만 비인가 실험 가능성 때문에 지속 감시된다.</td></tr><tr><td class="neutral">감시</td><td>U.A.C / Amarion</td><td>기술 관리</td><td>의료 재조립, 생체 연구, 피의 호수 계열 기록 때문에 관리 대상이 된다.</td></tr><tr><td class="hostile">적대</td><td>N.H.C / Syndicate</td><td>이탈 세력 추적</td><td>Redwolf 계열 이탈 전투조직은 신디케이트 네트워크와 연결되어 추적 대상이 된다.</td></tr><tr><td class="hostile">적대</td><td>S.I.D / 우시노다교</td><td>의식 범죄 조사</td><td>타락교와 혈교 계열 의식까지 우시노다교 통합 위협으로 분류한다.</td></tr><tr><td class="hostile">적대</td><td>Haimun / 민간 구역</td><td>도심 침투</td><td>비공식 거점, 시민 납치, 의식 준비, 정보 교란을 통해 민간 구역에 침투한다.</td></tr></tbody></table></section>
-<section id="zone-map" class="panel content-page"><div class="label">지역지도</div><h2>지역지도</h2><p>구역 위험도 분류 문서의 핵심 내용을 지역지도에 통합했다. 지도는 크게 표시하고, 설명 글자는 작게 정리했다.</p><div class="map-layout wide-map"><div class="map-panel"><img class="map-img" src="assets/maps/global_zone_map.svg" alt="세계지도 구역 표시"><span class="map-badge m-uac">U.A.C 동아시아 정보본부</span><span class="map-badge m-nhc">N.H.C K-12 전방기지</span><span class="map-badge m-sid">S.I.D 도쿄 지부</span><span class="map-badge m-arf">A.R.F 북미 회수 허브</span><span class="map-badge m-cpd">C.P.D 검문 게이트</span><span class="map-badge m-fhc">F.H.C 유럽 연구소</span><span class="map-badge m-red1">중국 Red Zone</span><span class="map-badge m-red2">러시아 Black Fringe</span><span class="map-badge m-red3">북미 분절 Red Zone</span><span class="map-badge m-sea">해상 이상현상 구역</span><span class="map-badge m-ash">Ash Crew 처리 거점</span></div><div class="map-catalog compact"><div><b>GREEN ZONE</b><p>안정 민간 구역. 기본 거주와 물류 가능.</p></div><div><b>WHITE ZONE</b><p>정화·통제 구역. 피난민 수용, 귀환자 선별, 검문 진행.</p></div><div><b>YELLOW ZONE</b><p>감시·완충 구역. 레드존 외곽 정찰과 봉쇄 준비.</p></div><div><b>RED ZONE</b><p>활성 재난 구역. 괴이 출현, 오염 확산, 민간 통제 불능.</p></div><div><b>BLACK ZONE</b><p>회수 금지 심층 구역. 통신과 좌표가 불안정한 봉쇄 지역.</p></div><div><b>특수 표기</b><p>Gray는 통제 붕괴권, Blue Node는 지원 시설, Crimson/Black Core는 핵심 위험 지점.</p></div></div></div></section>
-<section id="archive-entry" class="panel content-page"><div class="label">기록 보관소</div><h2>기록 보관소</h2><p>원본 설정글은 기록 보관소에서 확인한다. 인물 프로필 기록은 제외했고, 연표 기록의 핵심 내용은 세계 역사에 통합했다.</p><a class="btn big" href="archive/">기록 보관소 열기</a></section>
-</main></div></div><script src="assets/js/main.js"></script></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>U.A.C 기록 단말기</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="scan">
+  <div id="loader" class="loader">
+    <div class="loader-box">
+      <div class="sys-kicker">U.A.C LEGACY TERMINAL 03</div>
+      <div class="loader-title">ARCHIVE BOOT SEQUENCE</div>
+      <div class="loader-lines">
+        <p><b>[BOOT]</b> POWER LINE STABLE</p>
+        <p><b>[CRT]</b> DISPLAY BUFFER CHECK</p>
+        <p><b>[MEMORY]</b> WORLD INDEX MOUNTED</p>
+        <p><b>[ARCHIVE]</b> FACTION RECORD CACHE RESTORED</p>
+        <p><b>[ZONE]</b> MAP LAYER READY</p>
+        <p><b>[STATUS]</b> ENTERING WORLD OVERVIEW</p>
+      </div>
+      <div class="loadbar"><span></span></div>
+    </div>
+  </div>
+
+  <div id="app" class="app">
+    <div class="legacy-layout">
+      <aside class="legacy-sidebar">
+        <div class="brand-side">U.A.C 기록 단말기<small>LEGACY PC-03</small></div>
+        <nav class="side-menu">
+          <a href="#history" data-target="history" class="active">세계 역사</a>
+          <a href="#faction-info" data-target="faction-info">세력 정보</a>
+          <a href="#faction-relation" data-target="faction-relation">세력 관계</a>
+          <a href="#zone-map" data-target="zone-map">지역 지도</a>
+          <a href="archive/" data-open-record="1">기록 보관소</a>
+          <button id="audioToggle" type="button">효과음: 켜짐</button>
+        </nav>
+        <div class="side-note">BOOT COMPLETE<br>EVENT SOUND READY</div>
+      </aside>
+
+      <main class="legacy-content">
+        <section id="history" class="panel content-page active">
+          <div class="label">WORLD OVERVIEW</div>
+          <h2>세계 개요</h2>
+          <p>파의 호수 사건 이후 세계 곳곳에서 레드존과 오염 구역이 확산되기 시작했다. U.A.C는 각 지역의 이상현상, 민간 피해, 세력 충돌, 귀환자 발생 기록을 통합 관리하고 있다.</p>
+          <p>이 기록 단말기는 구형 U.A.C 내부 서버에 남아 있는 세계 상태, 주요 기관, 봉쇄 구역, 괴이 분류, 회수 기록을 열람하기 위한 단말기다.</p>
+          <div class="overview-stats">
+            <div class="stat-card"><b>1986</b><span>피의 호수와 불멸 실험 계열 기록의 기원</span></div>
+            <div class="stat-card"><b>U.A.C</b><span>도시 이상현상 격리와 기록 통제를 담당하는 상위 기관</span></div>
+            <div class="stat-card"><b>RED ZONE</b><span>괴이 출현과 오염 확산이 상시 확인되는 재난 구역</span></div>
+            <div class="stat-card"><b>BLACK ZONE</b><span>회수 금지와 정보 붕괴가 적용되는 심층 봉쇄 구역</span></div>
+          </div>
+          <h3>세계 역사 요약</h3>
+          <div class="timeline-list">
+            <div><b>1986년 이전</b><p>우시노다교, 피의 호수, 인신공양 의식, 괴이 발생에 대한 산발적 기록이 확인된다.</p></div>
+            <div><b>1986년</b><p>불멸을 향해 작전과 피의 호수 사건이 발생한다. 이후 기존 법집행 체계만으로는 설명할 수 없는 괴이체, 변이, 오염 흔적이 확인된다.</p></div>
+            <div><b>U.A.C 설립 이후</b><p>도시 이상현상 격리국은 구역 분류, 기록 통제, 오염 은폐, 작전 조율을 담당하는 상위 기관으로 기능한다. S.I.D와 N.H.C는 이후 독립 기관으로 재편되어 협력 관계를 유지한다.</p></div>
+            <div><b>레드존 확산기</b><p>중국, 러시아, 북미 일부 지역에서 활성 재난 구역이 확대되고, 일부 지역은 Black Fringe 또는 Black Core로 분류된다.</p></div>
+            <div><b>2026년 기록 기준</b><p>세계 각지의 구역 분류, 세력 관계, 괴이 분류, N.H.C 현장 규정, 사쿠마 유타 실종 기록이 내부 기록 단말기에 복구되어 있다.</p></div>
+          </div>
+        </section>
+
+        <section id="faction-info" class="panel content-page">
+          <div class="label">FACTION INDEX</div>
+          <h2>세력 정보</h2>
+          <p>세력 마크를 클릭하면 해당 세력의 설명만 표시된다.</p>
+          <div class="faction-terminal">
+            <div class="faction-grid" id="factionGrid">
+              <button class="faction-tile active" data-key="uac"><img src="assets/faction_marks/uac.webp" alt="U.A.C"><span>U.A.C</span><small>격리와 통제</small></button>
+              <button class="faction-tile" data-key="nhc"><img src="assets/faction_marks/nhc.webp" alt="N.H.C"><span>N.H.C</span><small>현장 작전</small></button>
+              <button class="faction-tile" data-key="sid"><img src="assets/faction_marks/sid.webp" alt="S.I.D"><span>S.I.D</span><small>조사</small></button>
+              <button class="faction-tile" data-key="fhc"><img src="assets/faction_marks/fhc.webp" alt="F.H.C"><span>F.H.C</span><small>연구</small></button>
+              <button class="faction-tile" data-key="amarion"><img src="assets/faction_marks/amarion.webp" alt="Amarion"><span>Amarion</span><small>제약 기업</small></button>
+              <button class="faction-tile" data-key="syndicate"><img src="assets/faction_marks/syndicate.webp" alt="Syndicate"><span>Syndicate</span><small>이탈 네트워크</small></button>
+              <button class="faction-tile" data-key="ushinoda"><img src="assets/faction_marks/ushinoda.webp" alt="우시노다교"><span>우시노다교</span><small>통합 교단</small></button>
+              <button class="faction-tile" data-key="haimun"><img src="assets/faction_marks/haimun.webp" alt="Haimun"><span>Haimun</span><small>도심 침투</small></button>
+              <button class="faction-tile" data-key="ashcrew"><img src="assets/faction_marks/ashcrew.webp" alt="Ash Crew"><span>Ash Crew</span><small>오염물 처리</small></button>
+              <button class="faction-tile" data-key="arf"><img src="assets/faction_marks/arf.webp" alt="A.R.F"><span>A.R.F</span><small>회수 부대</small></button>
+              <button class="faction-tile" data-key="cpd"><img src="assets/faction_marks/cpd.webp" alt="C.P.D"><span>C.P.D</span><small>민간 보호</small></button>
+            </div>
+            <div class="faction-detail" id="factionDetail"></div>
+          </div>
+        </section>
+
+        <section id="faction-relation" class="panel content-page">
+          <div class="label">RELATION TABLE</div>
+          <h2>세력 관계</h2>
+          <p>세력 관계는 우호, 감시, 적대 기준으로 분류한다.</p>
+          <table class="relation-table"><thead><tr><th>분류</th><th>관계</th><th>상태</th><th>설명</th></tr></thead><tbody>
+            <tr><td class="friendly">우호</td><td>U.A.C / N.H.C</td><td>작전 협력</td><td>U.A.C가 구역 정보와 봉쇄 명령을 제공하고 N.H.C가 현장 전투와 봉쇄를 수행한다.</td></tr>
+            <tr><td class="friendly">우호</td><td>U.A.C / A.R.F</td><td>회수 지원</td><td>현장 확보 이후 기록, 시료, 생존자 자료를 회수한다.</td></tr>
+            <tr><td class="friendly">우호</td><td>U.A.C / C.P.D</td><td>민간 통제</td><td>피난민 선별, 귀환자 검문, 오염 의심자 분류에 협력한다.</td></tr>
+            <tr><td class="friendly">우호</td><td>N.H.C / Ash Crew</td><td>현장 사후 처리</td><td>전투 후 오염 시체, 오염 장비, 혈액 잔류물을 처리한다.</td></tr>
+            <tr><td class="neutral">감시</td><td>U.A.C / F.H.C</td><td>연구 의존과 불신</td><td>연구 자료는 필요하지만 비인가 실험 가능성 때문에 지속 감시된다.</td></tr>
+            <tr><td class="neutral">감시</td><td>U.A.C / Amarion</td><td>기술 관리</td><td>의료 재조립, 생체 연구, 피의 호수 계열 기록 때문에 관리 대상이 된다.</td></tr>
+            <tr><td class="hostile">적대</td><td>N.H.C / Syndicate</td><td>이탈 세력 추적</td><td>Redwolf 계열은 신디케이트 내부 작전 집단으로 분류된다.</td></tr>
+            <tr><td class="hostile">적대</td><td>S.I.D / 우시노다교</td><td>의식 범죄 조사</td><td>타락교와 혈교 계열 의식까지 우시노다교 통합 위협으로 분류한다.</td></tr>
+            <tr><td class="hostile">적대</td><td>Haimun / 민간 구역</td><td>도심 침투</td><td>비공식 거점, 시민 납치, 의식 준비, 정보 교란을 통해 민간 구역에 침투한다.</td></tr>
+          </tbody></table>
+        </section>
+
+        <section id="zone-map" class="panel content-page">
+          <div class="label">ZONE MAP</div>
+          <h2>지역 지도</h2>
+          <p>구역 위험도 분류 문서의 핵심 내용을 지역 지도에 통합했다.</p>
+          <div class="map-layout wide-map">
+            <div class="map-panel"><img class="map-img" src="assets/maps/global_zone_map.svg" alt="세계지도 구역 표시"></div>
+            <div class="map-catalog compact">
+              <div><b>주요 표기</b><p>U.A.C 동아시아 정보본부, N.H.C K-12, S.I.D 도쿄 지부, A.R.F 북미 회수 허브, C.P.D 검문 게이트, F.H.C 유럽 연구소, Ash Crew 처리 거점.</p></div>
+              <div><b>GREEN ZONE</b><p>안정 민간 구역. 기본 거주와 물류 가능.</p></div>
+              <div><b>WHITE ZONE</b><p>정화와 통제 구역. 피난민 수용, 귀환자 선별, 검문 진행.</p></div>
+              <div><b>YELLOW ZONE</b><p>감시와 완충 구역. 레드존 외곽 정찰과 봉쇄 준비.</p></div>
+              <div><b>RED ZONE</b><p>활성 재난 구역. 괴이 출현, 오염 확산, 민간 통제 불능.</p></div>
+              <div><b>BLACK ZONE</b><p>회수 금지 심층 구역. 통신과 좌표가 불안정한 봉쇄 지역.</p></div>
+              <div><b>특수 표기</b><p>Gray는 통제 붕괴권, Blue Node는 지원 시설, Crimson Core와 Black Core는 핵심 위험 지점.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="archive-entry" class="panel content-page">
+          <div class="label">ARCHIVE</div>
+          <h2>기록 보관소</h2>
+          <p>원본 설정글은 기록 보관소에서 확인한다. 인물 프로필 기록은 제외했고, 연표 기록의 핵심 내용은 세계 역사에 통합했다.</p>
+          <a class="btn big" href="archive/" data-open-record="1">기록 보관소 열기</a>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
