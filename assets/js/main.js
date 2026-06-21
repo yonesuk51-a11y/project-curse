@@ -154,7 +154,34 @@ function caseChain(){ main.innerHTML=head('CASE CHAIN','사건 원인-결과 연
 
 function zones(){ main.innerHTML=head('ZONE SYSTEM','Green / White / Yellow / Red / Black + optional layers')+`<div class="zone-grid">`+DATA.zones.map(z=>`<div class="panel zone-card ${z[4]}" data-label="ZONE"><div class="zone-name">${z[0]}</div><div class="zone-class"><span class="zone-pill ${z[4]}">${z[3]}</span> ${z[1]}</div><p>${z[2]}</p></div>`).join('')+`</div>`; }
 function factions(){ main.innerHTML=head('FACTION DATABASE','세력 / 역할 / 작전 권한 압축표')+`<div class="grid three">`+DATA.factions.map(f=>`<div class="card" data-label="FACTION"><div class="card-title">${f.id}</div><div class="card-role">${f.type}</div><p>${f.role}</p></div>`).join('')+`</div>`; }
-function relations(){ main.innerHTML=head('FACTION RELATIONS','세력간 협력 / 감시 / 적대 관계')+panel('RELATION MATRIX',`<table class="matrix"><thead><tr><th>FROM</th><th>TO</th><th>STATUS</th><th>NOTE</th></tr></thead><tbody>${DATA.relations.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="status-chip ${r[2].includes('위협')||r[2].includes('이탈')||r[2].includes('적대')?'red':r[2].includes('기밀')||r[2].includes('감시')?'amber':'cyan'}">${r[2]}</span></td><td>${r[3]}</td></tr>`).join('')}</tbody></table>`)+`<div class="grid two" style="margin-top:16px">${panel('LEGEND',`<p>${tag('ALLIED / COOPERATION','cyan')} 작전 협력 또는 자료 공유.</p><p>${tag('RESTRICTED TRUST','amber')} 협력하지만 감시 또는 검열 충돌이 있음.</p><p>${tag('HOSTILE / DEFECTOR','red')} 적대, 이탈, 추적, 회수 위험.</p>`)}${panel('RELATION NOTE',`<p>관계도는 세력 서열표가 아니라 <b>작전 현장에서 실제 충돌하는 권한</b>을 기준으로 정리한다.</p>`)}</div>`; }
+function relations(){ main.innerHTML=head('FACTION RELATIONS','세력간 협력 / 감시 / 적대 관계')+
+ panel('RELATION MATRIX // HTML NODE GRAPH',`<div class="relation-native">
+  <div class="rel-node rel-uac"><b>U.A.C</b><span>통제 / 승인 / 기록 서버</span><em>TRUST CORE 62%</em></div>
+  <div class="rel-node rel-nhc"><b>N.H.C</b><span>레드존 현장 진입</span><em>FIELD TRUST 55%</em></div>
+  <div class="rel-node rel-sid"><b>S.I.D</b><span>오컬트 수사 / 원인 추적</span><em>INTEL TRUST 49%</em></div>
+  <div class="rel-node rel-arf"><b>A.R.F</b><span>회수 / 샘플 / 기록 확보</span><em>RECOVERY 66%</em></div>
+  <div class="rel-node rel-cpd"><b>C.P.D</b><span>민간인 보호 / 귀환자 선별</span><em>CIVIL TRUST 57%</em></div>
+  <div class="rel-node rel-fhc"><b>F.H.C</b><span>기밀 연구 / 의료 병기화</span><em>SUSPICION 60%</em></div>
+  <div class="rel-node rel-redwolf"><b>Redwolf</b><span>N.H.C 이탈 / 비공식 작전</span><em>DEFECTOR 44%</em></div>
+  <div class="rel-node rel-ushinoda"><b>Ushinoda Cult</b><span>의식 / 오염 확산</span><em>THREAT 82%</em></div>
+  <div class="rel-node rel-blood"><b>Blood Cult</b><span>혈의식 / 적대 교단</span><em>THREAT 91%</em></div>
+  <svg class="rel-lines" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true">
+    <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9d433d"/></marker></defs>
+    <path class="line coop" d="M500 98 C360 100 245 140 180 198" marker-end="url(#arrow)"/><text x="294" y="118">OPERATIONAL COOPERATION</text>
+    <path class="line intel" d="M500 98 C645 96 735 135 812 198" marker-end="url(#arrow)"/><text x="632" y="116">INTELLIGENCE EXCHANGE</text>
+    <path class="line coop" d="M500 126 C500 172 500 211 500 246" marker-end="url(#arrow)"/><text x="515" y="188">OVERSIGHT</text>
+    <path class="line intel" d="M811 236 C790 290 745 334 725 386" marker-end="url(#arrow)"/><text x="745" y="314">RECOVERY SUPPORT</text>
+    <path class="line caution" d="M181 237 C235 300 250 349 276 386" marker-end="url(#arrow)"/><text x="214" y="310">MEDICAL SUPPORT</text>
+    <path class="line caution" d="M276 420 C347 468 415 469 458 432" marker-end="url(#arrow)"/><text x="335" y="462">SUPPLY RELIANCE</text>
+    <path class="line threat" d="M458 423 C575 452 662 450 728 423" marker-end="url(#arrow)"/><text x="560" y="475">DEFECTOR PURSUIT</text>
+    <path class="line threat" d="M728 419 C790 416 840 415 884 416" marker-end="url(#arrow)"/><text x="762" y="402">HOSTILE ALLIANCE</text>
+    <path class="line threat dash" d="M500 286 C640 305 760 340 884 389" marker-end="url(#arrow)"/><text x="638" y="328">INFILTRATION RISK</text>
+    <path class="line caution dash" d="M181 215 C320 234 384 252 500 267" marker-end="url(#arrow)"/><text x="300" y="228">REGULATORY CONFLICT</text>
+  </svg>
+  <div class="rel-legend"><span class="coop-dot">협력</span><span class="intel-dot">정보 공유</span><span class="caution-dot">불신/조건부</span><span class="threat-dot">적대/위협</span></div>
+ </div>`)+
+ panel('RELATION MATRIX DATA',`<table class="matrix"><thead><tr><th>FROM</th><th>TO</th><th>STATUS</th><th>NOTE</th></tr></thead><tbody>${DATA.relations.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="status-chip ${r[2].includes('위협')||r[2].includes('이탈')||r[2].includes('적대')?'red':r[2].includes('기밀')||r[2].includes('감시')?'amber':'cyan'}">${r[2]}</span></td><td>${r[3]}</td></tr>`).join('')}</tbody></table>`)+
+ `<div class="grid two" style="margin-top:16px">${panel('LEGEND',`<p>${tag('ALLIED / COOPERATION','cyan')} 작전 협력 또는 자료 공유.</p><p>${tag('RESTRICTED TRUST','amber')} 협력하지만 감시 또는 검열 충돌이 있음.</p><p>${tag('HOSTILE / DEFECTOR','red')} 적대, 이탈, 추적, 회수 위험.</p>`)}${panel('RELATION NOTE',`<p>관계도는 사진이 아니라 HTML/SVG로 구성한 서버 분석 UI다. 세력 서열표가 아니라 <b>작전 현장에서 실제 충돌하는 권한</b>을 기준으로 정리한다.</p>`)}</div>`; }
 function zoneMap(){ main.innerHTML=head('GLOBAL ZONE MAP','World overlay / Red Zone sectors / incident and facility layers')+`<div class="grid two"><div class="panel mapbox" data-label="WORLD SCAN">${worldMapSvg()}</div>${panel('GLOBAL STATUS',`<div class="stat-grid">${DATA.mapStats.map(s=>`<div class="statbox"><b>${s[1]}</b><span>${s[0]}</span></div>`).join('')}</div><hr style="border-color:rgba(255,255,255,.08);margin:16px 0"><h3>분류 요약</h3><p>${tag('GREEN','cyan')} 안정 민간권역 ${tag('WHITE')} 정화/통제권역 ${tag('YELLOW','amber')} 감시권역 ${tag('RED','red')} 활성 재난권역 ${tag('BLACK','red')} 회수 금지권역</p>` )}</div>
  <div class="grid two" style="margin-top:16px">
  ${panel('MAP LAYERS',`<div class="layer-list">${DATA.mapLayers.map(l=>`<div class="layer-item"><b>${l[0]}</b><p>${l[1]}</p></div>`).join('')}</div>`)}
@@ -177,7 +204,7 @@ function entities(){ main.innerHTML=head('ENTITY INDEX','Feral / Superior-Type /
 function research(){ main.innerHTML=head('WEAPON / RESEARCH FILES','혈무 / Wave Frame / Wivermensi / genetic and bio-weapon files')+`<div class="grid three">`+DATA.researchFiles.map(f=>`<div class="card research-card" data-label="RESEARCH"><div class="card-title">${f[0]}</div><div class="card-role">${f[1]}</div><p>${f[2]}</p></div>`).join('')+`</div>`; }
 function manuals(){ main.innerHTML=head('FIELD MANUALS','N.H.C / C.P.D / A.R.F / Ash Crew operational protocol')+`<div class="grid two">`+DATA.fieldManuals.map(m=>`<div class="card manual-card" data-label="MANUAL"><div class="card-title">${m[0]}</div><p>${m[1]}</p></div>`).join('')+`</div>`; }
 function blackfiles(){ main.innerHTML=head('BLACK FILES','열람 제한 / 손상도 높은 기록')+`<div class="grid two">`+DATA.blackFiles.map(b=>`<div class="card blackfile" data-label="BLACK FILE"><div class="card-title">${b[0]}</div><div class="card-role">${b[1]}</div><p>${b[2]}</p></div>`).join('')+`</div>`; }
-function imageIndex(){ main.innerHTML=head('RECOVERED FRAMES','이미지 첨부 / Audio Log 제거됨')+panel('FRAME CATEGORIES',`<div class="frame-cat-grid">${DATA.frameCategories.map(c=>`<div class="frame-cat"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div><p>원본 Audio Log MP3와 지속 배경음은 제거했다. 이미지 자료만 WebP 압축본으로 보관된다.</p><div class="image-grid">${DATA.images.slice(0,83).map((src,i)=>`<img src="${src}" loading="lazy" title="FRAME_${String(i+1).padStart(3,'0')}">`).join('')}</div>`); }
+function imageIndex(){ main.innerHTML=head('RECOVERED FRAMES','이미지 첨부 / Audio Log 제거됨')+panel('FRAME CATEGORIES',`<div class="frame-cat-grid">${DATA.frameCategories.map(c=>`<div class="frame-cat"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div><p>원본 Audio Log MP3와 지속 배경음은 제거했다. 이미지 자료는 실제 회수 프레임으로만 표시하며, UI 전체를 사진으로 대체하지 않는다.</p><div class="image-grid recovered-grid">${DATA.images.slice(0,83).map((src,i)=>`<figure><img src="${src}" loading="lazy" title="FRAME_${String(i+1).padStart(3,'0')}"><figcaption>FRAME_${String(i+1).padStart(3,'0')} // SOURCE: RECOVERED ARCHIVE // STATUS: DEGRADED // DAMAGE: ${18+(i*7%61)}%</figcaption></figure>`).join('')}</div>`); }
 
 const INCIDENT_LINKS = {
   'BLOOD LAKE':['Unknown Record2_860205','Immortality_860201','FCR Archive_890402'],
@@ -230,72 +257,3 @@ function renderSlide(){ const r=currentRecord,p=r.pages[currentPage]; const seve
 function turn(delta){ if(!currentRecord) return; const next=currentPage+delta; if(next<0||next>=currentRecord.pages.length) return; currentPage=next; const v=document.getElementById('viewer'); v.classList.add('turning'); playSlide(); setTimeout(()=>{renderSlide(); v.classList.remove('turning');},160); }
 document.getElementById('nextPage').onclick=()=>turn(1); document.getElementById('prevPage').onclick=()=>turn(-1); document.getElementById('closeViewer').onclick=()=>{document.getElementById('viewer').classList.remove('show');};
 document.addEventListener('keydown',e=>{ if(document.getElementById('viewer').classList.contains('show')){ if(e.key==='ArrowRight'||e.key.toLowerCase()==='d') turn(1); if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a') turn(-1); if(e.key==='Escape') document.getElementById('viewer').classList.remove('show'); }});
-
-
-/* === GITHUB READY FINAL: visual integration + document readability === */
-const UAC_VISUALS = {
-  auth:'assets/visuals/uac_auth_gate.webp',
-  map:'assets/visuals/global_redzone_map.webp',
-  relations:'assets/visuals/faction_relation_matrix.webp',
-  archive:'assets/visuals/recovered_archives_floor.webp'
-};
-function visualPanel(label,src,caption){
- return panel(label,`<div class="visual-panel"><img class="visual-img" src="${src}" loading="lazy" alt="${label}"><div class="visual-caption"><b>${label}</b><span>${caption}</span></div></div>`);
-}
-function overview(){
- main.innerHTML=head('ARCHIVE FLOOR','COMPRESSED DATABASE / FIELD TERMINAL VIEW')+`
- <div class="quick-start-line">
-  <button onclick="render('start')">START HERE</button>
-  <button onclick="render('map')">GLOBAL MAP</button>
-  <button onclick="render('relations')">RELATION MATRIX</button>
-  <button onclick="render('records')">ARCHIVE RECORDS</button>
-  <button onclick="render('search')">SEARCH / TAGS</button>
- </div>
- ${visualPanel('RECOVERED ARCHIVES VISUAL',UAC_VISUALS.archive,'문서 카드, 상태 라벨, 손상도, 관련 파일 구조를 한 화면에 보여주는 Archive Floor 기준 이미지.')}
- <div class="grid two" style="margin-top:16px">
- ${panel('SERVER SUMMARY',`<h3>U.A.C Secure Archive</h3><p>Project Curse 관련 세력, 레드존, 블랙존, 괴이, 회수 기록을 긴 원문 대신 현장 서버용 압축 데이터로 우선 열람한다. 원문은 각 문서의 <b>OPEN EXTENDED RECORD</b>에서 접기/펼치기 방식으로 확인한다.</p><p>${tag('CLASSIFIED','red')}${tag('FIELD OPS')}${tag('2026 NODE','amber')}${tag('NO AMBIENT AUDIO')}</p>`)}
- ${panel('CURRENT MAP ALERT',`<h3>Global Red Zone Status</h3><p><b class="danger">중국, 러시아, 북미 일부</b>가 레드존 오버레이로 표시된다. Black Core 좌표는 관측 실패율이 높아 완전 공개되지 않는다.</p><div class="stat-grid">${DATA.mapStats.slice(3,9).map(s=>`<div class="statbox"><b>${s[1]}</b><span>${s[0]}</span></div>`).join('')}</div>`)}
- </div>
- <div class="grid three" style="margin-top:16px">
- ${panel('READABILITY PASS',`<h3>Document Styling</h3><p>본문은 회백색, 경고와 Black File만 어두운 붉은색으로 제한했다. 초록 CRT 느낌은 제외하고 U.A.C 기밀 서버의 검정/회색/붉은 기록물 톤으로 통일했다.</p>`)}
- ${panel('IMAGE POLICY',`<h3>Recovered Frame Format</h3><p>이미지는 회수 프레임처럼 보이도록 어둡게 보정하고, 과도한 밝기와 채도를 줄였다. 각 이미지에는 SOURCE / STATUS / DAMAGE 캡션을 붙인다.</p>`)}
- ${panel('AUDIO POLICY',`<h3>Event Signal Only</h3><p>지속적인 지직 배경음과 hover 사운드는 제거했다. 남는 소리는 짧은 부트음과 문서 클릭/페이지 넘김 효과음뿐이다.</p>`)}
- </div>
- ${panel('CATEGORY INDEX',`<div class="category-list">${DATA.recordCategories.map(c=>`<div class="category-row"><b>${c[0]}</b><p>${c[1]}</p><code>${c[2]}</code></div>`).join('')}</div>`)}
- `;
-}
-function start(){ main.innerHTML=head('START HERE','입문용 서버 안내 / 추천 열람 순서')+`
- ${visualPanel('AUTHORIZATION VISUAL CACHE',UAC_VISUALS.auth,'메인 접속 화면은 Project Curse 로고가 아니라 U.A.C 정보 서버 인증 게이트로 정리된다.')}
- <div class="grid two" style="margin-top:16px">
- ${panel('WHAT THIS SERVER IS',`<h3>Project Curse 입문 노드</h3><p>이 서버는 Project Curse 세계관을 처음 보는 사람이 <b>세계 현황 → 구역 체계 → 세력 → 괴이 → 기록물</b> 순서로 이해할 수 있게 압축한 U.A.C 정보 서버다.</p><p>${tag('READ FIRST','red')}${tag('NO AMBIENT AUDIO')}${tag('2026 NODE','amber')}</p>`)}
- ${panel('FIRST FILES',`<h3>먼저 열람할 기록</h3><p>처음에는 <b>Timeline_860101</b>, <b>Zone_870815</b>, <b>Faction_860403</b>, <b>Ferals_860722</b>, <b>NHC Manual_891219</b> 순서를 추천한다.</p><p>사건 기록과 Black Files는 기본 구조를 본 뒤 열람하는 편이 이해하기 쉽다.</p>`)}
- </div>
- <div class="grid three" style="margin-top:16px">${DATA.startHere.map(x=>`<div class="card" data-label="START"><div class="card-role">${x[0]}</div><div class="card-title">${x[1]}</div><p>${x[2]}</p></div>`).join('')}</div>
- ${panel('RECOMMENDED ACCESS ORDER',`<div class="access-order">${DATA.recommendedOrder.map(o=>`<div class="order-row"><b>${o[0]}</b><button onclick="render('${o[3]}')">${o[1]}</button><p>${o[2]}</p></div>`).join('')}</div>`)}
- <div class="grid two" style="margin-top:16px">
- ${panel('CLEARANCE LEVELS',`<div class="mini-table">${DATA.clearanceLevels.map(l=>`<div><b>${l[0]}</b><span>${l[1]}</span><p>${l[2]}</p></div>`).join('')}</div>`)}
- ${panel('INCIDENT CLASSES',`<div class="mini-table">${DATA.incidentClasses.map(c=>`<div><b>${c[0]}</b><span>${c[1]}</span><p>${c[2]}</p></div>`).join('')}</div>`)}
- </div>
- ${panel('CIVILIAN / INFORMATION CONTROL',`<div class="grid two">${DATA.civilianSystems.map(c=>`<div class="micro-card"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div>`)}
- `; }
-function relations(){ main.innerHTML=head('FACTION RELATIONS','세력간 협력 / 감시 / 적대 관계')+
- visualPanel('RELATION MATRIX VISUAL',UAC_VISUALS.relations,'세력 간 협력, 감시, 불신, 적대 관계를 한 화면에 압축한 U.A.C 분석 이미지.')+
- panel('RELATION MATRIX DATA',`<table class="matrix"><thead><tr><th>FROM</th><th>TO</th><th>STATUS</th><th>NOTE</th></tr></thead><tbody>${DATA.relations.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="status-chip ${r[2].includes('위협')||r[2].includes('이탈')||r[2].includes('적대')?'red':r[2].includes('기밀')||r[2].includes('감시')?'amber':'cyan'}">${r[2]}</span></td><td>${r[3]}</td></tr>`).join('')}</tbody></table>`)+
- `<div class="grid two" style="margin-top:16px">${panel('LEGEND',`<p>${tag('ALLIED / COOPERATION','cyan')} 작전 협력 또는 자료 공유.</p><p>${tag('RESTRICTED TRUST','amber')} 협력하지만 감시 또는 검열 충돌이 있음.</p><p>${tag('HOSTILE / DEFECTOR','red')} 적대, 이탈, 추적, 회수 위험.</p>`)}${panel('RELATION NOTE',`<p>관계도는 세력 서열표가 아니라 <b>작전 현장에서 실제 충돌하는 권한</b>을 기준으로 정리한다.</p>`)}</div>`; }
-function zoneMap(){ main.innerHTML=head('GLOBAL ZONE MAP','World overlay / Red Zone sectors / incident and facility layers')+
- visualPanel('GLOBAL REDZONE MAP VISUAL',UAC_VISUALS.map,'중국, 러시아, 북미 일부 Red Zone / Crimson Core / Black Core와 회수 루트, 봉쇄선을 반영한 세계지도 이미지.')+
- `<div class="grid two" style="margin-top:16px"><div class="panel mapbox" data-label="WORLD SCAN">${worldMapSvg()}</div>${panel('GLOBAL STATUS',`<div class="stat-grid">${DATA.mapStats.map(s=>`<div class="statbox"><b>${s[1]}</b><span>${s[0]}</span></div>`).join('')}</div><hr style="border-color:rgba(255,255,255,.08);margin:16px 0"><h3>분류 요약</h3><p>${tag('GREEN','cyan')} 안정 민간권역 ${tag('WHITE')} 정화/통제권역 ${tag('YELLOW','amber')} 감시권역 ${tag('RED','red')} 활성 재난권역 ${tag('BLACK','red')} 회수 금지권역</p>` )}</div>
- <div class="grid two" style="margin-top:16px">
- ${panel('MAP LAYERS',`<div class="layer-list">${DATA.mapLayers.map(l=>`<div class="layer-item"><b>${l[0]}</b><p>${l[1]}</p></div>`).join('')}</div>`)}
- ${panel('INCIDENT MARKERS',`<div class="incident-list">${DATA.incidents.map(i=>`<div class="incident-row"><b>${i[0]}</b><span>${i[1]} // ${i[2]}</span><p>${i[3]}</p></div>`).join('')}</div><div class="map-marker-actions">${DATA.incidents.map(i=>`<button class="incident-open" onclick="openIncidentFiles('${i[0].replace(/'/g,"\\'")}')"><b>${i[0]}</b><span>OPEN RELATED FILES</span></button>`).join('')}</div>`)}
- </div>
- ${panel('FACILITY NODES',`<div class="facility-list">${DATA.facilities.map(f=>`<div class="facility-row"><b>${f[0]}</b><span>${f[1]}</span><p>${f[2]}</p></div>`).join('')}</div>`)}
- `; }
-function records(){ main.innerHTML=head('ARCHIVE RECORDS','코드형 문서 보관소 / status-access-damage labels')+
- visualPanel('ARCHIVE FLOOR VISUAL',UAC_VISUALS.archive,'설정글이 단순 글 목록이 아니라 회수된 기밀 기록물처럼 보이도록 정리한 기준 이미지.')+
- `<div class="grid three" style="margin-top:16px">`+DATA.records.map((r,i)=>recordCard(r,i)).join('')+`</div>`; }
-function imageIndex(){ main.innerHTML=head('RECOVERED FRAMES','이미지 첨부 / Audio Log 제거됨')+
- visualPanel('RECOVERED ARCHIVE VISUAL',UAC_VISUALS.archive,'각 이미지는 U.A.C 회수 프레임처럼 어둡게 보정하고 캡션으로 출처와 손상도를 표시한다.')+
- panel('FRAME CATEGORIES',`<div class="frame-cat-grid">${DATA.frameCategories.map(c=>`<div class="frame-cat"><b>${c[0]}</b><p>${c[1]}</p></div>`).join('')}</div><p>원본 Audio Log MP3와 지속 배경음은 제거했다. 이미지 자료만 WebP 압축본으로 보관된다.</p><div class="image-grid">${DATA.images.slice(0,83).map((src,i)=>`<figure><img src="${src}" loading="lazy" title="FRAME_${String(i+1).padStart(3,'0')}"><figcaption>FRAME_${String(i+1).padStart(3,'0')} // SOURCE: RECOVERED ARCHIVE // STATUS: DEGRADED // DAMAGE: ${18+(i*7%61)}%</figcaption></figure>`).join('')}</div>`); }
-function recordCard(r,i){ const rot=[-1.5,.8,-.4,1.4,-.9,.6,-1.2,1.1,0][i%9]; const severe=r.status==='CORRUPTED'||r.status==='SEALED'||r.access.includes('BLACK')||r.access.includes('OMEGA'); return `<div class="card record-card status-${r.status} ${severe?'access-black':''}" style="--r:${rot}deg" data-label="FILE" onclick="openRecord(${i})"><div class="record-code">${r.code}</div><div class="record-origin">ORIGIN: ${r.origin}</div><div class="record-meta">${tag(r.cat)}${tag(r.risk,severe?'red':r.risk.includes('SECRET')?'amber':'')}${tag(r.status,severe?'red':r.status==='PARTIAL'||r.status==='REDACTED'?'amber':'cyan')}</div><div class="meta-grid"><div class="meta-cell"><span class="meta-k">ACCESS</span><span class="meta-v">${r.access}</span></div><div class="meta-cell"><span class="meta-k">DAMAGE</span><span class="meta-v">${r.damage}%</span></div><div class="meta-cell"><span class="meta-k">INTEGRITY</span><span class="meta-v">${Math.max(8,100-r.damage)}%</span></div></div><div class="damagebar"><span style="width:${r.damage}%"></span></div><p>${r.summary}</p><div class="viewer-tags">${(r.tags||[]).slice(0,4).map(t=>tag(t)).join('')}</div></div>`; }
-function renderSlide(){ const r=currentRecord,p=r.pages[currentPage]; const severe=r.status==='CORRUPTED'||r.status==='SEALED'||r.access.includes('BLACK')||r.access.includes('OMEGA'); document.getElementById('viewerCode').textContent=r.code; document.getElementById('viewerOrigin').textContent='ORIGIN: '+r.origin+' // '+r.cat; document.getElementById('slideArea').innerHTML=`<div class="viewer-metadata"><div class="meta-cell"><span class="meta-k">STATUS</span><span class="meta-v">${r.status}</span></div><div class="meta-cell"><span class="meta-k">ACCESS</span><span class="meta-v">${r.access}</span></div><div class="meta-cell"><span class="meta-k">DAMAGE</span><span class="meta-v">${r.damage}%</span></div><div class="meta-cell"><span class="meta-k">INTEGRITY</span><span class="meta-v">${Math.max(8,100-r.damage)}%</span></div></div><div class="damagebar"><span style="width:${r.damage}%"></span></div><div class="slide active"><h2>${p[0]}</h2><p>${p[1]}</p><div class="viewer-tags">${tag(r.risk,severe?'red':'')}${tag('PAGE '+String(currentPage+1).padStart(2,'0'))}${(r.tags||[]).map(t=>tag(t)).join('')}</div>${currentPage===0?relatedBlock(r):''}${currentPage===r.pages.length-1?extendedBlock(r):''}</div>`; document.getElementById('pageCount').textContent=`PAGE ${String(currentPage+1).padStart(2,'0')} / ${String(r.pages.length).padStart(2,'0')}`; }
