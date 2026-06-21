@@ -58,15 +58,43 @@ document.addEventListener('DOMContentLoaded',()=>{
     tabs.querySelectorAll(':scope > .sub-tab').forEach((b,i)=>b.addEventListener('click',()=>showSub(i,true)));
     showSub(0,false);
   });
-  document.querySelectorAll('a[href*="/docs/"], a[href^="docs/"], a.btn[href$="/"]').forEach(a=>{
-    if(a.dataset.recordLoadBound)return; a.dataset.recordLoadBound='1';
-    a.addEventListener('click',e=>{const href=a.getAttribute('href')||''; if(!href.includes('docs')&&!a.closest('.doc-card')) return; e.preventDefault(); const url=a.href; showRecordLoad(()=>{location.href=url;});});
-  });
+  // FINAL ALLFIX: document navigation disabled; archive records open inside the index panel.
+
   document.querySelectorAll('.zone-risk-panel').forEach(panel=>{
     const tabs=Array.from(panel.querySelectorAll('.zone-risk-tab'));
     const pages=Array.from(panel.querySelectorAll('.zone-risk-page'));
     function showZone(key,sound=true){pages.forEach((p,i)=>p.classList.toggle('active', (key && p.classList.contains(key)) || (!key && i===0))); tabs.forEach(t=>t.classList.toggle('active', t.dataset.zone===key)); if(sound){startAmbient(); play(audio.page);}}
     tabs.forEach(t=>t.addEventListener('click',()=>showZone(t.dataset.zone,true)));
   });
+
+
+  // FINAL ALLFIX: internal archive record viewer, no external docs navigation.
+  const archiveListWrap=document.getElementById('archiveListWrap');
+  const archiveViewer=document.getElementById('archiveRecordViewer');
+  function showInternalRecord(id){
+    if(!archiveViewer) return;
+    const selected=archiveViewer.querySelector(`.record-detail[data-record="${id}"]`);
+    if(!selected) return;
+    startAmbient();
+    showRecordLoad(()=>{
+      if(archiveListWrap) archiveListWrap.classList.add('is-hidden');
+      archiveViewer.hidden=false;
+      archiveViewer.querySelectorAll('.record-detail').forEach(el=>{el.hidden=true;});
+      selected.hidden=false;
+      const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
+      const loaderEl=document.getElementById('recordLoading'); if(loaderEl) loaderEl.classList.remove('show');
+      play(audio.open);
+    });
+  }
+  function closeInternalRecord(){
+    if(archiveViewer) archiveViewer.hidden=true;
+    if(archiveListWrap) archiveListWrap.classList.remove('is-hidden');
+    const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
+    play(audio.menu);
+  }
+  document.querySelectorAll('.open-record[data-record]').forEach(btn=>{
+    btn.addEventListener('click',e=>{e.preventDefault(); showInternalRecord(btn.dataset.record);});
+  });
+  document.querySelectorAll('.record-back').forEach(btn=>btn.addEventListener('click',closeInternalRecord));
 
 });
