@@ -54,3 +54,23 @@ a{color:#dcdcdc}.label,.code{color:#aaa!important}.loader{background:#000;}
 .wrap,.doc-shell{margin-left:242px!important;}
 .footer{margin-left:242px!important;}
 @media(max-width:900px){.topbar{position:sticky!important;width:auto!important;height:auto!important}.wrap,.doc-shell,.footer{margin-left:0!important}.nav{display:grid!important;grid-template-columns:1fr!important}}
+
+
+/* === Final requested layout corrections === */
+.topbar{display:none!important}
+.legacy-layout{display:grid;grid-template-columns:235px minmax(0,1fr);min-height:100vh;}
+.legacy-sidebar{position:sticky;top:0;height:100vh;padding:18px 14px;background:#07080b;border-right:1px solid #2b2427;overflow:auto;box-shadow:18px 0 40px rgba(0,0,0,.22)}
+.legacy-sidebar .brand-side{font-family:monospace;color:#eee;font-weight:900;letter-spacing:.06em;margin-bottom:14px;border-bottom:1px solid #2b2427;padding-bottom:12px}
+.legacy-sidebar .brand-side small{display:block;color:#888;font-weight:400;font-size:11px;margin-top:4px;line-height:1.35}
+.side-menu{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.side-menu a,.side-menu button{display:block;width:100%;text-align:left;padding:10px 11px;border:1px solid #2b2427;background:#101218;color:#ddd;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;text-decoration:none}
+.side-menu a:hover,.side-menu button:hover,.side-menu a.active{border-color:#8c3034;background:#171115;color:#fff}
+.side-note{font-family:monospace;color:#777;font-size:11px;line-height:1.45;margin-top:16px;border-top:1px solid #242024;padding-top:12px}
+.legacy-content{min-width:0;padding:0 0 40px}.content-page{display:none}.content-page.active{display:block}.wrap{max-width:1180px}
+#history.panel .chapter-grid + h3,#history.panel .record-shortcut{display:none!important}
+.panel h2,.doc-title{word-break:keep-all}.panel p,.record-content{font-size:17px;line-height:1.75;color:#d6d6d6}
+.record-content div,.record-content p{line-height:1.75}.record-content h1{font-size:28px;margin:26px 0 12px;color:#f2eaea}.record-content h2{font-size:22px;margin:22px 0 10px;color:#e8d7d7}.record-content figure{margin:18px auto;max-width:860px}.record-content img{max-width:100%;height:auto;border:1px solid #32272a;border-radius:8px}.record-content figcaption{font-size:13px;color:#8e9299;margin-top:6px;text-align:center}.related.quickview{display:none!important}
+.paged-record{margin-top:18px}.page-status{font-family:monospace;color:#c56a6a;margin-bottom:10px}.record-page{display:none;border:1px solid #2b2427;background:#0c0e12;border-radius:12px;padding:20px;min-height:520px}.record-page.active{display:block}.record-page h1:first-child,.record-page h2:first-child{margin-top:0}.page-controls{display:flex;gap:10px;align-items:center;justify-content:center;margin:15px 0 22px}.page-controls button{border:1px solid #4a2428;background:#130c0e;color:#eee;padding:10px 14px;border-radius:8px;cursor:pointer}.page-controls button:disabled{opacity:.35;cursor:not-allowed}.page-counter{font-family:monospace;color:#b6b6b6;min-width:110px;text-align:center}
+.faction-selector{border:1px solid #2b2427;background:#0c0e12;border-radius:14px;padding:14px;margin:18px 0}.faction-selector h2{font-size:22px;margin:0 0 10px}.faction-mark-buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px}.faction-mark-btn{border:1px solid #2b2427;background:#111318;border-radius:10px;padding:10px;cursor:pointer;color:#ddd;text-align:center}.faction-mark-btn.active,.faction-mark-btn:hover{border-color:#8c3034;background:#171115}.faction-mark-btn img{width:58px;height:58px;object-fit:contain;display:block;margin:0 auto 6px}.faction-desc{margin-top:12px;border:1px solid #2b2427;background:#08090c;border-radius:10px;padding:14px;color:#d8d8d8}.faction-desc h3{margin:0 0 6px;color:#f1dddd}.faction-desc .meta{font-family:monospace;color:#b85f64;font-size:12px;margin-bottom:8px}.record-shortcut a[href*="Timeline_860101"],a[href*="Personnel_890617"],a[href*="Timeline_860101"]{display:none!important}
+.archive-list article:has(a[href*="Personnel_890617"]),.archive-list article:has(a[href*="Timeline_860101"]){display:none!important}
+@media(max-width:800px){.legacy-layout{grid-template-columns:1fr}.legacy-sidebar{position:relative;height:auto}.side-menu{display:grid;grid-template-columns:1fr 1fr}.legacy-content{padding-top:0}.record-page{min-height:360px;padding:14px}}
