@@ -125,17 +125,18 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 
-// Scope-locked patch: bottom map explanation buttons.
+
+// Final patch: bottom map marker explanation buttons only. Zone criteria stays in the right panel.
 (function(){
   const data={
-    red:{title:'레드존',body:'<p><b>정식 명칭:</b> 적색 재난구역</p><p>괴이 출현, 의식 사건, 귀환자 변질, 오염된 장비 발생이 집중되는 고위험 구역이다. 지도에서는 붉은 원형 영향권과 중심부 마커로 표시한다.</p>'},
-    yellow:{title:'옐로우존',body:'<p><b>정식 명칭:</b> 황색 경계구역</p><p>레드존 주변에 형성되는 완충·경계 구역이다. 민간인 통제, 선별 검사, C.P.D 대피버스 운용, N.H.C 대기선이 함께 배치된다.</p>'},
-    black:{title:'블랙존',body:'<p><b>정식 명칭:</b> 흑색 봉쇄구역</p><p>현장 통제권이 상실되었거나 진입 자체가 금지된 구역이다. 외곽 봉쇄와 정보 차단이 우선되며, 회수보다 격리가 우선된다.</p>'},
-    defense:{title:'방어선',body:'<p><b>표시:</b> 점선 또는 긴 차단선</p><p>N.H.C가 레드존과 옐로우존 외곽에 구축하는 전술 방어선이다. 민간 진입 차단, 괴이 이동 억제, 작전권 분리를 위해 운용된다.</p>'},
-    gate:{title:'봉쇄 게이트',body:'<p><b>표시:</b> 마름모형 게이트 마커</p><p>구역 간 이동을 통제하는 고정 검문·봉쇄 지점이다. C.P.D, N.H.C, S.I.D가 상황에 따라 공동 운용한다.</p>'},
-    bus:{title:'C.P.D 대피버스',body:'<p><b>분류:</b> 민간 보호 장비</p><p>옐로우존과 레드존 외곽에서 민간인을 이송하고, 귀환자 의심자를 일반 피난민과 분리하기 위한 이동식 대피·선별 수단이다.</p>'},
-    hq:{title:'본부 / 기지',body:'<p><b>표시:</b> 삼각형 또는 다이아몬드형 마커</p><p>U.A.C 본부, N.H.C 전방기지, S.I.D 지부, A.R.F 회수 거점, F.H.C 연구시설 등 작전권의 중심 지점을 나타낸다.</p>'},
-    ash:{title:'오염 처리소',body:'<p><b>관리:</b> Ash Crew / N.H.C</p><p>오염된 장비, 괴이 잔류물, 블랙 태그 대상, 회수 금지 물품을 봉인·소각·격리하는 후처리 지점이다.</p>'}
+    red:{title:'붉은 원형',body:'<p><b>표시:</b> 레드존 영향권 / 중심부 마커</p><p>고위험 사건 발생권을 원형 반경으로 표시한다. 자세한 구역 기준은 오른쪽 레드존 항목에서 확인한다.</p>'},
+    yellow:{title:'황색 원형',body:'<p><b>표시:</b> 옐로우존 경계권</p><p>레드존 인근의 완충·경계권을 표시한다. 독립 구역이 아니라 레드존 주변 방어·조사 범위로 배치한다.</p>'},
+    black:{title:'흑색 원형',body:'<p><b>표시:</b> 블랙존 봉쇄권</p><p>진입 금지 또는 통제권 상실 구역을 표시한다. 상세 기준은 오른쪽 블랙존 항목에서 확인한다.</p>'},
+    defense:{title:'방어선',body:'<p><b>표시:</b> 긴 점선 차단선</p><p>N.H.C 외곽 방어선과 C.P.D 통제선의 위치를 나타낸다.</p>'},
+    gate:{title:'봉쇄 게이트',body:'<p><b>표시:</b> 마름모형 게이트 마커</p><p>구역 출입과 검문을 통제하는 고정 봉쇄 지점이다.</p>'},
+    bus:{title:'C.P.D 대피버스',body:'<p><b>표시:</b> 작은 차량형 마커</p><p>민간인 이송, 귀환자 분리, 선별 검사 대기자 수송을 담당하는 C.P.D 이동 대피 지점이다.</p>'},
+    hq:{title:'본부 / 기지',body:'<p><b>표시:</b> 삼각형 또는 다이아몬드형 마커</p><p>U.A.C 본부, N.H.C 전방기지, S.I.D 지부, A.R.F 회수 거점, F.H.C 연구시설 등을 나타낸다.</p>'},
+    ash:{title:'오염 처리소',body:'<p><b>표시:</b> 십자형 처리 마커</p><p>오염된 장비, 괴이 잔류물, 회수 금지 물품을 봉인·소각·격리하는 후처리 지점이다.</p>'}
   };
   function render(key){const box=document.getElementById('mapInfoDisplay'); if(!box || !data[key]) return; box.innerHTML='<h3>'+data[key].title+'</h3>'+data[key].body; document.querySelectorAll('.map-info-btn').forEach(b=>b.classList.toggle('active',b.dataset.mapInfo===key));}
   document.querySelectorAll('.map-info-btn').forEach(btn=>btn.addEventListener('click',()=>{try{if(typeof play==='function' && typeof audio!=='undefined') play(audio.menu);}catch(e){} render(btn.dataset.mapInfo);}));
