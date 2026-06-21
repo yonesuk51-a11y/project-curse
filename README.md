@@ -23,3 +23,17 @@
 - 지역 지도는 사각형 영역 대신 원형 존 영향권으로 표시했다.
 - 지도 내부 텍스트는 제거하고, 지도 아래 버튼형 설명 패널로 이동했다.
 - 오디오 파일과 효과음 파일은 변경하지 않았다.
+
+
+## Scope-locked terminology patch 2026-06-22
+
+UI 색상, 레이아웃, 오디오, 기록보관소 구조, 문서 순서는 유지하고 아래 용어만 추가 패치했습니다.
+
+- Ferals / 페럴 → 타락 개체
+- Superiors / 상위체 → 상위 개체
+- Unusuals / 이례체 → 이례 개체
+- Artificial / 인공체 → 인공 개체
+- Hybrid / 혼합체 → 혼합 개체
+- Cursed Gear → 오염된 장비 유지
+- Returned Civilian → 귀환자 유지
+- C.P.D Evac Bus → C.P.D 대피버스 유지
