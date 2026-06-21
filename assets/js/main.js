@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded',()=>{
-  function rootPrefix(){const p=location.pathname.replace(/\/g,'/'); if(p.includes('/docs/'))return '../../'; if(p.includes('/archive/'))return '../'; return '';}
+  function rootPrefix(){const p=location.pathname; if(p.includes('/docs/'))return '../../'; if(p.includes('/archive/'))return '../'; return '';}
   const prefix=rootPrefix();
   const loader=document.getElementById('loader'); const app=document.getElementById('app');
   const audio={menu:new Audio(prefix+'assets/audio/menu_tick.mp3'),open:new Audio(prefix+'assets/audio/record_open.mp3'),page:new Audio(prefix+'assets/audio/page_turn.mp3'),boot:new Audio(prefix+'assets/audio/boot_legacy.mp3')};
