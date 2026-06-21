@@ -30,3 +30,39 @@
 /* nested record pages */
 .nested-record{border:1px solid rgba(150,150,150,.25);background:rgba(0,0,0,.22);padding:10px;margin-top:12px}
 .sub-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.sub-tab{font-size:12px;border:1px solid #555;background:#111;color:#ccc;padding:6px 9px;cursor:pointer}.sub-tab.active{background:#751c22;color:#fff;border-color:#d15a62}.sub-page{display:none}.sub-page.active{display:block}.record-loading{position:fixed;inset:0;background:rgba(0,0,0,.86);z-index:180;display:none;align-items:center;justify-content:center;font-family:Consolas,monospace;color:#dcdcdc;letter-spacing:1px}.record-loading.show{display:flex}.record-loading .box{border:1px solid #555;background:#08090a;padding:18px 26px;box-shadow:0 0 25px rgba(120,0,0,.3)}.record-loading .bars{margin-top:9px;white-space:pre;color:#b84d55}.timeline-list.expanded div{padding:12px 13px}.timeline-list.expanded p{font-size:13px;line-height:1.55}.map-catalog .zone-box{font-size:12px}.map-img{max-height:72vh;object-fit:contain}.record-page h1{font-size:24px}.record-page h2{font-size:21px}.record-page h3{font-size:18px}.record-page,.detail-body{font-size:14px}.record-figure img{max-height:360px;object-fit:contain}.page-tabs{position:sticky;top:0;z-index:4;background:rgba(5,6,7,.96);padding:7px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+
+
+/* Rebuilt ZoneAudio Final fixes */
+.side-note{font-size:11px;color:#8f969d}
+/* Top-level record pages are hidden by default; nested record-page cards must remain visible inside sub-pages. */
+.paged-record > .record-page{display:none!important;}
+.paged-record > .record-page.active{display:block!important;}
+.sub-pages > .sub-page{display:none!important;}
+.sub-pages > .sub-page.active{display:block!important;}
+.sub-pages > .sub-page > .record-page,
+.record-page .nested-record .record-page,
+.record-page .record-page{display:block!important;min-height:0!important;}
+.sub-pages > .sub-page > .record-page{border:1px solid #33383f;background:#0f1115;padding:16px;}
+.record-page .record-page .record-page{border:0;background:transparent;padding:0;}
+.record-figure img, figure img{display:block!important;max-width:100%!important;height:auto!important;opacity:1!important;visibility:visible!important;}
+.record-page p,.record-page div,.record-page li,.record-page h1,.record-page h2,.record-page h3{visibility:visible!important;opacity:1!important;}
+.record-figure figcaption, figcaption{display:none!important;}
+/* Longer record loading */
+.record-loading{background:rgba(0,0,0,.92)!important;backdrop-filter:blur(1px);}
+.record-loading .box{min-width:min(680px,88vw);border:1px solid #454b52!important;background:#060708!important;padding:22px 28px!important;box-shadow:0 0 38px rgba(130,23,29,.35),inset 0 0 0 1px rgba(255,255,255,.03)!important;}
+.record-loading .title{font-size:14px;color:#eee;margin-bottom:10px;letter-spacing:.12em;}
+.record-loading .logline{font-size:12px;color:#c4c8cc;margin:4px 0;white-space:nowrap;overflow:hidden;border-right:1px solid #9b3940;animation:typing 1.2s steps(44,end) both;}
+.record-loading .logline:nth-child(2){animation-delay:.15s}.record-loading .logline:nth-child(3){animation-delay:.35s}.record-loading .logline:nth-child(4){animation-delay:.55s}.record-loading .logline:nth-child(5){animation-delay:.75s}.record-loading .bars{margin-top:12px;color:#b84d55;animation:scanbars 1.4s linear infinite;}
+@keyframes typing{from{width:0}to{width:100%}}@keyframes scanbars{0%{opacity:.35}50%{opacity:1}100%{opacity:.35}}
+/* Zone map */
+.map-layout.rebuilt-map{grid-template-columns:minmax(0,1.9fr) minmax(340px,.85fr)!important;gap:14px!important;align-items:start;}
+.map-panel.inline-map{min-height:520px;background:#060709;border:1px solid #2d3339;padding:8px;overflow:hidden;}
+.map-panel.inline-map svg{width:100%;height:auto;max-height:75vh;display:block;}
+.zone-risk-panel{border:1px solid #2b3037;background:#090b0d;padding:12px;max-height:75vh;overflow:auto;}
+.zone-risk-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:10px;position:sticky;top:0;background:#090b0d;padding-bottom:8px;z-index:3;}
+.zone-risk-tab{border:1px solid #343a42;background:#111318;color:#dcdcdc;padding:7px 8px;font-size:12px;cursor:pointer;text-align:left;border-radius:3px;}
+.zone-risk-tab.active,.zone-risk-tab:hover{background:#1a1214;border-color:#8b3034;color:#fff;}
+.zone-risk-page{display:none;border:1px solid #2d333a;background:#101216;padding:12px;border-left-width:6px;}
+.zone-risk-page.active{display:block;}
+.zone-risk-page h3{margin:0 0 8px!important;font-size:18px!important}.zone-risk-page h4{font-size:14px;margin:12px 0 6px;color:#e6e6e6}.zone-risk-page p,.zone-risk-page li{font-size:12px!important;line-height:1.55!important;color:#c8cdd0!important}.zone-risk-page ul{margin:.4em 0 .7em 1.1em;padding:0}.zone-risk-page .level{display:grid;grid-template-columns:70px 1fr;gap:6px;border-top:1px solid rgba(255,255,255,.08);padding:5px 0;font-size:12px;color:#cbd0d4}.zone-risk-page.green{border-left-color:#3f8154;background:rgba(20,38,29,.85)}.zone-risk-page.white{border-left-color:#cdd4dc;background:rgba(180,190,200,.09)}.zone-risk-page.yellow{border-left-color:#c6aa3c;background:rgba(59,52,22,.86)}.zone-risk-page.red{border-left-color:#c94c56;background:rgba(58,16,20,.88)}.zone-risk-page.black{border-left-color:#777;background:#060607}.zone-risk-page.security{border-left-color:#9fb3c8}.zone-risk-page.rule{border-left-color:#8b3034}.map-note-small{font-size:11px;color:#8f969c;margin-top:8px;font-family:Consolas,monospace}.detail-body{max-height:56vh;overflow:auto}.faction-detail{overflow:visible!important}.faction-summary{font-size:13px!important;color:#cfd2d4!important}
+@media(max-width:900px){.map-layout.rebuilt-map{grid-template-columns:1fr!important}.zone-risk-panel{max-height:none}.zone-risk-tabs{grid-template-columns:repeat(2,1fr)}}
