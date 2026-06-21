@@ -9,4 +9,62 @@
 <g><rect class="red" x="210.7" y="104.7" width="92" height="40" rx="5" opacity=".78"/><text x="215.7" y="127.7" class="label">CANADA RED</text><rect class="red" x="919.0" y="189.6" width="54" height="28" rx="5" opacity=".78"/><text x="924.0" y="206.6" class="label">LANZHOU</text><rect class="red" x="946.7" y="238.7" width="62" height="28" rx="5" opacity=".78"/><text x="951.7" y="255.7" class="label">GUANGZHOU</text><rect class="red" x="952.7" y="243.8" width="56" height="24" rx="5" opacity=".78"/><text x="957.7" y="258.8" class="label">HONG KONG</text><rect class="black" x="821.0" y="235.9" width="78" height="42" rx="5" opacity=".78"/><text x="826.0" y="259.9" class="label">INDIA BLACK</text><rect class="black" x="748.7" y="202.1" width="56" height="34" rx="5" opacity=".78"/><text x="753.7" y="222.1" class="label">IRAN BLACK</text><rect class="black" x="1002.0" y="410.4" width="96" height="48" rx="5" opacity=".78"/><text x="1007.0" y="437.4" class="label">AUSTRALIA BLACK</text><rect class="green" x="329.3" y="184.7" width="28" height="16" rx="5" opacity=".78"/><text x="334.3" y="195.7" class="label">DC</text><rect class="green" x="256.0" y="260.2" width="28" height="16" rx="5" opacity=".78"/><text x="261.0" y="271.2" class="label">MEX</text><rect class="green" x="429.3" y="388.7" width="28" height="16" rx="5" opacity=".78"/><text x="434.3" y="399.7" class="label">BRA</text><rect class="green" x="392.7" y="460.4" width="28" height="16" rx="5" opacity=".78"/><text x="397.7" y="471.4" class="label">BUE</text><rect class="green" x="573.7" y="179.4" width="28" height="16" rx="5" opacity=".78"/><text x="578.7" y="190.4" class="label">MAD</text><rect class="green" x="593.7" y="147.6" width="28" height="16" rx="5" opacity=".78"/><text x="598.7" y="158.6" class="label">PAR</text><rect class="green" x="630.7" y="133.7" width="28" height="16" rx="5" opacity=".78"/><text x="635.7" y="144.7" class="label">BER</text><rect class="green" x="627.7" y="173.7" width="28" height="16" rx="5" opacity=".78"/><text x="632.7" y="184.7" class="label">ROM</text><rect class="green" x="711.3" y="121.6" width="28" height="16" rx="5" opacity=".78"/><text x="716.3" y="132.6" class="label">MOS</text><rect class="green" x="682.3" y="177.1" width="28" height="16" rx="5" opacity=".78"/><text x="687.3" y="188.1" class="label">IST</text><rect class="green" x="690.0" y="218.7" width="28" height="16" rx="5" opacity=".78"/><text x="695.0" y="229.7" class="label">CAI</text><rect class="green" x="1009.0" y="190.3" width="28" height="16" rx="5" opacity=".78"/><text x="1014.0" y="201.3" class="label">SEO</text><rect class="green" x="1051.7" y="197.1" width="28" height="16" rx="5" opacity=".78"/><text x="1056.7" y="208.1" class="label">TOK</text><rect class="green" x="974.0" y="181.3" width="28" height="16" rx="5" opacity=".78"/><text x="979.0" y="192.3" class="label">BEI</text><rect class="green" x="921.0" y="280.2" width="28" height="16" rx="5" opacity=".78"/><text x="926.0" y="291.2" class="label">BKK</text><rect class="green" x="932.0" y="327.1" width="28" height="16" rx="5" opacity=".78"/><text x="937.0" y="338.1" class="label">SIN</text><rect class="green" x="1090.0" y="459.7" width="28" height="16" rx="5" opacity=".78"/><text x="1095.0" y="470.7" class="label">SYD</text><rect class="green" x="647.3" y="460.1" width="28" height="16" rx="5" opacity=".78"/><text x="652.3" y="471.1" class="label">CPT</text></g>
 <g><rect class="danger" x="626.3" y="127.2" width="10" height="10" transform="rotate(45 631.3 132.2)"/><text x="641.3" y="132.2" class="label">BLOOD LAKE / HAMBURG-DENMARK</text><rect class="danger" x="241.7" y="123.4" width="10" height="10" transform="rotate(45 246.7 128.4)"/><text x="256.7" y="128.4" class="label">CANADA RED EVENT</text><rect class="danger" x="941.0" y="198.6" width="10" height="10" transform="rotate(45 946.0 203.6)"/><text x="956.0" y="203.6" class="label">LANZHOU BREACH</text><rect class="danger" x="972.7" y="247.7" width="10" height="10" transform="rotate(45 977.7 252.7)"/><text x="987.7" y="252.7" class="label">GUANGZHOU EVENT</text><rect class="danger" x="975.7" y="250.8" width="10" height="10" transform="rotate(45 980.7 255.8)"/><text x="990.7" y="255.8" class="label">HONG KONG EVENT</text><rect class="mark" x="601.7" y="149.9" width="10" height="10" transform="rotate(45 606.7 154.9)"/><text x="616.7" y="154.9" class="label">F.H.C EU LAB</text><rect class="mark" x="278.3" y="146.1" width="10" height="10" transform="rotate(45 283.3 151.1)"/><text x="293.3" y="151.1" class="label">A.R.F NORTH HUB</text><rect class="mark" x="1060.7" y="200.1" width="10" height="10" transform="rotate(45 1065.7 205.1)"/><text x="1075.7" y="205.1" class="label">S.I.D TOKYO</text><rect class="mark" x="1018.3" y="193.3" width="10" height="10" transform="rotate(45 1023.3 198.3)"/><text x="1033.3" y="198.3" class="label">U.A.C EAST ASIA HQ</text></g>
 <text x="28" y="648" class="tiny">Markers indicate incident points. Small blocks indicate regional zone status. Map text scale reduced.</text>
+
+<g id="final-regional-outline-layer" opacity="0.95">
+<style>
+.scope{fill:rgba(70,95,115,.05);stroke:#6f8793;stroke-width:1.2;stroke-dasharray:8 5;opacity:.85}.scope-red{fill:rgba(120,28,36,.10);stroke:#d55761;stroke-width:1.5;stroke-dasharray:8 4}.scope-black{fill:rgba(5,5,6,.22);stroke:#888;stroke-width:1.4;stroke-dasharray:7 4}.scope-green{fill:rgba(40,90,55,.12);stroke:#76ab7b;stroke-width:1;stroke-dasharray:5 4}.micro{font-family:Consolas,monospace;font-size:5px;fill:#aeb6bb}.micro-g{fill:#86b98b}.micro-r{fill:#e27a80}.micro-y{fill:#d7c26b}.micro-w{fill:#cbd5dd}.dashline{fill:none;stroke:#55717e;stroke-width:.9;stroke-dasharray:4 5;opacity:.7}.smallmark{fill:#7fad80;stroke:#cde7ce;stroke-width:.7}.redmark{fill:#b93e49;stroke:#ffd6d8;stroke-width:.8}.blackmark{fill:#111;stroke:#8c8c8c;stroke-width:.8}.yellowmark{fill:#8a7835;stroke:#e0cf74;stroke-width:.7}.whitemark{fill:#77828d;stroke:#dce5ec;stroke-width:.7}</style>
+<!-- outline-based control scopes -->
+<path class="scope" d="M595 118 L724 108 L765 171 L741 242 L642 259 L560 219 L548 151 Z"/>
+<text class="micro" x="585" y="132">F.H.C / EU ANALYSIS RANGE</text>
+<path class="scope-red" d="M877 147 L997 150 L1051 239 L1034 327 L934 349 L854 294 L838 205 Z"/>
+<text class="micro-r" x="882" y="164">EAST ASIA RED OBSERVATION ARC</text>
+<path class="scope" d="M110 132 L302 123 L358 210 L334 292 L169 305 L84 244 Z"/>
+<text class="micro" x="115" y="151">A.R.F / NORTH AMERICA RECOVERY RANGE</text>
+<path class="scope-black" d="M675 236 L770 242 L791 330 L745 390 L652 363 L620 294 Z"/>
+<text class="micro-w" x="660" y="252">MIDDLE EAST BLACK FRINGE</text>
+<path class="scope-black" d="M788 284 L890 295 L922 390 L867 449 L761 421 L733 335 Z"/>
+<text class="micro-w" x="790" y="304">INDIA BLACK CONTAINMENT</text>
+<path class="scope-black" d="M922 458 L1087 454 L1122 548 L1034 604 L910 570 Z"/>
+<text class="micro-w" x="952" y="478">AUSTRALIA BLACK BARRIER</text>
+<path class="scope-green" d="M515 152 L617 144 L656 225 L604 280 L510 252 L484 185 Z"/>
+<text class="micro-g" x="505" y="168">EU GREEN CORE NETWORK</text>
+<path class="scope-green" d="M905 190 L1058 194 L1094 302 L1012 373 L888 338 L858 246 Z"/>
+<text class="micro-g" x="910" y="209">EAST ASIA GREEN CORE NETWORK</text>
+<path class="dashline" d="M292 219 C412 186 500 168 590 175 C705 185 784 218 888 252"/>
+<text class="micro" x="450" y="177">U.A.C LONG RANGE MONITORING LINE</text>
+<path class="dashline" d="M224 465 C420 398 613 390 790 430 C880 452 942 490 1018 541"/>
+<text class="micro" x="420" y="406">C.P.D EVACUATION / GREEN CORE CIVIL ROUTE</text>
+<!-- additional green core city markers -->
+<rect class="smallmark" x="303" y="271" width="18" height="10" rx="3"/><text class="micro-g" x="306" y="278">WDC</text>
+<rect class="smallmark" x="247" y="340" width="18" height="10" rx="3"/><text class="micro-g" x="250" y="347">MEX</text>
+<rect class="smallmark" x="414" y="493" width="18" height="10" rx="3"/><text class="micro-g" x="417" y="500">BRA</text>
+<rect class="smallmark" x="423" y="570" width="18" height="10" rx="3"/><text class="micro-g" x="426" y="577">BUE</text>
+<rect class="smallmark" x="600" y="175" width="18" height="10" rx="3"/><text class="micro-g" x="604" y="182">BER</text>
+<rect class="smallmark" x="575" y="191" width="18" height="10" rx="3"/><text class="micro-g" x="579" y="198">PAR</text>
+<rect class="smallmark" x="556" y="178" width="18" height="10" rx="3"/><text class="micro-g" x="560" y="185">LON</text>
+<rect class="smallmark" x="617" y="206" width="18" height="10" rx="3"/><text class="micro-g" x="621" y="213">ROM</text>
+<rect class="smallmark" x="537" y="215" width="18" height="10" rx="3"/><text class="micro-g" x="541" y="222">MAD</text>
+<rect class="smallmark" x="700" y="244" width="18" height="10" rx="3"/><text class="micro-g" x="704" y="251">IST</text>
+<rect class="smallmark" x="665" y="291" width="18" height="10" rx="3"/><text class="micro-g" x="669" y="298">CAI</text>
+<rect class="smallmark" x="656" y="567" width="18" height="10" rx="3"/><text class="micro-g" x="660" y="574">CPT</text>
+<rect class="smallmark" x="1038" y="203" width="18" height="10" rx="3"/><text class="micro-g" x="1042" y="210">SEO</text>
+<rect class="smallmark" x="1075" y="203" width="18" height="10" rx="3"/><text class="micro-g" x="1079" y="210">TYO</text>
+<rect class="smallmark" x="1018" y="238" width="18" height="10" rx="3"/><text class="micro-g" x="1022" y="245">SHA</text>
+<rect class="smallmark" x="998" y="350" width="18" height="10" rx="3"/><text class="micro-g" x="1001" y="357">BKK</text>
+<rect class="smallmark" x="1022" y="418" width="18" height="10" rx="3"/><text class="micro-g" x="1025" y="425">SIN</text>
+<rect class="smallmark" x="1110" y="566" width="18" height="10" rx="3"/><text class="micro-g" x="1113" y="573">SYD</text>
+<!-- incident markers -->
+<rect class="redmark" x="936" y="220" width="14" height="14" transform="rotate(45 943 227)"/><text class="micro-r" x="952" y="230">LANZHOU BREACH</text>
+<rect class="redmark" x="999" y="280" width="14" height="14" transform="rotate(45 1006 287)"/><text class="micro-r" x="1016" y="290">GUANGZHOU RED</text>
+<rect class="redmark" x="1018" y="292" width="14" height="14" transform="rotate(45 1025 299)"/><text class="micro-r" x="1034" y="302">HONG KONG RED</text>
+<rect class="redmark" x="628" y="144" width="12" height="12" transform="rotate(45 634 150)"/><text class="micro-r" x="642" y="153">BLOOD LAKE MARKER</text>
+<rect class="redmark" x="250" y="130" width="16" height="16" transform="rotate(45 258 138)"/><text class="micro-r" x="272" y="141">CANADA RED EVENT</text>
+<rect class="blackmark" x="719" y="270" width="72" height="30" rx="3"/><text class="micro-w" x="728" y="287">IRAN BLACK</text>
+<rect class="blackmark" x="813" y="303" width="82" height="36" rx="3"/><text class="micro-w" x="825" y="324">INDIA BLACK</text>
+<rect class="blackmark" x="966" y="505" width="104" height="38" rx="3"/><text class="micro-w" x="989" y="527">AUSTRALIA BLACK</text>
+<rect class="yellowmark" x="485" y="236" width="50" height="17" rx="3"/><text class="micro-y" x="492" y="247">YELLOW BUFFER</text>
+<rect class="whitemark" x="665" y="154" width="46" height="16" rx="3"/><text class="micro-w" x="672" y="165">WHITE SCAN</text>
+<text class="micro" x="40" y="640">REGIONAL OUTLINE MODE / RANGE BOUNDARIES ACTIVE / CAPITAL GREEN CORES ADDED</text>
+</g>
+
 </svg>

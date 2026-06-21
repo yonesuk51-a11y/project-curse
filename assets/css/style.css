@@ -87,3 +87,17 @@
 .record-loading .bars{color:#b94c52;margin-top:12px;letter-spacing:.18em;}
 @keyframes logblink{from{opacity:.65}to{opacity:1}}
 #factionDetail .detail-tabs{position:sticky;top:0;background:#090a0c;z-index:4;padding:8px 0;border-bottom:1px solid #252a31;}
+
+
+/* Final rebuild stability patches */
+.record-detail:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;}
+.record-detail:not([hidden]) .record-content,
+.record-detail:not([hidden]) .record-content *{visibility:visible;opacity:1;}
+.archive-record-viewer:not([hidden]){display:block!important;}
+.archive-record-viewer[hidden]{display:none!important;}
+.record-back{margin-bottom:12px;}
+.zone-risk-page.upgrade{border-left-color:#b74b50;background:rgba(58,18,22,.88)}
+.zone-risk-page.down{border-left-color:#5f8d65;background:rgba(18,41,26,.84)}
+.map-panel{background:#06080a!important;}
+.map-img{width:100%!important;min-height:520px!important;}
+.detail-body ul{margin:.45em 0 .9em 1.2em}.detail-body li{margin:.28em 0}.detail-body h4{font-size:16px!important}.detail-tabs{max-height:96px;overflow:auto;padding-bottom:4px}.faction-detail{max-height:calc(100vh - 120px);overflow:auto!important;}
