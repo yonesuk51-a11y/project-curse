@@ -43,15 +43,16 @@
       <aside class="auth-side">
         <div class="stamp">CLASSIFIED</div>
         <div class="mini-leds"><span></span><span></span><span></span><span></span></div>
+        <figure class="auth-preview"><img src="assets/visuals/uac_auth_gate.webp" alt="U.A.C authorization gate visual"><figcaption>NODE-17A // AUTHORIZATION GATE VISUAL CACHE</figcaption></figure>
         <p>NODE STATUS: STABLE</p>
         <p>ARCHIVE INTEGRITY: CHECKED</p>
-        <p>GLOBAL MAP: PARTIAL</p>
+        <p>GLOBAL MAP: ZONE LAYERS ACTIVE</p>
         <p>AUDIO LOGS: REMOVED</p>
       </aside>
       <main class="auth-main">
         <div class="eyebrow">// AUTHENTICATION REQUIRED</div>
         <h1>ACCESS NODE</h1>
-        <p class="auth-desc">This terminal opens compressed field records, faction charts, zone overlays, and recovered visual files.</p>
+        <p class="auth-desc">This terminal opens compressed field records, faction charts, zone overlays, incident markers, weapon/research files, black files, and recovered visual frames.</p>
         <div class="password-card">
           <label for="password">ENTER PASSWORD</label>
           <div class="password-line">
@@ -74,12 +75,21 @@
       <div class="app-title"><b>U.A.C</b><span>INFORMATION SERVER</span></div>
       <nav id="tabs" class="tabs">
         <button data-page="overview" class="active">OVERVIEW</button>
+        <button data-page="start">START HERE</button>
+        <button data-page="zones">ZONE SYSTEM</button>
+        <button data-page="map">GLOBAL MAP</button>
         <button data-page="factions">FACTIONS</button>
         <button data-page="relations">RELATIONS</button>
-        <button data-page="map">GLOBAL MAP</button>
         <button data-page="records">ARCHIVE RECORDS</button>
+        <button data-page="search">SEARCH / TAGS</button>
         <button data-page="entities">ENTITY INDEX</button>
+        <button data-page="research">WEAPON / RESEARCH</button>
+        <button data-page="manuals">FIELD MANUALS</button>
+        <button data-page="blackfiles">BLACK FILES</button>
         <button data-page="images">RECOVERED FRAMES</button>
+        <button data-page="chain">CASE CHAIN</button>
+        <button data-page="glossary">GLOSSARY</button>
+        <button data-page="serverlog">SERVER LOG</button>
       </nav>
       <div class="session-box">SESSION: AUTHORIZED</div>
     </header>
@@ -101,7 +111,33 @@
     </div>
   </div>
 
-  <button id="soundBtn" class="soundbtn">SOUND OFF</button>
+
+  <div id="authFlash" class="auth-flash" aria-live="polite"></div>
+
+  <div id="mountOverlay" class="mount-overlay" aria-live="polite">
+    <div class="mount-box">
+      <div class="mount-title">MOUNTING RECORD</div>
+      <div class="mount-line">CHECKING DAMAGE INDEX...</div>
+      <div class="mount-line">VERIFYING RELATED FILE LINKS...</div>
+      <div class="mount-line">OPENING FIELD RECORD...</div>
+      <div class="mount-progress"><span></span></div>
+    </div>
+  </div>
+
+  <div id="blackGate" class="black-gate" role="dialog" aria-modal="true">
+    <div class="black-gate-box">
+      <div class="black-seal">BLACK FILE ACCESS</div>
+      <h2>THIS RECORD IS NOT CLEARED FOR STANDARD REVIEW</h2>
+      <p>Proceeding will be logged by the U.A.C archive server. The file may contain corrupted recovery notes, sealed operation metadata, and incomplete field testimony.</p>
+      <div id="blackGateCode" class="black-code">TARGET: UNASSIGNED</div>
+      <div class="black-gate-actions">
+        <button id="blackProceed">PROCEED</button>
+        <button id="blackCancel">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <button id="soundBtn" class="soundbtn">AUDIO OUTPUT: DISABLED</button>
   <script src="assets/js/data.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
