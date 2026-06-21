@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(localStorage.getItem('pc_audio_legacy2003_fixed')===null) localStorage.setItem('pc_audio_legacy2003_fixed','on');
   function isOn(){return localStorage.getItem('pc_audio_legacy2003_fixed')!=='off'}
   function play(a){if(!isOn()||!a)return; try{a.currentTime=0; a.play().catch(()=>{});}catch(e){}}
+  function ensureRecordLoader(){let el=document.getElementById('recordLoading'); if(!el){el=document.createElement('div'); el.id='recordLoading'; el.className='record-loading'; el.innerHTML='<div class="box">LOADING RECORD SECTOR<div class="bars">[▓▓▓▓░░░░░░]</div></div>'; document.body.appendChild(el);} return el;}
+  function showRecordLoad(){const el=ensureRecordLoader(); el.classList.add('show'); play(audio.open);}
   function syncBtns(){document.querySelectorAll('#audioToggle').forEach(b=>b.textContent=isOn()?'효과음: 켜짐':'효과음: 꺼짐')}
   syncBtns();
   const bootLines=Array.from(document.querySelectorAll('#bootLines p'));
@@ -38,11 +40,23 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   document.querySelectorAll('.faction-tile').forEach(b=>b.addEventListener('click',()=>{play(audio.menu); renderFaction(b.dataset.key)})); if(detail) renderFaction('uac');
   document.querySelectorAll('.paged-record').forEach(box=>{
-    const recPages=Array.from(box.querySelectorAll('.record-page'));
-    const tabs=box.querySelector('.page-tabs');
+    const recPages=Array.from(box.querySelectorAll(':scope > .record-page'));
+    const tabs=box.querySelector(':scope > .page-tabs');
     if(!recPages.length||!tabs) return;
-    function showRec(i,sound=true){recPages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll('.page-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page); const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; else window.scrollTo(0,0);}
-    tabs.querySelectorAll('.page-tab').forEach((b,i)=>b.addEventListener('click',()=>showRec(i,true)));
+    function showRec(i,sound=true){recPages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .page-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page); const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; else window.scrollTo(0,0);}
+    tabs.querySelectorAll(':scope > .page-tab').forEach((b,i)=>b.addEventListener('click',()=>showRec(i,true)));
     showRec(0,false);
+  });
+  document.querySelectorAll('.nested-record').forEach(box=>{
+    const pages=Array.from(box.querySelectorAll(':scope .sub-pages > .sub-page'));
+    const tabs=box.querySelector(':scope > .sub-tabs');
+    if(!pages.length||!tabs) return;
+    function showSub(i,sound=true){pages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .sub-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page);}
+    tabs.querySelectorAll(':scope > .sub-tab').forEach((b,i)=>b.addEventListener('click',()=>showSub(i,true)));
+    showSub(0,false);
+  });
+  document.querySelectorAll('a[href*="/docs/"], a[href^="docs/"], a.btn[href$="/"]').forEach(a=>{
+    if(a.dataset.recordLoadBound)return; a.dataset.recordLoadBound='1';
+    a.addEventListener('click',e=>{const href=a.getAttribute('href')||''; if(!href.includes('docs')&&!a.closest('.doc-card')) return; showRecordLoad();});
   });
 });
