@@ -90,7 +90,7 @@
 <section class="content-page panel" id="faction-relation">
 <div class="label">FACTION CONNECTION</div>
 <h2>U.A.C 내부 세력 연결도</h2>
-<p class="section-brief">핵심 세력 간 협력, 감시, 연구 의존, 적대 관계를 트리형 구조로 표시한다. 자세한 설명은 하단 관계표에서 확인한다.</p>
+<p class="section-brief">핵심 조직과 외부 적대 세력만 트리형 구조로 표시한다. 차량·장비·지도 마커는 관계도에서 제외하며, 자세한 설명은 하단 관계표에서 확인한다.</p>
 <div class="relation-legend compact">
 <span><i class="line friendly"></i>협력</span>
 <span><i class="line watch"></i>감시</span>
@@ -101,10 +101,11 @@
 <div class="relation-tree-panel" aria-label="U.A.C 내부 세력 연결도 트리형">
 <div class="tree-node tree-root"><img alt="U.A.C" src="assets/faction_marks/uac.webp"><b>U.A.C</b><small>중앙 통제</small></div>
 <div class="tree-branches">
-<div class="tree-branch friendly"><div class="tree-link-label">협력 / 현장 작전</div><div class="tree-node"><img alt="N.H.C" src="assets/faction_marks/nhc.webp"><b>N.H.C</b><small>현장 작전</small></div><div class="tree-children"><div class="tree-child friendly"><span>회수 지원</span><div class="tree-node mini"><img alt="A.R.F" src="assets/faction_marks/arf.webp"><b>A.R.F</b><small>회수</small></div></div><div class="tree-child friendly"><span>오염 처리</span><div class="tree-node mini"><img alt="Ash Crew" src="assets/faction_marks/ashcrew.webp"><b>Ash Crew</b><small>오염 처리</small></div></div><div class="tree-child hostile"><span>적대 / 추적</span><div class="tree-node mini danger"><img alt="Syndicate" src="assets/faction_marks/syndicate.webp"><b>Syndicate</b><small>적대 네트워크</small></div></div></div></div>
-<div class="tree-branch watch"><div class="tree-link-label">조사 / 감시</div><div class="tree-node"><img alt="S.I.D" src="assets/faction_marks/sid.webp"><b>S.I.D</b><small>조사</small></div><div class="tree-children"><div class="tree-child watch"><span>감시 조사</span><div class="tree-node mini danger"><img alt="Ushnoda Cult" src="assets/faction_marks/ushinoda.webp"><b>Ushnoda Cult</b><small>우시노다교</small></div></div><div class="tree-child ritual"><span>의식 / 침투</span><div class="tree-node mini danger"><img alt="Haimun" src="assets/faction_marks/haimun.webp"><b>Haimun</b><small>하이문</small></div></div></div></div>
-<div class="tree-branch friendly"><div class="tree-link-label">민간 통제</div><div class="tree-node"><img alt="C.P.D" src="assets/faction_marks/cpd.webp"><b>C.P.D</b><small>민간 통제</small></div><div class="tree-children"><div class="tree-child friendly"><span>대피 / 선별</span><div class="tree-node mini"><b>C.P.D 대피버스</b><small>귀환자 분리</small></div></div></div></div>
+<div class="tree-branch friendly"><div class="tree-link-label">협력 / 현장 작전</div><div class="tree-node"><img alt="N.H.C" src="assets/faction_marks/nhc.webp"><b>N.H.C</b><small>현장 작전</small></div><div class="tree-children"><div class="tree-child friendly"><span>회수 지원</span><div class="tree-node mini"><img alt="A.R.F" src="assets/faction_marks/arf.webp"><b>A.R.F</b><small>회수</small></div></div><div class="tree-child friendly"><span>오염 처리</span><div class="tree-node mini"><img alt="Ash Crew" src="assets/faction_marks/ashcrew.webp"><b>Ash Crew</b><small>오염 처리</small></div></div></div></div>
+<div class="tree-branch watch"><div class="tree-link-label">조사 / 감시</div><div class="tree-node"><img alt="S.I.D" src="assets/faction_marks/sid.webp"><b>S.I.D</b><small>조사</small></div><div class="tree-children"><div class="tree-child watch"><span>감시 대상</span><div class="tree-node mini danger"><img alt="Ushnoda Cult" src="assets/faction_marks/ushinoda.webp"><b>Ushnoda Cult</b><small>우시노다교</small></div></div><div class="tree-child ritual"><span>침투 대상</span><div class="tree-node mini danger"><img alt="Haimun" src="assets/faction_marks/haimun.webp"><b>Haimun</b><small>하이문</small></div></div></div></div>
+<div class="tree-branch friendly"><div class="tree-link-label">민간 통제</div><div class="tree-node"><img alt="C.P.D" src="assets/faction_marks/cpd.webp"><b>C.P.D</b><small>민간 보호</small></div></div>
 <div class="tree-branch research"><div class="tree-link-label">연구 의존 / 불신</div><div class="tree-node"><img alt="F.H.C" src="assets/faction_marks/fhc.webp"><b>F.H.C</b><small>극비 연구</small></div><div class="tree-children"><div class="tree-child research"><span>연구 연결</span><div class="tree-node mini"><img alt="Amarion" src="assets/faction_marks/amarion.webp"><b>Amarion</b><small>아마리온</small></div></div></div></div>
+<div class="tree-branch hostile"><div class="tree-link-label">외부 적대 / 이탈</div><div class="tree-node danger"><img alt="Syndicate" src="assets/faction_marks/syndicate.webp"><b>Syndicate</b><small>적대 네트워크</small></div></div>
 </div>
 </div>
 <p class="map-caption">관계도는 핵심 연결만 표시한다. 세력별 세부 설명은 세력 정보와 기록 보관서를 기준으로 확인한다.</p>

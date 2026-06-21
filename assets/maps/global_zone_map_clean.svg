@@ -13,26 +13,27 @@
 
 <g id="pc-clean-overlay">
 <style>
-.pc-red-zone{fill:#b3272f;stroke:#ff6970;stroke-width:2;opacity:.25}.pc-red-core{fill:#ff4048;stroke:#ffd0d0;stroke-width:1.2;opacity:.9}.pc-yellow-zone{fill:#b59a2f;stroke:#f2d96f;stroke-width:2;stroke-dasharray:6 5;opacity:.20}.pc-black-zone{fill:#050505;stroke:#aaa;stroke-width:2;opacity:.45}.pc-green-zone{fill:#2f8754;stroke:#84e0a4;stroke-width:1.6;opacity:.20}.pc-white-zone{fill:#b7c3cc;stroke:#e6edf2;stroke-width:1.3;opacity:.12}.pc-blue-zone{fill:#24a8c8;stroke:#75eaff;stroke-width:1.6;opacity:.22}.pc-defense{fill:none;stroke:#d7d1a3;stroke-width:2.2;stroke-dasharray:10 8;opacity:.8}.pc-route{fill:none;stroke:#80909a;stroke-width:1.4;stroke-dasharray:4 9;opacity:.42}.pc-gate{fill:#070809;stroke:#d7d1a3;stroke-width:2.4}.pc-hq{fill:#d7d1a3;stroke:#111;stroke-width:1}.pc-base{fill:#9eb2c7;stroke:#071016;stroke-width:1}.pc-bus{fill:#c5ccd2;stroke:#101010;stroke-width:1}.pc-ash{fill:#9d9d9d;stroke:#111;stroke-width:1}.pc-node{fill:#47bfd5;stroke:#d8fbff;stroke-width:1}</style>
-<circle class="pc-green-zone" cx="250" cy="150" r="78"/><circle class="pc-white-zone" cx="276" cy="155" r="120"/>
-<circle class="pc-red-zone" cx="632" cy="152" r="72"/><circle class="pc-red-core" cx="632" cy="152" r="10"/><circle class="pc-yellow-zone" cx="632" cy="152" r="112"/>
-<circle class="pc-red-zone" cx="946" cy="204" r="78"/><circle class="pc-red-core" cx="946" cy="204" r="11"/><circle class="pc-yellow-zone" cx="946" cy="204" r="125"/>
-<circle class="pc-red-zone" cx="1006" cy="287" r="66"/><circle class="pc-red-core" cx="1006" cy="287" r="9"/><circle class="pc-yellow-zone" cx="1006" cy="287" r="98"/>
-<circle class="pc-black-zone" cx="755" cy="286" r="88"/><circle class="pc-black-zone" cx="854" cy="323" r="82"/><circle class="pc-black-zone" cx="1018" cy="524" r="92"/>
-<circle class="pc-blue-zone" cx="1024" cy="198" r="46"/><circle class="pc-blue-zone" cx="284" cy="151" r="42"/>
+.pc-red-zone{fill:#b3272f;stroke:#ff6970;stroke-width:1.7;opacity:.25}.pc-red-core{fill:#ff4048;stroke:#ffd0d0;stroke-width:1;opacity:.92}.pc-yellow-zone{fill:#b59a2f;stroke:#f2d96f;stroke-width:1.7;stroke-dasharray:6 5;opacity:.19}.pc-black-zone{fill:#050505;stroke:#aaa;stroke-width:1.6;opacity:.38}.pc-green-zone{fill:#2f8754;stroke:#84e0a4;stroke-width:1.3;opacity:.18}.pc-white-zone{fill:#b7c3cc;stroke:#e6edf2;stroke-width:1.1;opacity:.10}.pc-blue-zone{fill:#24a8c8;stroke:#75eaff;stroke-width:1.3;opacity:.20}.pc-defense{fill:none;stroke:#d7d1a3;stroke-width:1.9;stroke-dasharray:9 8;opacity:.78}.pc-route{fill:none;stroke:#80909a;stroke-width:1.2;stroke-dasharray:4 9;opacity:.38}.pc-gate{fill:#070809;stroke:#d7d1a3;stroke-width:1.8}.pc-hq{fill:#d7d1a3;stroke:#111;stroke-width:.85}.pc-base{fill:#9eb2c7;stroke:#071016;stroke-width:.85}.pc-bus{fill:#c5ccd2;stroke:#101010;stroke-width:.85}.pc-ash{fill:#9d9d9d;stroke:#111;stroke-width:.85}.pc-node{fill:#47bfd5;stroke:#d8fbff;stroke-width:.9}</style>
+<!-- Final calibrated overlay: reduced circular ranges and smaller location markers. -->
+<circle class="pc-white-zone" cx="256" cy="154" r="82"/><circle class="pc-green-zone" cx="250" cy="150" r="48"/>
+<circle class="pc-yellow-zone" cx="628" cy="153" r="70"/><circle class="pc-red-zone" cx="628" cy="153" r="43"/><circle class="pc-red-core" cx="628" cy="153" r="6"/>
+<circle class="pc-yellow-zone" cx="946" cy="204" r="72"/><circle class="pc-red-zone" cx="946" cy="204" r="45"/><circle class="pc-red-core" cx="946" cy="204" r="6"/>
+<circle class="pc-yellow-zone" cx="1006" cy="287" r="62"/><circle class="pc-red-zone" cx="1006" cy="287" r="38"/><circle class="pc-red-core" cx="1006" cy="287" r="5.5"/>
+<circle class="pc-black-zone" cx="755" cy="286" r="52"/><circle class="pc-black-zone" cx="854" cy="323" r="50"/><circle class="pc-black-zone" cx="1030" cy="492" r="60"/>
+<circle class="pc-blue-zone" cx="1024" cy="198" r="28"/><circle class="pc-blue-zone" cx="284" cy="151" r="28"/>
 <path class="pc-defense" d="M585 165 C700 155 825 175 940 212"/>
 <path class="pc-defense" d="M720 420 C825 390 930 410 1030 470"/>
 <path class="pc-defense" d="M190 220 C285 200 365 220 440 270"/>
-<path class="pc-route" d="M270 152 C420 178 520 175 632 152"/>
-<path class="pc-route" d="M632 152 C755 180 845 178 946 204"/>
+<path class="pc-route" d="M270 152 C420 178 520 175 628 153"/>
+<path class="pc-route" d="M628 153 C755 180 845 178 946 204"/>
 <path class="pc-route" d="M946 204 C982 232 998 255 1006 287"/>
-<rect class="pc-gate" x="581" y="159" width="15" height="15" transform="rotate(45 588.5 166.5)"/>
-<rect class="pc-gate" x="910" y="226" width="15" height="15" transform="rotate(45 917.5 233.5)"/>
-<rect class="pc-gate" x="329" y="242" width="15" height="15" transform="rotate(45 336.5 249.5)"/>
-<path class="pc-hq" d="M1023 186 l12 22 h-24z"/><path class="pc-hq" d="M606 143 l12 22 h-24z"/>
-<path class="pc-base" d="M1066 205 l10 10-10 10-10-10z"/><path class="pc-base" d="M283 151 l10 10-10 10-10-10z"/>
-<path class="pc-bus" d="M245 186 h30 v15 h-30z M250 201 a4 4 0 1 0 .1 0 M269 201 a4 4 0 1 0 .1 0"/>
-<path class="pc-ash" d="M930 438 l14 14-14 14-14-14z M930 443 v18 M921 452 h18"/>
-<circle class="pc-node" cx="1030" cy="205" r="5"/><circle class="pc-node" cx="284" cy="151" r="5"/>
+<rect class="pc-gate" x="583.5" y="161.5" width="10" height="10" transform="rotate(45 588.5 166.5)"/>
+<rect class="pc-gate" x="912.5" y="228.5" width="10" height="10" transform="rotate(45 917.5 233.5)"/>
+<rect class="pc-gate" x="331.5" y="244.5" width="10" height="10" transform="rotate(45 336.5 249.5)"/>
+<path class="pc-hq" d="M1023 190 l8 15 h-16z"/><path class="pc-hq" d="M606 147 l8 15 h-16z"/>
+<path class="pc-base" d="M1066 208 l7 7-7 7-7-7z"/><path class="pc-base" d="M283 154 l7 7-7 7-7-7z"/>
+<path class="pc-bus" d="M249 190 h22 v10 h-22z M253 200 a2.6 2.6 0 1 0 .1 0 M267 200 a2.6 2.6 0 1 0 .1 0"/>
+<path class="pc-ash" d="M930 442 l10 10-10 10-10-10z M930 446 v12 M924 452 h12"/>
+<circle class="pc-node" cx="1030" cy="205" r="3.5"/><circle class="pc-node" cx="284" cy="151" r="3.5"/>
 </g>
 </svg>
