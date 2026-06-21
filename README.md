@@ -1,39 +1,21 @@
-# Project Curse Archive
+# Project Curse U.A.C Server - Korean Full Version
 
-GitHub Pages용 정적 아카이브 화면입니다.
+## 비밀번호
+`Curse`
 
-## 포함 기능
+## 반영 사항
+- 한국어 중심 UI
+- 상단 카테고리 축소
+- Search/Tag 메뉴 제거
+- Zone System과 Global Map 통합
+- 실제 세계지도 윤곽 기반 Red/Black/Yellow/White/Green/Gray/Blue/Crimson/Black Core 표시
+- Faction을 우호/중립/적대 기준으로 재정리
+- Relationship 선형 SVG 대신 표 구조로 정리
+- Archive Record는 원본 설정글을 최대한 유지
+- 설정글별 원래 제목과 코드 표시
+- ENEX 이미지 리소스 복구 및 문서 내부 표시
+- Entity Index 세부 능력/특성 펼침 구조
+- 메뉴 이동음과 낮은 서버 배경음 추가
 
-- 붉은 코드 부트 화면
-- 붉은 로딩바
-- 카세트 회전 느낌의 부트 사운드
-- Project Curse 로고 글리치 메인화면
-- `Enter password` 입력 게이트
-- 비밀번호: `Curse`
-- 문서들이 흩어진 Archive Floor 화면
-- 코드형 문서명 표시
-- 문서 카드 클릭 효과음
-- Archive 배경 효과음
-- 설정글 내부 페이지 넘김 구조
-- 슬라이드 기계가 넘어가는 듯한 페이지 전환 효과음
-- 문서 열람 중 지지직거리는 배경음
-
-## GitHub Pages 적용
-
-이 폴더 안의 파일을 저장소 루트에 올리면 됩니다.
-
-```text
-index.html
-archive/
-docs/
-assets/
-.nojekyll
-README.md
-```
-
-
-## Analog Projector Update
-
-- 설정글 페이지 넘김 사운드를 업로드된 projector button push 계열 효과음으로 교체했습니다.
-- 아카이브 전반에 analog computer / magnetic tape / relay bank 분위기의 화면 요소를 추가했습니다.
-- 기존 설정글 Audio Log MP3 리소스는 포함하지 않았습니다.
+## GitHub Desktop 업로드
+압축을 푼 뒤 이 폴더 안의 내용물(`index.html`, `archive`, `docs`, `assets`, `README.md`, `.nojekyll`)을 저장소 루트에 넣고 Commit / Push 하면 됩니다.

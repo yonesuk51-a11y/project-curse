@@ -1,47 +1,57 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Project Curse</title>
-<link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body data-page="main">
-<audio id="archive-ambience" src="assets/audio/archive_red_ambience.mp3" loop preload="auto"></audio>
-<audio id="boot-cassette" src="assets/audio/boot_cassette_reel.mp3" loop preload="auto"></audio>
-<div class="noise"></div><div class="scanlines"></div>
-<section class="boot-screen" data-boot>
-  <div class="boot-inner">
-    <div class="boot-title">PROJECT CURSE / ANALOG RESTRICTED BOOT SEQUENCE</div>
-    <div class="cassette-status" data-cassette-status><span class="reel left"></span><span class="tape-label">TAPE FEED: STANDBY</span><span class="reel right"></span></div>
-    <div class="boot-log"><div class="boot-line">&gt; INITIALIZING...</div></div>
-    <div class="loading-wrap">
-      <div class="loading-meta"><span>LOADING ARCHIVE ACCESS</span><span data-progress>000%</span></div>
-      <div class="loading-bar"><div class="loading-fill"></div></div>
-    </div>
-    <button class="skip-boot">SKIP BOOT</button>
-  </div>
-</section>
-<main class="main-screen">
-  <section class="logo-panel">
-    <img class="curse-logo" src="assets/images/project_curse_logo.png" alt="Project Curse">
-    <p class="system-text">U.A.C ANALOG ARCHIVE NODE / SIGNAL UNSTABLE / DOCUMENT FLOOR LOCKED</p>
-    <div class="analog-readout" aria-label="analog computer status">
-      <span>RELAY BANK: ARMED</span>
-      <span>MAGNETIC TAPE BUS: SYNC</span>
-      <span>VACUUM MEMORY: WARM</span>
-      <span>RED PHOSPHOR OUTPUT: ACTIVE</span>
-    </div>
-    <form class="password-gate" data-password-form autocomplete="off">
-      <label class="password-label" for="archive-password">Enter password</label>
-      <div class="password-row">
-        <input id="archive-password" class="password-input" data-password-input type="password" placeholder="INPUT PASSWORD" autocomplete="off" spellcheck="false">
-        <button class="password-submit" type="submit">ACCESS</button>
-      </div>
-      <p class="password-status" data-password-status>RESTRICTED ARCHIVE // PASSWORD REQUIRED</p>
-    </form>
-  </section>
-</main>
-<div class="access-flash">ACCESS GRANTED // OPENING ARCHIVE FLOOR</div>
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project Curse U.A.C 정보 서버</title><link rel="stylesheet" href="assets/css/style.css"></head><body class="scan"><audio id="ambient" src="assets/audio/server_ambient.wav" preload="auto" loop></audio>
+<audio id="menu" src="assets/audio/menu_relay.wav" preload="auto"></audio>
+<audio id="auth" src="assets/audio/auth_unlock.wav" preload="auto"></audio>
+<audio id="page" src="assets/audio/page_projector.mp3" preload="auto"></audio>
+<div id="gate" class="gate"><div class="gate-card"><div class="sys-kicker">U.A.C INTERNAL INFORMATION SERVER / 2026</div><h1>AUTHORIZATION GATE</h1><p class="muted">Project Curse 로고가 아닌 U.A.C 내부 정보 서버 접속 화면입니다. 비밀번호는 <b>Curse</b> 입니다.</p><div class="gate-grid"><div class="boot-log"><p><b>[BOOT]</b> 손상된 기록 인덱스 대조 중</p><p><b>[ZONE]</b> Red / Black Zone 지도 레이어 복구</p><p><b>[ARCHIVE]</b> 원본 설정 기록 및 확장 설정 연결</p><p><b>[AUDIO]</b> 서버 배경음 / 메뉴 이동음 대기</p><p><b>[AUTH]</b> 비밀번호 입력 요청</p></div><div class="auth-box"><label class="sys-kicker">ENTER PASSWORD</label><input id="password" class="auth-input" type="password" autocomplete="off" placeholder="Curse"><div class="auth-row"><button id="authBtn" data-auth-button class="btn">접속</button><button class="btn" data-audio-toggle>AUDIO: SERVER MODE</button></div><div id="gateMsg" class="gate-msg"></div></div></div></div></div>
+<div id="app" class="app"><div class="topbar"><div class="topbar-inner"><div class="brand">U.A.C 정보 서버<small>한국어 우선 / 원본 기록 유지 / 확장 설정 결합</small></div><nav class="nav"><a href="#home">홈</a><a href="#world">세계지도·구역</a><a href="#factions">세력·관계</a><a href="#entities">괴이·귀환자</a><a href="archive/">기록보관소</a><a href="#glossary">용어·로그</a><button class="audio-toggle" data-audio-toggle>AUDIO: SERVER MODE</button></nav></div></div>
+<main class="wrap">
+<section id="home" class="panel"><div class="label">START HERE</div><div class="hero"><div><h2>Project Curse 기록 열람 안내</h2><p>이번 버전은 설정글을 과하게 압축하지 않고, 업로드된 ENEX의 원본 설정 내용을 최대한 유지하면서 확장 설정을 관련 기록으로 연결했습니다. 화면 표기는 한국어 중심이며, 영어는 문서 코드와 서버식 라벨에만 보조적으로 사용합니다.</p><p>상단 카테고리는 보기 쉽게 6개로 줄였습니다. 세부 기록은 <b>기록보관소</b> 안에서 세력·세계·괴이·기술·사건별 Record로 나누어 확인할 수 있습니다.</p></div><div class="card"><div class="code">권장 열람 순서</div><ol><li>세계지도·구역</li><li>세력·관계</li><li>괴이·귀환자</li><li>기록보관소 원본 설정글</li><li>관련 확장 설정</li></ol></div></div></section>
+<section id="world" class="panel"><div class="label">GLOBAL MAP + ZONE SYSTEM</div><h2>세계지도·구역 체계</h2><p>세계지도는 실제 대륙 윤곽 위에 중국, 러시아, 북미 일부 레드존과 핵심 코어, 봉쇄선, 회수 루트, 시설 노드를 표시했습니다. Zone System은 이 화면 안에 함께 배치했습니다.</p><img class="map-img" src="assets/maps/global_zone_map.svg" alt="U.A.C 세계지도와 레드존 구역 표시"><h3>구역 분류</h3><div class="zone-grid"><div class="zone-card"><div class="zone-name">GREEN ZONE</div><h3>안정 민간 구역</h3><p>정부와 U.A.C 감시망이 유지되는 상대적 안전권역. 민간 거주와 일반 물류가 가능하지만, 이상현상 신고 의무는 유지된다.</p></div><div class="zone-card"><div class="zone-name">WHITE ZONE</div><h3>정화/통제 구역</h3><p>피난민 수용, 귀환자 선별, 오염 검사, 신원 재등록이 상시 진행되는 백색 관리권역.</p></div><div class="zone-card"><div class="zone-name">YELLOW ZONE</div><h3>감시/완충 구역</h3><p>레드존 외곽 완충지대. 출입 통제, 검문 강화, 간헐적 이상현상, C.P.D/N.H.C 합동 배치가 이루어진다.</p></div><div class="zone-card"><div class="zone-name">RED ZONE</div><h3>활성 재난 구역</h3><p>민간 통제 불능 지역. 괴이 출현, 통신 교란, 오염 확산, 회수/정찰/전투 작전만 허가된다.</p></div><div class="zone-card"><div class="zone-name">BLACK ZONE</div><h3>회수 금지 심층 구역</h3><p>정보 붕괴와 고위험 개체 활동이 확인된 심부. 통신·기록·공간 좌표가 불안정하며 표준 회수 작전은 금지된다.</p></div><div class="zone-card"><div class="zone-name">GRAY ZONE</div><h3>통제 붕괴/비공식 거주지</h3><p>국가 통제와 U.A.C 관리가 부분적으로 끊긴 불안정 지대. 비공식 생존자 거점과 밀수망이 형성된다.</p></div><div class="zone-card"><div class="zone-name">BLUE NODE</div><h3>U.A.C/A.R.F 지원 노드</h3><p>연구기지, 회수 허브, 의료 재조립 센터, 데이터 서버, 전초기지 등 특수 시설 마커.</p></div><div class="zone-card"><div class="zone-name">CRIMSON CORE</div><h3>레드존 심장부</h3><p>Queen-Type 둥지, 피의 호수, 강한 저주 방출점처럼 레드존 내부에서도 오염 강도가 가장 높은 핵심부.</p></div><div class="zone-card"><div class="zone-name">BLACK CORE</div><h3>정보 붕괴점</h3><p>블랙존 중심부. 지도·기억·영상 기록이 서로 불일치하는 완전 회수 금지 지점.</p></div></div></section>
+<section id="factions" class="panel"><div class="label">FACTION / RELATION</div><h2>세력·관계</h2><p>세력은 우호/협력권, 중립/감시/불신, 적대/위험으로 나누어 볼 수 있게 정리했습니다. 세부 원문은 기록보관소의 <b>주요 세력 기록서</b>와 관련 문서에서 확인할 수 있습니다.</p><div class="faction-group"><h3>우호/협력권</h3><div class="cards"><div class="card"><div class="code">U.A.C</div><h3>상위 정보·통제 기관</h3><p>전 세계 이상현상 기록, 봉쇄 정책, 구역 분류, 정보 검열을 담당한다.</p></div><div class="card"><div class="code">N.H.C</div><h3>현장 전투·봉쇄</h3><p>레드존/블랙존 외곽에서 전투, 봉쇄, 민간인 철수 지원을 수행한다.</p></div><div class="card"><div class="code">S.I.D</div><h3>오컬트/범죄 조사</h3><p>우시노다교, 실종 사건, 의식 범죄, 기억 오염 사건을 추적한다.</p></div><div class="card"><div class="code">A.R.F</div><h3>회수 부대</h3><p>생존자, 시료, 영상 기록, 장비 잔해를 회수한다.</p></div><div class="card"><div class="code">C.P.D</div><h3>민간인 보호·검문</h3><p>피난민, 귀환자, 검문소, 백색 구역 수용 절차를 관리한다.</p></div><div class="card"><div class="code">Ash Crew</div><h3>오염 잔해 처리</h3><p>시신, 오염 장비, 저주 반응 물질, 현장 잔재를 회수·소각·격리한다.</p></div></div></div><div class="faction-group"><h3>중립/감시/불신</h3><div class="cards"><div class="card"><div class="code">F.H.C</div><h3>연구 협력 / 불신</h3><p>치료·유전자·특수 병기 연구에 관여하지만 U.A.C와 상호 감시 관계에 있다.</p></div><div class="card"><div class="code">아마리온 계열 연구망</div><h3>회수 영상/실험 기록</h3><p>일부 회수 기록과 실험체 자료에서 반복적으로 등장하는 민간·준군사 연구망.</p></div><div class="card"><div class="code">지역 정부·비상 의회</div><h3>행정 협력</h3><p>구역 지정, 피난민 수용, 검열 발표를 담당하지만 현장 통제력은 제한적이다.</p></div><div class="card"><div class="code">블랙존 생존자 집단</div><h3>비공식 거주지</h3><p>구조 대상이자 오염 위험으로 분류되는 회색권역 생존자 네트워크.</p></div></div></div><div class="faction-group"><h3>적대/위험</h3><div class="cards"><div class="card"><div class="code">Redwolf</div><h3>이탈/무장 잔당</h3><p>N.H.C 및 관련 조직에서 이탈한 무장 세력. 일부 기록은 동정적, 일부는 적대적으로 분류된다.</p></div><div class="card"><div class="code">우시노다교</div><h3>저주 의식/침투</h3><p>이상현상과 귀환자, 오염 의식, 인신 공양 계열 사건과 연결된다.</p></div><div class="card"><div class="code">Blood Cult</div><h3>혈액 의식/괴이화</h3><p>혈무, 피의 호수, 변이체, 붉은 오염 반응과 관련된 고위험 적대 세력.</p></div><div class="card"><div class="code">Queen-Type 계열 괴이</div><h3>도시 붕괴급 위협</h3><p>레드존 내부 생산/지휘 개체. 둥지와 지휘 신호를 통해 Feral 계열을 확산시킨다.</p></div></div></div><h3>관계 표</h3><p class="muted">표 형태로 정리해 표시선이 화면 밖으로 벗어나는 문제를 없앴습니다.</p><table class="relation-table"><thead><tr><th>관계</th><th>상태</th><th>구분</th><th>신뢰도</th><th>설명</th></tr></thead><tbody><tr><td>U.A.C ↔ N.H.C</td><td>작전 협력</td><td>우호</td><td>72%</td><td>현장 봉쇄와 정보 통제에서 긴밀히 협력하지만, 작전 실패 책임 소재를 두고 갈등이 존재한다.</td></tr><tr><td>U.A.C ↔ S.I.D</td><td>정보 공유</td><td>우호</td><td>68%</td><td>오컬트 사건, 실종 사건, 컬트 침투 정보를 공유한다.</td></tr><tr><td>U.A.C ↔ F.H.C</td><td>연구 의존 / 상호 불신</td><td>감시</td><td>31%</td><td>치료·병기 연구는 필요하지만 실험 윤리와 은폐 기록 때문에 감시가 강하다.</td></tr><tr><td>N.H.C ↔ Redwolf</td><td>이탈자 추적</td><td>적대</td><td>0%</td><td>레드울프 이탈 이후 N.H.C 내부 기록에서 추적·격리 대상으로 분류된다.</td></tr><tr><td>S.I.D ↔ 우시노다교</td><td>조사/적대</td><td>적대</td><td>4%</td><td>의식 범죄, 기억 오염, 귀환자 조작 사건으로 직접 충돌한다.</td></tr><tr><td>Blood Cult ↔ 민간 구역</td><td>침식 위험</td><td>적대</td><td>0%</td><td>혈액 의식과 오염 매개를 통해 피난민·백색구역 내부 침투 위험을 만든다.</td></tr><tr><td>C.P.D ↔ 귀환자</td><td>보호/검문</td><td>감시</td><td>54%</td><td>귀환자는 구조 대상이지만, 동시에 오염·기억 이상 검사 대상이다.</td></tr></tbody></table></section>
+<section id="entities" class="panel"><div class="label">ENTITY INDEX</div><h2>괴이·귀환자 분류</h2><p>각 종류를 펼치면 능력, 위험성, 현장 대응 기준을 더 세세하게 볼 수 있습니다. 원문 기록은 타락 개체 분류 보고서와 FCR Archive에 보존했습니다.</p><div class="details-grid"><details><summary>Feral / 타락 개체 — 양산형·야생화 개체</summary><ul><li>근거리 돌진, 집단 포위, 통증 반응 둔화, 혈액/오염 반응에 의한 급격한 흥분 상태를 보인다.</li><li>하위 개체는 지능이 낮지만, 레드존 장기 노출 개체는 간단한 매복과 우회 행동을 보일 수 있다.</li><li>일부는 산성 침, 폭발성 장기, 포자성 오염, 벽면 기어오르기, 야간 시야에 특화된다.</li></ul></details><details><summary>Queen-Type / Regina-Type — 생산·지휘 개체</summary><ul><li>둥지 구축, 하위 개체 생산, 지휘 신호 방출, 통신 교란, 기록 왜곡, 구역 오염 확산 능력을 가진다.</li><li>일반 전투보다 장기 봉쇄와 정보 차단을 우선해야 하며, 위치가 확인되면 Black File로 자동 승격된다.</li><li>도시 기반 시설의 열, 전력, 생체 반응, 공포 반응을 흡수해 레드존을 확대한다.</li></ul></details><details><summary>Superior-Type — 소형 고출력 정예 괴이</summary><ul><li>크기는 작아도 고밀도 저주장, 높은 지능, 전술적 기만, 방어막 절단 또는 무력화 능력을 가진다.</li><li>Wivermensi 또는 고위 N.H.C 부대가 아니면 단독 교전이 금지된다.</li><li>암살, 지휘관 사냥, 방어선 돌파, 기록 회수 방해 등 특수 목적 개체가 많다.</li></ul></details><details><summary>Returned Civilian / 귀환자 — 생존자·오염 의심 민간인</summary><ul><li>레드존 또는 블랙존에서 귀환했으나 기억 누락, 시간 불일치, 감각 이상, 혈액 반응을 보일 수 있다.</li><li>C.P.D 검문, S.I.D 면담, U.A.C 기록 대조를 통과해야 Green/White Zone 복귀가 허가된다.</li><li>일부 귀환자는 이상현상 탐지에 유용한 증언을 제공하지만, 일부는 컬트 침투 매개로 악용된다.</li></ul></details><details><summary>Artificial / Hybrid — 인공 괴이·혼합 개체</summary><ul><li>F.H.C, 비인가 연구망, 컬트 의식, 전쟁기 실험에서 파생된 인공/혼합 개체군이다.</li><li>기계 장치, 합성 신경, 괴이 조직, 인간 기억이 섞여 기록상 생명체와 병기의 경계가 불명확하다.</li><li>제어 신호가 끊기면 Feral보다 불안정하게 폭주하거나, 반대로 인간에 가까운 판단을 보이기도 한다.</li></ul></details><details><summary>Ushinoda/Blood Cult Touched — 의식 오염자</summary><ul><li>의식 문양, 혈액 반응, 다중 눈 환시, 기억 전염, 군중성 최면, 자해성 복종 행동이 보고된다.</li><li>초기에는 민간인 또는 실종자로 위장되며, 감염 경로가 기록·영상·증언에 숨어 있는 경우가 있다.</li><li>S.I.D와 C.P.D의 공동 검사가 필요하며, 단순 민간인과 구분하지 못하면 White Zone 내부 침투로 이어질 수 있다.</li></ul></details></div></section>
+<section id="archive-preview" class="panel"><div class="label">ARCHIVE RECORDS</div><h2>기록보관소 미리보기</h2><p>설정글 이름을 알아보기 쉽도록 원래 제목과 문서 코드를 함께 표시합니다. 더 많은 기록은 기록보관소 페이지에서 확인할 수 있습니다.</p><div class="archive-list"><article class="doc-card"><div class="code">Faction_860403</div><h3>주요 세력 기록서</h3><img class="thumb" src="assets/resources/e701e44546b5caab40264cb43efef5b0.webp" alt="주요 세력 기록서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">세력/조직</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">주요 세력 기록서
+본 문서는 Project Curse 세계관 내에서 활동하는 주요 기관, 적성 세력, 비인가 무장 조직, 연구 기업, 회수 부대, 민간 통제 조직의 역할과 관계를 정리한 세력 기록서이다.
+해당 기록은 도시 이상현상, 괴이 출현,
+우시노다교
+의식,
+레드존
+확산,
+피의 호수</p><a class="btn" href="docs/Faction_860403/">기록 열람</a></article><article class="doc-card"><div class="code">Personnel_890617</div><h3>인물 프로필 기록</h3><img class="thumb" src="assets/resources/57674a652af43e6aec284bbc33018b06.webp" alt="인물 프로필 기록 썸네일" loading="lazy"><div class="status-row"><span class="chip red">인물</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">인물 프로필 기록
+Character Profile Archive
+본 문서는 Project Curse 세계관 내 주요 인물, 특수 작전 인원, 고위험 개체화 가능 인물, 사건 관련자를 정리한 인물 기록이다
+본 기록은 각 인물의 소속, 상태, 능력, 관련 사건, 위험도, 장비 정보를 포함하</p><a class="btn" href="docs/Personnel_890617/">기록 열람</a></article><article class="doc-card"><div class="code">Ferals_860722</div><h3>타락 개체 분류 보고서</h3><img class="thumb" src="assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp" alt="타락 개체 분류 보고서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">괴이/개체</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">타락 개체 분류 보고서
+Feral
+Entity Classification Report
+현재 보시는 정보는 관계자 외 열람이 불가능한 정보입니다
+이는 관련 담당자와 함께 확인해주시기 바랍니다
+본 문서는 Project Curse 세계관 내에서 확인된 괴이 개체, 페럴, 타락체, 인공 괴이,</p><a class="btn" href="docs/Ferals_860722/">기록 열람</a></article><article class="doc-card"><div class="code">Cults_871104</div><h3>F.H.C 극비 보안 문서</h3><img class="thumb" src="assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp" alt="F.H.C 극비 보안 문서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">세력/극비</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">F.H.C
+극비 보안 문서
+F.H.C
+Classified Security Document
+경고
+본 정보에 포함된 내용은
+F.H.C
+극비 분석 부서에서 독점 관리 중인 기밀 자료입니다
+해당 정보에는 다수의 기밀 내용과 오컬트 위협 사례가 포함되어 있으므로, 반드시 관련 담당자를 동반하여 </p><a class="btn" href="docs/Cults_871104/">기록 열람</a></article><article class="doc-card"><div class="code">Sakuma_Tape_991028</div><h3>사쿠마 유타 실종 사건 보고서</h3><img class="thumb" src="assets/resources/daa52fcde14e129a569b7c1703bf0c5c.webp" alt="사쿠마 유타 실종 사건 보고서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">사건 기록</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">사쿠마 유타 실종 사건 보고서
+Sakuma Yuta Disappearance Case Report
+주의⚠️
+본 자료는
+S.I.D
+오컬트 부서의 기밀 내용으로 분류되어 있으며, 열람 시 담당 관계자와 동행하여 확인해야 한다
+해당 문서는
+S.I.D
+일본 도쿄 지부에서 관리하던 오컬트 사건 </p><a class="btn" href="docs/Sakuma_Tape_991028/">기록 열람</a></article><article class="doc-card"><div class="code">Unknown_Record1_860204</div><h3>아마리온 회수 영상 기록</h3><img class="thumb" src="assets/resources/c789dad33bd006ec60d4c737f7e5e2b7.webp" alt="아마리온 회수 영상 기록 썸네일" loading="lazy"><div class="status-row"><span class="chip red">회수 기록</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">아마리온
+회수 영상 기록
+Recovered
+Amarion
+Training Footage
+본 문서는
+F.H.C
+극비 분석 부서가 회수한
+아마리온
+제약 내부 사전교육 영상의 복구 기록이다
+해당 영상은 표면적으로는 인류의 미래와 자원 확보를 위한 기술 교육 자료로 제작되었으나, 실제 내용은 </p><a class="btn" href="docs/Unknown_Record1_860204/">기록 열람</a></article></div><p><a class="btn" href="archive/">전체 기록보관소 열기</a></p></section>
+<section id="frames" class="panel"><div class="label">RECOVERED FRAMES</div><h2>회수 이미지 자료</h2><p>원본 ENEX 안의 이미지를 웹용으로 압축해 다시 연결했습니다. 설정글 내부에서도 해당 위치에 이미지가 표시됩니다.</p><div class="image-grid"><figure><img src="assets/resources/e701e44546b5caab40264cb43efef5b0.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH e701e445</figcaption></figure><figure><img src="assets/resources/347cf1ec325477cc146240b140954628.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH 347cf1ec</figcaption></figure><figure><img src="assets/resources/b072725c37c4a651e3812dea759d7088.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH b072725c</figcaption></figure><figure><img src="assets/resources/5bd494eff5acc3ebeb0f9b72d473fa17.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH 5bd494ef</figcaption></figure><figure><img src="assets/resources/753a6a3e814a58684b1670a01f3247d6.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH 753a6a3e</figcaption></figure><figure><img src="assets/resources/4a2b89833ad58501c0593f845e5000a4.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH 4a2b8983</figcaption></figure><figure><img src="assets/resources/db15213c78e789d0fb2eadc5423c15fe.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH db15213c</figcaption></figure><figure><img src="assets/resources/97219b16f0b2429365c89c98d64340a9.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH 97219b16</figcaption></figure><figure><img src="assets/resources/a5879fc3786a488b1b4e648d3950dc66.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH a5879fc3</figcaption></figure><figure><img src="assets/resources/1ff34fadd4be71392d17f458d5d43313.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH 1ff34fad</figcaption></figure><figure><img src="assets/resources/c2c3ab6a9da838a851a58d644bc7cc37.webp" loading="lazy"><figcaption>회수 이미지 / 주요 세력 기록서 / HASH c2c3ab6a</figcaption></figure><figure><img src="assets/resources/57674a652af43e6aec284bbc33018b06.webp" loading="lazy"><figcaption>회수 이미지 / 인물 프로필 기록 / HASH 57674a65</figcaption></figure></div></section>
+<section id="glossary" class="panel"><div class="label">GLOSSARY / SERVER LOG</div><h2>용어·서버 로그</h2><div class="cards"><div class="card"><div class="code">U.A.C</div><p>Urban Anomaly Containment. 도시 이상현상 기록, 통제, 구역 지정, 기밀 서버 운영의 중심 기관.</p></div><div class="card"><div class="code">N.H.C</div><p>National Hazard Control. 레드존 현장 전투, 봉쇄, 민간인 철수, 장비 운용 담당.</p></div><div class="card"><div class="code">S.I.D</div><p>Special Investigation Department. 오컬트 범죄, 컬트, 실종, 기억 오염 사건 조사.</p></div><div class="card"><div class="code">A.R.F</div><p>Anomaly Recovery Force. 생존자, 기록, 시료, 장비 잔해 회수 담당.</p></div><div class="card"><div class="code">C.P.D</div><p>Civilian Protection Division. 피난민, 귀환자, 검문소, 보호 구역 관리.</p></div><div class="card"><div class="code">Wivermensi</div><p>저주 병기화 기술과 신체 강화가 결합된 특수 요원 계통.</p></div><div class="card"><div class="code">혈무 / Blood Weapon</div><p>혈액 반응으로 활성화되는 특수 근접 무기. 기본은 금속 검이나 혈액 접촉 시 붉게 변한다.</p></div><div class="card"><div class="code">Wave Frame / 파동기</div><p>저주 파동·신체 강화·무기 동기화가 결합된 전투 운용 체계.</p></div><div class="card"><div class="code">Returned Civilian</div><p>레드존/블랙존에서 귀환한 민간인. 구조 대상이자 오염 검사 대상.</p></div><div class="card"><div class="code">Red Zone</div><p>민간 통제 불능의 활성 재난 구역.</p></div><div class="card"><div class="code">Black Zone</div><p>회수 금지 심층 구역. 정보·통신·공간 좌표가 붕괴된다.</p></div></div><h3>서버 로그</h3><div id="liveLog" class="server-log"><div>[00:00:00] U.A.C 정보 서버 대기 중</div><div>[00:00:00] 원본 기록 보존 모드 활성화</div></div></section>
+</main><div class="footer">U.A.C INTERNAL SERVER / Project Curse Archive / Password: Curse</div></div>
+<script src="assets/js/main.js"></script></body></html>

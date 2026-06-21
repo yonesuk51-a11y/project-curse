@@ -1,150 +1,423 @@
-<!DOCTYPE html>
-
-<html lang="ko">
-<head>
-<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>Archive Floor // Project Curse</title>
-<link href="../assets/css/style.css" rel="stylesheet"/>
-<script>
-if(sessionStorage.getItem('pc_archive_access')!=='granted'){window.location.replace('../index.html');}
-</script>
-</head>
-<body data-page="archive">
-<audio id="archive-ambience" loop="" preload="auto" src="../assets/audio/archive_red_ambience.mp3"></audio>
-<div class="noise"></div><div class="scanlines"></div>
-<main class="archive-shell">
-<header class="archive-header">
-<div class="archive-title">
-<h1>ARCHIVE FLOOR</h1>
-<p data-archive-status="">ANALOG DOCUMENT FLOOR</p><p class="analog-subline">RELAY SORTER / PAPER INDEX TABLE / MAGNETIC RECORD ACCESS</p>
-</div>
-<div class="archive-controls">
-<input class="search-box" data-search="" placeholder="SEARCH CODE NAME / FILE KEYWORD" type="search"/>
-<select class="filter-select" data-filter=""><option value="all">ALL FILES</option><option value="faction">FACTION RECORD</option><option value="profile">PERSONNEL PROFILE</option><option value="entity">ENTITY / CONTAMINATION</option><option value="research">RESEARCH / CLASSIFIED</option><option value="incident">INCIDENT / RECOVERED FILE</option><option value="zone">ZONE CLASSIFICATION</option><option value="timeline">TIMELINE</option><option value="operation">FIELD MANUAL</option></select>
-<button class="sound-toggle" data-sound-toggle="" type="button">SOUND OFF</button>
-<a class="back-button" href="../index.html">MAIN</a>
-</div>
-</header>
-<section aria-label="scattered archive documents" class="archive-board">
-<div class="red-line" style="left:92px;top:210px;width:540px;transform:rotate(9deg)"></div>
-<div class="red-line" style="left:610px;top:220px;width:470px;transform:rotate(-13deg)"></div>
-<div class="red-line" style="left:290px;top:610px;width:650px;transform:rotate(4deg)"></div>
-<a class="doc-card cat-faction" data-cat="FACTION RECORD" data-catkey="faction" data-code="Faction_860403" data-title="Faction_860403 주요 세력 기록서" href="../docs/Faction_860403/index.html" style="--x:4px;--y:36px;--rot:-7deg">
-<div class="doc-top"><span class="doc-id">Faction_860403</span><span class="doc-cat">FACTION RECORD</span></div>
-<div class="doc-code-stamp">Faction_860403</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Faction_860403</h2><p class="doc-origin">ORIGIN: 주요 세력 기록서</p>
-<p class="doc-summary">주요 세력 기록서 본 문서는 Project Curse 세계관 내에서 활동하는 주요 기관, 적성 세력, 비인가 무장 조직, 연구 기업, 회수 부대, 민간 통제 조직의 역할과 관계를 정리한 세력 기록서이다. 해당 기록은 도시 이상현상, 괴이 출현...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/e701e44546b5.png"/></div>
-</a><a class="doc-card cat-profile" data-cat="PERSONNEL PROFILE" data-catkey="profile" data-code="Personnel_890617" data-title="Personnel_890617 인물 프로필 기록" href="../docs/Personnel_890617/index.html" style="--x:255px;--y:70px;--rot:5deg">
-<div class="doc-top"><span class="doc-id">Personnel_890617</span><span class="doc-cat">PERSONNEL PROFILE</span></div>
-<div class="doc-code-stamp">Personnel_890617</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Personnel_890617</h2><p class="doc-origin">ORIGIN: 인물 프로필 기록</p>
-<p class="doc-summary">인물 프로필 기록 Character Profile Archive 본 문서는 Project Curse 세계관 내 주요 인물, 특수 작전 인원, 고위험 개체화 가능 인물, 사건 관련자를 정리한 인물 기록이다 본 기록은 각 인물의 소속, 상태, 능력, 관련 사건, 위험도, 장비 정보를 포함하며, 일부...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/57674a652af4.jpg"/></div>
-</a><a class="doc-card cat-entity" data-cat="ENTITY / CONTAMINATION" data-catkey="entity" data-code="Ferals_860722" data-title="Ferals_860722 타락 개체 분류 보고서" href="../docs/Ferals_860722/index.html" style="--x:522px;--y:28px;--rot:-3deg">
-<div class="doc-top"><span class="doc-id">Ferals_860722</span><span class="doc-cat">ENTITY / CONTAMINATION</span></div>
-<div class="doc-code-stamp">Ferals_860722</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Ferals_860722</h2><p class="doc-origin">ORIGIN: 타락 개체 분류 보고서</p>
-<p class="doc-summary">타락 개체 분류 보고서 Feral Entity Classification Report 현재 보시는 정보는 관계자 외 열람이 불가능한 정보입니다 이는 관련 담당자와 함께 확인해주시기 바랍니다 본 문서는 Project Curse 세계관 내에서 확...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/8bb53a89c3ba.jpg"/></div>
-</a><a class="doc-card cat-research" data-cat="RESEARCH / CLASSIFIED" data-catkey="research" data-code="Cults_871104" data-title="Cults_871104 F.H.C 극비 보안 문서" href="../docs/Cults_871104/index.html" style="--x:790px;--y:88px;--rot:7deg">
-<div class="doc-top"><span class="doc-id">Cults_871104</span><span class="doc-cat">RESEARCH / CLASSIFIED</span></div>
-<div class="doc-code-stamp">Cults_871104</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Cults_871104</h2><p class="doc-origin">ORIGIN: F.H.C 극비 보안 문서</p>
-<p class="doc-summary">F.H.C 극비 보안 문서 F.H.C Classified Security Document 경고 본 정보에 포함된 내용은 F.H.C 극비 분석 부서에서 독점 관리 중인 기밀 자료입니다 해당 정보에는 다수의 기밀 내용과 오컬트 위협 사례가 포함되...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/b20abfee553b.jpg"/></div>
-</a><a class="doc-card cat-incident" data-cat="INCIDENT / RECOVERED FILE" data-catkey="incident" data-code="Sakuma Tape_991028" data-title="Sakuma Tape_991028 사쿠마 유타 실종 사건 보고서" href="../docs/Sakuma_Tape_991028/index.html" style="--x:1020px;--y:40px;--rot:-5deg">
-<div class="doc-top"><span class="doc-id">Sakuma Tape_991028</span><span class="doc-cat">INCIDENT / RECOVERED FILE</span></div>
-<div class="doc-code-stamp">Sakuma Tape_991028</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Sakuma Tape_991028</h2><p class="doc-origin">ORIGIN: 사쿠마 유타 실종 사건 보고서</p>
-<p class="doc-summary">사쿠마 유타 실종 사건 보고서 Sakuma Yuta Disappearance Case Report 주의⚠️ 본 자료는 S.I.D 오컬트 부서의 기밀 내용으로 분류되어 있으며, 열람 시 담당 관계자와 동행하여 확인해야 한다 해당 문서는 S.I....</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/daa52fcde14e.jpg"/></div>
-</a><a class="doc-card cat-incident" data-cat="INCIDENT / RECOVERED FILE" data-catkey="incident" data-code="Unknown Record1_860204" data-title="Unknown Record1_860204 아마리온 회수 영상 기록" href="../docs/Unknown_Record1_860204/index.html" style="--x:70px;--y:260px;--rot:4deg">
-<div class="doc-top"><span class="doc-id">Unknown Record1_860204</span><span class="doc-cat">INCIDENT / RECOVERED FILE</span></div>
-<div class="doc-code-stamp">Unknown Record1_860204</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Unknown Record1_860204</h2><p class="doc-origin">ORIGIN: 아마리온 회수 영상 기록</p>
-<p class="doc-summary">아마리온 회수 영상 기록 Recovered Amarion Training Footage 본 문서는 F.H.C 극비 분석 부서가 회수한 아마리온 제약 내부 사전교육 영상의 복구 기록이다 해당 영상은 표면적으로는 인류의 미래와 자원 확보를 위한 ...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/c789dad33bd0.jpg"/></div>
-</a><a class="doc-card cat-incident" data-cat="INCIDENT / RECOVERED FILE" data-catkey="incident" data-code="Unknown Record2_860205" data-title="Unknown Record2_860205 피의 호수 부검 기록" href="../docs/Unknown_Record2_860205/index.html" style="--x:350px;--y:250px;--rot:-8deg">
-<div class="doc-top"><span class="doc-id">Unknown Record2_860205</span><span class="doc-cat">INCIDENT / RECOVERED FILE</span></div>
-<div class="doc-code-stamp">Unknown Record2_860205</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Unknown Record2_860205</h2><p class="doc-origin">ORIGIN: 피의 호수 부검 기록</p>
-<p class="doc-summary">피의 호수 부검 기록 Blood Lake Autopsy Record U.A.C 오컬트 생명 과학 부서 녹음파일#088 19xx/xx/02 지역:아오██하라 관련 개체: 피의 호수 / Blood Lake 피해자:현장 촬영팀 - 마렌 예거트 기록 형태:부검 녹음파일 / 법의학 기록 / 생체 이상 분...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/fb5ead8ded76.jpg"/></div>
-</a><a class="doc-card cat-incident" data-cat="INCIDENT / RECOVERED FILE" data-catkey="incident" data-code="Unknown Record3_920711" data-title="Unknown Record3_920711 레드울프 이탈 기록" href="../docs/Unknown_Record3_920711/index.html" style="--x:620px;--y:275px;--rot:6deg">
-<div class="doc-top"><span class="doc-id">Unknown Record3_920711</span><span class="doc-cat">INCIDENT / RECOVERED FILE</span></div>
-<div class="doc-code-stamp">Unknown Record3_920711</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Unknown Record3_920711</h2><p class="doc-origin">ORIGIN: 레드울프 이탈 기록</p>
-<p class="doc-summary">레드울프 이탈 기록 Red Wolf Defection Record 본 문서는 U.A.C 정보 수집 부서가 복구한 암호화 CCTV 영상 기록이다 해당 기록은 과거 N.H.C 1차 작전팀 : 레드울프 가 기존 지휘 체계에서 이탈하는 과정과, 이후 신디케이트 주요팀으로 재분류되는 계기가 된 내부 대화...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/074fd0bfd4a4.jpg"/></div>
-</a><a class="doc-card cat-incident" data-cat="INCIDENT / RECOVERED FILE" data-catkey="incident" data-code="Unknown Record4_930314" data-title="Unknown Record4_930314 축복으로 위장된 병기" href="../docs/Unknown_Record4_930314/index.html" style="--x:890px;--y:250px;--rot:-4deg">
-<div class="doc-top"><span class="doc-id">Unknown Record4_930314</span><span class="doc-cat">INCIDENT / RECOVERED FILE</span></div>
-<div class="doc-code-stamp">Unknown Record4_930314</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Unknown Record4_930314</h2><p class="doc-origin">ORIGIN: 축복으로 위장된 병기</p>
-<p class="doc-summary">축복으로 위장된 병기 Weapon Disguised as Blessing 본 문서는 U.A.C 정보 수집 부서가 복구한 비인가 오디오 기록이다 해당 기록에는 과거 N.H.C 1차 작전팀 : 레드울프 소속이었던 웨이드 밀렌이 우시노다 의 힘을 병기화하려는 계획을 논의한 정황이 포함되어 있다 본 기...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/ca57620ab037.jpg"/></div>
-</a><a class="doc-card cat-incident" data-cat="INCIDENT / RECOVERED FILE" data-catkey="incident" data-code="Immortality_860201" data-title="Immortality_860201 불멸을 향해" href="../docs/Immortality_860201/index.html" style="--x:160px;--y:480px;--rot:-5deg">
-<div class="doc-top"><span class="doc-id">Immortality_860201</span><span class="doc-cat">INCIDENT / RECOVERED FILE</span></div>
-<div class="doc-code-stamp">Immortality_860201</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Immortality_860201</h2><p class="doc-origin">ORIGIN: 불멸을 향해</p>
-<p class="doc-summary">불멸을 향해 Blood Lake Incident File 독일 본토 ██ 지역에서 이상현상 감지됨 XX 정찰 부대에 의해 최초 발견 이 문서는 독일 본토 ██ 지역에서 발생한 피의 호수 관련 이상현상과, 현장 촬영 및 통신 임무를 수행하던 유...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/b1f6105c9de7.jpg"/></div>
-</a><a class="doc-card cat-zone" data-cat="ZONE CLASSIFICATION" data-catkey="zone" data-code="Zone_870815" data-title="Zone_870815 구역 위험도 분류 문서" href="../docs/Zone_870815/index.html" style="--x:455px;--y:500px;--rot:3deg">
-<div class="doc-top"><span class="doc-id">Zone_870815</span><span class="doc-cat">ZONE CLASSIFICATION</span></div>
-<div class="doc-code-stamp">Zone_870815</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Zone_870815</h2><p class="doc-origin">ORIGIN: 구역 위험도 분류 문서</p>
-<p class="doc-summary">ATTACHED IMAGE // 548f1c4456dc.jpg 구역 위험도 분류 문서 Zone Hazard Classification Document 기본 기록 본 문서는 U.A.C 공식 기준 문서이다.Project Curse 세계관 내 도시 및 외곽 지역에서 발생하는 이상현상, 괴이 출현, 우...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/548f1c4456dc.jpg"/></div>
-</a><a class="doc-card cat-research" data-cat="RESEARCH / CLASSIFIED" data-catkey="research" data-code="Unknown Record5_940626" data-title="Unknown Record5_940626 새로운 세계를 위한 유전자 기록" href="../docs/Unknown_Record5_940626/index.html" style="--x:740px;--y:472px;--rot:-7deg">
-<div class="doc-top"><span class="doc-id">Unknown Record5_940626</span><span class="doc-cat">RESEARCH / CLASSIFIED</span></div>
-<div class="doc-code-stamp">Unknown Record5_940626</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Unknown Record5_940626</h2><p class="doc-origin">ORIGIN: 새로운 세계를 위한 유전자 기록</p>
-<p class="doc-summary">새로운 세계를 위한 유전자 기록 Genetic Record for the New World 본 문서는 정체불명의 작성자가 남긴 비인가 유전자 연구 기록이다 해당 기록은 괴이로 변이한 생명체의 조직에서 추출된 유전 정보를 기반으로 작성된 것으로 추정되며, 괴이 유전자 디지털화, 생체 프린팅, 강제...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/438217418097.png"/></div>
-</a><a class="doc-card cat-timeline" data-cat="TIMELINE" data-catkey="timeline" data-code="Timeline_860101" data-title="Timeline_860101 Project Curse 연표 기록" href="../docs/Timeline_860101/index.html" style="--x:1010px;--y:505px;--rot:5deg">
-<div class="doc-top"><span class="doc-id">Timeline_860101</span><span class="doc-cat">TIMELINE</span></div>
-<div class="doc-code-stamp">Timeline_860101</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Timeline_860101</h2><p class="doc-origin">ORIGIN: Project Curse 연표 기록</p>
-<p class="doc-summary">Project Curse 연표 기록 Project Curse Timeline Archive 본 문서는 Project Curse 세계관 내에서 발생한 주요 사건, 조직 창설, 이상현상 기록, 실종 사건, 연구 자료, 작전 기록을 시간 순서대로 ...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/8339c89f563c.png"/></div>
-</a><a class="doc-card cat-entity" data-cat="ENTITY / CONTAMINATION" data-catkey="entity" data-code="Redzone_881120" data-title="Redzone_881120 레드존 이상현상 및 오염 기준 문서" href="../docs/Redzone_881120/index.html" style="--x:40px;--y:650px;--rot:8deg">
-<div class="doc-top"><span class="doc-id">Redzone_881120</span><span class="doc-cat">ENTITY / CONTAMINATION</span></div>
-<div class="doc-code-stamp">Redzone_881120</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">Redzone_881120</h2><p class="doc-origin">ORIGIN: 레드존 이상현상 및 오염 기준 문서</p>
-<p class="doc-summary">Red Zone Anomaly &amp; Contamination System ◆ 분류: 레드존 이상현상, 오염 지수, 시간 오염, 문 현상, 통신 오염 ▣ 중심 기관: U.A.C / N.H.C / S.I.D / F.H.C ⟐ 기능: 레드존 에서 발생하는 비정상 현상과 오염 기준을 한 문서 안에서 판정...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/0a8342297ac1.png"/></div>
-</a><a class="doc-card cat-entity" data-cat="ENTITY / CONTAMINATION" data-catkey="entity" data-code="FCR Archive_890402" data-title="FCR Archive_890402 괴이·우시노다교·귀환자 분류 문서" href="../docs/FCR_Archive_890402/index.html" style="--x:370px;--y:690px;--rot:-3deg">
-<div class="doc-top"><span class="doc-id">FCR Archive_890402</span><span class="doc-cat">ENTITY / CONTAMINATION</span></div>
-<div class="doc-code-stamp">FCR Archive_890402</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">FCR Archive_890402</h2><p class="doc-origin">ORIGIN: 괴이·우시노다교·귀환자 분류 문서</p>
-<p class="doc-summary">Feral , Cult &amp; Returned Entity Classification ◆ 분류: 괴이 개체, 인공 괴이, 우시노다교 , 의식 집행자, 귀환 민간인 ▣ 중심 기관: N.H.C / F.H.C / S.I.D / C.P.D ⟐ 기능: 사람처럼 보이거나 생물처럼 움직이는 위험 대상을 구분한다...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/c85c636bb85c.png"/></div>
-</a><a class="doc-card cat-operation" data-cat="FIELD MANUAL" data-catkey="operation" data-code="NHC Manual_891219" data-title="NHC Manual_891219 N.H.C 현장 작전·장비·봉쇄 규정 문서" href="../docs/NHC_Manual_891219/index.html" style="--x:690px;--y:650px;--rot:6deg">
-<div class="doc-top"><span class="doc-id">NHC Manual_891219</span><span class="doc-cat">FIELD MANUAL</span></div>
-<div class="doc-code-stamp">NHC Manual_891219</div>
-<div class="doc-access-row"><span>ACCESS: RESTRICTED</span><span>STATUS: INDEXED</span></div>
-<h2 class="doc-title">NHC Manual_891219</h2><p class="doc-origin">ORIGIN: N.H.C 현장 작전·장비·봉쇄 규정 문서</p>
-<p class="doc-summary">N.H.C Field Protocol, Equipment &amp; Containment Manual ◆ 분류: N.H.C 현장 규칙, 회수 금지 기준, 장비, 시설, 차량, 봉쇄 코드 ▣ 중심 기관: N.H.C / Ash Crew / A.R.F / C.P.D / U.A.C ⟐ 기능: 레드존 현장에서 ...</p>
-<div class="doc-thumb"><img alt="thumbnail" src="../assets/resources/e39a87391183.png"/></div>
-</a>
-<div class="board-warning">WARNING: DO NOT RESTORE BLACK FILES</div>
-</section>
-</main>
-<script src="../assets/js/archive.js"></script>
-</body>
-</html>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>기록보관소 - Project Curse</title><link rel="stylesheet" href="../assets/css/style.css"></head><body class="scan"><audio id="ambient" src="../assets/audio/server_ambient.wav" preload="auto" loop></audio>
+<audio id="menu" src="../assets/audio/menu_relay.wav" preload="auto"></audio>
+<audio id="auth" src="../assets/audio/auth_unlock.wav" preload="auto"></audio>
+<audio id="page" src="../assets/audio/page_projector.mp3" preload="auto"></audio><div class="topbar"><div class="topbar-inner"><div class="brand">U.A.C 정보 서버<small>Project Curse 내부 기록 열람 / 2026</small></div><nav class="nav"><a href="../index.html#home">홈</a><a href="../index.html#world">세계지도·구역</a><a href="../index.html#factions">세력·관계</a><a href="../index.html#entities">괴이·귀환자</a><a href="../archive/">기록보관소</a><a href="../index.html#glossary">용어·로그</a><button class="audio-toggle" data-audio-toggle>AUDIO: SERVER MODE</button></nav></div></div><main class="wrap"><section class="panel"><div class="label">ARCHIVE RECORDS</div><h2>기록보관소</h2><p>Search/Tag 메뉴는 제거했고, 설정글이 어떤 문서인지 알 수 있도록 원래 제목과 코드명을 함께 표시했습니다. 원본 설정글 16개는 각 Record 그룹 안에 배치했고, 확장 설정은 별도 그룹으로 연결했습니다.</p><div class="archive-groups"><details open><summary>세력·인물 Record (4)</summary><div class="archive-list"><article class="doc-card"><div class="code">Faction_860403</div><h3>주요 세력 기록서</h3><img class="thumb" src="../assets/resources/e701e44546b5caab40264cb43efef5b0.webp" alt="주요 세력 기록서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">세력/조직</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">주요 세력 기록서
+본 문서는 Project Curse 세계관 내에서 활동하는 주요 기관, 적성 세력, 비인가 무장 조직, 연구 기업, 회수 부대, 민간 통제 조직의 역할과 관계를 정리한 세력 기록서이다.
+해당 기록은 도시 이상현상, 괴이 출현,
+우시노다교
+의식,
+레드존
+확산,
+피의 호수</p><a class="btn" href="../docs/Faction_860403/">기록 열람</a></article><article class="doc-card"><div class="code">Personnel_890617</div><h3>인물 프로필 기록</h3><img class="thumb" src="../assets/resources/57674a652af43e6aec284bbc33018b06.webp" alt="인물 프로필 기록 썸네일" loading="lazy"><div class="status-row"><span class="chip red">인물</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">인물 프로필 기록
+Character Profile Archive
+본 문서는 Project Curse 세계관 내 주요 인물, 특수 작전 인원, 고위험 개체화 가능 인물, 사건 관련자를 정리한 인물 기록이다
+본 기록은 각 인물의 소속, 상태, 능력, 관련 사건, 위험도, 장비 정보를 포함하</p><a class="btn" href="../docs/Personnel_890617/">기록 열람</a></article><article class="doc-card"><div class="code">Cults_871104</div><h3>F.H.C 극비 보안 문서</h3><img class="thumb" src="../assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp" alt="F.H.C 극비 보안 문서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">세력/극비</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">F.H.C
+극비 보안 문서
+F.H.C
+Classified Security Document
+경고
+본 정보에 포함된 내용은
+F.H.C
+극비 분석 부서에서 독점 관리 중인 기밀 자료입니다
+해당 정보에는 다수의 기밀 내용과 오컬트 위협 사례가 포함되어 있으므로, 반드시 관련 담당자를 동반하여 </p><a class="btn" href="../docs/Cults_871104/">기록 열람</a></article><article class="doc-card"><div class="code">Unknown_Record3_920711</div><h3>레드울프 이탈 기록</h3><img class="thumb" src="../assets/resources/074fd0bfd4a4eb91fb3a948b9f2777d8.webp" alt="레드울프 이탈 기록 썸네일" loading="lazy"><div class="status-row"><span class="chip red">세력/사건</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">레드울프
+이탈 기록
+Red Wolf
+Defection Record
+본 문서는
+U.A.C
+정보 수집 부서가 복구한 암호화 CCTV 영상 기록이다
+해당 기록은 과거
+N.H.C
+1차 작전팀 :
+레드울프
+가 기존 지휘 체계에서 이탈하는 과정과, 이후 신디케이트 주요팀으로 재분류되는 계기가 된 </p><a class="btn" href="../docs/Unknown_Record3_920711/">기록 열람</a></article></div></details><details open><summary>세계·구역·연표 Record (4)</summary><div class="archive-list"><article class="doc-card"><div class="code">Immortality_860201</div><h3>불멸을 향해</h3><img class="thumb" src="../assets/resources/b1f6105c9de718ff230e00b702ada13b.webp" alt="불멸을 향해 썸네일" loading="lazy"><div class="status-row"><span class="chip red">기원/사건</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">불멸을 향해
+Blood Lake Incident File
+독일 본토 ██ 지역에서 이상현상 감지됨
+XX 정찰 부대에 의해 최초 발견
+이 문서는 독일 본토 ██ 지역에서 발생한
+피의 호수
+관련 이상현상과, 현장 촬영 및 통신 임무를 수행하던 유닛2의 작전 기록을 정리한 사건 파일이다
+현장</p><a class="btn" href="../docs/Immortality_860201/">기록 열람</a></article><article class="doc-card"><div class="code">Zone_870815</div><h3>구역 위험도 분류 문서</h3><img class="thumb" src="../assets/resources/548f1c4456dc240389f61115de660a7f.webp" alt="구역 위험도 분류 문서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">구역/지도</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">구역 위험도 분류 문서
+Zone Hazard Classification Document
+기본 기록
+본 문서는
+U.A.C
+공식 기준 문서이다.Project Curse 세계관 내 도시 및 외곽 지역에서 발생하는 이상현상, 괴이 출현,
+우시노다교
+의식,
+혈교
+의식, 타락 확산, 민간 피해 가</p><a class="btn" href="../docs/Zone_870815/">기록 열람</a></article><article class="doc-card"><div class="code">Timeline_860101</div><h3>Project Curse 연표 기록</h3><img class="thumb" src="../assets/resources/8339c89f563c7581a6e0f9e6d83aad43.webp" alt="Project Curse 연표 기록 썸네일" loading="lazy"><div class="status-row"><span class="chip red">연표</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">Project Curse 연표 기록
+Project Curse Timeline Archive
+본 문서는 Project Curse 세계관 내에서 발생한 주요 사건, 조직 창설, 이상현상 기록, 실종 사건, 연구 자료, 작전 기록을 시간 순서대로 정리한 연표 기록이다
+해당 연표는 현재 공개된</p><a class="btn" href="../docs/Timeline_860101/">기록 열람</a></article><article class="doc-card"><div class="code">Redzone_881120</div><h3>레드존 이상현상 및 오염 기준 문서</h3><img class="thumb" src="../assets/resources/0a8342297ac1a847461c57a2726d98b7.webp" alt="레드존 이상현상 및 오염 기준 문서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">구역/오염</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">Red Zone
+Anomaly &amp; Contamination System
+◆ 분류:
+레드존
+이상현상, 오염 지수, 시간 오염, 문 현상, 통신 오염
+▣ 중심 기관:
+U.A.C
+/
+N.H.C
+/
+S.I.D
+/
+F.H.C
+⟐ 기능:
+레드존
+에서 발생하는 비정상 현상과 오염 기준을 한 문서 안</p><a class="btn" href="../docs/Redzone_881120/">기록 열람</a></article></div></details><details open><summary>괴이·오염·귀환자 Record (3)</summary><div class="archive-list"><article class="doc-card"><div class="code">Ferals_860722</div><h3>타락 개체 분류 보고서</h3><img class="thumb" src="../assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp" alt="타락 개체 분류 보고서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">괴이/개체</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">타락 개체 분류 보고서
+Feral
+Entity Classification Report
+현재 보시는 정보는 관계자 외 열람이 불가능한 정보입니다
+이는 관련 담당자와 함께 확인해주시기 바랍니다
+본 문서는 Project Curse 세계관 내에서 확인된 괴이 개체, 페럴, 타락체, 인공 괴이,</p><a class="btn" href="../docs/Ferals_860722/">기록 열람</a></article><article class="doc-card"><div class="code">Unknown_Record2_860205</div><h3>피의 호수 부검 기록</h3><img class="thumb" src="../assets/resources/fb5ead8ded766fd8d05938b1caf6a18e.webp" alt="피의 호수 부검 기록 썸네일" loading="lazy"><div class="status-row"><span class="chip red">부검/블랙 파일</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">피의 호수
+부검 기록
+Blood Lake Autopsy Record
+U.A.C
+오컬트 생명 과학 부서
+녹음파일#088
+19xx/xx/02
+지역:아오██하라
+관련 개체:
+피의 호수
+/ Blood Lake
+피해자:현장 촬영팀 - 마렌 예거트
+기록 형태:부검 녹음파일 / 법의학 기록 / 생체</p><a class="btn" href="../docs/Unknown_Record2_860205/">기록 열람</a></article><article class="doc-card"><div class="code">FCR_Archive_890402</div><h3>괴이·우시노다교·귀환자 분류 문서</h3><img class="thumb" src="../assets/resources/c85c636bb85c747508df07e1115a9b89.webp" alt="괴이·우시노다교·귀환자 분류 문서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">괴이/종교/귀환자</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">Feral
+, Cult &amp; Returned Entity Classification
+◆ 분류: 괴이 개체, 인공 괴이,
+우시노다교
+, 의식 집행자,
+귀환 민간인
+▣ 중심 기관:
+N.H.C
+/
+F.H.C
+/
+S.I.D
+/
+C.P.D
+⟐ 기능: 사람처럼 보이거나 생물처럼 움직이는 위험 대상을</p><a class="btn" href="../docs/FCR_Archive_890402/">기록 열람</a></article></div></details><details open><summary>기술·장비·작전 Record (3)</summary><div class="archive-list"><article class="doc-card"><div class="code">Unknown_Record4_930314</div><h3>축복으로 위장된 병기</h3><img class="thumb" src="../assets/resources/ca57620ab037144cc82ea9443e85a91e.webp" alt="축복으로 위장된 병기 썸네일" loading="lazy"><div class="status-row"><span class="chip red">기술/병기</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">축복으로 위장된 병기
+Weapon Disguised as Blessing
+본 문서는
+U.A.C
+정보 수집 부서가 복구한 비인가 오디오 기록이다
+해당 기록에는 과거
+N.H.C
+1차 작전팀 :
+레드울프
+소속이었던 웨이드 밀렌이
+우시노다
+의 힘을 병기화하려는 계획을 논의한 정황이 포함되어 있</p><a class="btn" href="../docs/Unknown_Record4_930314/">기록 열람</a></article><article class="doc-card"><div class="code">Unknown_Record5_940626</div><h3>새로운 세계를 위한 유전자 기록</h3><img class="thumb" src="../assets/resources/438217418097b2edce42165378c56e6c.webp" alt="새로운 세계를 위한 유전자 기록 썸네일" loading="lazy"><div class="status-row"><span class="chip red">유전자/연구</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">새로운 세계를 위한 유전자 기록
+Genetic Record for the New World
+본 문서는 정체불명의 작성자가 남긴 비인가 유전자 연구 기록이다
+해당 기록은 괴이로 변이한 생명체의 조직에서 추출된 유전 정보를 기반으로 작성된 것으로 추정되며, 괴이 유전자 디지털화, 생체 프린</p><a class="btn" href="../docs/Unknown_Record5_940626/">기록 열람</a></article><article class="doc-card"><div class="code">NHC_Manual_891219</div><h3>N.H.C 현장 작전·장비·봉쇄 규정 문서</h3><img class="thumb" src="../assets/resources/e39a87391183a4f564af26c1dd3b7bbd.webp" alt="N.H.C 현장 작전·장비·봉쇄 규정 문서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">작전/장비</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">N.H.C
+Field Protocol, Equipment &amp; Containment Manual
+◆ 분류:
+N.H.C
+현장 규칙, 회수 금지 기준, 장비, 시설, 차량, 봉쇄 코드
+▣ 중심 기관:
+N.H.C
+/
+Ash Crew
+/
+A.R.F
+/
+C.P.D
+/
+U.A.C
+⟐ 기능:
+레드존
+</p><a class="btn" href="../docs/NHC_Manual_891219/">기록 열람</a></article></div></details><details open><summary>사건·회수 Record (2)</summary><div class="archive-list"><article class="doc-card"><div class="code">Sakuma_Tape_991028</div><h3>사쿠마 유타 실종 사건 보고서</h3><img class="thumb" src="../assets/resources/daa52fcde14e129a569b7c1703bf0c5c.webp" alt="사쿠마 유타 실종 사건 보고서 썸네일" loading="lazy"><div class="status-row"><span class="chip red">사건 기록</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">사쿠마 유타 실종 사건 보고서
+Sakuma Yuta Disappearance Case Report
+주의⚠️
+본 자료는
+S.I.D
+오컬트 부서의 기밀 내용으로 분류되어 있으며, 열람 시 담당 관계자와 동행하여 확인해야 한다
+해당 문서는
+S.I.D
+일본 도쿄 지부에서 관리하던 오컬트 사건 </p><a class="btn" href="../docs/Sakuma_Tape_991028/">기록 열람</a></article><article class="doc-card"><div class="code">Unknown_Record1_860204</div><h3>아마리온 회수 영상 기록</h3><img class="thumb" src="../assets/resources/c789dad33bd006ec60d4c737f7e5e2b7.webp" alt="아마리온 회수 영상 기록 썸네일" loading="lazy"><div class="status-row"><span class="chip red">회수 기록</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">아마리온
+회수 영상 기록
+Recovered
+Amarion
+Training Footage
+본 문서는
+F.H.C
+극비 분석 부서가 회수한
+아마리온
+제약 내부 사전교육 영상의 복구 기록이다
+해당 영상은 표면적으로는 인류의 미래와 자원 확보를 위한 기술 교육 자료로 제작되었으나, 실제 내용은 </p><a class="btn" href="../docs/Unknown_Record1_860204/">기록 열람</a></article></div></details><details><summary>확장 설정 기록 (18)</summary><div class="archive-list"><article class="doc-card"><div class="code">Project_Curse_확장설정_목차</div><h3>Project Curse 확장설정 목차</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">Project Curse 확장설정 목차
+Evernote 추가 확장설정 목차
+원본 설정글 뒤에 추가되는 Project Curse 확장설정 목차다. 각 확장설정은 Evernote에서 별도 노트로 확인할 수 있다.
+번호
+확장설정
+내용
+01
+전체 확장 방향
+장르, 분위기, 세계 구조, 핵심 주</p><a class="btn" href="../docs/Project_Curse/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_01_전체_확장_방향</div><h3>확장설정 01. 전체 확장 방향</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 01. 전체 확장 방향
+장르, 분위기, 세계 구조, 핵심 주제를 정리한 기준 페이지.
+Project Curse는 단순한
+괴이
+퇴치물이 아니라, 도시 재난, 오컬트 감염, 군사 봉쇄, 강화 인간,
+생체 병기
+산업, 종교 의식, 기밀 연구, 정치적 은폐가 얽힌 오컬트 군사 재난 세</p><a class="btn" href="../docs/01/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_02_주요_세력_확장</div><h3>확장설정 02. 주요 세력 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 02. 주요 세력 확장
+U.A.C
+,
+N.H.C
+,
+S.I.D
+,
+F.H.C
+, 기업, 종교 집단의 역할 정리.
+U.A.C
+/ Urban Anomaly Containment
+도시 이상현상 격리·통제 기관. 1986년 “
+불멸을 향해
+/
+피의 호수
+” 작전 이후 본격적으로 설립된</p><a class="btn" href="../docs/02/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_03_구역_확장</div><h3>확장설정 03. 구역 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 03. 구역 확장
+일반 도시,
+Yellow Zone
+,
+Red Zone
+,
+Black Zone
+의 구분.
+일반 도시 구역
+아직 공식적으로
+오염
+판정을 받지 않은 구역. 이상현상, 실종,
+귀환자
+발생이 시작되면 감시 대상으로 전환된다.
+Yellow Zone
+초기 위험 구역.
+실종</p><a class="btn" href="../docs/03/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_04_괴이_생태계_확장</div><h3>확장설정 04. 괴이 생태계 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 04. 괴이 생태계 확장
+괴이
+,
+페럴
+,
+Queen-Type
+,
+Superior-Type
+, 양산형, 인공형, 혼합형의 계통.
+괴이
+우시노다의 힘, 의식, 변이, 감염, 비인가 연구 등으로 발생한 비정상 생명체 전체를 의미한다.
+우시노다교
+의식
+Blood Cult
+희생 의식
+</p><a class="btn" href="../docs/04/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_05_귀환자_Returned_Civilian_확장</div><h3>확장설정 05. 귀환자 / Returned Civilian 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 05. 귀환자 / Returned Civilian 확장
+레드존
+이나
+블랙존
+에서 돌아온 인간의 판정 체계.
+귀환자
+는
+레드존
+이나
+블랙존
+에서 실종된 뒤 다시 돌아온 민간인 혹은 병력이다.
+기억 일부 손실
+신체
+오염
+반응 없음으로 보일 수 있음
+특정 단어, 장소, 의식 문장에 </p><a class="btn" href="../docs/05___Returned_Civilian/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_06_Wivermensi_확장</div><h3>확장설정 06. Wivermensi 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 06. Wivermensi 확장
+저주성 힘, 신체 강화, 장비,
+혈무
+,
+파동기
+의 결합체.
+Wivermensi
+/
+위버멘시
+는 저주성 힘, 신체 강화, 전술 장비,
+혈무
+,
+파동기
+시스템이 결합된 강화 인간 요원이다.
+위버멘시
+는 단순한 슈퍼솔저가 아니라, 우시노다 계열 저주</p><a class="btn" href="../docs/06_Wivermensi/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_07_Wave_Frame_파동기_확장</div><h3>확장설정 07. Wave Frame / 파동기 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 07. Wave Frame / 파동기 확장
+저주성 파동·압력 기반 전투 시스템.
+Wave Frame
+은
+위버멘시
+가 사용하는 저주성 파동·압력 기반 전투 시스템이다.
+파동기
+는 신체 내부에 저주성 압력을 순환시키고, 이를 근육, 뼈, 신경, 무기, 방어막 파괴에 사용하는 기술이</p><a class="btn" href="../docs/07_Wave_Frame/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_08_혈무_Blood_Weapon_확장</div><h3>확장설정 08. 혈무 / Blood Weapon 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 08. 혈무 / Blood Weapon 확장
+피와 저주성 장벽에 반응하는 검형 병기.
+혈무
+는
+위버멘시
+, 일부
+N.H.C
+병사, 지휘관, 특수 작전 인원이 사용하는 저주 반응형 칼날이다.
+기본 형태
+평소에는 금속 칼날
+칼집에 보관
+피가 닿으면 붉게 변함
+저주성 장벽에 반응
+위</p><a class="btn" href="../docs/08___Blood_Weapon/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_09_장비_기술_확장</div><h3>확장설정 09. 장비 / 기술 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 09. 장비 / 기술 확장
+W-Coat
+,
+W-Fiber
+,
+Null Coating
+, 의료 복원, AI, Synthetic,
+생체 병기
+.
+W-Coat
+위버멘시
+가 착용하는 전투 코트형 장비.
+오염
+저항
+탄도 방어
+혈무
+하네스 장착
+신체 강화 보조
+Null Coating
+적용</p><a class="btn" href="../docs/09/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_10_시설_인프라_확장</div><h3>확장설정 10. 시설 / 인프라 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 10. 시설 / 인프라 확장
+본부, 전진기지, Black Site, 이동식 요새, 위성 관측망, 격리 연구소.
+U.A.C
+본부
+이상현상 감시
+기록 검열
+작전 승인
+연구 데이터 관리
+레드존
+확산 지도 관리
+N.H.C
+전진기지
+병력 재보급
+장비 정비
+부상자 후송
+오염
+장비 임시 보</p><a class="btn" href="../docs/10/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_11_인공_괴이_유전자_기록_확장</div><h3>확장설정 11. 인공 괴이 / 유전자 기록 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 11. 인공 괴이 / 유전자 기록 확장
+괴이
+유전자 디지털화, 생체 프린팅, 강제 진화.
+괴이
+유전자 디지털화
+괴이
+생체 정보를 데이터화하여 저장하는 기술.
+괴이
+구조 분석
+변이 패턴 예측
+생체 병기
+설계
+인공 조직 제작
+불멸 연구
+생체 프린팅
+괴이
+유전자 데이터를 기반으로 조</p><a class="btn" href="../docs/11/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_12_주요_사건_확장</div><h3>확장설정 12. 주요 사건 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 12. 주요 사건 확장
+기원 사건, 전쟁, 붕괴, 재조사,
+Queen-Type
+등장,
+Young Soldier
+손실 작전.
+1986년 “
+불멸을 향해
+/
+피의 호수
+” 작전
+Project Curse 세계관의 핵심 기원 사건.
+U.A.C
+설립 계기
+피의 호수
+기록 발생
+불멸 연구</p><a class="btn" href="../docs/12/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_13_전투_체계_확장</div><h3>확장설정 13. 전투 체계 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 13. 전투 체계 확장
+N.H.C
+,
+Young Soldier
+,
+Wivermensi
+,
+Redwolf
+전투원의 차이.
+일반
+N.H.C
+병력
+장비
+소총
+방탄복
+헬멧
+방독 장비
+오염
+검사 키트
+일부
+혈무
+붉은 완장 혹은 구역 표식
+역할
+봉쇄선 유지
+민간인 호위
+페럴
+진압
+전진기지</p><a class="btn" href="../docs/13/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_14_문서_형식_확장</div><h3>확장설정 14. 문서 형식 확장</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 14. 문서 형식 확장
+세력, 인물,
+괴이
+, 사건, 작전 규정 문서의 형태.
+세력 문서
+기관 브리핑 형식.
+세력명
+정식 명칭
+설립 배경
+권한 범위
+주요 인물
+협력 세력
+적대 세력
+위험도
+관련 사건
+인물 문서
+프로필 카드 형식.
+이름
+코드네임
+소속
+상태
+역할
+장비
+능력
+관련 사</p><a class="btn" href="../docs/14/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_15_추가_확장_가능_방향</div><h3>확장설정 15. 추가 확장 가능 방향</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 15. 추가 확장 가능 방향
+정치, 사회, 법률, 경제, 국제 대응, 최상위 존재까지 넓히는 확장안.
+중앙 재난 의회 / 비상통제위원회
+U.A.C
+,
+N.H.C
+,
+S.I.D
+,
+F.H.C
+, 군부, 기업 세력, 지역 정부가 얽힌 상위 정치 구조.
+레드존
+선포 승인
+블랙존
+폐쇄</p><a class="btn" href="../docs/15/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_16_핵심_키워드_묶음</div><h3>확장설정 16. 핵심 키워드 묶음</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 16. 핵심 키워드 묶음
+세력, 구역, 병기, 강화 인간,
+괴이
+, 사회, 정치, 미확인 키워드 정리.
+계열
+키워드
+기관
+U.A.C
+,
+N.H.C
+,
+S.I.D
+,
+A.R.F
+,
+C.P.D
+,
+F.H.C
+구역
+Yellow Zone
+,
+Red Zone
+,
+Black Zone
+병기</p><a class="btn" href="../docs/16/">기록 열람</a></article><article class="doc-card"><div class="code">확장설정_17_최종_정리</div><h3>확장설정 17. 최종 정리</h3><div class="status-row"><span class="chip red">확장 설정</span><span class="chip">원본 기록 유지</span><span class="chip yellow">확장 설정 연결</span></div><p class="muted">확장설정 17. 최종 정리
+Project Curse 확장설정의 핵심 문장.
+Project Curse는
+괴이
+와 인간이 싸우는 세계가 아니라,
+괴이
+를 연구하고, 이용하고, 은폐하고, 무기화하다가 결국 도시와 인간성이 함께 무너지는 세계관이다.
+U.A.C
+는 통제한다.
+N.H.C
+는 죽으</p><a class="btn" href="../docs/17/">기록 열람</a></article></div></details></div></section></main><div class="footer">Archive Records / 원본 설정 유지 + 확장 설정 연결</div><script src="../assets/js/main.js"></script></body></html>
