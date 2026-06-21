@@ -1,8 +1,8 @@
-# Project Curse U.A.C 기록 단말기 - Rebuilt ZoneAudio Final
+# Project Curse U.A.C 기록 단말기 - MapArchive AmarionGene Fix
 
-- 기록보관소 하위 기록면 표시 오류 수정
-- 세력 정보 상세 페이지 유지 및 표시 보강
-- 지역 지도 SVG 복구 및 구역 위험도 분류 문서 패널 추가
-- 기록 열람 로딩 연출 1.7초 적용
-- old computer 배경음 및 기록 열람 로딩음 추가
-- GitHub Pages 정적 배포용
+- 지역지도 실제 세계지도 윤곽 기반 SVG로 복구
+- archive/index.html의 문서 링크와 썸네일 상대경로 수정
+- 기록보관소에서 돌아온 뒤 다시 기록 열람 시 archive/docs 중복 경로로 404가 나던 문제 수정
+- 아마리온 회수 영상 기록의 기록 정보 / 사전교육 영상 / 프로젝트 장점 / 위험 기술 분석 구조 재정리
+- xxxx 프로젝트 페이지 제거
+- 새로운 세계를 위한 유전자 기록의 기술 위험 분석 첫 빈 페이지 제거
