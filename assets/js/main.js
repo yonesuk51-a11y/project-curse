@@ -1,15 +1,66 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const loader = document.getElementById('loader');
+  const app = document.getElementById('app');
+  if (loader && app) {
+    setTimeout(() => {
+      loader.classList.add('hide');
+      app.classList.add('ready');
+      const first = document.getElementById('history');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 1850);
+  }
 
-let audioEnabled = true;
-let ambientStarted = false;
-function audio(name){ return document.getElementById(name); }
-function playSound(name, vol=0.45){ if(!audioEnabled) return; const a=audio(name); if(!a) return; try{ a.volume=vol; a.currentTime=0; a.play().catch(()=>{}); }catch(e){} }
-function startAmbient(){ if(!audioEnabled || ambientStarted) return; const a=audio('ambient'); if(!a) return; try{ a.volume=.12; a.loop=true; a.play().then(()=>{ambientStarted=true}).catch(()=>{}); }catch(e){} }
-function toggleAudio(){ audioEnabled=!audioEnabled; document.querySelectorAll('[data-audio-toggle]').forEach(b=>b.textContent=audioEnabled?'AUDIO: SERVER MODE':'AUDIO: OFF'); if(!audioEnabled){ const a=audio('ambient'); if(a) a.pause(); ambientStarted=false;} else {startAmbient(); playSound('menu',.35);} }
-document.addEventListener('click',e=>{ const link=e.target.closest('a,button'); if(link && !link.matches('[data-auth-button]') && !link.matches('[data-audio-toggle]')) playSound('menu',.28); });
-document.addEventListener('DOMContentLoaded',()=>{
- document.querySelectorAll('[data-audio-toggle]').forEach(b=>b.addEventListener('click',toggleAudio));
- const gate=document.getElementById('gate'); const app=document.getElementById('app'); const input=document.getElementById('password'); const msg=document.getElementById('gateMsg'); const btn=document.getElementById('authBtn');
- function auth(){ if(!input) return; const v=input.value.trim(); if(v==='Curse'){ msg.textContent='ACCESS GRANTED // U.A.C 내부 서버 접속 승인'; playSound('auth',.45); setTimeout(()=>{ gate.style.display='none'; app.classList.add('ready'); startAmbient();},650); } else { msg.textContent='ACCESS DENIED // ATTEMPT LOGGED'; if(input){input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake');} } }
- if(btn) btn.addEventListener('click',auth); if(input) input.addEventListener('keydown',e=>{ if(e.key==='Enter') auth(); });
- const log=document.getElementById('liveLog'); if(log){ const lines=['구역 지도 레이어 갱신 완료','원본 기록 인덱스 대조 완료','세력 관계 기록 재정렬','귀환자 분류표 접근 대기','배경 서버음 출력 상태 확인']; let i=0; setInterval(()=>{ const d=document.createElement('div'); const t=new Date().toLocaleTimeString('ko-KR',{hour12:false}); d.textContent=`[${t}] ${lines[i++%lines.length]}`; log.prepend(d); while(log.children.length>12) log.removeChild(log.lastChild);},4200); }
+  const log = document.getElementById('liveLog');
+  if (log) {
+    const lines = [
+      '세계 개요 기록 인덱스 확인',
+      '지역지도 레이어 갱신 완료',
+      '세력 관계 데이터 재정렬',
+      '기록보관소 원본 문서 연결 확인',
+      'U.A.C 좌측 메뉴 인터페이스 대기 중'
+    ];
+    let i = 0;
+    setInterval(() => {
+      const d = document.createElement('div');
+      const t = new Date().toLocaleTimeString('ko-KR', { hour12:false });
+      d.textContent = `[${t}] ${lines[i++ % lines.length]}`;
+      log.prepend(d);
+      while (log.children.length > 10) log.removeChild(log.lastChild);
+    }, 4500);
+  }
 });
+
+
+// === Legacy 2000s PC audio layer ===
+(function(){
+  function rootPrefix(){
+    const path = location.pathname.replace(/\\/g,'/');
+    const parts = path.split('/').filter(Boolean);
+    // If inside docs/<name>/ or archive/, use relative search by testing script path not possible; infer by current path.
+    if (path.includes('/docs/')) return '../../';
+    if (path.includes('/archive/')) return '../';
+    return '';
+  }
+  const prefix = rootPrefix();
+  const ambience = new Audio(prefix + 'assets/audio/legacy_ambient.mp3');
+  ambience.loop = true; ambience.volume = 0.18;
+  const menuTick = new Audio(prefix + 'assets/audio/menu_tick.mp3'); menuTick.volume = 0.38;
+  const recordOpen = new Audio(prefix + 'assets/audio/record_open.mp3'); recordOpen.volume = 0.46;
+  const bootLegacy = new Audio(prefix + 'assets/audio/boot_legacy.mp3'); bootLegacy.volume = 0.32;
+  let enabled = localStorage.getItem('pc_audio') === 'on';
+  const btn = document.getElementById('audioToggle');
+  function setBtn(){ if(btn) btn.textContent = enabled ? 'AUDIO: ON / 구형 PC' : 'AUDIO: OFF'; }
+  function play(a){ if(!enabled) return; try{ a.currentTime=0; a.play().catch(()=>{}); }catch(e){} }
+  function start(){ if(!enabled) return; ambience.play().catch(()=>{}); }
+  setBtn();
+  if(btn){
+    btn.addEventListener('click',()=>{
+      enabled=!enabled; localStorage.setItem('pc_audio', enabled?'on':'off'); setBtn();
+      if(enabled){ bootLegacy.play().catch(()=>{}); ambience.play().catch(()=>{}); }
+      else { ambience.pause(); ambience.currentTime=0; }
+    });
+  }
+  document.addEventListener('pointerdown',()=>{ if(enabled) start(); }, {once:true});
+  document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>play(menuTick)));
+  document.querySelectorAll('.record-shortcut a,.doc-card a,.archive-list a,.backline a,.btn').forEach(a=>a.addEventListener('click',()=>play(recordOpen)));
+})();
