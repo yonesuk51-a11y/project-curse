@@ -1,0 +1,16 @@
+Project Curse ScopeLocked Integration Patch Report
+
+Applied pages:
+- docs/NHC_Manual_891219/index.html: +4 page(s)
+- docs/Ferals_860722/index.html: +2 page(s)
+- docs/Cults_871104/index.html: +2 page(s)
+- docs/Redzone_881120/index.html: +2 page(s)
+- docs/FCR_Archive_890402/index.html: +2 page(s)
+- index.html#NHC_Manual_891219: +4 page(s)
+- index.html#Ferals: +2 page(s)
+- index.html#Cults_871104: +2 page(s)
+- index.html#Redzone_881120: +2 page(s)
+- index.html#FCR_Archive_890402: +2 page(s)
+
+축복으로 위장된 병기 unchanged: True
+Broken links: 0
