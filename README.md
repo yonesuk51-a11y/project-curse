@@ -66,10 +66,11 @@ UI 색상, 전체 레이아웃, 오디오, 기록보관소 구조, 문서 순서
 - 세계 역사 섹션의 닫는 div 태그가 하나 과하게 들어가 다른 메뉴 섹션이 main 영역 밖으로 밀리는 문제를 수정했다.
 - 세력 정보 / 세력 관계 / 지역 지도 / 기록 보관소 메뉴가 같은 content 영역 안에서 정상 전환되도록 구조를 복구했다.
 
-## 2026-06-22 three-document cleanup
 
-- Cleaned `괴이·우시노다교·귀환자` into a field-identification document instead of a mixed official taxonomy/cult/returnee encyclopedia.
-- Cleaned `N.H.C 현장 작전·장비·봉쇄 규정 문서` into a Korean-first Red Zone field manual.
-- Cleaned `레드존 이상현상 및 오염 기준 문서` into a zone judgment standard focused on contamination, anomalies, escalation, and black-zone conversion.
-- Removed visible `Type` phrasing in these documents; user-facing labels now use Korean forms such as `상위 개체`, `이례 개체`, `위장 개체`, and `여왕형 개체`.
-- Protected original record documents remain unexpanded.
+## N.H.C 문서 재정리 패치
+
+- 기준 버전: ExpansionRemoved 계열.
+- 이미지 위치 보존을 우선해 N.H.C 문서의 기존 회수 이미지 순서와 리소스는 변경하지 않음.
+- `장비·시설 운용`, `차량 운용`, `특수탄약 운용`을 `장비·시설·차량·특수탄약 운용` 기록면으로 통합.
+- `N.H.C 생존 규칙`, `블랙 태그 기준`, `회수·소각 연계 절차`, `봉쇄선 붕괴 코드`, `작전 실패 후 기록 회수 절차`를 순서대로 별도 기록면에서 열람하도록 정리.
+- 사용자에게 보이는 N.H.C 문서 본문의 영어식 Type/Entity/Protocol/Breach 표기는 한국어 중심으로 정리.
