@@ -65,3 +65,11 @@ UI 색상, 전체 레이아웃, 오디오, 기록보관소 구조, 문서 순서
 ## Navigation DOM Fix
 - 세계 역사 섹션의 닫는 div 태그가 하나 과하게 들어가 다른 메뉴 섹션이 main 영역 밖으로 밀리는 문제를 수정했다.
 - 세력 정보 / 세력 관계 / 지역 지도 / 기록 보관소 메뉴가 같은 content 영역 안에서 정상 전환되도록 구조를 복구했다.
+
+## 2026-06-22 three-document cleanup
+
+- Cleaned `괴이·우시노다교·귀환자` into a field-identification document instead of a mixed official taxonomy/cult/returnee encyclopedia.
+- Cleaned `N.H.C 현장 작전·장비·봉쇄 규정 문서` into a Korean-first Red Zone field manual.
+- Cleaned `레드존 이상현상 및 오염 기준 문서` into a zone judgment standard focused on contamination, anomalies, escalation, and black-zone conversion.
+- Removed visible `Type` phrasing in these documents; user-facing labels now use Korean forms such as `상위 개체`, `이례 개체`, `위장 개체`, and `여왕형 개체`.
+- Protected original record documents remain unexpanded.
