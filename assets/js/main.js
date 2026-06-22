@@ -132,10 +132,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     red:{title:'붉은 원형',body:'<p><b>표시:</b> 레드존 영향권 / 중심부 마커</p><p>고위험 사건 발생권을 원형 반경으로 표시한다. 자세한 구역 기준은 오른쪽 레드존 항목에서 확인한다.</p>'},
     yellow:{title:'황색 원형',body:'<p><b>표시:</b> 옐로우존 경계권</p><p>레드존 인근의 완충·경계권을 표시한다. 독립 구역이 아니라 레드존 주변 방어·조사 범위로 배치한다.</p>'},
     black:{title:'흑색 원형',body:'<p><b>표시:</b> 블랙존 봉쇄권</p><p>진입 금지 또는 통제권 상실 구역을 표시한다. 상세 기준은 오른쪽 블랙존 항목에서 확인한다.</p>'},
+    green:{title:'녹색 원형',body:'<p><b>표시:</b> 그린존 코어 / 안정 행정권</p><p>주요 수도권, 행정 거점, 민간 거주가 유지되는 안정권을 작게 표시한다. 주변 이상 징후가 증가하면 옐로우존으로 격상될 수 있다.</p>'},
+    white:{title:'백색 원형',body:'<p><b>표시:</b> 화이트존 감시권 / 외곽 통제권</p><p>완전한 안전지대가 아니라 장기 감시와 출입 통제가 유지되는 권역을 표시한다. 그린존과 겹칠 경우 흰 원은 외곽 감시권, 녹색 원은 안정 중심부를 의미한다.</p>'},
     defense:{title:'방어선',body:'<p><b>표시:</b> 긴 점선 차단선</p><p>N.H.C 외곽 방어선과 C.P.D 통제선의 위치를 나타낸다.</p>'},
     gate:{title:'봉쇄 게이트',body:'<p><b>표시:</b> 마름모형 게이트 마커</p><p>구역 출입과 검문을 통제하는 고정 봉쇄 지점이다.</p>'},
     bus:{title:'C.P.D 대피버스',body:'<p><b>표시:</b> 작은 차량형 마커</p><p>민간인 이송, 귀환자 분리, 선별 검사 대기자 수송을 담당하는 C.P.D 이동 대피 지점이다.</p>'},
-    hq:{title:'본부 / 기지',body:'<p><b>표시:</b> 삼각형 또는 다이아몬드형 마커</p><p>U.A.C 본부, N.H.C 전방기지, S.I.D 지부, A.R.F 회수 거점, F.H.C 연구시설 등을 나타낸다.</p>'},
+    hq:{title:'본부 / 기지 / 시설',body:'<p><b>표시:</b> 삼각형, 다이아몬드, 사각형 계열 마커</p><p>U.A.C 본부, N.H.C 전방기지, S.I.D 지부, A.R.F 회수 거점, F.H.C 연구시설, 이동 감시 거점 등을 나타낸다.</p>'},
     ash:{title:'오염 처리소',body:'<p><b>표시:</b> 십자형 처리 마커</p><p>오염된 장비, 괴이 잔류물, 회수 금지 물품을 봉인·소각·격리하는 후처리 지점이다.</p>'}
   };
   function render(key){const box=document.getElementById('mapInfoDisplay'); if(!box || !data[key]) return; box.innerHTML='<h3>'+data[key].title+'</h3>'+data[key].body; document.querySelectorAll('.map-info-btn').forEach(b=>b.classList.toggle('active',b.dataset.mapInfo===key));}
