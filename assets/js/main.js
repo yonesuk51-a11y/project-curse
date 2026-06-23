@@ -143,3 +143,27 @@ document.addEventListener('DOMContentLoaded',()=>{
   function render(key){const box=document.getElementById('mapInfoDisplay'); if(!box || !data[key]) return; box.innerHTML='<h3>'+data[key].title+'</h3>'+data[key].body; document.querySelectorAll('.map-info-btn').forEach(b=>b.classList.toggle('active',b.dataset.mapInfo===key));}
   document.querySelectorAll('.map-info-btn').forEach(btn=>btn.addEventListener('click',()=>{try{if(typeof play==='function' && typeof audio!=='undefined') play(audio.menu);}catch(e){} render(btn.dataset.mapInfo);}));
 })();
+
+
+// Actual world map continental record controls.
+(function(){
+  const shell=document.querySelector('.continental-map-shell');
+  if(!shell) return;
+  const panels=Array.from(shell.querySelectorAll('.continent-panel'));
+  const tabs=Array.from(shell.querySelectorAll('.continent-tab'));
+  const filters=Array.from(shell.querySelectorAll('.continent-filter'));
+  function playTick(){try{if(typeof play==='function' && typeof audio!=='undefined') play(audio.page||audio.menu);}catch(e){}}
+  function showRegion(key,sound){
+    panels.forEach(p=>p.classList.toggle('active',p.dataset.continentPanel===key));
+    tabs.forEach(t=>t.classList.toggle('active',t.dataset.continent===key));
+    if(sound) playTick();
+  }
+  function showFilter(key,sound){
+    shell.dataset.filter=key;
+    filters.forEach(f=>f.classList.toggle('active',f.dataset.mapFilter===key));
+    if(sound) playTick();
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>showRegion(t.dataset.continent,true)));
+  filters.forEach(f=>f.addEventListener('click',()=>showFilter(f.dataset.mapFilter,true)));
+  showFilter('all',false);
+})();
