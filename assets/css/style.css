@@ -5070,3 +5070,101 @@ body.r24-map-review-mode .record-detail > .r24-record-map-bridge .r24-map-link-i
 #zone-map .uac-r24-regional-map[data-r54="zoom-five-restore"] .r54-pan-hint{
   color:rgba(180,225,220,.72);
 }
+
+
+/* R59 — RegionalMapMountAndResponsiveStabilityHotfix
+   Safe responsive pass based on stable R55 renderer.
+   Important: this patch does not override map build/render functions. */
+#zone-map .uac-r24-regional-map[data-r24-version]{
+  display:block!important;
+  width:100%;
+  min-height:520px;
+  box-sizing:border-box;
+  overflow:visible;
+}
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-body{
+  display:grid!important;
+  grid-template-columns:minmax(620px,1fr) minmax(300px,380px);
+  gap:12px;
+  align-items:stretch;
+}
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-map-stage{
+  display:block!important;
+  position:relative!important;
+  min-height:clamp(520px,68vh,820px);
+  overflow:hidden;
+  contain:paint;
+}
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-map-img,
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-map-svg{
+  display:block!important;
+  visibility:visible!important;
+}
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-map-img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-info{
+  display:block!important;
+  min-width:0;
+  max-height:clamp(520px,68vh,820px);
+  overflow:auto;
+  contain:paint;
+}
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-region-tabs,
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-filter-row{
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  scrollbar-width:thin;
+}
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-region-tabs{
+  display:flex;
+  flex-wrap:nowrap;
+}
+#zone-map .uac-r24-regional-map[data-r24-version] .r24-region-tab{
+  flex:0 0 auto;
+}
+@media (max-width:1280px){
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-body{
+    grid-template-columns:minmax(0,1fr);
+  }
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-map-stage{
+    min-height:clamp(480px,64vh,760px);
+  }
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-info{
+    max-height:none;
+  }
+}
+@media (max-width:820px){
+  #zone-map .uac-r24-regional-map[data-r24-version]{
+    min-height:0;
+  }
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-map-stage{
+    min-height:62vh;
+  }
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-info{
+    max-height:46vh;
+    overflow:auto;
+    border-top:1px solid rgba(120,220,220,.22);
+  }
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-record-index:not(:focus-within) .r24-index-list{
+    max-height:180px;
+  }
+  #zone-map .uac-r24-regional-map[data-r24-version]:not(.is-review) .r24-self-review,
+  #zone-map .uac-r24-regional-map[data-r24-version]:not(.is-review) .r24-list-head,
+  #zone-map .uac-r24-regional-map[data-r24-version]:not(.is-review) .r24-node-list{
+    display:none;
+  }
+}
+@media (max-width:560px){
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-map-stage{
+    min-height:58vh;
+  }
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-info{
+    max-height:42vh;
+  }
+  #zone-map .uac-r24-regional-map[data-r24-version] .r24-filter-row{
+    flex-wrap:nowrap;
+  }
+}

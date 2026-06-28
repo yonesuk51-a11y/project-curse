@@ -1,3 +1,16 @@
+# Project Curse U.A.C Server ScopeLocked — MapPatch 5.8.1R-59
+
+## R59 RegionalMapMountAndResponsiveStabilityHotfix
+
+R57/R58에서 발생한 PC 지역지도 미표시 회귀를 안정본 기준으로 복구했다. 이번 버전은 함수 오버라이드형 모바일/성능 패치를 제거하고, 지도 렌더링 자체는 항상 마운트한 뒤 CSS 반응형으로 PC/태블릿/모바일 폭에 대응한다.
+
+- PC 넓은 화면: 기존 지도 + 우측 패널 가로 배치
+- 중간 폭: 지도 우선 단일 열 배치
+- 모바일: 지도 우선, 정보 패널 압축/스크롤
+- R55 지역지도 기능 유지
+- R53/R54 마커 스케일/아이콘/줌 1~5 유지
+- 오래된 패치노트 R24~R54는 `PATCH_HISTORY_ARCHIVE_R24_R54.md`로 통합
+
 # Project Curse U.A.C Server ScopeLocked — MapPatch 5.8.1R-55 FinalReleaseAuditAndPackageCleanup
 
 ## MapPatch5_8_1R-55 FinalReleaseAuditAndPackageCleanup

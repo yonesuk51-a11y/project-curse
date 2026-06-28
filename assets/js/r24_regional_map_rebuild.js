@@ -1388,7 +1388,7 @@
      - Adds a single final release audit that consolidates link, RC, zoom, pan, no-auto-recenter,
        decongestion, marker/icon mapping, and restored five-stage zoom checks.
      - Does not add map content, zones, or world-map tactical markers. */
-  VERSION='5.8.1R-55 FinalReleaseAuditAndPackageCleanup';
+  VERSION='5.8.1R-59 RegionalMapMountAndResponsiveStabilityHotfix';
   if(RELEASE_CHECKS.indexOf('final-release-audit')===-1) RELEASE_CHECKS.push('final-release-audit');
   var FINAL_RELEASE_AUDIT={
     version:VERSION,
@@ -3063,7 +3063,7 @@
 
 
   /* R55 final override — active after all previous runtime overrides. */
-  VERSION='5.8.1R-55 FinalReleaseAuditAndPackageCleanup';
+  VERSION='5.8.1R-59 RegionalMapMountAndResponsiveStabilityHotfix';
   if(RELEASE_CHECKS.indexOf('final-release-audit')===-1) RELEASE_CHECKS.push('final-release-audit');
   if(typeof FINAL_RELEASE_AUDIT==='object' && FINAL_RELEASE_AUDIT){
     FINAL_RELEASE_AUDIT.version=VERSION;
@@ -3081,9 +3081,29 @@
     PAN_WHEEL_ZOOM.finalReleaseAudit=true;
   }
 
+
+  function auditResponsiveStabilityHotfix(){
+    var warnings=[], notes=[];
+    var section=document.querySelector('#zone-map');
+    var mounted=!!document.querySelector('#zone-map .uac-r24-regional-map');
+    if(!section) warnings.push('zone-map 섹션 누락');
+    if(!mounted) warnings.push('지역지도 모듈 DOM 미마운트');
+    if(root){
+      if(!root.querySelector('.r24-map-stage')) warnings.push('지도 스테이지 누락');
+      if(!root.querySelector('.r24-map-img')) warnings.push('지도 이미지 레이어 누락');
+      if(!root.querySelector('.r24-map-svg')) warnings.push('지도 SVG 레이어 누락');
+      if(!root.querySelector('.r24-info')) warnings.push('정보 패널 누락');
+    }
+    notes.push('R57/R58의 함수 오버라이드형 모바일 패치를 제거하고 안정 렌더러 기반 CSS 반응형으로 복구');
+    notes.push('PC 넓은 화면: 지도+패널 / 중간 폭: 지도 우선 단일 열 / 모바일: 지도 우선+압축 패널');
+    notes.push('지도 렌더링 자체는 지연·스킵하지 않음');
+    return {ok:!warnings.length,warnings:warnings,notes:notes,version:VERSION,mounted:mounted};
+  }
+  function makeResponsiveStabilityReport(){var a=auditResponsiveStabilityHotfix(); return '[U.A.C 지역지도 반응형·마운트 안정화 리포트]\n버전: '+VERSION+'\n요약: '+(a.ok?'정상':'경고 '+a.warnings.length+'건')+'\n마운트: '+(a.mounted?'ON':'OFF')+'\n'+(a.warnings.length?'경고: '+a.warnings.join(' / '):'경고 없음')+'\n메모: '+a.notes.join(' / ');}
+
   function exposeApi(){
     window.ProjectCurseRegionalMap={
-      version:VERSION, resetToWorld:resetToWorld, getState:function(){return {region:state.region,filter:state.filter,review:!!state.review,selected:state.selected,zoom:state.zoom,focus:state.focus,panX:Number(state.panX)||0,panY:Number(state.panY)||0,canPan:canPanDetailMap(),overlap:state.overlap&&state.overlap.ids?state.overlap.ids.slice():[]};}, setZoomMode:setZoomMode, setZoomFocus:setZoomFocus, clearZoomFocus:clearZoomFocus,
+      version:VERSION, auditResponsiveStabilityHotfix:auditResponsiveStabilityHotfix, makeResponsiveStabilityReport:makeResponsiveStabilityReport, resetToWorld:resetToWorld, getState:function(){return {region:state.region,filter:state.filter,review:!!state.review,selected:state.selected,zoom:state.zoom,focus:state.focus,panX:Number(state.panX)||0,panY:Number(state.panY)||0,canPan:canPanDetailMap(),overlap:state.overlap&&state.overlap.ids?state.overlap.ids.slice():[]};}, setZoomMode:setZoomMode, setZoomFocus:setZoomFocus, clearZoomFocus:clearZoomFocus,
       getRelatedRecords:function(id){var local=findItem(id||state.selected), global=!local&&id?findGlobalItem(id):null, it=local||(global&&global.item); return it?relatedRecordKeys(it).map(function(k){return RECORD_LIBRARY[k];}):[];},
       getRecordMapLinks:getRecordMapLinks, openRelatedRecord:openRelatedRecord, openMapItem:openMapItem, returnToLastMap:function(){return applyMapSnapshot(readMapSnapshot());}, getRouteContext:readRouteContext,
       getIndexRows:function(){return buildIndexRows().map(function(row){return row.item?{region:row.region,id:row.item.id,name:row.item.name,type:row.item.type,zone:row.item.zone,group:row.item.group,zoomMin:itemZoomMin(row.item)}:{region:row.region,group:row.group,count:row.items.length};});}, openIndexItem:openIndexItem,
