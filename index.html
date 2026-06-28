@@ -1,45 +1,60 @@
 <!DOCTYPE html>
 
-<html lang="ko">
+<html data-pc-patch5-1="fhc-redaction-safe" lang="ko">
 <head>
+  <!-- MapPatch 5.8.1R-55 FinalReleaseAuditAndPackageCleanup -->
+<!-- MapPatch4.9 Function Restore: rolled back to stable 3.1 interaction core; broken 4.8 modular effects removed. -->
+<!-- MapPatch5 Safe UI Reapply: lightweight server bar, document badges, stable loaders, zoom stage labels. -->
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>U.A.C 기록 단말기</title>
 <link href="assets/css/style.css" rel="stylesheet"/>
-</head>
+<meta data-pc-patch="pc-fixed-ratio-map-visual-v6"/><meta data-pc-patch5-5-2="map-coordinate-viewport-qa"/><meta data-pc-patch3="pc-map-patch3-serverui"/></head>
 <body class="scan">
-<div class="loader" id="loader">
-<div class="loader-box">
-<div class="sys-kicker">U.A.C ARCHIVE PC-03 / LEGACY BOOT MODE</div>
-<div class="loader-title">구형 기록 단말기 부팅 중</div>
+<div class="loader uac-boot-loader" data-boot-state="initializing" id="loader">
+<div class="loader-box uac-boot-box">
+<div class="boot-topline"><span>U.A.C ARCHIVE SYSTEM v2.7.18</span><em>SECURE INTERNAL RECORD NODE</em></div>
+<div class="sys-kicker">U.A.C ARCHIVE PC-03 // LEGACY BOOT MODE</div>
+<div class="loader-title">U.A.C 기록 보관 시스템 부팅 중</div>
+<div class="boot-layout">
+<div class="boot-sequence">
+<div class="boot-section-label">BOOT SEQUENCE</div>
 <div class="loader-lines" id="bootLines">
-<p><b>[BOOT]</b> U.A.C LEGACY RECORD TERMINAL POWER CHECK</p>
-<p><b>[DRIVE A:]</b> ORIGINAL RECORD INDEX DETECTED</p>
-<p><b>[DISPLAY]</b> CRT SCANLINE / 4:3 RECORD MODE READY</p>
-<p><b>[MEMORY]</b> FACTION / RELATION CACHE LOADING</p>
-<p><b>[MAP]</b> GLOBAL ZONE LAYER MOUNTED</p>
-<p><b>[READY]</b> OPENING WORLD OVERVIEW</p>
+<p data-boot-step="0"><b>01 TERMINAL HANDSHAKE</b><span>PC-03 단말 접속 확인</span></p>
+<p data-boot-step="1"><b>02 ARCHIVE SYNC</b><span>기록 색인 동기화</span></p>
+<p data-boot-step="2"><b>03 STORAGE MOUNT</b><span>보관 노드 마운트</span></p>
+<p data-boot-step="3"><b>04 ACCESS VERIFICATION</b><span>내부 열람 권한 검증</span></p>
+<p data-boot-step="4"><b>05 INTEGRITY CHECK</b><span>기록 무결성 검사</span></p>
 </div>
-<div class="loadbar"><span></span></div>
+</div>
+<div class="boot-status-grid">
+<div><b>SYSTEM STATUS</b><span data-boot-status-row="system">ONLINE</span></div>
+<div><b>ARCHIVE NODE</b><span>UAC-7 // PRIMARY</span></div>
+<div><b>SECURE LINK</b><span data-boot-status-row="link">ESTABLISHED</span></div>
+<div><b>RECORD INTEGRITY</b><span data-boot-status-row="integrity">VERIFYING</span></div>
+<div><b>BOOT SEQUENCE</b><span data-boot-status-row="sequence">RUNNING</span></div>
+</div>
+</div>
+<div class="boot-progress-head"><b>BOOT PROGRESS</b><span data-boot-percent="">0%</span></div>
+<div class="loadbar boot-progress"><span data-boot-progress=""></span></div>
+<div class="boot-handoff" data-boot-status="">SERVER NODE INITIALIZING...</div>
 </div>
 </div>
 <div class="app" id="app">
 <div class="legacy-layout">
 <aside class="legacy-sidebar">
 <div class="brand-side">U.A.C 기록 단말기<small>LEGACY PC-03 / INTERNAL ARCHIVE</small></div>
-<nav class="side-menu">
-<a data-target="history" href="#history">세계 역사</a>
-<a data-target="faction-info" href="#faction-info">세력 정보</a>
-<a data-target="faction-relation" href="#faction-relation">세력 관계</a>
-<a data-target="zone-map" href="#zone-map">지역 지도</a>
-<a data-target="archive-entry" href="#archive-entry">기록 보관소</a>
+<nav class="side-menu server-module-menu">
+<a data-target="history" href="#history"><span>세계 역사</span><small>CHRONICLE INDEX</small></a>
+<a data-target="faction-info" href="#faction-info"><span>세력 정보</span><small>FACTION DATABASE</small></a>
+<a data-target="faction-relation" href="#faction-relation"><span>세력 관계</span><small>RELATION MATRIX</small></a>
+<a data-target="zone-map" href="#zone-map"><span>지역 지도</span><small>REGIONAL SURFACE</small></a>
+<a data-target="archive-entry" href="#archive-entry"><span>기록 보관소</span><small>ARCHIVE REPOSITORY</small></a>
 </nav>
 <div class="side-note">SOUND: ON<br/>LOW AMBIENT / MENU / RECORD / PAGE EFFECT</div>
 </aside>
 <main class="legacy-content">
-<section class="content-page panel" id="history"><div class="label">WORLD OVERVIEW</div><h2>세계 개요</h2>
-<p>1986년 피의 호수 사건 이후 세계 각지에서 이상현상, 우시노다교 의식, 타락 개체 출현, 귀환자 기록, 레드존 확산이 연쇄적으로 보고되기 시작했다. 해당 사건은 U.A.C 창설과 S.I.D, N.H.C, A.R.F, C.P.D, Ash Crew로 이어지는 재난 대응 체계의 기점으로 분류된다.</p>
-<p>피의 호수 사건은 독일 함부르크와 덴마크 사이의 북해권에서 발생한 것으로 기록된다. 이후 중국 란저우, 광저우, 홍콩 권역과 캐나다 일부 지역에서 레드존이 확산되었고, 오스트레일리아, 인도, 이란 일대는 블랙존으로 봉쇄되었다. 나머지 국가의 수도권과 핵심 행정권은 그린존으로 관리된다.</p>
+<section class="content-page panel" id="history"><div class="section-compact-intro" data-section-node="history"><b>CHRONICLE INDEX</b><span>WORLD EVENT LOG / TIMELINE READY</span></div>
 <div class="overview-stats"><div class="stat-card"><b>1986.02</b><span>피의 호수 사건과 불멸 작전 발생</span></div><div class="stat-card"><b>1986.04</b><span>U.A.C 임시 격리국 설치</span></div><div class="stat-card"><b>1987.08</b><span>구역 위험도 분류 체계 정식 채택</span></div><div class="stat-card"><b>2026</b><span>구형 기록 단말기 복구 운영</span></div></div>
 <h3>세계 역사 핵심 흐름</h3>
 <div class="timeline-list expanded">
@@ -75,9 +90,7 @@
 <div><b>2026년 현재 / 구형 기록 단말기 복구</b><p>U.A.C는 구형 PC-03 기록 단말기를 통해 원본 기록, 현장 보고, 세력 관계, 구역 지도를 보존한다. 현 시점에서도 레드존과 블랙존의 경계는 변동 중이며, 각 기관은 상호 협력과 감시를 병행한다.</p></div>
 </div></section>
 <section class="content-page panel" id="faction-info">
-<div class="label">FACTION INDEX</div>
-<h2>세력 정보</h2>
-<p>세력 마크를 누르면 해당 세력의 개요, 기원, 조직 구조, 부서, 주요 임무, 관계, 위험 기록을 기록면 버튼으로 열람한다.</p>
+<div class="section-compact-intro" data-section-node="faction-info"><b>FACTION DATABASE</b><span>SELECT NODE TO OPEN DOSSIER</span></div>
 <div class="faction-terminal">
 <div class="faction-grid">
 <button class="faction-tile" data-key="uac" type="button"><img alt="U.A.C" src="assets/faction_marks/uac.webp"/><span>U.A.C</span><small>격리와 통제</small></button>
@@ -96,9 +109,7 @@
 </div>
 </section>
 <section class="content-page panel" id="faction-relation">
-<div class="label">FACTION CONNECTION</div>
-<h2>U.A.C 내부 세력 연결도</h2>
-<p class="section-brief">핵심 조직과 외부 적대 세력만 트리형 구조로 표시한다. 차량·장비·지도 마커는 관계도에서 제외하며, 자세한 설명은 하단 관계표에서 확인한다.</p>
+<div class="section-compact-intro" data-section-node="faction-relation"><b>RELATION MATRIX</b><span>SELECT FACTION NODE / DIRECT LINKS READY</span></div>
 <div class="relation-legend compact">
 <span><i class="line friendly"></i>협력</span>
 <span><i class="line watch"></i>감시</span>
@@ -133,273 +144,13 @@
 </table>
 </section>
 <section class="content-page panel" id="zone-map">
-<div class="label">U.A.C ACTUAL WORLD MAP</div>
-<h2>지역 지도</h2>
-<p class="section-brief">실제 세계지도 윤곽을 기준으로 대륙권을 확대 열람한다. 한 장의 지도에 모든 정보를 겹쳐 넣지 않고, 대륙권별 기록면과 내부 필터로 오염 구역, 작전 시설, 현상 기록, 사건 좌표, 봉쇄선을 분리 표시한다.</p>
-<div class="continental-map-shell">
-  <div class="continent-tabs" role="tablist" aria-label="대륙권 기록면 선택">
-    <button class="continent-tab active" data-continent="world" type="button">세계</button><button class="continent-tab " data-continent="east" type="button">동아시아</button><button class="continent-tab " data-continent="europe" type="button">유럽</button><button class="continent-tab " data-continent="north" type="button">북미</button><button class="continent-tab " data-continent="south" type="button">남방권</button><button class="continent-tab " data-continent="mea" type="button">중동·아프리카</button>
-  </div>
-  <div class="continent-filters" role="tablist" aria-label="지도 내부 필터 선택">
-    <button class="continent-filter active" data-map-filter="all" type="button">전체</button><button class="continent-filter " data-map-filter="zone" type="button">오염 구역</button><button class="continent-filter " data-map-filter="facility" type="button">작전 시설</button><button class="continent-filter " data-map-filter="anomaly" type="button">현상 기록</button><button class="continent-filter " data-map-filter="incident" type="button">사건 좌표</button><button class="continent-filter " data-map-filter="blockade" type="button">봉쇄선</button>
-  </div>
-  <div class="continental-map-note"><b>지도 기준:</b> 실제 세계지도 기반 / 바다 영역은 색칠 확산권 대신 점선 감시권과 사건 좌표로만 표시한다.</div>
-  <div class="continent-panel-wrap">
-    <div class="continent-panel active" data-continent-panel="world">
-<div class="continent-map-frame">
-<img alt="세계 실제 세계지도 기반 관제도" class="continent-map-img" src="assets/maps/world_actual_base.svg"/>
-<button class="continent-marker red" data-filter="zone" style="left:25.0%;top:19.0%" type="button" title="캐나다 북부 레드존"><span>캐나다 북부 레드존</span></button>
-<button class="continent-marker red" data-filter="zone" style="left:53.0%;top:20.0%" type="button" title="피의 호수 레드존"><span>피의 호수 레드존</span></button>
-<button class="continent-marker red" data-filter="zone" style="left:79.0%;top:30.0%" type="button" title="란저우 레드존"><span>란저우 레드존</span></button>
-<button class="continent-marker red" data-filter="zone" style="left:82.0%;top:38.0%" type="button" title="홍콩 해안 오염"><span>홍콩 해안 오염</span></button>
-<button class="continent-marker black" data-filter="zone" style="left:87.0%;top:64.0%" type="button" title="호주 장기 감시권"><span>호주 장기 감시권</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:85.0%;top:30.0%" type="button" title="U.A.C 동아시아 관제소"><span>U.A.C 동아시아 관제소</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:50.0%;top:24.0%" type="button" title="U.A.C 유럽 관측거점"><span>U.A.C 유럽 관측거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:29.0%;top:22.0%" type="button" title="A.R.F 북미 회수거점"><span>A.R.F 북미 회수거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:77.0%;top:48.0%" type="button" title="남방권 관측소"><span>남방권 관측소</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:61.0%;top:39.0%" type="button" title="중동·아프리카 감시거점"><span>중동·아프리카 감시거점</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:70.0%;top:35.0%" type="button" title="전역 오염 무전 반복권"><span>전역 오염 무전 반복권</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:88.0%;top:45.0%" type="button" title="해상 혈문 후보권"><span>해상 혈문 후보권</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:53.0%;top:20.0%" type="button" title="피의 호수 사건"><span>피의 호수 사건</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:79.0%;top:30.0%" type="button" title="란저우 봉쇄 실패"><span>란저우 봉쇄 실패</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:25.0%;top:19.0%" type="button" title="캐나다 레드존 사건"><span>캐나다 레드존 사건</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:54.0%;top:23.0%" type="button" title="북유럽 해상 감시권"><span>북유럽 해상 감시권</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:83.0%;top:41.0%" type="button" title="홍콩 해안 감시선"><span>홍콩 해안 감시선</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:85.0%;top:65.0%" type="button" title="남태평양 접근 제한권"><span>남태평양 접근 제한권</span></button>
-</div>
-<div class="continent-region-info"><h3>세계</h3><p>실제 세계지도 윤곽 위에 주요 레드존, 사건 좌표, 작전 시설, 현상 기록, 봉쇄권만 축약 표시한 전역 관제 화면.</p><div class="continent-point-list">
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>캐나다 북부 레드존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>피의 호수 레드존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>란저우 레드존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>홍콩 해안 오염</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>호주 장기 감시권</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>U.A.C 동아시아 관제소</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>U.A.C 유럽 관측거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>A.R.F 북미 회수거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>남방권 관측소</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>중동·아프리카 감시거점</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>전역 오염 무전 반복권</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>해상 혈문 후보권</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>피의 호수 사건</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>란저우 봉쇄 실패</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>캐나다 레드존 사건</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>북유럽 해상 감시권</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>홍콩 해안 감시선</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>남태평양 접근 제한권</span></div>
-</div></div></div>
-<div class="continent-panel " data-continent-panel="east">
-<div class="continent-map-frame">
-<img alt="동아시아 실제 세계지도 기반 관제도" class="continent-map-img" src="assets/maps/continent_east_asia.svg"/>
-<button class="continent-marker red" data-filter="zone" style="left:43.0%;top:37.0%" type="button" title="란저우 레드존"><span>란저우 레드존</span></button>
-<button class="continent-marker yellow" data-filter="zone" style="left:56.0%;top:58.0%" type="button" title="광둥권 옐로우존"><span>광둥권 옐로우존</span></button>
-<button class="continent-marker red" data-filter="zone" style="left:62.0%;top:64.0%" type="button" title="홍콩 해안 오염"><span>홍콩 해안 오염</span></button>
-<button class="continent-marker black" data-filter="zone" style="left:39.0%;top:49.0%" type="button" title="란저우 외곽 블랙존 후보지"><span>란저우 외곽 블랙존 후보지</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:78.0%;top:35.0%" type="button" title="U.A.C 동아시아 관제소"><span>U.A.C 동아시아 관제소</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:63.0%;top:66.0%" type="button" title="C.P.D 홍콩 대피거점"><span>C.P.D 홍콩 대피거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:49.0%;top:42.0%" type="button" title="N.H.C 란저우 외곽 봉쇄기지"><span>N.H.C 란저우 외곽 봉쇄기지</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:74.0%;top:31.0%" type="button" title="S.I.D 도쿄 연락소"><span>S.I.D 도쿄 연락소</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:53.0%;top:44.0%" type="button" title="동중국 혈문 잔류 지점"><span>동중국 혈문 잔류 지점</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:61.0%;top:62.0%" type="button" title="홍콩 오염 무전 수신"><span>홍콩 오염 무전 수신</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:47.0%;top:38.0%" type="button" title="죽은 시간 반복 구역"><span>죽은 시간 반복 구역</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:45.0%;top:37.0%" type="button" title="란저우 초기 봉쇄 실패"><span>란저우 초기 봉쇄 실패</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:63.0%;top:65.0%" type="button" title="홍콩 민간 대피 지연"><span>홍콩 민간 대피 지연</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:58.0%;top:50.0%" type="button" title="귀환자 선별 실패"><span>귀환자 선별 실패</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:50.0%;top:41.0%" type="button" title="란저우 외곽 1차 봉쇄선"><span>란저우 외곽 1차 봉쇄선</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:65.0%;top:67.0%" type="button" title="홍콩 해안 감시선"><span>홍콩 해안 감시선</span></button>
-</div>
-<div class="continent-region-info"><h3>동아시아</h3><p>중국 내륙·홍콩 해안·일본 및 한반도 관측권을 실제 동아시아 지도 확대 화면으로 표시한다.</p><div class="continent-point-list">
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>란저우 레드존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>광둥권 옐로우존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>홍콩 해안 오염</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>란저우 외곽 블랙존 후보지</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>U.A.C 동아시아 관제소</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>C.P.D 홍콩 대피거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>N.H.C 란저우 외곽 봉쇄기지</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>S.I.D 도쿄 연락소</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>동중국 혈문 잔류 지점</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>홍콩 오염 무전 수신</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>죽은 시간 반복 구역</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>란저우 초기 봉쇄 실패</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>홍콩 민간 대피 지연</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>귀환자 선별 실패</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>란저우 외곽 1차 봉쇄선</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>홍콩 해안 감시선</span></div>
-</div></div></div>
-<div class="continent-panel " data-continent-panel="europe">
-<div class="continent-map-frame">
-<img alt="유럽 실제 세계지도 기반 관제도" class="continent-map-img" src="assets/maps/continent_europe.svg"/>
-<button class="continent-marker red" data-filter="zone" style="left:44.0%;top:24.0%" type="button" title="피의 호수 레드존"><span>피의 호수 레드존</span></button>
-<button class="continent-marker yellow" data-filter="zone" style="left:42.0%;top:32.0%" type="button" title="함부르크 북부 옐로우존"><span>함부르크 북부 옐로우존</span></button>
-<button class="continent-marker black" data-filter="zone" style="left:46.0%;top:22.0%" type="button" title="피의 호수 중심부 블랙존 후보지"><span>피의 호수 중심부 블랙존 후보지</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:38.0%;top:37.0%" type="button" title="C.P.D 함부르크 대피거점"><span>C.P.D 함부르크 대피거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:47.0%;top:27.0%" type="button" title="A.R.F 피의 호수 회수거점"><span>A.R.F 피의 호수 회수거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:52.0%;top:34.0%" type="button" title="U.A.C 유럽 관측거점"><span>U.A.C 유럽 관측거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:50.0%;top:29.0%" type="button" title="혈문 통제소-EU04"><span>혈문 통제소-EU04</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:45.0%;top:23.0%" type="button" title="혈문 잔류 구역"><span>혈문 잔류 구역</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:38.0%;top:20.0%" type="button" title="북해 오염 무전 수신권"><span>북해 오염 무전 수신권</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:49.0%;top:31.0%" type="button" title="영상 변질 다발 구역"><span>영상 변질 다발 구역</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:44.0%;top:24.0%" type="button" title="피의 호수 사건 지점"><span>피의 호수 사건 지점</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:48.0%;top:28.0%" type="button" title="A.R.F 회수 실패"><span>A.R.F 회수 실패</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:54.0%;top:36.0%" type="button" title="블랙월 붕괴 관측지"><span>블랙월 붕괴 관측지</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:39.0%;top:23.0%" type="button" title="북해 해상 접근 금지 점선권"><span>북해 해상 접근 금지 점선권</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:42.0%;top:34.0%" type="button" title="북유럽 1차 봉쇄선"><span>북유럽 1차 봉쇄선</span></button>
-</div>
-<div class="continent-region-info"><h3>유럽</h3><p>함부르크-덴마크 사이의 피의 호수 권역과 북해 해상 감시권을 실제 유럽 지도 위에 분리 표시한다.</p><div class="continent-point-list">
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>피의 호수 레드존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>함부르크 북부 옐로우존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>피의 호수 중심부 블랙존 후보지</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>C.P.D 함부르크 대피거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>A.R.F 피의 호수 회수거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>U.A.C 유럽 관측거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>혈문 통제소-EU04</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>혈문 잔류 구역</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>북해 오염 무전 수신권</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>영상 변질 다발 구역</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>피의 호수 사건 지점</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>A.R.F 회수 실패</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>블랙월 붕괴 관측지</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>북해 해상 접근 금지 점선권</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>북유럽 1차 봉쇄선</span></div>
-</div></div></div>
-<div class="continent-panel " data-continent-panel="north">
-<div class="continent-map-frame">
-<img alt="북미 실제 세계지도 기반 관제도" class="continent-map-img" src="assets/maps/continent_north_america.svg"/>
-<button class="continent-marker red" data-filter="zone" style="left:43.0%;top:30.0%" type="button" title="캐나다 북부 레드존"><span>캐나다 북부 레드존</span></button>
-<button class="continent-marker yellow" data-filter="zone" style="left:55.0%;top:48.0%" type="button" title="오대호 인근 옐로우존"><span>오대호 인근 옐로우존</span></button>
-<button class="continent-marker black" data-filter="zone" style="left:37.0%;top:26.0%" type="button" title="북부 침묵 지대"><span>북부 침묵 지대</span></button>
-<button class="continent-marker white" data-filter="zone" style="left:27.0%;top:37.0%" type="button" title="알래스카 감시 구역"><span>알래스카 감시 구역</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:52.0%;top:42.0%" type="button" title="U.A.C 북미 관제소"><span>U.A.C 북미 관제소</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:48.0%;top:28.0%" type="button" title="A.R.F 냉지 회수거점"><span>A.R.F 냉지 회수거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:61.0%;top:46.0%" type="button" title="N.H.C 북미 협력기지"><span>N.H.C 북미 협력기지</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:40.0%;top:18.0%" type="button" title="위성 감시 관측소-NA"><span>위성 감시 관측소-NA</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:43.0%;top:31.0%" type="button" title="오염 무전 반복 구역"><span>오염 무전 반복 구역</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:38.0%;top:25.0%" type="button" title="위성 영상 변질 구역"><span>위성 영상 변질 구역</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:49.0%;top:33.0%" type="button" title="죽은 시간 장기 발생지"><span>죽은 시간 장기 발생지</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:43.0%;top:30.0%" type="button" title="캐나다 최초 봉쇄 지점"><span>캐나다 최초 봉쇄 지점</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:50.0%;top:35.0%" type="button" title="실험체 유출 추정 좌표"><span>실험체 유출 추정 좌표</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:40.0%;top:20.0%" type="button" title="위성 감시 실패"><span>위성 감시 실패</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:45.0%;top:33.0%" type="button" title="캐나다 북부 1차 봉쇄선"><span>캐나다 북부 1차 봉쇄선</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:56.0%;top:50.0%" type="button" title="오대호 감시선"><span>오대호 감시선</span></button>
-</div>
-<div class="continent-region-info"><h3>북미</h3><p>캐나다 북부 레드존과 북미 위성 감시망, 오대호 감시선을 실제 북미 지도 확대 화면으로 표시한다.</p><div class="continent-point-list">
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>캐나다 북부 레드존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>오대호 인근 옐로우존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>북부 침묵 지대</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>알래스카 감시 구역</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>U.A.C 북미 관제소</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>A.R.F 냉지 회수거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>N.H.C 북미 협력기지</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>위성 감시 관측소-NA</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>오염 무전 반복 구역</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>위성 영상 변질 구역</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>죽은 시간 장기 발생지</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>캐나다 최초 봉쇄 지점</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>실험체 유출 추정 좌표</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>위성 감시 실패</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>캐나다 북부 1차 봉쇄선</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>오대호 감시선</span></div>
-</div></div></div>
-<div class="continent-panel " data-continent-panel="south">
-<div class="continent-map-frame">
-<img alt="남방권 실제 세계지도 기반 관제도" class="continent-map-img" src="assets/maps/continent_south.svg"/>
-<button class="continent-marker yellow" data-filter="zone" style="left:23.0%;top:22.0%" type="button" title="인도 서부 옐로우존"><span>인도 서부 옐로우존</span></button>
-<button class="continent-marker white" data-filter="zone" style="left:44.0%;top:36.0%" type="button" title="동남아 해안 감시권"><span>동남아 해안 감시권</span></button>
-<button class="continent-marker black" data-filter="zone" style="left:73.0%;top:70.0%" type="button" title="호주 내륙 장기 감시 구역"><span>호주 내륙 장기 감시 구역</span></button>
-<button class="continent-marker black" data-filter="zone" style="left:62.0%;top:55.0%" type="button" title="남방 해상 침묵권"><span>남방 해상 침묵권</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:38.0%;top:38.0%" type="button" title="U.A.C 남방권 관측소"><span>U.A.C 남방권 관측소</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:50.0%;top:47.0%" type="button" title="A.R.F 해상 회수거점"><span>A.R.F 해상 회수거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:70.0%;top:67.0%" type="button" title="이동식 격리선 운용지점"><span>이동식 격리선 운용지점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:43.0%;top:40.0%" type="button" title="C.P.D 해안 대피거점"><span>C.P.D 해안 대피거점</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:55.0%;top:47.0%" type="button" title="남태평양 오염 무전"><span>남태평양 오염 무전</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:49.0%;top:42.0%" type="button" title="해상 혈문 후보지"><span>해상 혈문 후보지</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:60.0%;top:50.0%" type="button" title="실종 선박 반복 좌표"><span>실종 선박 반복 좌표</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:55.0%;top:47.0%" type="button" title="해상 구조대 실종"><span>해상 구조대 실종</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:46.0%;top:38.0%" type="button" title="C.P.D 대피선 회항"><span>C.P.D 대피선 회항</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:44.0%;top:36.0%" type="button" title="해안 귀환자 선별 실패"><span>해안 귀환자 선별 실패</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:34.0%;top:30.0%" type="button" title="인도양 해상 감시선"><span>인도양 해상 감시선</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:52.0%;top:48.0%" type="button" title="남태평양 접근 제한 점선권"><span>남태평양 접근 제한 점선권</span></button>
-</div>
-<div class="continent-region-info"><h3>남방권</h3><p>남아시아·동남아시아·오세아니아를 한 화면으로 묶어 해상 감시권과 장기 감시 구역을 점선 위주로 표시한다.</p><div class="continent-point-list">
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>인도 서부 옐로우존</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>동남아 해안 감시권</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>호주 내륙 장기 감시 구역</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>남방 해상 침묵권</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>U.A.C 남방권 관측소</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>A.R.F 해상 회수거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>이동식 격리선 운용지점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>C.P.D 해안 대피거점</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>남태평양 오염 무전</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>해상 혈문 후보지</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>실종 선박 반복 좌표</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>해상 구조대 실종</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>C.P.D 대피선 회항</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>해안 귀환자 선별 실패</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>인도양 해상 감시선</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>남태평양 접근 제한 점선권</span></div>
-</div></div></div>
-<div class="continent-panel " data-continent-panel="mea">
-<div class="continent-map-frame">
-<img alt="중동·아프리카 실제 세계지도 기반 관제도" class="continent-map-img" src="assets/maps/continent_me_africa.svg"/>
-<button class="continent-marker yellow" data-filter="zone" style="left:46.0%;top:30.0%" type="button" title="중동 사막 감시 구역"><span>중동 사막 감시 구역</span></button>
-<button class="continent-marker white" data-filter="zone" style="left:37.0%;top:42.0%" type="button" title="북아프리카 장기 방치 구역"><span>북아프리카 장기 방치 구역</span></button>
-<button class="continent-marker black" data-filter="zone" style="left:51.0%;top:46.0%" type="button" title="사막 침묵 지대"><span>사막 침묵 지대</span></button>
-<button class="continent-marker yellow" data-filter="zone" style="left:58.0%;top:55.0%" type="button" title="동아프리카 옐로우존 후보지"><span>동아프리카 옐로우존 후보지</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:43.0%;top:37.0%" type="button" title="U.A.C 중동·아프리카 감시거점"><span>U.A.C 중동·아프리카 감시거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:49.0%;top:45.0%" type="button" title="N.H.C 임시 전진기지"><span>N.H.C 임시 전진기지</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:53.0%;top:48.0%" type="button" title="A.R.F 사막 회수거점"><span>A.R.F 사막 회수거점</span></button>
-<button class="continent-marker facility" data-filter="facility" style="left:39.0%;top:33.0%" type="button" title="Syndicate 유출 감시초소"><span>Syndicate 유출 감시초소</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:50.0%;top:46.0%" type="button" title="사막 오염 무전 반복"><span>사막 오염 무전 반복</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:47.0%;top:34.0%" type="button" title="혈문 후보 구조물"><span>혈문 후보 구조물</span></button>
-<button class="continent-marker anomaly" data-filter="anomaly" style="left:42.0%;top:44.0%" type="button" title="지도 좌표 불일치 사막권"><span>지도 좌표 불일치 사막권</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:38.0%;top:33.0%" type="button" title="유출 장비 거래 좌표"><span>유출 장비 거래 좌표</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:52.0%;top:47.0%" type="button" title="오염 장비 회수 실패"><span>오염 장비 회수 실패</span></button>
-<button class="continent-marker incident" data-filter="incident" style="left:51.0%;top:43.0%" type="button" title="사막 혈문 관측"><span>사막 혈문 관측</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:35.0%;top:30.0%" type="button" title="지중해 남부 감시선"><span>지중해 남부 감시선</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:50.0%;top:45.0%" type="button" title="사막 임시 봉쇄선"><span>사막 임시 봉쇄선</span></button>
-<button class="continent-marker blockade" data-filter="blockade" style="left:39.0%;top:36.0%" type="button" title="유출 경로 차단선"><span>유출 경로 차단선</span></button>
-</div>
-<div class="continent-region-info"><h3>중동·아프리카</h3><p>확정 레드존보다 유출 경로, 장기 방치 후보지, 이동식 봉쇄선을 중심으로 실제 중동·아프리카 지도에 표시한다.</p><div class="continent-point-list">
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>중동 사막 감시 구역</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>북아프리카 장기 방치 구역</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>사막 침묵 지대</span></div>
-<div class="continent-point" data-filter="zone"><b>오염 구역</b><span>동아프리카 옐로우존 후보지</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>U.A.C 중동·아프리카 감시거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>N.H.C 임시 전진기지</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>A.R.F 사막 회수거점</span></div>
-<div class="continent-point" data-filter="facility"><b>작전 시설</b><span>Syndicate 유출 감시초소</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>사막 오염 무전 반복</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>혈문 후보 구조물</span></div>
-<div class="continent-point" data-filter="anomaly"><b>현상 기록</b><span>지도 좌표 불일치 사막권</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>유출 장비 거래 좌표</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>오염 장비 회수 실패</span></div>
-<div class="continent-point" data-filter="incident"><b>사건 좌표</b><span>사막 혈문 관측</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>지중해 남부 감시선</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>사막 임시 봉쇄선</span></div>
-<div class="continent-point" data-filter="blockade"><b>봉쇄선</b><span>유출 경로 차단선</span></div>
-</div></div></div>
-  </div>
-</div>
-<div class="zone-risk-panel compact-zone-guide">
-  <div class="zone-risk-tabs">
-    <button class="zone-risk-tab active" data-zone="security" type="button">지도 범례</button>
-    <button class="zone-risk-tab" data-zone="green" type="button">그린존</button>
-    <button class="zone-risk-tab" data-zone="yellow" type="button">옐로우존</button>
-    <button class="zone-risk-tab" data-zone="red" type="button">레드존</button>
-    <button class="zone-risk-tab" data-zone="white" type="button">화이트존</button>
-    <button class="zone-risk-tab" data-zone="black" type="button">블랙존</button>
-  </div>
-  <div class="zone-risk-page security active"><h3>지도 범례</h3><p>표식은 실제 위치 위에 얹힌 관제용 마커다. 넓은 색 영역은 최소화하고, 해상권은 점선 감시권으로만 표시한다.</p><ul><li>오염 구역: 레드·옐로우·블랙·화이트 계열 얼룩형 마커</li><li>작전 시설: 사각형 시설 마커</li><li>현상 기록: 삼각형/균열형 마커</li><li>사건 좌표: 붉은 다이아몬드</li><li>봉쇄선: 점선형 차단권</li></ul></div>
-  <div class="zone-risk-page green"><h3>그린존</h3><p>민간 거주와 행정 기능이 유지되는 안정권. 지도에서는 별도 대형 영역보다 관제 중심지와 작전 시설 주변의 안정 코어로만 취급한다.</p></div>
-  <div class="zone-risk-page yellow"><h3>옐로우존</h3><p>조사·감시·대피 준비가 필요한 보류 구역. 레드존 주변의 완충권 또는 민간 통제권으로 표시한다.</p></div>
-  <div class="zone-risk-page red"><h3>레드존</h3><p>N.H.C 직접 대응이 필요한 고위험 오염 구역. 실제 도시·내륙 중심부에 작게 표시하고, 바다까지 색을 넓게 덮지 않는다.</p></div>
-  <div class="zone-risk-page white"><h3>화이트존</h3><p>위험도가 확정되지 않은 미확인 감시권. 정찰 또는 후속 조사를 전제로 표시한다.</p></div>
-  <div class="zone-risk-page black"><h3>블랙존</h3><p>진입 금지 또는 통제권 상실 구역. 검은 얼룩형 마커와 봉쇄선으로 표시하며, 전역 지도에서는 후보지만 축약 표기한다.</p></div>
+<div class="doc-header compact-doc-header section-intro-decluttered" data-section-node="zone-map">
+<div class="label">REGIONAL SURFACE</div>
+<div class="code">TACTICAL MAP ONLINE / COORDINATE LOCK READY</div>
 </div>
 </section>
 <section class="content-page panel" id="archive-entry">
-<div class="label">ARCHIVE INDEX</div>
-<h2>기록 보관소</h2>
-<p>기록보관소에서는 세력 색인을 제외한 원본 설정 기록을 분류별로 열람한다. 세력 개별 설명은 세력 정보 메뉴에서 확인한다.</p>
+<div class="section-compact-intro" data-section-node="archive-entry"><b>ARCHIVE REPOSITORY</b><span>RECORD INDEX MOUNTED</span></div>
 <div id="archiveListWrap"><div class="archive-groups">
 <details open=""><summary>괴이·오염 기록</summary><div class="archive-list"><article class="doc-card"><div class="code">Cults_871104</div><h3>F.H.C 극비 보안 문서</h3><img alt="F.H.C 극비 보안 문서" class="thumb" loading="lazy" src="assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp"/><div class="status-row"><span class="chip red">괴이·오염</span></div><p class="muted">타락교, 혈교, 피의 호수, 혈무 제작, 제압된 타락체 등 오컬트 위협 사례를 다루는 기록이다.</p><button class="btn open-record" data-record="Cults_871104" type="button">기록 열람</button></article><article class="doc-card"><div class="code">타락 개체_860722</div><h3>타락 개체 분류 보고서</h3><img alt="타락 개체 분류 보고서" class="thumb" loading="lazy" src="assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp"/><div class="status-row"><span class="chip red">괴이·오염</span></div><p class="muted">타락 개체, 타락체, 인공 괴이, 변이 개체의 위험 분류를 다루는 기록이다.</p><button class="btn open-record" data-record="타락 개체_860722" type="button">기록 열람</button></article><article class="doc-card"><div class="code">불명_Record2_860205</div><h3>피의 호수 부검 기록</h3><img alt="피의 호수 부검 기록" class="thumb" loading="lazy" src="assets/resources/fb5ead8ded766fd8d05938b1caf6a18e.webp"/><div class="status-row"><span class="chip red">괴이·오염</span></div><p class="muted">피의 호수 관련 피해자와 생체 오염 반응을 다룬 부검 기록이다.</p><button class="btn open-record" data-record="불명_Record2_860205" type="button">기록 열람</button></article></div></details>
 <details open=""><summary>기술·작전 기록</summary><div class="archive-list"><article class="doc-card"><div class="code">Redzone_881120</div><h3>레드존 이상현상 및 오염 기준 문서</h3><img alt="레드존 이상현상 및 오염 기준 문서" class="thumb" loading="lazy" src="assets/resources/0a8342297ac1a847461c57a2726d98b7.webp"/><div class="status-row"><span class="chip red">기술·작전</span></div><p class="muted">레드존 장기 방치 구역에서 회수된 시간 오염, 혈문, 오염 무전, 구역 판정 기록을 바탕으로 오염 격상과 블랙존화 징후를 분류한 내부 기준 문서.</p><button class="btn open-record" data-record="Redzone_881120" type="button">기록 열람</button></article><article class="doc-card"><div class="code">FCR_Archive_890402</div><h3>타락 개체 분류 추가 보고서</h3><img alt="타락 개체 분류 추가 보고서" class="thumb" loading="lazy" src="assets/resources/c85c636bb85c747508df07e1115a9b89.webp"/><div class="status-row"><span class="chip red">기술·작전</span></div><p class="muted">공식 분류표 밖의 괴이 통칭, 의식성 오염, 귀환자 이상 반응을 정리한 추가 보고서다.</p><button class="btn open-record" data-record="FCR_Archive_890402" type="button">기록 열람</button></article><article class="doc-card"><div class="code">NHC_Manual_891219</div><h3>N.H.C 현장 작전·장비·봉쇄 규정 문서</h3><img alt="N.H.C 현장 작전·장비·봉쇄 규정 문서" class="thumb" loading="lazy" src="assets/resources/e39a87391183a4f564af26c1dd3b7bbd.webp"/><div class="status-row"><span class="chip red">기술·작전</span></div><p class="muted">레드존에서 회수된 장비 기록과 미복귀 대원의 마지막 보고를 바탕으로 작성된 N.H.C 내부 규정. 진입, 생존, 오염 회수, 봉쇄 실패, 기록 회수 절차가 현장 대원용으로 정리되어 있다.</p><button class="btn open-record" data-record="NHC_Manual_891219" type="button">기록 열람</button></article></div></details>
@@ -418,6 +169,7 @@
 <article class="record-detail" data-record="FCR_Archive_890402" hidden=""><header class="doc-header"><div class="label">기록 보관서</div><h1 class="doc-title">타락 개체 분류 추가 보고서</h1><div class="code">FCR_Archive_890402</div><p class="muted">공식 분류표에 포함되지 않는 현장 통칭, 의식성 오염, 귀환자 이상 반응을 별도 기록한 추가 보고서다.</p></header><section class="record-content"><div class="page-status">기록면을 선택해서 열람하십시오.</div><div class="paged-record"><div class="page-tabs"><button class="page-tab active" type="button">추가 보고서 개요</button><button class="page-tab" type="button">괴이 현장 통칭</button><button class="page-tab" type="button">우시노다교 의식성 오염</button><button class="page-tab" type="button">귀환자 이상 반응</button><button class="page-tab" type="button">교차 위험 사례</button><button class="page-tab" type="button">현장 판정 기준</button></div><div class="record-page active">
 <h1>타락 개체 분류 추가 보고서</h1>
 <h3>괴이·우시노다교·귀환자 현장 식별 기록</h3>
+<figure class="record-figure"><img alt="타락 개체 분류 추가 보고서 첫 기록면 회수 이미지" loading="lazy" src="assets/resources/fcr_additional_report_overview.webp"/></figure>
 <p>본 문서는 <b>타락 개체 분류 보고서</b>를 대체하지 않는다. 공식 분류는 타락 개체, 상위 개체, 이례 개체, 인공 개체, 혼합 개체 기준을 따른다.</p>
 <p>이 추가 보고서는 현장에서 공식 분류가 확정되기 전까지 사용되는 통칭, 우시노다교 의식 흔적, 귀환자 이상 반응처럼 여러 문서 사이에 걸쳐 있는 교차 위험 사례를 정리한다.</p>
 <ul>
@@ -689,5 +441,9 @@
 </div>
 </div>
 <script src="assets/js/main.js"></script>
+<script src="assets/data/uac_region_map_data.js"></script>
+<script src="assets/data/uac_region_summaries.js"></script>
+<script src="assets/data/uac_region_record_links.js"></script>
+<script src="assets/js/r24_regional_map_rebuild.js"></script>
 </body>
 </html>
