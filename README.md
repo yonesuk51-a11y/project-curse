@@ -1,3 +1,56 @@
+# MapPatch6.2.8 ContentSuggestion / Remediation QA
+
+- Content Opportunity QA를 추가해 메뉴별로 “추가하면 좋은 컨텐츠 후보”를 제안합니다.
+- Bug Pattern Playbook / Remediation Rules를 추가해 반복 버그별 원인 후보, 권장 수정, 제거 대상 패턴을 기록합니다.
+- `config/UAC_CANON_RULES.json`와 `config/UAC_REMEDIATION_RULES.json`를 기준으로 제작/검수 규칙을 고정합니다.
+- `CONTENT_SUGGESTION_REPORT.md`, `REMEDIATION_QA_REPORT.md`를 생성합니다.
+- 6.2.7의 동기화 게이지 런타임과 시각/설정/지도/오디오 QA 구조를 유지합니다.
+
+---
+
+# MapPatch6.2.6 QA Runtime / Gauge Fix
+
+# PATCH6.2.6 QA Runtime / Gauge Fix
+
+- `runTerminalGauge`를 전역 공통 컨트롤러로 승격해 사이드 메뉴 게이지 로딩 스코프 오류를 수정했다.
+- 일반 메뉴 / 지역지도 / 기록보관서 진입 로딩을 동일한 게이지 시스템으로 통합했다.
+- 기록면 / 내부 페이지 / 세력마크 버튼은 로딩 없이 기존 철컥음만 유지한다.
+- 구버전 팝업/스캔/토스트 노드 제거 루틴을 클릭 시점 중심으로 유지한다.
+- `index.html?uac_qa=1` 런타임 QA 모드를 추가했다.
+- QA 모드는 메뉴 클릭, 게이지 표시, 100% 후 숨김, 구버전 팝업 잔존, 기록 열람 로더를 자동 점검한다.
+- `QA_REPORT.md`, `QA_FINDINGS.json`, `BROWSER_QA_RESULT.json`을 패키지에 포함한다.
+
+---
+
+# Project Curse U.A.C 기록 단말기
+
+## Patch 6.2.5 VisibleGauge AbstractOpsMap
+
+- 주요 로딩은 게이지가 차오른 뒤 100%에서 화면이 펼쳐지는 방식입니다.
+- 지역지도는 실제 지도 재현보다 반추상 U.A.C 작전구역도 기준으로 재구성되었습니다.
+- 세계지도는 권역 선택 전용이며, 세부 마커는 대륙 상세지도에서만 표시됩니다.
+- 구버전 지도 SVG와 좌표 기반 렌더러는 제거되었습니다.
+
+- 낡은 2000~2010년대 기록 단말기 분위기를 유지하면서 메뉴 반응 속도를 단축했습니다.
+- 기록보관서 기록 열람 전용 로딩만 유지하고, 기존 전환 팝업/스캔/리맵 계열은 정리했습니다.
+- PC/모바일 공통 오프캔버스 메뉴, 개별 문서 페이지 메뉴명, 모바일 세력관계 카드 뷰를 보강했습니다.
+
+# Patch6 모바일 기록 시스템 구조 개편본
+
+이 압축본은 기존 ScopeLocked 소스를 직접 개조한 버전입니다.
+
+핵심 변경:
+- 사이드 메뉴를 `세계 개요 / 세력 / 지역지도 / 기록보관서`로 재구성
+- 모바일 상단 `☰` 오프캔버스 메뉴 추가
+- 지역지도 권역 바로가기 추가
+- 세계지도는 권역 선택 전용 화면으로 정리
+- 기록보관서 개별 설정글에 문서 내부 목차 추가
+- 모바일 카드/지도/기록 탭 가독성 보정
+
+자세한 내용은 `PATCH6_MOBILE_RECORD_SYSTEM_RESTRUCTURE_NOTE.md`를 확인하십시오.
+
+---
+
 # Project Curse U.A.C Server — MapPatch5_2_2_VideoFeedLayoutFix
 
 5.2.1 영상 피드 튜닝 이후 발견된 라벨 반복/이미지 정렬 문제를 정리한 안정 패치입니다.
@@ -49,7 +102,7 @@
 - No new generated images were added.
 
 ## Patch: Region Map Code Loading Overlay
-- 지역 지도 진입 시 U.A.C 코드 로딩 오버레이를 표시합니다.
+- 지역지도 진입 시 U.A.C 코드 로딩 오버레이를 표시합니다.
 - 각 대륙/권역 탭 선택 시 짧은 코드 스캔 로딩 화면을 표시합니다.
 - 외부 이미지 생성 없이 CSS/DOM 기반으로 구현했습니다.
 - 기존 9개 권역, 존 복구, PC 16:9 지도 구조는 유지했습니다.
@@ -135,8 +188,8 @@
 
 - 세력 관계도 노드 클릭 강조 / 관련 경로 / 관계표 행 강조 추가.
 - 우측/상단 분석 패널 대신 관계도 상단의 가벼운 FACTION TRACE 패널로 적용.
-- 세력 정보 카드 클릭 시 짧은 파일 재정렬 연출 추가.
-- 기록면 탭 전환 시 RECORD SURFACE REMAP 보조 연출 추가.
+- 세력기록 카드 클릭 시 짧은 파일 재정렬 연출 추가.
+- 기록면 탭 전환 시 RECORD PAGE 보조 연출 추가.
 - 기존 오디오 파일은 유지하고, 클릭 시 짧은 WebAudio 펄스 효과만 추가.
 
 
@@ -440,3 +493,54 @@
 - `assets/css/style.css`
 - `README.md`
 - `PATCH5_8_1_FINAL_HOTFIX_SOURCE_CLEANUP_NOTE.md`
+
+## PATCH 6.1 — Menu Effect / Audio Cleanup
+
+- 사이드 메뉴 항목 클릭 시 표시되던 `REGION MAP ACCESS`, `WORLD OVERVIEW ACCESS` 계열 팝업을 제거했다.
+- 기록 열람 후 기록면/페이지 전환 시 표시되던 `RECORD PAGE` 팝업과 토스트를 제거했다.
+- 세력 마크 클릭 시 세력 설명칸에 표시되던 `FACTION FILE` 효과를 제거했다.
+- 세력 마크 버튼은 기본 버튼 클릭음만 남도록 정리했다.
+- 사이드 메뉴의 기록보관서 하위 메뉴를 제거하고 `기록보관서` 단일 항목으로 유지했다.
+- 효과음은 새로 제공된 프로젝터 버튼, 구형 컴퓨터, VHS, 아날로그 계열 파일을 기존 오디오 슬롯에 맞춰 교체했다.
+
+
+## PATCH6.2 NAV / AUDIO / STATUSBAR FINAL
+
+- 좌측 메뉴는 기본 숨김 상태이며, 좌측 상단 ☰ 버튼으로 열린다.
+- 상단 바는 현재 위치와 짧은 상태값만 표시한다.
+- 사이드 메뉴는 `세계 개요 / 세력 / 지역지도 / 기록보관서` 구조를 사용한다.
+- 기록보관서 기록 열람음은 `403566__lamamakesmusic__computer_startup_boot.wav`의 0~4초 구간만 사용한다.
+- 지정되지 않은 오디오와 팝업/스캔 효과는 제거되었다.
+
+
+## Patch6.2.1 NavFix LightAudio Hotfix
+
+- 좌측 상단 ☰ 버튼 오프캔버스 메뉴 동작 복구
+- PC/모바일 공통 메뉴 열림 처리
+- `assets/audio/source_inputs/` 원본 오디오 폴더 제거
+- 지정된 오디오만 유지
+- `403566__lamamakesmusic__computer_startup_boot.wav`는 0초~4초 컷본만 기록 열람음으로 사용
+
+
+## Patch 6.2.2 — No Transition Popups + Record Page Click
+
+- 남아 있던 REGIONAL / TERMINAL / CHRONICLE / ARCHIVE / RECORD / FACTION FILE 계열 중앙 팝업을 완전히 비활성화했습니다.
+- `pc551-menu-loader` 계열이 여전히 표시되던 문제를 JS 호출부와 CSS에서 함께 차단했습니다.
+- 기록보관서의 기록면과 기록면 내부 페이지 클릭음은 세력마크 버튼의 기존 철컥음과 동일하게 통일했습니다.
+
+
+## Patch 6.2.3
+
+- Responsive stability and archive access loading overlay.
+- Mobile faction relation cards replace cramped radial relation view.
+- Region maps styled as semi-abstract U.A.C operational surfaces.
+- Legacy transition popups remain disabled.
+
+
+## MapPatch6.2.7 SyncedGaugeRuntime VisualQA
+
+이 버전은 로딩 게이지/퍼센트 싱크, 검은 화면 잔상 제거, 반추상 작전구역도 유지, 자동 QA 제작 시스템을 포함합니다.
+
+- 정적 QA: `python tools/qa/run_all_qa.py`
+- 런타임 QA: `index.html?uac_qa=1`
+- 기준 규칙: `config/UAC_CANON_RULES.json`

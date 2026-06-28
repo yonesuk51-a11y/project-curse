@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet">
+<defs>
+  <radialGradient id="bg" cx="50%" cy="48%" r="76%"><stop offset="0" stop-color="#11161a"/><stop offset="0.58" stop-color="#070a0d"/><stop offset="1" stop-color="#020304"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="1.2"/></filter>
+</defs>
+<style>
+  .bg{fill:url(#bg)} .grid{stroke:#26313a;stroke-width:1;opacity:.20} .grid.major{stroke:#46545d;opacity:.28}
+  .land{fill:#12191d;stroke:#5b686e;stroke-width:2.2;opacity:.82} .land.dim{opacity:.54} .land.sea{fill:none;stroke:#6a7051;stroke-dasharray:10 8;opacity:.62} .land.core{fill:#171d22;stroke:#879097;opacity:.88}
+  .label{font:700 26px Consolas,monospace;fill:#d2d7d9;letter-spacing:2px} .note{font:15px Consolas,monospace;fill:#899196;letter-spacing:1px}
+  .title{font:700 34px Consolas,monospace;fill:#e7ecee;letter-spacing:3px} .subtitle{font:16px Consolas,monospace;fill:#929b9f;letter-spacing:1.4px}
+  .edge{fill:none;stroke:#742a31;stroke-width:5;opacity:.72} .scan{fill:none;stroke:#9aa7aa;stroke-width:1;stroke-dasharray:6 10;opacity:.22}
+</style>
+<rect class="bg" width="1600" height="900"/>
+<path d="M100 0V900" class="grid"/><path d="M200 0V900" class="grid"/><path d="M300 0V900" class="grid"/><path d="M400 0V900" class="grid"/><path d="M500 0V900" class="grid"/><path d="M600 0V900" class="grid"/><path d="M700 0V900" class="grid"/><path d="M800 0V900" class="grid"/><path d="M900 0V900" class="grid"/><path d="M1000 0V900" class="grid"/><path d="M1100 0V900" class="grid"/><path d="M1200 0V900" class="grid"/><path d="M1300 0V900" class="grid"/><path d="M1400 0V900" class="grid"/><path d="M1500 0V900" class="grid"/><path d="M0 100H1600" class="grid"/><path d="M0 200H1600" class="grid"/><path d="M0 300H1600" class="grid"/><path d="M0 400H1600" class="grid"/><path d="M0 500H1600" class="grid"/><path d="M0 600H1600" class="grid"/><path d="M0 700H1600" class="grid"/><path d="M0 800H1600" class="grid"/>
+<path class="edge" d="M44 62H1556V838H44Z"/>
+<path class="scan" d="M80 180H1520M80 720H1520M240 90V810M1360 90V810"/>
+<text x="64" y="118" class="title">GLOBAL REGION SELECTOR</text>
+<text x="66" y="148" class="subtitle">권역 선택 전용 관제면</text>
+<rect x="95" y="240" width="250" height="170" rx="18" class="land core"/><text x="150" y="315" class="label">북미</text><text x="150" y="339" class="note">NORTH AMERICA</text><rect x="385" y="225" width="180" height="150" rx="18" class="land "/><text x="430" y="292" class="label">유럽</text><text x="430" y="316" class="note">EUROPE</text><rect x="605" y="275" width="210" height="160" rx="18" class="land "/><text x="655" y="344" class="label">중동</text><text x="655" y="368" class="note">MIDDLE EAST</text><rect x="865" y="235" width="225" height="170" rx="18" class="land core"/><text x="900" y="312" class="label">동아시아</text><text x="900" y="336" class="note">EAST ASIA</text><rect x="1115" y="260" width="230" height="175" rx="18" class="land "/><text x="1148" y="338" class="label">남아시아</text><text x="1148" y="362" class="note">SOUTH ASIA</text><rect x="1170" y="500" width="285" height="160" rx="18" class="land "/><text x="1198" y="570" class="label">동남아·인도양</text><text x="1198" y="594" class="note">SEA / INDIAN</text><rect x="795" y="505" width="255" height="170" rx="18" class="land "/><text x="850" y="582" class="label">아프리카</text><text x="850" y="606" class="note">AFRICA</text><rect x="1210" y="685" width="240" height="95" rx="18" class="land dim"/><text x="1238" y="730" class="label">오세아니아</text><text x="1238" y="754" class="note">OCEANIA</text>
+<text x="64" y="824" class="note">U.A.C SEMI-ABSTRACT OPERATIONAL SURFACE / NOT A GEOGRAPHIC COORDINATE MAP</text>
+</svg>

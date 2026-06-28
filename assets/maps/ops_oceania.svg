@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet">
+<defs>
+  <radialGradient id="bg" cx="50%" cy="48%" r="76%"><stop offset="0" stop-color="#11161a"/><stop offset="0.58" stop-color="#070a0d"/><stop offset="1" stop-color="#020304"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="1.2"/></filter>
+</defs>
+<style>
+  .bg{fill:url(#bg)} .grid{stroke:#26313a;stroke-width:1;opacity:.20} .grid.major{stroke:#46545d;opacity:.28}
+  .land{fill:#12191d;stroke:#5b686e;stroke-width:2.2;opacity:.82} .land.dim{opacity:.54} .land.sea{fill:none;stroke:#6a7051;stroke-dasharray:10 8;opacity:.62} .land.core{fill:#171d22;stroke:#879097;opacity:.88}
+  .label{font:700 26px Consolas,monospace;fill:#d2d7d9;letter-spacing:2px} .note{font:15px Consolas,monospace;fill:#899196;letter-spacing:1px}
+  .title{font:700 34px Consolas,monospace;fill:#e7ecee;letter-spacing:3px} .subtitle{font:16px Consolas,monospace;fill:#929b9f;letter-spacing:1.4px}
+  .edge{fill:none;stroke:#742a31;stroke-width:5;opacity:.72} .scan{fill:none;stroke:#9aa7aa;stroke-width:1;stroke-dasharray:6 10;opacity:.22}
+</style>
+<rect class="bg" width="1600" height="900"/>
+<path d="M100 0V900" class="grid"/><path d="M200 0V900" class="grid"/><path d="M300 0V900" class="grid"/><path d="M400 0V900" class="grid"/><path d="M500 0V900" class="grid"/><path d="M600 0V900" class="grid"/><path d="M700 0V900" class="grid"/><path d="M800 0V900" class="grid"/><path d="M900 0V900" class="grid"/><path d="M1000 0V900" class="grid"/><path d="M1100 0V900" class="grid"/><path d="M1200 0V900" class="grid"/><path d="M1300 0V900" class="grid"/><path d="M1400 0V900" class="grid"/><path d="M1500 0V900" class="grid"/><path d="M0 100H1600" class="grid"/><path d="M0 200H1600" class="grid"/><path d="M0 300H1600" class="grid"/><path d="M0 400H1600" class="grid"/><path d="M0 500H1600" class="grid"/><path d="M0 600H1600" class="grid"/><path d="M0 700H1600" class="grid"/><path d="M0 800H1600" class="grid"/>
+<path class="edge" d="M44 62H1556V838H44Z"/>
+<path class="scan" d="M80 180H1520M80 720H1520M240 90V810M1360 90V810"/>
+<text x="64" y="118" class="title">OCEANIA OPERATIONAL SURFACE</text>
+<text x="66" y="148" class="subtitle">오세아니아 반추상 작전구역도</text>
+<polygon points="415,210 905,225 1035,535 825,710 445,640 295,380" class="land core"/><text x="520" y="420" class="label">호주 내륙 오염권</text><text x="520" y="444" class="note">AUSTRALIAN INTERIOR</text><rect x="840" y="520" width="285" height="150" rx="18" class="land "/><text x="900" y="600" class="label">남동부 후방권</text><text x="900" y="624" class="note">REAR LOGISTICS</text><path d="M1095 265 C1260 230 1410 280 1490 390" class="land sea"/><text x="1190" y="345" class="label">남태평양 감시권</text><text x="1190" y="369" class="note">SOUTH PACIFIC WATCH</text><rect x="295" y="690" width="260" height="85" rx="18" class="land dim"/><text x="340" y="740" class="label">남부 항로</text><text x="340" y="764" class="note">SOUTHERN ROUTE</text>
+<text x="64" y="824" class="note">U.A.C SEMI-ABSTRACT OPERATIONAL SURFACE / NOT A GEOGRAPHIC COORDINATE MAP</text>
+</svg>

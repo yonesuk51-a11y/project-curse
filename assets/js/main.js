@@ -1,14 +1,154 @@
+/* PATCH6_2_7_SYNCEDGAUGE_VISUALQA
+   Single synced gauge/runtime loader. The bar width, numeric percent, completion, unfold,
+   and overlay removal are driven from one controller to prevent desync and black-screen residue. */
+(function(){
+  const VERSION='6.2.7';
+  const DEFAULT_STEPS=[0,7,16,28,41,46,63,77,88,96,100];
+  const active=new WeakMap();
+  function clamp(v){return Math.max(0,Math.min(100,Math.round(Number(v)||0)));}
+  function pad(v){return String(clamp(v)).padStart(3,'0')+'%';}
+  function wait(ms){return new Promise(function(resolve){setTimeout(resolve,Math.max(0,ms||0));});}
+  function findFill(el){return el && (el.querySelector('[data-gauge-fill]') || el.querySelector('.terminal-gauge i') || el.querySelector('.uac-data-bar i') || el.querySelector('.archive-access-bar i') || el.querySelector('.loadbar span'));}
+  function findPercent(el){return el && (el.querySelector('[data-gauge-percent]') || el.querySelector('.terminal-gauge em') || el.querySelector('.loadbar em'));}
+  function cancel(el){
+    const state=active.get(el);
+    if(state){
+      state.cancelled=true;
+      if(state.raf) cancelAnimationFrame(state.raf);
+      (state.timers||[]).forEach(clearTimeout);
+      active.delete(el);
+    }
+  }
+  function setGauge(el,value){
+    const v=clamp(value);
+    const fill=findFill(el);
+    const pct=findPercent(el);
+    if(fill){
+      fill.style.transition='none';
+      fill.style.width=v+'%';
+      fill.setAttribute('aria-valuenow',String(v));
+    }
+    if(pct) pct.textContent=pad(v);
+    el.dataset.gaugeValue=String(v);
+  }
+  function steppedValue(progress,steps){
+    if(progress>=1) return 100;
+    const idx=Math.max(0,Math.min(steps.length-1,Math.floor(progress*(steps.length-1))));
+    return steps[idx];
+  }
+  function run(el,duration,options){
+    if(!el) return Promise.resolve(false);
+    options=options||{};
+    duration=Math.max(320,Number(duration)||900);
+    const steps=Array.isArray(options.steps)&&options.steps.length>1 ? options.steps.map(clamp) : DEFAULT_STEPS;
+    cancel(el);
+    const state={cancelled:false,timers:[]};
+    active.set(el,state);
+    el.dataset.gaugeRunning='1';
+    el.classList.remove('gauge-done');
+    setGauge(el,0);
+    return new Promise(function(resolve){
+      const start=performance.now();
+      function frame(now){
+        if(state.cancelled){resolve(false);return;}
+        const progress=Math.min(1,(now-start)/duration);
+        const value=options.smooth ? progress*100 : steppedValue(progress,steps);
+        setGauge(el,value);
+        if(progress<1){ state.raf=requestAnimationFrame(frame); }
+        else{
+          setGauge(el,100);
+          el.dataset.gaugeRunning='0';
+          el.classList.add('gauge-done');
+          active.delete(el);
+          try{el.dispatchEvent(new CustomEvent('uac:gauge:complete',{bubbles:true,detail:{duration:duration,version:VERSION}}));}catch(e){}
+          resolve(true);
+        }
+      }
+      state.raf=requestAnimationFrame(frame);
+    });
+  }
+  function ensureDataLoader(){
+    let el=document.getElementById('uacDataAccessLoader');
+    if(!el){
+      el=document.createElement('div');
+      el.id='uacDataAccessLoader';
+      el.className='uac-data-access-loader uac-gauge-loader pc627-loader';
+      el.innerHTML='<div class="uac-data-access-box terminal-gauge-box"><div class="uac-data-kicker">[DATA ACCESS]</div><div class="uac-data-title">화면 데이터 호출 중</div><div class="uac-data-lines"><span>색인 확인</span><span>표시 권한 확인</span><span>노드 응답 확인</span></div><div class="terminal-gauge"><i data-gauge-fill></i><em data-gauge-percent>000%</em></div><div class="pc626-loader-foot">PC-03 LEGACY TERMINAL / LOW RESOLUTION ACCESS</div></div>';
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+  function setDataText(el,cfg){
+    cfg=cfg||{};
+    const k=el.querySelector('.uac-data-kicker');
+    const title=el.querySelector('.uac-data-title');
+    const lines=el.querySelector('.uac-data-lines');
+    if(k) k.textContent='['+(cfg.code||'DATA ACCESS')+']';
+    if(title) title.textContent=cfg.title||'화면 데이터 호출 중';
+    if(lines) lines.innerHTML=(cfg.lines||['색인 확인','표시 권한 확인','노드 응답 확인']).map(function(x){return '<span>'+String(x)+'</span>';}).join('');
+  }
+  function resetOverlay(el){
+    if(!el) return;
+    cancel(el);
+    el.classList.remove('show','hide','complete','gauge-done','is-running');
+    el.style.opacity='';
+    el.style.visibility='';
+    el.style.pointerEvents='none';
+    setGauge(el,0);
+  }
+  function show(el,duration,options){
+    options=options||{};
+    if(!el) return Promise.resolve(false);
+    cancel(el);
+    el.classList.remove('hide','complete','gauge-done');
+    el.classList.add('show','is-running');
+    el.style.opacity='1';
+    el.style.visibility='visible';
+    el.style.pointerEvents='none';
+    void el.offsetWidth;
+    return run(el,duration,options).then(function(ok){
+      if(!ok) return false;
+      el.classList.add('complete');
+      return wait(options.completePause==null?120:options.completePause).then(function(){
+        if(typeof options.beforeHide==='function') options.beforeHide();
+        // Remove the dark backing at completion so there is no black-screen residue.
+        el.classList.add('hide');
+        el.classList.remove('is-running');
+        return wait(options.fadeDuration==null?120:options.fadeDuration).then(function(){resetOverlay(el);return true;});
+      });
+    });
+  }
+  function showData(kind,cfg,duration){
+    const el=ensureDataLoader();
+    setDataText(el,cfg||{});
+    return show(el,duration||820,{steps:[0,8,17,29,42,48,66,81,92,98,100],completePause:110,fadeDuration:110,kind:kind||'default'});
+  }
+  function showArchive(el,duration,next){
+    return show(el,duration||2050,{steps:[0,6,15,27,35,39,58,74,89,97,100],completePause:130,fadeDuration:130,beforeHide:function(){ if(typeof next==='function') next(); }});
+  }
+  window.ProjectCurseTerminalGauge={version:VERSION,run:run,cancel:cancel,set:setGauge,reset:resetOverlay};
+  window.ProjectCurseTerminalLoader={version:VERSION,show:show,showData:showData,showArchive:showArchive,reset:resetOverlay,ensureDataLoader:ensureDataLoader};
+  window.runTerminalGauge=run;
+})();
+var runTerminalGauge = window.runTerminalGauge;
+
+
 document.addEventListener('DOMContentLoaded',()=>{
   function rootPrefix(){const p=location.pathname; if(p.includes('/docs/'))return '../../'; if(p.includes('/archive/'))return '../'; return '';}
   const prefix=rootPrefix();
   const loader=document.getElementById('loader');
   const app=document.getElementById('app');
-  const audio={menu:new Audio(prefix+'assets/audio/menu_tick.mp3'),open:new Audio(prefix+'assets/audio/record_open.mp3'),page:new Audio(prefix+'assets/audio/page_turn.mp3'),boot:new Audio(prefix+'assets/audio/boot_legacy.mp3'),ambient:new Audio(prefix+'assets/audio/ambient_loop.mp3'),load:new Audio(prefix+'assets/audio/record_load.mp3')};
-  audio.menu.volume=.26; audio.open.volume=.30; audio.page.volume=.28; audio.boot.volume=.30; audio.load.volume=.42; audio.ambient.volume=.11; audio.ambient.loop=true;
+  const audio={menu:new Audio(prefix+'assets/audio/menu_analog.wav'),record:new Audio(prefix+'assets/audio/record_read.wav'),boot:new Audio(prefix+'assets/audio/boot_loading.wav'),ambient:new Audio(prefix+'assets/audio/ambient_loop.mp3'),faction:new Audio(prefix+'assets/audio/faction_click.mp3')};
+  // Patch6.2.2: record-face/page tabs use the same mechanical click as faction mark buttons.
+  audio.page=audio.faction;
+  audio.menu.volume=.32; audio.record.volume=.38; audio.boot.volume=.36; audio.ambient.volume=.10; audio.faction.volume=.30; audio.ambient.loop=true;
+  window.ProjectCurseAudio=audio;
   let ambientStarted=false;
   if(localStorage.getItem('pc_audio_legacy2003_fixed')===null) localStorage.setItem('pc_audio_legacy2003_fixed','on');
   function isOn(){return localStorage.getItem('pc_audio_legacy2003_fixed')!=='off'}
   function play(a){if(!isOn()||!a)return; try{a.currentTime=0; a.play().catch(()=>{});}catch(e){}}
+  window.ProjectCursePlayAudio=play;
+  function runTerminalGauge(el,duration,options){ return window.runTerminalGauge ? window.runTerminalGauge(el,duration,options) : Promise.resolve(false); }
   function startAmbient(){if(!isOn()||ambientStarted||!audio.ambient)return; ambientStarted=true; try{audio.ambient.play().catch(()=>{ambientStarted=false;});}catch(e){ambientStarted=false;}}
   document.addEventListener('pointerdown',startAmbient); document.addEventListener('keydown',startAmbient);
   function ensureRecordLoader(){let el=document.getElementById('recordLoading'); if(!el){el=document.createElement('div'); el.id='recordLoading'; el.className='record-loading'; el.innerHTML='<div class="box"><div class="title">DOCUMENT HASH CHECK</div><div class="logline">VERIFYING ARCHIVE SEAL...</div><div class="logline">CHECKING CLEARANCE LEVEL...</div><div class="logline">DECRYPTING RECORD BLOCK...</div><div class="logline">MOUNTING PAGE SECTORS...</div><div class="bars"><i></i></div><div class="loader-hint">READ PERMISSION: FIELD REVIEW</div></div>'; document.body.appendChild(el);} return el;}
@@ -29,12 +169,36 @@ document.addEventListener('DOMContentLoaded',()=>{
           : '<div class="box"><div class="title">DOCUMENT HASH CHECK</div><div class="logline">VERIFYING ARCHIVE SEAL...</div><div class="logline">CHECKING CLEARANCE LEVEL...</div><div class="logline">DECRYPTING RECORD BLOCK...</div><div class="logline">MOUNTING PAGE SECTORS...</div><div class="bars"><i></i></div><div class="loader-hint">READ PERMISSION: FIELD REVIEW</div></div>';
     return el;
   }
-  function showRecordLoad(next){const el=ensureRecordLoader(); el.classList.remove('done'); void el.offsetWidth; el.classList.add('show'); startAmbient(); play(audio.load||audio.open); const minTime=2050; setTimeout(()=>{ el.classList.add('done'); if(typeof next==='function') next(); else el.classList.remove('show'); },minTime);}
+  
+  let archiveAccessTimer=0;
+  function ensureArchiveAccessLoader(){
+    let el=document.getElementById('archiveAccessLoader');
+    if(!el){
+      el=document.createElement('div');
+      el.id='archiveAccessLoader';
+      el.className='archive-access-loader uac-gauge-loader';
+      el.innerHTML='<div class="archive-access-box terminal-gauge-box"><div class="archive-access-kicker">[ARCHIVE ACCESS]</div><div class="archive-access-title">기록 문서 열람 중</div><div class="archive-access-lines"><span>원본 기록 호출</span><span>손상 구간 대조</span><span>열람 권한 확인</span></div><div class="terminal-gauge"><i data-gauge-fill></i><em data-gauge-percent>000%</em></div><div class="archive-access-hint">OLD TERMINAL / RECORD BLOCK / READ ONLY</div></div>';
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+  function showRecordLoad(next){
+    startAmbient();
+    const el=ensureArchiveAccessLoader();
+    clearTimeout(archiveAccessTimer);
+    play(audio.record);
+    if(window.ProjectCurseTerminalLoader && window.ProjectCurseTerminalLoader.showArchive){
+      window.ProjectCurseTerminalLoader.showArchive(el,2050,next);
+    }else{
+      el.classList.add('show');
+      setTimeout(function(){ if(typeof next==='function') next(); el.classList.remove('show'); },2050);
+    }
+  }
   function syncBtns(){document.querySelectorAll('#audioToggle').forEach(b=>b.textContent=isOn()?'효과음: 켜짐':'효과음: 꺼짐')}
   syncBtns();
   const bootLines=Array.from(document.querySelectorAll('#bootLines p'));
-  bootLines.forEach((line,i)=>setTimeout(()=>line.classList.add('show'),220+i*260));
-  if(loader){setTimeout(()=>{loader.classList.add('hide'); if(app)app.classList.add('ready'); play(audio.boot);},2350);} else {if(app)app.classList.add('ready');}
+  bootLines.forEach((line,i)=>setTimeout(()=>line.classList.add('show'),70+i*70));
+  if(loader){play(audio.boot); runTerminalGauge(loader,1800,{steps:[0,9,18,31,46,58,73,86,96,100]}); setTimeout(()=>{loader.classList.add('hide'); if(app)app.classList.add('ready');},1800);} else {if(app)app.classList.add('ready');}
   document.querySelectorAll('#audioToggle').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem('pc_audio_legacy2003_fixed',isOn()?'off':'on'); syncBtns(); if(isOn())play(audio.menu);}));
   const pages=Array.from(document.querySelectorAll('.content-page'));
   const links=Array.from(document.querySelectorAll('.side-menu a[data-target]'));
@@ -47,23 +211,22 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
   links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault(); startAmbient(); play(audio.menu); show(a.dataset.target); history.replaceState(null,'','#'+a.dataset.target);}));
   if(pages.length){show((location.hash||'#history').slice(1));}
-  document.querySelectorAll('[data-open-record], .archive-list a, .backline a, .btn:not(.open-record):not(.record-back)').forEach(a=>a.addEventListener('click',()=>play(audio.open)));
   const factionData={"uac": {"img": "uac.webp", "name": "U.A.C", "meta": "Urban Anomaly 봉쇄 / 도시 이상현상 격리국", "summary": "도시 이상현상과 우시노다교 의식, 괴이 출현, 레드존 확산을 감시하고 격리하는 상위 통제 기관.", "pages": [{"title": "개요", "body": "<p>U.A.C는 도시 내부에서 발생하는 이상현상, 괴이 출현, 우시노다교 의식, 오컬트 재난, 적성 종교 세력의 침투를 감시하고 격리하기 위해 설립된 국가 안보 기관이다.</p><p>정식 명칭은 Urban Anomaly 봉쇄이며, 한국어 명칭으로는 도시 이상현상 격리국이라 불린다. U.A.C는 단순한 수사 기관이나 군사 조직이 아니라, 도시 단위의 초상 재난을 감시하고 위험 구역을 분류하며 이상현상의 확산을 막기 위해 각 기관을 조율하는 상위 통제 기관에 가깝다.</p>"}, {"title": "창설 배경", "body": "<p>U.A.C의 창설 기점은 1986년으로 기록된다. 당시 정부는 대규모 인신공양 사건을 저지하기 위해 불멸을 향해 및 Blood Lake Incident File 작전을 승인하였다.</p><p>해당 작전은 우시노다교가 준비하던 대규모 인신공양 의식을 차단하기 위한 특수 작전이었으며, 의식의 완전한 진행은 저지되었다. 그러나 작전 이후 다수의 괴이체, 비정상적인 생체 변이, 오염된 의식 흔적, 기존 법집행기관으로는 설명하거나 통제할 수 없는 이상현상이 확인되었다.</p><p>정부는 이 사건을 계기로 일시적인 대응팀이 아닌, 영구적으로 이상현상을 감시하고 격리할 전문 기관이 필요하다고 판단하였다. 그 결과 설립된 조직이 U.A.C이다.</p>"}, {"title": "초기 조직 체계", "body": "<p>창설 초기에는 S.I.D와 N.H.C가 각각 조사 부서와 현장 진압 부서로서 U.A.C 산하에 편제되어 있었다. 우시노다교 의식, 괴이 출현, 인신공양 사건에 대응할 전문 기관이 부족했기 때문에 조사, 정보 수집, 현장 진압 기능이 모두 U.A.C 내부 체계에 묶여 있었다.</p><ul><li>U.A.C : 상위 통제 기관</li><li>S.I.D : 특수 조사 부서</li><li>N.H.C : 현장 진압 부서</li></ul>"}, {"title": "현재 조직 체계", "body": "<p>우시노다 현상, 괴이 출현, 레드존 확산, 혈교 의식, 블랙존화 사건이 증가하면서 기존 U.A.C 내부 부서 체계만으로는 대응이 어려워졌다.</p><p>이후 조직 개편을 통해 S.I.D와 N.H.C는 U.A.C 산하 하위 부서에서 분리되어 독립 기관으로 재편되었다. 현재 U.A.C는 도시 이상현상의 상위 통제와 구역 분류, 정보 관리, 기관 간 작전 조율을 담당하며, S.I.D와 N.H.C는 독립 기관으로서 U.A.C와 협력한다.</p><ul><li>U.A.C : 상위 통제, 구역 분류, 정보 관리</li><li>S.I.D : 독립 특수 조사 기관</li><li>N.H.C : 독립 현장 대응 조직</li></ul>"}, {"title": "핵심 목표", "body": "<p>U.A.C의 핵심 목표는 우시노다교의 인신공양 의식을 사전에 차단하고, 그로 인해 발생하는 타락 개체을 제거 또는 통제하는 것이다.</p><p>이후 우시노다 현상과 혈교 의식, 타락교 하위 조직, 인공 괴이, 피의 호수, 변이 균주와 같은 사건들이 늘어나면서 U.A.C의 임무 범위는 확장되었다. 현재 U.A.C는 괴이를 제거하는 기관이 아니라, 도시 전체가 레드존 또는 블랙존으로 변질되는 것을 막기 위한 최종 통제선으로 기능한다.</p>"}, {"title": "주요 임무", "body": "<ul><li>우시노다교 인신공양 의식 사전 차단</li><li>타락 개체 출현 감시</li><li>그린존, 옐로우존, 레드존, 화이트존, 블랙존 분류</li><li>이상현상 발생 지역 봉쇄 및 정보 통제</li><li>현장 기록, CCTV, 오디오, 생체 샘플 회수</li><li>S.I.D, N.H.C, F.H.C, A.R.F, C.P.D와의 작전 조율</li><li>위험 인물 및 비인가 연구자 감시</li><li>오컬트 생명체, 미확인 균주, 변이 조직 분석</li><li>민간 사회로의 정보 유출 차단</li></ul>"}, {"title": "정보 수집 부서", "body": "<p>U.A.C 정보 수집 부서는 도시 전역의 감시 영상, 통신 기록, 오디오 파일, 암호화 CCTV, 현장 데이터를 수집하고 복구하는 정보 부서이다. 이 부서는 U.A.C의 눈으로 불리며, 이상현상이 발생하기 전의 징후를 포착하고 이미 발생한 사건의 기록을 복원하는 역할을 맡는다.</p><p>주로 N.H.C 내부 이탈 징후, S.I.D 현장 보고, F.H.C 회수 문서, 타락교 및 혈교 활동 기록을 분석한다. 레드울프 이탈 기록과 축복으로 위장된 병기는 해당 부서가 복구한 감시 자료로 분류된다.</p><ul><li>암호화 영상 복호화</li><li>감시 데이터 수집</li><li>통신 기록 분석</li><li>내부 반역 징후 감시</li><li>적성 세력 활동 추적</li><li>위험 인물 파일 작성</li><li>비인가 오디오 및 CCTV 자료 복구</li><li>우시노다 현상 발생 전조 감지</li></ul>"}, {"title": "도시 격리 집행부", "body": "<p>U.A.C 도시 격리 집행부는 확인된 이상현상 발생 지역을 봉쇄하고, 괴이 및 오염 요소의 확산을 차단하는 실행 부서이다. 이 부서는 U.A.C의 망치로 불리며, 직접적인 전투만을 담당하는 조직이라기보다는 현장 봉쇄, 격리 명령, 출입 통제, 구역 등급 격상, 지원 부대 호출 권한을 가진 작전 집행 체계에 가깝다.</p><ul><li>이상현상 발생 지역 봉쇄</li><li>구역 출입 통제</li><li>민간인 대피 명령 승인</li><li>현장 격리선 설치</li><li>N.H.C 및 A.R.F 투입 요청</li><li>C.P.D와 연계한 피난민 통제</li><li>레드존 및 블랙존화 징후 감시</li><li>우시노다교 의식장 차단</li><li>괴이체 확산 경로 봉쇄</li></ul>"}, {"title": "오컬트 생명 과학 부서", "body": "<p>U.A.C 오컬트 생명 과학 부서는 괴이, 타락체, 피의 호수, 미확인 균주, 변이 조직을 연구하는 생체 분석 부서이다. 일반적인 생물학이나 법의학으로 설명할 수 없는 사체, 조직, 체액, 균주, 장기 반응을 조사한다.</p><p>피의 호수 부검 기록에서 마렌 예거트의 시신을 분석했으며, BL-088 균주를 최초로 임시 분류한 부서로 기록된다.</p><ul><li>괴이 조직 분석</li><li>타락 생명체 부검</li><li>미확인 균주 분류</li><li>생체 부패 정지 반응 연구</li><li>혈액성 잔류물 분석</li><li>괴이 유전자 자료 대조</li><li>F.H.C 분석 부서와 샘플 공유</li><li>타락 개체 변이 과정 기록</li></ul>"}]}, "nhc": {"img": "nhc.webp", "name": "N.H.C", "meta": "National Hazard Control / 국가 위난 격리 사령부", "summary": "레드존과 블랙존 인접 지역에 투입되는 고위험 현장 대응 조직.", "pages": [{"title": "개요", "body": "<p>N.H.C는 레드존, 옐로우존, 블랙존 인접 지역에 투입되는 고위험 현장 대응 조직이다. 초기에는 U.A.C 산하 현장 진압 부서로 운용되었으나, 레드존 확산과 블랙존화 사건이 증가하면서 독립적인 현장 대응 조직으로 재편되었다.</p><p>괴이 섬멸, 방어선 유지, 고위험 구역 봉쇄, 생존자 회수, 적성 무장 세력 제압을 담당한다. U.A.C가 전체 통제와 정보 관리를 담당한다면, N.H.C는 직접적인 전투와 현장 작전을 수행하는 조직이다.</p>"}, {"title": "레드울프 이탈", "body": "<p>과거 N.H.C 산하에는 레드울프가 1차 작전팀으로 존재했다. 그러나 그린존 붕괴 이후 이어진 사건을 계기로 해당 팀은 사실상 이탈하였고, 현재는 신디케이트 주요팀으로 분류된다.</p>"}, {"title": "주요 임무", "body": "<ul><li>레드존 방어선 유지</li><li>괴이 및 타락체 섬멸</li><li>고위험 구역 봉쇄</li><li>생존자 제한 구조</li><li>적성 무장 세력 제압</li><li>블랙존화 징후 감시</li><li>오염 구역 정화 및 소각 판단</li></ul>"}, {"title": "전술 및 특수 자산", "body": "<p>N.H.C는 일반 화기뿐만 아니라 타락 개체의 재생력을 억제하는 고주파 소각탄, 혈액 변이를 중단시키는 화학 중화 가스, 대괴이 특수 탄약 등 우시노다 현상에 특화된 독점 병기를 운용한다.</p><p>포획된 변이체를 해부하여 약점을 찾아내고, 인간 요원들에게 초자연적 저항력을 부여하는 위험한 시술 시설을 보유하고 있다는 의혹도 존재한다.</p>"}, {"title": "위버맨시", "body": "<p>위버맨시는 N.H.C의 기술력으로 탄생한 대생명체 전용 강화병이다. 우시노다 현상, 혈교 의식, 타락교 정신 오염, 그림자 계열 이상현상에 대응하기 위해 만들어진 극비 전력이다.</p><p>타락 개체와 대등하게 싸울 수 있는 유일한 인간형 전력으로 평가되지만, 시술 부작용으로 인해 서서히 인간성을 잃거나 결국 스스로가 격리 대상이 되는 경우가 있다.</p>"}, {"title": "기본 핵심 능력", "body": "<h4>혈액 중화 및 강화</h4><p>혈교의 혈액 마법에 대응하기 위해 자신의 혈액을 특수 화학 물질로 치환한 개체군이다. 이 혈액은 괴이체의 산성 혈액에 부식되지 않으며, 상처 부위를 빠르게 응고시키는 초재생 반응을 제공한다.</p><h4>신경계 가속</h4><p>그림자 계열 이상현상에 대응하기 위해 신경계를 기계적으로 가속한 개체군이다. 그림자 속에서 적이 나타나는 찰나의 움직임을 포착할 수 있는 초감각적 반사신경을 가진다.</p><h4>정신 격벽</h4><p>타락교의 정신 오염을 차단하기 위해 뇌에 인지 필터 칩을 삽입한 개체군이다. 환각이나 공포를 노이즈로 처리하여 무시할 수 있지만, 부작용으로 인간적인 감정까지 거세되어 기계처럼 차가운 성격이 되는 경우가 있다.</p>"}, {"title": "교단 분파별 사냥 전술", "body": "<h4>타락교 대응</h4><p>S.I.D가 특수 전파 교란기로 공간 왜곡을 억제하는 동안, 위버맨시는 정신 격벽을 활성화한 채 안개를 뚫고 진입한다.</p><h4>혈교 대응</h4><p>위버맨시는 대괴이용 무기를 사용하여 혈교의 경질화된 피와 뼈 무기를 절단한다. 혈액 마법에 전염되지 않는 특수 방호복과 중화 혈액 덕분에 강제 변이 공격을 무시하며 육탄전으로 괴물들을 제압한다.</p><h4>그림자교 대응</h4><p>고광도 UV 조명탄과 음파 탐지기로 그림자교의 은신처를 강제로 노출시킨다. 그림자 속으로 숨으려는 적을 가속된 신경계로 추적하여 비물질화가 풀리는 짧은 순간을 노려 특수 탄환으로 사살한다.</p>"}]}, "sid": {"img": "sid.webp", "name": "S.I.D", "meta": "Special Investigation Department / 특수 수사과", "summary": "이상현상, 오컬트 사건, 실종 사건, 심각 범죄를 조사하는 특수 조사 조직.", "pages": [{"title": "개요", "body": "<p>S.I.D는 이상현상, 심각 범죄, 괴이 출현, 오컬트 사건을 조사하는 특수 조사 조직이다. 초기에는 U.A.C 산하 특수 조사 부서로 운용되었으나, 사건 규모가 확대되고 지역별 독립 조사가 필요해지면서 독립 기관으로 재편되었다.</p><p>일반적인 수사 기관으로 해결하기 어려운 사건을 담당하며, 현장 조사, 피해자 기록, 의식 흔적 분석, 민간 구역 감시를 수행한다. 그린존 내부의 치안 유지와 이상현상 감시 역시 S.I.D의 주요 임무 중 하나이다.</p>"}, {"title": "핵심 임무", "body": "<ul><li>도심 및 일상 공간에서 발생하는 기괴한 징후 감지</li><li>피의 연못, 그림자 전이, 신체 변이 등 초상 현상 추적</li><li>우시노다 현상 발생 경로 분석</li><li>교단 은신처 및 의식장 식별</li><li>초자연적 에너지 잔류량 측정</li><li>F.H.C, 타락교, 혈교 관련 의도적 의식 여부 판별</li><li>현장 1차 봉쇄 및 정보 검열</li></ul>"}, {"title": "N.H.C와의 공조", "body": "<p>S.I.D는 수집된 데이터를 분석하여 N.H.C가 화력을 집중할 지점을 지목한다. 현상 발생 시 가장 먼저 현장에 도착하여 반경 수 킬로미터를 물리적으로 폐쇄하고, 외부인의 출입을 막으며 진실이 유출되지 않도록 정보 검열을 병행한다.</p><p>상황이 걷잡을 수 없이 커질 경우 N.H.C의 정규군 병력에 배속되어 현장 가이드 및 전술 지원팀으로 직접 전투에 참여한다.</p>"}, {"title": "무장 및 전술 지위", "body": "<p>S.I.D는 경찰 계열 조사 조직이지만 일반 총기 외에도 대크리처 전용 특수 탄환, 전파 교란기, 고감도 열화상 탐지기 등 군사 수준의 장비를 운용한다.</p><p>주 임무는 조사와 차단이지만, 초기 대응 실패 시 N.H.C가 도착하기 전까지 1차 봉쇄선을 유지해야 한다.</p>"}, {"title": "오컬트 부서", "body": "<p>S.I.D 오컬트 부서는 우시노다 현상, 괴이 출현, 타락교 관련 사건, 혈교 의식 흔적 등을 조사하는 전문 부서이다. 현장 조사관, 특수 효과 분석 담당자, 기록 담당자, 심각 범죄 분석관으로 구성되어 있다.</p><p>사쿠마 유타 실종 사건 보고서는 S.I.D 일본 도쿄 지부 오컬트 부서가 관리하던 사건 기록으로 분류된다.</p><ul><li>오컬트 범죄 현장 조사</li><li>괴이 흔적 판독</li><li>우시노다교 관련 문서 회수</li><li>피해자 관계 인물 조사</li><li>정신 오염 가능성 판정</li><li>U.A.C 및 F.H.C로 자료 이관</li></ul>"}]}, "ashcrew": {"img": "ashcrew.webp", "name": "Ash Crew", "meta": "괴이 사체 처리반 / N.H.C 산하 특수 처리반", "summary": "전투 이후 남은 오염 사체, 괴이 잔해, Blood Gate 잔류물, 오염된 장비를 봉인·회수·소각하는 처리반.", "pages": [{"title": "개요", "body": "<p>Ash Crew는 독립 세력이 아니라 N.H.C 산하 특수 처리반이다. 일반 N.H.C 전투조가 진압과 봉쇄를 담당한다면, Ash Crew는 전투 이후 남은 오염 사체, 괴이 잔해, 블랙 태그 대상, 오염된 장비, Blood Gate 잔류물을 봉인하고 소각한다.</p><p>이 부대는 전투의 승패가 결정된 뒤에도 끝나지 않는 현장 오염을 처리하기 위해 운용된다. 잔해 하나가 새로운 오염 매개체가 될 수 있기 때문에, Ash Crew의 임무는 단순한 청소가 아니라 2차 재난 차단에 가깝다.</p>"}, {"title": "오염 사체 처리", "body": "<p>괴이 사체, 타락 개체 잔해, 부패 정지 상태의 인체 조직, 혈액성 잔류물은 일반 의료·군수 절차로 처리하지 않는다. Ash Crew는 블랙 태그 봉인 백과 고열 소각 장비를 사용해 현장 반출 전 오염 수치를 측정하고, 회수 불가 판정 시 현장에서 소각한다.</p><ul><li>괴이 사체의 부위별 분리 봉인</li><li>혈액성 잔류물의 중화 및 소각</li><li>감염 가능 장비의 임시 격납</li><li>귀환자 접촉 흔적의 별도 기록</li></ul>"}, {"title": "블랙 태그", "body": "<p>블랙 태그 대상은 일반 회수 대상으로 분류되지 않는다. 해당 대상은 살아있는 생존자처럼 보이더라도 오염 매개체, 위장 개체, 자율 증식 조직일 가능성이 있어 Ash Crew 또는 U.A.C 고위 승인 없이는 반출할 수 없다.</p><p>A.R.F가 회수 작전을 수행하더라도 블랙 태그 대상은 Ash Crew의 현장 판정을 거친 뒤 봉인·소각·격리 중 하나로 처리된다.</p>"}, {"title": "오염된 장비", "body": "<p>오염된 장비는 현장 인원이 사용했거나 접촉한 장비가 의식 잔류물, 혈액성 반응, Ghost Channel 노이즈와 결합해 독립 위험물로 변한 것을 뜻한다. Ash Crew는 해당 장비를 군수품으로 회수하지 않고 별도 저주 오염 장비로 분류한다.</p><ul><li>손상된 혈무 또는 오염 탄창</li><li>Ghost Channel 반응을 보이는 무전기</li><li>피의 호수 잔류물에 노출된 방호복</li><li>사용자 사망 후에도 반응하는 장비</li></ul>"}, {"title": "주요 장비", "body": "<ul><li>블랙 태그 봉인 백</li><li>고열 소각기</li><li>CI-O 오염 측정기</li><li>Ghost Channel 차단기</li><li>Ash Truck 현장 처리 차량</li><li>오염 장비 임시 격납 케이스</li><li>혈액성 잔류물 중화 팩</li></ul>"}, {"title": "협력 기관", "body": "<p>Ash Crew는 N.H.C의 후속 처리반이지만 단독으로 모든 결정을 내리지 않는다. S.I.D가 현장 증거를 확인하고, A.R.F가 회수 가능한 물리 자료를 선별하며, F.H.C는 일부 샘플의 분석 필요성을 제기한다. 다만 블랙 태그 대상의 최종 반출 여부는 U.A.C 통제권 아래 결정된다.</p>"}]}, "arf": {"img": "arf.webp", "name": "A.R.F", "meta": "Anomaly Recovery Force / 이상현상 회수 부대", "summary": "전면 교전보다 생존자, 샘플, 기록 매체, 장비, 시신, 기밀 자산 회수에 특화된 조직.", "pages": [{"title": "개요", "body": "<p>A.R.F는 이상현상 회수 부대다. 전면 교전보다 생존자, 샘플, 기록 매체, 장비, 시신, 기밀 자산을 회수하는 역할에 특화되어 있다.</p><p>이들은 N.H.C가 교전 구역을 확보한 뒤 후속 진입하며, 아직 완전히 안전하지 않은 현장에서 정보와 물증을 보존하는 역할을 맡는다.</p>"}, {"title": "회수 임무", "body": "<ul><li>생존자 제한 구조 및 이송</li><li>시신과 신원 불명 인체 잔해 반출</li><li>현장 기록 매체, 카메라, 오디오 장비 회수</li><li>괴이 조직과 혈액 샘플의 1차 격납</li><li>기밀 장비와 오염 문서 회수</li></ul>"}, {"title": "작전 구조", "body": "<p>A.R.F는 선두 전투부대가 아니다. N.H.C가 위험 개체를 제압하거나 방어선을 확보한 뒤 진입하며, S.I.D가 지정한 증거물과 U.A.C가 요구한 기록 매체를 우선 회수한다.</p><p>현장 상황이 불안정할 경우 A.R.F는 회수보다 봉쇄선 외곽 대기를 우선하며, N.H.C 호위 없이 레드존 심부로 진입하지 않는다.</p>"}, {"title": "F.H.C 분석 전 단계", "body": "<p>F.H.C가 분석하는 대부분의 샘플은 A.R.F가 먼저 물리적으로 회수한다. A.R.F는 연구 조직이 아니라 회수 조직이므로, 샘플의 의미를 해석하기보다 원형 보존과 오염 확산 방지를 우선한다.</p><ul><li>샘플 원형 보존</li><li>현장 좌표 및 회수 시간 기록</li><li>동행 인원 오염 노출 기록</li><li>분석기관 이송 전 봉인 확인</li></ul>"}, {"title": "Ash Crew와의 차이", "body": "<p>A.R.F는 회수 가능한 자료와 생존자를 반출하는 부대이고, Ash Crew는 회수 불가 또는 위험성이 높은 사체·장비를 처리하는 부대다. 블랙 태그 대상은 A.R.F가 단독 회수하지 않고 Ash Crew 또는 U.A.C의 판단을 따른다.</p>"}]}, "cpd": {"img": "cpd.webp", "name": "C.P.D", "meta": "Civilian Protection Division / 민간 보호 조직", "summary": "민간 보호와 외곽 질서 유지, 피난민 관리, 귀환자 분리 절차를 담당하는 조직.", "pages": [{"title": "개요", "body": "<p>C.P.D는 민간 보호와 외곽 질서 유지를 담당하는 조직이다. 레드존 안쪽으로 깊게 들어가기보다는 검문선, 대피소, 보호 구역, 귀환자 분리 절차를 관리한다.</p><p>U.A.C와 N.H.C가 이상현상과 교전을 관리한다면, C.P.D는 그 바깥에서 민간 사회가 완전히 붕괴하지 않도록 질서를 유지한다.</p>"}, {"title": "피난민 관리", "body": "<ul><li>피난민 대기 구역 관리</li><li>대피 경로 통제</li><li>가족 단위 신원 확인</li><li>오염 노출자와 일반 민간인 분리</li><li>식량, 의료품, 임시 거주 구역 배정</li></ul>"}, {"title": "검문 게이트", "body": "<p>C.P.D 검문 게이트는 그린존과 옐로우존, 옐로우존과 레드존 외곽을 나누는 민간 통제선이다. 모든 통과 인원은 신분 확인, 오염 반응 검사, 귀환자 판정을 거친다.</p><p>의심 인원은 S.I.D나 U.A.C 조사반으로 이관되며, 폭동이나 강제 돌파 시 N.H.C 외곽 경계대가 지원된다.</p>"}, {"title": "귀환자", "body": "<p>귀환자는 실종 이후 돌아온 민간인 중 기억 공백, 생체 반응 이상, 타인의 신원 모방, Ghost Channel 반응을 보이는 대상을 말한다. C.P.D는 이들을 일반 피난민과 분리하고 S.I.D 조사 전까지 보호 격리한다.</p>"}, {"title": "C.P.D 대피버스", "body": "<p>C.P.D 대피버스는 레드존 외곽과 옐로우존에서 민간인을 그린 코어 또는 임시 대피소로 옮기는 이동 수단이다. 단순 수송 차량이 아니라 이동식 검문·분리 절차를 수행하는 민간 보호 장비로 운용된다.</p>"}, {"title": "기관 관계", "body": "<p>C.P.D는 U.A.C 행정 통제 아래 운영되며, S.I.D와는 민간 구역 조사 및 실종자 자료 공유를, N.H.C와는 외곽 봉쇄 및 대피 지원을, A.R.F와는 생존자 이송 절차를 공유한다.</p>"}]}, "fhc": {"img": "fhc.webp", "name": "F.H.C", "meta": "Foremost Hitech Cooperation / 포레모스트 하이테크 기업", "summary": "초상 기술, 괴이 조직, 타락·혈액 샘플, 비인가 연구 자료를 분석하고 회수하는 고위 기술 조직.", "pages": [{"title": "개요", "body": "<p>F.H.C는 초상 기술, 괴이 조직, 타락 및 혈액 관련 샘플, 비인가 연구 자료를 분석하고 회수하는 고위 기술 조직이다. 표면적으로는 첨단 기술 개발, 교육 서비스, 사회 복지, 의료 기술, 특수 산업 연구를 제공하는 세계적인 초거대 기업이다.</p><p>그러나 내부적으로는 초자연과학, 오컬트 생명공학, 현실 접속 기술, 생체 병기화 가능성을 다루는 극비 부서를 보유하고 있다. F.H.C는 U.A.C, S.I.D, N.H.C가 회수한 자료를 분석하며, 특히 아마리온 제약과 공식 협력 관계를 맺고 있다.</p>"}, {"title": "표면적 정체", "body": "<ul><li>첨단 기술 개발 기업</li><li>교육 서비스 및 연구 지원 기관</li><li>사회 복지 및 의료 지원 기업</li><li>고위 산업 기술 협력체</li><li>아마리온 제약과 공식 연구 협력 관계 유지</li></ul>"}, {"title": "실질적 정체", "body": "<p>F.H.C는 초상 기술과 오컬트 현상을 기술적으로 실용화하려는 오컬트 과학 복합체에 가깝다. 이들은 외신, 우시노다 현상, 괴이 조직, 혈액 의식, 현실 왜곡, 생명 연장, 생체 병기화 가능성 등을 연구한다.</p><p>공식적으로는 U.A.C와 협력하는 기술 분석 기관이지만, 일부 내부 부서와 자금 흐름에서 우시노다교와의 유착 정황이 확인되고 있다. 따라서 F.H.C는 협력 기관이자 감시 대상에 가까운 이중적 세력이다.</p>"}, {"title": "사회적 영향력", "body": "<p>F.H.C는 수많은 학원, 학교, 연구소, 복지 시설을 운영하며 인재 육성과 사회 기여를 명분으로 영향력을 확장하고 있다. 그러나 일부 시설은 우시노다 현상이 발생하는 주요 지점을 감시하고 제어하기 위한 거점으로 활용된다는 의혹이 존재한다.</p><p>세련된 디자인의 선전 포스터와 출판물을 통해 우시노다와 관련된 철학을 현대적인 자기계발, 첨단 과학, 진화론적 인류 개선 사상으로 위장하여 대중에게 배포한다는 기록도 있다.</p>"}, {"title": "극비 분석 부서", "body": "<p>F.H.C 극비 분석 부서는 괴이, 혈교, 타락교, 우시노다 현상, 비인가 생체 연구 자료, 초상 기술을 분석하고 회수하는 고위 보안 부서이다.</p><p>특히 아마리온 제약, BL-088 균주, 괴이 유전자 디지털화 기술, 저접근 자기 변형 시스템과 관련된 자료를 별도 관리하는 것으로 추정된다.</p><ul><li>초상 기술 분석</li><li>괴이 조직 샘플 연구</li><li>회수 문서 해독</li><li>비인가 연구자 추적</li><li>아마리온 협력 자료 검토</li><li>생체 병기화 가능성 평가</li><li>타락 및 혈액 관련 기술 분류</li><li>우시노다교 유착 의혹 자료 추적</li></ul>"}, {"title": "무력 체계와 조사 기록", "body": "<p>F.H.C는 기업 보안을 명분으로 정규군에 필적하는 사설 무장 세력을 보유하고 있다. 이들은 외부 조사기관의 접근을 차단하거나, 실험 도중 통제를 벗어난 괴이체를 비밀리에 처리한다.</p><p>표면적으로는 합법적인 기업 활동을 하나, 내부 기밀 문서와 자금 흐름을 추적한 결과 우시노다교의 핵심 성소 및 일부 의식 거점과 물리적·재정적으로 연결되어 있다는 정황이 발견되었다.</p>"}]}, "amarion": {"img": "amarion.webp", "name": "Amarion", "meta": "Amarion Pharmaceuticals / 아마리온 제약", "summary": "의약품과 생명공학을 표면에 둔 민간 제약 기업이자 F.H.C 협력·감시 대상.", "pages": [{"title": "개요", "body": "<p>아마리온 제약은 표면적으로는 의약품, 생명공학, 특수 자원 연구를 수행하는 대형 민간 제약 기업이다. 공식적으로는 F.H.C와 연구 협력 관계를 맺고 있으며, 초자연과학, 생명 연장, 고응축 자원, 특수 물질 분석 분야에서 기술 지원을 제공하는 협력 기관으로 분류된다.</p><p>그러나 아마리온은 F.H.C의 승인 범위를 넘어선 비인가 실험을 여러 차례 진행한 정황이 있으며, 현재는 협력 기관이자 고위험 감시 대상이라는 이중적 위치에 놓여 있다.</p>"}, {"title": "F.H.C와의 관계", "body": "<p>F.H.C는 아마리온의 기술력과 연구 성과를 필요로 하지만, 아마리온이 보유한 기술이 너무 위험하기 때문에 완전히 신뢰하지 않는다. 따라서 아마리온은 F.H.C의 협력 기업이면서도 동시에 감시와 통제를 받는 민간 연구 조직으로 분류된다.</p>"}, {"title": "초자연과학 연구 부서", "body": "<p>아마리온 초자연과학 연구 부서는 아마리온 제약 내부에 존재했던 비공개 연구 부서이다. 이 부서는 일반적인 질병 치료나 의약품 개발이 아니라 현실 왜곡, 비가시적 공간 접속, 생체 변형, 고응축 자원 회수, 불멸 연구와 관련된 실험을 진행한 것으로 추정된다.</p><p>공식 기록상 대부분의 자료는 삭제되었으나, F.H.C가 회수한 사전교육 영상에서 해당 부서의 존재가 확인되었다.</p>"}, {"title": "대표 기술", "body": "<p>저접근 자기 변형 시스템은 현실 세계와 비가시적 공간 사이의 접점을 형성하기 위해 개발된 초기형 관문 기술로 추정된다. 아마리온은 이를 자원 확보와 인류 생존 기반 확장 기술로 홍보했으나, F.H.C 분석 기록에 따르면 현실 외부 공간 접촉 실험에 가까운 것으로 분류된다.</p>"}]}, "syndicate": {"img": "syndicate.webp", "name": "Syndicate", "meta": "신디케이트 / 비공식 사설 군사 네트워크", "summary": "국가 기관, 기업, 종교 집단, 무장 조직 사이에서 활동하는 비공식 사설 군사 조직.", "pages": [{"title": "개요", "body": "<p>신디케이트는 국가 기관, 기업, 종교 집단, 무장 조직 사이의 틈에서 활동하는 비공식 사설 군사 조직이자 무장 네트워크이다. 현재 일부 작전은 F.H.C의 거대 자본에 고용되어 움직이지만, 본질적으로는 독자적인 이해관계와 생존 논리를 가진 예측 불가능한 집단이다.</p><p>이들은 국가 체계를 거부하면서도 우시노다의 힘을 군사 전술에 결합하려는 시도를 보이며, 정부와 교단 양쪽 모두에게 위험한 세력으로 분류된다.</p>"}, {"title": "군사 전술과 우시노다", "body": "<p>신디케이트는 우시노다교처럼 숭배에 매몰되지 않는다. 대신 우시노다의 힘을 철저히 효율적인 무기로 취급한다. 현대적 군사 전술에 초자연적인 변이 능력을 덧입혀 정부군인 N.H.C조차 당혹하게 만드는 변칙적인 전투를 수행한다.</p>"}, {"title": "독자 노선", "body": "<p>신디케이트는 작전 단위로 F.H.C의 명령을 따르거나 자금을 받을 수 있지만, 완전히 F.H.C에 종속된 조직은 아니다. 정부에게는 체제를 위협하는 테러리스트이며, 교단에게는 신성한 힘을 도구로 모독하는 약탈자이다.</p><p>이들은 오직 자신들의 독립된 세력을 유지하고 힘을 키우는 데 관심이 있다.</p>"}, {"title": "기만 전술", "body": "<p>신디케이트의 가장 특징적인 전술은 더미 요원 활용이다. 현장에서 포로로 잡히거나 정보가 유출되는 것을 막기 위해 실제 인간 요원 대신 정교하게 제작된 인조체나 세뇌된 소모품 병사를 전면에 내세운다.</p><p>이로 인해 U.A.C가 이들을 소탕하더라도 본대의 실체나 거점은 늘 안개 속에 가려져 있다.</p>"}, {"title": "레드울프", "body": "<p>레드울프는 현재 신디케이트 내부에서 가장 핵심적인 전투 및 현장 작전팀 중 하나로 분류된다. 이들은 원래 N.H.C 1차 작전팀으로 활동했던 고위험 대응팀이었으나, 그린존 붕괴 사건 및 그 이후 이어진 일련의 사건을 거치며 기존 지휘 체계에서 이탈하였다.</p><ul><li>이전 명칭 : N.H.C 1차 작전팀 레드울프</li><li>현재 분류 : 신디케이트 주요팀 레드울프</li><li>변동 사유 : 그린존 붕괴 이후 지휘 체계 붕괴, 상부와의 결별, 생존 인원 재편, 비공식 세력화</li></ul>"}, {"title": "켈베로스 파벌", "body": "<p>켈베로스 파벌은 레드울프 전체를 의미하는 명칭이 아니라, 현재 신디케이트 주요팀으로 활동 중인 레드울프 내부에서 웨이드 밀렌을 중심으로 형성될 가능성이 있는 비인가 독자 행동 세력을 뜻한다.</p><p>밀렌은 과거 N.H.C 시절부터 상부 명령에 대한 불신을 보였으며, 레드울프가 신디케이트 소속으로 재편된 이후에는 독자적인 질서와 권력을 세우려는 방향으로 움직이고 있다. 이후 기록에서는 우시노다의 힘을 감염 병기와 억제제로 전환하려는 계획이 확인되었다.</p>"}]}, "ushinoda": {"img": "ushinoda.webp", "name": "Ushnoda Cult", "meta": "우시노다교 / 타락교·혈교·그림자교를 포함한 통합 교단", "summary": "우시노다의 힘을 숭배하며 인신공양과 이상현상을 통해 세계 재편을 시도하는 적대 종교 세력.", "pages": [{"title": "개요", "body": "<p>우시노다교는 고대 존재 우시노다의 힘을 숭배하며, 그를 향한 맹목적인 믿음을 바탕으로 인류의 도덕성을 완전히 저버린 최악의 광신도 집단이다. 이들은 단순히 신을 믿는 것을 넘어 잔혹한 반인류적 행위를 신성한 의식으로 여기며 인간을 초월한 신인류라는 왜곡된 이상을 꿈꾼다.</p>"}, {"title": "연합된 세 가지 교단", "body": "<p>현재 우시노다교는 각기 다른 힘과 성향을 가진 세 분파가 하나의 목적을 위해 손을 잡은 교단 연합 체제로 운영되고 있다. 이들의 세력은 이미 비밀리에 전 세계 구석구석까지 뻗어 나가 있으며, 도시 내부의 공공 시설, 학교, 병원, 연구소, 복지 기관에 침투한 정황이 확인되고 있다.</p>"}, {"title": "타락교", "body": "<p>타락교는 인간의 정신을 오염시키고 자아를 붕괴시켜 우시노다의 의지에 완전히 종속되게 만드는 심리적 잠식을 담당한다. 이들은 우시노다의 타락의 힘을 축복으로 받아들이며, 신체 변형과 불멸성을 신앙의 증거로 여긴다.</p><h4>핵심 능력 : 현실 부식</h4><ul><li>공포의 안개 : 오염된 기운에 노출된 자는 가장 끔찍한 트라우마를 환각으로 본다.</li><li>자아 와해 : 상대의 이성을 마비시켜 자신이 누구인지 잊게 만들거나 스스로를 해치게 만든다.</li><li>공간 뒤틀림 : 문을 열면 다른 장소가 나오거나 복도가 무한히 길어지는 공간 왜곡을 일으킨다.</li></ul>"}, {"title": "혈교", "body": "<p>혈교는 혈액 마법과 신체 변이에 집착하는 분파이며, 인체를 기괴하게 뒤틀어 타락 개체을 만들어내는 실무적인 무력 집단이다.</p><h4>핵심 능력 : 과부하 변이</h4><ul><li>경질화 혈액 : 피를 강철보다 단단한 칼날이나 가시로 굳혀 공격한다.</li><li>신체 재구성 : 뼈를 검으로 쓰거나 등에서 촉수를 돋게 하며, 부상을 입을수록 더 강력한 형태로 변이한다.</li><li>강제 전이 : 적의 몸속에 자신의 피를 주입하여 장기를 뒤틀거나 타락 개체로 강제 변이시킨다.</li></ul>"}, {"title": "그림자교", "body": "<p>그림자교는 실체가 없는 공포를 이용하는 분파이다. 어둠 속에서 은밀하게 움직이며 요인을 암살하거나, 보이지 않는 곳에서 이상현상을 유도하여 사회적 혼란을 야기한다.</p><h4>핵심 능력 : 심연의 수의</h4><ul><li>그림자 전이 : 모든 그림자를 통로로 삼아 순간이동한다.</li><li>비물질화 : 일시적으로 신체를 그림자 상태로 만들어 총알이나 물리 공격이 통과하게 만든다.</li><li>그림자 구속 : 상대의 그림자를 물리적으로 고정하거나 목을 조르는 끈으로 변형시킨다.</li></ul>"}, {"title": "인신공양과 이상현상", "body": "<p>우시노다교에게 가장 중요한 행위는 인신공양이다. 무고한 생명을 제물로 바침으로써 현실 세계의 물리 법칙을 뒤트는 이상현상을 강제로 발생시키며, 이를 통해 우시노다의 강림을 앞당기려 한다.</p>"}, {"title": "영향력과 암약", "body": "<p>우시노다교는 정체를 숨긴 채 F.H.C와 같은 거대 자본 뒤에 숨어 활동하거나, 학교와 병원 같은 공공 시설에 침투하여 일반인을 서서히 오염시킨다.</p><p>최종 목표는 기존 인류를 멸절시키고, 우시노다의 축복을 받은 변이된 인류로 세상을 재편하는 것이다.</p>"}]}, "haimun": {"img": "haimun.webp", "name": "Haimun", "meta": "For Our Future / 하이문", "summary": "우시노다교의 타락교와 혈교 교리에 심취한 범죄 조직이자 초인간주의 신봉자 단체.", "pages": [{"title": "개요", "body": "<p>하이문은 우시노다교의 분파 중 가장 과격한 타락교와 혈교의 교리에 심취하여, 인류의 멸망과 새로운 세상의 도래를 꿈꾸는 범죄 조직이자 초인간주의 신봉자 단체이다.</p><p>우리의 미래를 위하여라는 슬로건 아래 기존의 인간성을 버리고 괴물로 진화하는 것을 유일한 구원으로 믿는다.</p>"}, {"title": "도심 속 공포", "body": "<p>하이문은 U.A.C의 감시를 피해 도심 깊숙이 뿌리를 내리고 있다. 현재 도시 곳곳에서 산발적으로 발생하는 우시노다 현상의 압도적인 다수는 이들의 소행으로 추정된다.</p><p>이들은 인신공양을 위해 일반 시민들을 납치하거나, 도심 한복판에서 금기된 의식을 강행하여 도시를 아수라장으로 만든다.</p>"}, {"title": "초인간주의 사상", "body": "<p>하이문의 구성원들은 인간이라는 종의 나약함에 환멸을 느낀 자들이다. 타락교의 정신 오염과 혈교의 신체 변이를 적극적으로 받아들이며, 스스로 기괴한 존재가 되는 것을 진화라고 부른다.</p><p>이들은 인간은 곧 사라질 구시대의 유물이며, 우시노다의 축복을 받은 우리만이 미래라고 주장한다.</p>"}, {"title": "리더십", "body": "<p>대부분 평범한 인간들로 구성되어 활동하지만, 이들을 하나로 묶고 거대한 테러를 기획하는 리더의 정체는 철저히 베일에 싸여 있다. 조직원들조차 리더를 직접 본 적이 없으며, 오직 우시노다의 목소리를 대변하는 전언을 통해서만 명령을 하달받는다고 알려져 있다.</p>"}, {"title": "추적 대상", "body": "<p>하이문은 도심 내부에서 인신공양, 실종 사건, 우시노다 현상, 괴이 출현을 유발하는 주요 세력으로 분류된다. S.I.D는 은신처와 의식 거점을 추적하며, U.A.C는 하이문이 활동한 구역을 옐로우존 또는 레드존으로 격상할 수 있다. N.H.C는 대규모 의식이나 타락 개체 양산 정황이 확인될 경우 즉시 투입된다.</p>"}]}};
   const detail=document.getElementById('factionDetail');
   function renderFaction(key){
     const d=factionData[key]||factionData.uac; if(!detail)return;
     detail.innerHTML=`<img class="faction-mark-large" src="${prefix}assets/faction_marks/${d.img}" alt="${d.name}"><h3>${d.name}</h3><div class="meta">${d.meta}</div><p class="faction-summary">${d.summary||''}</p><div class="detail-tabs">${d.pages.map((p,i)=>`<button class="detail-tab ${i===0?'active':''}" data-i="${i}" type="button">${p.title}</button>`).join('')}</div><div class="detail-body"></div>`;
-    function showPage(i,sound=true){const p=d.pages[i]||d.pages[0]; detail.querySelectorAll('.detail-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); detail.querySelector('.detail-body').innerHTML=`<h4>${p.title}</h4>${p.body}`; if(sound)play(audio.page);}
+    function showPage(i,sound=true){const p=d.pages[i]||d.pages[0]; detail.querySelectorAll('.detail-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); detail.querySelector('.detail-body').innerHTML=`<h4>${p.title}</h4>${p.body}`; if(sound && audio.page)play(audio.page);}
     detail.querySelectorAll('.detail-tab').forEach((b,i)=>b.addEventListener('click',()=>showPage(i,true)));
     showPage(0,false);
     document.querySelectorAll('.faction-tile').forEach(b=>b.classList.toggle('active',b.dataset.key===key));
   }
-  document.querySelectorAll('.faction-tile').forEach(b=>b.addEventListener('click',()=>{play(audio.menu); renderFaction(b.dataset.key)})); if(detail) renderFaction('uac');
+  document.querySelectorAll('.faction-tile').forEach(b=>b.addEventListener('click',()=>{play(audio.faction); renderFaction(b.dataset.key)})); if(detail) renderFaction('uac');
   document.querySelectorAll('.paged-record').forEach(box=>{
     const recPages=Array.from(box.querySelectorAll(':scope > .record-page'));
     const tabs=box.querySelector(':scope > .page-tabs');
     if(!recPages.length||!tabs) return;
-    function showRec(i,sound=true){recPages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .page-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page); const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; else window.scrollTo(0,0);}
+    function showRec(i,sound=true){recPages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .page-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound && audio.page)play(audio.page); const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; else window.scrollTo(0,0);}
     tabs.querySelectorAll(':scope > .page-tab').forEach((b,i)=>b.addEventListener('click',()=>showRec(i,true)));
     showRec(0,false);
   });
@@ -71,7 +234,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const pages=Array.from(box.querySelectorAll(':scope .sub-pages > .sub-page'));
     const tabs=box.querySelector(':scope > .sub-tabs');
     if(!pages.length||!tabs) return;
-    function showSub(i,sound=true){pages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .sub-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page);}
+    function showSub(i,sound=true){pages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .sub-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound && audio.page)play(audio.page);}
     tabs.querySelectorAll(':scope > .sub-tab').forEach((b,i)=>b.addEventListener('click',()=>showSub(i,true)));
     showSub(0,false);
   });
@@ -87,7 +250,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       pages.forEach((p,i)=>{const on=p.classList.contains(cls)||(!key && i===0); if(on) matched=true; p.classList.toggle('active',on);});
       if(!matched && pages[0]) pages[0].classList.add('active');
       tabs.forEach(t=>t.classList.toggle('active', t.dataset.zone===key));
-      if(sound){startAmbient(); play(audio.page);}
+      if(sound){startAmbient(); if(audio.page)play(audio.page);}
     }
     tabs.forEach(t=>t.addEventListener('click',()=>showZone(t.dataset.zone,true)));
   });
@@ -130,7 +293,6 @@ document.addEventListener('DOMContentLoaded',()=>{
       resetRecordState(selected);
       const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
       const loaderEl=document.getElementById('recordLoading'); if(loaderEl) loaderEl.classList.remove('show');
-      play(audio.open);
     });
   }
   function closeInternalRecord(e){
@@ -138,7 +300,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(archiveViewer){archiveViewer.hidden=true; archiveViewer.querySelectorAll('.record-detail').forEach(el=>{el.hidden=true;});}
     if(archiveListWrap){archiveListWrap.classList.remove('is-hidden'); archiveListWrap.querySelectorAll('details').forEach(d=>d.open=true);}
     const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
-    play(audio.menu);
   }
   window.ProjectCurseShowInternalRecord=showInternalRecord;
   window.ProjectCurseCloseInternalRecord=closeInternalRecord;
@@ -177,7 +338,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const panels=Array.from(shell.querySelectorAll('.continent-panel'));
   const tabs=Array.from(shell.querySelectorAll('.continent-tab'));
   const filters=Array.from(shell.querySelectorAll('.continent-filter'));
-  function playTick(){try{if(typeof play==='function' && typeof audio!=='undefined') play(audio.page||audio.menu);}catch(e){}}
+  function playTick(){}
   function showRegion(key,sound){
     panels.forEach(p=>p.classList.toggle('active',p.dataset.continentPanel===key));
     tabs.forEach(t=>t.classList.toggle('active',t.dataset.continent===key));
@@ -216,254 +377,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 })();
 
 
-// Project Curse 2차 지도 패치: 가독성 정리 + 짧은 검수 표시 + 세계지도 요약 + 봉쇄선 감쇠.
-(function(){
-  const shell=document.querySelector('.continental-map-shell.datamap-v3');
-  if(!shell) return;
-  shell.classList.add('map-patch1');
-  const NS='http://www.w3.org/2000/svg';
-  const W=1600, H=900;
-  const typeLabel={zone:'오염 구역',facility:'작전 시설',anomaly:'현상 기록',incident:'사건 좌표',blockade:'봉쇄선', 'blockade-node':'봉쇄 거점'};
-  const zoneLabel={red:'레드존',yellow:'옐로우존',green:'그린존',white:'화이트존',black:'블랙존'};
-const maps={"world":{"extent":{"lonMin":-185,"lonMax":185,"latMin":-65,"latMax":85}},"east":{"extent":{"lonMin":68,"lonMax":158,"latMin":-8,"latMax":60}},"europe":{"extent":{"lonMin":-28,"lonMax":48,"latMin":28,"latMax":74}},"north":{"extent":{"lonMin":-175,"lonMax":-20,"latMin":0,"latMax":83}},"southasia":{"extent":{"lonMin":55,"lonMax":105,"latMin":-3,"latMax":40}},"seindian":{"extent":{"lonMin":84,"lonMax":136,"latMin":-16,"latMax":28}},"oceania":{"extent":{"lonMin":106,"lonMax":184,"latMin":-52,"latMax":-2}},"mideast":{"extent":{"lonMin":20,"lonMax":70,"latMin":6,"latMax":45}},"africa":{"extent":{"lonMin":-25,"lonMax":60,"latMin":-38,"latMax":42}}};
-  const data={"world":[{"type":"zone","zone":"red","name":"유럽 북부 레드존","status":"독일 북부-덴마크 남부 대표 오염권","records":"피의 호수 부검 기록 / 레드존 이상현상 및 오염 기준 문서","lon":10.1,"lat":55,"r":2.05,"core":0.82,"surface":"land","surfaceLabel":"육상/권역","location":"전역 축약 표시","qa":"REVIEWED","regionName":"세계"},{"type":"zone","zone":"red","name":"란저우 내륙 레드존","status":"중국 서북부 내륙 오염권","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":103.8,"lat":36.1,"r":1.95,"core":0.78,"surface":"land","surfaceLabel":"육상/권역","location":"중국 간쑤성 내륙","qa":"REVIEWED","regionName":"세계"},{"type":"zone","zone":"red","name":"캐나다 북부 레드존","status":"캐나다 북서부 광역 봉쇄권","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":-126,"lat":63,"r":3.1,"core":1.25,"surface":"land","surfaceLabel":"육상/권역","location":"캐나다 북부권","qa":"REVIEWED","regionName":"세계"},{"type":"zone","zone":"red","name":"호주 남중부 레드존","status":"남호주 내륙 오염권","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":135,"lat":-32.5,"r":2.3,"core":0.9,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"세계"},{"type":"zone","zone":"black","name":"호주 중앙 블랙존 후보지","status":"호주 중앙 심부 반응 코어","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":132.5,"lat":-25.5,"r":1.05,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEW REQUIRED","regionName":"세계"},{"type":"zone","zone":"yellow","name":"중동 사막 감시권","status":"이라크-시리아-사우디 북부 장기 감시권","records":"지역지도","lon":42,"lat":31,"r":3.05,"surface":"land","surfaceLabel":"육상/권역","location":"중동 내륙 감시권","qa":"REVIEWED","regionName":"세계"},{"type":"zone","zone":"white","name":"홍콩 연안 화이트존","status":"홍콩-선전 항만 검문·관리권 대표 표기","records":"구역 위험도 분류 문서 / 지역지도","lon":114.16,"lat":22.3,"r":0.95,"surface":"port","surfaceLabel":"항만/연안","location":"남중국 연안","qa":"REVIEWED","regionName":"세계"},{"type":"zone","zone":"green","name":"호주 남동부 그린존","status":"멜버른-캔버라 후방 운영권 대표 표기","records":"구역 위험도 분류 문서 / 지역지도","lon":146.5,"lat":-36.7,"r":1.1,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"세계"},{"type":"blockade","surface":"sea","name":"북해 해상 감시권","status":"북해 점선 감시권","records":"피의 호수 부검 기록","lon":4.5,"lat":56.5,"rx":2.1,"ry":1.35,"rot":-10,"surfaceLabel":"해상/감시권","location":"북해 해상권","qa":"REVIEWED","regionName":"세계"},{"type":"blockade","surface":"sea","name":"동중국해 감시권","status":"동중국해 점선 감시권","records":"지역지도","lon":127,"lat":28,"rx":2.2,"ry":1.4,"rot":14,"surfaceLabel":"해상/감시권","location":"동중국해 해상권","qa":"REVIEWED","regionName":"세계"},{"type":"incident","name":"피의 호수 사건","status":"1986년 북해권 혈액성 이상현상","records":"피의 호수 부검 기록","lon":10.1,"lat":55,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"독일 북부·덴마크 남부권","qa":"REVIEWED","regionName":"세계"},{"type":"incident","name":"란저우 대오염 사건","status":"동아시아 내륙 오염 사건","records":"레드존 이상현상 및 오염 기준 문서","lon":103.8,"lat":36.1,"surface":"land","surfaceLabel":"육상/권역","location":"중국 간쑤성 내륙","qa":"REVIEWED","regionName":"세계"},{"type":"incident","name":"호주 중앙 심부 반응점","status":"오세아니아 심부 반응 기록","records":"레드존 이상현상 및 오염 기준 문서","lon":132.5,"lat":-25.5,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"세계"},{"type":"blockade","kind":"defense","name":"글로벌 레드존 봉쇄망","status":"대표 봉쇄망 요약선","records":"지역지도","points":[[-130,50],[-80,48],[-5,50],[45,36],[110,35]],"surface":"land","surfaceLabel":"육상/권역","location":"전역 축약 표시","qa":"REVIEWED","regionName":"세계"}],"east":[{"type":"zone","zone":"red","name":"란저우 내륙 레드존","status":"중국 간쑤성 란저우 중심 레드존","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":103.8,"lat":36.1,"r":4.2,"core":1.65,"surface":"land","surfaceLabel":"육상/권역","location":"중국 간쑤성 내륙","qa":"REVIEWED","regionName":"동아시아"},{"type":"zone","zone":"red","name":"주강 하구 레드존","status":"광저우-선전-홍콩 축 연안 오염권","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":114.1,"lat":22.7,"r":2.25,"core":0.82,"surface":"port","surfaceLabel":"항만/연안","location":"남중국 연안","qa":"REVIEWED","regionName":"동아시아"},{"type":"zone","zone":"black","name":"란저우 심부 반응 후보지","status":"란저우 레드존 내부 심부 반응","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":103.8,"lat":36.1,"r":1.25,"surface":"land","surfaceLabel":"육상/권역","location":"중국 간쑤성 내륙","qa":"REVIEW REQUIRED","regionName":"동아시아"},{"type":"zone","zone":"white","name":"홍콩 격리 항만 관리권","status":"항만 검역·귀환자 선별 관리권","records":"지역지도","lon":114.16,"lat":22.3,"r":1.15,"surface":"port","surfaceLabel":"항만/연안","location":"남중국 연안","qa":"REVIEWED","regionName":"동아시아"},{"type":"zone","zone":"white","name":"부산 검문 관리권","status":"한반도 남동부 항만 검문권","records":"구역 위험도 분류 문서","lon":129.05,"lat":35.15,"r":1.25,"surface":"port","surfaceLabel":"항만/연안","location":"한반도 남동부 연안","qa":"REVIEWED","regionName":"동아시아"},{"type":"zone","zone":"green","name":"일본 서남부 그린존","status":"후쿠오카 권역 후방 운영권","records":"구역 위험도 분류 문서 / 지역지도","lon":130.4,"lat":33.6,"r":1.25,"surface":"land","surfaceLabel":"육상/권역","location":"동아시아 권역","qa":"REVIEWED","regionName":"동아시아"},{"type":"blockade","surface":"sea","name":"동중국해 감시권","status":"해상 점선 감시권","records":"지역지도","lon":127.4,"lat":27.6,"rx":4.4,"ry":2.75,"rot":16,"surfaceLabel":"해상/감시권","location":"동중국해 해상권","qa":"REVIEWED","regionName":"동아시아"},{"type":"blockade","kind":"defense","name":"란저우 동부 1차 차단선","status":"란저우 동측 육상 차단선","records":"N.H.C 현장 작전·장비·봉쇄 규정 문서","points":[[104.2,38.2],[107.3,36.7],[108.1,34.8]],"surface":"land","surfaceLabel":"육상/권역","location":"중국 간쑤성 내륙","qa":"REVIEWED","regionName":"동아시아"},{"type":"facility","name":"N.H.C 란저우 전방 관측기지","status":"레드존 동측 외곽 관측기지","records":"N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":106.2,"lat":36.3,"org":"nhc","surface":"land","surfaceLabel":"육상/권역","location":"중국 간쑤성 내륙","qa":"REVIEWED","regionName":"동아시아"},{"type":"facility","name":"홍콩 격리 항만 검문소","status":"항만 검역·귀환자 선별","records":"지역지도","lon":114.15,"lat":22.3,"org":"cpd","surface":"port","surfaceLabel":"항만/연안","location":"남중국 연안","qa":"REVIEWED","regionName":"동아시아"},{"type":"facility","name":"부산 동아시아 해상 통제 허브","status":"부산항 남동 연안 해상 통제 거점","records":"지역지도","lon":128.98,"lat":35.05,"org":"uac","surface":"sea","qa":"REVIEWED","location":"한반도 남동부 연안 / 부산항 외곽","surfaceLabel":"해상/통제 노드","regionName":"동아시아"},{"type":"incident","name":"홍콩 항만 집단 실종 사건","status":"항만 구역 민간인 소실 기록","records":"타락 개체 분류 추가 보고서","lon":114.2,"lat":22.2,"surface":"port","surfaceLabel":"항만/연안","location":"남중국 연안","qa":"REVIEWED","regionName":"동아시아"},{"type":"anomaly","name":"황허 변류 이상현상","status":"하천 흐름·기록 좌표 불일치","records":"레드존 이상현상 및 오염 기준 문서","lon":105,"lat":36.2,"surface":"land","surfaceLabel":"육상/권역","location":"중국 간쑤성 내륙","qa":"REVIEW REQUIRED","regionName":"동아시아"}],"europe":[{"type":"zone","zone":"red","name":"피의 호수 레드존","status":"함부르크 북부-독일·덴마크 접경 메인 레드존","records":"피의 호수 부검 기록 / 레드존 이상현상 및 오염 기준 문서","lon":10.25,"lat":54.9,"r":4.4,"core":1.75,"surface":"land","surfaceLabel":"육상/권역","location":"독일 북부·덴마크 남부권","qa":"REVIEWED","regionName":"유럽"},{"type":"zone","zone":"black","name":"피의 호수 중심 블랙존 후보지","status":"혈색 수면 중심부 심부 반응","records":"피의 호수 부검 기록","lon":10.25,"lat":55,"r":1.22,"surface":"land","surfaceLabel":"육상/권역","location":"독일 북부·덴마크 남부권","qa":"REVIEW REQUIRED","regionName":"유럽"},{"type":"zone","zone":"white","name":"코펜하겐 검문 관리권","status":"북유럽 대피·검문 관리권","records":"구역 위험도 분류 문서","lon":12.57,"lat":55.68,"r":1.35,"surface":"land","surfaceLabel":"육상/권역","location":"덴마크 동부 연안","qa":"REVIEWED","regionName":"유럽"},{"type":"zone","zone":"yellow","name":"북독일 옐로우존","status":"피의 호수 외곽 감시 완충권","records":"구역 위험도 분류 문서 / 지역지도","lon":9.1,"lat":53.7,"r":2.2,"surface":"land","surfaceLabel":"육상/권역","location":"유럽 권역","qa":"REVIEWED","regionName":"유럽"},{"type":"blockade","surface":"sea","name":"북해 해상 감시권","status":"북해 점선 감시권","records":"피의 호수 부검 기록","lon":5,"lat":56.3,"rx":5,"ry":2.45,"rot":-12,"surfaceLabel":"해상/감시권","location":"북해 해상권","qa":"REVIEWED","regionName":"유럽"},{"type":"blockade","kind":"defense","name":"독일-덴마크 이중 봉쇄선","status":"독일 북부-덴마크 남부 핵심 차단선","records":"N.H.C 현장 작전·장비·봉쇄 규정 문서","points":[[7.8,54.5],[10.5,54.9],[13,54.5]],"surface":"land","surfaceLabel":"육상/권역","location":"유럽 권역","qa":"REVIEWED","regionName":"유럽"},{"type":"facility","name":"함부르크 봉쇄사령 거점","status":"피의 호수 후방 통제소","records":"지역지도","lon":10,"lat":53.55,"org":"nhc","surface":"land","surfaceLabel":"육상/권역","location":"독일 북부·덴마크 남부권","qa":"REVIEWED","regionName":"유럽"},{"type":"facility","name":"코펜하겐 대피 검문 허브","status":"북유럽 대피 검문 허브","records":"지역지도","lon":12.57,"lat":55.68,"org":"cpd","surface":"land","surfaceLabel":"육상/권역","location":"덴마크 동부 연안","qa":"REVIEWED","regionName":"유럽"},{"type":"incident","name":"피의 호수 사건 원점","status":"혈액성 이상현상 원점","records":"피의 호수 부검 기록","lon":10.35,"lat":55.05,"surface":"land","surfaceLabel":"육상/권역","location":"독일 북부·덴마크 남부권","qa":"REVIEWED","regionName":"유럽"},{"type":"incident","name":"A.R.F 회수 실패 지점","status":"피의 호수 회수 실패 기록","records":"피의 호수 부검 기록","lon":9.2,"lat":54.9,"surface":"land","surfaceLabel":"육상/권역","location":"유럽 권역","qa":"REVIEWED","regionName":"유럽"},{"type":"anomaly","name":"북해 오염 무전 수신권","status":"북해 해상 오염 무전 반복","records":"레드존 이상현상 및 오염 기준 문서","lon":5.8,"lat":56.4,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"북해 해상권","qa":"REVIEWED","regionName":"유럽"}],"north":[{"type":"zone","zone":"red","name":"캐나다 북서 레드존","status":"유콘-노스웨스트 준주 광역 봉쇄권","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":-128,"lat":63,"r":5.1,"core":2.15,"surface":"land","surfaceLabel":"육상/권역","location":"캐나다 북부권","qa":"REVIEWED","regionName":"북미"},{"type":"zone","zone":"red","name":"캐나다 중북부 레드존","status":"앨버타 북부-서스캐처원 북부 확산권","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":-111,"lat":58,"r":3.9,"core":1.55,"surface":"land","surfaceLabel":"육상/권역","location":"캐나다 북부권","qa":"REVIEWED","regionName":"북미"},{"type":"zone","zone":"black","name":"북부 침묵 지대 블랙존 후보","status":"캐나다 북부 심부 후보 코어","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":-122,"lat":65,"r":1.35,"surface":"land","surfaceLabel":"육상/권역","location":"캐나다 북부권","qa":"REVIEW REQUIRED","regionName":"북미"},{"type":"zone","zone":"yellow","name":"오대호 옐로우존","status":"오대호 주변 감시 완충권","records":"지역지도","lon":-82,"lat":44,"r":3.1,"surface":"land","surfaceLabel":"육상/권역","location":"오대호 주변권","qa":"REVIEWED","regionName":"북미"},{"type":"zone","zone":"white","name":"밴쿠버 검역 관리권","status":"태평양 연안 검역항 관리권","records":"지역지도","lon":-123.12,"lat":49.28,"r":1.35,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"북미 태평양 연안","qa":"REVIEWED","regionName":"북미"},{"type":"zone","zone":"green","name":"에드먼턴 후방 그린존","status":"캐나다 후방 방어·물류 운영권","records":"구역 위험도 분류 문서 / 지역지도","lon":-113.49,"lat":53.55,"r":1.45,"surface":"land","surfaceLabel":"육상/권역","location":"북미 권역","qa":"REVIEWED","regionName":"북미"},{"type":"blockade","surface":"sea","name":"태평양 연안 감시권","status":"밴쿠버-시애틀 앞바다 점선 감시권","records":"지역지도","lon":-125,"lat":48.7,"rx":2.7,"ry":1.85,"rot":18,"surfaceLabel":"해상/감시권","location":"북미 태평양 연안","qa":"REVIEWED","regionName":"북미"},{"type":"blockade","kind":"defense","name":"캐나다 남하 1차 차단선","status":"캐나다 북부 남하 차단선","records":"N.H.C 현장 작전·장비·봉쇄 규정 문서","points":[[-126,56],[-116,54],[-103,54],[-94,52]],"surface":"land","surfaceLabel":"육상/권역","location":"캐나다 북부권","qa":"REVIEWED","regionName":"북미"},{"type":"facility","name":"에드먼턴 방어물류기지","status":"레드존 후방 물류거점","records":"지역지도","lon":-113.49,"lat":53.55,"org":"nhc","surface":"land","surfaceLabel":"육상/권역","location":"북미 권역","qa":"REVIEWED","regionName":"북미"},{"type":"facility","name":"밴쿠버 검역 항만","status":"태평양 연안 검역항","records":"지역지도","lon":-123.12,"lat":49.28,"org":"cpd","surface":"sea","surfaceLabel":"해상/통제 노드","location":"북미 태평양 연안","qa":"REVIEWED","regionName":"북미"},{"type":"incident","name":"북부 정찰대 전멸지점","status":"캐나다 북부 정찰 기록 소실","records":"지역지도","lon":-126,"lat":62.5,"surface":"land","surfaceLabel":"육상/권역","location":"북미 권역","qa":"REVIEWED","regionName":"북미"},{"type":"anomaly","name":"위성 영상 변질 구역","status":"위성 영상 변질 관측지","records":"레드존 이상현상 및 오염 기준 문서","lon":-109,"lat":59.5,"surface":"land","surfaceLabel":"육상/권역","location":"북미 권역","qa":"REVIEW REQUIRED","regionName":"북미"}],"southasia":[{"type":"zone","zone":"yellow","name":"인도 북부 감시권","status":"인도 북부 장기 감시권","records":"지역지도","lon":78.8,"lat":28.5,"r":4.2,"surface":"land","surfaceLabel":"육상/권역","location":"인도 북부권","qa":"REVIEWED","regionName":"남아시아"},{"type":"zone","zone":"white","name":"뉴델리 서부 검문 관리권","status":"수도권 외곽 검문·선별 관리권","records":"구역 위험도 분류 문서","lon":76.8,"lat":28.6,"r":1.35,"surface":"land","surfaceLabel":"육상/권역","location":"인도 북부권","qa":"REVIEWED","regionName":"남아시아"},{"type":"zone","zone":"green","name":"인도 서부 후방 운영권","status":"서부 항만 후방 운영권","records":"지역지도","lon":73,"lat":19,"r":1.45,"surface":"port","surfaceLabel":"항만/연안","location":"남아시아 권역","qa":"REVIEWED","regionName":"남아시아"},{"type":"blockade","surface":"sea","name":"인도양 항로 감시권","status":"인도양 북부 항로 점선 감시권","records":"지역지도","lon":73.5,"lat":8,"rx":3.4,"ry":2.1,"rot":-10,"surfaceLabel":"해상/감시권","location":"인도양 북부·서인도 연안","qa":"REVIEWED","regionName":"남아시아"},{"type":"blockade","kind":"defense","name":"인도 북부 내륙 감시선","status":"인도 북부 내륙 감시선","records":"지역지도","points":[[74.5,30.5],[78.5,29.3],[82.5,27.8]],"surface":"land","surfaceLabel":"육상/권역","location":"인도 북부권","qa":"REVIEWED","regionName":"남아시아"},{"type":"facility","name":"뉴델리 서부 검문소","status":"수도권 외곽 검문소","records":"지역지도","lon":76.8,"lat":28.6,"org":"cpd","surface":"land","surfaceLabel":"육상/권역","location":"인도 북부권","qa":"REVIEWED","regionName":"남아시아"},{"type":"facility","name":"뭄바이 후방 보급 허브","status":"서부 항만 후방 보급","records":"지역지도","lon":72.88,"lat":19.07,"org":"uac","surface":"port","surfaceLabel":"항만/연안","location":"인도양 북부·서인도 연안","qa":"REVIEWED","regionName":"남아시아"},{"type":"incident","name":"갠지스 상류 이상현상","status":"상류 시간·수위 불일치","records":"레드존 이상현상 및 오염 기준 문서","lon":78,"lat":29.9,"surface":"land","surfaceLabel":"육상/권역","location":"인도 북부권","qa":"REVIEWED","regionName":"남아시아"},{"type":"anomaly","name":"인도 북부 오염 무전 수신권","status":"내륙 반복 무전 감지","records":"레드존 이상현상 및 오염 기준 문서","lon":79.4,"lat":27.5,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"인도 북부권","qa":"REVIEWED","regionName":"남아시아"}],"seindian":[{"type":"zone","zone":"white","name":"싱가포르 검문 관리권","status":"말라카 해협 검문 허브","records":"지역지도","lon":103.85,"lat":1.3,"r":1.25,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"말라카 해협권","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"zone","zone":"yellow","name":"자바 해역 감시권","status":"자바 해역 집단 실종권 감시","records":"지역지도","lon":111.5,"lat":-5.4,"r":3.2,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"자바 해역권","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"zone","zone":"yellow","name":"보르네오 이상신호권","status":"보르네오 해상 이상신호권","records":"레드존 이상현상 및 오염 기준 문서","lon":114,"lat":1,"r":2.4,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"보르네오 해상권","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"zone","zone":"green","name":"말레이 반도 후방 그린존","status":"말라카 남부 후방 운영권","records":"구역 위험도 분류 문서 / 지역지도","lon":101.7,"lat":3.1,"r":1.2,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"동남아·인도양 권역","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"blockade","surface":"sea","name":"말라카 해협 감시권","status":"말라카 해협 점선 감시권","records":"지역지도","lon":100.5,"lat":4,"rx":3.2,"ry":1.8,"rot":-22,"surfaceLabel":"해상/감시권","location":"말라카 해협권","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"blockade","kind":"defense","name":"인도네시아 군도 통제선","status":"군도 해상 통제선","records":"지역지도","points":[[103,1],[108,-3],[114,-6],[120,-7]],"surface":"sea","surfaceLabel":"해상/감시권","location":"자바 해역권","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"facility","name":"싱가포르 검문 허브","status":"동남아 군도 검문 허브","records":"지역지도","lon":103.85,"lat":1.29,"org":"cpd","surface":"port","surfaceLabel":"항만/연안","location":"말라카 해협권","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"facility","name":"자카르타 해상 감시소","status":"자바 해역 감시소","records":"지역지도","lon":106.85,"lat":-6.2,"org":"uac","surface":"sea","surfaceLabel":"해상/통제 노드","location":"동남아·인도양 권역","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"incident","name":"자바 해역 집단 실종 사건","status":"해상 집단 실종 기록","records":"지역지도","lon":112,"lat":-5.2,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"자바 해역권","qa":"REVIEWED","regionName":"동남아·인도양"},{"type":"anomaly","name":"보르네오 해상 이상신호","status":"해상 오염 신호 반복","records":"레드존 이상현상 및 오염 기준 문서","lon":114,"lat":1,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"보르네오 해상권","qa":"REVIEWED","regionName":"동남아·인도양"}],"oceania":[{"type":"zone","zone":"red","name":"호주 남중부 레드존","status":"남호주 내륙 레드존","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":135,"lat":-32.5,"r":4,"core":1.6,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"오세아니아"},{"type":"zone","zone":"black","name":"호주 중앙 블랙존 후보지","status":"앨리스스프링스 서측 심부 반응","records":"레드존 이상현상 및 오염 기준 문서 / N.H.C 현장 작전·장비·봉쇄 규정 문서","lon":132.5,"lat":-25.5,"r":1.45,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEW REQUIRED","regionName":"오세아니아"},{"type":"zone","zone":"yellow","name":"호주 동부 옐로우존","status":"호주 동부 내륙 감시권","records":"지역지도","lon":149,"lat":-29.5,"r":3.35,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"오세아니아"},{"type":"zone","zone":"green","name":"호주 남동부 후방 운영권","status":"멜버른-캔버라 후방 운영권","records":"지역지도","lon":145,"lat":-37.2,"r":1.55,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"오세아니아"},{"type":"blockade","surface":"sea","name":"뉴질랜드 북방 감시권","status":"뉴질랜드 북방 점선 감시권","records":"지역지도","lon":174,"lat":-30,"rx":3.3,"ry":2,"rot":18,"surfaceLabel":"해상/감시권","location":"뉴질랜드 북방·남태평양권","qa":"REVIEWED","regionName":"오세아니아"},{"type":"blockade","kind":"defense","name":"호주 내륙-해안 방어선","status":"호주 내륙 접근 차단선","records":"N.H.C 현장 작전·장비·봉쇄 규정 문서","points":[[130,-30],[137,-32],[143,-36]],"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"오세아니아"},{"type":"facility","name":"다윈 해군 검역기지","status":"호주 북부 검역항","records":"지역지도","lon":130.84,"lat":-12.46,"org":"nhc","surface":"port","surfaceLabel":"항만/연안","location":"오세아니아 권역","qa":"REVIEWED","regionName":"오세아니아"},{"type":"facility","name":"애들레이드 차단 거점","status":"남호주 내륙 접근 차단 거점","records":"지역지도","lon":138.6,"lat":-34.93,"org":"nhc","surface":"land","surfaceLabel":"육상/권역","location":"오세아니아 권역","qa":"REVIEWED","regionName":"오세아니아"},{"type":"facility","name":"멜버른 후방 병참기지","status":"남동부 후방 병참","records":"지역지도","lon":144.96,"lat":-37.81,"org":"uac","surface":"land","surfaceLabel":"육상/권역","location":"오세아니아 권역","qa":"REVIEWED","regionName":"오세아니아"},{"type":"facility","name":"오클랜드 남태평양 보급거점","status":"남태평양 보급 거점","records":"지역지도","lon":174.76,"lat":-36.85,"org":"cpd","surface":"sea","surfaceLabel":"해상/통제 노드","location":"뉴질랜드 북방·남태평양권","qa":"REVIEWED","regionName":"오세아니아"},{"type":"incident","name":"호주 중앙 심부 반응점","status":"호주 내륙 심부 반응 기록","records":"레드존 이상현상 및 오염 기준 문서","lon":132.5,"lat":-25.5,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"오세아니아"},{"type":"anomaly","name":"사막 지하 진동 기록점","status":"호주 내륙 지하 진동 기록","records":"레드존 이상현상 및 오염 기준 문서","lon":132.2,"lat":-25.4,"surface":"land","surfaceLabel":"육상/권역","location":"호주 내륙·남방권","qa":"REVIEWED","regionName":"오세아니아"}],"mideast":[{"type":"zone","zone":"yellow","name":"중동 사막 옐로우존","status":"이라크-시리아-사우디 북부 장기 감시권","records":"지역지도","lon":42,"lat":31,"r":4.35,"surface":"land","surfaceLabel":"육상/권역","location":"중동 내륙 감시권","qa":"REVIEWED","regionName":"중동"},{"type":"zone","zone":"red","name":"시리아-이라크 경계 이상 발화권","status":"사막 경계 이상 발화점 주변 소형 레드존","records":"레드존 이상현상 및 오염 기준 문서","lon":41,"lat":34,"r":1.65,"core":0.62,"surface":"land","surfaceLabel":"육상/권역","location":"중동 내륙 감시권","qa":"REVIEWED","regionName":"중동"},{"type":"zone","zone":"white","name":"수에즈-홍해 북부 관리권","status":"수에즈-홍해 북부 항로 관리권","records":"구역 위험도 분류 문서","lon":33.2,"lat":28.6,"r":1.55,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"수에즈·홍해 항로권","qa":"REVIEWED","regionName":"중동"},{"type":"zone","zone":"green","name":"바그다드 후방 그린존","status":"중동 사막 감시권 후방 분석·운영권","records":"구역 위험도 분류 문서 / 지역지도","lon":44.36,"lat":33.31,"r":1.15,"surface":"land","surfaceLabel":"육상/권역","location":"중동 내륙 감시권","qa":"REVIEWED","regionName":"중동"},{"type":"blockade","surface":"sea","name":"홍해 해상 감시권","status":"홍해 해상 점선 감시권","records":"지역지도","lon":39,"lat":20,"rx":3,"ry":4,"rot":28,"surfaceLabel":"해상/감시권","location":"수에즈·홍해 항로권","qa":"REVIEWED","regionName":"중동"},{"type":"blockade","kind":"defense","name":"수에즈-홍해 항로 검문선","status":"수에즈-홍해 항로 점선","records":"지역지도","points":[[32,30],[34,24],[38,18],[42,13]],"surface":"sea","surfaceLabel":"해상/감시권","location":"수에즈·홍해 항로권","qa":"REVIEWED","regionName":"중동"},{"type":"blockade","kind":"defense","name":"중동 사막 횡단 차단선","status":"사막 횡단 차단선","records":"N.H.C 현장 작전·장비·봉쇄 규정 문서","points":[[36,32],[43,31],[49,29]],"surface":"land","surfaceLabel":"육상/권역","location":"중동 내륙 감시권","qa":"REVIEWED","regionName":"중동"},{"type":"facility","name":"수에즈 항로 봉쇄통제소","status":"수에즈 항로 봉쇄통제","records":"지역지도","lon":32.55,"lat":29.97,"org":"cpd","surface":"sea","surfaceLabel":"해상/통제 노드","location":"수에즈·홍해 항로권","qa":"REVIEWED","regionName":"중동"},{"type":"facility","name":"리야드 사막 관측기지","status":"사막 감시 기지","records":"지역지도","lon":46.68,"lat":24.71,"org":"nhc","surface":"land","surfaceLabel":"육상/권역","location":"중동 내륙 감시권","qa":"REVIEWED","regionName":"중동"},{"type":"facility","name":"바그다드 후방 분석소","status":"사막 감시권 후방 분석소","records":"지역지도","lon":44.36,"lat":33.31,"org":"uac","surface":"land","surfaceLabel":"육상/권역","location":"중동 내륙 감시권","qa":"REVIEWED","regionName":"중동"},{"type":"incident","name":"시리아-이라크 경계 이상 발화점","status":"사막 경계 이상 발화 기록","records":"레드존 이상현상 및 오염 기준 문서","lon":41,"lat":34,"surface":"land","surfaceLabel":"육상/권역","location":"중동 내륙 감시권","qa":"REVIEWED","regionName":"중동"},{"type":"incident","name":"홍해 선박 실종 기록","status":"홍해 해상 실종 기록","records":"지역지도","lon":40,"lat":18,"surface":"sea","surfaceLabel":"해상/통제 노드","location":"수에즈·홍해 항로권","qa":"REVIEWED","regionName":"중동"},{"type":"anomaly","name":"사막 오염 무전 반복 구역","status":"모래폭풍 내 음성 전파","records":"레드존 이상현상 및 오염 기준 문서","lon":42.5,"lat":31,"surface":"land","surfaceLabel":"육상/권역","location":"북아프리카·사헬권","qa":"REVIEWED","regionName":"중동"}],"africa":[{"type":"zone","zone":"black","name":"북아프리카 흑색 후보권","status":"리비아 남부-알제리 동부 사막권","records":"레드존 이상현상 및 오염 기준 문서","lon":12,"lat":22,"r":1.8,"surface":"land","surfaceLabel":"육상/권역","location":"북아프리카·사헬권","qa":"REVIEW REQUIRED","regionName":"아프리카"},{"type":"zone","zone":"yellow","name":"사헬 감시권","status":"차드-수단 서부 감시축","records":"지역지도","lon":22,"lat":13,"r":4.3,"surface":"land","surfaceLabel":"육상/권역","location":"북아프리카·사헬권","qa":"REVIEWED","regionName":"아프리카"},{"type":"zone","zone":"red","name":"동아프리카 사건권","status":"케냐 북부 귀환자 붕괴권","records":"타락 개체 분류 추가 보고서","lon":37,"lat":2,"r":1.55,"core":0.58,"surface":"land","surfaceLabel":"육상/권역","location":"동아프리카 내륙권","qa":"REVIEWED","regionName":"아프리카"},{"type":"zone","zone":"white","name":"카이로 검문 관리권","status":"북아프리카 검문 통합 허브","records":"지역지도","lon":31.24,"lat":30.04,"r":1.35,"surface":"land","surfaceLabel":"육상/권역","location":"북아프리카 지중해 연안","qa":"REVIEWED","regionName":"아프리카"},{"type":"zone","zone":"green","name":"나이로비 회수지원 그린존","status":"동아프리카 회수지원 후방 운영권","records":"구역 위험도 분류 문서 / 지역지도","lon":36.82,"lat":-1.29,"r":1.25,"surface":"land","surfaceLabel":"육상/권역","location":"동아프리카 내륙권","qa":"REVIEWED","regionName":"아프리카"},{"type":"blockade","surface":"sea","name":"지중해 남부 해상 감시권","status":"북아프리카 연안 해상 감시권","records":"지역지도","lon":16,"lat":35,"rx":4.2,"ry":1.6,"rot":-4,"surfaceLabel":"해상/감시권","location":"북아프리카 지중해 연안","qa":"REVIEWED","regionName":"아프리카"},{"type":"blockade","kind":"defense","name":"사헬 횡단 감시선","status":"사헬 횡단 감시선","records":"지역지도","points":[[5,16],[18,14],[32,12]],"surface":"land","surfaceLabel":"육상/권역","location":"북아프리카·사헬권","qa":"REVIEWED","regionName":"아프리카"},{"type":"facility","name":"카이로 검문 통합허브","status":"북아프리카 검문 통합허브","records":"지역지도","lon":31.24,"lat":30.04,"org":"uac","surface":"land","surfaceLabel":"육상/권역","location":"북아프리카 지중해 연안","qa":"REVIEWED","regionName":"아프리카"},{"type":"facility","name":"나이로비 회수지원 거점","status":"동아프리카 회수지원 거점","records":"지역지도","lon":36.82,"lat":-1.29,"org":"arf","surface":"land","surfaceLabel":"육상/권역","location":"동아프리카 내륙권","qa":"REVIEWED","regionName":"아프리카"},{"type":"facility","name":"지부티 해상 감시기지","status":"홍해 남부 해상 감시기지","records":"지역지도","lon":43.15,"lat":11.59,"org":"uac","surface":"sea","surfaceLabel":"해상/통제 노드","location":"아프리카 동부 해상 감시권","qa":"REVIEWED","regionName":"아프리카"},{"type":"incident","name":"리비아 남부 유물 회수 실패","status":"사막권 회수 실패 사건","records":"지역지도","lon":14,"lat":23,"surface":"land","surfaceLabel":"육상/권역","location":"북아프리카·사헬권","qa":"REVIEWED","regionName":"아프리카"},{"type":"incident","name":"케냐 북부 귀환자 집단 붕괴","status":"동아프리카 귀환자 붕괴 사건","records":"타락 개체 분류 추가 보고서","lon":37,"lat":2,"surface":"land","surfaceLabel":"육상/권역","location":"동아프리카 내륙권","qa":"REVIEWED","regionName":"아프리카"},{"type":"anomaly","name":"사막 유리화 흔적","status":"사막 표층 유리화 관측","records":"레드존 이상현상 및 오염 기준 문서","lon":14,"lat":23,"surface":"land","surfaceLabel":"육상/권역","location":"북아프리카·사헬권","qa":"REVIEWED","regionName":"아프리카"}]};
-
-  const regionCode={world:'WD',east:'EA',europe:'EU',north:'NA',southasia:'SA',seindian:'SI',oceania:'OC',mideast:'ME',africa:'AF'};
-  const regionName={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
-
-  function textOf(item){return [item.name,item.status,item.records,item.org,item.kind,item.surface].filter(Boolean).join(' ');}
-  function classifyBlockadeNode(item){
-    if(!item || item.type!=='facility') return false;
-    return /(검문|검역|봉쇄|차단|통제|항로|해상\s*통제|게이트|허브)/.test(textOf(item));
-  }
-  function displayFilter(item){if(classifyBlockadeNode(item)) return 'blockade-node'; return item.type;}
-  function displayLabel(item){if(item && item.type==='zone') return zoneLabel[item.zone]||'오염 구역'; return typeLabel[displayFilter(item)]||typeLabel[item.type]||'기록';}
-  function codePrefix(item){
-    if(item.type==='zone') return ({red:'RZ',black:'BZ',yellow:'YZ',white:'WZ',green:'GZ'}[item.zone]||'ZN');
-    if(classifyBlockadeNode(item)) return 'GATE';
-    if(item.type==='facility') return 'FAC';
-    if(item.type==='incident') return 'INC';
-    if(item.type==='anomaly') return 'ANM';
-    if(item.type==='blockade' && item.surface==='sea' && item.lon!=null) return 'SEA';
-    if(item.type==='blockade') return 'BLK';
-    return 'REC';
-  }
-  function assignCode(region,item,counters){
-    const prefix=codePrefix(item), rc=regionCode[region]||region.toUpperCase();
-    counters[prefix]=(counters[prefix]||0)+1;
-    return `${prefix}-${rc}-${String(counters[prefix]).padStart(2,'0')}`;
-  }
-  function nodeRole(item){
-    const t=textOf(item);
-    if(/해상|항로|항만|연안|수에즈|홍해|부산|밴쿠버|홍콩|다윈|지부티|말라카|싱가포르/.test(t)) return 'maritime';
-    if(/사령|통합|통제소|허브|본부/.test(t)) return 'command';
-    if(/초소|관측|관측기지|감시소/.test(t)) return 'outpost';
-    if(/검문|검역|차단|봉쇄/.test(t)) return 'checkpoint';
-    return 'gate';
-  }
-  function lineVisual(item){
-    const t=textOf(item);
-    if(/붕괴|소실|실패|전멸|단절/.test(t)) return 'line-broken';
-    if(item.surface==='sea' || /해상|항로|북해|홍해|인도양|동중국해|태평양|지중해|말라카/.test(t)) return 'line-sea';
-    if(/감시/.test(t)) return 'line-watch';
-    if(/이중|완전|방어|차단|봉쇄망|봉쇄선/.test(t)) return 'line-hard';
-    return 'line-blockade';
-  }
-  function visualName(item){
-    const f=displayFilter(item), role=nodeRole(item), l=lineVisual(item);
-    if(f==='blockade-node') return role==='maritime'?'항로/항만 통제 노드':role==='command'?'봉쇄사령 노드':role==='outpost'?'차단초소 노드':'검문 게이트 노드';
-    if(item.type==='blockade') return l==='line-sea'?'해상 점선 봉쇄선':l==='line-hard'?'완전 차단선':l==='line-watch'?'감시선':l==='line-broken'?'붕괴/소실 구간':'봉쇄선';
-    if(item.type==='zone') return ({red:'레드존 해칭+코어',black:'블랙존 심부 코어',yellow:'옐로우 점선 감시권',white:'화이트 관리권',green:'그린 후방 운영권'}[item.zone]||'권역 표시');
-    if(item.type==='facility') return '작전 시설 노드';
-    if(item.type==='incident') return '사건 좌표 노드';
-    if(item.type==='anomaly') return '현상 기록 노드';
-    return '기록 노드';
-  }
-  function surfaceLabel(item){ if(item.surfaceLabel) return item.surfaceLabel; if(item.surface==='sea') return '해상/감시권'; if(item.surface==='port') return '항만/연안'; if(item.surface==='land') return '육상/권역'; return (/해상|항로|바다|해역|북해|홍해|인도양|태평양|지중해|말라카/.test(textOf(item))?'해상/감시권':'육상/권역');}
-  function geoFrame(region){
-    const e=maps[region].extent;
-    const lonSpan=e.lonMax-e.lonMin, latSpan=e.latMax-e.latMin;
-    const scale=Math.min(W/lonSpan,H/latSpan);
-    const mapW=lonSpan*scale, mapH=latSpan*scale;
-    return {e,scale,mapW,mapH,offX:(W-mapW)/2,offY:(H-mapH)/2};
-  }
-  function xy(region, lon, lat){
-    const f=geoFrame(region);
-    return [f.offX+(lon-f.e.lonMin)*f.scale, f.offY+(f.e.latMax-lat)*f.scale];
-  }
-  function inExtent(region, lon, lat){const e=maps[region].extent; const pad=0.0001; return lon>=e.lonMin-pad&&lon<=e.lonMax+pad&&lat>=e.latMin-pad&&lat<=e.latMax+pad;}
-  function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-  function el(tag, attrs){const n=document.createElementNS(NS,tag); Object.entries(attrs||{}).forEach(([k,v])=>n.setAttribute(k,v)); return n;}
-  function itemAttrs(item){
-    const a={'data-map-item':'1','data-filter':displayFilter(item),'data-visual':visualName(item),'data-role':nodeRole(item),'data-title':item.name,'data-code':item.code||'', 'data-status':item.status||'', 'data-records':item.records||'지역지도','data-region':item._region||'', 'data-surface':item.surfaceLabel||surfaceLabel(item), 'data-qa':item.qa||'REVIEWED', 'data-location':item.location||'', 'data-lon':(item.lon!=null?String(item.lon):''), 'data-lat':(item.lat!=null?String(item.lat):''), 'data-proj':(item._xy?('X '+Math.round(item._xy[0])+' / Y '+Math.round(item._xy[1])):''), 'tabindex':'0'};
-    if(item && item.type==='zone') a['data-zone']=item.zone||'';
-    return a;
-  }
-  function applyDatum(n,item){Object.entries(itemAttrs(item)).forEach(([k,v])=>n.setAttribute(k,v));}
-  function pstr(region,p){return xy(region,p[0],p[1]).map(v=>v.toFixed(1)).join(',');}
-  function ensureDefs(layer){
-    const defs=el('defs',{});
-    defs.innerHTML=`
-      <pattern id="rzHatch" patternUnits="userSpaceOnUse" width="18" height="18" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="18" class="hatch-line-red"/></pattern>
-      <pattern id="yzHatch" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="20" class="hatch-line-yellow"/></pattern>
-      <pattern id="blackNoise" patternUnits="userSpaceOnUse" width="24" height="24"><circle cx="5" cy="7" r="1.5" class="black-noise-dot"/><circle cx="17" cy="13" r="1" class="black-noise-dot"/><circle cx="10" cy="20" r=".8" class="black-noise-dot"/></pattern>`;
-    layer.appendChild(defs);
-  }
-  function makeDebug(g,x,y,item){
-    // 2차 패치: 지도 위 긴 검수 문장을 제거하고, 검수 모드에서는 십자점+짧은 코드만 표시한다.
-    // 전체 좌표/표면 판정/관련 기록은 우측 상세 카드와 관제 목록에서 확인한다.
-    const dg=el('g',{class:'debug-readout'});
-    dg.appendChild(el('line',{x1:(x-7).toFixed(1),y1:y.toFixed(1),x2:(x+7).toFixed(1),y2:y.toFixed(1),class:'debug-cross'}));
-    dg.appendChild(el('line',{x1:x.toFixed(1),y1:(y-7).toFixed(1),x2:x.toFixed(1),y2:(y+7).toFixed(1),class:'debug-cross'}));
-    const t=el('text',{x:(x+9).toFixed(1),y:(y+11).toFixed(1),class:'debug-code'});
-    t.textContent=item.code||'NO-CODE';
-    dg.appendChild(t);
-    g.appendChild(dg);
-  }
-  function makeZone(layer,region,item){
-    if(!inExtent(region,item.lon,item.lat)) return null;
-    const [x,y]=xy(region,item.lon,item.lat); item._region=region; item._xy=[x,y];
-    const g=el('g',{}); applyDatum(g,item);
-    const z=item.zone||'red'; const cls='zone-circle zone-'+z;
-    const r=(item.r||2.5)*9; const core=(item.core||Math.max(.42,(item.r||2.5)*.40))*9;
-    if(z==='red'){
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:r.toFixed(1),class:cls+' zone-outer'}));
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:r.toFixed(1),class:'zone-hatch zone-hatch-red'}));
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:core.toFixed(1),class:cls+' zone-core'}));
-    }else if(z==='black'){
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:r.toFixed(1),class:cls}));
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:r.toFixed(1),class:'zone-noise zone-noise-black'}));
-    }else if(z==='yellow'){
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:r.toFixed(1),class:cls}));
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:r.toFixed(1),class:'zone-hatch zone-hatch-yellow'}));
-    }else{
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:r.toFixed(1),class:cls}));
-    }
-    const label=el('text',{x:(x+r+8).toFixed(1),y:(y-r*.38).toFixed(1),class:'zone-code-label'}); label.textContent=item.code||''; g.appendChild(label);
-    makeDebug(g,x,y,item);
-    layer.appendChild(g); return g;
-  }
-  function makeLine(layer,region,item){
-    if(!item.points || item.points.some(p=>!inExtent(region,p[0],p[1]))) return null;
-    const pts=item.points.map(p=>xy(region,p[0],p[1])); item._region=region; item._xy=pts[Math.floor(pts.length/2)]||pts[0];
-    const g=el('g',{}); applyDatum(g,item);
-    const cls='map-line '+lineVisual(item);
-    if(cls.includes('line-hard')) g.appendChild(el('polyline',{points:pts.map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' '),class:'map-line line-hard-back'}));
-    g.appendChild(el('polyline',{points:pts.map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' '),class:cls}));
-    const [lx,ly]=item._xy; const label=el('text',{x:(lx+10).toFixed(1),y:(ly-12).toFixed(1),class:'node-label line-code-label'}); label.textContent=item.code||''; g.appendChild(label); makeDebug(g,lx,ly,item);
-    layer.appendChild(g); return g;
-  }
-  function makeRing(layer,region,item){
-    if(!inExtent(region,item.lon,item.lat)) return null;
-    const [x,y]=xy(region,item.lon,item.lat); item._region=region; item._xy=[x,y];
-    const g=el('g',{}); applyDatum(g,item);
-    const rx=(item.rx||4)*9, ry=(item.ry||2.4)*9;
-    g.appendChild(el('ellipse',{cx:x.toFixed(1),cy:y.toFixed(1),rx:rx.toFixed(1),ry:ry.toFixed(1),transform:`rotate(${item.rot||0} ${x.toFixed(1)} ${y.toFixed(1)})`,class:'sea-ring sea-ring-watch'}));
-    g.appendChild(el('text',{x:(x+rx+8).toFixed(1),y:(y-6).toFixed(1),class:'zone-code-label sea-code-label'})).textContent=item.code||'';
-    makeDebug(g,x,y,item);
-    layer.appendChild(g); return g;
-  }
-  function markerShape(type,org,x,y,item){
-    const visual=(classifyBlockadeNode(item)?'blockade-node':type), role=nodeRole(item);
-    const s=11.5;
-    const g=el('g',{class:'node-marker node-marker-'+(visual||'unknown')+' node-role-'+role});
-    const pt=(dx,dy)=>[(x+dx*s).toFixed(1),(y+dy*s).toFixed(1)].join(',');
-    const cls=(base)=>base+(org?' '+org:'')+(role?' role-'+role:'');
-    if(visual==='facility'){
-      g.appendChild(el('polygon',{points:[pt(0,-1.15),pt(1.05,-.55),pt(1.05,.55),pt(0,1.15),pt(-1.05,.55),pt(-1.05,-.55)].join(' '),class:cls('node-shape node-facility')}));
-      if(org==='uac') g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:(.34*s).toFixed(1),class:'node-symbol node-symbol-core'}));
-      else if(org==='nhc') g.appendChild(el('polyline',{points:[pt(-.42,-.12),pt(0,.42),pt(.42,-.12)].join(' '),class:'node-symbol node-symbol-chevron'}));
-      else if(org==='arf') g.appendChild(el('polyline',{points:[pt(-.45,.3),pt(0,-.38),pt(.45,.3)].join(' '),class:'node-symbol node-symbol-hook'}));
-      else g.appendChild(el('line',{x1:(x-.42*s).toFixed(1),y1:y.toFixed(1),x2:(x+.42*s).toFixed(1),y2:y.toFixed(1),class:'node-symbol node-symbol-line'}));
-    }else if(visual==='blockade-node'){
-      if(role==='command'){
-        g.appendChild(el('rect',{x:(x-1.18*s).toFixed(1),y:(y-1.05*s).toFixed(1),width:(2.36*s).toFixed(1),height:(2.10*s).toFixed(1),rx:(.12*s).toFixed(1),class:'node-shape node-blockade-node node-blockade-command'}));
-        g.appendChild(el('line',{x1:(x-1*s).toFixed(1),y1:(y-.45*s).toFixed(1),x2:(x+1*s).toFixed(1),y2:(y-.45*s).toFixed(1),class:'node-symbol node-symbol-commandbar'}));
-        g.appendChild(el('line',{x1:(x-.58*s).toFixed(1),y1:(y+.36*s).toFixed(1),x2:(x+.58*s).toFixed(1),y2:(y+.36*s).toFixed(1),class:'node-symbol node-symbol-commandbar'}));
-      }else if(role==='maritime'){
-        g.appendChild(el('rect',{x:(x-1.18*s).toFixed(1),y:(y-.78*s).toFixed(1),width:(2.36*s).toFixed(1),height:(1.56*s).toFixed(1),rx:(.10*s).toFixed(1),class:'node-shape node-blockade-node node-blockade-maritime'}));
-        g.appendChild(el('path',{d:`M ${(x-.78*s).toFixed(1)} ${(y+.18*s).toFixed(1)} Q ${x.toFixed(1)} ${(y-.28*s).toFixed(1)} ${(x+.78*s).toFixed(1)} ${(y+.18*s).toFixed(1)}`,class:'node-symbol node-symbol-wave'}));
-        g.appendChild(el('line',{x1:x.toFixed(1),y1:(y-.62*s).toFixed(1),x2:x.toFixed(1),y2:(y-.16*s).toFixed(1),class:'node-symbol node-symbol-antenna'}));
-      }else if(role==='outpost'){
-        g.appendChild(el('rect',{x:(x-.86*s).toFixed(1),y:(y-.86*s).toFixed(1),width:(1.72*s).toFixed(1),height:(1.72*s).toFixed(1),rx:(.08*s).toFixed(1),class:'node-shape node-blockade-node node-blockade-outpost'}));
-        g.appendChild(el('line',{x1:(x-.46*s).toFixed(1),y1:y.toFixed(1),x2:(x+.46*s).toFixed(1),y2:y.toFixed(1),class:'node-symbol node-symbol-crossbar'}));
-        g.appendChild(el('line',{x1:x.toFixed(1),y1:(y-.46*s).toFixed(1),x2:x.toFixed(1),y2:(y+.46*s).toFixed(1),class:'node-symbol node-symbol-crossbar'}));
-      }else{
-        g.appendChild(el('rect',{x:(x-1.10*s).toFixed(1),y:(y-.72*s).toFixed(1),width:(2.20*s).toFixed(1),height:(1.44*s).toFixed(1),rx:(.09*s).toFixed(1),class:'node-shape node-blockade-node node-blockade-checkpoint'}));
-        g.appendChild(el('line',{x1:(x-.46*s).toFixed(1),y1:(y-.72*s).toFixed(1),x2:(x-.46*s).toFixed(1),y2:(y+.72*s).toFixed(1),class:'node-symbol node-symbol-gatebar'}));
-        g.appendChild(el('line',{x1:(x+.46*s).toFixed(1),y1:(y-.72*s).toFixed(1),x2:(x+.46*s).toFixed(1),y2:(y+.72*s).toFixed(1),class:'node-symbol node-symbol-gatebar'}));
-      }
-    }else if(visual==='incident'){
-      g.appendChild(el('polygon',{points:[pt(0,-1.05),pt(1.05,0),pt(0,1.05),pt(-1.05,0)].join(' '),class:'node-shape node-incident'}));
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:(.21*s).toFixed(1),class:'node-symbol node-symbol-dot'}));
-    }else if(visual==='anomaly'){
-      g.appendChild(el('polygon',{points:[pt(0,-1.12),pt(1.05,.95),pt(-1.05,.95)].join(' '),class:'node-shape node-anomaly'}));
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:(.42*s).toFixed(1),class:'node-symbol node-symbol-ring'}));
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:(.15*s).toFixed(1),class:'node-symbol node-symbol-dot dim'}));
-    }else{
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:(.72*s).toFixed(1),class:'node-shape node-zone'}));
-      g.appendChild(el('circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:(.28*s).toFixed(1),class:'node-symbol node-symbol-dot'}));
-    }
-    return g;
-  }
-  function makeMarker(layer,region,item){
-    if(!inExtent(region,item.lon,item.lat)) return null;
-    const [x,y]=xy(region,item.lon,item.lat); item._region=region; item._xy=[x,y];
-    const g=el('g',{}); applyDatum(g,item);
-    g.appendChild(markerShape(item.type,item.org,x,y,item));
-    const label=el('text',{x:(x+16).toFixed(1),y:(y-14).toFixed(1),class:'node-label'}); label.textContent=item.code||item.name; g.appendChild(label);
-    makeDebug(g,x,y,item);
-    layer.appendChild(g); return g;
-  }
-  function renderRegion(region){
-    const panel=shell.querySelector(`[data-continent-panel="${region}"]`); if(!panel) return;
-    const layer=panel.querySelector('.map-data-layer'); const list=panel.querySelector('.continent-point-list');
-    if(!layer||!list) return;
-    layer.setAttribute('viewBox',`0 0 ${W} ${H}`); layer.setAttribute('preserveAspectRatio','xMidYMid meet');
-    layer.innerHTML=''; list.innerHTML=''; ensureDefs(layer);
-    const counters={}; const items=data[region]||[];
-    items.forEach(item=>{item.code=assignCode(region,item,counters);});
-    items.forEach(item=>{
-      let node=null;
-      if(item.lon!=null && item.lat!=null && item.type==='zone') node=makeZone(layer,region,item);
-      else if(item.points && item.type==='blockade') node=makeLine(layer,region,item);
-      else if(item.lon!=null && item.lat!=null && item.type==='blockade' && item.surface==='sea') node=makeRing(layer,region,item);
-      else if(item.lon!=null && item.lat!=null) node=makeMarker(layer,region,item);
-      if(!node) return;
-      const li=document.createElement('div'); li.className='continent-point'+(item.type==='zone'?' zone-point zone-'+(item.zone||''):''); li.dataset.filter=displayFilter(item); if(item.type==='zone') li.dataset.zone=item.zone||'';
-      const coord=(item.lon!=null&&item.lat!=null)?`위도 ${item.lat.toFixed(2)} / 경도 ${item.lon.toFixed(2)}`:(item.points?`${item.points.length}점 선형 좌표`:'좌표 미지정');
-      li.innerHTML=`<b>${esc(item.code)} · ${esc(displayLabel(item))}</b><span>${esc(item.name)}<small>${esc(item.status||'위치 검수 대상')} · ${esc(coord)}</small></span>`;
-      li.addEventListener('click',()=>updateCard(panel,item)); list.appendChild(li);
-      node.addEventListener('click',()=>updateCard(panel,item));
-      node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();updateCard(panel,item);}});
-    });
-    if(items[0]) updateCard(panel,items[0]);
-  }
-  function updateCard(panel,item){
-    const card=panel.querySelector('.map-detail-card'); if(!card||!item) return;
-    const xyTxt=item._xy?`X ${Math.round(item._xy[0])} / Y ${Math.round(item._xy[1])}`:'선형 좌표';
-    const coord=(item.lon!=null&&item.lat!=null)?`${item.lat.toFixed(4)}, ${item.lon.toFixed(4)}`:(item.points?`${item.points.length}개 경유점`:'좌표 없음');
-    card.innerHTML=`<b>${esc(item.code||'NO-CODE')} · ${esc(item.name)}</b><p>${esc(item.status||'상태 기록 없음')}</p><small>분류: ${esc(displayLabel(item))}<br>표현: ${esc(visualName(item))}<br>표면: ${esc(surfaceLabel(item))}<br>좌표: ${esc(coord)}<br>SVG: ${esc(xyTxt)}<br>관련 기록: ${esc(item.records||'지역지도')}</small>`;
-  }
-  function matchFilter(el,filter){if(filter==='all') return true; if(filter==='zone') return el.dataset.filter==='zone'; if(filter && filter.startsWith('zone-')) return el.dataset.filter==='zone' && el.dataset.zone===filter.replace('zone-',''); return el.dataset.filter===filter;}
-  function applyFilter(){const filter=shell.dataset.filter||'all'; shell.querySelectorAll('[data-map-item]').forEach(el=>{el.style.display=matchFilter(el,filter)?'':'none';}); shell.querySelectorAll('.continent-point').forEach(el=>{el.style.display=matchFilter(el,filter)?'':'none';});}
-  function addDebugButton(){
-    const filters=shell.querySelector('.continent-filters'); if(!filters || filters.querySelector('[data-map-debug]')) return;
-    const btn=document.createElement('button'); btn.type='button'; btn.className='continent-filter debug-filter'; btn.dataset.mapDebug='toggle'; btn.textContent='검수 모드';
-    btn.addEventListener('click',()=>{shell.classList.toggle('map-debug-on'); btn.classList.toggle('active',shell.classList.contains('map-debug-on'));});
-    filters.appendChild(btn);
-  }
-  // 2차 패치: 세계 지도는 요약판으로 유지한다. 세부 사건 좌표와 전역 봉쇄선은 대륙별 지도에서 확인한다.
-  data.world=(data.world||[]).filter(function(item){
-    return item.type==='zone' || (item.type==='blockade' && item.surface==='sea');
-  });
-  Object.keys(data).forEach(renderRegion);
-  addDebugButton();
-  shell.querySelectorAll('.continent-filter:not(.debug-filter)').forEach(btn=>btn.addEventListener('click',()=>setTimeout(applyFilter,0)));
-  shell.querySelectorAll('.continent-tab').forEach(btn=>btn.addEventListener('click',()=>setTimeout(applyFilter,0)));
-  applyFilter();
-})();
-
+// PATCH6_2_5: legacy geographic coordinate map renderer removed.
+// The active region map is now the final semi-abstract U.A.C operational-surface renderer appended below.
 
 // U.A.C regional surface-link overlay. Replaces code-dump loading with map-control surface alignment.
 document.addEventListener('DOMContentLoaded', function(){
@@ -484,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function(){
     el.innerHTML = '<div class="surface-frame"><i></i><i></i><i></i><i></i></div>'+ 
       '<div class="surface-scan-x"></div><div class="surface-scan-y"></div>'+ 
       '<div class="red-band"></div>'+ 
-      '<div class="status-card"><div class="status-title"><b>REGIONAL SURFACE LINK</b><em data-loader-region>세계 관제 개요</em></div>'+ 
+      '<div class="status-card"><div class="status-title"><b>REGION MAP ACCESS</b><em data-loader-region>세계 관제 개요</em></div>'+ 
       '<div class="status-log">'+stepText.map(function(t){return '<span>'+esc(t)+'</span>';}).join('')+'</div>'+ 
       '<div class="progress-row"><i></i></div></div>'+ 
       '<div class="sector-grid">'+Array.from({length:20},function(){return '<i></i>';}).join('')+'</div>';
@@ -493,16 +408,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   let timer = null;
   function showMapSurfaceLoader(regionKey, duration){
-    const el = ensureLoader();
-    const label = el.querySelector('[data-loader-region]');
-    if(label) label.textContent = regionNames[regionKey] || '권역 관제면';
-    clearTimeout(timer);
-    el.classList.remove('is-fading');
-    el.classList.add('is-active');
-    timer = setTimeout(function(){
-      el.classList.add('is-fading');
-      setTimeout(function(){el.classList.remove('is-active','is-fading');}, 280);
-    }, duration || 920);
+    return;
   }
   shell.querySelectorAll('.continent-tab').forEach(function(btn){
     btn.addEventListener('click', function(){showMapSurfaceLoader(btn.dataset.continent || 'world', 1050);}, true);
@@ -535,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function(){
       if(bar) return bar;
       bar=document.createElement('div');
       bar.className='uac-server-statusbar';
-      bar.innerHTML='<span class="status-dot"></span><b>U.A.C ARCHIVE NODE</b><span class="status-field" data-srv-node>ONLINE</span><span class="status-field status-warn" data-srv-field>N.H.C FIELD LINK: LIMITED</span><span class="status-field" data-srv-trace>F.H.C TRACE: NONE</span><span class="status-field status-map" data-srv-map>MAP SYNC: STANDBY</span><span class="status-field" data-srv-integrity>RECORD INTEGRITY: 72%</span><span class="status-field status-breadcrumb" data-srv-breadcrumb>U.A.C ARCHIVE / HOME</span><span class="status-scroll" data-srv-notice>PROJECT CURSE / SCOPELOCKED SERVER</span>';
+      bar.innerHTML='<span class="status-dot"></span><b>U.A.C RECORD NODE</b><span class="status-field" data-srv-node>ONLINE</span><span class="status-field status-warn" data-srv-field>N.H.C FIELD LINK: LIMITED</span><span class="status-field" data-srv-trace>F.H.C TRACE: NONE</span><span class="status-field status-map" data-srv-map>MAP SYNC: STANDBY</span><span class="status-field" data-srv-integrity>RECORD INTEGRITY: 72%</span><span class="status-field status-breadcrumb" data-srv-breadcrumb>U.A.C 기록 단말기 / HOME</span><span class="status-scroll" data-srv-notice>PROJECT CURSE / SCOPELOCKED SERVER</span>';
       document.body.prepend(bar);
       document.body.classList.add('has-uac-statusbar');
       return bar;
@@ -552,19 +458,19 @@ document.addEventListener('DOMContentLoaded', function(){
         map.textContent='MAP SYNC: ACTIVE '+(regionName?'/ '+regionName:'');
         trace.textContent='F.H.C TRACE: NONE'; trace.className='status-field';
         field.textContent='N.H.C FIELD LINK: LIMITED';
-        notice.textContent='REGION LAYER / ZONE / BLOCKADE NETWORK READY'; if(crumb) crumb.textContent='U.A.C ARCHIVE / 지역지도 / '+(regionName||'GLOBAL');
+        notice.textContent='REGION LAYER / ZONE / BLOCKADE NETWORK READY'; if(crumb) crumb.textContent='U.A.C 기록 단말기 / 지역지도 / '+(regionName||'GLOBAL');
       }else if(mode==='archive'){
         map.textContent='MAP SYNC: STANDBY';
         trace.textContent='F.H.C TRACE: INDEX SCAN'; trace.className='status-field status-warn';
-        notice.textContent='ARCHIVE INDEX OPEN / RECORD BADGES ACTIVE'; if(crumb) crumb.textContent='U.A.C ARCHIVE / 기록보관서';
+        notice.textContent='ARCHIVE INDEX OPEN / RECORD BADGES ACTIVE'; if(crumb) crumb.textContent='U.A.C 기록 단말기 / 기록보관서';
       }else if(mode==='faction'){
         map.textContent='MAP SYNC: STANDBY';
         trace.textContent='RELATION TRACE: ACTIVE'; trace.className='status-field status-map';
-        notice.textContent='FACTION NETWORK ANALYSIS MODULE'; if(crumb) crumb.textContent='U.A.C ARCHIVE / 세력 분석';
+        notice.textContent='FACTION NETWORK ANALYSIS MODULE'; if(crumb) crumb.textContent='U.A.C 기록 단말기 / 세력 관계';
       }else{
         map.textContent='MAP SYNC: STANDBY';
         trace.textContent='F.H.C TRACE: NONE'; trace.className='status-field';
-        notice.textContent='PROJECT CURSE / SCOPELOCKED SERVER'; if(crumb) crumb.textContent='U.A.C ARCHIVE / HOME';
+        notice.textContent='PROJECT CURSE / SCOPELOCKED SERVER'; if(crumb) crumb.textContent='U.A.C 기록 단말기 / HOME';
       }
     }
     function currentPage(){const a=document.querySelector('.content-page.active'); return a?a.id:(location.hash||'').replace('#','');}
@@ -699,23 +605,12 @@ document.addEventListener('DOMContentLoaded', function(){
       if(boot) return boot;
       boot=document.createElement('div');
       boot.className='uac-layer-boot';
-      boot.innerHTML='<div class="boot-panel"><div class="boot-title">REGIONAL SURFACE LINK<em data-boot-region>REGION</em></div><div class="boot-steps">'+bootSteps.map(s=>'<span>'+esc(s)+'</span>').join('')+'</div><div class="boot-progress"><i></i></div></div>';
+      boot.innerHTML='<div class="boot-panel"><div class="boot-title">REGION MAP ACCESS<em data-boot-region>REGION</em></div><div class="boot-steps">'+bootSteps.map(s=>'<span>'+esc(s)+'</span>').join('')+'</div><div class="boot-progress"><i></i></div></div>';
       frame.appendChild(boot); return boot;
     }
     function runLayerBoot(region){
-      const panel=shell.querySelector(`[data-continent-panel="${region}"]`)||shell.querySelector('.continent-panel.active');
-      if(!panel) return;
-      const frame=panel.querySelector('.continent-map-frame'); if(!frame) return;
-      const boot=ensureBoot(frame); const label=boot.querySelector('[data-boot-region]');
-      const names={world:'GLOBAL',east:'EAST-ASIA',europe:'EUROPE',north:'NORTH-AMERICA',southasia:'SOUTH-ASIA',seindian:'SEA/INDIAN',oceania:'OCEANIA',mideast:'MIDDLE-EAST',africa:'AFRICA'};
-      if(label) label.textContent=names[region]||'REGION';
-      boot.querySelectorAll('.boot-steps span').forEach(s=>s.classList.remove('on'));
-      boot.classList.remove('is-active'); void boot.offsetWidth; boot.classList.add('is-active');
-      panel.classList.add('layer-booting');
-      boot.querySelectorAll('.boot-steps span').forEach((step,i)=>setTimeout(()=>step.classList.add('on'),120+i*105));
-      clearTimeout(frame._uacBootTimer);
-      frame._uacBootTimer=setTimeout(()=>{boot.classList.remove('is-active'); panel.classList.remove('layer-booting');},1500);
-      setStatus('map',region);
+      setStatus('map', region);
+      return;
     }
     shell.querySelectorAll('.continent-tab').forEach(btn=>btn.addEventListener('click',()=>setTimeout(()=>runLayerBoot(btn.dataset.continent||'world'),80),false));
     document.querySelectorAll('.side-menu a[data-target="zone-map"]').forEach(link=>link.addEventListener('click',()=>setTimeout(()=>{
@@ -1157,28 +1052,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch53:
     const audioKey='pc_audio_legacy2003_fixed';
     let ctx=null;
     function audioEnabled(){ return localStorage.getItem(audioKey)!=='off'; }
-    function tone(freq=520,dur=0.055,vol=0.018,type='square'){
-      if(!audioEnabled()) return;
-      try{
-        const AC=window.AudioContext||window.webkitAudioContext;
-        if(!AC) return;
-        ctx=ctx||new AC();
-        if(ctx.state==='suspended') ctx.resume().catch(()=>{});
-        const o=ctx.createOscillator();
-        const g=ctx.createGain();
-        o.type=type;
-        o.frequency.setValueAtTime(freq,ctx.currentTime);
-        g.gain.setValueAtTime(0.0001,ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(Math.max(vol,0.0002),ctx.currentTime+0.01);
-        g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+dur);
-        o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur+0.02);
-      }catch(e){}
-    }
-    function pulse(kind){
-      if(kind==='hostile'){ tone(180,.08,.024,'sawtooth'); setTimeout(()=>tone(360,.045,.014,'square'),80); return; }
-      if(kind==='surface'){ tone(620,.04,.012,'triangle'); setTimeout(()=>tone(780,.035,.010,'triangle'),55); return; }
-      tone(440,.055,.016,'square'); setTimeout(()=>tone(660,.035,.010,'triangle'),65);
-    }
+    function tone(){ return; }
+    function pulse(){ return; }
 
     const keyAliases={
       uac:['U.A.C','UAC','중앙 통제'],
@@ -1287,19 +1162,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch53:
     }
 
     function addFactionInfoPulse(){
-      const detail=document.getElementById('factionDetail');
-      document.querySelectorAll('.faction-tile').forEach(tile=>{
-        if(tile.dataset.trace54InfoBound) return;
-        tile.dataset.trace54InfoBound='1';
-        tile.addEventListener('click',()=>{
-          pulse('relation');
-          if(!detail) return;
-          detail.classList.remove('faction-detail-loading');
-          void detail.offsetWidth;
-          detail.classList.add('faction-detail-loading');
-          setTimeout(()=>detail.classList.remove('faction-detail-loading'),720);
-        },true);
-      });
+      return;
     }
 
     function ensureSurfaceLoader(box){
@@ -1307,24 +1170,12 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch53:
       if(el) return el;
       el=document.createElement('div');
       el.className='record-surface-loader';
-      el.innerHTML='<div><b>RECORD SURFACE REMAP</b><span>INDEX PAGE SWITCH / SECTOR VERIFY / LOCAL CACHE READY</span><i></i></div>';
+      el.innerHTML='<div><b>RECORD PAGE</b><span>INDEX PAGE SWITCH / SECTOR VERIFY / LOCAL CACHE READY</span><i></i></div>';
       box.appendChild(el);
       return el;
     }
     function surfaceFx(btn){
-      const box=btn.closest('.paged-record,.nested-record,.record-content');
-      if(!box) return;
-      const el=ensureSurfaceLoader(box);
-      const title=String(btn.textContent||'기록면').trim();
-      el.querySelector('b').textContent='RECORD SURFACE: '+title;
-      el.querySelector('span').textContent='기록면 색인 재정렬 / 페이지 섹터 확인 / 열람 권한 유지';
-      box.classList.remove('record-surface-active');
-      el.classList.remove('show');
-      void box.offsetWidth;
-      box.classList.add('record-surface-active');
-      el.classList.add('show');
-      pulse('surface');
-      setTimeout(()=>{ el.classList.remove('show'); box.classList.remove('record-surface-active'); },820);
+      return;
     }
     function bindRecordSurfaceTabs(){
       document.querySelectorAll('.page-tab,.sub-tab').forEach(btn=>{
@@ -1369,6 +1220,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     let audioCtx=null, lastTone=0;
     function soundEnabled(){ return localStorage.getItem('pc_audio_legacy2003_fixed')!=='off'; }
     function mapTone(kind){
+      return;
       if(!soundEnabled()) return;
       const now=performance.now();
       if(now-lastTone<120) return;
@@ -1503,6 +1355,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       }
     }
     function showSync(frame,title,desc){
+      // Patch6.2.2: disable map/status sync popups and HUD flashes.
+      return;
       if(!frame) return;
       const hud=frame.querySelector('.pc55-sync-hud');
       if(!hud) return;
@@ -1612,11 +1466,11 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch55:
 
     // Left-menu entry transitions are separate from record-file notices and map HUDs.
     const menuFx={
-      history:['CHRONICLE INDEX REBUILD','연대 기록 색인 재구성',['사건 연표 확인','기록 단절 구간 보정','U.A.C 역사 자료면 개방']],
+      history:['WORLD OVERVIEW ACCESS','연대 기록 색인 재구성',['사건 연표 확인','기록 단절 구간 보정','U.A.C 역사 자료면 개방']],
       factions:['FACTION DOSSIER ACCESS','세력 기록철 접근',['식별 코드 대조','관계 등급 확인','세력 파일 목록 개방']],
-      relation:['RELATION TRACE MATRIX','관계 추적 행렬 전개',['중심 기관 확인: U.A.C','연결 세력 조회','감시/협력/적대 경로 분리']],
-      'zone-map':['REGIONAL SURFACE LINK','권역 관제면 연결',['감시망 수신','좌표면 정렬','오염권·봉쇄선 레이어 대기']],
-      'archive-entry':['ARCHIVE SURFACE OPEN','기록 보관면 개방',['색인 잠금 해제','문서 상태 대조','열람 가능 기록 정렬']]
+      relation:['RELATION LIST','관계 추적 행렬 전개',['중심 기관 확인: U.A.C','연결 세력 조회','감시/협력/적대 경로 분리']],
+      'zone-map':['REGION MAP ACCESS','권역 관제면 연결',['감시망 수신','좌표면 정렬','오염권·봉쇄선 레이어 대기']],
+      'archive-entry':['ARCHIVE INDEX','기록보관서 색인 개방',['색인 잠금 해제','문서 상태 대조','열람 가능 기록 정렬']]
     };
     function ensureMenuLoader(){
       let el=document.querySelector('.pc551-menu-loader');
@@ -1629,7 +1483,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch55:
     }
     let menuTimer=null;
     function showMenuLoader(id){
-      const data=menuFx[id]||['TERMINAL PANEL SYNC','터미널 표시면 동기화',['화면 모드 확인','표시 옵션 동기화','서버 표면 개방']];
+      // Patch6.2.2: all transition/surface/link popups are disabled.
+      return;
+      const data=menuFx[id]||['DATA ACCESS','터미널 표시면 동기화',['화면 모드 확인','표시 옵션 동기화','서버 표면 개방']];
       const el=ensureMenuLoader();
       el.querySelector('b').textContent=data[0];
       el.querySelector('em').textContent=data[1];
@@ -1700,7 +1556,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch551
     shell.classList.add('map-patch552');
     const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const regionNames={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
-    const regionMode={world:'전역 축약 관제',east:'동아시아 고정 좌표면',europe:'유럽 고정 좌표면',north:'북미 고정 좌표면',southasia:'남아시아 고정 좌표면',seindian:'동남아·인도양 고정 좌표면',oceania:'오세아니아 고정 좌표면',mideast:'중동 고정 좌표면',africa:'아프리카 고정 좌표면'};
+    const regionMode={world:'전역 축약 관제',east:'동아시아 작전 표면',europe:'유럽 작전 표면',north:'북미 작전 표면',southasia:'남아시아 작전 표면',seindian:'동남아·인도양 작전 표면',oceania:'오세아니아 작전 표면',mideast:'중동 작전 표면',africa:'아프리카 작전 표면'};
     function activePanel(){return shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
     function getRegion(panel){return panel?.dataset.continentPanel || 'world';}
     function coordStatus(el){return el.getAttribute('data-qa') || 'REVIEWED';}
@@ -1784,7 +1640,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch551
         decorateMarkers();
         const p=activePanel();
         const frame=p?.querySelector('.continent-map-frame');
-        if(frame){ frame.classList.add('pc552-region-fixed'); frame.dataset.qaSurface=regionMode[getRegion(p)]||'고정 좌표면'; }
+        if(frame){ frame.classList.add('pc552-region-fixed'); frame.dataset.qaSurface=regionMode[getRegion(p)]||'작전 표면'; }
         const first=p?.querySelector('[data-map-item]'); if(first){ writeCardFromMarker(first); updateAuditPanel(first); }
       },140),true);
     });
@@ -1794,7 +1650,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch551
       shell.querySelectorAll('.continent-map-frame').forEach(frame=>{
         frame.classList.add('pc552-region-fixed');
         const panel=frame.closest('.continent-panel');
-        frame.dataset.qaSurface=regionMode[getRegion(panel)]||'고정 좌표면';
+        frame.dataset.qaSurface=regionMode[getRegion(panel)]||'작전 표면';
       });
       const first=activePanel()?.querySelector('[data-map-item]');
       if(first){ writeCardFromMarker(first); updateAuditPanel(first); }
@@ -1849,8 +1705,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch552
           '<i>역할</i><b>'+esc(role)+'</b>'+ 
           '<i>표면</i><b>'+esc(surfaceOf(el))+'</b>'+ 
           '<i>위치 판정</i><b>'+esc(locOf(el))+'</b>'+ 
-          '<i>위경도</i><b>'+esc(coordOf(el))+'</b>'+ 
-          '<i>투영좌표</i><b>'+esc(projOf(el))+'</b>'+ 
+          '<i>작전 위치</i><b>'+esc(coordOf(el))+'</b>'+ 
+          '<i>표시면</i><b>'+esc(projOf(el))+'</b>'+ 
           '<i>좌표 상태</i><b class="'+qaCls+'">'+esc(qa)+'</b>'+ 
           '<i>동기화</i><b>MAP PATCH 5.5.3</b>'+ 
         '</div>'+ 
@@ -1860,15 +1716,15 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch552
       let p=shell.querySelector('.pc553-audit-panel');
       if(p) return p;
       p=document.createElement('div'); p.className='pc553-audit-panel';
-      p.innerHTML='<b>GEO PROJECTION QA</b><span data-audit-region>권역</span><span data-audit-coord>위경도</span><span data-audit-proj>투영좌표</span><span data-audit-surface>표면</span><span data-audit-status>좌표상태</span>';
+      p.innerHTML='<b>OPS SURFACE QA</b><span data-audit-region>권역</span><span data-audit-coord>작전 위치</span><span data-audit-proj>표시면</span><span data-audit-surface>표면</span><span data-audit-status>연결상태</span>';
       shell.appendChild(p); return p;
     }
     function updateAudit(el){
       const p=ensureAudit();
       const region=el?regionOf(el):((shell.querySelector('.continent-panel.active')||{}).dataset?.continentPanel||'world');
       p.querySelector('[data-audit-region]').textContent='권역: '+(regionNames[region]||region);
-      p.querySelector('[data-audit-coord]').textContent='위경도: '+(el?coordOf(el):'대기');
-      p.querySelector('[data-audit-proj]').textContent='투영좌표: '+(el?projOf(el):'대기');
+      p.querySelector('[data-audit-coord]').textContent='작전 위치: '+(el?coordOf(el):'대기');
+      p.querySelector('[data-audit-proj]').textContent='표시면: '+(el?projOf(el):'대기');
       p.querySelector('[data-audit-surface]').textContent='표면: '+(el?surfaceOf(el):'대기');
       p.querySelector('[data-audit-status]').textContent='좌표 상태: '+(el?qaOf(el):'대기');
     }
@@ -1876,7 +1732,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch552
       shell.querySelectorAll('.continent-map-frame').forEach(frame=>{
         const r=frame.closest('.continent-panel')?.dataset.continentPanel||'world';
         frame.classList.add('pc553-geoframe');
-        frame.dataset.qaSurface=regionFrame[r]||'지오 프레임 좌표면';
+        frame.dataset.qaSurface=regionFrame[r]||'작전 프레임';
       });
     }
     function decorateMarkers(){
@@ -3306,28 +3162,20 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch56:
     }
     let toastTimer=0;
     function archiveToast(title,body){
-      const t=ensureToast();
-      t.querySelector('b').textContent=title||'ARCHIVE SURFACE OPEN';
-      t.querySelector('span').textContent=body||'기록 보관면 상태를 갱신합니다.';
-      t.classList.remove('show');
-      void t.offsetWidth;
-      t.classList.add('show');
-      document.body.classList.add('pc562-archive-active');
-      clearTimeout(toastTimer);
-      toastTimer=setTimeout(()=>{t.classList.remove('show');document.body.classList.remove('pc562-archive-active');},940);
+      return;
     }
     // Separate the three archive effects: menu entry, record-tab remap, and individual file open.
     document.querySelectorAll('.side-menu a[data-target="archive-entry"]').forEach(a=>{
       if(a.dataset.pc562ArchiveEntry) return;
       a.dataset.pc562ArchiveEntry='1';
-      a.addEventListener('click',()=>archiveToast('ARCHIVE SURFACE OPEN','색인 잠금 해제 / 문서 상태 대조 / 열람 가능 기록 정렬'),true);
+      a.addEventListener('click',()=>archiveToast('ARCHIVE INDEX','색인 잠금 해제 / 문서 상태 대조 / 열람 가능 기록 정렬'),true);
     });
     document.querySelectorAll('.page-tab,.sub-tab').forEach(btn=>{
       if(btn.dataset.pc562Surface) return;
       btn.dataset.pc562Surface='1';
       btn.addEventListener('click',()=>{
         const inRecord=btn.closest('#archive-entry,.record-content,.paged-record,.nested-record');
-        if(inRecord) archiveToast('RECORD SURFACE REMAP','상단 스캔라인 1회 / 기록면 색인 재정렬');
+        if(inRecord) archiveToast('RECORD PAGE','상단 스캔라인 1회 / 기록면 색인 재정렬');
       },true);
     });
     document.querySelectorAll('.open-record[data-record]').forEach(btn=>{
@@ -3469,10 +3317,10 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch562
       const tree=section.querySelector('.relation-tree-panel');
       if(!tree) return;
       tree.classList.add('pc563-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 360도 세력 관계도');
+      tree.setAttribute('aria-label','U.A.C 중심 세력 관계 기록');
       const order=['nhc','arf','ashcrew','sid','fhc','amarion','syndicate','ushinoda','haimun','cpd','uac'];
       tree.innerHTML='<div class="pc563-relation-matrix">'
-        +'<div class="pc563-matrix-title"><b>RELATION TRACE MATRIX</b><span>U.A.C 중심 관계 추적 행렬 / 감시·통제·적대 경로 분리</span></div>'
+        +'<div class="pc563-matrix-title"><b>RELATION LIST</b><span>U.A.C 중심 관계 추적 행렬 / 감시·통제·적대 경로 분리</span></div>'
         +lineSvg()+order.map(nodeHtml).join('')+'</div>';
       const brief=section.querySelector('.section-brief');
       if(brief){
@@ -3503,21 +3351,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch562
     function edgeTextFor(key){
       return edges.filter(e=>e.a===key||e.b===key).map(e=>nodes[e.a===key?e.b:e.a].name+' · '+e.label).join(' / ') || '직접 연결 없음';
     }
-    function pulseTone(kind){
-      // Keep temporary node click tone only; full audio mix remains postponed.
-      try{
-        const audioKey='pc_audio_legacy2003_fixed';
-        if(localStorage.getItem(audioKey)==='off') return;
-        const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
-        const ctx=window.__pc563AudioCtx||(window.__pc563AudioCtx=new AC());
-        if(ctx.state==='suspended') ctx.resume().catch(()=>{});
-        const o=ctx.createOscillator(), g=ctx.createGain(), f=kind==='hostile'?190:kind==='informal'?330:460;
-        o.type=kind==='hostile'?'sawtooth':'triangle';
-        o.frequency.setValueAtTime(f,ctx.currentTime); o.frequency.exponentialRampToValueAtTime(f*1.35,ctx.currentTime+.075);
-        g.gain.setValueAtTime(.0001,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.018,ctx.currentTime+.012); g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.105);
-        o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+.13);
-      }catch(e){}
-    }
+    function pulseTone(){ return; }
     function focus(key,opts={}){
       if(!nodes[key]) key='uac';
       const n=nodes[key];
@@ -3553,8 +3387,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch562
       });
       const notice=document.querySelector('[data-srv-notice]');
       const trace=document.querySelector('[data-srv-trace]');
-      if(notice) notice.textContent='RELATION TRACE MATRIX / '+n.name+' / '+n.tag;
-      if(trace){ trace.textContent='RELATION TRACE MATRIX: '+n.name; trace.className='status-field status-map'; }
+      if(notice) notice.textContent='RELATION LIST / '+n.name+' / '+n.tag;
+      if(trace){ trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map'; }
       if(!opts.silent) pulseTone((statusClass[n.tag]||'control'));
     }
     function bind(){
@@ -3580,8 +3414,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch562
         a.addEventListener('click',()=>{
           const notice=document.querySelector('[data-srv-notice]');
           const trace=document.querySelector('[data-srv-trace]');
-          if(notice) notice.textContent='RELATION TRACE MATRIX / 중심 기관 확인: U.A.C / 경로 분리';
-          if(trace){ trace.textContent='RELATION TRACE MATRIX: ONLINE'; trace.className='status-field status-map'; }
+          if(notice) notice.textContent='RELATION LIST / 중심 기관 확인: U.A.C / 경로 분리';
+          if(trace){ trace.textContent='RELATION LIST: ONLINE'; trace.className='status-field status-map'; }
           setTimeout(()=>focus('uac',{silent:true}),160);
         },true);
       });
@@ -3603,26 +3437,17 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch563
     const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const prefix=(document.body&&document.body.dataset&&document.body.dataset.basePath)||'';
     const menuFx={
-      history:{cls:'archive',title:'CHRONICLE INDEX REBUILD',sub:'연대 기록 색인 재구성',lines:['사건 연표 확인','기록 단절 구간 보정','세계 기록면 개방']},
+      history:{cls:'archive',title:'WORLD OVERVIEW ACCESS',sub:'연대 기록 색인 재구성',lines:['사건 연표 확인','기록 단절 구간 보정','세계 기록면 개방']},
       'faction-info':{cls:'faction',title:'FACTION DOSSIER ACCESS',sub:'세력 기록철 접근',lines:['식별 코드 대조','관계 등급 확인','세력 파일 목록 개방']},
-      'faction-relation':{cls:'faction',title:'RELATION TRACE MATRIX',sub:'관계 추적 행렬 전개',lines:['중심 기관 확인: U.A.C','연결 세력 조회','감시·통제·적대 경로 분리']},
-      'zone-map':{cls:'map',title:'REGIONAL SURFACE LINK',sub:'권역 관제면 연결',lines:['감시망 수신','좌표면 정렬','봉쇄선 레이어 동기화']},
-      'archive-entry':{cls:'archive',title:'ARCHIVE SURFACE OPEN',sub:'기록 보관면 개방',lines:['색인 잠금 해제','문서 상태 대조','열람 가능 기록 정렬']}
+      'faction-relation':{cls:'faction',title:'RELATION LIST',sub:'관계 추적 행렬 전개',lines:['중심 기관 확인: U.A.C','연결 세력 조회','감시·통제·적대 경로 분리']},
+      'zone-map':{cls:'map',title:'REGION MAP ACCESS',sub:'권역 관제면 연결',lines:['감시망 수신','좌표면 정렬','봉쇄선 레이어 동기화']},
+      'archive-entry':{cls:'archive',title:'ARCHIVE INDEX',sub:'기록보관서 색인 개방',lines:['색인 잠금 해제','문서 상태 대조','열람 가능 기록 정렬']}
     };
     let fx=document.querySelector('.pc564-menu-fx');
     if(!fx){ fx=document.createElement('div'); fx.className='pc564-menu-fx'; fx.setAttribute('aria-hidden','true'); document.body.appendChild(fx); }
     let fxTimer=null;
     function showMenuFx(target){
-      const info=menuFx[target]; if(!info) return;
-      clearTimeout(fxTimer);
-      fx.className='pc564-menu-fx '+(info.cls||'');
-      fx.innerHTML='<b>'+esc(info.title)+'</b><span>'+esc(info.sub)+'</span>'+info.lines.map(l=>'<i>'+esc(l)+'</i>').join('');
-      requestAnimationFrame(()=>fx.classList.add('active'));
-      fxTimer=setTimeout(()=>fx.classList.remove('active'),780);
-      const notice=document.querySelector('[data-srv-notice]');
-      const trace=document.querySelector('[data-srv-trace]');
-      if(notice) notice.textContent=info.title+' / '+info.sub;
-      if(trace) trace.textContent=info.title+': ONLINE';
+      return;
     }
     document.querySelectorAll('.side-menu a[data-target]').forEach(a=>{
       if(a.dataset.pc564MenuFx) return;
@@ -3681,9 +3506,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch563
     function render(){
       const tree=section.querySelector('.relation-tree-panel'); if(!tree) return;
       tree.classList.add('pc563-radial-panel','pc564-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 방사형 세력 관계도');
+      tree.setAttribute('aria-label','U.A.C 중심 세력 관계도');
       const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','amarion','syndicate','ushinoda','haimun'];
-      tree.innerHTML='<div class="pc564-matrix"><div class="pc564-title"><b>RELATION TRACE MATRIX</b><span>중심 통제 / 감시 의존 / 비공식 접촉 / 의식성 적대 경로 분리</span></div>'
+      tree.innerHTML='<div class="pc564-matrix"><div class="pc564-title"><b>RELATION LIST</b><span>중심 통제 / 감시 의존 / 비공식 접촉 / 의식성 적대 경로 분리</span></div>'
         +'<svg class="pc564-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc564-ring inner" cx="50" cy="50" r="17"/><circle class="pc564-ring" cx="50" cy="50" r="30"/><circle class="pc564-ring outer" cx="50" cy="50" r="42"/><circle class="pc564-ring outer" cx="50" cy="50" r="47"/>'+edges.map(edgeHtml).join('')+'</svg>'
         +order.map(nodeHtml).join('')+'</div>';
       const brief=section.querySelector('.section-brief');
@@ -3706,9 +3531,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch563
       const tree=section.querySelector('.relation-tree-panel'); if(tree) tree.insertAdjacentElement('afterend',p); else section.appendChild(p); return p;
     }
     function edgeText(k){ return edges.filter(e=>e.a===k||e.b===k).map(e=>nodes[e.a===k?e.b:e.a].name+' · '+e.label).join(' / ') || '직접 연결 없음'; }
-    function tone(k){
-      try{ if(localStorage.getItem('pc_audio_legacy2003_fixed')==='off') return; const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return; const ctx=window.__pc564Ctx||(window.__pc564Ctx=new AC()); if(ctx.state==='suspended') ctx.resume().catch(()=>{}); const n=nodes[k]||nodes.uac; const cls=statusClass[n.tag]||'control'; const f=cls==='hostile'?185:cls==='informal'?310:cls==='watch'?270:430; const o=ctx.createOscillator(),g=ctx.createGain(); o.type=cls==='hostile'?'sawtooth':'triangle'; o.frequency.setValueAtTime(f,ctx.currentTime); o.frequency.exponentialRampToValueAtTime(f*1.25,ctx.currentTime+.07); g.gain.setValueAtTime(.0001,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.016,ctx.currentTime+.012); g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.11); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+.13); }catch(e){}
-    }
+    function tone(){ return; }
     function focus(k,opts={}){
       if(!nodes[k]) k='uac'; const n=nodes[k]; const rel=related[k]||new Set([k]);
       section.dataset.pc564Focus=k; section.dataset.pc563Focus=k; section.dataset.pc563Status=statusClass[n.tag]||'unknown';
@@ -3725,7 +3548,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch563
       p.querySelector('[data-pc564-summary]').textContent=n.summary;
       p.querySelector('[data-pc564-state]').textContent='NODE: '+n.name+' / TRACE ACTIVE';
       section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const tx=row.textContent||''; const active=k==='uac'?/U\.A\.C|UAC/.test(tx):(tx.includes(n.name)||tx.includes(n.name.replace(' Cult',''))||tx.includes(n.role)); row.classList.toggle('pc564-row-active',active); row.classList.toggle('pc564-row-muted',!active); row.classList.remove('relation-row-active','relation-row-muted'); });
-      const notice=document.querySelector('[data-srv-notice]'); const trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION TRACE MATRIX / '+n.name+' / '+n.tag; if(trace){trace.textContent='RELATION TRACE MATRIX: '+n.name; trace.className='status-field status-map';}
+      const notice=document.querySelector('[data-srv-notice]'); const trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION LIST / '+n.name+' / '+n.tag; if(trace){trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map';}
       if(!opts.silent) tone(k);
     }
     function bind(){
@@ -3810,9 +3633,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch564
       const tree=section.querySelector('.relation-tree-panel'); if(!tree) return;
       section.classList.add('pc5641-default-view');
       tree.classList.add('pc5641-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 3단 링 세력 관계도');
+      tree.setAttribute('aria-label','U.A.C 중심 계층형 세력 관계도');
       const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','amarion','syndicate','ushinoda','haimun'];
-      tree.innerHTML='<div class="pc5641-matrix"><div class="pc5641-title"><b>RELATION TRACE MATRIX</b><span>U.A.C 중심 3단 링 / 작전권·위험권·외곽 불명권 분리</span></div><div class="pc5641-ring-label core">중심 관제</div><div class="pc5641-ring-label inner">1차 작전권</div><div class="pc5641-ring-label outer">외곽 위험권</div><svg class="pc5641-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc5641-ring core" cx="50" cy="50" r="14"/><circle class="pc5641-ring inner" cx="50" cy="50" r="25"/><circle class="pc5641-ring mid" cx="50" cy="50" r="36"/><circle class="pc5641-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
+      tree.innerHTML='<div class="pc5641-matrix"><div class="pc5641-title"><b>RELATION LIST</b><span>U.A.C 중심 계층형 / 작전권·위험권·외곽 불명권 분리</span></div><div class="pc5641-ring-label core">중심 관제</div><div class="pc5641-ring-label inner">1차 작전권</div><div class="pc5641-ring-label outer">외곽 위험권</div><svg class="pc5641-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc5641-ring core" cx="50" cy="50" r="14"/><circle class="pc5641-ring inner" cx="50" cy="50" r="25"/><circle class="pc5641-ring mid" cx="50" cy="50" r="36"/><circle class="pc5641-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
       const brief=section.querySelector('.section-brief');
       if(brief) brief.innerHTML='U.A.C 관계도는 우호 여부를 단순 나열하지 않는다. 중심 관제, 1차 작전권, 후속 회수권, 연구 불신, 비공식 접촉, 의식성 적대 경로를 하나의 추적 행렬로 묶어 표시한다. 기본 상태에서는 모든 노드를 확인할 수 있으며, 노드를 선택하면 해당 세력과 직접 연결된 경로만 강조된다.';
       const cap=section.querySelector('.map-caption');
@@ -3852,9 +3675,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch564
       p.querySelector('[data-pc5641-summary]').textContent='기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다. 흐림 처리는 세력 노드 선택 후에만 적용된다.';
       p.querySelector('[data-pc5641-edge-note]').textContent='선택된 세력 없음.';
     }
-    function tone(k){
-      try{ if(localStorage.getItem('pc_audio_legacy2003_fixed')==='off') return; const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return; const ctx=window.__pc5641Ctx||(window.__pc5641Ctx=new AC()); if(ctx.state==='suspended') ctx.resume().catch(()=>{}); const n=nodes[k]||nodes.uac; const cls=statusClass[n.tag]||'control'; const f=cls==='hostile'?185:cls==='informal'?310:cls==='watch'?270:430; const o=ctx.createOscillator(),g=ctx.createGain(); o.type=cls==='hostile'?'sawtooth':'triangle'; o.frequency.setValueAtTime(f,ctx.currentTime); o.frequency.exponentialRampToValueAtTime(f*1.22,ctx.currentTime+.065); g.gain.setValueAtTime(.0001,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.014,ctx.currentTime+.012); g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.10); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+.12); }catch(e){}
-    }
+    function tone(){ return; }
     function focus(k,opts={}){
       if(!nodes[k]) return reset();
       const n=nodes[k], rel=related[k]||new Set([k]);
@@ -3874,8 +3695,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch564
       p.querySelector('[data-pc5641-summary]').textContent=n.summary;
       p.querySelector('[data-pc5641-edge-note]').textContent=edgeList(k).join('  |  ') || '관계 기록 없음';
       const notice=document.querySelector('[data-srv-notice]'), trace=document.querySelector('[data-srv-trace]');
-      if(notice) notice.textContent='RELATION TRACE MATRIX / '+n.name+' / '+n.tag;
-      if(trace){ trace.textContent='RELATION TRACE MATRIX: '+n.name; trace.className='status-field status-map'; }
+      if(notice) notice.textContent='RELATION LIST / '+n.name+' / '+n.tag;
+      if(trace){ trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map'; }
       if(!opts.silent) tone(k);
     }
     function bind(){
@@ -3966,9 +3787,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch564
       const tree=section.querySelector('.relation-tree-panel'); if(!tree) return;
       section.classList.add('pc57-default-view');
       tree.classList.add('pc57-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 3단 링 세력 관계도');
+      tree.setAttribute('aria-label','U.A.C 중심 계층형 세력 관계도');
       const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','amarion','syndicate','ushinoda','haimun'];
-      tree.innerHTML='<div class="pc57-matrix"><div class="pc57-title"><b>RELATION TRACE MATRIX</b><span>U.A.C 중심 3단 링 / 연결 노드 가시성 복구 / 오디오 중복 재생 억제</span></div><svg class="pc57-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc57-ring core" cx="50" cy="50" r="14"/><circle class="pc57-ring inner" cx="50" cy="50" r="25"/><circle class="pc57-ring mid" cx="50" cy="50" r="36"/><circle class="pc57-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
+      tree.innerHTML='<div class="pc57-matrix"><div class="pc57-title"><b>RELATION LIST</b><span>U.A.C 중심 계층형 / 연결 노드 가시성 복구 / 오디오 중복 재생 억제</span></div><svg class="pc57-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc57-ring core" cx="50" cy="50" r="14"/><circle class="pc57-ring inner" cx="50" cy="50" r="25"/><circle class="pc57-ring mid" cx="50" cy="50" r="36"/><circle class="pc57-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
       const brief=section.querySelector('.section-brief');
       if(brief) brief.innerHTML='U.A.C 관계도는 조직 노드와 직접 연결 경로를 우선 표시한다. 기본 상태에서는 모든 세력이 선명하게 보이고, 노드를 선택한 뒤에만 선택 세력·직접 연결 세력·비관련 세력이 단계적으로 구분된다. C.P.D 대피버스·차량·장비 단위는 관계도 노드에서 제외된다.';
       const cap=section.querySelector('.map-caption'); if(cap) cap.textContent='기본 상태에서는 모든 노드가 표시된다. 노드 선택 시 직접 연결 경로만 강조되며, 무관 노드는 완전히 숨기지 않고 낮은 명도로만 후퇴한다.';
@@ -3980,8 +3801,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch564
     function ensurePanel(){ section.querySelectorAll('.pc563-analysis-panel,.pc564-analysis-panel,.pc5641-analysis-panel').forEach(el=>el.remove()); let p=section.querySelector('.pc57-analysis-panel'); if(p) return p; p=document.createElement('div'); p.className='pc57-analysis-panel'; p.innerHTML='<div class="pc57-analysis-head"><b>TRACE ANALYSIS</b><span data-pc57-state>NO NODE SELECTED / ALL NODES VISIBLE</span></div><div class="pc57-analysis-grid"><span><b>선택 세력</b><i data-pc57-name>대기 중</i></span><span><b>상태 태그</b><i data-pc57-status>전체 표시</i></span><span><b>관계 등급</b><i data-pc57-grade>STANDBY</i></span><span><b>감시 상태</b><i data-pc57-watch>선택 대기</i></span><span><b>직접 연결</b><i data-pc57-links>노드를 선택하면 직접 연결 경로가 표시된다.</i></span><span><b>위험도</b><i data-pc57-risk>전체 관제</i></span><span><b>관련 기록</b><i data-pc57-records>기록 연결 대기</i></span><span class="wide"><b>U.A.C 판단</b><i data-pc57-summary>기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다.</i></span><span class="wide"><b>관계 기록</b><i data-pc57-edge-note>선택된 세력 없음.</i></span></div>'; const tree=section.querySelector('.relation-tree-panel'); if(tree) tree.insertAdjacentElement('afterend',p); else section.appendChild(p); return p; }
     function edgeList(k){return edges.filter(e=>e.a===k||e.b===k).map(e=>{const other=e.a===k?e.b:e.a; return nodes[other].name+' · '+e.label+' — '+e.desc;});}
     function reset(){ section.dataset.pc57Focus=''; section.classList.add('pc57-default-view'); section.querySelectorAll('.pc57-node').forEach(btn=>btn.classList.remove('selected','related','muted')); section.querySelectorAll('.pc57-edge').forEach(edge=>edge.classList.remove('focus','dim')); section.querySelectorAll('.relation-table tbody tr').forEach(row=>row.classList.remove('pc57-row-active','pc57-row-muted','pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted')); const p=ensurePanel(); p.querySelector('[data-pc57-state]').textContent='NO NODE SELECTED / ALL NODES VISIBLE'; p.querySelector('[data-pc57-name]').textContent='대기 중'; p.querySelector('[data-pc57-status]').textContent='전체 표시'; p.querySelector('[data-pc57-grade]').textContent='STANDBY'; p.querySelector('[data-pc57-watch]').textContent='선택 대기'; p.querySelector('[data-pc57-links]').textContent='노드를 선택하면 직접 연결 경로가 표시된다.'; p.querySelector('[data-pc57-risk]').textContent='전체 관제'; p.querySelector('[data-pc57-records]').textContent='기록 연결 대기'; p.querySelector('[data-pc57-summary]').textContent='기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다.'; p.querySelector('[data-pc57-edge-note]').textContent='선택된 세력 없음.'; }
-    function tone(k){ try{ if(localStorage.getItem('pc_audio_legacy2003_fixed')==='off') return; const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return; const ctx=window.__pc57Ctx||(window.__pc57Ctx=new AC()); if(ctx.state==='suspended') ctx.resume().catch(()=>{}); const n=nodes[k]||nodes.uac; const cls=statusClass[n.tag]||'control'; const f=cls==='hostile'?175:cls==='informal'?300:cls==='watch'?250:400; const o=ctx.createOscillator(),g=ctx.createGain(); o.type=cls==='hostile'?'sawtooth':'triangle'; o.frequency.setValueAtTime(f,ctx.currentTime); o.frequency.exponentialRampToValueAtTime(f*1.16,ctx.currentTime+.06); g.gain.setValueAtTime(.0001,ctx.currentTime); g.gain.exponentialRampToValueAtTime(.010,ctx.currentTime+.012); g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.095); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+.11); }catch(e){} }
-    function focus(k,opts={}){ if(!nodes[k]) return reset(); const n=nodes[k],rel=related[k]||new Set([k]); section.classList.remove('pc57-default-view'); section.dataset.pc57Focus=k; section.querySelectorAll('.pc57-node').forEach(btn=>{ const key=btn.dataset.factionKey; btn.classList.toggle('selected',key===k); btn.classList.toggle('related',key!==k&&rel.has(key)); btn.classList.toggle('muted',!rel.has(key)); }); section.querySelectorAll('.pc57-edge').forEach(edge=>{ const a=edge.dataset.edgeA,b=edge.dataset.edgeB,active=(a===k||b===k); edge.classList.toggle('focus',active); edge.classList.toggle('dim',!active); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const active=(row.dataset.edgeA===k||row.dataset.edgeB===k); row.classList.toggle('pc57-row-active',active); row.classList.toggle('pc57-row-muted',!active); row.classList.remove('pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted'); }); const p=ensurePanel(); p.querySelector('[data-pc57-state]').textContent='NODE: '+n.name+' / TRACE ACTIVE'; p.querySelector('[data-pc57-name]').textContent=n.name+' / '+n.role+' / '+n.ring; p.querySelector('[data-pc57-status]').textContent=n.tag; p.querySelector('[data-pc57-grade]').textContent=n.grade; p.querySelector('[data-pc57-watch]').textContent=n.watch; p.querySelector('[data-pc57-links]').textContent=Array.from(rel).filter(x=>x!==k).map(x=>nodes[x].name).join(' / ') || '직접 연결 없음'; p.querySelector('[data-pc57-risk]').textContent=n.risk; p.querySelector('[data-pc57-records]').textContent=n.records; p.querySelector('[data-pc57-summary]').textContent=n.summary; p.querySelector('[data-pc57-edge-note]').textContent=edgeList(k).join('  |  ') || '관계 기록 없음'; const notice=document.querySelector('[data-srv-notice]'),trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION TRACE MATRIX / '+n.name+' / '+n.tag; if(trace){ trace.textContent='RELATION TRACE MATRIX: '+n.name; trace.className='status-field status-map'; } if(!opts.silent) tone(k); }
+    function tone(){ return; }
+    function focus(k,opts={}){ if(!nodes[k]) return reset(); const n=nodes[k],rel=related[k]||new Set([k]); section.classList.remove('pc57-default-view'); section.dataset.pc57Focus=k; section.querySelectorAll('.pc57-node').forEach(btn=>{ const key=btn.dataset.factionKey; btn.classList.toggle('selected',key===k); btn.classList.toggle('related',key!==k&&rel.has(key)); btn.classList.toggle('muted',!rel.has(key)); }); section.querySelectorAll('.pc57-edge').forEach(edge=>{ const a=edge.dataset.edgeA,b=edge.dataset.edgeB,active=(a===k||b===k); edge.classList.toggle('focus',active); edge.classList.toggle('dim',!active); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const active=(row.dataset.edgeA===k||row.dataset.edgeB===k); row.classList.toggle('pc57-row-active',active); row.classList.toggle('pc57-row-muted',!active); row.classList.remove('pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted'); }); const p=ensurePanel(); p.querySelector('[data-pc57-state]').textContent='NODE: '+n.name+' / TRACE ACTIVE'; p.querySelector('[data-pc57-name]').textContent=n.name+' / '+n.role+' / '+n.ring; p.querySelector('[data-pc57-status]').textContent=n.tag; p.querySelector('[data-pc57-grade]').textContent=n.grade; p.querySelector('[data-pc57-watch]').textContent=n.watch; p.querySelector('[data-pc57-links]').textContent=Array.from(rel).filter(x=>x!==k).map(x=>nodes[x].name).join(' / ') || '직접 연결 없음'; p.querySelector('[data-pc57-risk]').textContent=n.risk; p.querySelector('[data-pc57-records]').textContent=n.records; p.querySelector('[data-pc57-summary]').textContent=n.summary; p.querySelector('[data-pc57-edge-note]').textContent=edgeList(k).join('  |  ') || '관계 기록 없음'; const notice=document.querySelector('[data-srv-notice]'),trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION LIST / '+n.name+' / '+n.tag; if(trace){ trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map'; } if(!opts.silent) tone(k); }
     function bind(){ section.querySelectorAll('.pc57-node').forEach(btn=>{ btn.addEventListener('click',()=>focus(btn.dataset.factionKey)); btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();focus(btn.dataset.factionKey);}}); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ row.setAttribute('tabindex','0'); row.addEventListener('click',()=>focus(row.dataset.edgeA||'uac')); }); section.querySelector('.pc57-title')?.addEventListener('dblclick',reset); document.querySelectorAll('.side-menu a[data-target="faction-relation"]').forEach(a=>{ a.addEventListener('click',()=>setTimeout(()=>{render();ensurePanel();bind();reset();},310),true); }); }
     render(); ensurePanel(); bind(); reset();
   });
@@ -4047,9 +3868,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch57:
       const tree=section.querySelector('.relation-tree-panel'); if(!tree) return;
       section.classList.add('pc571-faction-focus-fix','pc571-default-view');
       tree.classList.add('pc571-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 3단 링 세력 관계도');
+      tree.setAttribute('aria-label','U.A.C 중심 계층형 세력 관계도');
       const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','amarion','syndicate','ushinoda','haimun'];
-      tree.innerHTML='<div class="pc571-matrix"><div class="pc571-title"><b>RELATION TRACE MATRIX</b><span>U.A.C 선택 시 직접 연결 노드가 드러나도록 포커스 판정 보정</span></div><div class="pc571-ring-label core">중심 관제</div><div class="pc571-ring-label inner">1차 작전권</div><div class="pc571-ring-label mid">후속/위험권</div><div class="pc571-ring-label outer">외곽 불명권</div><svg class="pc571-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc571-ring core" cx="50" cy="50" r="14"/><circle class="pc571-ring inner" cx="50" cy="50" r="25"/><circle class="pc571-ring mid" cx="50" cy="50" r="36"/><circle class="pc571-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
+      tree.innerHTML='<div class="pc571-matrix"><div class="pc571-title"><b>RELATION LIST</b><span>U.A.C 선택 시 직접 연결 노드가 드러나도록 포커스 판정 보정</span></div><div class="pc571-ring-label core">중심 관제</div><div class="pc571-ring-label inner">1차 작전권</div><div class="pc571-ring-label mid">후속/위험권</div><div class="pc571-ring-label outer">외곽 불명권</div><svg class="pc571-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc571-ring core" cx="50" cy="50" r="14"/><circle class="pc571-ring inner" cx="50" cy="50" r="25"/><circle class="pc571-ring mid" cx="50" cy="50" r="36"/><circle class="pc571-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
       const brief=section.querySelector('.section-brief');
       if(brief) brief.innerHTML='U.A.C 관계도는 선택한 세력을 중심으로 직접 연결 노드를 드러내고, 2차 연결 노드는 중간 명도로 유지한다. 기본 상태에서는 모든 조직 노드가 표시되며, C.P.D 대피버스·차량·장비 단위는 관계도 노드에서 제외된다.';
       const cap=section.querySelector('.map-caption'); if(cap) cap.textContent='U.A.C를 선택하면 N.H.C, S.I.D, F.H.C, C.P.D, A.R.F, Ushnoda Cult, Haimun이 직접 연결 노드로 강조된다.';
@@ -4061,7 +3882,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch57:
     function ensurePanel(){ section.querySelectorAll('.pc563-analysis-panel,.pc564-analysis-panel,.pc5641-analysis-panel,.pc57-analysis-panel').forEach(el=>el.remove()); let p=section.querySelector('.pc571-analysis-panel'); if(p) return p; p=document.createElement('div'); p.className='pc571-analysis-panel'; p.innerHTML='<div class="pc571-analysis-head"><b>TRACE ANALYSIS</b><span data-pc571-state>NO NODE SELECTED / ALL NODES VISIBLE</span></div><div class="pc571-analysis-grid"><span><b>선택 세력</b><i data-pc571-name>대기 중</i></span><span><b>상태 태그</b><i data-pc571-status>전체 표시</i></span><span><b>관계 등급</b><i data-pc571-grade>STANDBY</i></span><span><b>감시 상태</b><i data-pc571-watch>선택 대기</i></span><span><b>직접 연결</b><i data-pc571-links>노드를 선택하면 직접 연결 경로가 표시된다.</i></span><span><b>2차 연결</b><i data-pc571-secondary>선택 대기</i></span><span><b>관련 기록</b><i data-pc571-records>기록 연결 대기</i></span><span class="wide"><b>U.A.C 판단</b><i data-pc571-summary>기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다.</i></span><span class="wide"><b>관계 기록</b><i data-pc571-edge-note>선택된 세력 없음.</i></span></div>'; const tree=section.querySelector('.relation-tree-panel'); if(tree) tree.insertAdjacentElement('afterend',p); else section.appendChild(p); return p; }
     function edgeList(k){return edges.filter(e=>e.a===k||e.b===k).map(e=>{const other=e.a===k?e.b:e.a; return nodes[other].name+' · '+e.label+' — '+e.desc;});}
     function reset(){ section.dataset.pc571Focus=''; section.classList.add('pc571-default-view'); section.querySelectorAll('.pc571-node').forEach(btn=>btn.classList.remove('selected','related','secondary','muted')); section.querySelectorAll('.pc571-edge').forEach(edge=>edge.classList.remove('focus','secondary','dim')); section.querySelectorAll('.relation-table tbody tr').forEach(row=>row.classList.remove('pc571-row-active','pc571-row-muted','pc57-row-active','pc57-row-muted','pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted')); const p=ensurePanel(); p.querySelector('[data-pc571-state]').textContent='NO NODE SELECTED / ALL NODES VISIBLE'; p.querySelector('[data-pc571-name]').textContent='대기 중'; p.querySelector('[data-pc571-status]').textContent='전체 표시'; p.querySelector('[data-pc571-grade]').textContent='STANDBY'; p.querySelector('[data-pc571-watch]').textContent='선택 대기'; p.querySelector('[data-pc571-links]').textContent='노드를 선택하면 직접 연결 경로가 표시된다.'; p.querySelector('[data-pc571-secondary]').textContent='선택 대기'; p.querySelector('[data-pc571-records]').textContent='기록 연결 대기'; p.querySelector('[data-pc571-summary]').textContent='기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다.'; p.querySelector('[data-pc571-edge-note]').textContent='선택된 세력 없음.'; }
-    function focus(rawKey,opts={}){ const k=canon(rawKey); if(!nodes[k]) return reset(); const n=nodes[k],rel=related[k]||new Set([k]),sec=secondarySet(k); section.classList.remove('pc571-default-view'); section.dataset.pc571Focus=k; section.querySelectorAll('.pc571-node').forEach(btn=>{ const key=canon(btn.dataset.factionKey); const isSelected=key===k, isRelated=key!==k && rel.has(key), isSecondary=key!==k && !rel.has(key) && sec.has(key); btn.classList.toggle('selected',isSelected); btn.classList.toggle('related',isRelated); btn.classList.toggle('secondary',isSecondary); btn.classList.toggle('muted',!isSelected&&!isRelated&&!isSecondary); }); section.querySelectorAll('.pc571-edge').forEach(edge=>{ const a=canon(edge.dataset.edgeA),b=canon(edge.dataset.edgeB),active=(a===k||b===k),secondary=(rel.has(a)||rel.has(b)); edge.classList.toggle('focus',active); edge.classList.toggle('secondary',!active&&secondary); edge.classList.toggle('dim',!active&&!secondary); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const a=canon(row.dataset.edgeA),b=canon(row.dataset.edgeB),active=(a===k||b===k); row.classList.toggle('pc571-row-active',active); row.classList.toggle('pc571-row-muted',!active); row.classList.remove('pc57-row-active','pc57-row-muted','pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted'); }); const p=ensurePanel(); const direct=Array.from(rel).filter(x=>x!==k&&nodes[x]); const second=Array.from(sec).filter(x=>nodes[x]); p.querySelector('[data-pc571-state]').textContent='NODE: '+n.name+' / DIRECT LINKS VISIBLE'; p.querySelector('[data-pc571-name]').textContent=n.name+' / '+n.role+' / '+n.ring; p.querySelector('[data-pc571-status]').textContent=n.tag; p.querySelector('[data-pc571-grade]').textContent=n.grade; p.querySelector('[data-pc571-watch]').textContent=n.watch; p.querySelector('[data-pc571-links]').textContent=direct.map(x=>nodes[x].name).join(' / ') || '직접 연결 없음'; p.querySelector('[data-pc571-secondary]').textContent=second.map(x=>nodes[x].name).join(' / ') || '2차 연결 없음'; p.querySelector('[data-pc571-records]').textContent=n.records; p.querySelector('[data-pc571-summary]').textContent=n.summary; p.querySelector('[data-pc571-edge-note]').textContent=edgeList(k).join('  |  ') || '관계 기록 없음'; const notice=document.querySelector('[data-srv-notice]'),trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION TRACE MATRIX / '+n.name+' / DIRECT NODES VISIBLE'; if(trace){ trace.textContent='RELATION TRACE MATRIX: '+n.name; trace.className='status-field status-map'; } if(!opts.silent && window.__pc57LastTone!==k){ window.__pc57LastTone=k; setTimeout(()=>{ if(window.__pc57LastTone===k) window.__pc57LastTone=''; },120); }
+    function focus(rawKey,opts={}){ const k=canon(rawKey); if(!nodes[k]) return reset(); const n=nodes[k],rel=related[k]||new Set([k]),sec=secondarySet(k); section.classList.remove('pc571-default-view'); section.dataset.pc571Focus=k; section.querySelectorAll('.pc571-node').forEach(btn=>{ const key=canon(btn.dataset.factionKey); const isSelected=key===k, isRelated=key!==k && rel.has(key), isSecondary=key!==k && !rel.has(key) && sec.has(key); btn.classList.toggle('selected',isSelected); btn.classList.toggle('related',isRelated); btn.classList.toggle('secondary',isSecondary); btn.classList.toggle('muted',!isSelected&&!isRelated&&!isSecondary); }); section.querySelectorAll('.pc571-edge').forEach(edge=>{ const a=canon(edge.dataset.edgeA),b=canon(edge.dataset.edgeB),active=(a===k||b===k),secondary=(rel.has(a)||rel.has(b)); edge.classList.toggle('focus',active); edge.classList.toggle('secondary',!active&&secondary); edge.classList.toggle('dim',!active&&!secondary); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const a=canon(row.dataset.edgeA),b=canon(row.dataset.edgeB),active=(a===k||b===k); row.classList.toggle('pc571-row-active',active); row.classList.toggle('pc571-row-muted',!active); row.classList.remove('pc57-row-active','pc57-row-muted','pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted'); }); const p=ensurePanel(); const direct=Array.from(rel).filter(x=>x!==k&&nodes[x]); const second=Array.from(sec).filter(x=>nodes[x]); p.querySelector('[data-pc571-state]').textContent='NODE: '+n.name+' / DIRECT LINKS VISIBLE'; p.querySelector('[data-pc571-name]').textContent=n.name+' / '+n.role+' / '+n.ring; p.querySelector('[data-pc571-status]').textContent=n.tag; p.querySelector('[data-pc571-grade]').textContent=n.grade; p.querySelector('[data-pc571-watch]').textContent=n.watch; p.querySelector('[data-pc571-links]').textContent=direct.map(x=>nodes[x].name).join(' / ') || '직접 연결 없음'; p.querySelector('[data-pc571-secondary]').textContent=second.map(x=>nodes[x].name).join(' / ') || '2차 연결 없음'; p.querySelector('[data-pc571-records]').textContent=n.records; p.querySelector('[data-pc571-summary]').textContent=n.summary; p.querySelector('[data-pc571-edge-note]').textContent=edgeList(k).join('  |  ') || '관계 기록 없음'; const notice=document.querySelector('[data-srv-notice]'),trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION LIST / '+n.name+' / DIRECT NODES VISIBLE'; if(trace){ trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map'; } if(!opts.silent && window.__pc57LastTone!==k){ window.__pc57LastTone=k; setTimeout(()=>{ if(window.__pc57LastTone===k) window.__pc57LastTone=''; },120); }
     }
     function bindRelation(){ section.querySelectorAll('.pc571-node').forEach(btn=>{ if(btn.dataset.pc571Bound) return; btn.dataset.pc571Bound='1'; btn.addEventListener('click',ev=>{ev.stopPropagation();focus(btn.dataset.factionKey);},true); btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();focus(btn.dataset.factionKey);}},true); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ row.setAttribute('tabindex','0'); if(row.dataset.pc571Bound) return; row.dataset.pc571Bound='1'; row.addEventListener('click',()=>focus(row.dataset.edgeA||'uac'),true); }); const title=section.querySelector('.pc571-title'); if(title&&!title.dataset.pc571Bound){title.dataset.pc571Bound='1'; title.addEventListener('dblclick',reset,true);} }
     function install(){ renderRelation(); ensurePanel(); bindRelation(); reset(); }
@@ -4323,5 +4144,846 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch571
       const tree=section.querySelector('.relation-tree-panel')||section;
       new MutationObserver(()=>{ if(section.querySelector('.pc571-node')) schedule(); }).observe(tree,{childList:true,subtree:true});
     }
+  });
+})();
+
+
+/* PATCH6_MOBILE_RECORD_SYSTEM_RESTRUCTURE
+   실제 소스 기반 개조 패치:
+   - 모바일 오프캔버스 메뉴
+   - 4대 사이드 메뉴 접기/펼치기
+   - 지역지도 세계 권역 선택 전용 UX
+   - 기록보관서 문서 내부 목차 자동 생성
+*/
+(function(){
+  function ready(fn){
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+  ready(function(){
+    const body=document.body;
+    const sidebar=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
+    const openBtn=document.getElementById('uacMenuToggle');
+    const closeBtn=document.getElementById('uacMenuClose');
+    const pathLabel=document.getElementById('mobileCurrentPath');
+    const legacyContent=document.querySelector('.legacy-content');
+
+    let backdrop=document.querySelector('.uac-menu-backdrop');
+    if(!backdrop){
+      backdrop=document.createElement('div');
+      backdrop.className='uac-menu-backdrop';
+      document.body.appendChild(backdrop);
+    }
+
+    function setPathLabel(text){
+      if(pathLabel && text) pathLabel.textContent=text;
+    }
+    function openMenu(){
+      body.classList.add('uac-menu-open');
+      backdrop.classList.add('is-open');
+    }
+    function closeMenu(){
+      body.classList.remove('uac-menu-open');
+      backdrop.classList.remove('is-open');
+    }
+
+    if(openBtn) openBtn.addEventListener('click', openMenu);
+    if(closeBtn) closeBtn.addEventListener('click', closeMenu);
+    if(backdrop) backdrop.addEventListener('click', closeMenu);
+
+    document.querySelectorAll('.side-menu-group').forEach(group=>{
+      group.addEventListener('toggle', function(){
+        if(!group.open) return;
+        document.querySelectorAll('.side-menu-group').forEach(other=>{
+          if(other!==group) other.open=false;
+        });
+      });
+    });
+
+    document.querySelectorAll('.side-menu a[data-target]').forEach(link=>{
+      link.addEventListener('click', function(){
+        setPathLabel(link.dataset.pathLabel || link.textContent.trim());
+        closeMenu();
+      });
+    });
+
+    function goArchiveAndOpenRecord(recordId, label){
+      const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
+      if(archiveLink) archiveLink.click();
+      setPathLabel(label || 'U.A.C 기록 단말기 / 기록보관서 / 문서 열람');
+      setTimeout(function(){
+        if(typeof window.ProjectCurseShowInternalRecord === 'function'){
+          window.ProjectCurseShowInternalRecord(recordId);
+          setTimeout(buildRecordToc, 260);
+          setTimeout(buildRecordToc, 620);
+        }
+      }, 80);
+      closeMenu();
+    }
+
+    document.querySelectorAll('.side-record-link[data-side-record]').forEach(btn=>{
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        goArchiveAndOpenRecord(btn.dataset.sideRecord, btn.dataset.pathLabel);
+      });
+    });
+
+    function goMapRegion(region, label){
+      const mapLink=document.querySelector('.side-menu a[data-target="zone-map"]');
+      if(mapLink) mapLink.click();
+      setPathLabel(label || '지역지도');
+      setTimeout(function(){
+        const tab=document.querySelector('.continent-tab[data-continent="'+region+'"]');
+        if(tab) tab.click();
+      }, 80);
+      closeMenu();
+    }
+
+    document.querySelectorAll('.side-map-jump[data-map-jump], .world-region-button[data-map-jump]').forEach(btn=>{
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        const label=btn.dataset.pathLabel || ('지역지도 / ' + btn.textContent.trim());
+        goMapRegion(btn.dataset.mapJump, label);
+      });
+    });
+
+    function syncMapState(){
+      const shell=document.querySelector('.continental-map-shell');
+      if(!shell) return;
+      const active=shell.querySelector('.continent-tab.active');
+      shell.dataset.currentContinent = active ? active.dataset.continent : 'world';
+    }
+    syncMapState();
+    document.querySelectorAll('.continent-tab').forEach(tab=>{
+      tab.addEventListener('click', function(){
+        const name=tab.textContent.trim();
+        setPathLabel(name==='세계' ? 'U.A.C 기록 단말기 / 지역지도 / 세계' : 'U.A.C 기록 단말기 / 지역지도 / '+name);
+        setTimeout(syncMapState, 0);
+      });
+    });
+
+    function isVisible(el){
+      return !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+    }
+    function slug(text, i){
+      return 'uac-record-section-' + i + '-' + String(text || 'section').replace(/\s+/g,'-').replace(/[^\w\-가-힣]/g,'').slice(0,28);
+    }
+    function buildRecordToc(){
+      const toc=document.getElementById('recordLocalToc');
+      if(!toc) return;
+      const selected=document.querySelector('.record-detail:not([hidden])');
+      if(!selected){
+        toc.innerHTML='<div class="toc-kicker">[SECTION LIST]</div><div class="toc-empty">기록을 열면 문서 목차가 표시됩니다.</div>';
+        return;
+      }
+
+      const title=(selected.querySelector('.doc-title') || selected.querySelector('h1'));
+      const headings=Array.from(selected.querySelectorAll('.record-content h1, .record-content h2, .record-content h3'))
+        .filter(isVisible)
+        .filter((el, idx, arr)=> {
+          const txt=el.textContent.trim();
+          if(!txt) return false;
+          return arr.findIndex(x=>x.textContent.trim()===txt)===idx;
+        })
+        .slice(0, 18);
+
+      let html='<div class="toc-kicker">[SECTION LIST]</div>';
+      html+='<span class="toc-chip">INTERNAL DOCUMENT</span>';
+      html+='<h3>'+ (title ? title.textContent.trim() : '문서 목차') +'</h3>';
+
+      if(!headings.length){
+        html+='<div class="toc-empty">현재 기록면에서 이동 가능한 섹션을 찾지 못했습니다.</div>';
+        toc.innerHTML=html;
+        return;
+      }
+
+      headings.forEach((h,i)=>{
+        if(!h.id) h.id=slug(h.textContent.trim(),i+1);
+        const num=String(i+1).padStart(2,'0');
+        html+='<a href="#'+h.id+'">'+num+'. '+h.textContent.trim()+'</a>';
+      });
+      toc.innerHTML=html;
+      toc.classList.remove('is-expanded');
+
+      const titleEl=toc.querySelector('h3');
+      if(titleEl){
+        titleEl.addEventListener('click', function(){
+          toc.classList.toggle('is-expanded');
+        });
+      }
+      toc.querySelectorAll('a').forEach(a=>{
+        a.addEventListener('click', function(){
+          if(window.innerWidth <= 900) toc.classList.remove('is-expanded');
+        });
+      });
+    }
+
+    window.ProjectCurseBuildRecordToc=buildRecordToc;
+
+    const archiveViewer=document.getElementById('archiveRecordViewer');
+    if(archiveViewer){
+      const observer=new MutationObserver(function(){ setTimeout(buildRecordToc, 40); });
+      observer.observe(archiveViewer, {subtree:true, attributes:true, attributeFilter:['hidden','class']});
+    }
+
+    document.querySelectorAll('.open-record[data-record]').forEach(btn=>{
+      btn.addEventListener('click', function(){
+        setPathLabel('U.A.C 기록 단말기 / 기록보관서 / 문서 열람');
+        setTimeout(buildRecordToc, 260);
+        setTimeout(buildRecordToc, 620);
+      });
+    });
+    document.querySelectorAll('.record-back').forEach(btn=>{
+      btn.addEventListener('click', function(){
+        setPathLabel('U.A.C 기록 단말기 / 기록보관서');
+        setTimeout(buildRecordToc, 80);
+      });
+    });
+    document.querySelectorAll('.page-tab,.sub-tab').forEach(btn=>{
+      btn.addEventListener('click', function(){
+        setTimeout(buildRecordToc, 40);
+        setTimeout(buildRecordToc, 160);
+      });
+    });
+
+    if(legacyContent){
+      legacyContent.addEventListener('scroll', function(){
+        closeMenu();
+      }, {once:true, passive:true});
+    }
+
+    // 초기 모바일 경로 라벨
+    const activeLink=document.querySelector('.side-menu a.active[data-path-label]');
+    if(activeLink) setPathLabel(activeLink.dataset.pathLabel);
+  });
+})();
+
+
+/* PATCH6_2_NAV_AUDIO_STATUSBAR_FINAL
+   - top-left hamburger controls the only global side menu
+   - side menu summary clicks use analog-17 only
+   - no transient remap/status popups
+   - terminal statusbar keeps only path + short status
+*/
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  ready(function(){
+    const body=document.body;
+    const sidebar=document.getElementById('uacSideMenu');
+    const openBtn=document.getElementById('uacMenuToggle');
+    const closeBtn=document.getElementById('uacMenuClose');
+    const backdrop=document.querySelector('.uac-menu-backdrop') || (function(){const d=document.createElement('div'); d.className='uac-menu-backdrop'; document.body.appendChild(d); return d;})();
+    const pathLabel=document.getElementById('mobileCurrentPath');
+    const status=document.getElementById('terminalStatusText');
+    function playMenu(){ try{ if(window.ProjectCursePlayAudio && window.ProjectCurseAudio) window.ProjectCursePlayAudio(window.ProjectCurseAudio.menu); }catch(e){} }
+    function openMenu(){ body.classList.add('uac-menu-open'); backdrop.classList.add('is-open'); }
+    function closeMenu(){ body.classList.remove('uac-menu-open'); backdrop.classList.remove('is-open'); }
+    if(openBtn){ openBtn.addEventListener('click',function(e){ e.preventDefault(); if(body.classList.contains('uac-menu-open')) closeMenu(); else openMenu(); }); }
+    if(closeBtn){ closeBtn.addEventListener('click',function(e){ e.preventDefault(); closeMenu(); }); }
+    if(backdrop){ backdrop.addEventListener('click',closeMenu); }
+    document.querySelectorAll('.side-menu-group > summary').forEach(function(summary){
+      summary.addEventListener('click',function(){ playMenu(); });
+    });
+    document.querySelectorAll('.side-menu a[data-path-label], .side-menu button[data-path-label]').forEach(function(el){
+      el.addEventListener('click',function(){
+        if(pathLabel && el.dataset.pathLabel) pathLabel.textContent=el.dataset.pathLabel;
+        if(status){
+          const t=el.dataset.pathLabel || el.textContent || '';
+          if(t.includes('지역지도')) status.textContent='MAP STANDBY';
+          else if(t.includes('세력')) status.textContent='RELATION FILE';
+          else if(t.includes('기록보관서')) status.textContent='ACCESS PARTIAL';
+          else status.textContent='NODE ONLINE';
+        }
+      }, true);
+    });
+    if(pathLabel && !pathLabel.textContent.trim()) pathLabel.textContent='U.A.C 기록 단말기 / 세계 개요';
+    if(sidebar) sidebar.setAttribute('aria-hidden', body.classList.contains('uac-menu-open') ? 'false' : 'true');
+    // Patch6.2.4: duplicate sidebar aria MutationObserver removed; final nav handler owns aria state.
+  });
+})();
+
+
+/* PATCH6_2_1_NAVFIX_LIGHTAUDIO
+   Final hotfix:
+   - Previous Patch6/6.2 modules both bound the hamburger button; open then immediate close happened.
+   - Clone the menu controls once after all older listeners are registered, then bind a single clean handler.
+   - Keep menu/audio scope minimal. No remap popups, no WebAudio tones.
+*/
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  ready(function(){
+    const body=document.body;
+    const sidebar=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
+    let backdrop=document.querySelector('.uac-menu-backdrop');
+    if(!backdrop){
+      backdrop=document.createElement('div');
+      backdrop.className='uac-menu-backdrop';
+      document.body.appendChild(backdrop);
+    }
+
+    function cloneControl(id){
+      const old=document.getElementById(id);
+      if(!old || !old.parentNode) return old;
+      const fresh=old.cloneNode(true);
+      old.parentNode.replaceChild(fresh, old);
+      return fresh;
+    }
+
+    const openBtn=cloneControl('uacMenuToggle');
+    const closeBtn=cloneControl('uacMenuClose');
+    const pathLabel=document.getElementById('mobileCurrentPath');
+    const status=document.getElementById('terminalStatusText');
+
+    function setOpen(isOpen){
+      body.classList.toggle('uac-menu-open', !!isOpen);
+      backdrop.classList.toggle('is-open', !!isOpen);
+      if(sidebar) sidebar.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      if(openBtn) openBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+    function openMenu(){ setOpen(true); }
+    function closeMenu(){ setOpen(false); }
+    function toggleMenu(){ setOpen(!body.classList.contains('uac-menu-open')); }
+    function menuAudio(){
+      try{
+        if(window.ProjectCursePlayAudio && window.ProjectCurseAudio && window.ProjectCurseAudio.menu){
+          window.ProjectCursePlayAudio(window.ProjectCurseAudio.menu);
+        }
+      }catch(e){}
+    }
+    function updateStatus(label){
+      if(pathLabel && label) pathLabel.textContent=label;
+      if(!status || !label) return;
+      if(label.includes('지역지도')) status.textContent='MAP STANDBY';
+      else if(label.includes('세력')) status.textContent='RELATION FILE';
+      else if(label.includes('기록보관서')) status.textContent='ACCESS PARTIAL';
+      else status.textContent='NODE ONLINE';
+    }
+
+    if(openBtn){
+      openBtn.setAttribute('aria-controls','uacSideMenu');
+      openBtn.setAttribute('aria-expanded','false');
+      openBtn.addEventListener('click',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMenu();
+      }, true);
+    }
+    if(closeBtn){ closeBtn.addEventListener('click',function(e){ e.preventDefault(); closeMenu(); }, true); }
+    backdrop.addEventListener('click',function(e){ e.preventDefault(); closeMenu(); }, true);
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeMenu(); });
+
+    document.querySelectorAll('.side-menu-group').forEach(function(group){
+      group.addEventListener('toggle',function(){
+        if(!group.open) return;
+        document.querySelectorAll('.side-menu-group').forEach(function(other){ if(other!==group) other.open=false; });
+      });
+    });
+
+    document.querySelectorAll('.side-menu-group > summary').forEach(function(summary){
+      if(summary.dataset.patch621Bound) return;
+      summary.dataset.patch621Bound='1';
+      summary.addEventListener('click',function(){ menuAudio(); }, true);
+    });
+    document.querySelectorAll('.side-menu a[data-path-label], .side-menu button[data-path-label]').forEach(function(el){
+      if(el.dataset.patch621Bound) return;
+      el.dataset.patch621Bound='1';
+      el.addEventListener('click',function(){
+        updateStatus(el.dataset.pathLabel || el.textContent.trim());
+        closeMenu();
+      }, true);
+    });
+
+    setOpen(false);
+  });
+})();
+
+
+/* PATCH6_2_2_NO_TRANSITION_POPUPS_PAGECLICK
+   Hard-disable all transient surface/link/index/menu/record/faction overlay nodes.
+   Record-face and nested record-page tabs use the same click as faction mark buttons.
+*/
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  ready(function(){
+    function playFactionClick(){
+      try{
+        if(window.ProjectCursePlayAudio && window.ProjectCurseAudio && window.ProjectCurseAudio.faction){
+          window.ProjectCursePlayAudio(window.ProjectCurseAudio.faction);
+        }
+      }catch(e){}
+    }
+    // Remove any transient panels that older patches may have already injected.
+    function purgeTransientPanels(){
+      document.querySelectorAll([
+        '.pc551-menu-loader',
+        '.pc564-menu-fx',
+        '.pc562-archive-toast',
+        '.record-surface-loader',
+        '.uac-map-code-loader',
+        '.uac-layer-boot',
+        '.record-loading.show'
+      ].join(',')).forEach(function(el){
+        if(el && el.parentNode) el.parentNode.removeChild(el);
+      });
+      document.querySelectorAll('.faction-detail-loading,.record-surface-active').forEach(function(el){
+        el.classList.remove('faction-detail-loading','record-surface-active');
+      });
+    }
+    purgeTransientPanels();
+    // Patch6.2.4: removed always-on popup MutationObserver; cleanup runs on interaction only.
+
+    // Record-face and nested page tabs: same mechanical click as faction mark buttons.
+    document.querySelectorAll('.page-tab,.sub-tab').forEach(function(btn){
+      if(btn.dataset.patch622PageClick) return;
+      btn.dataset.patch622PageClick='1';
+      btn.addEventListener('click',function(){ playFactionClick(); }, true);
+    });
+  });
+})();
+
+
+/* PATCH6_2_3_RESPONSIVE_STABILITY_ARCHIVE_LOADING
+   Adds controlled 2000s terminal-style loading only for approved transitions,
+   adds mobile relation cards, keeps forbidden legacy popups disabled, and hardens PC/mobile state cleanup.
+*/
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  ready(function(){
+    const body=document.body;
+    const forbiddenSelector=[
+      '.pc551-menu-loader',
+      '.pc564-menu-fx',
+      '.pc562-archive-toast',
+      '.record-surface-loader',
+      '.uac-map-code-loader',
+      '.uac-layer-boot',
+      '.record-loading.show',
+      '.pc55-sync-hud.is-active'
+    ].join(',');
+
+    function purgeForbiddenPanels(){
+      document.querySelectorAll(forbiddenSelector).forEach(function(el){
+        if(el && el.parentNode) el.parentNode.removeChild(el);
+      });
+      document.querySelectorAll('.faction-detail-loading,.record-surface-active').forEach(function(el){
+        el.classList.remove('faction-detail-loading','record-surface-active');
+      });
+    }
+
+    function closeOffcanvasMenu(){
+      body.classList.remove('uac-menu-open');
+      document.querySelectorAll('.uac-menu-backdrop').forEach(function(b){ b.classList.remove('is-open'); });
+      const btn=document.getElementById('uacMenuToggle');
+      if(btn) btn.setAttribute('aria-expanded','false');
+      const sidebar=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
+      if(sidebar) sidebar.setAttribute('aria-hidden','true');
+    }
+
+    window.ProjectCurseResetUiState=function(opts){
+      opts=opts||{};
+      if(!opts.keepMenu) closeOffcanvasMenu();
+      purgeForbiddenPanels();
+      if(!opts.keepLoaders){
+        document.querySelectorAll('.uac-data-access-loader.show').forEach(function(el){el.classList.add('hide'); setTimeout(()=>el.classList.remove('show','hide'),220);});
+      }
+    };
+
+    // Keep old transient nodes from coming back without deleting the approved archive loader.
+    purgeForbiddenPanels();
+    // Patch6.2.4: removed always-on forbidden-panel MutationObserver; cleanup runs on interaction only.
+
+    function ensureDataLoader(){
+      let el=document.getElementById('uacDataAccessLoader');
+      if(!el){
+        el=document.createElement('div');
+        el.id='uacDataAccessLoader';
+        el.className='uac-data-access-loader uac-gauge-loader';
+        el.innerHTML='<div class="uac-data-access-box terminal-gauge-box"><div class="uac-data-kicker">[DATA ACCESS]</div><div class="uac-data-title">화면 데이터 호출 중</div><div class="uac-data-lines"><span>색인 확인</span><span>표시 권한 확인</span></div><div class="terminal-gauge"><i data-gauge-fill></i><em data-gauge-percent>000%</em></div></div>';
+        document.body.appendChild(el);
+      }
+      return el;
+    }
+    let dataTimer=0;
+    function setDataLoaderText(title, lines){
+      const el=ensureDataLoader();
+      el.querySelector('.uac-data-kicker').textContent='['+(title.code||'DATA ACCESS')+']';
+      el.querySelector('.uac-data-title').textContent=title.title||'화면 데이터 호출 중';
+      el.querySelector('.uac-data-lines').innerHTML=(lines||['색인 확인','표시 권한 확인']).map(function(t){return '<span>'+String(t)+'</span>';}).join('');
+      return el;
+    }
+    function dataDuration(kind){
+      if(kind==='world') return 520;
+      if(kind==='worldmap') return 900;
+      if(kind==='region') return 1040;
+      if(kind==='archive') return 820;
+      if(kind==='relation' || kind==='faction') return 820;
+      return 760;
+    }
+    function showDataAccess(kind){
+      let cfg={code:'DATA ACCESS',title:'화면 데이터 호출 중',lines:['색인 확인','표시 권한 확인']};
+      if(kind==='world') cfg={code:'WORLD OVERVIEW',title:'세계 개요 호출 중',lines:['세계 상태 색인 확인','기록 위치 갱신']};
+      if(kind==='relation') cfg={code:'RELATION TRACE',title:'세력관계도 호출 중',lines:['중심 노드 확인','관계 기록 연결']};
+      if(kind==='faction') cfg={code:'FACTION RECORD',title:'세력 기록 호출 중',lines:['세력 색인 확인','기록 카드 정렬']};
+      if(kind==='worldmap') cfg={code:'WORLD MAP',title:'권역 선택 관제도 호출 중',lines:['권역 표면 확인','작전 구역 색인 정렬']};
+      if(kind==='region') cfg={code:'REGION MAP',title:'권역 작전도 불러오는 중',lines:['오염 구역 대조','작전 시설 확인','봉쇄선 레이어 정렬']};
+      if(kind==='archive') cfg={code:'ARCHIVE INDEX',title:'기록보관서 색인 호출 중',lines:['문서 목록 확인','내부 기록 위치 갱신']};
+      const duration=dataDuration(kind);
+      if(window.ProjectCurseTerminalLoader && window.ProjectCurseTerminalLoader.showData){
+        return window.ProjectCurseTerminalLoader.showData(kind,cfg,duration);
+      }
+      const el=setDataLoaderText({code:cfg.code,title:cfg.title},cfg.lines);
+      runTerminalGauge(el,duration);
+    }
+    window.ProjectCurseShowDataAccess=showDataAccess;
+
+    // Controlled short terminal loader for main menu movements only.
+    document.querySelectorAll('.side-menu a[data-target]').forEach(function(el){
+      if(el.dataset.pc623LoaderBound) return;
+      el.dataset.pc623LoaderBound='1';
+      el.addEventListener('click',function(){
+        const id=el.dataset.target;
+        if(id==='history') showDataAccess('world');
+        else if(id==='faction-relation') showDataAccess('relation');
+        else if(id==='faction-info') showDataAccess('faction');
+        else if(id==='zone-map') showDataAccess('worldmap');
+        else if(id==='archive-entry') showDataAccess('archive');
+        setTimeout(function(){ if(window.ProjectCurseResetUiState) window.ProjectCurseResetUiState({keepLoaders:true}); },60);
+      },true);
+    });
+    document.querySelectorAll('.side-map-jump,.world-region-button,.continent-tab').forEach(function(el){
+      if(el.dataset.pc623RegionLoaderBound) return;
+      el.dataset.pc623RegionLoaderBound='1';
+      el.addEventListener('click',function(){ showDataAccess(el.dataset.continent==='world' ? 'worldmap':'region'); },true);
+    });
+
+    // Mobile relation view: create readable relation cards from the table and hide cramped radial/tree graphics on small screens.
+    function buildMobileRelationCards(){
+      const root=document.getElementById('faction-relation');
+      if(!root || root.querySelector('.pc623-relation-mobile-cards')) return;
+      const table=root.querySelector('.relation-table');
+      if(!table) return;
+      const cards=document.createElement('section');
+      cards.className='pc623-relation-mobile-cards';
+      cards.innerHTML='<div class="pc623-mobile-relation-head"><b>[RELATION LIST]</b><span>모바일에서는 전체 원형 배치 대신 관계 기록 카드로 표시합니다.</span></div>';
+      table.querySelectorAll('tbody tr').forEach(function(row){
+        const cells=row.querySelectorAll('td');
+        if(cells.length<4) return;
+        const card=document.createElement('article');
+        card.className='pc623-relation-card '+(cells[0].className||'');
+        card.innerHTML='<small>'+cells[0].textContent.trim()+'</small><h3>'+cells[1].textContent.trim()+'</h3><b>'+cells[2].textContent.trim()+'</b><p>'+cells[3].textContent.trim()+'</p>';
+        cards.appendChild(card);
+      });
+      const caption=root.querySelector('.map-caption') || table;
+      caption.parentNode.insertBefore(cards, caption.nextSibling);
+    }
+    buildMobileRelationCards();
+
+    // Semi-abstract operational-surface marker labels for maps without discarding the existing data.
+    document.querySelectorAll('.continent-map-frame').forEach(function(frame){
+      if(frame.querySelector('.pc623-surface-tag')) return;
+      const tag=document.createElement('div');
+      tag.className='pc623-surface-tag';
+      const region=(frame.dataset.mapRegion||'world').toUpperCase();
+      tag.textContent= region==='WORLD' ? '[WORLD REGION SELECTOR]' : '['+region+' OPERATIONAL SURFACE]';
+      frame.appendChild(tag);
+    });
+
+    // Page tabs and inner page tabs stay fast: click only, no loaders.
+    document.querySelectorAll('.page-tab,.sub-tab').forEach(function(btn){
+      if(btn.dataset.pc623NoLoader) return;
+      btn.dataset.pc623NoLoader='1';
+      btn.addEventListener('click',function(){ purgeForbiddenPanels(); },true);
+    });
+  });
+})();
+
+
+/* PATCH6_2_4_CLEANRUNTIME_FASTRESPONSE
+   Runtime cleanup pass: faster terminal response, no permanent popup observer,
+   final status text, direct cleanup on interactions, and mobile-safe relation fallback.
+*/
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  ready(function(){
+    var body=document.body;
+    var forbidden='.pc551-menu-loader,.pc564-menu-fx,.pc562-archive-toast,.record-surface-loader,.uac-map-code-loader,.uac-layer-boot,.record-loading.show,.pc55-sync-hud.is-active';
+    function purge(){
+      document.querySelectorAll(forbidden).forEach(function(el){ if(el && el.parentNode) el.parentNode.removeChild(el); });
+      document.querySelectorAll('.faction-detail-loading,.record-surface-active').forEach(function(el){ el.classList.remove('faction-detail-loading','record-surface-active'); });
+    }
+    function closeMenu(){
+      body.classList.remove('uac-menu-open');
+      document.querySelectorAll('.uac-menu-backdrop').forEach(function(b){ b.classList.remove('is-open'); });
+      var btn=document.getElementById('uacMenuToggle');
+      var side=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
+      if(btn) btn.setAttribute('aria-expanded','false');
+      if(side) side.setAttribute('aria-hidden','true');
+    }
+    window.ProjectCurseCleanRuntimeFastResponse={purge:purge,closeMenu:closeMenu,version:'6.2.4'};
+    purge();
+    document.addEventListener('click',function(e){
+      if(e.target && e.target.closest('.side-menu a,.side-menu button,.continent-tab,.continent-filter,.page-tab,.sub-tab,.open-record,.record-back,.faction-tile')){
+        setTimeout(purge,0); setTimeout(purge,180);
+      }
+    },true);
+    document.querySelectorAll('.side-menu a,.side-menu button').forEach(function(el){
+      if(el.dataset.pc624Bound) return;
+      el.dataset.pc624Bound='1';
+      el.addEventListener('click',function(){ setTimeout(closeMenu,0); },true);
+    });
+    var status=document.getElementById('terminalStatusText');
+    var path=document.getElementById('mobileCurrentPath');
+    function calmStatus(label){
+      if(path && label) path.textContent=label;
+      if(!status) return;
+      var t=label || (path ? path.textContent : '');
+      if(t.indexOf('지역지도')>-1) status.textContent='MAP STANDBY';
+      else if(t.indexOf('세력')>-1) status.textContent='RELATION FILE';
+      else if(t.indexOf('기록보관서')>-1) status.textContent='ACCESS PARTIAL';
+      else status.textContent='NODE ONLINE';
+    }
+    document.querySelectorAll('.side-menu a[data-path-label],.side-menu button[data-path-label]').forEach(function(el){
+      el.addEventListener('click',function(){ calmStatus(el.dataset.pathLabel || el.textContent.trim()); },true);
+    });
+    if(path) calmStatus(path.textContent || 'U.A.C 기록 단말기 / 세계 개요');
+    document.querySelectorAll('.uac-server-statusbar').forEach(function(el){ el.remove(); });
+    if(document.body.classList.contains('has-uac-statusbar')) document.body.classList.remove('has-uac-statusbar');
+  });
+})();
+
+
+/* PATCH6_2_5_VISIBLEGAUGE_ABSTRACTOPSMAP
+   Final semi-abstract operational map renderer. It does not use geographic lon/lat data.
+*/
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  ready(function(){
+    const shell=document.querySelector('.continental-map-shell.datamap-v3');
+    if(!shell) return;
+    shell.classList.add('abstract-ops-map');
+    const NS='http://www.w3.org/2000/svg';
+    const W=1600,H=900;
+    const regionName={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
+    const regionCode={east:'EA',europe:'EU',north:'NA',southasia:'SA',seindian:'SI',oceania:'OC',mideast:'ME',africa:'AF'};
+    const zoneName={red:'레드존',yellow:'옐로우존',green:'그린존',white:'화이트존',black:'블랙존'};
+    const typeName={zone:'오염 구역',facility:'작전 시설',anomaly:'현상 기록',incident:'사건 좌표',blockade:'봉쇄선'};
+    const DATA={"east": [{"type": "zone", "zone": "red", "name": "란저우 내륙 레드존", "status": "내륙 오염권 중심. 관측기지와 봉쇄선이 외곽에 붙어 있다.", "x": 470, "y": 350, "rx": 170, "ry": 95, "sector": "내륙 오염권", "records": "레드존 이상현상 및 오염 기준 / N.H.C 현장 운용 절차"}, {"type": "zone", "zone": "black", "name": "란저우 심부 반응 후보지", "status": "레드존 내부 심부 반응. 외곽 마커와 겹치지 않게 중앙부에 묶는다.", "x": 505, "y": 360, "rx": 55, "ry": 38, "sector": "내륙 오염권", "records": "레드존 이상현상 및 오염 기준"}, {"type": "blockade", "name": "란저우 동부 차단선", "status": "레드존 외곽을 감싸는 대형 육상 차단선.", "points": [[610, 285], [700, 340], [710, 445]], "sector": "내륙 오염권", "records": "N.H.C 현장 운용 절차"}, {"type": "facility", "org": "nhc", "name": "N.H.C 란저우 전방 관측기지", "status": "레드존 동측 외곽 관측기지. 레드존과 가깝되 겹치지 않는다.", "x": 680, "y": 365, "sector": "내륙 오염권", "records": "N.H.C 현장 운용 절차"}, {"type": "zone", "zone": "white", "name": "홍콩 격리 항만 관리권", "status": "항만 검역과 귀환자 선별을 담당하는 화이트존.", "x": 770, "y": 625, "rx": 105, "ry": 58, "sector": "항만 검문권", "records": "구역 위험도 분류 / 지역지도"}, {"type": "facility", "org": "cpd", "name": "홍콩 격리 항만 검문소", "status": "화이트존 내부 검문소. 항만 관리권과 붙어 배치한다.", "x": 815, "y": 640, "sector": "항만 검문권", "records": "지역지도"}, {"type": "incident", "name": "홍콩 항만 집단 실종 사건", "status": "항만 화이트존 인접 사건 좌표.", "x": 870, "y": 610, "sector": "항만 검문권", "records": "타락 개체 분류 추가 보고서"}, {"type": "facility", "org": "uac", "name": "부산 해상 통제 허브", "status": "동아시아 해상 통제와 항만 검문을 연결하는 허브.", "x": 990, "y": 340, "sector": "한반도·해상 통제", "records": "지역지도"}, {"type": "zone", "zone": "green", "name": "일본 서남부 그린존", "status": "후방 작전과 회수지원이 가능한 안전권.", "x": 1165, "y": 515, "rx": 95, "ry": 55, "sector": "일본 후방권", "records": "구역 위험도 분류"}, {"type": "anomaly", "name": "황허 변류 이상현상", "status": "레드존 주변 하천 기록의 방향 불일치.", "x": 585, "y": 455, "sector": "내륙 오염권", "records": "레드존 이상현상 및 오염 기준"}, {"type": "blockade", "name": "동중국해 감시권", "status": "해상 감시선. 항만 검문권과 부산 허브를 잇는 점선권.", "points": [[990, 620], [1130, 640], [1300, 690]], "sector": "해상 감시권", "records": "지역지도"}], "europe": [{"type": "zone", "zone": "red", "name": "피의 호수 레드존", "status": "북부 사건권의 핵심 레드존.", "x": 470, "y": 335, "rx": 180, "ry": 95, "sector": "북부 레드존 외곽", "records": "피의 호수 부검 기록 / 레드존 이상현상"}, {"type": "zone", "zone": "black", "name": "피의 호수 중심 블랙존 후보지", "status": "혈색 수면 중심부 심부 반응.", "x": 475, "y": 337, "rx": 58, "ry": 40, "sector": "북부 레드존 외곽", "records": "피의 호수 부검 기록"}, {"type": "blockade", "name": "독일-덴마크 이중 봉쇄선", "status": "레드존 외곽을 감싸는 완전 봉쇄선.", "points": [[255, 440], [435, 470], [650, 435]], "sector": "북부 레드존 외곽", "records": "N.H.C 현장 운용 절차"}, {"type": "facility", "org": "nhc", "name": "함부르크 봉쇄사령 거점", "status": "피의 호수 후방 통제소.", "x": 650, "y": 420, "sector": "북부 레드존 외곽", "records": "지역지도"}, {"type": "zone", "zone": "white", "name": "코펜하겐 검문 관리권", "status": "민간 대피와 검문이 집중된 북유럽 관리권.", "x": 765, "y": 285, "rx": 96, "ry": 55, "sector": "중앙 봉쇄권", "records": "구역 위험도 분류"}, {"type": "zone", "zone": "yellow", "name": "북독일 옐로우존", "status": "레드존 외곽 감시 완충권.", "x": 735, "y": 520, "rx": 125, "ry": 70, "sector": "중앙 봉쇄권", "records": "지역지도"}, {"type": "blockade", "name": "북해 해상 감시권", "status": "해상 점선 감시권. 피의 호수 사건과 분리 표기한다.", "points": [[230, 625], [440, 590], [690, 610]], "sector": "북해 감시권", "records": "피의 호수 부검 기록"}, {"type": "incident", "name": "피의 호수 사건 좌표", "status": "1986년 혈액성 이상현상 회수 지점.", "x": 430, "y": 305, "sector": "북부 레드존 외곽", "records": "피의 호수 부검 기록"}, {"type": "anomaly", "name": "사망자 무전 반복 지점", "status": "죽은 시간 계열 통신 오염 기록.", "x": 555, "y": 435, "sector": "북부 레드존 외곽", "records": "레드존 이상현상"}, {"type": "facility", "org": "cpd", "name": "남부 대피 연결소", "status": "대피 축 후방 검문소.", "x": 1035, "y": 625, "sector": "남부 대피 축", "records": "지역지도"}], "north": [{"type": "zone", "zone": "red", "name": "캐나다 북부 레드존", "status": "북부 광역 봉쇄권의 핵심 레드존.", "x": 470, "y": 260, "rx": 190, "ry": 95, "sector": "북부 광역 봉쇄권", "records": "레드존 이상현상 / N.H.C 현장 운용"}, {"type": "zone", "zone": "black", "name": "북부 심부 반응 후보지", "status": "광역 오염권 내부 블랙존 후보.", "x": 515, "y": 263, "rx": 62, "ry": 42, "sector": "북부 광역 봉쇄권", "records": "레드존 이상현상"}, {"type": "facility", "org": "nhc", "name": "알래스카 전방 관측기지", "status": "북부 레드존 서측 외곽 관측기지.", "x": 265, "y": 315, "sector": "북부 광역 봉쇄권", "records": "N.H.C 현장 운용"}, {"type": "blockade", "name": "중부 장거리 봉쇄선", "status": "북부 오염권의 남하를 막는 장거리 차단선.", "points": [[235, 535], [480, 510], [790, 540]], "sector": "중부 장거리 차단선", "records": "지역지도"}, {"type": "zone", "zone": "yellow", "name": "오대호 감시권", "status": "도시 통제권으로 확장되는 완충 감시권.", "x": 970, "y": 425, "rx": 125, "ry": 70, "sector": "동부 도시 통제권", "records": "지역지도"}, {"type": "zone", "zone": "white", "name": "동부 도시 검문권", "status": "민간 이동 제한과 선별을 담당하는 화이트존.", "x": 1105, "y": 470, "rx": 95, "ry": 55, "sector": "동부 도시 통제권", "records": "구역 위험도 분류"}, {"type": "facility", "org": "cpd", "name": "동부 도시 통제소", "status": "화이트존 내부 검문 거점.", "x": 1135, "y": 475, "sector": "동부 도시 통제권", "records": "지역지도"}, {"type": "incident", "name": "북부 귀환자 소실 기록", "status": "봉쇄권 외곽 구조 실패 기록.", "x": 640, "y": 340, "sector": "북부 광역 봉쇄권", "records": "귀환자 분류 기록"}, {"type": "anomaly", "name": "빙원 통신 단절권", "status": "장거리 무전과 위치 신호가 동시에 끊기는 구역.", "x": 575, "y": 200, "sector": "북부 광역 봉쇄권", "records": "레드존 이상현상"}, {"type": "zone", "zone": "green", "name": "남부 이동 제한 후방권", "status": "검문 후방 운영 가능한 그린존.", "x": 560, "y": 710, "rx": 120, "ry": 55, "sector": "남부 이동 제한권", "records": "구역 위험도 분류"}], "southasia": [{"type": "zone", "zone": "yellow", "name": "히말라야 산악 감시권", "status": "북부 산악권 이상징후 감시 구역.", "x": 465, "y": 300, "rx": 175, "ry": 80, "sector": "북부 산악 감시권", "records": "지역지도"}, {"type": "anomaly", "name": "갠지스 상류 시간 왜곡", "status": "강유역의 위치·시간 기록 불일치.", "x": 610, "y": 505, "sector": "강유역 이상권", "records": "레드존 이상현상"}, {"type": "zone", "zone": "red", "name": "강유역 레드존 후보", "status": "귀환자 붕괴 사건과 연결된 레드존 후보.", "x": 720, "y": 520, "rx": 130, "ry": 70, "sector": "강유역 이상권", "records": "타락 개체 분류 추가 보고서"}, {"type": "facility", "org": "uac", "name": "델리 후방 분석소", "status": "산악 감시권과 강유역 이상권을 연결하는 분석소.", "x": 710, "y": 400, "sector": "강유역 이상권", "records": "지역지도"}, {"type": "zone", "zone": "white", "name": "동부 검문 관리권", "status": "대피 이동과 민간 선별 관리권.", "x": 1075, "y": 335, "rx": 95, "ry": 55, "sector": "동부 검문권", "records": "구역 위험도 분류"}, {"type": "facility", "org": "cpd", "name": "동부 대피 검문소", "status": "화이트존 내부 검문소.", "x": 1105, "y": 352, "sector": "동부 검문권", "records": "지역지도"}, {"type": "blockade", "name": "인도양 항로 감시선", "status": "남부 항로 해상 감시선.", "points": [[910, 720], [1110, 700], [1360, 735]], "sector": "인도양 항로 감시선", "records": "지역지도"}, {"type": "incident", "name": "콜카타 항만 실종 기록", "status": "동부 검문권 인접 사건 좌표.", "x": 1035, "y": 420, "sector": "동부 검문권", "records": "타락 개체 분류 추가 보고서"}, {"type": "zone", "zone": "green", "name": "남부 후방 운영권", "status": "회수지원과 대피 동선이 유지되는 그린존.", "x": 610, "y": 665, "rx": 105, "ry": 52, "sector": "강유역 이상권", "records": "구역 위험도 분류"}], "seindian": [{"type": "zone", "zone": "white", "name": "싱가포르 검문 허브", "status": "말라카 검문권 중심 화이트존.", "x": 450, "y": 300, "rx": 105, "ry": 58, "sector": "말라카 검문권", "records": "지역지도"}, {"type": "facility", "org": "cpd", "name": "싱가포르 검문소", "status": "항로 선별과 민간 이동 통제.", "x": 470, "y": 310, "sector": "말라카 검문권", "records": "지역지도"}, {"type": "zone", "zone": "yellow", "name": "군도 오염 감시권", "status": "군도 전역의 반복 통신 이상 감시권.", "x": 880, "y": 390, "rx": 190, "ry": 90, "sector": "군도 오염 감시권", "records": "레드존 이상현상"}, {"type": "anomaly", "name": "보르네오 해상 이상신호", "status": "오염 무전이 반복 수신되는 해상 통신권.", "x": 940, "y": 340, "sector": "군도 오염 감시권", "records": "레드존 이상현상"}, {"type": "zone", "zone": "red", "name": "자바 해역 사건권", "status": "집단 실종 기록이 집중된 레드존 후보 해역.", "x": 1150, "y": 602, "rx": 130, "ry": 65, "sector": "자바 사건권", "records": "지역지도"}, {"type": "facility", "org": "uac", "name": "자카르타 해상 감시소", "status": "자바 사건권 외곽 감시소.", "x": 1045, "y": 570, "sector": "자바 사건권", "records": "지역지도"}, {"type": "incident", "name": "자바 해역 집단 실종 사건", "status": "해상 집단 실종 기록.", "x": 1205, "y": 615, "sector": "자바 사건권", "records": "지역지도"}, {"type": "blockade", "name": "인도양 해상 통제선", "status": "말라카-자바-인도양 감시선을 잇는 해상 통제선.", "points": [[390, 640], [680, 590], [940, 610], [1230, 690]], "sector": "인도양 해상 통제권", "records": "지역지도"}, {"type": "zone", "zone": "green", "name": "동남아 후방 보급권", "status": "검문 허브 후방 운영권.", "x": 605, "y": 210, "rx": 105, "ry": 55, "sector": "말라카 검문권", "records": "구역 위험도 분류"}], "oceania": [{"type": "zone", "zone": "red", "name": "호주 남중부 레드존", "status": "호주 내륙 오염권의 주요 레드존.", "x": 620, "y": 500, "rx": 190, "ry": 105, "sector": "호주 내륙 오염권", "records": "레드존 이상현상 / N.H.C 현장 운용"}, {"type": "zone", "zone": "black", "name": "호주 중앙 블랙존 후보지", "status": "심부 반응 중심.", "x": 600, "y": 390, "rx": 60, "ry": 42, "sector": "호주 내륙 오염권", "records": "레드존 이상현상"}, {"type": "anomaly", "name": "사막 지하 진동 기록점", "status": "블랙존 후보 주변 지하 진동.", "x": 650, "y": 385, "sector": "호주 내륙 오염권", "records": "레드존 이상현상"}, {"type": "blockade", "name": "내륙-해안 방어선", "status": "호주 내륙 오염권을 해안 후방권과 분리하는 차단선.", "points": [[405, 610], [615, 655], [845, 612]], "sector": "호주 내륙 오염권", "records": "N.H.C 현장 운용"}, {"type": "facility", "org": "nhc", "name": "애들레이드 차단 거점", "status": "남부 차단선의 핵심 거점.", "x": 820, "y": 638, "sector": "호주 내륙 오염권", "records": "지역지도"}, {"type": "zone", "zone": "green", "name": "남동부 후방 운영권", "status": "후방 병참 및 회수지원 그린존.", "x": 980, "y": 604, "rx": 120, "ry": 60, "sector": "남동부 후방권", "records": "구역 위험도 분류"}, {"type": "facility", "org": "uac", "name": "멜버른 후방 병참기지", "status": "남동부 후방 작전 거점.", "x": 1015, "y": 625, "sector": "남동부 후방권", "records": "지역지도"}, {"type": "facility", "org": "cpd", "name": "다윈 검역기지", "status": "북부 항만 검역 거점.", "x": 530, "y": 250, "sector": "호주 내륙 오염권", "records": "지역지도"}, {"type": "blockade", "name": "남태평양 감시권", "status": "뉴질랜드 북방과 남태평양 해상 감시권.", "points": [[1100, 345], [1260, 320], [1450, 390]], "sector": "남태평양 감시권", "records": "지역지도"}, {"type": "incident", "name": "호주 중앙 심부 반응점", "status": "중앙 내륙 심부 반응 기록.", "x": 600, "y": 390, "sector": "호주 내륙 오염권", "records": "레드존 이상현상"}], "mideast": [{"type": "zone", "zone": "yellow", "name": "중동 사막 감시권", "status": "이라크-시리아-사우디 북부 장기 감시권.", "x": 555, "y": 360, "rx": 210, "ry": 100, "sector": "사막 장기 감시권", "records": "지역지도"}, {"type": "zone", "zone": "red", "name": "시리아-이라크 경계 이상 발화권", "status": "사막 경계의 소형 레드존.", "x": 880, "y": 270, "rx": 110, "ry": 62, "sector": "경계 이상 발화권", "records": "레드존 이상현상"}, {"type": "incident", "name": "경계 이상 발화점", "status": "반복 발화와 오염 무전이 묶인 사건 좌표.", "x": 900, "y": 292, "sector": "경계 이상 발화권", "records": "레드존 이상현상"}, {"type": "anomaly", "name": "사막 오염 무전 반복 구역", "status": "모래폭풍 내부에서 사망자 음성이 반복 수신됨.", "x": 610, "y": 410, "sector": "사막 장기 감시권", "records": "레드존 이상현상"}, {"type": "blockade", "name": "사막 횡단 차단선", "status": "장기 감시권 남측을 가르는 육상 차단선.", "points": [[310, 620], [540, 585], [840, 625]], "sector": "사막 횡단 차단선", "records": "N.H.C 현장 운용"}, {"type": "facility", "org": "nhc", "name": "리야드 사막 관측기지", "status": "사막 감시권 남측 관측기지.", "x": 705, "y": 495, "sector": "사막 장기 감시권", "records": "지역지도"}, {"type": "facility", "org": "uac", "name": "바그다드 후방 분석소", "status": "감시권 후방 분석소.", "x": 665, "y": 335, "sector": "사막 장기 감시권", "records": "지역지도"}, {"type": "zone", "zone": "white", "name": "수에즈-홍해 북부 관리권", "status": "해상 항로 검문 관리권.", "x": 1075, "y": 590, "rx": 115, "ry": 60, "sector": "홍해·수에즈 항로", "records": "구역 위험도 분류"}, {"type": "facility", "org": "cpd", "name": "수에즈 항로 봉쇄통제소", "status": "수에즈 항로 검문과 봉쇄 통제.", "x": 1030, "y": 580, "sector": "홍해·수에즈 항로", "records": "지역지도"}, {"type": "blockade", "name": "홍해 해상 감시선", "status": "홍해 항로의 점선 감시권.", "points": [[990, 645], [1130, 610], [1365, 635]], "sector": "홍해·수에즈 항로", "records": "지역지도"}], "africa": [{"type": "zone", "zone": "black", "name": "북아프리카 흑색 후보권", "status": "리비아 남부-알제리 동부 사막권 블랙존 후보.", "x": 545, "y": 310, "rx": 135, "ry": 75, "sector": "북아프리카 후보권", "records": "레드존 이상현상"}, {"type": "facility", "org": "uac", "name": "카이로 검문 통합허브", "status": "북아프리카 검문 통합허브.", "x": 760, "y": 285, "sector": "북아프리카 후보권", "records": "지역지도"}, {"type": "zone", "zone": "yellow", "name": "사헬 감시권", "status": "사헬 횡단 감시선과 연결된 완충 감시권.", "x": 690, "y": 535, "rx": 220, "ry": 85, "sector": "사헬 횡단 감시권", "records": "지역지도"}, {"type": "blockade", "name": "사헬 횡단 감시선", "status": "북아프리카와 동아프리카를 가르는 장거리 감시선.", "points": [[320, 585], [600, 555], [1040, 585]], "sector": "사헬 횡단 감시권", "records": "지역지도"}, {"type": "incident", "name": "리비아 남부 유물 회수 실패", "status": "흑색 후보권 주변 회수 실패 사건.", "x": 500, "y": 370, "sector": "북아프리카 후보권", "records": "지역지도"}, {"type": "zone", "zone": "red", "name": "동아프리카 귀환자 붕괴권", "status": "귀환자 집단 붕괴와 연결된 레드존 후보.", "x": 1050, "y": 690, "rx": 115, "ry": 60, "sector": "동아프리카 사건권", "records": "타락 개체 분류 추가 보고서"}, {"type": "facility", "org": "arf", "name": "나이로비 회수지원 거점", "status": "동아프리카 사건권 외곽 회수지원 거점.", "x": 980, "y": 690, "sector": "동아프리카 사건권", "records": "지역지도"}, {"type": "incident", "name": "케냐 북부 귀환자 집단 붕괴", "status": "귀환자 선별 실패와 붕괴 사건 기록.", "x": 1085, "y": 675, "sector": "동아프리카 사건권", "records": "타락 개체 분류 추가 보고서"}, {"type": "zone", "zone": "white", "name": "카이로 검문 관리권", "status": "북아프리카 연안 검문 화이트존.", "x": 835, "y": 315, "rx": 92, "ry": 50, "sector": "북아프리카 후보권", "records": "구역 위험도 분류"}, {"type": "blockade", "name": "지중해 남부 해상 감시권", "status": "북아프리카 연안 해상 감시권.", "points": [[210, 205], [450, 170], [820, 185]], "sector": "지중해 남부 감시권", "records": "지역지도"}]};
+    function el(n,a){const x=document.createElementNS(NS,n); Object.entries(a||{}).forEach(([k,v])=>x.setAttribute(k,v)); return x;}
+    function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+    function pathBlob(cx,cy,rx,ry){
+      const pts=[]; for(let i=0;i<10;i++){const a=(Math.PI*2*i/10)-Math.PI/2; const j=(i%3===0?1.12:(i%2===0?.88:1.02)); pts.push([cx+Math.cos(a)*rx*j,cy+Math.sin(a)*ry*j]);}
+      return 'M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L')+'Z';
+    }
+    function classify(item){ return item.type==='zone' ? 'zone' : item.type; }
+    function match(item,filter){ if(filter==='all') return true; if(filter==='zone') return item.type==='zone'; if(filter && filter.startsWith('zone-')) return item.type==='zone' && item.zone===filter.replace('zone-',''); return classify(item)===filter; }
+    function itemCode(region,item,idx){ if(item.type==='zone') return ({red:'RZ',yellow:'YZ',green:'GZ',white:'WZ',black:'BZ'}[item.zone]||'ZN')+'-'+(idx+1); if(item.type==='facility') return 'FAC-'+(idx+1); if(item.type==='incident') return 'INC-'+(idx+1); if(item.type==='anomaly') return 'ANM-'+(idx+1); return 'BLK-'+(idx+1); }
+    function addDatum(g,item,region,idx){ g.dataset.mapItem='1'; g.dataset.filter=classify(item); if(item.zone) g.dataset.zone=item.zone; g.setAttribute('tabindex','0'); g.setAttribute('role','button'); g.dataset.title=item.name; g.dataset.status=item.status; g.dataset.records=item.records||'지역지도'; g.dataset.sector=item.sector||regionName[region]||region; g.dataset.code=itemCode(region,item,idx); }
+    function drawZone(layer,item,region,idx){ const g=el('g',{'class':'ops-map-item ops-zone zone-'+item.zone}); addDatum(g,item,region,idx); const outer=el('path',{d:pathBlob(item.x,item.y,item.rx,item.ry),'class':'ops-zone-blob outer zone-'+item.zone}); g.appendChild(outer); if(item.zone==='red'){g.appendChild(el('path',{d:pathBlob(item.x,item.y,item.rx*.42,item.ry*.42),'class':'ops-zone-blob core zone-red'}));} if(item.zone==='black'){g.appendChild(el('path',{d:pathBlob(item.x,item.y,item.rx*.58,item.ry*.58),'class':'ops-zone-blob core zone-black'}));} const t=el('text',{x:item.x+item.rx*.45,y:item.y-item.ry*.75,'class':'ops-label'}); t.textContent=item.name; g.appendChild(t); layer.appendChild(g); return g; }
+    function drawLine(layer,item,region,idx){ const g=el('g',{'class':'ops-map-item ops-line'}); addDatum(g,item,region,idx); const d='M'+item.points.map(p=>p[0]+','+p[1]).join('L'); g.appendChild(el('path',{d,'class':'ops-blockade-line'})); item.points.forEach((p,i)=>{ if(i===0||i===item.points.length-1) g.appendChild(el('rect',{x:p[0]-7,y:p[1]-7,width:14,height:14,'class':'ops-blockade-node'})); }); const mid=item.points[Math.floor(item.points.length/2)]; const t=el('text',{x:mid[0]+20,y:mid[1]-18,'class':'ops-label ops-line-label'}); t.textContent=item.name; g.appendChild(t); layer.appendChild(g); return g; }
+    function drawNode(layer,item,region,idx){ const g=el('g',{'class':'ops-map-item ops-node ops-'+item.type+(item.org?' org-'+item.org:'')}); addDatum(g,item,region,idx); let shape; if(item.type==='facility') shape=el('polygon',{points:`${item.x},${item.y-14} ${item.x+14},${item.y} ${item.x},${item.y+14} ${item.x-14},${item.y}`,'class':'ops-node-shape'}); else if(item.type==='incident') shape=el('rect',{x:item.x-10,y:item.y-10,width:20,height:20,transform:`rotate(45 ${item.x} ${item.y})`,'class':'ops-node-shape'}); else shape=el('path',{d:`M${item.x},${item.y-15} L${item.x+15},${item.y+12} L${item.x-15},${item.y+12} Z`,'class':'ops-node-shape'}); g.appendChild(shape); g.appendChild(el('circle',{cx:item.x,cy:item.y,r:3.5,'class':'ops-node-dot'})); const t=el('text',{x:item.x+18,y:item.y-16,'class':'ops-label'}); t.textContent=item.name; g.appendChild(t); layer.appendChild(g); return g; }
+    function updateCard(panel,item,region,idx){ const card=panel.querySelector('.map-detail-card'); if(!card) return; if(!item){card.innerHTML='<b>WORLD REGION SELECTOR</b><p>세계지도는 권역 선택 전용 관제면입니다. 세부 오염권·시설·사건·봉쇄선은 각 권역 작전구역도에서 확인합니다.</p><small>표현 기준: 반추상 U.A.C 작전 관제도</small>'; return;} const code=itemCode(region,item,idx); const cls=item.type==='zone' ? zoneName[item.zone] : typeName[item.type]; card.innerHTML='<b>'+esc(code+' · '+item.name)+'</b><p>'+esc(item.status)+'</p><small>분류: '+esc(cls)+'<br>작전권: '+esc(item.sector||regionName[region])+'<br>표현 기준: 실제 좌표가 아닌 작전 관계 배치<br>관련 기록: '+esc(item.records||'지역지도')+'</small>'; }
+    function render(region){ const panel=shell.querySelector(`[data-continent-panel="${region}"]`); if(!panel) return; const layer=panel.querySelector('.map-data-layer'); const list=panel.querySelector('.continent-point-list'); if(!layer) return; layer.setAttribute('viewBox','0 0 '+W+' '+H); layer.innerHTML=''; if(list) list.innerHTML=''; if(region==='world'){ updateCard(panel,null,region,0); if(list) list.innerHTML='<div class="continent-point"><b>WORLD SELECTOR</b><span>세계지도는 권역 선택 전용입니다.</span></div>'; return; } const filter=shell.dataset.filter||'all'; const items=DATA[region]||[]; items.forEach((item,idx)=>{ let g=item.type==='zone'?drawZone(layer,item,region,idx):(item.type==='blockade'?drawLine(layer,item,region,idx):drawNode(layer,item,region,idx)); g.style.display=match(item,filter)?'':'none'; g.addEventListener('click',()=>updateCard(panel,item,region,idx)); g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault(); updateCard(panel,item,region,idx);}}); if(list){ const li=document.createElement('div'); li.className='continent-point ops-point'+(item.type==='zone'?' zone-'+item.zone:''); li.dataset.filter=classify(item); if(item.zone) li.dataset.zone=item.zone; li.style.display=match(item,filter)?'':'none'; li.innerHTML='<b>'+esc(itemCode(region,item,idx)+' · '+(item.type==='zone'?zoneName[item.zone]:typeName[item.type]))+'</b><span>'+esc(item.name)+'<small>'+esc(item.sector||regionName[region])+' · '+esc(item.status)+'</small></span>'; li.addEventListener('click',()=>updateCard(panel,item,region,idx)); list.appendChild(li); } }); const first=items.find(it=>match(it,filter)) || items[0]; updateCard(panel,first,region,items.indexOf(first)); }
+    function activeRegion(){ return shell.querySelector('.continent-panel.active')?.dataset.continentPanel || shell.dataset.currentContinent || 'world'; }
+    function applyFilter(){ const region=activeRegion(); render(region); }
+    shell.querySelectorAll('.continent-panel').forEach(p=>render(p.dataset.continentPanel));
+    shell.querySelectorAll('.continent-filter').forEach(btn=>{ btn.addEventListener('click',function(){ shell.dataset.filter=btn.dataset.mapFilter||'all'; shell.querySelectorAll('.continent-filter').forEach(b=>b.classList.toggle('active',b===btn)); setTimeout(applyFilter,0); },true); });
+    shell.querySelectorAll('.continent-tab').forEach(btn=>{ btn.addEventListener('click',function(){ const key=btn.dataset.continent||'world'; shell.dataset.currentContinent=key; setTimeout(()=>render(key),30); setTimeout(()=>render(key),260); },true); });
+    document.querySelectorAll('.side-map-jump,.world-region-button').forEach(btn=>{ btn.addEventListener('click',function(){ const key=btn.dataset.mapJump||btn.dataset.worldRegion; if(!key) return; shell.dataset.currentContinent=key; setTimeout(()=>render(key),60); setTimeout(()=>render(key),360); },true); });
+    setTimeout(()=>render(activeRegion()),600);
+  });
+})();
+
+
+/* PATCH6_2_6_QARUNTIME_GAUGEFIX
+   Self-diagnostic runtime, loader fallback, and QA simulation mode.
+   Open index.html?uac_qa=1 to run the in-browser test pass and copy results. */
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true}); else fn(); }
+  const QA_VERSION='6.2.7';
+  const forbiddenSelectors='.pc551-menu-loader,.pc551-menu-box,.pc564-menu-fx,.pc562-archive-toast,.record-surface-loader,.uac-map-code-loader,.uac-layer-boot,.pc55-sync-hud,.uac-server-statusbar';
+  const forbiddenText=[['REGIONAL','SURFACE','LINK'],['TERMINAL','PANEL','SYNC'],['CHRONICLE','INDEX','REBUILD'],['ARCHIVE','SURFACE','OPEN'],['RECORD','SURFACE','REMAP'],['FACTION','FILE','REMAP']].map(function(parts){return parts.join(' ');});
+  const durations={world:560,relation:880,faction:880,worldmap:960,region:1080,archive:840,default:820};
+  const messages={
+    world:{code:'WORLD OVERVIEW',title:'세계 개요 호출 중',lines:['세계 상태 색인 확인','기록 위치 갱신','노드 응답 확인']},
+    relation:{code:'RELATION TRACE',title:'세력관계도 호출 중',lines:['중심 노드 확인','관계 기록 연결','관계 목록 대조']},
+    faction:{code:'FACTION RECORD',title:'세력 기록 호출 중',lines:['세력 색인 확인','기록 카드 정렬','문서 연결 확인']},
+    worldmap:{code:'WORLD MAP',title:'권역 선택 관제도 호출 중',lines:['권역 표면 확인','작전 구역 색인 정렬','마커 레이어 제한']},
+    region:{code:'REGION MAP',title:'권역 작전도 불러오는 중',lines:['오염 구역 대조','작전 시설 확인','봉쇄선 레이어 정렬']},
+    archive:{code:'ARCHIVE INDEX',title:'기록보관서 색인 호출 중',lines:['문서 목록 확인','내부 기록 위치 갱신','열람 노드 대기']},
+    default:{code:'DATA ACCESS',title:'화면 데이터 호출 중',lines:['색인 확인','표시 권한 확인','노드 응답 확인']}
+  };
+  let dataHideTimer=0;
+  function purgeForbidden(){
+    document.querySelectorAll(forbiddenSelectors).forEach(function(el){ if(el && el.parentNode) el.parentNode.removeChild(el); });
+    document.querySelectorAll('.faction-detail-loading,.record-surface-active').forEach(function(el){ el.classList.remove('faction-detail-loading','record-surface-active'); });
+    // Text-level guard for legacy central panels that may be reintroduced by older scripts.
+    document.querySelectorAll('body *').forEach(function(el){
+      if(!el || !el.textContent || el.children.length>5) return;
+      const t=el.textContent.trim();
+      if(forbiddenText.some(function(f){return t.indexOf(f)>-1;})){
+        if(!el.closest('.patch-note,.qa-panel,.uac-qa-panel')) el.remove();
+      }
+    });
+  }
+  function ensureDataLoader(){
+    let el=document.getElementById('uacDataAccessLoader');
+    if(!el){
+      el=document.createElement('div');
+      el.id='uacDataAccessLoader';
+      el.className='uac-data-access-loader uac-gauge-loader pc626-loader';
+      el.innerHTML='<div class="uac-data-access-box terminal-gauge-box"><div class="uac-data-kicker">[DATA ACCESS]</div><div class="uac-data-title">화면 데이터 호출 중</div><div class="uac-data-lines"><span>색인 확인</span><span>표시 권한 확인</span><span>노드 응답 확인</span></div><div class="terminal-gauge"><i data-gauge-fill></i><em data-gauge-percent>000%</em></div><div class="pc626-loader-foot">PC-03 LEGACY TERMINAL / LOW RESOLUTION ACCESS</div></div>';
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+  function setText(el,cfg){
+    cfg=cfg||messages.default;
+    const k=el.querySelector('.uac-data-kicker');
+    const title=el.querySelector('.uac-data-title');
+    const lines=el.querySelector('.uac-data-lines');
+    if(k) k.textContent='['+(cfg.code||'DATA ACCESS')+']';
+    if(title) title.textContent=cfg.title||'화면 데이터 호출 중';
+    if(lines) lines.innerHTML=(cfg.lines||messages.default.lines).map(function(x){return '<span>'+String(x)+'</span>';}).join('');
+  }
+  function showDataAccess(kind){
+    kind=kind||'default';
+    purgeForbidden();
+    const cfg=messages[kind]||messages.default;
+    const duration=durations[kind]||durations.default;
+    if(window.ProjectCurseTerminalLoader && window.ProjectCurseTerminalLoader.showData){
+      window.ProjectCurseTerminalLoader.showData(kind,cfg,duration);
+      return {element:document.getElementById('uacDataAccessLoader'),duration:duration,kind:kind};
+    }
+    const el=ensureDataLoader();
+    setText(el,cfg);
+    try{ window.runTerminalGauge(el,duration,{steps:[0,8,17,29,42,48,66,81,92,98,100]}); }
+    catch(err){ console.error('[UAC QA] gauge failed',err); }
+    return {element:el,duration:duration,kind:kind};
+  }
+  function kindFromElement(el){
+    if(!el) return 'default';
+    const target=el.dataset.target;
+    if(target==='history') return 'world';
+    if(target==='faction-relation') return 'relation';
+    if(target==='faction-info') return 'faction';
+    if(target==='zone-map') return 'worldmap';
+    if(target==='archive-entry') return 'archive';
+    const jump=el.dataset.continent||el.dataset.mapJump||el.dataset.worldRegion;
+    if(jump) return jump==='world' ? 'worldmap' : 'region';
+    return 'default';
+  }
+  function bindLoaders(){
+    document.querySelectorAll('.side-menu a[data-target],.side-menu button[data-target],.side-map-jump,.world-region-button,.continent-tab').forEach(function(el){
+      if(el.dataset.pc626GaugeBound) return;
+      el.dataset.pc626GaugeBound='1';
+      el.addEventListener('click',function(){ showDataAccess(kindFromElement(el)); },true);
+    });
+    document.querySelectorAll('.page-tab,.sub-tab,.faction-tile').forEach(function(el){
+      if(el.dataset.pc626FastBound) return;
+      el.dataset.pc626FastBound='1';
+      el.addEventListener('click',function(){ purgeForbidden(); },true);
+    });
+  }
+  function closeMenu(){
+    document.body.classList.remove('uac-menu-open');
+    const btn=document.getElementById('uacMenuToggle');
+    const side=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
+    if(btn) btn.setAttribute('aria-expanded','false');
+    if(side) side.setAttribute('aria-hidden','true');
+    document.querySelectorAll('.uac-menu-backdrop').forEach(function(b){b.classList.remove('is-open');});
+  }
+  function staticRuntimeChecks(){
+    return {
+      version:QA_VERSION,
+      hasGauge:typeof window.runTerminalGauge==='function',
+      hasDataLoader:!!document.getElementById('uacDataAccessLoader') || true,
+      sideLinks:document.querySelectorAll('.side-menu a[data-target]').length,
+      regionControls:document.querySelectorAll('.side-map-jump,.world-region-button,.continent-tab').length,
+      recordOpenButtons:document.querySelectorAll('.open-record[data-record]').length,
+      oldMapRefs:[].slice.call(document.querySelectorAll('img[src],image[href]')).filter(function(n){return /world_actual_base|global_zone_map|continent_/.test(n.getAttribute('src')||n.getAttribute('href')||'');}).length,
+      forbiddenNodes:document.querySelectorAll(forbiddenSelectors).length
+    };
+  }
+  function makeQaPanel(){
+    let panel=document.getElementById('uacQaPanel');
+    if(panel) return panel;
+    panel=document.createElement('aside');
+    panel.id='uacQaPanel';
+    panel.className='uac-qa-panel';
+    panel.innerHTML='<h2>[U.A.C QA RUNTIME]</h2><p>자동 클릭 시뮬레이션과 로딩 게이지 검사를 실행합니다.</p><div class="uac-qa-results"></div><div class="uac-qa-actions"><button type="button" data-qa-copy>QA 결과 복사</button><button type="button" data-qa-hide>닫기</button></div>';
+    document.body.appendChild(panel);
+    panel.querySelector('[data-qa-hide]').addEventListener('click',function(){panel.remove();});
+    panel.querySelector('[data-qa-copy]').addEventListener('click',function(){
+      const data=JSON.stringify(window.ProjectCurseQA.lastResult||{},null,2);
+      if(navigator.clipboard) navigator.clipboard.writeText(data).catch(()=>{});
+    });
+    return panel;
+  }
+  function renderQa(results){
+    const panel=makeQaPanel();
+    const box=panel.querySelector('.uac-qa-results');
+    box.innerHTML=results.map(function(r){return '<div class="'+(r.pass?'pass':'fail')+'"><b>'+(r.pass?'PASS':'FAIL')+'</b><span>'+r.name+'</span><small>'+String(r.detail||'')+'</small></div>';}).join('');
+  }
+  function wait(ms){return new Promise(function(res){setTimeout(res,ms);});}
+  async function qaClickTest(name,selector,expectActive,kind){
+    const el=document.querySelector(selector);
+    if(!el) return {name:name,pass:false,detail:'missing '+selector};
+    purgeForbidden();
+    el.click();
+    await wait(80);
+    const loader=document.getElementById('uacDataAccessLoader');
+    const showed=!!(loader && loader.classList.contains('show'));
+    await wait((durations[kind||kindFromElement(el)]||820)+520);
+    const activeOk=!expectActive || !!document.querySelector(expectActive+'.active, '+expectActive+':not([hidden])');
+    const hiddenOk=!(loader && loader.classList.contains('show'));
+    const forbiddenOk=document.querySelectorAll(forbiddenSelectors).length===0;
+    return {name:name,pass:showed && hiddenOk && activeOk && forbiddenOk,detail:'loader='+showed+', hidden='+hiddenOk+', active='+activeOk+', forbiddenClear='+forbiddenOk};
+  }
+  async function runQA(){
+    bindLoaders(); purgeForbidden();
+    const results=[];
+    const errors=[];
+    const onErr=function(e){errors.push(e.message||String(e));};
+    const onRej=function(e){errors.push((e.reason&&e.reason.message)||String(e.reason||e));};
+    window.addEventListener('error',onErr);
+    window.addEventListener('unhandledrejection',onRej);
+    const checks=staticRuntimeChecks();
+    results.push({name:'global runTerminalGauge exists',pass:checks.hasGauge,detail:typeof window.runTerminalGauge});
+    results.push({name:'side menu links present',pass:checks.sideLinks>=4,detail:checks.sideLinks});
+    results.push({name:'region controls present',pass:checks.regionControls>=8,detail:checks.regionControls});
+    results.push({name:'old map image refs removed',pass:checks.oldMapRefs===0,detail:checks.oldMapRefs});
+    results.push(await qaClickTest('세계 개요 menu gauge','[data-target="history"]','#history','world'));
+    results.push(await qaClickTest('세력관계도 menu gauge','[data-target="faction-relation"]','#faction-relation','relation'));
+    results.push(await qaClickTest('세력기록 menu gauge','[data-target="faction-info"]','#faction-info','faction'));
+    results.push(await qaClickTest('지역지도 menu gauge','[data-target="zone-map"]','#zone-map','worldmap'));
+    const region=document.querySelector('.continent-tab[data-continent]:not([data-continent="world"])');
+    if(region) results.push(await qaClickTest('대륙 작전구역도 gauge','.continent-tab[data-continent]:not([data-continent="world"])',null,'region'));
+    results.push(await qaClickTest('기록보관서 menu gauge','[data-target="archive-entry"]','#archive-entry','archive'));
+    const rec=document.querySelector('.open-record[data-record]');
+    if(rec){
+      rec.click();
+      await wait(100);
+      const ar=document.getElementById('archiveAccessLoader');
+      const showed=!!(ar && ar.classList.contains('show'));
+      await wait(2600);
+      results.push({name:'기록 열람 archive loader',pass:showed && !(ar&&ar.classList.contains('show')),detail:'loader='+showed});
+    }
+    purgeForbidden();
+    if(errors.length) results.push({name:'runtime JS errors',pass:false,detail:errors.slice(0,5).join(' | ')});
+    else results.push({name:'runtime JS errors',pass:true,detail:'none'});
+    window.removeEventListener('error',onErr);
+    window.removeEventListener('unhandledrejection',onRej);
+    window.ProjectCurseQA.lastResult={version:QA_VERSION,when:new Date().toISOString(),checks:checks,results:results,errors:errors};
+    try{localStorage.setItem('uac_last_qa_result',JSON.stringify(window.ProjectCurseQA.lastResult));}catch(e){}
+    renderQa(results);
+    return window.ProjectCurseQA.lastResult;
+  }
+  ready(function(){
+    bindLoaders(); purgeForbidden();
+    window.ProjectCurseQA={version:QA_VERSION,run:runQA,bindLoaders:bindLoaders,purge:purgeForbidden,showLoader:showDataAccess,lastResult:null,checks:staticRuntimeChecks,visualRules:true,loreRules:true};
+    window.ProjectCurseShowDataAccess=showDataAccess;
+    window.ProjectCurseResetUiState=function(opts){ opts=opts||{}; if(!opts.keepMenu) closeMenu(); if(!opts.keepLoaders){ document.querySelectorAll('.uac-data-access-loader.show').forEach(function(el){el.classList.add('hide');}); } purgeForbidden(); };
+    document.addEventListener('click',function(e){ if(e.target && e.target.closest('.side-menu a,.side-menu button,.continent-tab,.continent-filter,.page-tab,.sub-tab,.open-record,.record-back,.faction-tile')) setTimeout(purgeForbidden,80); },true);
+    if(/[?&]uac_qa=1\b/.test(location.search)) setTimeout(runQA,900);
   });
 })();
