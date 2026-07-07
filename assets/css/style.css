@@ -11386,3 +11386,248 @@ body.pc5152ai-global-responsive-silent-menu #history .timeline-list p{margin-top
   body.pc5152ai-global-responsive-silent-menu .panel{padding:12px!important;}
   body.pc5152ai-global-responsive-silent-menu.pc584-main-drawer-open .pc584-main-drawer-toggle{left:min(calc(88vw - 54px),336px)!important;}
 }
+
+
+/* MapPatch 5.15.2aj — MobileSidebarRouter_WidthHotfix
+   Hard override for same-link PC/mobile layout: the sidebar is an independent overlay and never reserves layout columns.
+   Fixes mobile menu items not receiving touches and removes the narrow-content grid column on phones. */
+body.pc5152aj-mobile-sidebar-router-width-hotfix{
+  --pc-aj-sidebar-pc: clamp(320px, 34vw, 560px);
+  --pc-aj-sidebar-mobile: min(86vw, 420px);
+  --pc-aj-content-max: clamp(1320px, 78vw, 2520px);
+  --pc-aj-content-pad-x: clamp(72px, 4.4vw, 176px);
+  --pc-aj-content-pad-y: clamp(22px, 2.2vw, 42px);
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix,
+body.pc5152aj-mobile-sidebar-router-width-hotfix *{box-sizing:border-box;min-width:0;}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-layout{
+  display:block!important;
+  grid-template-columns:none!important;
+  width:100vw!important;
+  height:100dvh!important;
+  overflow:hidden!important;
+  position:relative!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-content{
+  position:relative!important;
+  width:100vw!important;
+  max-width:none!important;
+  height:100dvh!important;
+  margin:0!important;
+  padding:var(--pc-aj-content-pad-y) var(--pc-aj-content-pad-x)!important;
+  overflow:auto!important;
+  overflow-x:hidden!important;
+  z-index:1!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .wrap,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .content-page,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .panel,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .doc-shell{
+  width:min(100%, var(--pc-aj-content-max))!important;
+  max-width:var(--pc-aj-content-max)!important;
+  margin-inline:auto!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-sidebar{
+  position:fixed!important;
+  left:0!important;
+  top:0!important;
+  bottom:0!important;
+  width:var(--pc-aj-sidebar-pc)!important;
+  min-width:300px!important;
+  max-width:50vw!important;
+  height:100dvh!important;
+  z-index:10020!important;
+  transform:translateX(-106%)!important;
+  transition:transform .14s ease!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  pointer-events:auto!important;
+  touch-action:pan-y!important;
+  box-shadow:18px 0 44px rgba(0,0,0,.78)!important;
+  isolation:isolate!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix.pc584-main-drawer-open .legacy-sidebar{transform:translateX(0)!important;}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-sidebar,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-sidebar *,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .side-menu,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .side-menu *,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .side-menu a[data-target],
+body.pc5152aj-mobile-sidebar-router-width-hotfix .pc585-menu-heading{
+  pointer-events:auto!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .side-menu a[data-target],
+body.pc5152aj-mobile-sidebar-router-width-hotfix .pc585-menu-heading,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .pc5151-root-list a{
+  position:relative!important;
+  z-index:10035!important;
+  min-height:48px!important;
+  touch-action:manipulation!important;
+  cursor:pointer!important;
+  opacity:1!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .side-menu a[data-target] b,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .side-menu a[data-target] small,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .side-menu a[data-target] i{pointer-events:none!important;}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .pc584-drawer-backdrop,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .mobile-backdrop,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .drawer-backdrop,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .content-dim,
+body.pc5152aj-mobile-sidebar-router-width-hotfix .menu-overlay{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  z-index:-1!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix .pc584-main-drawer-toggle{
+  position:fixed!important;
+  left:max(14px,env(safe-area-inset-left))!important;
+  top:max(14px,env(safe-area-inset-top))!important;
+  width:46px!important;
+  height:46px!important;
+  min-width:46px!important;
+  min-height:46px!important;
+  z-index:10060!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  cursor:pointer!important;
+  line-height:44px!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix.pc584-main-drawer-open .pc584-main-drawer-toggle{
+  left:calc(min(var(--pc-aj-sidebar-pc), 50vw) - 58px)!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix.pc584-main-drawer-open .legacy-content::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.42);
+  z-index:2;
+  pointer-events:none!important;
+}
+/* Archive/card containment stays inside boxes. */
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .archive-list{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))!important;
+  gap:clamp(10px,.75vw,16px)!important;
+  width:100%!important;
+  overflow:visible!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+  min-height:150px!important;
+  height:auto!important;
+  overflow:hidden!important;
+  position:relative!important;
+  isolation:isolate!important;
+  z-index:1!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card[data-access="open"]{z-index:20!important;}
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card .code,
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card h3,
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card p,
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card .muted{
+  max-width:100%!important;
+  overflow-wrap:anywhere!important;
+  word-break:keep-all!important;
+}
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card button,
+body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card .btn{
+  margin-top:auto!important;
+  position:relative!important;
+  z-index:50!important;
+}
+/* Mobile full-width policy. The content must not inherit an empty sidebar grid column. */
+@media (max-width:1024px){
+  body.pc5152aj-mobile-sidebar-router-width-hotfix{
+    --pc-aj-sidebar-mobile:min(86vw,420px);
+    --pc-aj-content-max:none;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-layout{
+    display:block!important;
+    grid-template-columns:1fr!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-content{
+    width:100vw!important;
+    max-width:100vw!important;
+    padding:64px max(10px,env(safe-area-inset-left)) 28px max(10px,env(safe-area-inset-right))!important;
+    margin:0!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .wrap,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .content-page,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .panel,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .doc-shell,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .record-content{
+    width:100%!important;
+    max-width:100%!important;
+    margin-inline:0!important;
+    padding-inline:clamp(12px,3.2vw,18px)!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-sidebar{
+    width:var(--pc-aj-sidebar-mobile)!important;
+    max-width:86vw!important;
+    min-width:0!important;
+    padding-top:clamp(18px,4vw,28px)!important;
+    padding-bottom:28px!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix.pc584-main-drawer-open .pc584-main-drawer-toggle{
+    left:calc(var(--pc-aj-sidebar-mobile) - 58px)!important;
+    top:max(14px,env(safe-area-inset-top))!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .brand-side{padding-right:58px!important;}
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .overview-stats,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #history .overview-stats,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .archive-list,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .timeline-list,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .faction-terminal,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .pc5134-network-shell,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .pc5133-case-frame{
+    grid-template-columns:1fr!important;
+    width:100%!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #history .stat-card,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #history .timeline-list>div,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .card,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .record-page,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .faction-detail{
+    width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #history h2,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .content-page h2,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .panel h2{
+    font-size:clamp(24px,7.3vw,34px)!important;
+    line-height:1.18!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #history p,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .content-page p,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .panel p,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .record-page div,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .record-page p,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .record-page li{
+    font-size:clamp(14px,4.05vw,17px)!important;
+    line-height:1.68!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .stat-card b{font-size:clamp(21px,6.4vw,30px)!important;}
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .stat-card,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #history .timeline-list>div{
+    padding:clamp(13px,3.6vw,18px)!important;
+  }
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .archive-groups details{width:100%!important;}
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .archive-list{padding:8px!important;}
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card{min-height:0!important;padding:13px!important;}
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .doc-card button{width:100%!important;min-height:44px!important;}
+}
+@media (max-width:430px){
+  body.pc5152aj-mobile-sidebar-router-width-hotfix{--pc-aj-sidebar-mobile:min(88vw,392px);}
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-content{padding-left:9px!important;padding-right:9px!important;}
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .content-page,
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .panel{padding:12px!important;}
+}
+@media (min-width:3000px){
+  body.pc5152aj-mobile-sidebar-router-width-hotfix .legacy-content{padding-left:clamp(92px,4.6vw,190px)!important;padding-right:clamp(92px,4.6vw,190px)!important;}
+  body.pc5152aj-mobile-sidebar-router-width-hotfix #archive-entry .archive-list{grid-template-columns:repeat(auto-fit,minmax(360px,1fr))!important;}
+}

@@ -5377,3 +5377,162 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     });
   });
 })();
+
+
+// MapPatch 5.15.2aj — MobileSidebarRouter_WidthHotfix
+// Final override for mobile sidebar routing and full-width content. Keeps menu sounds silent and preserves Immortality sequence cues.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152aj-mobile-sidebar-router-width-hotfix');
+    const pageSel='.content-page,.panel';
+    const sidebar=document.querySelector('.legacy-sidebar');
+    const toggle=document.querySelector('.pc584-main-drawer-toggle');
+    function isMobile(){
+      const w=window.innerWidth||document.documentElement.clientWidth||0;
+      return w<=1024 || ((window.matchMedia&&window.matchMedia('(pointer:coarse)').matches) && w<=1180);
+    }
+    function allPages(){ return Array.from(document.querySelectorAll(pageSel)).filter(p=>p.id); }
+    function allLinks(){ return Array.from(document.querySelectorAll('.side-menu a[data-target]')); }
+    function setToggleLabel(){
+      const t=document.querySelector('.pc584-main-drawer-toggle');
+      if(!t) return;
+      const open=body.classList.contains('pc584-main-drawer-open');
+      t.textContent=open?'×':'☰';
+      t.setAttribute('aria-expanded', open?'true':'false');
+      t.setAttribute('aria-label', open?'사이드 메뉴 접기':'사이드 메뉴 펼치기');
+    }
+    function openDrawer(open){
+      body.classList.toggle('pc584-main-drawer-open', !!open);
+      try{ localStorage.setItem('pc-main-drawer-open', open?'open':'closed'); }catch(e){}
+      setToggleLabel();
+    }
+    function openPage(id){
+      if(!id || !document.getElementById(id)) id='history';
+      allPages().forEach(p=>p.classList.toggle('active', p.id===id));
+      allLinks().forEach(a=>a.classList.toggle('active', a.dataset.target===id));
+      const active=document.querySelector(`.side-menu a[data-target="${CSS.escape(id)}"]`);
+      if(active){
+        document.querySelectorAll('.pc585-menu-group').forEach(group=>{
+          if(group.contains(active)){
+            group.classList.add('open');
+            const head=group.querySelector('.pc585-menu-heading');
+            if(head){ head.setAttribute('aria-expanded','true'); const s=head.querySelector('span'); if(s) s.textContent='▾'; }
+          }
+        });
+      }
+      const content=document.querySelector('.legacy-content');
+      if(content) content.scrollTop=0;
+      try{ history.replaceState(null,'','#'+id); }catch(e){}
+      if(isMobile()) openDrawer(false);
+    }
+    function toggleGroup(btn){
+      const group=btn && btn.closest('.pc585-menu-group');
+      if(!group) return;
+      const open=!group.classList.contains('open');
+      group.classList.toggle('open',open);
+      btn.setAttribute('aria-expanded',open?'true':'false');
+      const icon=btn.querySelector('span'); if(icon) icon.textContent=open?'▾':'▸';
+    }
+    // Make the old backdrop inert; if it exists above the content it must not capture touches.
+    document.querySelectorAll('.pc584-drawer-backdrop,.mobile-backdrop,.drawer-backdrop,.content-dim,.menu-overlay').forEach(el=>{
+      el.style.pointerEvents='none'; el.style.display='none'; el.style.visibility='hidden';
+    });
+    // Rename menu labels again after older scripts mutate DOM.
+    function rename(){
+      document.querySelectorAll('.side-menu a[data-target="faction-relation"] b').forEach(el=>el.textContent='관계도');
+      document.querySelectorAll('.side-menu a[data-target="faction-info"] b').forEach(el=>el.textContent='세력');
+      document.querySelectorAll('.side-menu a[data-target="archive-entry"] b').forEach(el=>el.textContent='기록보관소');
+    }
+    rename();
+    // Hard mobile router: handle menu links at document capture before old handlers can swallow the tap.
+    let lastRoute=0;
+    function routeFromEvent(e){
+      const link=e.target && e.target.closest ? e.target.closest('.legacy-sidebar .side-menu a[data-target]') : null;
+      const heading=e.target && e.target.closest ? e.target.closest('.legacy-sidebar .pc585-menu-heading') : null;
+      if(!link && !heading) return;
+      if(!isMobile()) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      if(heading){ toggleGroup(heading); return; }
+      const now=Date.now();
+      if(now-lastRoute<260) return;
+      lastRoute=now;
+      openPage(link.dataset.target || 'history');
+    }
+    ['touchstart','pointerdown','click'].forEach(type=>{
+      document.addEventListener(type, routeFromEvent, {capture:true, passive:false});
+    });
+    // Also delegate inside the sidebar for desktop and non-touch fallback.
+    if(sidebar && sidebar.dataset.pc5152ajRouter!=='1'){
+      sidebar.dataset.pc5152ajRouter='1';
+      sidebar.addEventListener('click',function(e){
+        const link=e.target.closest && e.target.closest('.side-menu a[data-target]');
+        const heading=e.target.closest && e.target.closest('.pc585-menu-heading');
+        if(heading && !link){ e.preventDefault(); toggleGroup(heading); return; }
+        if(link){ e.preventDefault(); openPage(link.dataset.target || 'history'); }
+      },true);
+    }
+    if(toggle && toggle.dataset.pc5152ajToggle!=='1'){
+      toggle.dataset.pc5152ajToggle='1';
+      ['touchstart','pointerdown','click'].forEach(type=>{
+        toggle.addEventListener(type,function(e){
+          e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+          openDrawer(!body.classList.contains('pc584-main-drawer-open'));
+        },{capture:true, passive:false});
+      });
+    }
+    function normalizeArchive(){
+      const openIds=new Set(['Cults_871104','Immortality_860201']);
+      document.querySelectorAll('#archive-entry .doc-card').forEach(card=>{
+        const code=(card.querySelector('.code')?.textContent||'').trim();
+        const btn=card.querySelector('button[data-record],button.open-record,.pc5152aa-public-open,.pc5152aa-locked-record');
+        const id=(btn?.getAttribute('data-record')||code).trim();
+        const open=openIds.has(id)||openIds.has(code);
+        card.dataset.access=open?'open':'sealed';
+        card.style.pointerEvents='auto'; card.style.position='relative'; card.style.overflow='hidden'; card.style.zIndex=open?'20':'1';
+        if(btn){
+          btn.type='button';
+          if(open){
+            btn.classList.add('btn','open-record','pc5152aa-public-open');
+            btn.classList.remove('pc5152aa-locked-record');
+            btn.removeAttribute('disabled'); btn.removeAttribute('aria-disabled'); btn.textContent='기록 열람';
+            btn.style.pointerEvents='auto'; btn.style.position='relative'; btn.style.zIndex='50';
+          }else{
+            btn.classList.remove('open-record','pc5152aa-public-open'); btn.classList.add('pc5152aa-locked-record');
+            btn.setAttribute('disabled',''); btn.setAttribute('aria-disabled','true'); btn.textContent='기밀 처리됨';
+            btn.style.pointerEvents='none';
+          }
+        }
+      });
+    }
+    const archive=document.getElementById('archive-entry');
+    if(archive && archive.dataset.pc5152ajGuard!=='1'){
+      archive.dataset.pc5152ajGuard='1';
+      archive.addEventListener('click',function(e){
+        const btn=e.target.closest && e.target.closest('button.open-record.pc5152aa-public-open[data-record]');
+        if(btn) return;
+        const card=e.target.closest && e.target.closest('.doc-card');
+        if(card){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }
+      },true);
+    }
+    function sync(){
+      body.classList.toggle('pc5152aj-phone', isMobile());
+      document.querySelectorAll('.pc584-drawer-backdrop,.mobile-backdrop,.drawer-backdrop,.content-dim,.menu-overlay').forEach(el=>{
+        el.style.pointerEvents='none'; el.style.display='none'; el.style.visibility='hidden';
+      });
+      setToggleLabel(); rename(); normalizeArchive();
+    }
+    sync(); [80,250,650,1400,2800].forEach(t=>setTimeout(sync,t));
+    window.addEventListener('resize',sync,{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(sync,120),{passive:true});
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152aj:'MobileSidebarRouter WidthHotfix',
+      mobile:'sidebar independent overlay; links routed at capture phase; content no longer reserves sidebar column',
+      layout:'mobile pages use full viewport width; PC 4K overlay layout preserved',
+      audio:'menu click sounds remain silent; main BGM and record/Immortality cues preserved'
+    });
+  });
+})();
