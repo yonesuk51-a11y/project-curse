@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     'Cults_871104':{grade:'F.H.C / SEALED',tone:'restricted',type:'오컬트 봉인 기록',map:'란저우 / 우시노다교 흔적',op:'lanzhou',factions:['F.H.C','S.I.D','Ushnoda Cult'],equipment:['봉인 태그','오염 표식 샘플','혈무'],phenomena:['의식성 오염','Blood Gate 잔향','타락교'],attachments:['타락교 기록면','혈교 기록면','현장 대응 경고'],annotation:'F.H.C 봉인 기록. 일부 문장은 부분 공개 상태로 유지한다.'},
     '타락 개체_860722':{grade:'ENTITY / RED',tone:'bio',type:'개체 분류 기록',map:'세계 상황판 / 레드존 개체권',op:'world',factions:['U.A.C','N.H.C','S.I.D'],equipment:['Null Round','W-Coat','회수 태그'],phenomena:['타락 개체','상위 개체','미믹 개체'],attachments:['개체 분류','부검 메모','회수 이미지'],annotation:'생체 반응과 위협 분류를 먼저 확인한다.'},
     '불명_Record2_860205':{grade:'BIO / HIGH',tone:'bio',type:'부검·오염 기록',map:'북해-함부르크 봉인 항만',op:'northsea',factions:['F.H.C','A.R.F','U.A.C'],equipment:['생체 샘플 키트','Black Tag Charge'],phenomena:['피의 호수','혈액성 잔류물','부패 정지 반응'],attachments:['부검 사진','샘플 기록','오염 판정'],annotation:'생체 샘플 접촉 금지. 회수보다 격리 우선.'},
-    'Redzone_881120':{grade:'REDZONE / FIELD-2',tone:'redzone',type:'레드존 이상현상 기준',map:'부산 / 란저우 / 전역 레드권',op:'busan',factions:['U.A.C','S.I.D','F.H.C'],equipment:['Chrono Anchor','해상 감청 장비','봉쇄 게이트'],phenomena:['Dead Hour','Ghost Channel','Blood Gate','시간 오염'],attachments:['오염 기준','장기 방치 단계','격상/하향 기준'],annotation:'지도 마커와 직접 연결되는 핵심 기준 문서.'},
+    'Redzone_881120':{grade:'REDZONE / FIELD-2',tone:'redzone',type:'레드존 이상현상 기준',map:'부산 / 란저우 / 전역 레드권',op:'busan',factions:['U.A.C','S.I.D','F.H.C'],equipment:['Chrono Anchor','해상 감청 장비','봉쇄 게이트'],phenomena:['Dead Hour','Ghost Channel','Blood Gate','시간 오염'],attachments:['오염 기준','장기 방치 단계','격상/하향 기준'],annotation:'오염 기준과 봉쇄 판단에 연결되는 핵심 기준 문서.'},
     'FCR_Archive_890402':{grade:'RETURNED / CIV-2',tone:'returned',type:'귀환자·분류 추가 보고',map:'부산 선별 부두 / 란저우 주거블록',op:'busan',factions:['C.P.D','S.I.D','U.A.C'],equipment:['C.P.D 대피선','격리 태그','선별 장비'],phenomena:['귀환자 선별 실패','지연 신체 반응','재실종 사례'],attachments:['추가 분류','귀환자 기준','위장 개체 경고'],annotation:'민간 대피 동선과 기록 판단을 분리한다.'},
     'NHC_Manual_891219':{grade:'N.H.C / FIELD-1',tone:'field',type:'현장 작전·봉쇄 규정',map:'부산 부두 차단선 / 란저우 후퇴선',op:'lanzhou',factions:['N.H.C','U.A.C','A.R.F','C.P.D'],equipment:['W-Coat','Null Round','혈무','Black Tag Charge'],phenomena:['봉쇄선 붕괴','회수 실패','블랙 태그'],attachments:['현장 운용','봉쇄 대응','장비 운용'],annotation:'현장 대원 기준 문서. 작전 실패 시 기록 회수 절차를 우선한다.'},
     'Immortality_860201':{grade:'VIDEO / ORIGIN',tone:'video',type:'작전 영상·기원 사건',map:'북해-함부르크 봉인 항만',op:'northsea',factions:['U.A.C','S.I.D','F.H.C'],equipment:['현장 카메라','무전 기록','회수 매체'],phenomena:['피의 호수','혈액성 이상현상','야생동물 변질'],attachments:['작전 로그','촬영 기록','통신 기록'],annotation:'기원 사건 파일. 영상 프레임 손상 상태를 유지한다.'},
@@ -238,8 +238,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     metaPanel.innerHTML=`<div class="pc5133-meta-head"><span>U.A.C CASE FILE</span><b>${caseEsc(meta.grade)}</b></div>
       <div class="pc5133-meta-grid">
         <span>기록 유형</span><strong>${caseEsc(meta.type)}</strong>
-        <span>관련 작전권</span><strong>${caseEsc(meta.map)}</strong>
-        <span>작전 링크</span><button type="button" data-pc5133-open-op="${caseEsc(meta.op || 'world')}">작전보드 열기</button>
+        <span>관련 권역</span><strong>${caseEsc(meta.map)}</strong>
+        <span>연결 상태</span><strong>기록 색인만 표시</strong>
       </div>
       <section><b>관련 세력</b><div>${caseChips(meta.factions,'세력 미연결')}</div></section>
       <section><b>관련 장비</b><div>${caseChips(meta.equipment,'장비 미연결')}</div></section>
@@ -1904,7 +1904,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     // Make root archive grouping explicit for later patches.
     window.ProjectCurseArchiveRoot = Object.assign(window.ProjectCurseArchiveRoot || {}, {
       patch:'5.15.1',
-      rootOrder:['세계 개요','세력','지도','기록보관소'],
+      rootOrder:['세계 사건 연표','세력','기록보관소'],
       archiveSubIndexes:['entity-archive','returned-registry','equipment-codex']
     });
   });
@@ -3349,7 +3349,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
           transitionVideo:'assets/video/pc5152q_immortality_fhc_transition_204_209.mp4',
           endingVideo:'',
           bgm:'assets/audio/pc5152v_immortality_scp087_vcr_ambient_mix.mp3',
-          bgmVolume:.30,
+          bgmVolume:.86,
           introVolume:.09,
           transitionVolume:.72,
           introFallback:14650,
@@ -3716,13 +3716,13 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       // Immortality pages use only a noisy black hold plus the 51s-55s beep cue.
       // Cult/blood internal subpages keep the VHS-treated slide projector cue.
       if(state.activeRecord===IMMORTALITY_RECORD){
-        try{ if(state.bgm && !state.bgm.paused) state.bgm.volume=.24; }catch(e){}
+        try{ if(state.bgm && !state.bgm.paused) state.bgm.volume=.62; }catch(e){}
         playLocal(state.immortalityStep);
       }else if(isInternalProjectorTransition(current,next)){
         playLocal(state.internalStep);
       }
       state.timer=setTimeout(()=>{
-        try{ if(state.activeRecord===IMMORTALITY_RECORD && state.bgm && !state.bgm.paused) state.bgm.volume=Number(cfg.bgmVolume||.62); }catch(e){}
+        try{ if(state.activeRecord===IMMORTALITY_RECORD && state.bgm && !state.bgm.paused) state.bgm.volume=Number(cfg.bgmVolume||.86); }catch(e){}
         state.transitioning=false;
         el.classList.remove('black-transition','major-transition','normal-transition','video-transition');
         state.pageIndex=nextIndex;
@@ -4800,6 +4800,419 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       audio:'single action cue gate + simple volume preset',
       archiveOpen:'button-only public records',
       visualEffects:'main-menu scan/noise/VHS overlays removed'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2ae — SourceDiet_LayoutPolish_S24Mobile.
+// Final runtime guard: PC layout stays stable; S24 Ultra gets readable one-column/mobile drawer behavior.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152ae-source-diet','pc5152ae-s24-ready');
+    body.classList.remove('scan','pc5152-analog-horror-retrofit','pc5152a-fellon-signal-pass','pc5152b-curse-series-recalibrated','pc5152ab-visibility-mobile-audio');
+
+    function cleanVisualResidue(){
+      document.querySelectorAll('.pc5152-signal-overlay,.pc5152-frame-id,.pc5152a-slow-drift,.pc5152a-tape-meter,.pc5152b-tape-sequence-overlay,.pc5152ab-breadcrumb,.pc5152ab-mobile-menu-toggle,.pc5152ab-mobile-backdrop').forEach(el=>el.remove());
+      document.querySelectorAll('#archiveListWrap .doc-card img.thumb,.pc5152d-open-cue').forEach(el=>el.remove());
+      document.querySelectorAll('#faction-info > p,#faction-relation > .section-brief,#archive-entry > p').forEach(el=>el.remove());
+      document.querySelectorAll('#entity-archive,#returned-registry,#equipment-codex,#zone-map').forEach(el=>el.remove());
+    }
+    cleanVisualResidue();
+    [200,650,1500,3000].forEach(t=>setTimeout(cleanVisualResidue,t));
+
+    const PUBLIC=new Set(['Cults_871104','Immortality_860201']);
+    function lockArchive(){
+      document.querySelectorAll('#archiveListWrap .doc-card').forEach(card=>{
+        const code=(card.querySelector('.code')&&card.querySelector('.code').textContent.trim())||card.dataset.sealedRecord||'';
+        const open=PUBLIC.has(code);
+        card.dataset.access=open?'open':'sealed';
+        card.classList.toggle('pc5152aa-public-record',open);
+        card.classList.toggle('pc5152aa-sealed-record',!open);
+        card.removeAttribute('role'); card.removeAttribute('tabindex'); card.removeAttribute('aria-label');
+        let row=card.querySelector('.status-row');
+        if(!row){ row=document.createElement('div'); row.className='status-row'; const p=card.querySelector('p'); card.insertBefore(row,p||card.firstChild); }
+        row.innerHTML='<span class="chip red'+(open?'':' pc5152aa-sealed-chip')+'">'+(open?'열람 가능':'봉인됨')+'</span>';
+        let btn=card.querySelector('button');
+        if(btn){
+          if(open){
+            btn.disabled=false; btn.removeAttribute('aria-disabled'); btn.dataset.record=code;
+            btn.className='btn open-record pc5152aa-public-open'; btn.textContent='기록 열람';
+          }else{
+            btn.disabled=true; btn.removeAttribute('data-record'); btn.setAttribute('aria-disabled','true');
+            btn.className='btn pc5152aa-locked-record'; btn.textContent='기밀 처리됨';
+          }
+        }
+      });
+    }
+    lockArchive();
+    [250,700,1800,3200].forEach(t=>setTimeout(lockArchive,t));
+
+    // Strong click guard: only the two public buttons open files; card/title/body clicks never open.
+    document.addEventListener('click',function(e){
+      const archive=document.getElementById('archiveListWrap');
+      if(!archive) return;
+      const openBtn=e.target.closest && e.target.closest('#archiveListWrap .open-record[data-record]');
+      if(openBtn){
+        const id=openBtn.getAttribute('data-record');
+        if(!PUBLIC.has(id)){
+          e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+          try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('denied',260)}catch(err){}
+          return false;
+        }
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('open',220)}catch(err){}
+        if(typeof window.ProjectCurseShowInternalRecord==='function') window.ProjectCurseShowInternalRecord(id);
+        return false;
+      }
+      const card=e.target.closest && e.target.closest('#archiveListWrap .doc-card');
+      if(card){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        if(card.dataset.access==='sealed'){
+          try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('denied',280)}catch(err){}
+        }
+        return false;
+      }
+    },true);
+
+    // One cue per interaction. Prevent older stacked menu/faction effects from leaking through.
+    const bus=window.ProjectCurseAudio;
+    if(bus && typeof bus.playCue==='function' && !bus.pc5152aeWrapped){
+      const native=bus.playCue.bind(bus);
+      let last=0;
+      bus.playCue=function(name,cooldown){
+        const now=performance.now();
+        if(now-last<190) return;
+        last=now;
+        const n=String(name||'menu');
+        const normalized=(n==='drawer'||n==='command'||n==='marker'||n==='radio')?'menu':n;
+        return native(normalized, Math.max(Number(cooldown)||0, 200));
+      };
+      bus.pc5152aeWrapped=true;
+    }
+
+    // Sidebar: desktop keeps restored drawer; mobile/S24 uses same toggle as off-canvas menu.
+    function applyViewportMode(){
+      const mobile=window.matchMedia('(max-width: 760px)').matches || (window.matchMedia('(pointer: coarse)').matches && window.innerWidth<=940);
+      body.classList.toggle('pc5152ae-mobile-viewport', mobile);
+    }
+    applyViewportMode();
+    window.addEventListener('resize',applyViewportMode,{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(applyViewportMode,80),{passive:true});
+
+    // Remove stale zone/map routes if an old link reappears.
+    document.addEventListener('click',function(e){
+      const zone=e.target.closest && e.target.closest('[data-target="zone-map"],[href="#zone-map"],[data-pc5133-open-op],[data-case-open-op],[data-pc5140-open-op],[data-pc5141-open-op],[data-pc5150-open-op]');
+      if(zone){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
+        if(archiveLink) archiveLink.click();
+        return false;
+      }
+    },true);
+
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152ae:'SourceDiet LayoutPolish S24Mobile',
+      mobile:'S24 Ultra friendly responsive layout enabled without mobile-only feature creep',
+      archive:'thumbnail-free file index; button-only open guard',
+      visualEffects:'noise/VHS/scan overlays removed from main runtime and locked stubs',
+      maps:'region/operation map runtime remains pruned and routed away'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2af — FluidResolution_S24DesktopResponsive
+// Adds viewport category classes and desktop default sidebar state for resolution-safe PC/S24 layouts.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152af-fluid-resolution');
+    body.classList.remove('scan','pc5152-analog-horror-retrofit','pc5152a-fellon-signal-pass','pc5152b-curse-series-recalibrated');
+    document.querySelectorAll('.pc5152-signal-overlay,.pc5152-frame-id,.pc5152a-slow-drift,.pc5152a-tape-meter,.pc5152b-tape-sequence-overlay,.pc5152ab-breadcrumb,.pc5152ab-mobile-menu-toggle,.pc5152ab-mobile-backdrop').forEach(el=>el.remove());
+
+    const KEY='pc5152af_sidebar_state';
+    function viewportClass(){
+      const w=window.innerWidth||document.documentElement.clientWidth||0;
+      const coarse=window.matchMedia&&window.matchMedia('(pointer: coarse)').matches;
+      body.classList.toggle('pc5152af-phone', w<=760 || (coarse && w<=940));
+      body.classList.toggle('pc5152af-tablet', w>760 && w<=1024);
+      body.classList.toggle('pc5152af-desktop-compact', w>1024 && w<=1366);
+      body.classList.toggle('pc5152af-desktop-wide', w>=1800);
+      body.style.setProperty('--pc-af-vw', String(w));
+      const toggle=document.querySelector('.pc584-main-drawer-toggle');
+      if(toggle){
+        toggle.setAttribute('aria-label', body.classList.contains('pc584-main-drawer-open')?'사이드 메뉴 접기':'사이드 메뉴 펼치기');
+        toggle.setAttribute('aria-expanded', body.classList.contains('pc584-main-drawer-open')?'true':'false');
+        toggle.textContent=body.classList.contains('pc584-main-drawer-open')?'×':'☰';
+      }
+    }
+
+    function defaultSidebar(){
+      const w=window.innerWidth||0;
+      const saved=localStorage.getItem(KEY);
+      const desktop=w>=1025 && !(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches);
+      if(saved==='open') body.classList.add('pc584-main-drawer-open');
+      else if(saved==='closed') body.classList.remove('pc584-main-drawer-open');
+      else body.classList.toggle('pc584-main-drawer-open', desktop);
+      viewportClass();
+    }
+    defaultSidebar();
+    window.addEventListener('resize',()=>{viewportClass();}, {passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(viewportClass,80), {passive:true});
+
+    // Persist sidebar state without fighting the existing restored toggle handler.
+    let lastOpen=body.classList.contains('pc584-main-drawer-open');
+    const obs=new MutationObserver(()=>{
+      const open=body.classList.contains('pc584-main-drawer-open');
+      if(open!==lastOpen){
+        lastOpen=open;
+        try{localStorage.setItem(KEY, open?'open':'closed');}catch(e){}
+        viewportClass();
+      }
+    });
+    obs.observe(body,{attributes:true,attributeFilter:['class']});
+
+    // Last safety pass: media and long tokens must not escape their containers after record render.
+    function clampMedia(){
+      document.querySelectorAll('img,video,iframe,canvas,svg').forEach(el=>{
+        el.style.maxWidth='100%';
+        if(el.tagName==='IMG' || el.tagName==='VIDEO'){
+          el.style.height='auto';
+          el.style.objectFit='contain';
+        }
+      });
+      document.querySelectorAll('.record-page,.faction-detail,.doc-card,.timeline-list>div').forEach(el=>{
+        el.style.overflowWrap='anywhere';
+      });
+    }
+    clampMedia();
+    [200,700,1800,3600].forEach(t=>setTimeout(clampMedia,t));
+
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152af:'FluidResolution S24DesktopResponsive',
+      desktopResolution:'1366/FHD/QHD/4K/ultrawide fluid layout guards',
+      mobile:'S24 Ultra readability and media containment retained',
+      sidebar:'desktop defaults open; saved collapsed/open state; mobile remains off-canvas',
+      overflow:'text/media/table containment guards applied'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2ag — ClickGuard_RelationNetwork_DensityResponsive
+// Adds final click guard, compact relation-network replacement, and density safeguards for PC/mobile.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  const esc=(v)=>String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const mark=(key)=>`assets/faction_marks/${key}.webp`;
+  const nodeInfo={
+    uac:{name:'U.A.C',status:'CORE-0',trust:'CONTROL',kind:'control',links:['N.H.C','S.I.D','F.H.C','C.P.D','A.R.F']},
+    nhc:{name:'N.H.C',status:'FIELD-1',trust:'CONTROLLED',kind:'control',links:['U.A.C','C.P.D','A.R.F','Syndicate']},
+    sid:{name:'S.I.D',status:'INTEL-1',trust:'WATCHED',kind:'watch',links:['U.A.C','F.H.C','Haimun','Ushnoda Cult']},
+    fhc:{name:'F.H.C',status:'SEAL-1',trust:'RESTRICTED',kind:'seal',links:['U.A.C','S.I.D','Amarion','Ushnoda Cult']},
+    cpd:{name:'C.P.D',status:'CIV-1',trust:'CONTROLLED',kind:'control',links:['U.A.C','N.H.C','A.R.F']},
+    arf:{name:'A.R.F',status:'REC-1',trust:'CONTROLLED',kind:'control',links:['U.A.C','N.H.C','C.P.D']},
+    ushinoda:{name:'Ushnoda Cult',status:'HOSTILE',trust:'BLOCKED',kind:'hostile',links:['S.I.D','F.H.C','Haimun','Syndicate']},
+    haimun:{name:'Haimun',status:'WATCH',trust:'UNKNOWN',kind:'watch',links:['S.I.D','Ushnoda Cult','Syndicate']},
+    syndicate:{name:'Syndicate',status:'HOSTILE-WATCH',trust:'HOSTILE',kind:'hostile',links:['N.H.C','A.R.F','Ushnoda Cult','Amarion']},
+    amarion:{name:'Amarion',status:'RESEARCH-WATCH',trust:'UNSTABLE',kind:'research',links:['F.H.C','U.A.C','Syndicate']},
+    ashcrew:{name:'Ash Crew',status:'ASH-1',trust:'CONTROLLED',kind:'control',links:['N.H.C','A.R.F']}
+  };
+  const nodePos={
+    uac:[50,50], nhc:[26,36], sid:[50,23], fhc:[73,36], cpd:[29,66], arf:[70,66],
+    ushinoda:[17,82], haimun:[17,18], syndicate:[84,82], amarion:[84,18], ashcrew:[50,82]
+  };
+  const relations=[
+    ['CONTROL','control','U.A.C','N.H.C','현장 투입 승인 / 레드존 봉쇄선 유지','CONTROLLED','uac','nhc'],
+    ['INTEL','watch','U.A.C','S.I.D','감청 기록 / 귀환자 진술 검증','WATCHED','uac','sid'],
+    ['SEAL','seal','U.A.C','F.H.C','봉인 기록 / 제한 열람 승인','RESTRICTED','uac','fhc'],
+    ['CIV','control','U.A.C','C.P.D','대피 회랑 / 귀환자 1차 선별','CONTROLLED','uac','cpd'],
+    ['REC','control','U.A.C','A.R.F','회수물 / 기록 매체 복구','CONTROLLED','uac','arf'],
+    ['CLEAN','control','N.H.C','Ash Crew','오염 처리 / 소각 후속 절차','CONTROLLED','nhc','ashcrew'],
+    ['HOSTILE','hostile','U.A.C','Ushnoda Cult','의식성 오염 / Blood Gate 차단','BLOCKED','uac','ushinoda'],
+    ['WATCH','watch','S.I.D','Haimun','도심 침투 흔적 감청','SIGNAL DEGRADED','sid','haimun'],
+    ['HOSTILE','hostile','N.H.C','Syndicate','오염 장비 유통 차단','ACTIVE WATCH','nhc','syndicate'],
+    ['RESEARCH','research','F.H.C','Amarion','비인가 연구 자료 봉인','CLEARANCE MISMATCH','fhc','amarion'],
+    ['TRACE','watch','Ushnoda Cult','Haimun','의식 거점 / 은닉 루트 연결','WATCH','ushinoda','haimun'],
+    ['TRADE','hostile','Syndicate','Amarion','회수 자원 / 연구 자료 암거래 의혹','UNSTABLE','syndicate','amarion']
+  ];
+  function chips(list){return (list||[]).map(x=>`<span>${esc(x)}</span>`).join('');}
+  function lineStyle(a,b){
+    const [x1,y1]=nodePos[a], [x2,y2]=nodePos[b];
+    const dx=x2-x1, dy=y2-y1;
+    const len=Math.sqrt(dx*dx+dy*dy);
+    const ang=Math.atan2(dy,dx)*180/Math.PI;
+    return `left:${x1}%;top:${y1}%;width:${len}%;transform:rotate(${ang}deg);`;
+  }
+  function renderRelationNetwork(){
+    const root=document.getElementById('pc584-relation-root');
+    if(!root) return;
+    const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','ushinoda','haimun','syndicate','amarion'];
+    root.className='pc5152ag-relation-root';
+    root.innerHTML=`
+      <div class="pc5152ag-network-shell">
+        <aside class="pc5152ag-network-left">
+          <div class="pc5134-node-header"><span>NETWORK INDEX</span><b>U.A.C CENTERED</b><small>RELATION NODES</small></div>
+          <div class="pc5152ag-node-list">
+            ${order.map(key=>{const d=nodeInfo[key]; const imgKey=key==='ushinoda'?'ushinoda':key; return `<button type="button" data-pc5152ag-node="${esc(key)}"><img src="${mark(imgKey)}" alt="${esc(d.name)}"><b>${esc(d.name)}</b><small>${esc(d.status)} / ${esc(d.trust)}</small></button>`;}).join('')}
+          </div>
+        </aside>
+        <section class="pc5152ag-network-center">
+          <div class="pc5152ag-legend"><span class="control"><i></i>통제</span><span class="watch"><i></i>감시</span><span class="seal"><i></i>봉인</span><span class="hostile"><i></i>적대</span><span class="research"><i></i>연구</span></div>
+          <div class="pc5152ag-focus-line"><b data-pc5152ag-focus>U.A.C</b><span data-pc5152ag-status>CORE-0</span><span data-pc5152ag-links>N.H.C / S.I.D / F.H.C</span></div>
+          <div class="pc5152ag-signal-frame">
+            ${relations.map(r=>`<i class="pc5152ag-link ${esc(r[1])}" data-link-a="${esc(r[6])}" data-link-b="${esc(r[7])}" style="${lineStyle(r[6],r[7])}"></i>`).join('')}
+            ${order.filter(k=>nodePos[k]).map(key=>{const d=nodeInfo[key]; const [x,y]=nodePos[key]; return `<button type="button" class="pc5152ag-map-node ${esc(d.kind)} ${key==='uac'?'core':''}" style="left:${x}%;top:${y}%" data-pc5152ag-node="${esc(key)}">${esc(d.name)}</button>`;}).join('')}
+          </div>
+          <div class="pc5152ag-relation-log"><b>CONNECTION LOG</b>${relations.map(r=>`<div data-pc5152ag-row="${esc(r[6]+' '+r[7])}"><i>${esc(r[0])}</i><span>${esc(r[2])} ↔ ${esc(r[3])}</span><small>${esc(r[4])} / ${esc(r[5])}</small></div>`).join('')}</div>
+        </section>
+      </div>`;
+    function select(key){
+      const d=nodeInfo[key]||nodeInfo.uac;
+      root.querySelectorAll('[data-pc5152ag-node]').forEach(el=>el.classList.toggle('active',el.getAttribute('data-pc5152ag-node')===key));
+      root.querySelector('[data-pc5152ag-focus]').textContent=d.name;
+      root.querySelector('[data-pc5152ag-status]').textContent=d.status+' / '+d.trust;
+      root.querySelector('[data-pc5152ag-links]').innerHTML=chips(d.links);
+      root.querySelectorAll('[data-pc5152ag-row]').forEach(row=>{
+        const tx=(row.getAttribute('data-pc5152ag-row')||'').split(/\s+/);
+        row.classList.toggle('active',tx.includes(key));
+      });
+      root.querySelectorAll('.pc5152ag-link').forEach(line=>{
+        const on=line.getAttribute('data-link-a')===key || line.getAttribute('data-link-b')===key || key==='uac';
+        line.style.opacity=on?'.78':'.20';
+      });
+      if(window.ProjectCurseAudio && !root.dataset.pc5152agInit) window.ProjectCurseAudio.playCue('drawer',180);
+      root.dataset.pc5152agInit='1';
+    }
+    root.querySelectorAll('[data-pc5152ag-node]').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault(); e.stopPropagation(); select(btn.getAttribute('data-pc5152ag-node')||'uac');}));
+    select('uac');
+  }
+  ready(function(){
+    // only public archive buttons can open records; card/title/description clicks are inert.
+    const archive=document.getElementById('archive-entry');
+    if(archive && archive.dataset.pc5152agClickGuard!=='1'){
+      archive.dataset.pc5152agClickGuard='1';
+      archive.addEventListener('click',function(e){
+        const publicBtn=e.target.closest && e.target.closest('.pc5152aa-public-open,.open-record[data-record]');
+        if(publicBtn) return;
+        const card=e.target.closest && e.target.closest('.doc-card');
+        if(card){ e.preventDefault(); e.stopPropagation(); }
+      },true);
+    }
+    // Re-render relation UI after older relation rebuilds finish.
+    setTimeout(renderRelationNetwork,0);
+    setTimeout(renderRelationNetwork,350);
+  });
+})();
+
+
+// MapPatch 5.15.2ah — ArchiveStackFix_4KOverlaySidebar_BGMBoost
+// Fixes archive card stacking/clickability, widens 4K layout, makes the sidebar overlay the content, and boosts Immortality BGM.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152ah-archive-4k-overlay-bgm');
+
+    function normalizeArchiveCards(){
+      const archive=document.getElementById('archive-entry');
+      if(!archive) return;
+      const openIds=new Set(['Cults_871104','Immortality_860201']);
+      archive.querySelectorAll('.doc-card').forEach(card=>{
+        card.classList.remove('pc5152v-classified-card','fhc-sealed-card','video-damaged-card','bio-scan-card');
+        card.removeAttribute('onclick');
+        card.style.position='relative';
+        card.style.zIndex=card.getAttribute('data-access')==='open'?'3':'1';
+        card.style.overflow='hidden';
+        card.querySelectorAll('.thumb,.open-file-cue,.pc5152ac-open-cue,.pc5152ad-card-cue,.doc-status-badge').forEach(el=>el.remove());
+        const btn=card.querySelector('button.open-record,[data-record].open-record,.pc5152aa-public-open');
+        const code=(card.querySelector('.code')?.textContent||btn?.getAttribute('data-record')||'').trim();
+        const isOpen=openIds.has(btn?.getAttribute('data-record')||code);
+        card.setAttribute('data-access', isOpen?'open':'sealed');
+        card.classList.toggle('pc5152aa-public-record',isOpen);
+        card.classList.toggle('pc5152aa-sealed-record',!isOpen);
+        if(btn){
+          if(isOpen){
+            btn.classList.add('btn','open-record','pc5152aa-public-open');
+            btn.removeAttribute('disabled');
+            btn.removeAttribute('aria-disabled');
+            btn.type='button';
+            btn.textContent='기록 열람';
+            btn.style.pointerEvents='auto';
+            btn.style.position='relative';
+            btn.style.zIndex='20';
+          }else{
+            btn.classList.remove('open-record','pc5152aa-public-open');
+            btn.classList.add('pc5152aa-locked-record');
+            btn.setAttribute('disabled','');
+            btn.setAttribute('aria-disabled','true');
+            btn.type='button';
+            btn.textContent='기밀 처리됨';
+            btn.style.pointerEvents='none';
+          }
+        }
+      });
+      if(archive.dataset.pc5152ahClickGuard!=='1'){
+        archive.dataset.pc5152ahClickGuard='1';
+        archive.addEventListener('click',function(e){
+          const btn=e.target.closest && e.target.closest('button.open-record.pc5152aa-public-open[data-record]');
+          if(btn){ return; }
+          const card=e.target.closest && e.target.closest('.doc-card');
+          if(card){ e.preventDefault(); e.stopPropagation(); }
+        },true);
+      }
+    }
+
+    function applyAhViewport(){
+      const w=window.innerWidth||document.documentElement.clientWidth||0;
+      body.classList.toggle('pc5152ah-4k', w>=3000);
+      body.classList.toggle('pc5152ah-qhd', w>=2200 && w<3000);
+      body.classList.toggle('pc5152ah-fhd', w>=1600 && w<2200);
+      body.classList.toggle('pc5152ah-phone', w<=760 || (window.matchMedia && window.matchMedia('(pointer:coarse)').matches && w<=940));
+      body.style.setProperty('--pc-ah-vw', String(w));
+    }
+    applyAhViewport();
+    window.addEventListener('resize',applyAhViewport,{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(applyAhViewport,80),{passive:true});
+
+    // Make the restored sidebar an overlay: it does not shrink content width on PC.
+    const toggle=document.querySelector('.pc584-main-drawer-toggle');
+    if(toggle && toggle.dataset.pc5152ahBound!=='1'){
+      toggle.dataset.pc5152ahBound='1';
+      toggle.addEventListener('click',()=>setTimeout(applyAhViewport,0),true);
+    }
+
+    // Boost Immortality BGM for phones where maximum device volume is still quiet.
+    function boostImmortalityBgm(){
+      try{
+        const active=document.body.classList.contains('pc5152q-immortality-sequence');
+        const seqOpen=document.body.classList.contains('pc5152h-sequence-open');
+        const audios=[...document.querySelectorAll('audio')];
+        audios.forEach(a=>{
+          const src=a.currentSrc||a.src||'';
+          if(src.includes('pc5152v_immortality_scp087_vcr_ambient_mix')){
+            a.volume = Math.max(a.volume||0, body.classList.contains('pc5152ah-phone') ? .92 : .86);
+          }
+        });
+      }catch(e){}
+    }
+    normalizeArchiveCards();
+    [80,300,900,1800,3600].forEach(t=>setTimeout(()=>{normalizeArchiveCards();boostImmortalityBgm();},t));
+    document.addEventListener('click',function(e){
+      const btn=e.target.closest && e.target.closest('button.open-record.pc5152aa-public-open[data-record="Immortality_860201"]');
+      if(btn) setTimeout(boostImmortalityBgm,950);
+    },true);
+
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152ah:'ArchiveStackFix 4KOverlaySidebar BGMBoost',
+      archive:'openable cards are boxed and button-only; no stacked click-blocking layers',
+      layout:'4K content width expanded; sidebar overlays content and covers no more than the intended menu width',
+      responsive:'PC/FHD/QHD/4K/ultrawide plus common mobile widths retained',
+      audio:'Immortality sequence BGM boosted for desktop and mobile playback'
     });
   });
 })();

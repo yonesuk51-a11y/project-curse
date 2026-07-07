@@ -1,9 +1,3 @@
-# SOURCE ROADMAP POINTER
+# Future Patch Pointer
 
-Latest future patch direction after MapPatch5.15.2y is stored in:
-
-- `PROJECT_CURSE_SOURCE_ROADMAP_AFTER_5_15_2y.md`
-- `assets/maps/schema/cults_bgm_immortality_nolatepulse_5_15_2y.json`
-- `assets/maps/schema/future_patch_roadmap_after_5_15_2y.json`
-
-These files are source notes only. They are not user-facing UI documents.
+Continue after MapPatch 5.15.2ah. Preserve PC + mobile responsiveness by default. Do not restore region/operation map modules unless explicitly requested. Avoid click-blocking overlays and keep archive open rules button-only.
