@@ -1,6 +1,0 @@
-{
-  "version": "6.2.8",
-  "status": "not_completed_in_container",
-  "reason": "Previous Chromium navigation in this environment returned net::ERR_BLOCKED_BY_ADMINISTRATOR.",
-  "localRuntimeQA": "Open index.html?uac_qa=1 through a local server to run the in-browser QA panel."
-}

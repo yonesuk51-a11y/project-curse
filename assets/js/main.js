@@ -1,159 +1,55 @@
-/* PATCH6_2_7_SYNCEDGAUGE_VISUALQA
-   Single synced gauge/runtime loader. The bar width, numeric percent, completion, unfold,
-   and overlay removal are driven from one controller to prevent desync and black-screen residue. */
-(function(){
-  const VERSION='6.2.7';
-  const DEFAULT_STEPS=[0,7,16,28,41,46,63,77,88,96,100];
-  const active=new WeakMap();
-  function clamp(v){return Math.max(0,Math.min(100,Math.round(Number(v)||0)));}
-  function pad(v){return String(clamp(v)).padStart(3,'0')+'%';}
-  function wait(ms){return new Promise(function(resolve){setTimeout(resolve,Math.max(0,ms||0));});}
-  function findFill(el){return el && (el.querySelector('[data-gauge-fill]') || el.querySelector('.terminal-gauge i') || el.querySelector('.uac-data-bar i') || el.querySelector('.archive-access-bar i') || el.querySelector('.loadbar span'));}
-  function findPercent(el){return el && (el.querySelector('[data-gauge-percent]') || el.querySelector('.terminal-gauge em') || el.querySelector('.loadbar em'));}
-  function cancel(el){
-    const state=active.get(el);
-    if(state){
-      state.cancelled=true;
-      if(state.raf) cancelAnimationFrame(state.raf);
-      (state.timers||[]).forEach(clearTimeout);
-      active.delete(el);
-    }
-  }
-  function setGauge(el,value){
-    const v=clamp(value);
-    const fill=findFill(el);
-    const pct=findPercent(el);
-    if(fill){
-      fill.style.transition='none';
-      fill.style.width=v+'%';
-      fill.setAttribute('aria-valuenow',String(v));
-    }
-    if(pct) pct.textContent=pad(v);
-    el.dataset.gaugeValue=String(v);
-  }
-  function steppedValue(progress,steps){
-    if(progress>=1) return 100;
-    const idx=Math.max(0,Math.min(steps.length-1,Math.floor(progress*(steps.length-1))));
-    return steps[idx];
-  }
-  function run(el,duration,options){
-    if(!el) return Promise.resolve(false);
-    options=options||{};
-    duration=Math.max(320,Number(duration)||900);
-    const steps=Array.isArray(options.steps)&&options.steps.length>1 ? options.steps.map(clamp) : DEFAULT_STEPS;
-    cancel(el);
-    const state={cancelled:false,timers:[]};
-    active.set(el,state);
-    el.dataset.gaugeRunning='1';
-    el.classList.remove('gauge-done');
-    setGauge(el,0);
-    return new Promise(function(resolve){
-      const start=performance.now();
-      function frame(now){
-        if(state.cancelled){resolve(false);return;}
-        const progress=Math.min(1,(now-start)/duration);
-        const value=options.smooth ? progress*100 : steppedValue(progress,steps);
-        setGauge(el,value);
-        if(progress<1){ state.raf=requestAnimationFrame(frame); }
-        else{
-          setGauge(el,100);
-          el.dataset.gaugeRunning='0';
-          el.classList.add('gauge-done');
-          active.delete(el);
-          try{el.dispatchEvent(new CustomEvent('uac:gauge:complete',{bubbles:true,detail:{duration:duration,version:VERSION}}));}catch(e){}
-          resolve(true);
-        }
-      }
-      state.raf=requestAnimationFrame(frame);
-    });
-  }
-  function ensureDataLoader(){
-    let el=document.getElementById('uacDataAccessLoader');
-    if(!el){
-      el=document.createElement('div');
-      el.id='uacDataAccessLoader';
-      el.className='uac-data-access-loader uac-gauge-loader pc627-loader';
-      el.innerHTML='<div class="uac-data-access-box terminal-gauge-box"><div class="uac-data-kicker">[DATA ACCESS]</div><div class="uac-data-title">화면 데이터 호출 중</div><div class="uac-data-lines"><span>색인 확인</span><span>표시 권한 확인</span><span>노드 응답 확인</span></div><div class="terminal-gauge"><i data-gauge-fill></i><em data-gauge-percent>000%</em></div><div class="pc626-loader-foot">PC-03 LEGACY TERMINAL / LOW RESOLUTION ACCESS</div></div>';
-      document.body.appendChild(el);
-    }
-    return el;
-  }
-  function setDataText(el,cfg){
-    cfg=cfg||{};
-    const k=el.querySelector('.uac-data-kicker');
-    const title=el.querySelector('.uac-data-title');
-    const lines=el.querySelector('.uac-data-lines');
-    if(k) k.textContent='['+(cfg.code||'DATA ACCESS')+']';
-    if(title) title.textContent=cfg.title||'화면 데이터 호출 중';
-    if(lines) lines.innerHTML=(cfg.lines||['색인 확인','표시 권한 확인','노드 응답 확인']).map(function(x){return '<span>'+String(x)+'</span>';}).join('');
-  }
-  function resetOverlay(el){
-    if(!el) return;
-    cancel(el);
-    el.classList.remove('show','hide','complete','gauge-done','is-running');
-    el.style.opacity='';
-    el.style.visibility='';
-    el.style.pointerEvents='none';
-    setGauge(el,0);
-  }
-  function show(el,duration,options){
-    options=options||{};
-    if(!el) return Promise.resolve(false);
-    cancel(el);
-    el.classList.remove('hide','complete','gauge-done');
-    el.classList.add('show','is-running');
-    el.style.opacity='1';
-    el.style.visibility='visible';
-    el.style.pointerEvents='none';
-    void el.offsetWidth;
-    return run(el,duration,options).then(function(ok){
-      if(!ok) return false;
-      el.classList.add('complete');
-      return wait(options.completePause==null?120:options.completePause).then(function(){
-        if(typeof options.beforeHide==='function') options.beforeHide();
-        // Remove the dark backing at completion so there is no black-screen residue.
-        el.classList.add('hide');
-        el.classList.remove('is-running');
-        return wait(options.fadeDuration==null?120:options.fadeDuration).then(function(){resetOverlay(el);return true;});
-      });
-    });
-  }
-  function showData(kind,cfg,duration){
-    const el=ensureDataLoader();
-    setDataText(el,cfg||{});
-    return show(el,duration||820,{steps:[0,8,17,29,42,48,66,81,92,98,100],completePause:110,fadeDuration:110,kind:kind||'default'});
-  }
-  function showArchive(el,duration,next){
-    return show(el,duration||2050,{steps:[0,6,15,27,35,39,58,74,89,97,100],completePause:130,fadeDuration:130,beforeHide:function(){ if(typeof next==='function') next(); }});
-  }
-  window.ProjectCurseTerminalGauge={version:VERSION,run:run,cancel:cancel,set:setGauge,reset:resetOverlay};
-  window.ProjectCurseTerminalLoader={version:VERSION,show:show,showData:showData,showArchive:showArchive,reset:resetOverlay,ensureDataLoader:ensureDataLoader};
-  window.runTerminalGauge=run;
-})();
-var runTerminalGauge = window.runTerminalGauge;
-
-
 document.addEventListener('DOMContentLoaded',()=>{
+  document.body.classList.add('pc5121-boot-pending');
   function rootPrefix(){const p=location.pathname; if(p.includes('/docs/'))return '../../'; if(p.includes('/archive/'))return '../'; return '';}
   const prefix=rootPrefix();
   const loader=document.getElementById('loader');
   const app=document.getElementById('app');
-  const audio={menu:new Audio(prefix+'assets/audio/menu_analog.wav'),record:new Audio(prefix+'assets/audio/record_read.wav'),boot:new Audio(prefix+'assets/audio/boot_loading.wav'),ambient:new Audio(prefix+'assets/audio/ambient_loop.mp3'),faction:new Audio(prefix+'assets/audio/faction_click.mp3')};
-  // Patch6.2.2: record-face/page tabs use the same mechanical click as faction mark buttons.
-  audio.page=audio.faction;
-  audio.menu.volume=.32; audio.record.volume=.38; audio.boot.volume=.36; audio.ambient.volume=.10; audio.faction.volume=.30; audio.ambient.loop=true;
-  window.ProjectCurseAudio=audio;
+  const audio={
+    menu:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
+    open:new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav'),
+    page:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
+    boot:new Audio(prefix+'assets/audio/pc5152f_boot_access_oldpc.wav'),
+    ambient:new Audio(prefix+'assets/audio/pc5152f_old_terminal_roomtone.wav'),
+    load:new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav'),
+    drawer:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
+    command:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
+    restricted:new Audio(prefix+'assets/audio/pc5152f_low_denied_oldpc.wav'),
+    video:new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav'),
+    radio:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
+    marker:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
+    alert:new Audio(prefix+'assets/audio/pc5152f_low_denied_oldpc.wav'),
+    denied:new Audio(prefix+'assets/audio/pc5152f_low_denied_oldpc.wav')
+  };
+  const audioVolume={menu:.045,open:.075,page:.06,boot:.075,ambient:.028,load:.07,drawer:.055,command:.05,restricted:.075,video:.052,radio:.045,marker:.018,alert:.045,denied:.065};
+  Object.keys(audio).forEach(k=>{if(audio[k]) audio[k].volume=audioVolume[k]??.16;});
+  audio.ambient.loop=true;
   let ambientStarted=false;
+  let activeRecordLoadMode='default';
+  const audioCooldown={};
   if(localStorage.getItem('pc_audio_legacy2003_fixed')===null) localStorage.setItem('pc_audio_legacy2003_fixed','on');
   function isOn(){return localStorage.getItem('pc_audio_legacy2003_fixed')!=='off'}
-  function play(a){if(!isOn()||!a)return; try{a.currentTime=0; a.play().catch(()=>{});}catch(e){}}
-  window.ProjectCursePlayAudio=play;
-  function runTerminalGauge(el,duration,options){ return window.runTerminalGauge ? window.runTerminalGauge(el,duration,options) : Promise.resolve(false); }
-  function startAmbient(){if(!isOn()||ambientStarted||!audio.ambient)return; ambientStarted=true; try{audio.ambient.play().catch(()=>{ambientStarted=false;});}catch(e){ambientStarted=false;}}
+  function play(a,key='generic',cooldown=55){
+    if(!isOn()||!a)return;
+    const now=performance.now();
+    if(audioCooldown[key] && now-audioCooldown[key]<cooldown) return;
+    audioCooldown[key]=now;
+    try{a.currentTime=0; a.play().catch(()=>{});}catch(e){}
+  }
+  function playCue(name,cooldown=70){
+    const a=audio[name]||audio.menu;
+    play(a,name,cooldown);
+  }
+  function startAmbient(){
+    if(!isOn()||ambientStarted||!audio.ambient)return;
+    ambientStarted=true;
+    try{audio.ambient.currentTime=0; audio.ambient.play().catch(()=>{ambientStarted=false;});}catch(e){ambientStarted=false;}
+  }
+  window.ProjectCurseAudio={playCue,play,startAmbient,isOn,audio};
   document.addEventListener('pointerdown',startAmbient); document.addEventListener('keydown',startAmbient);
-  function ensureRecordLoader(){let el=document.getElementById('recordLoading'); if(!el){el=document.createElement('div'); el.id='recordLoading'; el.className='record-loading'; el.innerHTML='<div class="box"><div class="title">DOCUMENT HASH CHECK</div><div class="logline">VERIFYING ARCHIVE SEAL...</div><div class="logline">CHECKING CLEARANCE LEVEL...</div><div class="logline">DECRYPTING RECORD BLOCK...</div><div class="logline">MOUNTING PAGE SECTORS...</div><div class="bars"><i></i></div><div class="loader-hint">READ PERMISSION: FIELD REVIEW</div></div>'; document.body.appendChild(el);} return el;}
+  function ensureRecordLoader(){let el=document.getElementById('recordLoading'); if(!el){el=document.createElement('div'); el.id='recordLoading'; el.className='record-loading'; el.innerHTML='<div class="box"><div class="title">RECORD MOUNT</div><div class="logline">TEXT BLOCK ........ PARTIAL</div><div class="logline">LOCAL ACCESS ...... ACCEPTED</div><div class="logline">IMAGE FRAME ....... DAMAGED</div><div class="logline">RECORD BUS ........ READ</div><div class="bars"><i></i></div><div class="loader-hint">READ PERMISSION: LOCAL</div></div>'; document.body.appendChild(el);} return el;}
   function configureRecordLoader(mode){
     const el=ensureRecordLoader();
+    activeRecordLoadMode=mode||'default';
     const fhc=mode==='fhc';
     const video=mode==='video';
     const bio=mode==='bio';
@@ -161,45 +57,33 @@ document.addEventListener('DOMContentLoaded',()=>{
     el.classList.toggle('video-mode',video);
     el.classList.toggle('bio-mode',bio);
     el.innerHTML=fhc
-      ? '<div class="box"><div class="title">F.H.C INTERNAL ACCESS</div><div class="logline">CLEARANCE MISMATCH DETECTED...</div><div class="logline">PARTIAL RECORD RELEASED...</div><div class="logline">TRACE LOG ENABLED...</div><div class="logline">BLACK TAG CROSS-CHECK...</div><div class="bars"><i></i></div><div class="loader-hint">RESTRICTED NODE: SINGLE ACCESS LAYER</div></div>'
+      ? '<div class="box"><div class="title">RESTRICTED RECORD MOUNT</div><div class="logline">CLEARANCE ......... MISMATCH</div><div class="logline">TEXT BLOCK ........ PARTIAL</div><div class="logline">RED TRACE ......... ENABLED</div><div class="logline">BLACK TAG ......... CROSS-CHECK</div><div class="bars"><i></i></div><div class="loader-hint">RESTRICTED NODE: SINGLE ACCESS LAYER</div></div>'
       : video
         ? '<div class="box"><div class="title">DAMAGED VIDEO FEED</div><div class="logline">SIGNAL RECOVERY IN PROGRESS...</div><div class="logline">FRAME INDEX REBUILD...</div><div class="logline">AUDIO CHANNEL DEGRADED...</div><div class="logline">FIELD CAMERA CACHE MOUNTED...</div><div class="bars"><i></i></div><div class="loader-hint">VIDEO: PARTIAL / AUDIO: DEGRADED / FRAME LOSS DETECTED</div></div>'
         : bio
-          ? '<div class="box"><div class="title">BIOLOGICAL TRACE SCAN</div><div class="logline">ENTITY CLASSIFICATION...</div><div class="logline">CONTAMINATION RESPONSE CHECK...</div><div class="logline">HOST REACTION INDEX...</div><div class="logline">THREAT TABLE MATCHING...</div><div class="bars"><i></i></div><div class="loader-hint">ENTITY SCAN: PARTIAL / THREAT TABLE ACTIVE</div></div>'
-          : '<div class="box"><div class="title">DOCUMENT HASH CHECK</div><div class="logline">VERIFYING ARCHIVE SEAL...</div><div class="logline">CHECKING CLEARANCE LEVEL...</div><div class="logline">DECRYPTING RECORD BLOCK...</div><div class="logline">MOUNTING PAGE SECTORS...</div><div class="bars"><i></i></div><div class="loader-hint">READ PERMISSION: FIELD REVIEW</div></div>';
-    return el;
-  }
-  
-  let archiveAccessTimer=0;
-  function ensureArchiveAccessLoader(){
-    let el=document.getElementById('archiveAccessLoader');
-    if(!el){
-      el=document.createElement('div');
-      el.id='archiveAccessLoader';
-      el.className='archive-access-loader uac-gauge-loader';
-      el.innerHTML='<div class="archive-access-box terminal-gauge-box"><div class="archive-access-kicker">[ARCHIVE ACCESS]</div><div class="archive-access-title">기록 문서 열람 중</div><div class="archive-access-lines"><span>원본 기록 호출</span><span>손상 구간 대조</span><span>열람 권한 확인</span></div><div class="terminal-gauge"><i data-gauge-fill></i><em data-gauge-percent>000%</em></div><div class="archive-access-hint">OLD TERMINAL / RECORD BLOCK / READ ONLY</div></div>';
-      document.body.appendChild(el);
-    }
+          ? '<div class="box"><div class="title">BIOLOGICAL TRACE SCAN</div><div class="logline">BIOLOGICAL RECORD MOUNT...</div><div class="logline">CONTAMINATION ..... CHECK</div><div class="logline">HOST REACTION ..... INDEX</div><div class="logline">THREAT TABLE ...... MATCH</div><div class="bars"><i></i></div><div class="loader-hint">ENTITY SCAN: PARTIAL / LOCAL</div></div>'
+          : '<div class="box"><div class="title">RECORD MOUNT</div><div class="logline">TEXT BLOCK ........ PARTIAL</div><div class="logline">LOCAL ACCESS ...... ACCEPTED</div><div class="logline">IMAGE FRAME ....... DAMAGED</div><div class="logline">RECORD BUS ........ READ</div><div class="bars"><i></i></div><div class="loader-hint">READ PERMISSION: LOCAL</div></div>';
     return el;
   }
   function showRecordLoad(next){
+    const el=ensureRecordLoader();
+    el.classList.remove('done');
+    void el.offsetWidth;
+    el.classList.add('show');
     startAmbient();
-    const el=ensureArchiveAccessLoader();
-    clearTimeout(archiveAccessTimer);
-    play(audio.record);
-    if(window.ProjectCurseTerminalLoader && window.ProjectCurseTerminalLoader.showArchive){
-      window.ProjectCurseTerminalLoader.showArchive(el,2050,next);
-    }else{
-      el.classList.add('show');
-      setTimeout(function(){ if(typeof next==='function') next(); el.classList.remove('show'); },2050);
-    }
+    if(activeRecordLoadMode==='fhc') playCue('restricted',220);
+    else if(activeRecordLoadMode==='video') playCue('video',220);
+    else if(activeRecordLoadMode==='bio') playCue('radio',220);
+    else playCue('load',220);
+    const minTime=850;
+    setTimeout(()=>{ el.classList.add('done'); if(typeof next==='function') next(); else el.classList.remove('show'); },minTime);
   }
   function syncBtns(){document.querySelectorAll('#audioToggle').forEach(b=>b.textContent=isOn()?'효과음: 켜짐':'효과음: 꺼짐')}
   syncBtns();
   const bootLines=Array.from(document.querySelectorAll('#bootLines p'));
-  bootLines.forEach((line,i)=>setTimeout(()=>line.classList.add('show'),70+i*70));
-  if(loader){play(audio.boot); runTerminalGauge(loader,1800,{steps:[0,9,18,31,46,58,73,86,96,100]}); setTimeout(()=>{loader.classList.add('hide'); if(app)app.classList.add('ready');},1800);} else {if(app)app.classList.add('ready');}
-  document.querySelectorAll('#audioToggle').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem('pc_audio_legacy2003_fixed',isOn()?'off':'on'); syncBtns(); if(isOn())play(audio.menu);}));
+  bootLines.forEach((line,i)=>setTimeout(()=>line.classList.add('show'),220+i*260));
+  if(loader){setTimeout(()=>{loader.classList.add('hide'); if(app)app.classList.add('ready'); document.body.classList.add('pc5121-boot-complete'); document.body.classList.remove('pc5121-boot-pending'); playCue('boot',260);},2350);} else {if(app)app.classList.add('ready'); document.body.classList.add('pc5121-boot-complete'); document.body.classList.remove('pc5121-boot-pending');}
+  document.querySelectorAll('#audioToggle').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem('pc_audio_legacy2003_fixed',isOn()?'off':'on'); syncBtns(); if(isOn())playCue('menu',90);}));
   const pages=Array.from(document.querySelectorAll('.content-page'));
   const links=Array.from(document.querySelectorAll('.side-menu a[data-target]'));
   function show(id){
@@ -209,24 +93,25 @@ document.addEventListener('DOMContentLoaded',()=>{
     links.forEach(a=>a.classList.toggle('active',a.dataset.target===id));
     const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
   }
-  links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault(); startAmbient(); play(audio.menu); show(a.dataset.target); history.replaceState(null,'','#'+a.dataset.target);}));
+  links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault(); startAmbient(); playCue('menu',140); show(a.dataset.target); history.replaceState(null,'','#'+a.dataset.target);}));
   if(pages.length){show((location.hash||'#history').slice(1));}
+  document.querySelectorAll('[data-open-record], .archive-list a, .backline a, .btn:not(.open-record):not(.record-back)').forEach(a=>a.addEventListener('click',()=>play(audio.open)));
   const factionData={"uac": {"img": "uac.webp", "name": "U.A.C", "meta": "Urban Anomaly 봉쇄 / 도시 이상현상 격리국", "summary": "도시 이상현상과 우시노다교 의식, 괴이 출현, 레드존 확산을 감시하고 격리하는 상위 통제 기관.", "pages": [{"title": "개요", "body": "<p>U.A.C는 도시 내부에서 발생하는 이상현상, 괴이 출현, 우시노다교 의식, 오컬트 재난, 적성 종교 세력의 침투를 감시하고 격리하기 위해 설립된 국가 안보 기관이다.</p><p>정식 명칭은 Urban Anomaly 봉쇄이며, 한국어 명칭으로는 도시 이상현상 격리국이라 불린다. U.A.C는 단순한 수사 기관이나 군사 조직이 아니라, 도시 단위의 초상 재난을 감시하고 위험 구역을 분류하며 이상현상의 확산을 막기 위해 각 기관을 조율하는 상위 통제 기관에 가깝다.</p>"}, {"title": "창설 배경", "body": "<p>U.A.C의 창설 기점은 1986년으로 기록된다. 당시 정부는 대규모 인신공양 사건을 저지하기 위해 불멸을 향해 및 Blood Lake Incident File 작전을 승인하였다.</p><p>해당 작전은 우시노다교가 준비하던 대규모 인신공양 의식을 차단하기 위한 특수 작전이었으며, 의식의 완전한 진행은 저지되었다. 그러나 작전 이후 다수의 괴이체, 비정상적인 생체 변이, 오염된 의식 흔적, 기존 법집행기관으로는 설명하거나 통제할 수 없는 이상현상이 확인되었다.</p><p>정부는 이 사건을 계기로 일시적인 대응팀이 아닌, 영구적으로 이상현상을 감시하고 격리할 전문 기관이 필요하다고 판단하였다. 그 결과 설립된 조직이 U.A.C이다.</p>"}, {"title": "초기 조직 체계", "body": "<p>창설 초기에는 S.I.D와 N.H.C가 각각 조사 부서와 현장 진압 부서로서 U.A.C 산하에 편제되어 있었다. 우시노다교 의식, 괴이 출현, 인신공양 사건에 대응할 전문 기관이 부족했기 때문에 조사, 정보 수집, 현장 진압 기능이 모두 U.A.C 내부 체계에 묶여 있었다.</p><ul><li>U.A.C : 상위 통제 기관</li><li>S.I.D : 특수 조사 부서</li><li>N.H.C : 현장 진압 부서</li></ul>"}, {"title": "현재 조직 체계", "body": "<p>우시노다 현상, 괴이 출현, 레드존 확산, 혈교 의식, 블랙존화 사건이 증가하면서 기존 U.A.C 내부 부서 체계만으로는 대응이 어려워졌다.</p><p>이후 조직 개편을 통해 S.I.D와 N.H.C는 U.A.C 산하 하위 부서에서 분리되어 독립 기관으로 재편되었다. 현재 U.A.C는 도시 이상현상의 상위 통제와 구역 분류, 정보 관리, 기관 간 작전 조율을 담당하며, S.I.D와 N.H.C는 독립 기관으로서 U.A.C와 협력한다.</p><ul><li>U.A.C : 상위 통제, 구역 분류, 정보 관리</li><li>S.I.D : 독립 특수 조사 기관</li><li>N.H.C : 독립 현장 대응 조직</li></ul>"}, {"title": "핵심 목표", "body": "<p>U.A.C의 핵심 목표는 우시노다교의 인신공양 의식을 사전에 차단하고, 그로 인해 발생하는 타락 개체을 제거 또는 통제하는 것이다.</p><p>이후 우시노다 현상과 혈교 의식, 타락교 하위 조직, 인공 괴이, 피의 호수, 변이 균주와 같은 사건들이 늘어나면서 U.A.C의 임무 범위는 확장되었다. 현재 U.A.C는 괴이를 제거하는 기관이 아니라, 도시 전체가 레드존 또는 블랙존으로 변질되는 것을 막기 위한 최종 통제선으로 기능한다.</p>"}, {"title": "주요 임무", "body": "<ul><li>우시노다교 인신공양 의식 사전 차단</li><li>타락 개체 출현 감시</li><li>그린존, 옐로우존, 레드존, 화이트존, 블랙존 분류</li><li>이상현상 발생 지역 봉쇄 및 정보 통제</li><li>현장 기록, CCTV, 오디오, 생체 샘플 회수</li><li>S.I.D, N.H.C, F.H.C, A.R.F, C.P.D와의 작전 조율</li><li>위험 인물 및 비인가 연구자 감시</li><li>오컬트 생명체, 미확인 균주, 변이 조직 분석</li><li>민간 사회로의 정보 유출 차단</li></ul>"}, {"title": "정보 수집 부서", "body": "<p>U.A.C 정보 수집 부서는 도시 전역의 감시 영상, 통신 기록, 오디오 파일, 암호화 CCTV, 현장 데이터를 수집하고 복구하는 정보 부서이다. 이 부서는 U.A.C의 눈으로 불리며, 이상현상이 발생하기 전의 징후를 포착하고 이미 발생한 사건의 기록을 복원하는 역할을 맡는다.</p><p>주로 N.H.C 내부 이탈 징후, S.I.D 현장 보고, F.H.C 회수 문서, 타락교 및 혈교 활동 기록을 분석한다. 레드울프 이탈 기록과 축복으로 위장된 병기는 해당 부서가 복구한 감시 자료로 분류된다.</p><ul><li>암호화 영상 복호화</li><li>감시 데이터 수집</li><li>통신 기록 분석</li><li>내부 반역 징후 감시</li><li>적성 세력 활동 추적</li><li>위험 인물 파일 작성</li><li>비인가 오디오 및 CCTV 자료 복구</li><li>우시노다 현상 발생 전조 감지</li></ul>"}, {"title": "도시 격리 집행부", "body": "<p>U.A.C 도시 격리 집행부는 확인된 이상현상 발생 지역을 봉쇄하고, 괴이 및 오염 요소의 확산을 차단하는 실행 부서이다. 이 부서는 U.A.C의 망치로 불리며, 직접적인 전투만을 담당하는 조직이라기보다는 현장 봉쇄, 격리 명령, 출입 통제, 구역 등급 격상, 지원 부대 호출 권한을 가진 작전 집행 체계에 가깝다.</p><ul><li>이상현상 발생 지역 봉쇄</li><li>구역 출입 통제</li><li>민간인 대피 명령 승인</li><li>현장 격리선 설치</li><li>N.H.C 및 A.R.F 투입 요청</li><li>C.P.D와 연계한 피난민 통제</li><li>레드존 및 블랙존화 징후 감시</li><li>우시노다교 의식장 차단</li><li>괴이체 확산 경로 봉쇄</li></ul>"}, {"title": "오컬트 생명 과학 부서", "body": "<p>U.A.C 오컬트 생명 과학 부서는 괴이, 타락체, 피의 호수, 미확인 균주, 변이 조직을 연구하는 생체 분석 부서이다. 일반적인 생물학이나 법의학으로 설명할 수 없는 사체, 조직, 체액, 균주, 장기 반응을 조사한다.</p><p>피의 호수 부검 기록에서 마렌 예거트의 시신을 분석했으며, BL-088 균주를 최초로 임시 분류한 부서로 기록된다.</p><ul><li>괴이 조직 분석</li><li>타락 생명체 부검</li><li>미확인 균주 분류</li><li>생체 부패 정지 반응 연구</li><li>혈액성 잔류물 분석</li><li>괴이 유전자 자료 대조</li><li>F.H.C 분석 부서와 샘플 공유</li><li>타락 개체 변이 과정 기록</li></ul>"}]}, "nhc": {"img": "nhc.webp", "name": "N.H.C", "meta": "National Hazard Control / 국가 위난 격리 사령부", "summary": "레드존과 블랙존 인접 지역에 투입되는 고위험 현장 대응 조직.", "pages": [{"title": "개요", "body": "<p>N.H.C는 레드존, 옐로우존, 블랙존 인접 지역에 투입되는 고위험 현장 대응 조직이다. 초기에는 U.A.C 산하 현장 진압 부서로 운용되었으나, 레드존 확산과 블랙존화 사건이 증가하면서 독립적인 현장 대응 조직으로 재편되었다.</p><p>괴이 섬멸, 방어선 유지, 고위험 구역 봉쇄, 생존자 회수, 적성 무장 세력 제압을 담당한다. U.A.C가 전체 통제와 정보 관리를 담당한다면, N.H.C는 직접적인 전투와 현장 작전을 수행하는 조직이다.</p>"}, {"title": "레드울프 이탈", "body": "<p>과거 N.H.C 산하에는 레드울프가 1차 작전팀으로 존재했다. 그러나 그린존 붕괴 이후 이어진 사건을 계기로 해당 팀은 사실상 이탈하였고, 현재는 신디케이트 주요팀으로 분류된다.</p>"}, {"title": "주요 임무", "body": "<ul><li>레드존 방어선 유지</li><li>괴이 및 타락체 섬멸</li><li>고위험 구역 봉쇄</li><li>생존자 제한 구조</li><li>적성 무장 세력 제압</li><li>블랙존화 징후 감시</li><li>오염 구역 정화 및 소각 판단</li></ul>"}, {"title": "전술 및 특수 자산", "body": "<p>N.H.C는 일반 화기뿐만 아니라 타락 개체의 재생력을 억제하는 고주파 소각탄, 혈액 변이를 중단시키는 화학 중화 가스, 대괴이 특수 탄약 등 우시노다 현상에 특화된 독점 병기를 운용한다.</p><p>포획된 변이체를 해부하여 약점을 찾아내고, 인간 요원들에게 초자연적 저항력을 부여하는 위험한 시술 시설을 보유하고 있다는 의혹도 존재한다.</p>"}, {"title": "위버맨시", "body": "<p>위버맨시는 N.H.C의 기술력으로 탄생한 대생명체 전용 강화병이다. 우시노다 현상, 혈교 의식, 타락교 정신 오염, 그림자 계열 이상현상에 대응하기 위해 만들어진 극비 전력이다.</p><p>타락 개체와 대등하게 싸울 수 있는 유일한 인간형 전력으로 평가되지만, 시술 부작용으로 인해 서서히 인간성을 잃거나 결국 스스로가 격리 대상이 되는 경우가 있다.</p>"}, {"title": "기본 핵심 능력", "body": "<h4>혈액 중화 및 강화</h4><p>혈교의 혈액 마법에 대응하기 위해 자신의 혈액을 특수 화학 물질로 치환한 개체군이다. 이 혈액은 괴이체의 산성 혈액에 부식되지 않으며, 상처 부위를 빠르게 응고시키는 초재생 반응을 제공한다.</p><h4>신경계 가속</h4><p>그림자 계열 이상현상에 대응하기 위해 신경계를 기계적으로 가속한 개체군이다. 그림자 속에서 적이 나타나는 찰나의 움직임을 포착할 수 있는 초감각적 반사신경을 가진다.</p><h4>정신 격벽</h4><p>타락교의 정신 오염을 차단하기 위해 뇌에 인지 필터 칩을 삽입한 개체군이다. 환각이나 공포를 노이즈로 처리하여 무시할 수 있지만, 부작용으로 인간적인 감정까지 거세되어 기계처럼 차가운 성격이 되는 경우가 있다.</p>"}, {"title": "교단 분파별 사냥 전술", "body": "<h4>타락교 대응</h4><p>S.I.D가 특수 전파 교란기로 공간 왜곡을 억제하는 동안, 위버맨시는 정신 격벽을 활성화한 채 안개를 뚫고 진입한다.</p><h4>혈교 대응</h4><p>위버맨시는 대괴이용 무기를 사용하여 혈교의 경질화된 피와 뼈 무기를 절단한다. 혈액 마법에 전염되지 않는 특수 방호복과 중화 혈액 덕분에 강제 변이 공격을 무시하며 육탄전으로 괴물들을 제압한다.</p><h4>그림자교 대응</h4><p>고광도 UV 조명탄과 음파 탐지기로 그림자교의 은신처를 강제로 노출시킨다. 그림자 속으로 숨으려는 적을 가속된 신경계로 추적하여 비물질화가 풀리는 짧은 순간을 노려 특수 탄환으로 사살한다.</p>"}]}, "sid": {"img": "sid.webp", "name": "S.I.D", "meta": "Special Investigation Department / 특수 수사과", "summary": "이상현상, 오컬트 사건, 실종 사건, 심각 범죄를 조사하는 특수 조사 조직.", "pages": [{"title": "개요", "body": "<p>S.I.D는 이상현상, 심각 범죄, 괴이 출현, 오컬트 사건을 조사하는 특수 조사 조직이다. 초기에는 U.A.C 산하 특수 조사 부서로 운용되었으나, 사건 규모가 확대되고 지역별 독립 조사가 필요해지면서 독립 기관으로 재편되었다.</p><p>일반적인 수사 기관으로 해결하기 어려운 사건을 담당하며, 현장 조사, 피해자 기록, 의식 흔적 분석, 민간 구역 감시를 수행한다. 그린존 내부의 치안 유지와 이상현상 감시 역시 S.I.D의 주요 임무 중 하나이다.</p>"}, {"title": "핵심 임무", "body": "<ul><li>도심 및 일상 공간에서 발생하는 기괴한 징후 감지</li><li>피의 연못, 그림자 전이, 신체 변이 등 초상 현상 추적</li><li>우시노다 현상 발생 경로 분석</li><li>교단 은신처 및 의식장 식별</li><li>초자연적 에너지 잔류량 측정</li><li>F.H.C, 타락교, 혈교 관련 의도적 의식 여부 판별</li><li>현장 1차 봉쇄 및 정보 검열</li></ul>"}, {"title": "N.H.C와의 공조", "body": "<p>S.I.D는 수집된 데이터를 분석하여 N.H.C가 화력을 집중할 지점을 지목한다. 현상 발생 시 가장 먼저 현장에 도착하여 반경 수 킬로미터를 물리적으로 폐쇄하고, 외부인의 출입을 막으며 진실이 유출되지 않도록 정보 검열을 병행한다.</p><p>상황이 걷잡을 수 없이 커질 경우 N.H.C의 정규군 병력에 배속되어 현장 가이드 및 전술 지원팀으로 직접 전투에 참여한다.</p>"}, {"title": "무장 및 전술 지위", "body": "<p>S.I.D는 경찰 계열 조사 조직이지만 일반 총기 외에도 대크리처 전용 특수 탄환, 전파 교란기, 고감도 열화상 탐지기 등 군사 수준의 장비를 운용한다.</p><p>주 임무는 조사와 차단이지만, 초기 대응 실패 시 N.H.C가 도착하기 전까지 1차 봉쇄선을 유지해야 한다.</p>"}, {"title": "오컬트 부서", "body": "<p>S.I.D 오컬트 부서는 우시노다 현상, 괴이 출현, 타락교 관련 사건, 혈교 의식 흔적 등을 조사하는 전문 부서이다. 현장 조사관, 특수 효과 분석 담당자, 기록 담당자, 심각 범죄 분석관으로 구성되어 있다.</p><p>사쿠마 유타 실종 사건 보고서는 S.I.D 일본 도쿄 지부 오컬트 부서가 관리하던 사건 기록으로 분류된다.</p><ul><li>오컬트 범죄 현장 조사</li><li>괴이 흔적 판독</li><li>우시노다교 관련 문서 회수</li><li>피해자 관계 인물 조사</li><li>정신 오염 가능성 판정</li><li>U.A.C 및 F.H.C로 자료 이관</li></ul>"}]}, "ashcrew": {"img": "ashcrew.webp", "name": "Ash Crew", "meta": "괴이 사체 처리반 / N.H.C 산하 특수 처리반", "summary": "전투 이후 남은 오염 사체, 괴이 잔해, Blood Gate 잔류물, 오염된 장비를 봉인·회수·소각하는 처리반.", "pages": [{"title": "개요", "body": "<p>Ash Crew는 독립 세력이 아니라 N.H.C 산하 특수 처리반이다. 일반 N.H.C 전투조가 진압과 봉쇄를 담당한다면, Ash Crew는 전투 이후 남은 오염 사체, 괴이 잔해, 블랙 태그 대상, 오염된 장비, Blood Gate 잔류물을 봉인하고 소각한다.</p><p>이 부대는 전투의 승패가 결정된 뒤에도 끝나지 않는 현장 오염을 처리하기 위해 운용된다. 잔해 하나가 새로운 오염 매개체가 될 수 있기 때문에, Ash Crew의 임무는 단순한 청소가 아니라 2차 재난 차단에 가깝다.</p>"}, {"title": "오염 사체 처리", "body": "<p>괴이 사체, 타락 개체 잔해, 부패 정지 상태의 인체 조직, 혈액성 잔류물은 일반 의료·군수 절차로 처리하지 않는다. Ash Crew는 블랙 태그 봉인 백과 고열 소각 장비를 사용해 현장 반출 전 오염 수치를 측정하고, 회수 불가 판정 시 현장에서 소각한다.</p><ul><li>괴이 사체의 부위별 분리 봉인</li><li>혈액성 잔류물의 중화 및 소각</li><li>감염 가능 장비의 임시 격납</li><li>귀환자 접촉 흔적의 별도 기록</li></ul>"}, {"title": "블랙 태그", "body": "<p>블랙 태그 대상은 일반 회수 대상으로 분류되지 않는다. 해당 대상은 살아있는 생존자처럼 보이더라도 오염 매개체, 위장 개체, 자율 증식 조직일 가능성이 있어 Ash Crew 또는 U.A.C 고위 승인 없이는 반출할 수 없다.</p><p>A.R.F가 회수 작전을 수행하더라도 블랙 태그 대상은 Ash Crew의 현장 판정을 거친 뒤 봉인·소각·격리 중 하나로 처리된다.</p>"}, {"title": "오염된 장비", "body": "<p>오염된 장비는 현장 인원이 사용했거나 접촉한 장비가 의식 잔류물, 혈액성 반응, Ghost Channel 노이즈와 결합해 독립 위험물로 변한 것을 뜻한다. Ash Crew는 해당 장비를 군수품으로 회수하지 않고 별도 저주 오염 장비로 분류한다.</p><ul><li>손상된 혈무 또는 오염 탄창</li><li>Ghost Channel 반응을 보이는 무전기</li><li>피의 호수 잔류물에 노출된 방호복</li><li>사용자 사망 후에도 반응하는 장비</li></ul>"}, {"title": "주요 장비", "body": "<ul><li>블랙 태그 봉인 백</li><li>고열 소각기</li><li>CI-O 오염 측정기</li><li>Ghost Channel 차단기</li><li>Ash Truck 현장 처리 차량</li><li>오염 장비 임시 격납 케이스</li><li>혈액성 잔류물 중화 팩</li></ul>"}, {"title": "협력 기관", "body": "<p>Ash Crew는 N.H.C의 후속 처리반이지만 단독으로 모든 결정을 내리지 않는다. S.I.D가 현장 증거를 확인하고, A.R.F가 회수 가능한 물리 자료를 선별하며, F.H.C는 일부 샘플의 분석 필요성을 제기한다. 다만 블랙 태그 대상의 최종 반출 여부는 U.A.C 통제권 아래 결정된다.</p>"}]}, "arf": {"img": "arf.webp", "name": "A.R.F", "meta": "Anomaly Recovery Force / 이상현상 회수 부대", "summary": "전면 교전보다 생존자, 샘플, 기록 매체, 장비, 시신, 기밀 자산 회수에 특화된 조직.", "pages": [{"title": "개요", "body": "<p>A.R.F는 이상현상 회수 부대다. 전면 교전보다 생존자, 샘플, 기록 매체, 장비, 시신, 기밀 자산을 회수하는 역할에 특화되어 있다.</p><p>이들은 N.H.C가 교전 구역을 확보한 뒤 후속 진입하며, 아직 완전히 안전하지 않은 현장에서 정보와 물증을 보존하는 역할을 맡는다.</p>"}, {"title": "회수 임무", "body": "<ul><li>생존자 제한 구조 및 이송</li><li>시신과 신원 불명 인체 잔해 반출</li><li>현장 기록 매체, 카메라, 오디오 장비 회수</li><li>괴이 조직과 혈액 샘플의 1차 격납</li><li>기밀 장비와 오염 문서 회수</li></ul>"}, {"title": "작전 구조", "body": "<p>A.R.F는 선두 전투부대가 아니다. N.H.C가 위험 개체를 제압하거나 방어선을 확보한 뒤 진입하며, S.I.D가 지정한 증거물과 U.A.C가 요구한 기록 매체를 우선 회수한다.</p><p>현장 상황이 불안정할 경우 A.R.F는 회수보다 봉쇄선 외곽 대기를 우선하며, N.H.C 호위 없이 레드존 심부로 진입하지 않는다.</p>"}, {"title": "F.H.C 분석 전 단계", "body": "<p>F.H.C가 분석하는 대부분의 샘플은 A.R.F가 먼저 물리적으로 회수한다. A.R.F는 연구 조직이 아니라 회수 조직이므로, 샘플의 의미를 해석하기보다 원형 보존과 오염 확산 방지를 우선한다.</p><ul><li>샘플 원형 보존</li><li>현장 좌표 및 회수 시간 기록</li><li>동행 인원 오염 노출 기록</li><li>분석기관 이송 전 봉인 확인</li></ul>"}, {"title": "Ash Crew와의 차이", "body": "<p>A.R.F는 회수 가능한 자료와 생존자를 반출하는 부대이고, Ash Crew는 회수 불가 또는 위험성이 높은 사체·장비를 처리하는 부대다. 블랙 태그 대상은 A.R.F가 단독 회수하지 않고 Ash Crew 또는 U.A.C의 판단을 따른다.</p>"}]}, "cpd": {"img": "cpd.webp", "name": "C.P.D", "meta": "Civilian Protection Division / 민간 보호 조직", "summary": "민간 보호와 외곽 질서 유지, 피난민 관리, 귀환자 분리 절차를 담당하는 조직.", "pages": [{"title": "개요", "body": "<p>C.P.D는 민간 보호와 외곽 질서 유지를 담당하는 조직이다. 레드존 안쪽으로 깊게 들어가기보다는 검문선, 대피소, 보호 구역, 귀환자 분리 절차를 관리한다.</p><p>U.A.C와 N.H.C가 이상현상과 교전을 관리한다면, C.P.D는 그 바깥에서 민간 사회가 완전히 붕괴하지 않도록 질서를 유지한다.</p>"}, {"title": "피난민 관리", "body": "<ul><li>피난민 대기 구역 관리</li><li>대피 경로 통제</li><li>가족 단위 신원 확인</li><li>오염 노출자와 일반 민간인 분리</li><li>식량, 의료품, 임시 거주 구역 배정</li></ul>"}, {"title": "검문 게이트", "body": "<p>C.P.D 검문 게이트는 그린존과 옐로우존, 옐로우존과 레드존 외곽을 나누는 민간 통제선이다. 모든 통과 인원은 신분 확인, 오염 반응 검사, 귀환자 판정을 거친다.</p><p>의심 인원은 S.I.D나 U.A.C 조사반으로 이관되며, 폭동이나 강제 돌파 시 N.H.C 외곽 경계대가 지원된다.</p>"}, {"title": "귀환자", "body": "<p>귀환자는 실종 이후 돌아온 민간인 중 기억 공백, 생체 반응 이상, 타인의 신원 모방, Ghost Channel 반응을 보이는 대상을 말한다. C.P.D는 이들을 일반 피난민과 분리하고 S.I.D 조사 전까지 보호 격리한다.</p>"}, {"title": "C.P.D 대피버스", "body": "<p>C.P.D 대피버스는 레드존 외곽과 옐로우존에서 민간인을 그린 코어 또는 임시 대피소로 옮기는 이동 수단이다. 단순 수송 차량이 아니라 이동식 검문·분리 절차를 수행하는 민간 보호 장비로 운용된다.</p>"}, {"title": "기관 관계", "body": "<p>C.P.D는 U.A.C 행정 통제 아래 운영되며, S.I.D와는 민간 구역 조사 및 실종자 자료 공유를, N.H.C와는 외곽 봉쇄 및 대피 지원을, A.R.F와는 생존자 이송 절차를 공유한다.</p>"}]}, "fhc": {"img": "fhc.webp", "name": "F.H.C", "meta": "Foremost Hitech Cooperation / 포레모스트 하이테크 기업", "summary": "초상 기술, 괴이 조직, 타락·혈액 샘플, 비인가 연구 자료를 분석하고 회수하는 고위 기술 조직.", "pages": [{"title": "개요", "body": "<p>F.H.C는 초상 기술, 괴이 조직, 타락 및 혈액 관련 샘플, 비인가 연구 자료를 분석하고 회수하는 고위 기술 조직이다. 표면적으로는 첨단 기술 개발, 교육 서비스, 사회 복지, 의료 기술, 특수 산업 연구를 제공하는 세계적인 초거대 기업이다.</p><p>그러나 내부적으로는 초자연과학, 오컬트 생명공학, 현실 접속 기술, 생체 병기화 가능성을 다루는 극비 부서를 보유하고 있다. F.H.C는 U.A.C, S.I.D, N.H.C가 회수한 자료를 분석하며, 특히 아마리온 제약과 공식 협력 관계를 맺고 있다.</p>"}, {"title": "표면적 정체", "body": "<ul><li>첨단 기술 개발 기업</li><li>교육 서비스 및 연구 지원 기관</li><li>사회 복지 및 의료 지원 기업</li><li>고위 산업 기술 협력체</li><li>아마리온 제약과 공식 연구 협력 관계 유지</li></ul>"}, {"title": "실질적 정체", "body": "<p>F.H.C는 초상 기술과 오컬트 현상을 기술적으로 실용화하려는 오컬트 과학 복합체에 가깝다. 이들은 외신, 우시노다 현상, 괴이 조직, 혈액 의식, 현실 왜곡, 생명 연장, 생체 병기화 가능성 등을 연구한다.</p><p>공식적으로는 U.A.C와 협력하는 기술 분석 기관이지만, 일부 내부 부서와 자금 흐름에서 우시노다교와의 유착 정황이 확인되고 있다. 따라서 F.H.C는 협력 기관이자 감시 대상에 가까운 이중적 세력이다.</p>"}, {"title": "사회적 영향력", "body": "<p>F.H.C는 수많은 학원, 학교, 연구소, 복지 시설을 운영하며 인재 육성과 사회 기여를 명분으로 영향력을 확장하고 있다. 그러나 일부 시설은 우시노다 현상이 발생하는 주요 지점을 감시하고 제어하기 위한 거점으로 활용된다는 의혹이 존재한다.</p><p>세련된 디자인의 선전 포스터와 출판물을 통해 우시노다와 관련된 철학을 현대적인 자기계발, 첨단 과학, 진화론적 인류 개선 사상으로 위장하여 대중에게 배포한다는 기록도 있다.</p>"}, {"title": "극비 분석 부서", "body": "<p>F.H.C 극비 분석 부서는 괴이, 혈교, 타락교, 우시노다 현상, 비인가 생체 연구 자료, 초상 기술을 분석하고 회수하는 고위 보안 부서이다.</p><p>특히 아마리온 제약, BL-088 균주, 괴이 유전자 디지털화 기술, 저접근 자기 변형 시스템과 관련된 자료를 별도 관리하는 것으로 추정된다.</p><ul><li>초상 기술 분석</li><li>괴이 조직 샘플 연구</li><li>회수 문서 해독</li><li>비인가 연구자 추적</li><li>아마리온 협력 자료 검토</li><li>생체 병기화 가능성 평가</li><li>타락 및 혈액 관련 기술 분류</li><li>우시노다교 유착 의혹 자료 추적</li></ul>"}, {"title": "무력 체계와 조사 기록", "body": "<p>F.H.C는 기업 보안을 명분으로 정규군에 필적하는 사설 무장 세력을 보유하고 있다. 이들은 외부 조사기관의 접근을 차단하거나, 실험 도중 통제를 벗어난 괴이체를 비밀리에 처리한다.</p><p>표면적으로는 합법적인 기업 활동을 하나, 내부 기밀 문서와 자금 흐름을 추적한 결과 우시노다교의 핵심 성소 및 일부 의식 거점과 물리적·재정적으로 연결되어 있다는 정황이 발견되었다.</p>"}]}, "amarion": {"img": "amarion.webp", "name": "Amarion", "meta": "Amarion Pharmaceuticals / 아마리온 제약", "summary": "의약품과 생명공학을 표면에 둔 민간 제약 기업이자 F.H.C 협력·감시 대상.", "pages": [{"title": "개요", "body": "<p>아마리온 제약은 표면적으로는 의약품, 생명공학, 특수 자원 연구를 수행하는 대형 민간 제약 기업이다. 공식적으로는 F.H.C와 연구 협력 관계를 맺고 있으며, 초자연과학, 생명 연장, 고응축 자원, 특수 물질 분석 분야에서 기술 지원을 제공하는 협력 기관으로 분류된다.</p><p>그러나 아마리온은 F.H.C의 승인 범위를 넘어선 비인가 실험을 여러 차례 진행한 정황이 있으며, 현재는 협력 기관이자 고위험 감시 대상이라는 이중적 위치에 놓여 있다.</p>"}, {"title": "F.H.C와의 관계", "body": "<p>F.H.C는 아마리온의 기술력과 연구 성과를 필요로 하지만, 아마리온이 보유한 기술이 너무 위험하기 때문에 완전히 신뢰하지 않는다. 따라서 아마리온은 F.H.C의 협력 기업이면서도 동시에 감시와 통제를 받는 민간 연구 조직으로 분류된다.</p>"}, {"title": "초자연과학 연구 부서", "body": "<p>아마리온 초자연과학 연구 부서는 아마리온 제약 내부에 존재했던 비공개 연구 부서이다. 이 부서는 일반적인 질병 치료나 의약품 개발이 아니라 현실 왜곡, 비가시적 공간 접속, 생체 변형, 고응축 자원 회수, 불멸 연구와 관련된 실험을 진행한 것으로 추정된다.</p><p>공식 기록상 대부분의 자료는 삭제되었으나, F.H.C가 회수한 사전교육 영상에서 해당 부서의 존재가 확인되었다.</p>"}, {"title": "대표 기술", "body": "<p>저접근 자기 변형 시스템은 현실 세계와 비가시적 공간 사이의 접점을 형성하기 위해 개발된 초기형 관문 기술로 추정된다. 아마리온은 이를 자원 확보와 인류 생존 기반 확장 기술로 홍보했으나, F.H.C 분석 기록에 따르면 현실 외부 공간 접촉 실험에 가까운 것으로 분류된다.</p>"}]}, "syndicate": {"img": "syndicate.webp", "name": "Syndicate", "meta": "신디케이트 / 비공식 사설 군사 네트워크", "summary": "국가 기관, 기업, 종교 집단, 무장 조직 사이에서 활동하는 비공식 사설 군사 조직.", "pages": [{"title": "개요", "body": "<p>신디케이트는 국가 기관, 기업, 종교 집단, 무장 조직 사이의 틈에서 활동하는 비공식 사설 군사 조직이자 무장 네트워크이다. 현재 일부 작전은 F.H.C의 거대 자본에 고용되어 움직이지만, 본질적으로는 독자적인 이해관계와 생존 논리를 가진 예측 불가능한 집단이다.</p><p>이들은 국가 체계를 거부하면서도 우시노다의 힘을 군사 전술에 결합하려는 시도를 보이며, 정부와 교단 양쪽 모두에게 위험한 세력으로 분류된다.</p>"}, {"title": "군사 전술과 우시노다", "body": "<p>신디케이트는 우시노다교처럼 숭배에 매몰되지 않는다. 대신 우시노다의 힘을 철저히 효율적인 무기로 취급한다. 현대적 군사 전술에 초자연적인 변이 능력을 덧입혀 정부군인 N.H.C조차 당혹하게 만드는 변칙적인 전투를 수행한다.</p>"}, {"title": "독자 노선", "body": "<p>신디케이트는 작전 단위로 F.H.C의 명령을 따르거나 자금을 받을 수 있지만, 완전히 F.H.C에 종속된 조직은 아니다. 정부에게는 체제를 위협하는 테러리스트이며, 교단에게는 신성한 힘을 도구로 모독하는 약탈자이다.</p><p>이들은 오직 자신들의 독립된 세력을 유지하고 힘을 키우는 데 관심이 있다.</p>"}, {"title": "기만 전술", "body": "<p>신디케이트의 가장 특징적인 전술은 더미 요원 활용이다. 현장에서 포로로 잡히거나 정보가 유출되는 것을 막기 위해 실제 인간 요원 대신 정교하게 제작된 인조체나 세뇌된 소모품 병사를 전면에 내세운다.</p><p>이로 인해 U.A.C가 이들을 소탕하더라도 본대의 실체나 거점은 늘 안개 속에 가려져 있다.</p>"}, {"title": "레드울프", "body": "<p>레드울프는 현재 신디케이트 내부에서 가장 핵심적인 전투 및 현장 작전팀 중 하나로 분류된다. 이들은 원래 N.H.C 1차 작전팀으로 활동했던 고위험 대응팀이었으나, 그린존 붕괴 사건 및 그 이후 이어진 일련의 사건을 거치며 기존 지휘 체계에서 이탈하였다.</p><ul><li>이전 명칭 : N.H.C 1차 작전팀 레드울프</li><li>현재 분류 : 신디케이트 주요팀 레드울프</li><li>변동 사유 : 그린존 붕괴 이후 지휘 체계 붕괴, 상부와의 결별, 생존 인원 재편, 비공식 세력화</li></ul>"}, {"title": "켈베로스 파벌", "body": "<p>켈베로스 파벌은 레드울프 전체를 의미하는 명칭이 아니라, 현재 신디케이트 주요팀으로 활동 중인 레드울프 내부에서 웨이드 밀렌을 중심으로 형성될 가능성이 있는 비인가 독자 행동 세력을 뜻한다.</p><p>밀렌은 과거 N.H.C 시절부터 상부 명령에 대한 불신을 보였으며, 레드울프가 신디케이트 소속으로 재편된 이후에는 독자적인 질서와 권력을 세우려는 방향으로 움직이고 있다. 이후 기록에서는 우시노다의 힘을 감염 병기와 억제제로 전환하려는 계획이 확인되었다.</p>"}]}, "ushinoda": {"img": "ushinoda.webp", "name": "Ushnoda Cult", "meta": "우시노다교 / 타락교·혈교·그림자교를 포함한 통합 교단", "summary": "우시노다의 힘을 숭배하며 인신공양과 이상현상을 통해 세계 재편을 시도하는 적대 종교 세력.", "pages": [{"title": "개요", "body": "<p>우시노다교는 고대 존재 우시노다의 힘을 숭배하며, 그를 향한 맹목적인 믿음을 바탕으로 인류의 도덕성을 완전히 저버린 최악의 광신도 집단이다. 이들은 단순히 신을 믿는 것을 넘어 잔혹한 반인류적 행위를 신성한 의식으로 여기며 인간을 초월한 신인류라는 왜곡된 이상을 꿈꾼다.</p>"}, {"title": "연합된 세 가지 교단", "body": "<p>현재 우시노다교는 각기 다른 힘과 성향을 가진 세 분파가 하나의 목적을 위해 손을 잡은 교단 연합 체제로 운영되고 있다. 이들의 세력은 이미 비밀리에 전 세계 구석구석까지 뻗어 나가 있으며, 도시 내부의 공공 시설, 학교, 병원, 연구소, 복지 기관에 침투한 정황이 확인되고 있다.</p>"}, {"title": "타락교", "body": "<p>타락교는 인간의 정신을 오염시키고 자아를 붕괴시켜 우시노다의 의지에 완전히 종속되게 만드는 심리적 잠식을 담당한다. 이들은 우시노다의 타락의 힘을 축복으로 받아들이며, 신체 변형과 불멸성을 신앙의 증거로 여긴다.</p><h4>핵심 능력 : 현실 부식</h4><ul><li>공포의 안개 : 오염된 기운에 노출된 자는 가장 끔찍한 트라우마를 환각으로 본다.</li><li>자아 와해 : 상대의 이성을 마비시켜 자신이 누구인지 잊게 만들거나 스스로를 해치게 만든다.</li><li>공간 뒤틀림 : 문을 열면 다른 장소가 나오거나 복도가 무한히 길어지는 공간 왜곡을 일으킨다.</li></ul>"}, {"title": "혈교", "body": "<p>혈교는 혈액 마법과 신체 변이에 집착하는 분파이며, 인체를 기괴하게 뒤틀어 타락 개체을 만들어내는 실무적인 무력 집단이다.</p><h4>핵심 능력 : 과부하 변이</h4><ul><li>경질화 혈액 : 피를 강철보다 단단한 칼날이나 가시로 굳혀 공격한다.</li><li>신체 재구성 : 뼈를 검으로 쓰거나 등에서 촉수를 돋게 하며, 부상을 입을수록 더 강력한 형태로 변이한다.</li><li>강제 전이 : 적의 몸속에 자신의 피를 주입하여 장기를 뒤틀거나 타락 개체로 강제 변이시킨다.</li></ul>"}, {"title": "그림자교", "body": "<p>그림자교는 실체가 없는 공포를 이용하는 분파이다. 어둠 속에서 은밀하게 움직이며 요인을 암살하거나, 보이지 않는 곳에서 이상현상을 유도하여 사회적 혼란을 야기한다.</p><h4>핵심 능력 : 심연의 수의</h4><ul><li>그림자 전이 : 모든 그림자를 통로로 삼아 순간이동한다.</li><li>비물질화 : 일시적으로 신체를 그림자 상태로 만들어 총알이나 물리 공격이 통과하게 만든다.</li><li>그림자 구속 : 상대의 그림자를 물리적으로 고정하거나 목을 조르는 끈으로 변형시킨다.</li></ul>"}, {"title": "인신공양과 이상현상", "body": "<p>우시노다교에게 가장 중요한 행위는 인신공양이다. 무고한 생명을 제물로 바침으로써 현실 세계의 물리 법칙을 뒤트는 이상현상을 강제로 발생시키며, 이를 통해 우시노다의 강림을 앞당기려 한다.</p>"}, {"title": "영향력과 암약", "body": "<p>우시노다교는 정체를 숨긴 채 F.H.C와 같은 거대 자본 뒤에 숨어 활동하거나, 학교와 병원 같은 공공 시설에 침투하여 일반인을 서서히 오염시킨다.</p><p>최종 목표는 기존 인류를 멸절시키고, 우시노다의 축복을 받은 변이된 인류로 세상을 재편하는 것이다.</p>"}]}, "haimun": {"img": "haimun.webp", "name": "Haimun", "meta": "For Our Future / 하이문", "summary": "우시노다교의 타락교와 혈교 교리에 심취한 범죄 조직이자 초인간주의 신봉자 단체.", "pages": [{"title": "개요", "body": "<p>하이문은 우시노다교의 분파 중 가장 과격한 타락교와 혈교의 교리에 심취하여, 인류의 멸망과 새로운 세상의 도래를 꿈꾸는 범죄 조직이자 초인간주의 신봉자 단체이다.</p><p>우리의 미래를 위하여라는 슬로건 아래 기존의 인간성을 버리고 괴물로 진화하는 것을 유일한 구원으로 믿는다.</p>"}, {"title": "도심 속 공포", "body": "<p>하이문은 U.A.C의 감시를 피해 도심 깊숙이 뿌리를 내리고 있다. 현재 도시 곳곳에서 산발적으로 발생하는 우시노다 현상의 압도적인 다수는 이들의 소행으로 추정된다.</p><p>이들은 인신공양을 위해 일반 시민들을 납치하거나, 도심 한복판에서 금기된 의식을 강행하여 도시를 아수라장으로 만든다.</p>"}, {"title": "초인간주의 사상", "body": "<p>하이문의 구성원들은 인간이라는 종의 나약함에 환멸을 느낀 자들이다. 타락교의 정신 오염과 혈교의 신체 변이를 적극적으로 받아들이며, 스스로 기괴한 존재가 되는 것을 진화라고 부른다.</p><p>이들은 인간은 곧 사라질 구시대의 유물이며, 우시노다의 축복을 받은 우리만이 미래라고 주장한다.</p>"}, {"title": "리더십", "body": "<p>대부분 평범한 인간들로 구성되어 활동하지만, 이들을 하나로 묶고 거대한 테러를 기획하는 리더의 정체는 철저히 베일에 싸여 있다. 조직원들조차 리더를 직접 본 적이 없으며, 오직 우시노다의 목소리를 대변하는 전언을 통해서만 명령을 하달받는다고 알려져 있다.</p>"}, {"title": "추적 대상", "body": "<p>하이문은 도심 내부에서 인신공양, 실종 사건, 우시노다 현상, 괴이 출현을 유발하는 주요 세력으로 분류된다. S.I.D는 은신처와 의식 거점을 추적하며, U.A.C는 하이문이 활동한 구역을 옐로우존 또는 레드존으로 격상할 수 있다. N.H.C는 대규모 의식이나 타락 개체 양산 정황이 확인될 경우 즉시 투입된다.</p>"}]}};
   const detail=document.getElementById('factionDetail');
   function renderFaction(key){
     const d=factionData[key]||factionData.uac; if(!detail)return;
     detail.innerHTML=`<img class="faction-mark-large" src="${prefix}assets/faction_marks/${d.img}" alt="${d.name}"><h3>${d.name}</h3><div class="meta">${d.meta}</div><p class="faction-summary">${d.summary||''}</p><div class="detail-tabs">${d.pages.map((p,i)=>`<button class="detail-tab ${i===0?'active':''}" data-i="${i}" type="button">${p.title}</button>`).join('')}</div><div class="detail-body"></div>`;
-    function showPage(i,sound=true){const p=d.pages[i]||d.pages[0]; detail.querySelectorAll('.detail-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); detail.querySelector('.detail-body').innerHTML=`<h4>${p.title}</h4>${p.body}`; if(sound && audio.page)play(audio.page);}
+    function showPage(i,sound=true){const p=d.pages[i]||d.pages[0]; detail.querySelectorAll('.detail-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); detail.querySelector('.detail-body').innerHTML=`<h4>${p.title}</h4>${p.body}`; if(sound)play(audio.page);}
     detail.querySelectorAll('.detail-tab').forEach((b,i)=>b.addEventListener('click',()=>showPage(i,true)));
     showPage(0,false);
     document.querySelectorAll('.faction-tile').forEach(b=>b.classList.toggle('active',b.dataset.key===key));
   }
-  document.querySelectorAll('.faction-tile').forEach(b=>b.addEventListener('click',()=>{play(audio.faction); renderFaction(b.dataset.key)})); if(detail) renderFaction('uac');
+  document.querySelectorAll('.faction-tile').forEach(b=>b.addEventListener('click',()=>{playCue('menu',160); renderFaction(b.dataset.key)})); if(detail) renderFaction('uac');
   document.querySelectorAll('.paged-record').forEach(box=>{
     const recPages=Array.from(box.querySelectorAll(':scope > .record-page'));
     const tabs=box.querySelector(':scope > .page-tabs');
     if(!recPages.length||!tabs) return;
-    function showRec(i,sound=true){recPages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .page-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound && audio.page)play(audio.page); const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; else window.scrollTo(0,0);}
+    function showRec(i,sound=true){recPages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .page-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page); const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; else window.scrollTo(0,0);}
     tabs.querySelectorAll(':scope > .page-tab').forEach((b,i)=>b.addEventListener('click',()=>showRec(i,true)));
     showRec(0,false);
   });
@@ -234,7 +119,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const pages=Array.from(box.querySelectorAll(':scope .sub-pages > .sub-page'));
     const tabs=box.querySelector(':scope > .sub-tabs');
     if(!pages.length||!tabs) return;
-    function showSub(i,sound=true){pages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .sub-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound && audio.page)play(audio.page);}
+    function showSub(i,sound=true){pages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .sub-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page);}
     tabs.querySelectorAll(':scope > .sub-tab').forEach((b,i)=>b.addEventListener('click',()=>showSub(i,true)));
     showSub(0,false);
   });
@@ -250,7 +135,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       pages.forEach((p,i)=>{const on=p.classList.contains(cls)||(!key && i===0); if(on) matched=true; p.classList.toggle('active',on);});
       if(!matched && pages[0]) pages[0].classList.add('active');
       tabs.forEach(t=>t.classList.toggle('active', t.dataset.zone===key));
-      if(sound){startAmbient(); if(audio.page)play(audio.page);}
+      if(sound){startAmbient(); play(audio.page);}
     }
     tabs.forEach(t=>t.addEventListener('click',()=>showZone(t.dataset.zone,true)));
   });
@@ -278,6 +163,128 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(tabs) tabs.querySelectorAll(':scope > .sub-tab').forEach((b,i)=>b.classList.toggle('active',i===0));
     });
   }
+
+  /* MapPatch 5.13.3 — U.A.C case-file record viewer shell.
+     Existing record bodies are preserved; this only wraps them with metadata / links / sub-record navigation. */
+  const recordCaseMeta = {
+    'Cults_871104':{grade:'F.H.C / SEALED',tone:'restricted',type:'오컬트 봉인 기록',map:'란저우 / 우시노다교 흔적',op:'lanzhou',factions:['F.H.C','S.I.D','Ushnoda Cult'],equipment:['봉인 태그','오염 표식 샘플','혈무'],phenomena:['의식성 오염','Blood Gate 잔향','타락교'],attachments:['타락교 기록면','혈교 기록면','현장 대응 경고'],annotation:'F.H.C 봉인 기록. 일부 문장은 부분 공개 상태로 유지한다.'},
+    '타락 개체_860722':{grade:'ENTITY / RED',tone:'bio',type:'개체 분류 기록',map:'세계 상황판 / 레드존 개체권',op:'world',factions:['U.A.C','N.H.C','S.I.D'],equipment:['Null Round','W-Coat','회수 태그'],phenomena:['타락 개체','상위 개체','미믹 개체'],attachments:['개체 분류','부검 메모','회수 이미지'],annotation:'생체 반응과 위협 분류를 먼저 확인한다.'},
+    '불명_Record2_860205':{grade:'BIO / HIGH',tone:'bio',type:'부검·오염 기록',map:'북해-함부르크 봉인 항만',op:'northsea',factions:['F.H.C','A.R.F','U.A.C'],equipment:['생체 샘플 키트','Black Tag Charge'],phenomena:['피의 호수','혈액성 잔류물','부패 정지 반응'],attachments:['부검 사진','샘플 기록','오염 판정'],annotation:'생체 샘플 접촉 금지. 회수보다 격리 우선.'},
+    'Redzone_881120':{grade:'REDZONE / FIELD-2',tone:'redzone',type:'레드존 이상현상 기준',map:'부산 / 란저우 / 전역 레드권',op:'busan',factions:['U.A.C','S.I.D','F.H.C'],equipment:['Chrono Anchor','해상 감청 장비','봉쇄 게이트'],phenomena:['Dead Hour','Ghost Channel','Blood Gate','시간 오염'],attachments:['오염 기준','장기 방치 단계','격상/하향 기준'],annotation:'지도 마커와 직접 연결되는 핵심 기준 문서.'},
+    'FCR_Archive_890402':{grade:'RETURNED / CIV-2',tone:'returned',type:'귀환자·분류 추가 보고',map:'부산 선별 부두 / 란저우 주거블록',op:'busan',factions:['C.P.D','S.I.D','U.A.C'],equipment:['C.P.D 대피선','격리 태그','선별 장비'],phenomena:['귀환자 선별 실패','지연 신체 반응','재실종 사례'],attachments:['추가 분류','귀환자 기준','위장 개체 경고'],annotation:'민간 대피 동선과 기록 판단을 분리한다.'},
+    'NHC_Manual_891219':{grade:'N.H.C / FIELD-1',tone:'field',type:'현장 작전·봉쇄 규정',map:'부산 부두 차단선 / 란저우 후퇴선',op:'lanzhou',factions:['N.H.C','U.A.C','A.R.F','C.P.D'],equipment:['W-Coat','Null Round','혈무','Black Tag Charge'],phenomena:['봉쇄선 붕괴','회수 실패','블랙 태그'],attachments:['현장 운용','봉쇄 대응','장비 운용'],annotation:'현장 대원 기준 문서. 작전 실패 시 기록 회수 절차를 우선한다.'},
+    'Immortality_860201':{grade:'VIDEO / ORIGIN',tone:'video',type:'작전 영상·기원 사건',map:'북해-함부르크 봉인 항만',op:'northsea',factions:['U.A.C','S.I.D','F.H.C'],equipment:['현장 카메라','무전 기록','회수 매체'],phenomena:['피의 호수','혈액성 이상현상','야생동물 변질'],attachments:['작전 로그','촬영 기록','통신 기록'],annotation:'기원 사건 파일. 영상 프레임 손상 상태를 유지한다.'},
+    'Sakuma_Tape_991028':{grade:'S.I.D / OCCULT',tone:'video',type:'실종·오컬트 사건 보고',map:'동아시아 감시권 / 도쿄 오컬트 사건',op:'world',factions:['S.I.D','F.H.C','Ushnoda Cult'],equipment:['현장 카메라','감청 노트'],phenomena:['우시노다교 흔적','실종 사건','오컬트 사망'],attachments:['담당 인물','피해자 기록','잔류 문장'],annotation:'S.I.D 오컬트 부서 기록. 잔류 문장 노이즈를 보존한다.'},
+    '불명_Record1_860204':{grade:'VIDEO / AMARION',tone:'video',type:'아마리온 회수 영상',map:'Black Site 후보 / 기업 연구권',op:'world',factions:['F.H.C','Amarion','U.A.C'],equipment:['회수 영상 매체','연구 장비'],phenomena:['현실 외부 공간','고응축 자원','비인가 연구'],attachments:['사전교육 영상','프로젝트 장점','위험 기술 분석'],annotation:'기업 홍보 영상처럼 위장된 비인가 연구 기록.'},
+    '불명_Record3_920711':{grade:'INTEL / SYNDICATE',tone:'video',type:'감시 영상·이탈 기록',map:'북미/신디케이트 감시권',op:'pacificnw',factions:['U.A.C','N.H.C','Syndicate'],equipment:['암호화 CCTV','감시 데이터'],phenomena:['지휘 이탈','오염 장비 유통'],attachments:['기록 정보','암호화 CCTV 영상'],annotation:'레드울프 이탈과 신디케이트 재분류의 근거 기록.'},
+    '불명_Record4_930314':{grade:'BLACK / WEAPON',tone:'restricted',type:'비인가 오디오 기록',map:'신디케이트 / 우시노다교 연계 감시',op:'world',factions:['Syndicate','Red Wolf','F.H.C','Ushnoda Cult'],equipment:['혈무','오염된 장비','생체 병기'],phenomena:['우시노다 힘 병기화','의식성 오염'],attachments:['오디오 기록','무기화 논의','위험 분석'],annotation:'대화 기록은 문서 삽입용 설정이 아니라 제한 열람 자료로 유지한다.'},
+    '불명_Record5_940626':{grade:'GENE / EXTREME',tone:'bio',type:'비인가 유전자 연구',map:'Black Site / 아마리온 연계 감시',op:'world',factions:['F.H.C','Amarion','U.A.C'],equipment:['생체 프린팅 장비','유전자 분석 자료'],phenomena:['괴이 유전자','강제 진화','인류 정화 사상'],attachments:['유전자 기록','기술 위험 분석','격리 판정'],annotation:'사상 위험과 기술 위험이 결합된 고위험 생체 기록.'}
+  };
+  window.ProjectCurseRecordCaseMeta = recordCaseMeta;
+
+  function caseEsc(v){
+    return String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function caseChips(items, emptyLabel){
+    const list=Array.isArray(items)?items.filter(Boolean):[];
+    if(!list.length) return `<span class="pc5133-chip muted">${caseEsc(emptyLabel || '미연결')}</span>`;
+    return list.map(x=>`<span class="pc5133-chip">${caseEsc(x)}</span>`).join('');
+  }
+
+  function caseDefaultMeta(id, root){
+    const title=(root && root.querySelector('.doc-title') && root.querySelector('.doc-title').textContent.trim()) || id || '기록';
+    return {grade:'ARCHIVE / FIELD',tone:'default',type:title,map:'관련 작전권 미지정',op:'world',factions:['U.A.C'],equipment:[],phenomena:[],attachments:['본문 기록','첨부 이미지','페이지 기록'],annotation:'기존 기록 본문은 유지하고 열람 구조만 사건 파일 형식으로 재구성한다.'};
+  }
+
+  function casePrimaryTabs(root){
+    const tabs=[...root.querySelectorAll('.paged-record > .page-tabs > .page-tab')].slice(0,8);
+    return tabs.map((b,i)=>`<button type="button" data-pc5133-tab="${i}"><i>${String(i+1).padStart(2,'0')}</i><span>${caseEsc((b.textContent||'기록면').trim())}</span></button>`).join('') || '<span class="pc5133-empty">기록면 없음</span>';
+  }
+
+  function caseSubrecordSummary(root){
+    const subTabs=[...root.querySelectorAll('.nested-record > .sub-tabs > .sub-tab')].slice(0,8).map(b=>(b.textContent||'부속 기록').trim());
+    return subTabs.length ? subTabs : ['본문 기록','첨부 이미지','시스템 주석'];
+  }
+
+  function enhanceCaseFile(root,id){
+    if(!root) return;
+    const meta=Object.assign(caseDefaultMeta(id,root), recordCaseMeta[id] || {});
+    root.classList.add('pc5133-case-file',`pc5133-tone-${meta.tone || 'default'}`);
+    root.dataset.caseTone=meta.tone || 'default';
+    if(root.dataset.pc5133Enhanced==='1'){
+      updateCaseRail(root);
+      return;
+    }
+    root.dataset.pc5133Enhanced='1';
+
+    const header=root.querySelector(':scope > .doc-header');
+    const content=root.querySelector(':scope > .record-content');
+    if(!header || !content) return;
+
+    const frame=document.createElement('div');
+    frame.className='pc5133-case-frame';
+    const rail=document.createElement('aside');
+    rail.className='pc5133-case-rail';
+    rail.innerHTML=`<div class="pc5133-rail-title"><b>CASE INDEX</b><span>${caseEsc(id)}</span></div><div class="pc5133-rail-tabs">${casePrimaryTabs(root)}</div><div class="pc5133-rail-sub"><b>부속 기록</b>${caseChips(caseSubrecordSummary(root),'부속 없음')}</div>`;
+
+    const body=document.createElement('section');
+    body.className='pc5133-case-body';
+    body.appendChild(header);
+    body.appendChild(content);
+
+    const metaPanel=document.createElement('aside');
+    metaPanel.className='pc5133-case-meta';
+    metaPanel.innerHTML=`<div class="pc5133-meta-head"><span>U.A.C CASE FILE</span><b>${caseEsc(meta.grade)}</b></div>
+      <div class="pc5133-meta-grid">
+        <span>기록 유형</span><strong>${caseEsc(meta.type)}</strong>
+        <span>관련 작전권</span><strong>${caseEsc(meta.map)}</strong>
+        <span>작전 링크</span><button type="button" data-pc5133-open-op="${caseEsc(meta.op || 'world')}">작전보드 열기</button>
+      </div>
+      <section><b>관련 세력</b><div>${caseChips(meta.factions,'세력 미연결')}</div></section>
+      <section><b>관련 장비</b><div>${caseChips(meta.equipment,'장비 미연결')}</div></section>
+      <section><b>현상 / 개체</b><div>${caseChips(meta.phenomena,'현상 미연결')}</div></section>
+      <section><b>첨부 / 하위 기록</b><div>${caseChips(meta.attachments,'첨부 없음')}</div></section>
+      <section class="pc5133-system-note"><b>U.A.C 주석</b><p>${caseEsc(meta.annotation)}</p></section>`;
+
+    frame.appendChild(rail);
+    frame.appendChild(body);
+    frame.appendChild(metaPanel);
+    root.appendChild(frame);
+
+    rail.querySelectorAll('[data-pc5133-tab]').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.preventDefault();
+        const i=Number(btn.getAttribute('data-pc5133-tab')||0);
+        const pageTabs=root.querySelectorAll('.paged-record > .page-tabs > .page-tab');
+        if(pageTabs[i]) pageTabs[i].click();
+        updateCaseRail(root);
+        if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('command',120);
+      });
+    });
+    root.querySelectorAll('.paged-record > .page-tabs > .page-tab').forEach(btn=>{
+      if(btn.dataset.pc5133TabSync) return;
+      btn.dataset.pc5133TabSync='1';
+      btn.addEventListener('click',()=>setTimeout(()=>updateCaseRail(root),0));
+    });
+    metaPanel.querySelectorAll('[data-pc5133-open-op]').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.preventDefault();
+        const op=btn.getAttribute('data-pc5133-open-op')||'world';
+        if(typeof window.ProjectCurseSelectOperation==='function') window.ProjectCurseSelectOperation(op,{show:true,closeMap:true});
+        if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('command',140);
+      });
+    });
+    updateCaseRail(root);
+  }
+
+  function updateCaseRail(root){
+    if(!root) return;
+    const rail=root.querySelector('.pc5133-case-rail');
+    if(!rail) return;
+    const active=[...root.querySelectorAll('.paged-record > .page-tabs > .page-tab')].findIndex(b=>b.classList.contains('active'));
+    rail.querySelectorAll('[data-pc5133-tab]').forEach((btn,i)=>btn.classList.toggle('active',i===active));
+  }
   function showInternalRecord(id){
     if(!archiveViewer) return;
     const selected=archiveViewer.querySelector(`.record-detail[data-record="${id}"]`);
@@ -288,18 +295,24 @@ document.addEventListener('DOMContentLoaded',()=>{
     showRecordLoad(()=>{
       if(archiveListWrap) archiveListWrap.classList.add('is-hidden');
       archiveViewer.hidden=false;
+      document.body.classList.add('pc5133-case-file-open');
       archiveViewer.querySelectorAll('.record-detail').forEach(el=>{el.hidden=true;});
       selected.hidden=false;
+      enhanceCaseFile(selected,id);
       resetRecordState(selected);
+      updateCaseRail(selected);
       const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
       const loaderEl=document.getElementById('recordLoading'); if(loaderEl) loaderEl.classList.remove('show');
+      playCue('open',180);
     });
   }
   function closeInternalRecord(e){
     if(e){e.preventDefault(); e.stopPropagation();}
     if(archiveViewer){archiveViewer.hidden=true; archiveViewer.querySelectorAll('.record-detail').forEach(el=>{el.hidden=true;});}
+    document.body.classList.remove('pc5133-case-file-open');
     if(archiveListWrap){archiveListWrap.classList.remove('is-hidden'); archiveListWrap.querySelectorAll('details').forEach(d=>d.open=true);}
     const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
+    playCue('menu',160);
   }
   window.ProjectCurseShowInternalRecord=showInternalRecord;
   window.ProjectCurseCloseInternalRecord=closeInternalRecord;
@@ -311,350 +324,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 
-
-// Final patch: bottom map marker explanation buttons only. Zone criteria stays in the right panel.
-(function(){
-  const data={
-    red:{title:'붉은 원형',body:'<p><b>표시:</b> 레드존 영향권 / 중심부 마커</p><p>고위험 사건 발생권을 원형 반경으로 표시한다. 자세한 구역 기준은 오른쪽 레드존 항목에서 확인한다.</p>'},
-    yellow:{title:'황색 원형',body:'<p><b>표시:</b> 옐로우존 경계권</p><p>레드존 인근의 완충·경계권을 표시한다. 독립 구역이 아니라 레드존 주변 방어·조사 범위로 배치한다.</p>'},
-    black:{title:'흑색 원형',body:'<p><b>표시:</b> 블랙존 봉쇄권</p><p>진입 금지 또는 통제권 상실 구역을 표시한다. 상세 기준은 오른쪽 블랙존 항목에서 확인한다.</p>'},
-    green:{title:'녹색 원형',body:'<p><b>표시:</b> 그린존 코어 / 안정 행정권</p><p>주요 수도권, 행정 거점, 민간 거주가 유지되는 안정권을 작게 표시한다. 주변 이상 징후가 증가하면 옐로우존으로 격상될 수 있다.</p>'},
-    white:{title:'백색 원형',body:'<p><b>표시:</b> 화이트존 감시권 / 외곽 통제권</p><p>완전한 안전지대가 아니라 장기 감시와 출입 통제가 유지되는 권역을 표시한다. 그린존과 겹칠 경우 흰 원은 외곽 감시권, 녹색 원은 안정 중심부를 의미한다.</p>'},
-    defense:{title:'방어선',body:'<p><b>표시:</b> 긴 점선 차단선</p><p>N.H.C 외곽 방어선과 C.P.D 통제선의 위치를 나타낸다.</p>'},
-    gate:{title:'봉쇄 게이트',body:'<p><b>표시:</b> 마름모형 게이트 마커</p><p>구역 출입과 검문을 통제하는 고정 봉쇄 지점이다.</p>'},
-    bus:{title:'C.P.D 대피버스',body:'<p><b>표시:</b> 작은 차량형 마커</p><p>민간인 이송, 귀환자 분리, 선별 검사 대기자 수송을 담당하는 C.P.D 이동 대피 지점이다.</p>'},
-    hq:{title:'본부 / 기지 / 시설',body:'<p><b>표시:</b> 삼각형, 다이아몬드, 사각형 계열 마커</p><p>U.A.C 본부, N.H.C 전방기지, S.I.D 지부, A.R.F 회수 거점, F.H.C 연구시설, 이동 감시 거점 등을 나타낸다.</p>'},
-    ash:{title:'오염 처리소',body:'<p><b>표시:</b> 십자형 처리 마커</p><p>오염된 장비, 괴이 잔류물, 회수 금지 물품을 봉인·소각·격리하는 후처리 지점이다.</p>'}
-  };
-  function render(key){const box=document.getElementById('mapInfoDisplay'); if(!box || !data[key]) return; box.innerHTML='<h3>'+data[key].title+'</h3>'+data[key].body; document.querySelectorAll('.map-info-btn').forEach(b=>b.classList.toggle('active',b.dataset.mapInfo===key));}
-  document.querySelectorAll('.map-info-btn').forEach(btn=>btn.addEventListener('click',()=>{try{if(typeof play==='function' && typeof audio!=='undefined') play(audio.menu);}catch(e){} render(btn.dataset.mapInfo);}));
-})();
-
-
-// Actual world map continental record controls.
-(function(){
-  const shell=document.querySelector('.continental-map-shell');
-  if(!shell) return;
-  const panels=Array.from(shell.querySelectorAll('.continent-panel'));
-  const tabs=Array.from(shell.querySelectorAll('.continent-tab'));
-  const filters=Array.from(shell.querySelectorAll('.continent-filter'));
-  function playTick(){}
-  function showRegion(key,sound){
-    panels.forEach(p=>p.classList.toggle('active',p.dataset.continentPanel===key));
-    tabs.forEach(t=>t.classList.toggle('active',t.dataset.continent===key));
-    if(sound) playTick();
-  }
-  function showFilter(key,sound){
-    shell.dataset.filter=key;
-    filters.forEach(f=>f.classList.toggle('active',f.dataset.mapFilter===key));
-    if(sound) playTick();
-  }
-  tabs.forEach(t=>t.addEventListener('click',()=>showRegion(t.dataset.continent,true)));
-  filters.forEach(f=>f.addEventListener('click',()=>showFilter(f.dataset.mapFilter,true)));
-  showFilter('all',false);
-})();
-
-
-// Stable U.A.C continental map click-card details.
-(function(){
-  const shell=document.querySelector('.continental-map-shell');
-  if(!shell) return;
-  function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function updateCard(el){
-    const panel=el.closest('.continent-panel'); if(!panel) return;
-    const card=panel.querySelector('.map-detail-card'); if(!card) return;
-    const title=el.dataset.title || el.getAttribute('title') || 'U.A.C 관제 기록';
-    const status=el.dataset.status || '상태 기록 없음';
-    const records=el.dataset.records || '지역지도';
-    card.innerHTML='<b>'+esc(title)+'</b><p>'+esc(status)+'</p><small>관련 기록: '+esc(records)+'</small>';
-  }
-  shell.querySelectorAll('.continent-marker,.map-overlay').forEach(el=>{
-    el.addEventListener('click',()=>{try{if(typeof play==='function' && typeof audio!=='undefined') play(audio.menu);}catch(e){} updateCard(el);});
-  });
-  shell.querySelectorAll('.continent-panel').forEach(panel=>{
-    const first=panel.querySelector('.continent-marker,.map-overlay'); if(first) updateCard(first);
-  });
-})();
-
-
-// PATCH6_2_5: legacy geographic coordinate map renderer removed.
-// The active region map is now the final semi-abstract U.A.C operational-surface renderer appended below.
-
-// U.A.C regional surface-link overlay. Replaces code-dump loading with map-control surface alignment.
-document.addEventListener('DOMContentLoaded', function(){
-  const shell = document.querySelector('.continental-map-shell.datamap-v3');
-  if(!shell) return;
-  const regionNames = {
-    world:'세계 관제 개요', east:'동아시아 관제면', europe:'유럽 관제면', north:'북미 관제면',
-    southasia:'남아시아 관제면', seindian:'동남아·인도양 관제면', oceania:'오세아니아 관제면', mideast:'중동 관제면', africa:'아프리카 관제면'
-  };
-  const stepText = ['감시망 수신','좌표면 정렬','오염권 레이어 대기','봉쇄선 레이어 동기화','지도 표면 개방'];
-  function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function ensureLoader(){
-    let el = shell.querySelector('.uac-map-code-loader');
-    if(el) return el;
-    el = document.createElement('div');
-    el.className = 'uac-map-code-loader uac-map-surface-loader';
-    el.setAttribute('aria-hidden','true');
-    el.innerHTML = '<div class="surface-frame"><i></i><i></i><i></i><i></i></div>'+ 
-      '<div class="surface-scan-x"></div><div class="surface-scan-y"></div>'+ 
-      '<div class="red-band"></div>'+ 
-      '<div class="status-card"><div class="status-title"><b>REGION MAP ACCESS</b><em data-loader-region>세계 관제 개요</em></div>'+ 
-      '<div class="status-log">'+stepText.map(function(t){return '<span>'+esc(t)+'</span>';}).join('')+'</div>'+ 
-      '<div class="progress-row"><i></i></div></div>'+ 
-      '<div class="sector-grid">'+Array.from({length:20},function(){return '<i></i>';}).join('')+'</div>';
-    shell.appendChild(el);
-    return el;
-  }
-  let timer = null;
-  function showMapSurfaceLoader(regionKey, duration){
-    return;
-  }
-  shell.querySelectorAll('.continent-tab').forEach(function(btn){
-    btn.addEventListener('click', function(){showMapSurfaceLoader(btn.dataset.continent || 'world', 1050);}, true);
-  });
-  document.querySelectorAll('.side-menu a[data-target="zone-map"]').forEach(function(link){
-    link.addEventListener('click', function(){
-      const active = shell.querySelector('.continent-tab.active');
-      setTimeout(function(){showMapSurfaceLoader(active ? active.dataset.continent : 'world', 1120);}, 80);
-    }, false);
-  });
-  if((location.hash || '').replace('#','') === 'zone-map'){
-    setTimeout(function(){
-      const active = shell.querySelector('.continent-tab.active');
-      showMapSurfaceLoader(active ? active.dataset.continent : 'world', 1120);
-    }, 520);
-  }
-});
-
-
-// Project Curse 3차 패치: 서버 상태 바 + 지도 레이어 부팅 + 확대/축소 + 상세 패널 + 문서 상태 뱃지.
-(function(){
-  const ready = (fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-    // 1) 상단 서버 상태 바
-    function ensureStatusBar(){
-      let bar=document.querySelector('.uac-server-statusbar');
-      if(bar) return bar;
-      bar=document.createElement('div');
-      bar.className='uac-server-statusbar';
-      bar.innerHTML='<span class="status-dot"></span><b>U.A.C RECORD NODE</b><span class="status-field" data-srv-node>ONLINE</span><span class="status-field status-warn" data-srv-field>N.H.C FIELD LINK: LIMITED</span><span class="status-field" data-srv-trace>F.H.C TRACE: NONE</span><span class="status-field status-map" data-srv-map>MAP SYNC: STANDBY</span><span class="status-field" data-srv-integrity>RECORD INTEGRITY: 72%</span><span class="status-field status-breadcrumb" data-srv-breadcrumb>U.A.C 기록 단말기 / HOME</span><span class="status-scroll" data-srv-notice>PROJECT CURSE / SCOPELOCKED SERVER</span>';
-      document.body.prepend(bar);
-      document.body.classList.add('has-uac-statusbar');
-      return bar;
-    }
-    const statusBar=ensureStatusBar();
-    function setStatus(mode, region){
-      const map=statusBar.querySelector('[data-srv-map]');
-      const trace=statusBar.querySelector('[data-srv-trace]');
-      const notice=statusBar.querySelector('[data-srv-notice]');
-      const crumb=statusBar.querySelector('[data-srv-breadcrumb]');
-      const field=statusBar.querySelector('[data-srv-field]');
-      const regionName={world:'GLOBAL',east:'EAST-ASIA',europe:'EUROPE',north:'NORTH-AMERICA',southasia:'SOUTH-ASIA',seindian:'SEA/INDIAN',oceania:'OCEANIA',mideast:'MIDDLE-EAST',africa:'AFRICA'}[region||'']||'';
-      if(mode==='map'){
-        map.textContent='MAP SYNC: ACTIVE '+(regionName?'/ '+regionName:'');
-        trace.textContent='F.H.C TRACE: NONE'; trace.className='status-field';
-        field.textContent='N.H.C FIELD LINK: LIMITED';
-        notice.textContent='REGION LAYER / ZONE / BLOCKADE NETWORK READY'; if(crumb) crumb.textContent='U.A.C 기록 단말기 / 지역지도 / '+(regionName||'GLOBAL');
-      }else if(mode==='archive'){
-        map.textContent='MAP SYNC: STANDBY';
-        trace.textContent='F.H.C TRACE: INDEX SCAN'; trace.className='status-field status-warn';
-        notice.textContent='ARCHIVE INDEX OPEN / RECORD BADGES ACTIVE'; if(crumb) crumb.textContent='U.A.C 기록 단말기 / 기록보관서';
-      }else if(mode==='faction'){
-        map.textContent='MAP SYNC: STANDBY';
-        trace.textContent='RELATION TRACE: ACTIVE'; trace.className='status-field status-map';
-        notice.textContent='FACTION NETWORK ANALYSIS MODULE'; if(crumb) crumb.textContent='U.A.C 기록 단말기 / 세력 관계';
-      }else{
-        map.textContent='MAP SYNC: STANDBY';
-        trace.textContent='F.H.C TRACE: NONE'; trace.className='status-field';
-        notice.textContent='PROJECT CURSE / SCOPELOCKED SERVER'; if(crumb) crumb.textContent='U.A.C 기록 단말기 / HOME';
-      }
-    }
-    function currentPage(){const a=document.querySelector('.content-page.active'); return a?a.id:(location.hash||'').replace('#','');}
-    function updateStatusFromPage(){
-      const id=currentPage();
-      const active=shell?shell.querySelector('.continent-tab.active'):null;
-      if(id==='zone-map') setStatus('map',active?active.dataset.continent:'world');
-      else if(id==='archive-entry') setStatus('archive');
-      else if(id==='faction-info'||id==='faction-relation') setStatus('faction');
-      else setStatus('home');
-    }
-    document.querySelectorAll('.side-menu a[data-target]').forEach(a=>a.addEventListener('click',()=>setTimeout(updateStatusFromPage,60)));
-    window.addEventListener('hashchange',()=>setTimeout(updateStatusFromPage,60));
-    setTimeout(updateStatusFromPage,120);
-
-    // 2) 문서 상태 뱃지
-    const badgeMap=[
-      {re:/F\.H\.C|Cults|극비|검열|보안/i, cls:'badge-blacktag', text:'BLACK TAG'},
-      {re:/타락 개체|FCR|괴이|오염/i, cls:'badge-contaminated', text:'CONTAMINATED'},
-      {re:/레드존|Redzone|NHC|봉쇄|현장/i, cls:'badge-restricted', text:'RESTRICTED'},
-      {re:/사쿠마|실종|아마리온|부검|레드울프|회수|영상/i, cls:'badge-partial', text:'PARTIAL'},
-      {re:/축복|유전자|병기/i, cls:'badge-redacted', text:'REDACTED'}
-    ];
-    document.querySelectorAll('.doc-card').forEach(card=>{
-      if(card.querySelector('.doc-status-badge')) return;
-      const text=card.textContent||'';
-      const pick=badgeMap.find(b=>b.re.test(text))||{cls:'badge-verified',text:'VERIFIED'};
-      const row=card.querySelector('.status-row')||card;
-      const badge=document.createElement('span');
-      badge.className='doc-status-badge '+pick.cls;
-      badge.textContent=pick.text;
-      row.appendChild(badge);
-    });
-
-    if(!shell) return;
-    shell.classList.add('map-patch3');
-
-    // 3) 지도 확대/축소 / 넓게 보기 / 드래그 이동
-    const zoomState=new WeakMap();
-    function getState(frame){
-      let s=zoomState.get(frame);
-      if(!s){s={scale:1,x:0,y:0,wide:false}; zoomState.set(frame,s);} return s;
-    }
-    function clampViewport(frame){
-      const s=getState(frame);
-      const scale=Math.max(1,Math.min(3.2,+s.scale||1));
-      s.scale=scale;
-      if(scale<=1.001){s.x=0;s.y=0;return;}
-      const maxX=Math.max(0,(frame.clientWidth||0)*(scale-1)/2);
-      const maxY=Math.max(0,(frame.clientHeight||0)*(scale-1)/2);
-      s.x=Math.max(-maxX,Math.min(maxX,+s.x||0));
-      s.y=Math.max(-maxY,Math.min(maxY,+s.y||0));
-    }
-    function syncMarkerScale(frame){
-      const s=getState(frame);
-      const inv=(1/(Math.max(1,+s.scale||1))).toFixed(4);
-      frame.style.setProperty('--pc-marker-inv', inv);
-      frame.querySelectorAll('.node-label,.zone-code-label,.line-code-label,.debug-code').forEach(el=>{
-        el.style.setProperty('--pc-marker-inv', inv);
-      });
-    }
-    function applyViewport(frame){
-      const s=getState(frame);
-      clampViewport(frame);
-      const transform=`translate(${s.x}px, ${s.y}px) scale(${s.scale})`;
-      // 5.5.1: one viewport state drives base map, SVG markers, and tactical LOD together.
-      frame.style.setProperty('--map-x', s.x+'px');
-      frame.style.setProperty('--map-y', s.y+'px');
-      frame.style.setProperty('--map-scale', String(s.scale));
-      frame.querySelectorAll('.continent-map-img,.map-data-layer,.pc55-tactical-lod').forEach(el=>{el.style.transform=transform;});
-      syncMarkerScale(frame);
-      const read=frame.querySelector('.map-zoom-readout'); if(read) read.textContent=Math.round(s.scale*100)+'%';
-      const stage=frame.querySelector('.map-zoom-stage'); if(stage){ const n=s.scale<1.15?1:(s.scale<1.55?2:(s.scale<2.05?3:(s.scale<2.65?4:5))); const labels={1:'ZOOM 1 / 권역 관제',2:'ZOOM 2 / 작전권 관제',3:'ZOOM 3 / 전술 관제',4:'ZOOM 4 / 시설 관제',5:'ZOOM 5 / 기록 분석'}; stage.textContent=labels[n]; frame.dataset.zoomStage=String(n); }
-      frame.classList.toggle('map-wide-mode',!!s.wide);
-      const wideBtn=frame.querySelector('[data-map-tool="wide"]'); if(wideBtn) wideBtn.classList.toggle('active',!!s.wide);
-    }
-    function scheduleViewport(frame){
-      // 5.5.6: pointer drag can emit dozens of move events per second; schedule transform sync once per animation frame.
-      if(frame._pc556ViewportRAF) return;
-      frame._pc556ViewportRAF=requestAnimationFrame(()=>{frame._pc556ViewportRAF=0; applyViewport(frame);});
-    }
-    function zoomFrame(frame,delta){
-      const s=getState(frame);
-      s.scale=Math.max(1,Math.min(3.2, +(s.scale+delta).toFixed(2)));
-      if(s.scale<=1.001){s.x=0;s.y=0;s.wide=false;}
-      applyViewport(frame);
-    }
-    function resetFrame(frame){const s=getState(frame); s.scale=1;s.x=0;s.y=0;s.wide=false;applyViewport(frame);}
-    function wideFrame(frame){const s=getState(frame); s.scale=1;s.x=0;s.y=0;s.wide=!s.wide; applyViewport(frame);}
-    function ensureTools(frame){
-      if(frame.querySelector('.map-viewport-tools')) return;
-      const tools=document.createElement('div');
-      tools.className='map-viewport-tools';
-      tools.innerHTML='<button type="button" data-map-tool="zoom-in">+</button><button type="button" data-map-tool="zoom-out">−</button><span class="map-zoom-readout">100%</span><span class="map-zoom-stage">ZOOM 1 / 권역 보기</span><button type="button" data-map-tool="reset">FIT</button><button type="button" data-map-tool="wide">WIDE</button>';
-      frame.appendChild(tools);
-      tools.addEventListener('click',e=>{
-        const btn=e.target.closest('button'); if(!btn) return;
-        e.preventDefault(); e.stopPropagation();
-        const act=btn.dataset.mapTool;
-        if(act==='zoom-in') zoomFrame(frame,.18);
-        else if(act==='zoom-out') zoomFrame(frame,-.18);
-        else if(act==='reset') resetFrame(frame);
-        else if(act==='wide') wideFrame(frame);
-      });
-      frame.addEventListener('wheel',e=>{
-        if(!e.ctrlKey && Math.abs(e.deltaY)<30) return;
-        e.preventDefault(); zoomFrame(frame,e.deltaY<0?.14:-.14);
-      },{passive:false});
-      let drag=null;
-      frame.addEventListener('pointerdown',e=>{
-        if(e.target.closest('.map-viewport-tools') || e.target.closest('.map-detail-card')) return;
-        const s=getState(frame);
-        if(s.scale<=1.001) return;
-        drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:s.x,startY:s.y};
-        frame.classList.add('is-dragging');
-        try{frame.setPointerCapture(e.pointerId);}catch(_e){}
-      });
-      frame.addEventListener('pointermove',e=>{
-        if(!drag || drag.id!==e.pointerId) return;
-        const s=getState(frame); s.x=drag.startX+(e.clientX-drag.x); s.y=drag.startY+(e.clientY-drag.y); clampViewport(frame); scheduleViewport(frame);
-      });
-      function endDrag(e){ if(drag && (!e || drag.id===e.pointerId)){drag=null; frame.classList.remove('is-dragging');}}
-      frame.addEventListener('pointerup',endDrag); frame.addEventListener('pointercancel',endDrag); frame.addEventListener('lostpointercapture',endDrag);
-      applyViewport(frame);
-    }
-    shell.querySelectorAll('.continent-map-frame').forEach(ensureTools);
-
-    // 4) 지역지도 레이어 부팅 연출
-    const bootSteps=['감시망 수신','좌표면 정렬','오염권 레이어 대기','시설 표식 확인','봉쇄선 레이어 동기화','사건 좌표 대기','관제면 개방'];
-    function ensureBoot(frame){
-      let boot=frame.querySelector('.uac-layer-boot');
-      if(boot) return boot;
-      boot=document.createElement('div');
-      boot.className='uac-layer-boot';
-      boot.innerHTML='<div class="boot-panel"><div class="boot-title">REGION MAP ACCESS<em data-boot-region>REGION</em></div><div class="boot-steps">'+bootSteps.map(s=>'<span>'+esc(s)+'</span>').join('')+'</div><div class="boot-progress"><i></i></div></div>';
-      frame.appendChild(boot); return boot;
-    }
-    function runLayerBoot(region){
-      setStatus('map', region);
-      return;
-    }
-    shell.querySelectorAll('.continent-tab').forEach(btn=>btn.addEventListener('click',()=>setTimeout(()=>runLayerBoot(btn.dataset.continent||'world'),80),false));
-    document.querySelectorAll('.side-menu a[data-target="zone-map"]').forEach(link=>link.addEventListener('click',()=>setTimeout(()=>{
-      const active=shell.querySelector('.continent-tab.active'); runLayerBoot(active?active.dataset.continent:'world');
-    },160)));
-    if((location.hash||'').replace('#','')==='zone-map') setTimeout(()=>{const active=shell.querySelector('.continent-tab.active'); runLayerBoot(active?active.dataset.continent:'world');},780);
-
-    // 5) 마커 상세 패널 강화. 기존 카드 정보를 덮지 않고 서버식 상세 형식으로 재표시.
-    function linkedRecords(records){
-      const parts=String(records||'지역지도').split('/').map(s=>s.trim()).filter(Boolean).slice(0,4);
-      return parts.length?parts:['지역지도'];
-    }
-    function strengthenCardFromElement(el){
-      const panel=el.closest('.continent-panel'); if(!panel) return;
-      const card=panel.querySelector('.map-detail-card'); if(!card) return;
-      const code=el.getAttribute('data-code')||'NO-CODE';
-      const title=el.getAttribute('data-title')||'U.A.C 관제 기록';
-      const type=el.getAttribute('data-visual')||el.getAttribute('data-filter')||'기록';
-      const role=el.getAttribute('data-role')||'node';
-      const status=el.getAttribute('data-status')||'상태 기록 없음';
-      const records=el.getAttribute('data-records')||'지역지도';
-      const surface=/해상|항로|maritime|sea/i.test([title,type,role,status,records].join(' '))?'해상/항로':'육상/권역';
-      card.classList.add('detail-v3');
-      card.innerHTML='<div class="detail-code-row"><span class="detail-code">'+esc(code)+'</span><span class="detail-type">'+esc(type)+'</span></div>'+ 
-        '<b>'+esc(title)+'</b><p class="detail-status">'+esc(status)+'</p>'+ 
-        '<div class="detail-grid"><i>역할</i><b>'+esc(role)+'</b><i>표면</i><b>'+esc(surface)+'</b><i>관측</i><b>FIELD REVIEW</b><i>동기화</i><b>MAP PATCH 3</b></div>'+ 
-        '<div class="linked-records">'+linkedRecords(records).map(r=>'<span>'+esc(r)+'</span>').join('')+'</div>';
-    }
-    shell.addEventListener('click',e=>{
-      const el=e.target.closest('[data-map-item]'); if(el) setTimeout(()=>strengthenCardFromElement(el),0);
-    },true);
-    shell.querySelectorAll('.continent-point').forEach(li=>li.addEventListener('click',()=>{
-      const panel=li.closest('.continent-panel'); if(!panel) return;
-      const code=(li.querySelector('b')||{}).textContent||'';
-      const target=Array.from(panel.querySelectorAll('[data-map-item]')).find(n=>code && code.includes(n.getAttribute('data-code')));
-      if(target) setTimeout(()=>strengthenCardFromElement(target),0);
-    }));
-    shell.querySelectorAll('.continent-panel').forEach(panel=>{const first=panel.querySelector('[data-map-item]'); if(first) strengthenCardFromElement(first);});
-  });
-})();
-
-
-// MapPatch5_SAFE_UI_REAPPLY: lightweight status/badge/loading/zoom-stage polish only.
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch5:'Safe UI Reapply'});
 
 
 // PATCH 5.1 — F.H.C restricted record effect. Narrow and non-destructive.
@@ -671,7 +340,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch5:'
       const integrity=document.querySelector('[data-srv-integrity]');
       document.body.classList.toggle('has-fhc-trace',!!on);
       if(trace){ trace.textContent=on?'F.H.C TRACE: ACTIVE':'F.H.C TRACE: INDEX SCAN'; trace.className='status-field status-warn'; }
-      if(notice && on) notice.textContent='F.H.C INTERNAL ACCESS / PARTIAL RECORD RELEASED';
+      if(notice && on) notice.textContent='RESTRICTED RECORD MOUNT / PARTIAL RECORD RELEASED';
       if(integrity && on) integrity.textContent='RECORD INTEGRITY: 61%';
     }
 
@@ -696,7 +365,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch5:'
       el=document.createElement('div');
       el.className='fhc-access-overlay';
       el.setAttribute('aria-hidden','true');
-      el.innerHTML='<div class="top"><b>F.H.C INTERNAL ACCESS</b><span>RESTRICTED NODE</span></div>'+ 
+      el.innerHTML='<div class="top"><b>RESTRICTED RECORD MOUNT</b><span>RESTRICTED NODE</span></div>'+ 
         '<div class="grid"><span>CLEARANCE MISMATCH DETECTED</span><span>PARTIAL RECORD RELEASED</span><span>TRACE LOG ENABLED</span><span>BLACK TAG CROSS-CHECK</span></div><div class="bar"><i></i></div>';
       document.body.appendChild(el);
       return el;
@@ -957,7 +626,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch521
       const integrity=document.querySelector('[data-srv-integrity]');
       if(on){
         if(trace){ trace.textContent='BIO SCAN: ACTIVE'; trace.className='status-field status-map'; }
-        if(notice) notice.textContent='BIOLOGICAL TRACE SCAN / ENTITY CLASSIFICATION / HOST RESPONSE INDEX';
+        if(notice) notice.textContent='BIOLOGICAL TRACE SCAN / BIOLOGICAL RECORD MOUNT / HOST RESPONSE INDEX';
         if(integrity) integrity.textContent='RECORD INTEGRITY: 64%';
       }
     }
@@ -1052,8 +721,32 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch53:
     const audioKey='pc_audio_legacy2003_fixed';
     let ctx=null;
     function audioEnabled(){ return localStorage.getItem(audioKey)!=='off'; }
-    function tone(){ return; }
-    function pulse(){ return; }
+    function tone(freq=520,dur=0.055,vol=0.018,type='square'){
+      if(!audioEnabled()) return;
+      try{
+        const AC=window.AudioContext||window.webkitAudioContext;
+        if(!AC) return;
+        ctx=ctx||new AC();
+        if(ctx.state==='suspended') ctx.resume().catch(()=>{});
+        const o=ctx.createOscillator();
+        const g=ctx.createGain();
+        o.type=type;
+        o.frequency.setValueAtTime(freq,ctx.currentTime);
+        g.gain.setValueAtTime(0.0001,ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(Math.max(vol,0.0002),ctx.currentTime+0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+dur);
+        o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+dur+0.02);
+      }catch(e){}
+    }
+    function pulse(kind){
+      // 5.15.2d: disable old synthesized faction beeps. Use unified analog tape/relay audio bus.
+      try{
+        const cue = (kind==='hostile'||kind==='ritual') ? 'restricted' : 'drawer';
+        if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function'){
+          window.ProjectCurseAudio.playCue(cue, 260);
+        }
+      }catch(e){}
+    }
 
     const keyAliases={
       uac:['U.A.C','UAC','중앙 통제'],
@@ -1162,3828 +855,3951 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch53:
     }
 
     function addFactionInfoPulse(){
-      return;
-    }
-
-    function ensureSurfaceLoader(box){
-      let el=box.querySelector(':scope > .record-surface-loader');
-      if(el) return el;
-      el=document.createElement('div');
-      el.className='record-surface-loader';
-      el.innerHTML='<div><b>RECORD PAGE</b><span>INDEX PAGE SWITCH / SECTOR VERIFY / LOCAL CACHE READY</span><i></i></div>';
-      box.appendChild(el);
-      return el;
-    }
-    function surfaceFx(btn){
-      return;
-    }
-    function bindRecordSurfaceTabs(){
-      document.querySelectorAll('.page-tab,.sub-tab').forEach(btn=>{
-        if(btn.dataset.surface54Bound) return;
-        btn.dataset.surface54Bound='1';
-        btn.addEventListener('click',()=>surfaceFx(btn),true);
+      const detail=document.getElementById('factionDetail');
+      document.querySelectorAll('.faction-tile').forEach(tile=>{
+        if(tile.dataset.trace54InfoBound) return;
+        tile.dataset.trace54InfoBound='1';
+        tile.addEventListener('click',()=>{
+          pulse('relation');
+          if(!detail) return;
+          /* slide sweep disabled in 5.15.2z */
+        },true);
       });
     }
 
     markRelationTree();
     addFactionInfoPulse();
-    bindRecordSurfaceTabs();
-    setTimeout(()=>{markRelationTree(); addFactionInfoPulse(); bindRecordSurfaceTabs();},600);
+    setTimeout(()=>{markRelationTree(); addFactionInfoPulse();},600);
   });
 })();
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:'Faction Relation Trace + Record Surface Transition'});
+window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:'Faction Relation Trace'});
 
 
-// PATCH 5.5 — Tactical map zoom detail layers.
-// Scope lock: regional map only. Archive / F.H.C / video / bio scan / faction trace are not modified.
+// MapPatch 5.9.1 — MapViewport_TelemetryLog_Expansion
+// Clean runtime expansion: single map renderer with enlarged viewport and telemetry log panel.
+// This module owns the main drawer, map drawer, city operation map, and single-DOM relation tree.
 (function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  const ready = (fn) => { if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); };
+
   ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell || shell.dataset.patch55Applied) return;
-    shell.dataset.patch55Applied='1';
-    shell.classList.add('map-patch55');
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const mark = (name) => 'assets/faction_marks/' + name + '.webp';
 
-    const filterNames={
-      all:'전체 레이어', zone:'오염 구역', 'zone-red':'레드존', 'zone-yellow':'옐로우존', 'zone-green':'그린존', 'zone-white':'화이트존', 'zone-black':'블랙존', facility:'작전 시설', anomaly:'현상 기록', incident:'사건 좌표', blockade:'봉쇄선', 'blockade-node':'봉쇄 거점'
-    };
-    const stageData={
-      1:{title:'ZOOM 1 / 권역 보기', desc:'대형 오염권 · 주요 봉쇄선 · 대표 거점만 표시', code:'REGION OVERVIEW'},
-      2:{title:'ZOOM 2 / 작전권 보기', desc:'작전 거점 · 감시선 · 항만 검문권 · 외곽선 표시', code:'OPERATION SECTOR'},
-      3:{title:'ZOOM 3 / 전술 상세', desc:'사건 좌표 · 봉쇄 게이트 · 현상 기록점 · 제한 경로 표시', code:'TACTICAL DETAIL'},
-      4:{title:'ZOOM 4 / 시설 구조', desc:'시설 코드 · 방어선 분할 · 내부 노드 표시', code:'FACILITY STRUCTURE'},
-      5:{title:'ZOOM 5 / 기록 분석', desc:'사건 로그 연결선 · 오염 확산 추정선 · 경고 라벨 표시', code:'RECORD ANALYSIS'}
-    };
-    const regionNames={world:'GLOBAL',east:'EAST-ASIA',europe:'EUROPE',north:'NORTH-AMERICA',southasia:'SOUTH-ASIA',seindian:'SEA/INDIAN',oceania:'OCEANIA',mideast:'MIDDLE-EAST',africa:'AFRICA'};
+    const pages = Array.from(document.querySelectorAll('.content-page'));
+    const sideLinks = Array.from(document.querySelectorAll('.side-menu a[data-target]'));
+    const shell = document.querySelector('.pc584-city-map-shell');
+    const stage = document.getElementById('pc584-city-stage');
+    const info = document.getElementById('pc584-city-info');
 
-    let audioCtx=null, lastTone=0;
-    function soundEnabled(){ return localStorage.getItem('pc_audio_legacy2003_fixed')!=='off'; }
-    function mapTone(kind){
-      return;
-      if(!soundEnabled()) return;
-      const now=performance.now();
-      if(now-lastTone<120) return;
-      lastTone=now;
-      try{
-        const AC=window.AudioContext||window.webkitAudioContext;
-        if(!AC) return;
-        audioCtx=audioCtx||new AC();
-        if(audioCtx.state==='suspended') audioCtx.resume().catch(()=>{});
-        const t=audioCtx.currentTime;
-        const o=audioCtx.createOscillator();
-        const g=audioCtx.createGain();
-        const lp=audioCtx.createBiquadFilter();
-        const f={zoomIn:[150,230],zoomOut:[230,150],wide:[118,150],filter:[260,300],region:[135,195],audit:[360,260],reset:[190,160]}[kind]||[180,220];
-        o.type='sine';
-        lp.type='lowpass';
-        lp.frequency.setValueAtTime(kind==='filter'?900:620,t);
-        o.frequency.setValueAtTime(f[0],t);
-        o.frequency.linearRampToValueAtTime(f[1],t+0.20);
-        g.gain.setValueAtTime(0.0001,t);
-        g.gain.linearRampToValueAtTime(kind==='audit'?0.010:0.007,t+0.035);
-        g.gain.exponentialRampToValueAtTime(0.0001,t+0.28);
-        o.connect(lp); lp.connect(g); g.connect(audioCtx.destination);
-        o.start(t); o.stop(t+0.30);
-      }catch(e){}
+    function showPage(id){
+      if(!pages.length) return;
+      if(!pages.some(p => p.id === id)) id = 'history';
+      pages.forEach(p => p.classList.toggle('active', p.id === id));
+      sideLinks.forEach(a => {
+        a.classList.toggle('active', a.dataset.target === id);
+      });
+      const content = document.querySelector('.legacy-content');
+      if(content) content.scrollTop = 0;
+      history.replaceState(null, '', '#' + id);
     }
 
-    function makeEl(tag, cls, text){
-      const el=document.createElement(tag);
-      if(cls) el.className=cls;
-      if(text!=null) el.textContent=text;
-      return el;
+    function syncAccordionFor(link){
+      document.querySelectorAll('.pc585-menu-group').forEach(group => {
+        const shouldOpen = !!(link && group.contains(link));
+        if(shouldOpen){
+          group.classList.add('open');
+          const heading = group.querySelector('.pc585-menu-heading');
+          if(heading){
+            heading.setAttribute('aria-expanded','true');
+            const icon = heading.querySelector('span');
+            if(icon) icon.textContent = '▾';
+          }
+        }
+      });
     }
-    function line(parent,lvl,x1,y1,x2,y2,cls){
-      const el=makeEl('i','pc55-lod-item pc55-lod-'+lvl+' pc55-line '+(cls||''));
-      const dx=x2-x1, dy=y2-y1;
-      const len=Math.sqrt(dx*dx+dy*dy);
-      const angle=Math.atan2(dy,dx)*180/Math.PI;
-      el.style.left=x1+'%'; el.style.top=y1+'%'; el.style.width=len+'%'; el.style.transform='rotate('+angle+'deg)';
-      parent.appendChild(el); return el;
-    }
-    function dot(parent,lvl,x,y,cls,label){
-      const el=makeEl('i','pc55-lod-item pc55-lod-'+lvl+' pc55-dot '+(cls||''));
-      el.style.left=x+'%'; el.style.top=y+'%';
-      if(label) el.setAttribute('data-label',label);
-      parent.appendChild(el); return el;
-    }
-    function block(parent,lvl,x,y,w,h,cls,label){
-      const el=makeEl('i','pc55-lod-item pc55-lod-'+lvl+' pc55-block '+(cls||''));
-      el.style.left=x+'%'; el.style.top=y+'%'; el.style.width=w+'%'; el.style.height=h+'%';
-      if(label) el.setAttribute('data-label',label);
-      parent.appendChild(el); return el;
-    }
-    function label(parent,lvl,x,y,text,cls){
-      const el=makeEl('span','pc55-lod-item pc55-lod-'+lvl+' pc55-lod-label '+(cls||''),text);
-      el.style.left=x+'%'; el.style.top=y+'%';
-      parent.appendChild(el); return el;
-    }
-    function seedFromRegion(region){
-      let h=0; String(region||'world').split('').forEach(ch=>{h=(h*31+ch.charCodeAt(0))%997;});
-      return h;
-    }
-    function ensureLod(frame){
-      if(frame.querySelector('.pc55-tactical-lod')) return;
-      const panel=frame.closest('.continent-panel');
-      const region=panel?.dataset.continentPanel||'world';
-      const seed=seedFromRegion(region);
-      const layer=makeEl('div','pc55-tactical-lod');
-      layer.setAttribute('aria-hidden','true');
-      frame.insertBefore(layer, frame.querySelector('.map-data-layer') || frame.firstChild);
 
-      // ZOOM 1/2: broad sector grid and primary routes.
-      line(layer,2, 12+(seed%9), 72, 82, 38+(seed%8), 'route-main');
-      line(layer,2, 20, 22+(seed%6), 75-(seed%7), 64, 'route-watch');
-      line(layer,2, 9, 50, 92, 50+(seed%5), 'route-soft');
-      label(layer,2, 6, 8, 'SECTOR '+(regionNames[region]||region).replace(/[^A-Z/]/g,''), 'sector');
-      label(layer,2, 73, 14+(seed%5), 'BORDER WATCH', 'sector soft');
+    function setupMainDrawer(){
+      const body = document.body;
+      body.classList.add('pc584-city-operation-ready');
+      body.classList.remove('pc584-main-drawer-open');
+      const sidebar = document.querySelector('.legacy-sidebar');
+      if(!sidebar) return;
+      document.querySelectorAll('.pc584-main-drawer-toggle,.pc584-drawer-backdrop').forEach(el => el.remove());
 
-      // ZOOM 3: checkpoints and anomaly/incident micro-points.
-      const pts=[[32,34],[45,43],[58,38],[64,57],[38,63],[72,48],[24,55],[51,70]];
-      pts.forEach((p,i)=>dot(layer,3,p[0]+((seed+i)%5-2),p[1]+((seed*i)%5-2),i%3===0?'gate':(i%3===1?'anomaly':'incident'),['GATE','ANM','INC'][i%3]+'-'+String(i+1).padStart(2,'0')));
-      line(layer,3,31,34,45,43,'restricted');
-      line(layer,3,45,43,58,38,'restricted');
-      line(layer,3,58,38,64,57,'restricted red');
-      line(layer,3,38,63,51,70,'restricted');
-      label(layer,3, 18, 84, 'ENTRY ROUTE LIMITED', 'warn');
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'pc584-main-drawer-toggle';
+      toggle.setAttribute('aria-label', '왼쪽 메뉴 열기');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.textContent = '☰';
 
-      // ZOOM 4: facility blocks, defense segmentation and internal nodes.
-      block(layer,4, 33+(seed%5), 28, 12, 7, 'facility','FAC-A');
-      block(layer,4, 55, 48+(seed%4), 10, 6, 'facility','FAC-B');
-      block(layer,4, 68, 35, 8, 9, 'facility command','CMD');
-      block(layer,4, 27, 58, 9, 6, 'facility muted','OBS');
-      line(layer,4, 29, 58, 76, 35, 'defense');
-      line(layer,4, 33, 64, 67, 63, 'defense soft');
-      label(layer,4, 55, 30, 'INNER NODE / 시설 구조', 'facility-tag');
+      const backdrop = document.createElement('div');
+      backdrop.className = 'pc584-drawer-backdrop';
+      document.body.append(toggle, backdrop);
 
-      // ZOOM 5: analysis vectors and warning labels.
-      line(layer,5, 36, 34, 67, 52, 'analysis red');
-      line(layer,5, 42, 62, 71, 43, 'analysis yellow');
-      line(layer,5, 50, 28, 60, 70, 'analysis soft');
-      dot(layer,5, 68, 52, 'warning','LOG');
-      dot(layer,5, 42, 62, 'warning yellow','SPREAD');
-      label(layer,5, 66, 56, 'LOG LINK', 'warn');
-      label(layer,5, 39, 68, '확산 추정선', 'warn yellow');
-      label(layer,5, 10, 92, 'RECORD ANALYSIS LAYER', 'analysis-label');
-
-      const card=makeEl('div','pc55-stage-card');
-      card.innerHTML='<b data-pc55-stage-title>ZOOM 1 / 권역 보기</b><span data-pc55-stage-desc>대형 오염권 · 주요 봉쇄선 · 대표 거점만 표시</span><em data-pc55-stage-code>REGION OVERVIEW</em>';
-      frame.appendChild(card);
-      const hud=makeEl('div','pc55-sync-hud');
-      hud.innerHTML='<b>TACTICAL LAYER SYNC</b><span>전술 레이어 동기화</span>';
-      frame.appendChild(hud);
-    }
-    function activePanel(){ return shell.querySelector('.continent-panel.active'); }
-    function activeFrame(){ return activePanel()?.querySelector('.continent-map-frame'); }
-    function updateStage(frame){
-      if(!frame) return;
-      let n=parseInt(frame.dataset.zoomStage||'1',10);
-      if(!stageData[n]) n=1;
-      frame.dataset.pc55Stage=String(n);
-      const d=stageData[n];
-      const t=frame.querySelector('[data-pc55-stage-title]');
-      const s=frame.querySelector('[data-pc55-stage-desc]');
-      const c=frame.querySelector('[data-pc55-stage-code]');
-      if(t) t.textContent=d.title;
-      if(s) s.textContent=d.desc;
-      if(c) c.textContent=d.code;
-      const status=document.querySelector('[data-srv-map]');
-      if(status && (document.querySelector('.content-page.active')?.id==='zone-map')){
-        const region=activePanel()?.dataset.continentPanel||'world';
-        status.textContent='MAP SYNC: ACTIVE / '+(regionNames[region]||region.toUpperCase())+' / Z'+n;
+      function set(open){
+        body.classList.toggle('pc584-main-drawer-open', !!open);
+        toggle.textContent = open ? '×' : '☰';
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       }
-    }
-    function showSync(frame,title,desc){
-      // Patch6.2.2: disable map/status sync popups and HUD flashes.
-      return;
-      if(!frame) return;
-      const hud=frame.querySelector('.pc55-sync-hud');
-      if(!hud) return;
-      hud.querySelector('b').textContent=title||'TACTICAL LAYER SYNC';
-      hud.querySelector('span').textContent=desc||'전술 레이어 동기화';
-      hud.classList.remove('is-active');
-      requestAnimationFrame(()=>hud.classList.add('is-active'));
-      clearTimeout(hud._pc55Timer);
-      hud._pc55Timer=setTimeout(()=>hud.classList.remove('is-active'),320);
-    }
-    function ensureStatus(){
-      let status=shell.querySelector('.pc55-filter-status');
-      if(status) return status;
-      status=makeEl('div','pc55-filter-status');
-      status.innerHTML='<b>FILTER ACTIVE</b><span data-pc55-filter-text>전체 레이어</span><em data-pc55-stage-mini>ZOOM 1</em>';
-      const filters=shell.querySelector('.continent-filters');
-      if(filters) filters.insertAdjacentElement('afterend',status);
-      else shell.insertBefore(status,shell.firstChild);
-      return status;
-    }
-    function updateFilterStatus(){
-      const status=ensureStatus();
-      const key=shell.dataset.filter||'all';
-      const stage=activeFrame()?.dataset.zoomStage||activeFrame()?.dataset.pc55Stage||'1';
-      status.querySelector('[data-pc55-filter-text]').textContent=filterNames[key]||key;
-      status.querySelector('[data-pc55-stage-mini]').textContent='ZOOM '+stage;
-      shell.dataset.pc55Filter=key;
-    }
-    function initFrame(frame){
-      ensureLod(frame);
-      updateStage(frame);
-      const obs=new MutationObserver(()=>{ updateStage(frame); updateFilterStatus(); });
-      obs.observe(frame,{attributes:true,attributeFilter:['data-zoom-stage']});
+      set(false);
+
+      toggle.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); set(!body.classList.contains('pc584-main-drawer-open')); });
+      backdrop.addEventListener('click', () => set(false));
+      document.addEventListener('keydown', e => { if(e.key === 'Escape') { set(false); closeMapDrawer(); } });
+
+      document.querySelectorAll('.pc585-menu-heading').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const group = btn.closest('.pc585-menu-group');
+          if(!group) return;
+          const open = !group.classList.contains('open');
+          group.classList.toggle('open', open);
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          const icon = btn.querySelector('span');
+          if(icon) icon.textContent = open ? '▾' : '▸';
+        });
+      });
+
+      sideLinks.forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          const target = link.dataset.target || 'history';
+          showPage(target === 'zone-map' ? 'history' : target);
+          syncAccordionFor(link);
+          set(false);
+        }, true);
+      });
     }
 
-    shell.querySelectorAll('.continent-map-frame').forEach(initFrame);
-    updateFilterStatus();
 
-    shell.querySelectorAll('.map-viewport-tools').forEach(tools=>{
-      if(tools.dataset.pc55Bound) return;
-      tools.dataset.pc55Bound='1';
-      tools.addEventListener('click',function(e){
-        const btn=e.target.closest('[data-map-tool]'); if(!btn) return;
-        const frame=btn.closest('.continent-map-frame');
-        const act=btn.dataset.mapTool;
-        setTimeout(()=>{
-          updateStage(frame); updateFilterStatus();
-          if(act==='zoom-in'){mapTone('zoomIn'); frame.dataset.pc556LastZoom='in';}
-          else if(act==='zoom-out'){mapTone('zoomOut'); frame.dataset.pc556LastZoom='out';}
-          else if(act==='wide'){mapTone('wide'); showSync(frame,'WIDE VIEW RECALIBRATED','권역 전체 보기 좌표 재정렬');}
-          else {mapTone('reset'); showSync(frame,'MAP VIEW FIT','기본 보기로 복귀');}
-        },30);
-      },true);
-    });
-    shell.querySelectorAll('.continent-map-frame').forEach(frame=>{
-      let wheelTimer=0;
-      frame.addEventListener('wheel',function(e){
-        if(!e.ctrlKey && Math.abs(e.deltaY)<30) return;
-        const now=performance.now();
-        if(now-wheelTimer<180) return;
-        wheelTimer=now;
-        setTimeout(()=>{
-          updateStage(frame); updateFilterStatus();
-          mapTone(e.deltaY<0?'zoomIn':'zoomOut');
-          frame.dataset.pc556LastZoom=e.deltaY<0?'in':'out';
-        },35);
-      },{passive:true});
-    });
-    shell.querySelectorAll('.continent-filter').forEach(btn=>{
-      if(btn.dataset.pc55Bound) return;
-      btn.dataset.pc55Bound='1';
-      btn.addEventListener('click',function(){
-        setTimeout(()=>{
-          updateFilterStatus();
-          const key=shell.dataset.filter||btn.dataset.mapFilter||'all';
-          mapTone(btn.dataset.mapDebug?'audit':'filter');
-          showSync(activeFrame(),btn.dataset.mapDebug?'AUDIT LAYER TOGGLE':'FILTER MATRIX UPDATED',(filterNames[key]||'선택 레이어')+' 표시 기준 갱신');
-        },40);
-      },true);
-    });
-    shell.querySelectorAll('.continent-tab').forEach(btn=>{
-      if(btn.dataset.pc55RegionBound) return;
-      btn.dataset.pc55RegionBound='1';
-      btn.addEventListener('click',function(){
-        setTimeout(()=>{
-          shell.querySelectorAll('.continent-map-frame').forEach(frame=>{ensureLod(frame); updateStage(frame);});
-          updateFilterStatus();
-          mapTone('region');
-          showSync(activeFrame(),'REGION LAYER LINKED',(regionNames[btn.dataset.continent]||btn.textContent.trim())+' 권역 전술 레이어 연결');
-        },80);
-      },true);
-    });
-    setTimeout(()=>{shell.querySelectorAll('.continent-map-frame').forEach(frame=>{ensureLod(frame); updateStage(frame);}); updateFilterStatus();},420);
+    /* Map/runtime data removed in 5.15.2aa: 지역지도·작전지도 모듈은 현재 빌드에서 사용하지 않는다. */
+    function closeMapDrawer(){}
+    function setupMapDrawer(){}
+    function renderOperation(){}
+    function selectOperation(op, opts){
+      showPage('history');
+      const link = document.querySelector('.side-menu a[data-target="history"]');
+      syncAccordionFor(link);
+    }
+    window.ProjectCurseSelectOperation = function(){ selectOperation('history', {show:true}); };
+    window.ProjectCurseActivateOperation = function(){};
+
+    function renderRelation(){
+      const root = document.getElementById('pc584-relation-root');
+      if(!root) return;
+      const relationInfo = {
+        uac:['U.A.C','중앙 통제','CORE-0','N.H.C / S.I.D / F.H.C / C.P.D / A.R.F','구역 분류, 기록 통제, 기관 간 작전 조율을 담당하는 중심 기관이다.'],
+        nhc:['N.H.C','현장 작전','FIELD-1','U.A.C / C.P.D / A.R.F','레드존 투입, 봉쇄선 유지, 회수·소각 현장 작전을 맡는다.'],
+        sid:['S.I.D','정보/감청','INTEL-1','U.A.C / F.H.C / N.H.C','오염 통신, 귀환자 진술, 우시노다교 흔적을 검증한다.'],
+        fhc:['F.H.C','봉인 기록','SEAL-1','U.A.C / S.I.D','오컬트 기록, 봉인 자료, 극비 문서 격리를 담당한다.'],
+        cpd:['C.P.D','민간 대피','CIV-1','U.A.C / N.H.C','대피 회랑, 검문소, 귀환자 1차 선별을 담당한다.'],
+        arf:['A.R.F','회수/복구','REC-1','U.A.C / N.H.C','장비, 사체, 기록 매체 회수와 복구 절차를 담당한다.'],
+        ushinoda:['우시노다교','적대 의식 세력','HOSTILE','U.A.C / N.H.C / S.I.D','의식성 오염과 Blood Gate 관련 위험 세력이다.'],
+        haimun:['하이문','불명 네트워크','WATCH','S.I.D / 신디케이트','정보 중개와 비인가 경로가 확인되는 감시 대상이다.'],
+        syndicate:['신디케이트','오염 장비 유통','HOSTILE','N.H.C / A.R.F','오염 장비 거래와 이탈 네트워크 관련 세력이다.'],
+        amarion:['아마리온','비인가 연구','RESEARCH','F.H.C / U.A.C','Black Site와 인공 개체 연구 의혹이 연결된 대상이다.']
+      };
+      const rows = [
+        ['협력','U.A.C ↔ N.H.C','작전 승인','현장 투입과 봉쇄 명령이 연결된다.','uac nhc'],
+        ['협력','U.A.C ↔ S.I.D','정보 검증','감청과 진술 검증이 작전 판단에 반영된다.','uac sid'],
+        ['협력','U.A.C ↔ F.H.C','기록 봉인','위험 기록과 오컬트 자료가 격리된다.','uac fhc'],
+        ['협력','U.A.C ↔ C.P.D','민간 통제','대피 회랑과 검문 절차가 연결된다.','uac cpd'],
+        ['협력','U.A.C ↔ A.R.F','회수 복구','회수물과 폐기 절차가 연결된다.','uac arf'],
+        ['적대','U.A.C ↔ 우시노다교','의식 차단','의식성 오염과 Blood Gate를 차단한다.','uac ushinoda'],
+        ['감시','S.I.D ↔ 하이문','정보 감시','비인가 정보 흐름을 추적한다.','sid haimun'],
+        ['적대','N.H.C ↔ 신디케이트','장비 차단','오염 장비 유통을 추적·차단한다.','nhc syndicate'],
+        ['감시','F.H.C ↔ 아마리온','연구 격리','비인가 연구 기록을 봉인한다.','fhc amarion']
+      ];
+      function node(key,label,role,tone){
+        const img = key === 'ushinoda' ? 'ushinoda' : key;
+        return `<button type="button" class="pc584-relation-node ${tone||''}" data-relation-key="${key}"><img src="${mark(img)}" alt="${esc(label)}"><b>${esc(label)}</b><small>${esc(role)}</small></button>`;
+      }
+      root.innerHTML = `
+        <div class="pc584-relation-stage">
+          <div class="pc584-relation-core">${node('uac','U.A.C','중앙 통제','root')}</div>
+          <div class="pc584-relation-trunk"></div>
+          <div class="pc584-relation-agencies">
+            <div>${node('nhc','N.H.C','현장작전')}<span>봉쇄 / 회수 / 소각</span></div>
+            <div>${node('sid','S.I.D','정보/감청')}<span>감청 / 진술 검증</span></div>
+            <div>${node('fhc','F.H.C','봉인기록','research')}<span>오컬트 자료 격리</span></div>
+            <div>${node('cpd','C.P.D','민간대피')}<span>대피 / 검문 / 선별</span></div>
+            <div>${node('arf','A.R.F','회수/복구')}<span>복구 / 회수물 분류</span></div>
+          </div>
+          <div class="pc584-relation-watchline"><span>감시 / 적대 / 불명 연결</span></div>
+          <div class="pc584-relation-externals">
+            ${node('ushinoda','우시노다교','의식성 오염','hostile')}
+            ${node('haimun','하이문','정보 중개','watch')}
+            ${node('syndicate','신디케이트','오염 장비','hostile')}
+            ${node('amarion','아마리온','비인가 연구','research')}
+          </div>
+        </div>
+        <div class="pc584-relation-status">
+          <span><b>선택 세력</b><i data-r-name>U.A.C</i></span>
+          <span><b>상태 태그</b><i data-r-tag>중앙 통제</i></span>
+          <span><b>관계 등급</b><i data-r-grade>CORE-0</i></span>
+          <span><b>직접 연결</b><i data-r-links>N.H.C / S.I.D / F.H.C / C.P.D / A.R.F</i></span>
+          <span class="wide"><b>U.A.C 판단</b><i data-r-summary>구역 분류, 기록 통제, 기관 간 작전 조율을 담당하는 중심 기관이다.</i></span>
+        </div>
+        <table class="relation-table pc584-relation-table"><thead><tr><th>구분</th><th>관계</th><th>상태</th><th>설명</th></tr></thead><tbody>${rows.map(r => `<tr data-rel-row="${esc(r[4])}"><td class="${r[0].includes('적대')?'hostile':r[0].includes('감시')?'neutral':'friendly'}">${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td></tr>`).join('')}</tbody></table>`;
+
+      function update(key){
+        const d = relationInfo[key] || relationInfo.uac;
+        root.querySelectorAll('.pc584-relation-node').forEach(n => n.classList.toggle('active', n.dataset.relationKey === key));
+        root.querySelector('[data-r-name]').textContent = d[0];
+        root.querySelector('[data-r-tag]').textContent = d[1];
+        root.querySelector('[data-r-grade]').textContent = d[2];
+        root.querySelector('[data-r-links]').textContent = d[3];
+        root.querySelector('[data-r-summary]').textContent = d[4];
+        root.querySelectorAll('.relation-table tbody tr').forEach(row => row.classList.toggle('pc584-row-active', (row.dataset.relRow || '').split(/\s+/).includes(key)));
+      }
+      root.querySelectorAll('.pc584-relation-node').forEach(btn => btn.addEventListener('click', () => update(btn.dataset.relationKey || 'uac')));
+      update('uac');
+    }
+
+    setupMainDrawer();
+    setupMapDrawer();
+    renderRelation();
+
+    // Initial state
+    const initialHash = (location.hash || '#history').slice(1);
+    showPage(initialHash === 'zone-map' ? 'history' : initialHash);
   });
 })();
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch55:'Tactical Map Zoom Detail Layers'});
 
-
-// PATCH 5.5.1 — TacticalMapQA / viewport clamp / marker detail recovery / menu transition separation.
+// MapPatch 5.13.0 — CommandCenter_UI_Rebuild.
+// Lightweight dashboard bindings only. Side menu full rebuild remains 5.13.1.
 (function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  const ready = (fn) => { if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); };
   ready(function(){
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(shell) shell.classList.add('map-patch551');
+    function activateOperation(op){
+      if(!op) return;
+      if(typeof window.ProjectCurseSelectOperation === 'function'){
+        window.ProjectCurseSelectOperation(op, {show:true, closeMap:true});
+        return;
+      }
+      const link = document.querySelector(`.side-menu a[data-target="zone-map"][data-operation="${CSS.escape(op)}"]`);
+      if(link) link.click();
+    }
 
-    // Left-menu entry transitions are separate from record-file notices and map HUDs.
-    const menuFx={
-      history:['WORLD OVERVIEW ACCESS','연대 기록 색인 재구성',['사건 연표 확인','기록 단절 구간 보정','U.A.C 역사 자료면 개방']],
-      factions:['FACTION DOSSIER ACCESS','세력 기록철 접근',['식별 코드 대조','관계 등급 확인','세력 파일 목록 개방']],
-      relation:['RELATION LIST','관계 추적 행렬 전개',['중심 기관 확인: U.A.C','연결 세력 조회','감시/협력/적대 경로 분리']],
-      'zone-map':['REGION MAP ACCESS','권역 관제면 연결',['감시망 수신','좌표면 정렬','오염권·봉쇄선 레이어 대기']],
-      'archive-entry':['ARCHIVE INDEX','기록보관서 색인 개방',['색인 잠금 해제','문서 상태 대조','열람 가능 기록 정렬']]
-    };
-    function ensureMenuLoader(){
-      let el=document.querySelector('.pc551-menu-loader');
+    function openLinkedRecord(recordId){
+      if(!recordId) return;
+      const archiveLink = document.querySelector('.side-menu a[data-target="archive-entry"]');
+      if(archiveLink) archiveLink.click();
+      setTimeout(() => {
+        if(typeof window.ProjectCurseShowInternalRecord === 'function'){
+          window.ProjectCurseShowInternalRecord(recordId);
+          document.body.classList.add('pc5130-command-record-opened');
+          setTimeout(()=>document.body.classList.remove('pc5130-command-record-opened'), 900);
+        }
+      }, 120);
+    }
+
+    document.querySelectorAll('[data-pc5130-op]').forEach(btn => {
+      if(btn.dataset.bound5130) return;
+      btn.dataset.bound5130 = '1';
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        activateOperation(btn.getAttribute('data-pc5130-op'));
+      });
+    });
+
+    document.querySelectorAll('[data-pc5130-record]').forEach(btn => {
+      if(btn.dataset.bound5130) return;
+      btn.dataset.bound5130 = '1';
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        openLinkedRecord(btn.getAttribute('data-pc5130-record'));
+      });
+    });
+  });
+})();
+
+
+// MapPatch 5.13.1 — SideMenu_CommandCenter_Rebuild.
+(function(){
+  const ready = (fn) => { if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); };
+  ready(function(){
+    function ensureModuleToast(){
+      let el = document.querySelector('.pc5131-module-toast');
       if(el) return el;
-      el=document.createElement('div');
-      el.className='pc551-menu-loader';
-      el.innerHTML='<div class="pc551-menu-box"><b></b><em></em><div class="pc551-menu-lines"></div><i></i></div>';
+      el = document.createElement('div');
+      el.className = 'pc5131-module-toast';
+      el.setAttribute('aria-live','polite');
       document.body.appendChild(el);
       return el;
     }
-    let menuTimer=null;
-    function showMenuLoader(id){
-      // Patch6.2.2: all transition/surface/link popups are disabled.
-      return;
-      const data=menuFx[id]||['DATA ACCESS','터미널 표시면 동기화',['화면 모드 확인','표시 옵션 동기화','서버 표면 개방']];
-      const el=ensureMenuLoader();
-      el.querySelector('b').textContent=data[0];
-      el.querySelector('em').textContent=data[1];
-      el.querySelector('.pc551-menu-lines').innerHTML=data[2].map(t=>'<span>'+esc(t)+'</span>').join('');
-      clearTimeout(menuTimer);
-      el.classList.remove('hide');
+
+    function showModuleToast(label){
+      const el = ensureModuleToast();
+      el.textContent = `${label || 'MODULE'} / ACCESS LOCKED`;
       el.classList.add('show');
-      menuTimer=setTimeout(()=>{el.classList.add('hide'); setTimeout(()=>el.classList.remove('show','hide'),260);},780);
+      clearTimeout(el._pc5131Timer);
+      el._pc5131Timer = setTimeout(()=>el.classList.remove('show'), 1400);
     }
-    document.querySelectorAll('.side-menu a[data-target]').forEach(a=>{
-      if(a.dataset.pc551MenuFx) return;
-      a.dataset.pc551MenuFx='1';
-      a.addEventListener('click',()=>showMenuLoader(a.dataset.target),true);
-    });
 
-    // Robust marker detail-card recovery. Runs after older map handlers so the server-style card stays visible.
-    function linkedRecords(records){
-      const parts=String(records||'지역지도').split('/').map(s=>s.trim()).filter(Boolean).slice(0,5);
-      return parts.length?parts:['지역지도'];
-    }
-    function detailFromElement(el){
-      if(!el) return;
-      const panel=el.closest('.continent-panel');
-      if(!panel) return;
-      const card=panel.querySelector('.map-detail-card');
-      if(!card) return;
-      const code=el.getAttribute('data-code')||'NO-CODE';
-      const visual=el.getAttribute('data-visual')||el.getAttribute('data-filter')||'관제 표식';
-      const title=el.getAttribute('data-title')||'U.A.C 관제 기록';
-      const status=el.getAttribute('data-status')||'상태 기록 없음';
-      const role=el.getAttribute('data-role')||'node';
-      const records=el.getAttribute('data-records')||'지역지도';
-      const surface=/해상|항로|연안|항만|maritime|sea/i.test([title,visual,role,status,records].join(' '))?'해상/항로':'육상/권역';
-      card.classList.add('detail-v3','detail-551');
-      card.innerHTML='<div class="detail-code-row"><span class="detail-code">'+esc(code)+'</span><span class="detail-type">'+esc(visual)+'</span></div>'+ 
-        '<b>'+esc(title)+'</b><p class="detail-status">'+esc(status)+'</p>'+ 
-        '<div class="detail-grid"><i>역할</i><b>'+esc(role)+'</b><i>표면</i><b>'+esc(surface)+'</b><i>관측</i><b>FIELD REVIEW</b><i>동기화</i><b>MAP PATCH 5.5.1</b></div>'+ 
-        '<div class="linked-records">'+linkedRecords(records).map(r=>'<span>'+esc(r)+'</span>').join('')+'</div>';
-    }
-    if(shell){
-      shell.addEventListener('click',e=>{
-        const el=e.target.closest('[data-map-item]');
-        if(el) setTimeout(()=>detailFromElement(el),35);
-      },false);
-      shell.addEventListener('keydown',e=>{
-        if(e.key!=='Enter'&&e.key!==' ') return;
-        const el=e.target.closest('[data-map-item]');
-        if(el) setTimeout(()=>detailFromElement(el),35);
-      },false);
-      setTimeout(()=>{
-        shell.querySelectorAll('.continent-panel').forEach(panel=>{
-          const first=panel.querySelector('[data-map-item]');
-          if(first) detailFromElement(first);
-        });
-      },650);
-    }
+    document.querySelectorAll('[data-pc5131-module-placeholder]').forEach(btn => {
+      if(btn.dataset.bound5131) return;
+      btn.dataset.bound5131 = '1';
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const label = (btn.querySelector('b') && btn.querySelector('b').textContent) || btn.getAttribute('data-pc5131-module-placeholder') || 'MODULE';
+        document.body.classList.add('pc5131-module-pending');
+        showModuleToast(label);
+        setTimeout(()=>document.body.classList.remove('pc5131-module-pending'), 900);
+      });
+    });
   });
 })();
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch551:'Tactical Map QA'});
 
-// PATCH 5.5.2 — MapCoordinateViewportQA / all-region fixed 16:9 basemap alignment.
+// MapPatch 5.13.2 — SoundSystem_Remaster runtime bindings.
 (function(){
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
   ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell) return;
-    shell.classList.add('map-patch552');
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const regionNames={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
-    const regionMode={world:'전역 축약 관제',east:'동아시아 작전 표면',europe:'유럽 작전 표면',north:'북미 작전 표면',southasia:'남아시아 작전 표면',seindian:'동남아·인도양 작전 표면',oceania:'오세아니아 작전 표면',mideast:'중동 작전 표면',africa:'아프리카 작전 표면'};
-    function activePanel(){return shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
-    function getRegion(panel){return panel?.dataset.continentPanel || 'world';}
-    function coordStatus(el){return el.getAttribute('data-qa') || 'REVIEWED';}
-    function surfaceOf(el){return el.getAttribute('data-surface') || (/해상|항로|항만|연안|sea|maritime/i.test([el.getAttribute('data-title'),el.getAttribute('data-status'),el.getAttribute('data-role')].join(' '))?'해상/항만':'육상/권역');}
-    function locationOf(el){return el.getAttribute('data-location') || regionNames[getRegion(el.closest('.continent-panel'))] || '권역 관제면';}
-    function linked(records){
-      const arr=String(records||'지역지도').split('/').map(v=>v.trim()).filter(Boolean).slice(0,5);
-      return arr.length?arr:['지역지도'];
-    }
-    function writeCardFromMarker(el){
-      if(!el) return;
-      const panel=el.closest('.continent-panel'); if(!panel) return;
-      const card=panel.querySelector('.map-detail-card'); if(!card) return;
-      const region=getRegion(panel);
-      const code=el.getAttribute('data-code')||'NO-CODE';
-      const visual=el.getAttribute('data-visual')||el.getAttribute('data-filter')||'관제 표식';
-      const title=el.getAttribute('data-title')||'U.A.C 관제 기록';
-      const status=el.getAttribute('data-status')||'상태 기록 없음';
-      const role=el.getAttribute('data-role')||'node';
-      const records=el.getAttribute('data-records')||'지역지도';
-      const qa=coordStatus(el);
-      const qaCls=qa==='REVIEWED'?'qa-ok':'qa-review';
-      card.classList.add('detail-v3','detail-551','detail-552');
-      card.innerHTML='<div class="detail-code-row"><span class="detail-code">'+esc(code)+'</span><span class="detail-type">'+esc(visual)+'</span></div>'+ 
-        '<b>'+esc(title)+'</b><p class="detail-status">'+esc(status)+'</p>'+ 
-        '<div class="detail-grid detail-grid-552">'+
-          '<i>권역</i><b>'+esc(regionNames[region]||region)+'</b>'+
-          '<i>역할</i><b>'+esc(role)+'</b>'+
-          '<i>표면</i><b>'+esc(surfaceOf(el))+'</b>'+
-          '<i>위치 판정</i><b>'+esc(locationOf(el))+'</b>'+
-          '<i>좌표 상태</i><b class="'+qaCls+'">'+esc(qa)+'</b>'+
-          '<i>동기화</i><b>MAP PATCH 5.5.2</b>'+
-        '</div>'+ 
-        '<div class="linked-records">'+linked(records).map(r=>'<span>'+esc(r)+'</span>').join('')+'</div>';
-    }
-    function findMarkerByListItem(li){
-      const panel=li.closest('.continent-panel'); if(!panel) return null;
-      const text=(li.textContent||'').replace(/\s+/g,' ').trim();
-      const markers=Array.from(panel.querySelectorAll('[data-map-item]'));
-      return markers.find(el=>text.includes(el.getAttribute('data-title')||'') || text.includes(el.getAttribute('data-code')||'NO-CODE')) || markers[0] || null;
-    }
-    // Make every active-region marker carry visible QA hints for debug mode.
-    function decorateMarkers(){
-      shell.querySelectorAll('[data-map-item]').forEach(el=>{
-        const panel=el.closest('.continent-panel');
-        const region=getRegion(panel);
-        if(!el.getAttribute('data-region')) el.setAttribute('data-region',region);
-        if(!el.getAttribute('data-qa')) el.setAttribute('data-qa','REVIEWED');
-        if(!el.getAttribute('data-surface')) el.setAttribute('data-surface',surfaceOf(el));
-        if(!el.getAttribute('data-location')) el.setAttribute('data-location',locationOf(el));
-        el.setAttribute('data-qa-label',(regionNames[region]||region)+' / '+surfaceOf(el)+' / '+coordStatus(el));
-      });
-    }
-    function ensureAuditPanel(){
-      let panel=shell.querySelector('.pc552-audit-panel');
-      if(panel) return panel;
-      panel=document.createElement('div');
-      panel.className='pc552-audit-panel';
-      panel.innerHTML='<b>MARKER QA</b><span data-pc552-audit-region>권역</span><span data-pc552-audit-surface>표면</span><span data-pc552-audit-status>좌표 상태</span>';
-      shell.appendChild(panel);
-      return panel;
-    }
-    function updateAuditPanel(el){
-      const panel=ensureAuditPanel();
-      const reg=el?regionNames[getRegion(el.closest('.continent-panel'))]:'권역';
-      panel.querySelector('[data-pc552-audit-region]').textContent='권역: '+reg;
-      panel.querySelector('[data-pc552-audit-surface]').textContent='표면: '+(el?surfaceOf(el):'대기');
-      panel.querySelector('[data-pc552-audit-status]').textContent='좌표 상태: '+(el?coordStatus(el):'대기');
-    }
-    shell.addEventListener('click',e=>{
-      const marker=e.target.closest('[data-map-item]');
-      if(marker){ setTimeout(()=>{decorateMarkers(); writeCardFromMarker(marker); updateAuditPanel(marker);},55); return; }
-      const li=e.target.closest('.continent-point');
-      if(li){ setTimeout(()=>{const m=findMarkerByListItem(li); if(m){writeCardFromMarker(m); updateAuditPanel(m);}},60); }
-    },false);
-    shell.addEventListener('mouseover',e=>{
-      const marker=e.target.closest('[data-map-item]'); if(marker) updateAuditPanel(marker);
-    },false);
-    shell.querySelectorAll('.continent-tab').forEach(btn=>{
-      btn.addEventListener('click',()=>setTimeout(()=>{
-        decorateMarkers();
-        const p=activePanel();
-        const frame=p?.querySelector('.continent-map-frame');
-        if(frame){ frame.classList.add('pc552-region-fixed'); frame.dataset.qaSurface=regionMode[getRegion(p)]||'작전 표면'; }
-        const first=p?.querySelector('[data-map-item]'); if(first){ writeCardFromMarker(first); updateAuditPanel(first); }
-      },140),true);
-    });
-    // Reassert all map surfaces after old handlers finish.
-    setTimeout(()=>{
-      decorateMarkers();
-      shell.querySelectorAll('.continent-map-frame').forEach(frame=>{
-        frame.classList.add('pc552-region-fixed');
-        const panel=frame.closest('.continent-panel');
-        frame.dataset.qaSurface=regionMode[getRegion(panel)]||'작전 표면';
-      });
-      const first=activePanel()?.querySelector('[data-map-item]');
-      if(first){ writeCardFromMarker(first); updateAuditPanel(first); }
-    },900);
-  });
-})();
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch552:'Map Coordinate Viewport QA'});
-
-
-// PATCH 5.5.3 — MapProjectionMarkerRebuild / geo-frame projection + marker audit detail.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell) return;
-    shell.classList.add('map-patch553');
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const regionNames={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
-    const regionFrame={
-      world:'전역 지오 프레임 / 대륙 절단 방지', east:'동아시아 지오 프레임 / 한반도·일본·중국 동부 정렬', europe:'유럽 지오 프레임 / 북해·발트·중부유럽 정렬', north:'북미 지오 프레임 / 알래스카·캐나다·오대호 포함', southasia:'남아시아 지오 프레임 / 인도권 정렬', seindian:'동남아·인도양 지오 프레임 / 해협·항로 정렬', oceania:'오세아니아 지오 프레임 / 호주·뉴질랜드 정렬', mideast:'중동 지오 프레임 / 수에즈·홍해·메소포타미아 정렬', africa:'아프리카 지오 프레임 / 북아프리카·사헬·동아프리카 정렬'
-    };
-    function panelOf(el){return el?.closest?.('.continent-panel')||shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
-    function regionOf(el){return panelOf(el)?.dataset.continentPanel||'world';}
-    function linked(records){const arr=String(records||'지역지도').split('/').map(v=>v.trim()).filter(Boolean).slice(0,5); return arr.length?arr:['지역지도'];}
-    function surfaceOf(el){return el.getAttribute('data-surface') || (/해상|항로|항만|연안|sea|maritime/i.test([el.getAttribute('data-title'),el.getAttribute('data-status'),el.getAttribute('data-role')].join(' '))?'해상/항만':'육상/권역');}
-    function locOf(el){return el.getAttribute('data-location') || regionFrame[regionOf(el)] || '권역 관제면';}
-    function qaOf(el){return el.getAttribute('data-qa') || 'REVIEWED';}
-    function coordOf(el){
-      const lat=el.getAttribute('data-lat'), lon=el.getAttribute('data-lon');
-      if(lat && lon) return '위도 '+Number(lat).toFixed(4)+' / 경도 '+Number(lon).toFixed(4);
-      return '선형/권역 좌표';
-    }
-    function projOf(el){return el.getAttribute('data-proj') || '투영 좌표 대기';}
-    function codeOf(el){return el.getAttribute('data-code') || 'NO-CODE';}
-    function writeCard(el){
-      if(!el) return;
-      const panel=panelOf(el), card=panel?.querySelector('.map-detail-card');
-      if(!card) return;
-      const region=regionOf(el);
-      const visual=el.getAttribute('data-visual')||el.getAttribute('data-filter')||'관제 표식';
-      const title=el.getAttribute('data-title')||'U.A.C 관제 기록';
-      const status=el.getAttribute('data-status')||'상태 기록 없음';
-      const role=el.getAttribute('data-role')||'node';
-      const records=el.getAttribute('data-records')||'지역지도';
-      const qa=qaOf(el); const qaCls=qa==='REVIEWED'?'qa-ok':(qa==='OUT OF REGION'||qa==='SURFACE MISMATCH'?'qa-bad':'qa-review');
-      card.classList.add('detail-v3','detail-551','detail-552','detail-553');
-      card.innerHTML='<div class="detail-code-row"><span class="detail-code">'+esc(codeOf(el))+'</span><span class="detail-type">'+esc(visual)+'</span></div>'+ 
-        '<b>'+esc(title)+'</b><p class="detail-status">'+esc(status)+'</p>'+ 
-        '<div class="detail-grid detail-grid-552 detail-grid-553">'+
-          '<i>권역</i><b>'+esc(regionNames[region]||region)+'</b>'+ 
-          '<i>역할</i><b>'+esc(role)+'</b>'+ 
-          '<i>표면</i><b>'+esc(surfaceOf(el))+'</b>'+ 
-          '<i>위치 판정</i><b>'+esc(locOf(el))+'</b>'+ 
-          '<i>작전 위치</i><b>'+esc(coordOf(el))+'</b>'+ 
-          '<i>표시면</i><b>'+esc(projOf(el))+'</b>'+ 
-          '<i>좌표 상태</i><b class="'+qaCls+'">'+esc(qa)+'</b>'+ 
-          '<i>동기화</i><b>MAP PATCH 5.5.3</b>'+ 
-        '</div>'+ 
-        '<div class="linked-records">'+linked(records).map(r=>'<span>'+esc(r)+'</span>').join('')+'</div>';
-    }
-    function ensureAudit(){
-      let p=shell.querySelector('.pc553-audit-panel');
-      if(p) return p;
-      p=document.createElement('div'); p.className='pc553-audit-panel';
-      p.innerHTML='<b>OPS SURFACE QA</b><span data-audit-region>권역</span><span data-audit-coord>작전 위치</span><span data-audit-proj>표시면</span><span data-audit-surface>표면</span><span data-audit-status>연결상태</span>';
-      shell.appendChild(p); return p;
-    }
-    function updateAudit(el){
-      const p=ensureAudit();
-      const region=el?regionOf(el):((shell.querySelector('.continent-panel.active')||{}).dataset?.continentPanel||'world');
-      p.querySelector('[data-audit-region]').textContent='권역: '+(regionNames[region]||region);
-      p.querySelector('[data-audit-coord]').textContent='작전 위치: '+(el?coordOf(el):'대기');
-      p.querySelector('[data-audit-proj]').textContent='표시면: '+(el?projOf(el):'대기');
-      p.querySelector('[data-audit-surface]').textContent='표면: '+(el?surfaceOf(el):'대기');
-      p.querySelector('[data-audit-status]').textContent='좌표 상태: '+(el?qaOf(el):'대기');
-    }
-    function decorateFrames(){
-      shell.querySelectorAll('.continent-map-frame').forEach(frame=>{
-        const r=frame.closest('.continent-panel')?.dataset.continentPanel||'world';
-        frame.classList.add('pc553-geoframe');
-        frame.dataset.qaSurface=regionFrame[r]||'작전 프레임';
-      });
-    }
-    function decorateMarkers(){
-      shell.querySelectorAll('[data-map-item]').forEach(el=>{
-        const region=regionOf(el);
-        if(!el.getAttribute('data-region')) el.setAttribute('data-region',region);
-        if(!el.getAttribute('data-qa')) el.setAttribute('data-qa','REVIEWED');
-        el.setAttribute('data-qa-label',(regionNames[region]||region)+' / '+surfaceOf(el)+' / '+qaOf(el));
-      });
-    }
-    shell.addEventListener('click',e=>{
-      const el=e.target.closest('[data-map-item]');
-      if(el) setTimeout(()=>{decorateMarkers(); writeCard(el); updateAudit(el);},90);
-    },false);
-    shell.addEventListener('mouseover',e=>{
-      const el=e.target.closest('[data-map-item]'); if(el) updateAudit(el);
-    },false);
-    shell.querySelectorAll('.continent-tab').forEach(btn=>{
-      btn.addEventListener('click',()=>setTimeout(()=>{decorateFrames(); decorateMarkers(); const first=panelOf(shell.querySelector('.continent-panel.active'))?.querySelector('[data-map-item]'); if(first){writeCard(first); updateAudit(first);} else updateAudit(null);},220),true);
-    });
-    setTimeout(()=>{decorateFrames(); decorateMarkers(); const first=(shell.querySelector('.continent-panel.active')||shell).querySelector('[data-map-item]'); if(first){writeCard(first); updateAudit(first);} else updateAudit(null);},1050);
-  });
-})();
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch553:'Geo Projection Marker Rebuild'});
-
-
-// PATCH 5.5.3B — Viewport Bleed Continuation / no black empty margins.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell) return;
-    shell.classList.add('map-patch553b');
-    function ensureBleed(frame){
-      if(!frame || frame.querySelector('.pc553-bleed-map')) return;
-      const main=frame.querySelector('.continent-map-img');
-      if(!main) return;
-      const bleed=document.createElement('img');
-      bleed.className='pc553-bleed-map';
-      bleed.alt='';
-      bleed.setAttribute('aria-hidden','true');
-      bleed.src=main.currentSrc || main.src;
-      bleed.dataset.bleedSource='same-map-overscan';
-      frame.insertBefore(bleed, main);
-      frame.classList.add('pc553-bleed-ready');
-    }
-    function ensureAll(){shell.querySelectorAll('.continent-map-frame').forEach(ensureBleed);}
-    ensureAll();
-    shell.querySelectorAll('.continent-tab').forEach(btn=>btn.addEventListener('click',()=>setTimeout(ensureAll,90),true));
-    const obs=new MutationObserver(()=>ensureAll());
-    obs.observe(shell,{subtree:true,childList:true});
-  });
-})();
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch553b:'Viewport Bleed Continuation'});
-
-
-// PATCH 5.5.4 — MapViewportMarkerStackQA / marker stack selection + viewport usability.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell) return;
-    shell.classList.add('map-patch554');
-    const W=1600, H=900;
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    let suppressStack=false;
-
-    function activePanel(){return shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
-    function frameOf(panel){return panel?.querySelector?.('.continent-map-frame')||null;}
-    function scaleOf(frame){const v=parseFloat(getComputedStyle(frame).getPropertyValue('--map-scale')); return Number.isFinite(v)&&v>0?v:1;}
-    function stageOf(frame){const n=parseInt(frame?.dataset?.zoomStage||'1',10); return Number.isFinite(n)?Math.max(1,Math.min(5,n)):1;}
-    function filterOf(){return shell.dataset.filter||'all';}
-    function parseProj(el){
-      const raw=el.getAttribute('data-proj')||'';
-      const m=raw.match(/X\s*(-?\d+(?:\.\d+)?)\s*\/\s*Y\s*(-?\d+(?:\.\d+)?)/i);
-      if(m) return {x:+m[1],y:+m[2]};
-      try{
-        if(typeof el.getBBox==='function'){
-          const b=el.getBBox();
-          if(Number.isFinite(b.x+b.width+b.y+b.height)) return {x:b.x+b.width/2,y:b.y+b.height/2};
-        }
-      }catch(_e){}
-      return null;
-    }
-    function markerTitle(el){return el.getAttribute('data-title')||el.getAttribute('data-code')||'U.A.C 관제 기록';}
-    function markerCode(el){return el.getAttribute('data-code')||'NO-CODE';}
-    function markerType(el){return el.getAttribute('data-visual')||el.getAttribute('data-filter')||'관제 표식';}
-    function priorityOf(el){
-      const f=el.getAttribute('data-filter')||'';
-      const z=el.getAttribute('data-zone')||'';
-      const t=[f,z,markerTitle(el),markerType(el),el.getAttribute('data-status')||''].join(' ');
-      if(/black|블랙존|red|레드존/.test(t)) return 1;
-      if(/blockade-node|facility|봉쇄 거점|작전 시설|통제|검문|허브/.test(t)) return 2;
-      if(/incident|사건/.test(t)) return 3;
-      if(/anomaly|현상/.test(t)) return 4;
-      return 5;
-    }
-    function visibleByFilter(el){
-      const f=filterOf();
-      const ef=el.getAttribute('data-filter')||'';
-      const z=el.getAttribute('data-zone')||'';
-      if(f==='all') return true;
-      if(f.startsWith('zone-')) return ef==='zone' && z===f.replace('zone-','');
-      return ef===f;
-    }
-    function isSelectable(el){
-      if(!el || !el.matches || !el.matches('[data-map-item]')) return false;
-      const p=parseProj(el); if(!p) return false;
-      return true;
-    }
-    function markers(panel){
-      return Array.from(panel.querySelectorAll('[data-map-item]')).filter(isSelectable).map(el=>({el,p:parseProj(el),priority:priorityOf(el)}));
-    }
-    function stackThreshold(frame){
-      const s=scaleOf(frame);
-      return Math.max(12, 38 / Math.max(1,s));
-    }
-    function nearbyGroup(target){
-      const panel=target.closest('.continent-panel');
-      const frame=frameOf(panel); if(!panel||!frame) return [target];
-      const t=parseProj(target); if(!t) return [target];
-      const th=stackThreshold(frame);
-      const arr=markers(panel).filter(o=>visibleByFilter(o.el)).filter(o=>Math.hypot(o.p.x-t.x,o.p.y-t.y)<=th);
-      arr.sort((a,b)=>a.priority-b.priority || markerCode(a.el).localeCompare(markerCode(b.el)));
-      return arr.map(o=>o.el);
-    }
-    function buildGroups(panel){
-      const frame=frameOf(panel); if(!frame) return [];
-      const th=stackThreshold(frame);
-      const pool=markers(panel).filter(o=>visibleByFilter(o.el));
-      const used=new Set(), groups=[];
-      for(const item of pool){
-        if(used.has(item.el)) continue;
-        const group=[];
-        for(const other of pool){
-          if(used.has(other.el)) continue;
-          if(Math.hypot(other.p.x-item.p.x,other.p.y-item.p.y)<=th){ group.push(other); }
-        }
-        group.forEach(o=>used.add(o.el));
-        group.sort((a,b)=>a.priority-b.priority || markerCode(a.el).localeCompare(markerCode(b.el)));
-        groups.push(group);
-      }
-      return groups;
-    }
-    function ensureStackPanel(frame){
-      let p=frame.querySelector('.pc554-stack-panel');
-      if(p) return p;
-      p=document.createElement('div');
-      p.className='pc554-stack-panel';
-      p.innerHTML='<div class="pc554-stack-head"><b>MARKER STACK DETECTED</b><button type="button" aria-label="닫기">×</button></div><div class="pc554-stack-sub">중첩 좌표 선택</div><div class="pc554-stack-list"></div>';
-      p.querySelector('button').addEventListener('click',()=>p.classList.remove('show'));
-      frame.appendChild(p);
-      return p;
-    }
-    function appendStackState(el, group){
-      const panel=el.closest('.continent-panel'); const card=panel?.querySelector?.('.map-detail-card');
-      if(!card) return;
-      let state=card.querySelector('.pc554-stack-state');
-      if(!state){ state=document.createElement('div'); state.className='pc554-stack-state'; card.appendChild(state); }
-      const idx=Math.max(1, group.indexOf(el)+1);
-      state.innerHTML='<i>중첩 상태</i><b>'+ (group.length>1 ? 'STACKED / '+group.length+' RECORDS · SELECTED '+idx : 'SINGLE MARKER') +'</b>';
-      card.classList.add('detail-554');
-    }
-    function openMarker(el, group){
-      suppressStack=true;
-      try{ el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window})); }catch(_e){}
-      setTimeout(()=>{ appendStackState(el, group||[el]); suppressStack=false; },160);
-    }
-    function showStackPanel(frame, group){
-      const panel=ensureStackPanel(frame);
-      const list=panel.querySelector('.pc554-stack-list');
-      const sub=panel.querySelector('.pc554-stack-sub');
-      if(sub) sub.textContent='중첩 좌표 '+group.length+'건 감지 / 선택 후 상세 패널 호출';
-      list.innerHTML='';
-      group.forEach((el,i)=>{
-        const btn=document.createElement('button');
-        btn.type='button';
-        btn.innerHTML='<span>'+esc(markerCode(el))+'</span><b>'+esc(markerTitle(el))+'</b><em>'+esc(markerType(el))+'</em>';
-        btn.addEventListener('click',e=>{e.preventDefault(); e.stopPropagation(); panel.classList.remove('show'); openMarker(el,group);});
-        list.appendChild(btn);
-      });
-      panel.classList.add('show');
-    }
-    function ensureClusterLayer(frame){
-      let layer=frame.querySelector('.pc554-cluster-layer');
-      if(layer) return layer;
-      layer=document.createElement('div'); layer.className='pc554-cluster-layer';
-      frame.appendChild(layer); return layer;
-    }
-    function renderClusters(panel){
-      const frame=frameOf(panel); if(!frame) return;
-      ensureHitAreas(panel);
-      ensureUrbanLod(frame);
-      const layer=ensureClusterLayer(frame);
-      const groups=buildGroups(panel);
-      layer.innerHTML='';
-      let stackCount=0;
-      groups.forEach((group,idx)=>{
-        if(group.length<2) return;
-        stackCount++;
-        const avg=group.reduce((acc,o)=>{acc.x+=o.p.x;acc.y+=o.p.y;return acc;},{x:0,y:0});
-        avg.x/=group.length; avg.y/=group.length;
-        const btn=document.createElement('button');
-        btn.type='button'; btn.className='pc554-cluster-badge'; btn.textContent='+'+group.length;
-        btn.style.left=(avg.x/W*100).toFixed(3)+'%'; btn.style.top=(avg.y/H*100).toFixed(3)+'%';
-        btn.dataset.stackSize=String(group.length);
-        btn.addEventListener('click',e=>{e.preventDefault(); e.stopPropagation(); showStackPanel(frame, group.map(o=>o.el)); updateStackAudit(group.map(o=>o.el));});
-        layer.appendChild(btn);
-      });
-      frame.dataset.stackCount=String(stackCount);
-      updateStackAudit(null);
-    }
-    function ensureHitAreas(panel){
-      const svgNS='http://www.w3.org/2000/svg';
-      markers(panel).forEach(({el,p})=>{
-        if(el.querySelector('.pc554-hit-area')) return;
-        const f=el.getAttribute('data-filter')||'';
-        if(f==='zone' || f==='blockade') return;
-        const c=document.createElementNS(svgNS,'circle');
-        c.setAttribute('class','pc554-hit-area');
-        c.setAttribute('cx',p.x.toFixed(1)); c.setAttribute('cy',p.y.toFixed(1)); c.setAttribute('r','20');
-        try{el.insertBefore(c,el.firstChild);}catch(_e){el.appendChild(c);}
-      });
-    }
-    function ensureUrbanLod(frame){
-      if(frame.querySelector('.pc554-urban-lod')) return;
-      const d=document.createElement('div'); d.className='pc554-urban-lod';
-      d.innerHTML='<i></i><i></i><i></i>';
-      frame.appendChild(d);
-    }
-    function ensureAudit(){
-      let p=shell.querySelector('.pc554-stack-audit');
-      if(p) return p;
-      p=document.createElement('div'); p.className='pc554-stack-audit';
-      p.innerHTML='<b>MARKER STACK QA</b><span data-stack-region>권역</span><span data-stack-zoom>줌</span><span data-stack-count>중첩</span><span data-stack-mode>선택</span>';
-      shell.appendChild(p); return p;
-    }
-    function updateStackAudit(group){
-      const p=ensureAudit(); const panel=activePanel(); const frame=frameOf(panel);
-      const region=panel?.dataset?.continentPanel||'world';
-      p.querySelector('[data-stack-region]').textContent='권역: '+region;
-      p.querySelector('[data-stack-zoom]').textContent='줌: ZOOM '+stageOf(frame);
-      p.querySelector('[data-stack-count]').textContent='중첩 그룹: '+(frame?.dataset?.stackCount||'0');
-      p.querySelector('[data-stack-mode]').textContent='선택: '+(group&&group.length>1?'목록 모드 '+group.length+'건':'단일/대기');
-    }
-    function refresh(){
-      const panel=activePanel(); if(!panel) return;
-      renderClusters(panel);
-      updateStackAudit(null);
-    }
-    shell.addEventListener('click',e=>{
-      const el=e.target.closest('[data-map-item]');
-      if(!el || suppressStack) return;
-      const group=nearbyGroup(el);
-      setTimeout(()=>appendStackState(el,group),190);
-      if(group.length>1){
-        const frame=frameOf(el.closest('.continent-panel'));
-        setTimeout(()=>{showStackPanel(frame,group); updateStackAudit(group);},80);
-      }
-    },true);
-    shell.addEventListener('mouseover',e=>{
-      const el=e.target.closest('[data-map-item]');
-      if(!el) return;
-      const group=nearbyGroup(el); updateStackAudit(group);
-    },true);
-    shell.addEventListener('click',e=>{
-      if(e.target.closest('.continent-tab,.continent-filter,.map-viewport-tools button')) setTimeout(refresh,180);
-    },true);
-    shell.addEventListener('wheel',()=>{
-      if(shell.classList.contains('map-fast-nav')) return;
-      clearTimeout(shell._pc554WheelRefresh);
-      shell._pc554WheelRefresh=setTimeout(refresh,300);
-    },{passive:true});
-    const obs=new MutationObserver(muts=>{
-      if(muts.some(m=>m.type==='attributes' && (m.attributeName==='data-zoom-stage'||m.attributeName==='class'))){
-        clearTimeout(shell._pc554MutationRefresh);
-        shell._pc554MutationRefresh=setTimeout(refresh,180);
-      }
-    });
-    shell.querySelectorAll('.continent-map-frame').forEach(frame=>obs.observe(frame,{attributes:true,attributeFilter:['data-zoom-stage','class']}));
-    setTimeout(refresh,1200);
-    setTimeout(refresh,2200);
-  });
-})();
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch554:'Map Viewport Marker Stack QA'});
-
-// PATCH 5.5.5 — MapVisualLayerCleanupQA
-// Keeps helper LOD blocks out of overview zoom, clarifies that they are non-clickable visual layers,
-// and records visual-layer QA state without touching archive/faction/F.H.C/video/entity features.
-document.addEventListener('DOMContentLoaded', function(){
-  const shell = document.querySelector('.continental-map-shell.datamap-v3');
-  if(!shell) return;
-  shell.classList.add('map-patch555');
-  function activePanel(){ return shell.querySelector('.continent-panel.active') || shell.querySelector('.continent-panel'); }
-  function frameOf(panel){ return panel ? panel.querySelector('.continent-map-frame') : null; }
-  function zoomOf(frame){ return frame ? String(frame.dataset.zoomStage || frame.dataset.pc55Stage || '1') : '1'; }
-  function filterOf(){ return shell.dataset.filter || 'all'; }
-  function regionOf(panel){ return (panel && panel.dataset && panel.dataset.continentPanel) || 'world'; }
-  const regionNames={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
-  function ensureLegend(frame){
-    if(!frame) return null;
-    let el=frame.querySelector('.pc555-helper-legend');
-    if(el) return el;
-    el=document.createElement('div');
-    el.className='pc555-helper-legend';
-    el.innerHTML='<b>VISUAL HELPER LAYER</b><span>보조 관제 블록 · 실제 마커 아님</span>';
-    frame.appendChild(el);
-    return el;
-  }
-  function ensureAudit(){
-    let el=shell.querySelector('.pc555-visual-audit');
-    if(el) return el;
-    el=document.createElement('div');
-    el.className='pc555-visual-audit';
-    el.innerHTML='<b>VISUAL LAYER QA</b><span data-vqa-region>권역</span><span data-vqa-zoom>줌</span><span data-vqa-filter>필터</span><span data-vqa-helper>보조 레이어</span>';
-    shell.appendChild(el);
-    return el;
-  }
-  function tagHelpers(frame){
-    if(!frame) return;
-    frame.querySelectorAll('.pc55-block,.pc554-urban-lod').forEach(function(el){
-      el.setAttribute('aria-hidden','true');
-      el.setAttribute('data-helper-layer','visual-only');
-      el.setAttribute('title','보조 관제 레이어 / 실제 마커 아님');
-      el.style.pointerEvents='none';
-    });
-  }
-  function refresh(){
-    const panel=activePanel(); const frame=frameOf(panel); if(!frame) return;
-    ensureLegend(frame);
-    tagHelpers(frame);
-    const z=parseInt(zoomOf(frame),10)||1;
-    frame.dataset.visualHelperMode = z>=4 ? (filterOf()==='facility'?'facility-focus':'detail-only') : 'hidden-overview';
-    const audit=ensureAudit();
-    const helperText = z>=4 ? (filterOf()==='facility' ? '시설 필터 강조 / 클릭 불가' : '상세 줌에서만 약하게 표시 / 클릭 불가') : 'ZOOM 1~2 숨김';
-    const region = regionNames[regionOf(panel)] || regionOf(panel);
-    audit.querySelector('[data-vqa-region]').textContent='권역: '+region;
-    audit.querySelector('[data-vqa-zoom]').textContent='줌: ZOOM '+z;
-    audit.querySelector('[data-vqa-filter]').textContent='필터: '+filterOf();
-    audit.querySelector('[data-vqa-helper]').textContent='보조 레이어: '+helperText;
-  }
-  shell.addEventListener('click', function(e){
-    if(e.target.closest('.continent-tab,.continent-filter,.map-viewport-tools button,.pc554-cluster-badge,.pc554-stack-list button')){
-      setTimeout(refresh, 80);
-      setTimeout(refresh, 240);
-    }
-  }, true);
-  shell.addEventListener('wheel', function(){ setTimeout(refresh, 120); }, {passive:true});
-  const mo=new MutationObserver(function(muts){
-    if(muts.some(function(m){ return m.type==='attributes' && /data-zoom-stage|data-pc55-stage|class/.test(m.attributeName||''); })){
-      clearTimeout(shell._pc555VisualRefresh);
-      shell._pc555VisualRefresh=setTimeout(refresh, 140);
-    }
-  });
-  shell.querySelectorAll('.continent-map-frame,.continent-panel').forEach(function(el){
-    mo.observe(el,{attributes:true,attributeFilter:['data-zoom-stage','data-pc55-stage','class']});
-  });
-  setTimeout(refresh, 400);
-  setTimeout(refresh, 1400);
-});
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch555:'Map Visual Layer Cleanup QA'});
-
-
-// PATCH 5.5.6 — MapPerformanceMarkerFineTuneQA
-// Performance-first patch: reduces zoom/drag overlay spam, pauses heavy visual layers during navigation,
-// adds lightweight GEO/PERFORMANCE QA, and keeps marker fine-tune metadata visible without touching other menus.
-document.addEventListener('DOMContentLoaded', function(){
-  const shell=document.querySelector('.continental-map-shell.datamap-v3');
-  if(!shell) return;
-  shell.classList.add('map-patch556');
-  const regionNames={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
-  let navTimer=0, perfTimer=0, lastFrame=null;
-  function activePanel(){return shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
-  function activeFrame(){return activePanel()?.querySelector?.('.continent-map-frame')||null;}
-  function stageOf(frame){return frame ? (frame.dataset.zoomStage||frame.dataset.pc55Stage||'1') : '1';}
-  function regionOf(panel){return panel?.dataset?.continentPanel || 'world';}
-  function beginFastNav(frame, reason){
-    frame=frame||activeFrame();
-    lastFrame=frame||lastFrame;
-    shell.classList.add('map-fast-nav');
-    if(frame) frame.classList.add('pc556-fast-nav');
-    if(reason) shell.dataset.perfReason=reason;
-    clearTimeout(navTimer);
-    navTimer=setTimeout(function(){
-      shell.classList.remove('map-fast-nav');
-      shell.querySelectorAll('.pc556-fast-nav').forEach(function(f){f.classList.remove('pc556-fast-nav');});
-      refreshPerfAudit();
-    },220);
-  }
-  function markerCount(panel){return panel?panel.querySelectorAll('[data-map-item]').length:0;}
-  function reviewedCount(panel){return panel?panel.querySelectorAll('[data-map-item][data-qa="REVIEWED"]').length:0;}
-  function reviewRequiredCount(panel){return panel?panel.querySelectorAll('[data-map-item][data-qa="REVIEW REQUIRED"], [data-map-item][data-qa="SURFACE MISMATCH"], [data-map-item][data-qa="OUT OF REGION"]').length:0;}
-  function ensurePerfAudit(){
-    let el=shell.querySelector('.pc556-perf-audit');
-    if(el) return el;
-    el=document.createElement('div');
-    el.className='pc556-perf-audit';
-    el.innerHTML='<b>MAP PERFORMANCE QA</b><span data-pqa-region>권역</span><span data-pqa-zoom>줌</span><span data-pqa-marker>마커</span><span data-pqa-mode>렌더</span><span data-pqa-reason>상태</span>';
-    shell.appendChild(el);
-    return el;
-  }
-  function refreshPerfAudit(){
-    const panel=activePanel(); const frame=activeFrame(); const el=ensurePerfAudit();
-    const region=regionNames[regionOf(panel)]||regionOf(panel);
-    el.querySelector('[data-pqa-region]').textContent='권역: '+region;
-    el.querySelector('[data-pqa-zoom]').textContent='줌: ZOOM '+stageOf(frame);
-    el.querySelector('[data-pqa-marker]').textContent='마커: '+markerCount(panel)+' / 확인 '+reviewedCount(panel)+' / 재검수 '+reviewRequiredCount(panel);
-    el.querySelector('[data-pqa-mode]').textContent='렌더: '+(shell.classList.contains('map-fast-nav')?'FAST NAV · 상세 레이어 일시 정지':'STABLE · 상세 레이어 복구');
-    el.querySelector('[data-pqa-reason]').textContent='상태: '+(shell.dataset.perfReason||'대기');
-  }
-  function schedulePerfAudit(reason){
-    if(reason) shell.dataset.perfReason=reason;
-    clearTimeout(perfTimer);
-    perfTimer=setTimeout(refreshPerfAudit,160);
-  }
-  function decorateMarkerFineTune(){
-    shell.querySelectorAll('[data-map-item]').forEach(function(el){
-      const qa=el.getAttribute('data-qa')||'REVIEWED';
-      const surface=el.getAttribute('data-surface')||'';
-      const lon=el.getAttribute('data-lon')||'';
-      const lat=el.getAttribute('data-lat')||'';
-      el.setAttribute('data-pc556-qa', qa);
-      el.setAttribute('data-pc556-surface', surface);
-      if(lon && lat) el.setAttribute('data-pc556-geo', lat+' / '+lon);
-    });
-  }
-  function ensureGeoCrosshair(frame){
-    if(!frame || frame.querySelector('.pc556-geo-crosshair')) return;
-    const el=document.createElement('div');
-    el.className='pc556-geo-crosshair';
-    el.innerHTML='<span></span><i></i><b>GEO QA</b>';
-    frame.appendChild(el);
-  }
-  function ensureAll(){
-    shell.querySelectorAll('.continent-map-frame').forEach(ensureGeoCrosshair);
-    decorateMarkerFineTune();
-    refreshPerfAudit();
-  }
-  shell.addEventListener('wheel', function(e){
-    if(e.target.closest('.continent-map-frame')) beginFastNav(e.target.closest('.continent-map-frame'), '휠 줌 입력 · HUD 축소');
-  }, {passive:true, capture:true});
-  shell.addEventListener('pointerdown', function(e){
-    const frame=e.target.closest('.continent-map-frame');
-    if(frame && !e.target.closest('.map-detail-card,.pc554-stack-panel')) beginFastNav(frame, '드래그 준비 · 상세 레이어 일시 정지');
-  }, true);
-  shell.addEventListener('pointermove', function(e){
-    const frame=e.target.closest('.continent-map-frame');
-    if(frame && frame.classList.contains('is-dragging')) beginFastNav(frame, '드래그 이동 · 렌더 간소화');
-  }, true);
-  shell.addEventListener('click', function(e){
-    const tool=e.target.closest('.map-viewport-tools button');
-    if(tool){ beginFastNav(tool.closest('.continent-map-frame'), '툴 조작 · '+(tool.dataset.mapTool||'view')); schedulePerfAudit('툴 조작 완료 대기'); }
-    if(e.target.closest('.continent-tab,.continent-filter')){ schedulePerfAudit('권역/필터 변경'); setTimeout(ensureAll,260); }
-    const item=e.target.closest('[data-map-item]');
-    if(item){ schedulePerfAudit('마커 선택 · '+(item.getAttribute('data-code')||item.getAttribute('data-title')||'NO-CODE')); }
-  }, true);
-  const mo=new MutationObserver(function(muts){
-    if(muts.some(function(m){return m.type==='attributes' && /data-zoom-stage|data-pc55-stage|class/.test(m.attributeName||'');})){
-      schedulePerfAudit('줌/레이어 상태 갱신');
-    }
-  });
-  shell.querySelectorAll('.continent-map-frame,.continent-panel').forEach(function(el){mo.observe(el,{attributes:true,attributeFilter:['data-zoom-stage','data-pc55-stage','class']});});
-  ensureAll();
-  setTimeout(ensureAll,1200);
-});
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch556:'Map Performance + Marker Fine Tune QA'});
-
-
-// PATCH 5.5.7 — MapTacticalVisualUpgrade
-// Visual-only map upgrade. Keeps 5.5.6 as base and does NOT apply the rejected 5.5.6.1 hotfix.
-// Adds contamination hatching overlays, surveillance radii, FEEDS panel, satellite/drone links, and marker visual language.
-document.addEventListener('DOMContentLoaded', function(){
-  const shell=document.querySelector('.continental-map-shell.datamap-v3');
-  if(!shell || shell.dataset.patch557Applied) return;
-  shell.dataset.patch557Applied='1';
-  shell.classList.add('map-patch557');
-
-  const regionNames={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
-  const feedByRegion={
-    world:['SATELLITE','FIELD REVIEW','BLOCKADE GRID','REGIONAL RELAY'],
-    east:['SATELLITE','HARBOR WATCH','BLOCKADE GRID','DRONE WATCH'],
-    europe:['SATELLITE','NORTH SEA FEED','FIELD REVIEW','BLOCKADE GRID'],
-    north:['SATELLITE','BOREAL WATCH','FIELD REVIEW','AIR ROUTE'],
-    southasia:['SATELLITE','RIVER WATCH','FIELD REVIEW','DRONE WATCH'],
-    seindian:['SATELLITE','STRAIT WATCH','SEA LANE','FIELD REVIEW'],
-    oceania:['SATELLITE','OUTBACK GRID','SEA WATCH','DRONE WATCH'],
-    mideast:['SATELLITE','DESERT WATCH','BLOCKADE GRID','FIELD REVIEW'],
-    africa:['SATELLITE','SAHEL WATCH','FIELD REVIEW','SEA WATCH']
-  };
-  const filterNames={all:'전체 레이어',zone:'오염 구역','zone-red':'레드존','zone-yellow':'옐로우존','zone-green':'그린존','zone-white':'화이트존','zone-black':'블랙존',facility:'작전 시설',anomaly:'현상 기록',incident:'사건 좌표','blockade-node':'봉쇄 거점',blockade:'봉쇄선'};
-
-  function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function activePanel(){return shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
-  function activeFrame(){return activePanel()?.querySelector?.('.continent-map-frame')||null;}
-  function regionOf(panel){return panel?.dataset?.continentPanel || 'world';}
-  function stageOf(frame){return parseInt(frame?.dataset?.zoomStage || frame?.dataset?.pc55Stage || '1',10)||1;}
-  function filterOf(){return shell.dataset.filter || 'all';}
-  function parseProj(el){
-    const raw=el.getAttribute('data-proj')||'';
-    const m=/X\s*(-?\d+(?:\.\d+)?)\s*\/\s*Y\s*(-?\d+(?:\.\d+)?)/i.exec(raw);
-    if(m) return [Math.max(0,Math.min(1600,parseFloat(m[1]))), Math.max(0,Math.min(900,parseFloat(m[2])) )];
-    try{
-      if(typeof el.getBBox==='function'){
-        const b=el.getBBox();
-        if(isFinite(b.x) && isFinite(b.y)) return [b.x+b.width/2,b.y+b.height/2];
-      }
-    }catch(e){}
-    return null;
-  }
-  function pct(p){return [p[0]/16,p[1]/9];}
-  function markerKind(el){
-    const f=el.getAttribute('data-filter')||'';
-    const z=el.getAttribute('data-zone')||'';
-    const t=[el.getAttribute('data-title'),el.getAttribute('data-visual'),el.getAttribute('data-role'),el.getAttribute('data-surface')].join(' ');
-    if(f==='zone' || /^zone-/.test(f) || /레드존|블랙존|옐로우|화이트|그린/.test(t)) return z || (f.replace('zone-','')||'red');
-    if(f==='blockade-node' || /게이트|통제 노드|검문/.test(t)) return 'gate';
-    if(f==='facility') return 'facility';
-    if(f==='anomaly') return 'anomaly';
-    if(f==='incident') return 'incident';
-    if(f==='blockade' || /봉쇄선|감시권/.test(t)) return 'blockade';
-    return f || 'node';
-  }
-  function ensureFeedsPanel(){
-    let panel=shell.querySelector('.pc557-feeds-panel');
-    if(panel) return panel;
-    panel=document.createElement('aside');
-    panel.className='pc557-feeds-panel';
-    panel.innerHTML='<div class="pc557-feeds-head"><b>ACTIVE FEEDS</b><span data-pc557-region>REGION</span></div><div class="pc557-feed-list" data-pc557-feeds></div><div class="pc557-feed-metrics"><span data-pc557-filter>FILTER</span><span data-pc557-marker>MARKERS</span><span data-pc557-stage>ZOOM</span></div>';
-    shell.appendChild(panel);
-    return panel;
-  }
-  function ensureLegend(){
-    let legend=shell.querySelector('.pc557-tactical-legend');
-    if(legend) return legend;
-    legend=document.createElement('div');
-    legend.className='pc557-tactical-legend';
-    legend.innerHTML='<b>TACTICAL VISUAL</b><span><i class="rz"></i>해칭 오염권</span><span><i class="rad"></i>감시 반경</span><span><i class="sat"></i>위성/드론 링크</span><span><i class="feed"></i>활성 피드</span>';
-    shell.appendChild(legend);
-    return legend;
-  }
-  function ensureViz(frame){
-    if(!frame) return null;
-    let layer=frame.querySelector('.pc557-tactical-viz');
-    if(layer) return layer;
-    layer=document.createElement('div');
-    layer.className='pc557-tactical-viz';
-    layer.setAttribute('aria-hidden','true');
-    const lod=frame.querySelector('.pc55-tactical-lod');
-    if(lod) lod.appendChild(layer); else frame.insertBefore(layer, frame.querySelector('.map-data-layer'));
-    return layer;
-  }
-  function addDiv(layer,cls,x,y,w,h,text,meta){
-    const el=document.createElement('i');
-    el.className=cls;
-    el.style.left=x+'%'; el.style.top=y+'%';
-    if(w!=null) el.style.width=w+'%';
-    if(h!=null) el.style.height=h+'%';
-    if(text) el.setAttribute('data-label',text);
-    if(meta){
-      if(meta.code) el.setAttribute('data-node-code',meta.code);
-      if(meta.type) el.setAttribute('data-layer-type',meta.type);
-      if(meta.kind) el.setAttribute('data-layer-kind',meta.kind);
-    }
-    layer.appendChild(el);
-    return el;
-  }
-  function addLine(layer,cls,a,b,label,meta){
-    const dx=b[0]-a[0], dy=b[1]-a[1];
-    const len=Math.sqrt(dx*dx+dy*dy);
-    const angle=Math.atan2(dy,dx)*180/Math.PI;
-    const el=document.createElement('i');
-    el.className='pc557-link '+cls;
-    el.style.left=a[0]+'%'; el.style.top=a[1]+'%'; el.style.width=len+'%'; el.style.transform='rotate('+angle+'deg)';
-    if(label) el.setAttribute('data-label',label);
-    if(meta){
-      el.setAttribute('data-layer-type','link');
-      if(meta.source) el.setAttribute('data-source-code',meta.source);
-      if(meta.target) el.setAttribute('data-target-code',meta.target);
-      if(meta.feed) el.setAttribute('data-feed-type',meta.feed);
-    }
-    layer.appendChild(el);
-  }
-  function addCard(layer,x,y,code,title,kind){
-    const card=document.createElement('span');
-    card.className='pc557-mini-card '+(kind||'');
-    card.style.left=x+'%'; card.style.top=y+'%';
-    card.setAttribute('data-node-code',code||'NODE');
-    card.setAttribute('data-layer-type','card');
-    card.setAttribute('data-layer-kind',kind||'node');
-    card.innerHTML='<b>'+esc(code||'NODE')+'</b><em>'+esc(title||'관제 표식')+'</em>';
-    layer.appendChild(card);
-  }
-  function markerSnapshot(frame){
-    const nodes=Array.from(frame.querySelectorAll('[data-map-item]')).map(function(el){
-      const p=parseProj(el);
-      if(!p) return null;
-      const pc=pct(p);
-      return {el:el,x:pc[0],y:pc[1],kind:markerKind(el),filter:el.getAttribute('data-filter')||'',zone:el.getAttribute('data-zone')||'',code:el.getAttribute('data-code')||'',title:el.getAttribute('data-title')||'',surface:el.getAttribute('data-surface')||''};
-    }).filter(Boolean);
-    return nodes;
-  }
-  function buildViz(frame){
-    const layer=ensureViz(frame); if(!layer) return;
-    const stage=stageOf(frame);
-    layer.innerHTML='';
-    const nodes=markerSnapshot(frame);
-    const zones=nodes.filter(n=>['red','black','yellow','white','green'].includes(n.kind)).slice(0,9);
-    const gates=nodes.filter(n=>n.kind==='gate' || /해상|항만|통제/.test(n.surface)).slice(0,7);
-    const facilities=nodes.filter(n=>n.kind==='facility').slice(0,6);
-    const anomalies=nodes.filter(n=>n.kind==='anomaly' || n.kind==='incident').slice(0,7);
-
-    zones.forEach(function(n,i){
-      const size=(n.kind==='black'?13:(n.kind==='red'?18:(n.kind==='yellow'?15:11))) * (stage>=4?1.07:1);
-      addDiv(layer,'pc557-hatch pc557-zone-'+n.kind, n.x-size/2, n.y-size/2, size, size, n.kind.toUpperCase(), {code:n.code,type:'zone',kind:n.kind});
-      if(stage>=2) addDiv(layer,'pc557-radius pc557-radius-'+n.kind, n.x-size*.72, n.y-size*.72, size*1.44, size*1.44, 'WATCH', {code:n.code,type:'radius',kind:n.kind});
-      if(stage>=3) addCard(layer, Math.min(88,n.x+2), Math.max(4,n.y-4), n.code, n.title, 'zone');
-    });
-    gates.forEach(function(n,i){
-      if(stage>=2) addDiv(layer,'pc557-radius pc557-radius-gate', n.x-5.2, n.y-5.2, 10.4, 10.4, 'GATE', {code:n.code,type:'radius',kind:'gate'});
-      if(stage>=4) addCard(layer, Math.min(88,n.x+2), Math.max(5,n.y+2), n.code, n.title, 'gate');
-    });
-    anomalies.forEach(function(n,i){
-      if(stage>=3) addDiv(layer,'pc557-radius pc557-radius-scan', n.x-3.7, n.y-3.7, 7.4, 7.4, 'SCAN', {code:n.code,type:'radius',kind:'scan'});
-      if(stage>=5) addCard(layer, Math.min(88,n.x+1.6), Math.max(5,n.y-3), n.code, n.title, 'anomaly');
-    });
-
-    const linkSources = zones.concat(gates).concat(facilities).filter(Boolean).slice(0,7);
-    for(let i=0;i<linkSources.length-1;i++){
-      const a=linkSources[i], b=linkSources[i+1];
-      const cls = /해상|항만/.test(a.surface+b.surface) ? 'pc557-link-drone' : (i%2?'pc557-link-sat':'pc557-link-field');
-      if(stage>=2) addLine(layer, cls, [a.x,a.y], [b.x,b.y], i%2?'DRONE':'SAT', {source:a.code,target:b.code,feed:(i%2?'DRONE':'SAT')});
-    }
-    if(stage>=4){
-      facilities.forEach(function(n,i){
-        addDiv(layer,'pc557-facility-cell', n.x-3.5, n.y-2.5, 7, 5, 'FAC', {code:n.code,type:'facility',kind:'facility'});
-      });
-    }
-    frame.dataset.pc557VisualReady='1';
-  }
-  function updateFeeds(){
-    const panel=ensureFeedsPanel();
-    const active=activePanel(); const frame=activeFrame(); const region=regionOf(active);
-    const feeds=feedByRegion[region]||feedByRegion.world;
-    const count=active ? active.querySelectorAll('[data-map-item]').length : 0;
-    const review=active ? active.querySelectorAll('[data-map-item][data-qa="REVIEW REQUIRED"], [data-map-item][data-qa="SURFACE MISMATCH"], [data-map-item][data-qa="OUT OF REGION"]').length : 0;
-    const list=panel.querySelector('[data-pc557-feeds]');
-    list.innerHTML=feeds.map(function(f,i){
-      const ok = review && i===1 ? 'WARN' : 'ONLINE';
-      return '<span class="'+(ok==='WARN'?'warn':'')+'"><b>'+esc(f)+'</b><em>'+ok+'</em></span>';
-    }).join('');
-    panel.querySelector('[data-pc557-region]').textContent=regionNames[region]||region.toUpperCase();
-    panel.querySelector('[data-pc557-filter]').textContent='FILTER / '+(filterNames[filterOf()]||filterOf());
-    panel.querySelector('[data-pc557-marker]').textContent='MARKERS / '+count+(review?' · REVIEW '+review:'');
-    panel.querySelector('[data-pc557-stage]').textContent='ZOOM / '+stageOf(frame);
-  }
-  function refresh(){
-    ensureLegend();
-    shell.querySelectorAll('.continent-map-frame').forEach(function(frame){
-      buildViz(frame);
-      frame.dataset.pc557Stage=stageOf(frame);
-    });
-    updateFeeds();
-  }
-  let timer=0;
-  function schedule(delay){ clearTimeout(timer); timer=setTimeout(refresh, delay||140); }
-  shell.addEventListener('click',function(e){
-    if(e.target.closest('.continent-tab,.continent-filter,.map-viewport-tools button,.pc554-cluster-badge,.pc554-stack-list button')) schedule(180);
-  },true);
-  shell.addEventListener('wheel',function(e){ if(e.target.closest('.continent-map-frame')) schedule(260); },{passive:true});
-  const mo=new MutationObserver(function(muts){
-    if(muts.some(function(m){return m.type==='attributes' && /data-zoom-stage|data-pc55-stage|class/.test(m.attributeName||'');})) schedule(180);
-  });
-  shell.querySelectorAll('.continent-map-frame,.continent-panel').forEach(function(el){mo.observe(el,{attributes:true,attributeFilter:['data-zoom-stage','data-pc55-stage','class']});});
-  setTimeout(refresh,450);
-  setTimeout(refresh,1350);
-});
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch557:'Map Tactical Visual Upgrade'});
-
-
-// PATCH 5.5.8 — MapLayerDeclutterQA / zoom-stage visibility rules and selected marker focus.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell) return;
-    shell.classList.add('map-patch558');
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    let selectedCode='';
-    function activePanel(){return shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
-    function activeFrame(){return activePanel()?.querySelector?.('.continent-map-frame')||null;}
-    function stageOf(frame){return parseInt(frame?.dataset?.zoomStage || frame?.dataset?.pc55Stage || '1',10)||1;}
-    function filterOf(){return shell.dataset.filter || 'all';}
-    function selectedExists(frame){return !!(selectedCode && frame && frame.querySelector('[data-map-item][data-code="'+CSS.escape(selectedCode)+'"]'));}
-    function related(el){
-      if(!selectedCode) return false;
-      return el.getAttribute('data-node-code')===selectedCode || el.getAttribute('data-source-code')===selectedCode || el.getAttribute('data-target-code')===selectedCode;
-    }
-    function clearFlags(el){
-      el.classList.remove('pc558-hidden','pc558-muted','pc558-related','pc558-focus','pc558-overview');
-      el.removeAttribute('data-pc558-rule');
-    }
-    function hide(el,rule){el.classList.add('pc558-hidden'); if(rule) el.setAttribute('data-pc558-rule',rule);}
-    function mute(el,rule){el.classList.add('pc558-muted'); if(rule) el.setAttribute('data-pc558-rule',rule);}
-    function focus(el){el.classList.add('pc558-related','pc558-focus');}
-    function applyFrame(frame){
-      if(!frame) return;
-      const stage=stageOf(frame);
-      const filter=filterOf();
-      const hasSel=selectedExists(frame);
-      frame.classList.toggle('pc558-has-selection',hasSel);
-      frame.dataset.pc558Stage=String(stage);
-      frame.dataset.pc558Selected=hasSel?selectedCode:'';
-      const viz=frame.querySelector('.pc557-tactical-viz');
-      if(!viz) return;
-      const items=Array.from(viz.querySelectorAll('.pc557-hatch,.pc557-radius,.pc557-link,.pc557-mini-card,.pc557-facility-cell'));
-      let visibleCards=0;
-      items.forEach(function(el){
-        clearFlags(el);
-        const isH=el.classList.contains('pc557-hatch');
-        const isR=el.classList.contains('pc557-radius');
-        const isL=el.classList.contains('pc557-link');
-        const isC=el.classList.contains('pc557-mini-card');
-        const isF=el.classList.contains('pc557-facility-cell');
-        const rel=related(el);
-        const type=el.getAttribute('data-layer-type')||'';
-        const kind=el.getAttribute('data-layer-kind')||'';
-        if(rel) focus(el);
-        // Filter-first coarse suppression. Keeps non-selected categories from dominating the view.
-        if(filter==='facility' && !(isF || (isC&&kind==='facility') || rel)) mute(el,'filter-facility');
-        if(filter==='anomaly' && !(kind==='anomaly' || kind==='scan' || rel)) mute(el,'filter-anomaly');
-        if(filter==='incident' && !(kind==='incident' || rel)) mute(el,'filter-incident');
-        if((filter==='blockade'||filter==='blockade-node') && !(kind==='gate'||isL||rel)) mute(el,'filter-blockade');
-        if(filter.startsWith('zone') && !(isH || rel)) mute(el,'filter-zone');
-        // Stage visibility table.
-        if(stage<=1){
-          if(!isH) hide(el,'zoom1-overview');
-          else mute(el,'zoom1-hatch-only');
-          return;
-        }
-        if(stage===2){
-          if(isC||isF||isL) hide(el,'zoom2-summary');
-          else if(isR) mute(el,'zoom2-low-radius');
-          else if(isH) mute(el,'zoom2-low-hatch');
-          return;
-        }
-        if(stage===3){
-          if(isF) hide(el,'zoom3-no-facility');
-          if(isL && !rel) mute(el,'zoom3-link-muted');
-          if(isC){
-            if(hasSel && rel) focus(el);
-            else hide(el,'zoom3-label-selected-only');
-          }
-          if(isH&&!rel) mute(el,'zoom3-hatch-muted');
-          if(isR&&!rel) mute(el,'zoom3-radius-muted');
-          return;
-        }
-        if(stage===4){
-          if(isC){
-            if(hasSel){ if(!rel) hide(el,'zoom4-selected-labels-only'); }
-            else if(++visibleCards>3) hide(el,'zoom4-card-cap');
-          }
-          if(isL && hasSel && !rel) hide(el,'zoom4-related-links-only');
-          if((isH||isR) && hasSel && !rel) mute(el,'zoom4-background-context');
-          return;
-        }
-        // ZOOM 5: analysis is target-centered. Do not show every radius/link/card at once.
-        if(stage>=5){
-          if(hasSel){
-            if((isC||isR||isL||isF) && !rel) hide(el,'zoom5-selection-focus');
-            if(isH && !rel) mute(el,'zoom5-hatch-context');
-          }else{
-            if(isC||isL||isR||isF) hide(el,'zoom5-wait-for-selection');
-            if(isH) mute(el,'zoom5-overview-hatch');
-          }
-        }
-      });
-    }
-    function applyAll(){shell.querySelectorAll('.continent-map-frame').forEach(applyFrame); updateAudit();}
-    function ensureAudit(){
-      let p=shell.querySelector('.pc558-declutter-audit');
-      if(p) return p;
-      p=document.createElement('div');
-      p.className='pc558-declutter-audit';
-      p.innerHTML='<b>LAYER VISIBILITY QA</b><span data-dqa-stage>ZOOM</span><span data-dqa-filter>FILTER</span><span data-dqa-select>SELECT</span><span data-dqa-rule>RULE</span>';
-      shell.appendChild(p); return p;
-    }
-    function updateAudit(){
-      const p=ensureAudit(); const frame=activeFrame(); const stage=stageOf(frame); const f=filterOf();
-      p.querySelector('[data-dqa-stage]').textContent='줌: ZOOM '+stage;
-      p.querySelector('[data-dqa-filter]').textContent='필터: '+f;
-      p.querySelector('[data-dqa-select]').textContent='선택: '+(selectedCode||'없음');
-      p.querySelector('[data-dqa-rule]').textContent='규칙: '+(stage>=5?'선택 대상 중심':'단계별 요약');
-    }
-    shell.addEventListener('click',function(e){
-      const marker=e.target.closest('[data-map-item]');
-      if(marker){ selectedCode=marker.getAttribute('data-code')||''; setTimeout(applyAll,80); return; }
-      if(e.target.closest('.continent-filter,.continent-tab')){ selectedCode=''; setTimeout(applyAll,160); return; }
-      if(e.target.closest('.map-viewport-tools button,.pc554-cluster-badge,.pc554-stack-list button')) setTimeout(applyAll,180);
-    },true);
-    shell.addEventListener('keydown',function(e){
-      if(e.key!=='Enter'&&e.key!==' ') return;
-      const marker=e.target.closest('[data-map-item]');
-      if(marker){ selectedCode=marker.getAttribute('data-code')||''; setTimeout(applyAll,80); }
-    },true);
-    shell.addEventListener('wheel',function(e){ if(e.target.closest('.continent-map-frame')){ clearTimeout(shell._pc558Wheel); shell._pc558Wheel=setTimeout(applyAll,260); } },{passive:true});
-    const mo=new MutationObserver(function(muts){
-      if(muts.some(function(m){return m.type==='attributes' && /data-zoom-stage|data-pc55-stage|class/.test(m.attributeName||'');})){
-        clearTimeout(shell._pc558Mutation); shell._pc558Mutation=setTimeout(applyAll,160);
-      }
-    });
-    shell.querySelectorAll('.continent-map-frame,.continent-panel').forEach(function(el){mo.observe(el,{attributes:true,attributeFilter:['data-zoom-stage','data-pc55-stage','class']});});
-    setTimeout(applyAll,800);
-    setTimeout(applyAll,1600);
-  });
-})();
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch558:'Map Layer Declutter QA'});
-
-// PATCH 5.5.8.1 — MapLayerVisibilityHotfix
-// Narrow hotfix after 5.5.8: stronger declutter gates for ZOOM 4/5 and no-selection states.
-// Does not alter map pan/zoom transform logic.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell || shell.dataset.patch5581Applied) return;
-    shell.dataset.patch5581Applied='1';
-    shell.classList.add('map-patch5581');
-    let selectedCode='';
-    const qs=(root,sel)=>Array.from((root||document).querySelectorAll(sel));
-    function activePanel(){return shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
-    function activeFrame(){return activePanel()?.querySelector?.('.continent-map-frame')||null;}
-    function stageOf(frame){return parseInt(frame?.dataset?.zoomStage || frame?.dataset?.pc55Stage || '1',10)||1;}
-    function markerCodeFromEventTarget(t){
-      const m=t.closest?.('[data-map-item]');
-      if(m) return m.getAttribute('data-code')||'';
-      const b=t.closest?.('.pc554-stack-list button');
-      if(b){
-        const span=b.querySelector('span');
-        return span ? (span.textContent||'').trim() : '';
-      }
-      return '';
-    }
-    function clear5581(el){
-      el.classList.remove('pc5581-hidden','pc5581-dim','pc5581-focus','pc5581-related');
-      el.removeAttribute('data-pc5581-rule');
-    }
-    function hide(el,why){el.classList.add('pc5581-hidden'); if(why) el.setAttribute('data-pc5581-rule',why);}
-    function dim(el,why){el.classList.add('pc5581-dim'); if(why) el.setAttribute('data-pc5581-rule',why);}
-    function mark(el){el.classList.add('pc5581-related','pc5581-focus');}
-    function isRelated(el){
-      if(!selectedCode) return false;
-      return el.getAttribute('data-node-code')===selectedCode || el.getAttribute('data-source-code')===selectedCode || el.getAttribute('data-target-code')===selectedCode;
-    }
-    function applyFrame(frame){
-      if(!frame) return;
-      const stage=stageOf(frame);
-      const hasSel=!!(selectedCode && frame.querySelector('[data-map-item][data-code="'+(window.CSS&&CSS.escape?CSS.escape(selectedCode):selectedCode.replace(/"/g,'\\"'))+'"]'));
-      frame.classList.toggle('pc5581-has-selection',hasSel);
-      frame.classList.toggle('pc5581-no-selection',!hasSel);
-      frame.dataset.pc5581Stage=String(stage);
-      frame.dataset.pc5581Selected=hasSel?selectedCode:'';
-      const items=qs(frame,'.pc557-hatch,.pc557-radius,.pc557-link,.pc557-mini-card,.pc557-facility-cell');
-      let cardBudget = stage>=4 ? 2 : 0;
-      items.forEach(function(el){
-        clear5581(el);
-        const hatch=el.classList.contains('pc557-hatch');
-        const radius=el.classList.contains('pc557-radius');
-        const link=el.classList.contains('pc557-link');
-        const card=el.classList.contains('pc557-mini-card');
-        const fac=el.classList.contains('pc557-facility-cell');
-        const rel=isRelated(el);
-        if(rel) mark(el);
-
-        if(stage<=1){
-          if(!hatch) hide(el,'5581-zoom1-summary-only');
-          else dim(el,'5581-zoom1-hatch-bg');
-          return;
-        }
-        if(stage===2){
-          if(link||card||fac) hide(el,'5581-zoom2-no-detail');
-          else dim(el,'5581-zoom2-low-context');
-          return;
-        }
-        if(stage===3){
-          if(link||fac) hide(el,'5581-zoom3-no-link-fac');
-          if(card && !rel) hide(el,'5581-zoom3-selected-card-only');
-          if((hatch||radius) && !rel) dim(el,'5581-zoom3-background');
-          return;
-        }
-        if(stage===4){
-          if(hasSel){
-            if((link||card||radius||fac) && !rel) hide(el,'5581-zoom4-focus-only');
-            if(hatch && !rel) dim(el,'5581-zoom4-muted-hatch');
-          }else{
-            if(link||radius||fac) hide(el,'5581-zoom4-wait-selection');
-            if(card){ if(cardBudget-- > 0) dim(el,'5581-zoom4-card-preview'); else hide(el,'5581-zoom4-card-cap'); }
-            if(hatch) dim(el,'5581-zoom4-hatch-bg');
-          }
-          return;
-        }
-        // ZOOM 5 is analysis mode. Without a selected marker, keep only quiet context.
-        if(stage>=5){
-          if(hasSel){
-            if((link||card||radius||fac) && !rel) hide(el,'5581-zoom5-selected-only');
-            if(hatch && !rel) dim(el,'5581-zoom5-hatch-context');
-          }else{
-            if(link||card||radius||fac) hide(el,'5581-zoom5-no-selection');
-            if(hatch) dim(el,'5581-zoom5-hatch-bg-only');
-          }
-        }
-      });
-      // Hide old helper wording in normal mode even if older patches reinsert it.
-      if(!shell.classList.contains('map-debug-on')){
-        qs(frame,'.pc55-lod-label,.pc555-helper-legend,.pc555-visual-audit,.pc558-declutter-audit').forEach(function(el){ el.classList.add('pc5581-hidden'); });
+    document.body.classList.add('pc5132-audio-remastered');
+    document.body.classList.add('pc5133a-atmosphere-restored');
+    function cue(name,cooldown){
+      if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function'){
+        window.ProjectCurseAudio.playCue(name,cooldown || 90);
       }
     }
-    function applyAll(){qs(shell,'.continent-map-frame').forEach(applyFrame); updateAudit();}
-    function updateAudit(){
-      const p=shell.querySelector('.pc558-declutter-audit');
-      const frame=activeFrame();
-      if(!p || !frame) return;
-      const rule=p.querySelector('[data-dqa-rule]');
-      if(rule) rule.textContent='규칙: 5.5.8.1 핫픽스 · '+(frame.classList.contains('pc5581-has-selection')?'선택 중심':'요약 표시');
-    }
-    shell.addEventListener('click',function(e){
-      const code=markerCodeFromEventTarget(e.target);
-      if(code){selectedCode=code; setTimeout(applyAll,120); return;}
-      if(e.target.closest('.continent-filter,.continent-tab')){selectedCode=''; setTimeout(applyAll,180); return;}
-      if(e.target.closest('.map-viewport-tools button')) setTimeout(applyAll,180);
-    },true);
-    shell.addEventListener('wheel',function(e){ if(e.target.closest('.continent-map-frame')){ clearTimeout(shell._pc5581Wheel); shell._pc5581Wheel=setTimeout(applyAll,220); } },{passive:true});
-    const mo=new MutationObserver(function(muts){
-      if(muts.some(m=>m.type==='attributes')){ clearTimeout(shell._pc5581Mo); shell._pc5581Mo=setTimeout(applyAll,180); }
-    });
-    qs(shell,'.continent-map-frame,.continent-panel').forEach(el=>mo.observe(el,{attributes:true,attributeFilter:['data-zoom-stage','data-pc55-stage','class']}));
-    setTimeout(applyAll,500);
-    setTimeout(applyAll,1400);
-  });
-})();
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch5581:'Map Layer Visibility Hotfix'});
+    const videoRecords=new Set(['Immortality_860201','Sakuma_Tape_991028','불명_Record1_860204']);
+    const bioRecords=new Set(['타락 개체_860722','FCR_Archive_890402','불명_Record2_860205','불명_Record5_940626']);
+    const restrictedRecords=new Set(['Cults_871104']);
 
-// PATCH 5.5.9 — MapRuntimeCleanup
-// Consolidates map zoom/drag input at document-capture level so older patch listeners do not all react to every zoom/drag event.
-// This patch intentionally avoids display:none hide/restore loops from 5.5.6.1 and only commits heavy layer state once after input settles.
-// PATCH 5.6.1 overrides this runtime to use fixed 5-step zoom snapping instead of free percent zoom.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell || shell.dataset.patch559Applied) return;
-    shell.dataset.patch559Applied='1';
-    shell.classList.add('map-patch559','map-runtime-consolidated','map-patch561');
-
-    const state=new WeakMap();
-    const ZOOM_STEPS=[
-      {stage:1,scale:1.00,label:'ZOOM 1 / 권역 보기',code:'REGION OVERVIEW'},
-      {stage:2,scale:1.40,label:'ZOOM 2 / 작전권 보기',code:'OPERATION SECTOR'},
-      {stage:3,scale:1.85,label:'ZOOM 3 / 전술 관제',code:'TACTICAL CONTROL'},
-      {stage:4,scale:2.40,label:'ZOOM 4 / 시설 관제',code:'FACILITY CONTROL'},
-      {stage:5,scale:3.00,label:'ZOOM 5 / 기록 분석',code:'RECORD ANALYSIS'}
-    ];
-    const MIN=ZOOM_STEPS[0].scale, MAX=ZOOM_STEPS[ZOOM_STEPS.length-1].scale;
-    const layerSelector='.continent-map-img,.map-data-layer,.pc55-tactical-lod';
-    let dragging=null;
-    let busyTimer=0;
-
-    function px(n){ return Number.isFinite(n)? n+'px' : '0px'; }
-    function parsePx(v){ const n=parseFloat(String(v||'').replace('px','')); return Number.isFinite(n)?n:0; }
-    function frameFromTarget(t){ return t && t.closest ? t.closest('.continent-map-frame') : null; }
-    function isMapTool(t){ return t && t.closest && t.closest('.map-viewport-tools button'); }
-    function stepByStage(stage){ return ZOOM_STEPS[Math.max(1,Math.min(5,stage))-1] || ZOOM_STEPS[0]; }
-    function nearestStep(scale){
-      let best=ZOOM_STEPS[0], diff=Infinity;
-      ZOOM_STEPS.forEach(st=>{ const d=Math.abs((+scale||1)-st.scale); if(d<diff){diff=d; best=st;} });
-      return best;
-    }
-    function stageForScale(scale){ return nearestStep(scale).stage; }
-    function getState(frame){
-      let s=state.get(frame);
-      if(!s){
-        const cs=getComputedStyle(frame);
-        const raw=parseFloat(frame.dataset.pc559Scale||cs.getPropertyValue('--map-scale')||'1') || 1;
-        const st=nearestStep(raw);
-        s={scale:st.scale,x:parsePx(cs.getPropertyValue('--map-x')),y:parsePx(cs.getPropertyValue('--map-y')),wide:frame.classList.contains('map-wide-mode'),raf:0,idle:0,stage:st.stage,wheelDebt:0,wheelTimer:0};
-        state.set(frame,s);
-      }
-      return s;
-    }
-    function clamp(frame,s){
-      const st=nearestStep(s.scale);
-      s.scale=Math.max(MIN,Math.min(MAX,st.scale));
-      s.stage=st.stage;
-      if(s.scale<=1.001){s.x=0;s.y=0;return;}
-      const maxX=Math.max(0,(frame.clientWidth||0)*(s.scale-1)/2);
-      const maxY=Math.max(0,(frame.clientHeight||0)*(s.scale-1)/2);
-      s.x=Math.max(-maxX,Math.min(maxX,+s.x||0));
-      s.y=Math.max(-maxY,Math.min(maxY,+s.y||0));
-    }
-    function markBusy(){
-      shell.classList.add('pc559-runtime-moving');
-      clearTimeout(busyTimer);
-      busyTimer=setTimeout(()=>shell.classList.remove('pc559-runtime-moving'),180);
-    }
-    function syncReadout(frame,s,commit){
-      const st=stepByStage(s.stage||stageForScale(s.scale));
-      const read=frame.querySelector('.map-zoom-readout');
-      // 5.6.1: stage-first readout. Percent remains only as a small secondary cue.
-      if(read) read.textContent=Math.round(st.scale*100)+'%';
-      const stageEl=frame.querySelector('.map-zoom-stage');
-      if(stageEl) stageEl.textContent=st.label;
-      const pc55Title=frame.querySelector('[data-pc55-stage-title]');
-      if(pc55Title) pc55Title.textContent=st.label;
-      const pc55Code=frame.querySelector('[data-pc55-stage-code]');
-      if(pc55Code) pc55Code.textContent=st.code;
-      if(commit){
-        s.stage=st.stage;
-        frame.dataset.zoomStage=String(st.stage);
-        frame.dataset.pc55Stage=String(st.stage);
-        frame.dataset.pc559Scale=String(st.scale.toFixed(2));
-        frame.dataset.pc561ZoomStep=String(st.stage);
-      }
-    }
-    function apply(frame,commit){
-      const s=getState(frame);
-      clamp(frame,s);
-      const transform='translate('+s.x+'px, '+s.y+'px) scale('+s.scale+')';
-      frame.style.setProperty('--map-x',px(s.x));
-      frame.style.setProperty('--map-y',px(s.y));
-      frame.style.setProperty('--map-scale',String(s.scale));
-      frame.style.setProperty('--pc-marker-inv',String((1/Math.max(1,s.scale)).toFixed(4)));
-      frame.querySelectorAll(layerSelector).forEach(el=>{ el.style.transform=transform; });
-      syncReadout(frame,s,!!commit);
-    }
-    function scheduleApply(frame,commitDelay){
-      const s=getState(frame);
-      markBusy();
-      if(!s.raf){
-        s.raf=requestAnimationFrame(()=>{ s.raf=0; apply(frame,false); });
-      }
-      clearTimeout(s.idle);
-      s.idle=setTimeout(()=>{ apply(frame,true); }, commitDelay==null?120:commitDelay);
-    }
-    function setStage(frame,stage){
-      const s=getState(frame);
-      const st=stepByStage(stage);
-      s.scale=st.scale;
-      s.stage=st.stage;
-      if(s.stage<=1){s.x=0;s.y=0;s.wide=false; frame.classList.remove('map-wide-mode');}
-      clamp(frame,s);
-      scheduleApply(frame,110);
-    }
-    function stepZoom(frame,dir){
-      const s=getState(frame);
-      const cur=nearestStep(s.scale).stage;
-      setStage(frame,cur+(dir>0?1:-1));
-    }
-    function reset(frame){
-      const s=getState(frame); s.scale=MIN; s.stage=1; s.x=0; s.y=0; s.wide=false;
-      frame.classList.remove('map-wide-mode');
-      const btn=frame.querySelector('[data-map-tool="wide"]'); if(btn) btn.classList.remove('active');
-      scheduleApply(frame,90);
-    }
-    function wide(frame){
-      const s=getState(frame); s.scale=MIN; s.stage=1; s.x=0; s.y=0; s.wide=!s.wide;
-      frame.classList.toggle('map-wide-mode',s.wide);
-      const btn=frame.querySelector('[data-map-tool="wide"]'); if(btn) btn.classList.toggle('active',s.wide);
-      scheduleApply(frame,100);
-    }
-    function handleTool(e){
-      const btn=isMapTool(e.target); if(!btn) return false;
-      const frame=frameFromTarget(btn); if(!frame || !shell.contains(frame)) return false;
-      e.preventDefault(); e.stopImmediatePropagation();
-      const act=btn.dataset.mapTool;
-      if(act==='zoom-in') stepZoom(frame,1);
-      else if(act==='zoom-out') stepZoom(frame,-1);
-      else if(act==='reset') reset(frame);
-      else if(act==='wide') wide(frame);
-      return true;
-    }
-    function handleWheel(e){
-      const frame=frameFromTarget(e.target); if(!frame || !shell.contains(frame)) return false;
-      if(e.target.closest('.map-detail-card,.pc554-stack-panel,.pc557-feeds-panel')) return false;
-      if(!e.ctrlKey && Math.abs(e.deltaY)<28) return false;
-      e.preventDefault(); e.stopImmediatePropagation();
-      const s=getState(frame);
-      // 5.6.1: accumulate wheel motion and snap only one ZOOM step at a time.
-      s.wheelDebt += e.deltaY;
-      clearTimeout(s.wheelTimer);
-      const threshold=e.ctrlKey?70:120;
-      if(Math.abs(s.wheelDebt)>=threshold){
-        stepZoom(frame, s.wheelDebt<0?1:-1);
-        s.wheelDebt=0;
-      }
-      s.wheelTimer=setTimeout(()=>{s.wheelDebt=0;},160);
-      return true;
-    }
-    function beginDrag(e){
-      const frame=frameFromTarget(e.target); if(!frame || !shell.contains(frame)) return false;
-      if(e.button!==0 || e.target.closest('.map-viewport-tools,.map-detail-card,.pc554-stack-panel,.pc557-feeds-panel')) return false;
-      if(e.target.closest('[data-map-item],.pc554-cluster-badge')){ e.stopImmediatePropagation(); return true; }
-      const s=getState(frame);
-      if(s.scale<=1.001) return false;
-      e.preventDefault(); e.stopImmediatePropagation();
-      dragging={frame,id:e.pointerId,x:e.clientX,y:e.clientY,startX:s.x,startY:s.y};
-      shell.classList.add('pc559-runtime-moving');
-      try{frame.setPointerCapture(e.pointerId);}catch(_e){}
-      return true;
-    }
-    function moveDrag(e){
-      if(!dragging || dragging.id!==e.pointerId) return false;
-      e.preventDefault(); e.stopImmediatePropagation();
-      const s=getState(dragging.frame);
-      s.x=dragging.startX+(e.clientX-dragging.x);
-      s.y=dragging.startY+(e.clientY-dragging.y);
-      clamp(dragging.frame,s);
-      scheduleApply(dragging.frame,140);
-      return true;
-    }
-    function endDrag(e){
-      if(!dragging || (e && dragging.id!==e.pointerId)) return false;
-      e.preventDefault(); e.stopImmediatePropagation();
-      const frame=dragging.frame; dragging=null;
-      clearTimeout(busyTimer);
-      busyTimer=setTimeout(()=>shell.classList.remove('pc559-runtime-moving'),120);
-      apply(frame,true);
-      return true;
-    }
-    function initFrames(){
-      shell.querySelectorAll('.continent-map-frame').forEach(frame=>{
-        const s=getState(frame);
-        const st=nearestStep(s.scale);
-        s.scale=st.scale; s.stage=st.stage;
-        apply(frame,true);
-      });
-    }
-
-    document.addEventListener('click',handleTool,true);
-    document.addEventListener('wheel',handleWheel,{capture:true,passive:false});
-    document.addEventListener('pointerdown',beginDrag,true);
-    document.addEventListener('pointermove',moveDrag,true);
-    document.addEventListener('pointerup',endDrag,true);
-    document.addEventListener('pointercancel',endDrag,true);
-
-    shell.addEventListener('click',function(e){
-      if(e.target.closest('.continent-tab,.continent-filter')) setTimeout(initFrames,120);
-    },false);
-
-    initFrames();
-  });
-})();
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch559:'Map Runtime Cleanup', patch561Runtime:'Map Zoom Step Runtime'});
-
-
-// PATCH 5.6 — RecordLinkCodebook + MapReadabilityCleanup
-// Scope: map marker <-> archive record linking, codebook overlay, and readability gates.
-// Keeps pan/zoom runtime from 5.5.9 intact.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    const pages=Array.from(document.querySelectorAll('.content-page'));
-    const links=Array.from(document.querySelectorAll('.side-menu a[data-target]'));
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const RECORD_ALIASES=[
-      {id:'Redzone_881120', keys:['레드존 이상현상','오염 기준','레드존 이상현상 및 오염 기준 문서','Redzone']},
-      {id:'NHC_Manual_891219', keys:['N.H.C 현장 작전','N.H.C 현장 작전·장비·봉쇄 규정 문서','NHC 현장','봉쇄 규정']},
-      {id:'Zone_870815', keys:['구역 위험도','구역 위험도 분류 문서','지역지도']},
-      {id:'불명_Record2_860205', keys:['피의 호수','피의 호수 부검 기록']},
-      {id:'FCR_Archive_890402', keys:['타락 개체 분류 추가','추가 보고서','괴이','귀환자']},
-      {id:'타락 개체_860722', keys:['타락 개체 분류 보고서','타락 개체']},
-      {id:'Cults_871104', keys:['F.H.C 극비 보안','F.H.C','우시노다교','Ushnoda']},
-      {id:'Immortality_860201', keys:['불멸을 향해','불멸 작전']},
-      {id:'Sakuma_Tape_991028', keys:['사쿠마 유타','사쿠마 유타 실종 사건 보고서']},
-      {id:'불명_Record1_860204', keys:['아마리온 회수 영상','아마리온 회수 영상 기록']},
-      {id:'불명_Record3_920711', keys:['레드울프 이탈','레드울프 이탈 기록']},
-      {id:'불명_Record4_930314', keys:['축복으로 위장된 병기']},
-      {id:'불명_Record5_940626', keys:['새로운 세계를 위한 유전자','새로운 세계를 위한 유전자 기록']}
-    ];
-    const CODEBOOK=[
-      ['RZ','레드존','고위험 오염권·중심 코어 표식'],
-      ['YZ','옐로우존','감시·격상 후보 구역'],
-      ['GZ','그린존','후방 운영·관리권'],
-      ['WZ','화이트존','검문·관리·완충 구역'],
-      ['BZ / BLK','블랙존','진입 금지 심부 위험권'],
-      ['GATE','봉쇄 거점','게이트·검문 허브·통제 노드'],
-      ['SEA','해상 감시권','항로·해역·감시선 표식'],
-      ['FAC','작전 시설','관제소·회수거점·지원 시설'],
-      ['ANM','현상 기록','이상현상 관측점'],
-      ['INC / EVT','사건 좌표','사건·전투·실종 좌표']
-    ];
-    function resolveRecordId(label){
-      const txt=String(label||'').trim();
-      if(!txt) return '';
-      const direct=document.querySelector('.record-detail[data-record="'+(window.CSS&&CSS.escape?CSS.escape(txt):txt.replace(/"/g,'\\"'))+'"]');
-      if(direct) return txt;
-      const found=RECORD_ALIASES.find(r=>r.keys.some(k=>txt.includes(k)||k.includes(txt)));
-      return found?found.id:'';
-    }
-    function recordTitle(id){
-      const el=document.querySelector('.record-detail[data-record="'+(window.CSS&&CSS.escape?CSS.escape(id):id.replace(/"/g,'\\"'))+'"] .doc-title');
-      return el?el.textContent.trim():id;
-    }
-    function switchPage(id){
-      if(!pages.length) return;
-      pages.forEach(p=>p.classList.toggle('active',p.id===id));
-      links.forEach(a=>a.classList.toggle('active',a.dataset.target===id));
-      try{history.replaceState(null,'','#'+id);}catch(_e){}
-      const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
-    }
-    function openRecord(id){
-      if(!id) return;
-      switchPage('archive-entry');
-      setTimeout(()=>{
-        if(typeof window.ProjectCurseShowInternalRecord==='function') window.ProjectCurseShowInternalRecord(id);
-        else document.querySelector('.open-record[data-record="'+(window.CSS&&CSS.escape?CSS.escape(id):id.replace(/"/g,'\\"'))+'"]').click();
-        const target=document.querySelector('.record-detail[data-record="'+(window.CSS&&CSS.escape?CSS.escape(id):id.replace(/"/g,'\\"'))+'"]');
-        if(target){ target.classList.add('pc56-record-linked-open'); setTimeout(()=>target.classList.remove('pc56-record-linked-open'),1300); }
-      },90);
-    }
-    function activePanel(){ return shell?.querySelector('.continent-panel.active') || shell?.querySelector('.continent-panel') || null; }
-    function activeFrame(){ return activePanel()?.querySelector?.('.continent-map-frame') || null; }
-    function showMapRegion(region, code){
-      if(!shell) return;
-      switchPage('zone-map');
-      const tab=shell.querySelector('.continent-tab[data-continent="'+region+'"]');
-      if(tab) tab.click();
-      setTimeout(()=>{
-        const selector='[data-map-item][data-code="'+(window.CSS&&CSS.escape?CSS.escape(code):String(code).replace(/"/g,'\\"'))+'"]';
-        const marker=shell.querySelector(selector);
-        if(marker){
-          marker.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
-          marker.classList.add('pc56-linked-marker-flash');
-          marker.scrollIntoView({block:'center',inline:'center',behavior:'smooth'});
-          setTimeout(()=>marker.classList.remove('pc56-linked-marker-flash'),1200);
-        }
-      },220);
-    }
-    function splitRecords(records){
-      return String(records||'').split('/').map(s=>s.trim()).filter(Boolean).slice(0,6);
-    }
-    function enhanceLinkedRecords(root){
-      (root||document).querySelectorAll('.linked-records').forEach(box=>{
-        if(box.dataset.pc56Linked) return;
-        const entries=Array.from(box.children).length?Array.from(box.children).map(el=>el.textContent.trim()):splitRecords(box.textContent);
-        box.dataset.pc56Linked='1';
-        box.innerHTML='';
-        entries.forEach(label=>{
-          const id=resolveRecordId(label);
-          const btn=document.createElement('button');
-          btn.type='button';
-          btn.className='pc56-record-link';
-          btn.textContent=label;
-          if(id){btn.dataset.record=id; btn.title='기록보관서에서 열기: '+recordTitle(id);} else {btn.dataset.mapOnly='1'; btn.title='지역지도 참조 항목';}
-          box.appendChild(btn);
-        });
-      });
-    }
-    function markerInfo(el){
-      return {
-        code:el.getAttribute('data-code')||'NO-CODE',
-        title:el.getAttribute('data-title')||'U.A.C 관제 표식',
-        region:el.getAttribute('data-region')||el.closest('.continent-panel')?.dataset?.continentPanel||'world',
-        surface:el.getAttribute('data-surface')||'표면 판정 없음',
-        qa:el.getAttribute('data-qa')||'REVIEWED',
-        records:splitRecords(el.getAttribute('data-records')||'')
-      };
-    }
-    function collectRecordLinks(){
-      const map=new Map();
-      if(!shell) return map;
-      shell.querySelectorAll('[data-map-item]').forEach(el=>{
-        const info=markerInfo(el);
-        info.records.forEach(label=>{
-          const id=resolveRecordId(label);
-          if(!id) return;
-          if(!map.has(id)) map.set(id,[]);
-          map.get(id).push(info);
-        });
-      });
-      return map;
-    }
-    function injectRecordMapLinks(){
-      const related=collectRecordLinks();
-      document.querySelectorAll('.record-detail[data-record]').forEach(article=>{
-        if(article.dataset.pc56Maplinks) return;
-        const id=article.dataset.record;
-        const list=(related.get(id)||[]).slice(0,8);
-        if(!list.length) return;
-        article.dataset.pc56Maplinks='1';
-        const panel=document.createElement('div');
-        panel.className='pc56-record-maplinks';
-        panel.innerHTML='<div class="pc56-record-maplinks-head"><b>RELATED MAP COORDINATES</b><span>지도 좌표 연결</span></div><div class="pc56-record-maplinks-list"></div>';
-        const wrap=panel.querySelector('.pc56-record-maplinks-list');
-        list.forEach(item=>{
-          const btn=document.createElement('button');
-          btn.type='button';
-          btn.dataset.region=item.region;
-          btn.dataset.code=item.code;
-          btn.innerHTML='<b>'+esc(item.code)+'</b><span>'+esc(item.title)+'</span><em>'+esc(item.surface)+' / '+esc(item.qa)+'</em>';
-          wrap.appendChild(btn);
-        });
-        const header=article.querySelector('.doc-header');
-        if(header) header.insertAdjacentElement('afterend',panel);
-      });
-    }
-    function ensureCodebook(){
-      if(!shell || shell.querySelector('.pc56-codebook')) return;
-      const box=document.createElement('aside');
-      box.className='pc56-codebook';
-      box.innerHTML='<button class="pc56-codebook-toggle" type="button">CODEBOOK</button><div class="pc56-codebook-panel"><div class="pc56-codebook-head"><b>MAP CODEBOOK</b><span>표식 코드북</span></div><div class="pc56-codebook-list"></div></div>';
-      const list=box.querySelector('.pc56-codebook-list');
-      CODEBOOK.forEach(r=>{
-        const row=document.createElement('div');
-        row.innerHTML='<b>'+esc(r[0])+'</b><span>'+esc(r[1])+'</span><em>'+esc(r[2])+'</em>';
-        list.appendChild(row);
-      });
-      shell.appendChild(box);
-    }
-    function updateReadabilityState(){
-      if(!shell) return;
-      const stackOpen=!!shell.querySelector('.pc554-stack-panel.show');
-      const detailActive=!!shell.querySelector('.map-detail-card.pc56-detail-active, .map-detail-card.detail-v3:not(.pc56-detail-idle)');
-      shell.classList.toggle('pc56-stack-mode',stackOpen);
-      shell.classList.toggle('pc56-marker-mode',detailActive && !stackOpen);
-      shell.classList.toggle('pc56-overview-mode',!stackOpen && !detailActive);
-      // In marker/stack mode, keep feeds compact and prevent right-side information overload.
-      shell.classList.add('pc56-feeds-compact');
-    }
-    function markDetailActive(card){
-      if(!card) return;
-      card.classList.add('pc56-detail-active');
-      card.classList.remove('pc56-detail-idle');
-      updateReadabilityState();
-    }
-    function resetToOverview(){
-      if(!shell) return;
-      shell.querySelectorAll('.map-detail-card').forEach(c=>{c.classList.remove('pc56-detail-active'); c.classList.add('pc56-detail-idle');});
-      shell.querySelectorAll('.pc554-stack-panel.show').forEach(p=>p.classList.remove('show'));
-      updateReadabilityState();
-    }
-    function softenBleed(){
-      if(!shell) return;
-      shell.classList.add('map-patch56');
-      shell.querySelectorAll('.continent-map-frame').forEach(frame=>{
-        frame.classList.add('pc56-readability-frame');
-      });
-    }
-    if(shell){
-      shell.classList.add('map-patch56','pc56-overview-mode','pc56-feeds-compact');
-      ensureCodebook();
-      softenBleed();
-      shell.addEventListener('click',function(e){
-        const link=e.target.closest('.pc56-record-link');
-        if(link){
-          e.preventDefault(); e.stopPropagation();
-          if(link.dataset.record) openRecord(link.dataset.record);
-          else switchPage('zone-map');
-          return;
-        }
-        const toggle=e.target.closest('.pc56-codebook-toggle');
-        if(toggle){ e.preventDefault(); e.stopPropagation(); shell.classList.toggle('pc56-codebook-open'); return; }
-        const marker=e.target.closest('[data-map-item]');
-        if(marker){
-          setTimeout(()=>{
-            const card=marker.closest('.continent-panel')?.querySelector('.map-detail-card');
-            markDetailActive(card); enhanceLinkedRecords(card||document); updateReadabilityState();
-          },80);
-          return;
-        }
-        if(e.target.closest('.pc554-cluster-badge')){ setTimeout(updateReadabilityState,80); return; }
-        if(e.target.closest('.pc554-stack-list button')){ setTimeout(()=>{ const card=activePanel()?.querySelector('.map-detail-card'); markDetailActive(card); enhanceLinkedRecords(card||document); updateReadabilityState(); },120); return; }
-        if(e.target.closest('.continent-tab,.continent-filter')){ setTimeout(()=>{ resetToOverview(); softenBleed(); injectRecordMapLinks(); },180); }
-      },true);
-      shell.addEventListener('keydown',function(e){
-        if(e.key!=='Enter'&&e.key!==' ') return;
-        const marker=e.target.closest('[data-map-item]');
-        if(marker) setTimeout(()=>{const card=marker.closest('.continent-panel')?.querySelector('.map-detail-card'); markDetailActive(card); enhanceLinkedRecords(card||document);},90);
-      },true);
-      const mo=new MutationObserver(function(muts){
-        let needLinks=false, needState=false;
-        muts.forEach(m=>{
-          if(m.type==='childList') needLinks=true;
-          if(m.type==='attributes' && /class|hidden/.test(m.attributeName||'')) needState=true;
-        });
-        if(needLinks){ clearTimeout(shell._pc56Links); shell._pc56Links=setTimeout(()=>{enhanceLinkedRecords(shell); injectRecordMapLinks();},120); }
-        if(needState){ clearTimeout(shell._pc56State); shell._pc56State=setTimeout(updateReadabilityState,80); }
-      });
-      mo.observe(shell,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
-    }
     document.addEventListener('click',function(e){
-      const link=e.target.closest('.pc56-record-link');
-      if(link){ e.preventDefault(); e.stopPropagation(); if(link.dataset.record) openRecord(link.dataset.record); }
-      const mapBtn=e.target.closest('.pc56-record-maplinks button[data-code]');
-      if(mapBtn){ e.preventDefault(); showMapRegion(mapBtn.dataset.region||'world', mapBtn.dataset.code||''); }
+      const target=e.target && e.target.closest ? e.target.closest('button,a,[role="button"]') : null;
+      if(!target) return;
+
+      if(target.matches('[data-pc5131-module-placeholder]')){
+        cue('denied',260);
+        return;
+      }
+      if(target.matches('.pc585-menu-heading,[data-dock-toggle],.pc584-map-drawer-toggle,.pc584-main-drawer-toggle')){
+        cue('drawer',120);
+        return;
+      }
+      if(target.matches('.pc589-marker,.pc589-route,.pc589-facility-label,.pc584-operation-filter')){
+        cue('marker',260);
+        return;
+      }
+      if(target.matches('[data-pc5124-open-record],[data-pc5130-record]')){
+        const recordId=target.getAttribute('data-record-id')||target.getAttribute('data-pc5130-record')||'';
+        if(restrictedRecords.has(recordId)) cue('restricted',260);
+        else if(videoRecords.has(recordId)) cue('video',220);
+        else if(bioRecords.has(recordId)) cue('radio',180);
+        else cue('open',160);
+        return;
+      }
+      if(target.matches('.open-record[data-record]')){
+        const recordId=target.getAttribute('data-record')||'';
+        if(restrictedRecords.has(recordId)) cue('restricted',260);
+        else if(videoRecords.has(recordId)) cue('video',220);
+        else if(bioRecords.has(recordId)) cue('radio',180);
+        else cue('open',160);
+        return;
+      }
+      if(target.matches('[data-pc5130-op],.pc5131-operation-list a[data-operation],.pc5131-module-items a[data-target]')){
+        cue('command',100);
+        return;
+      }
     },true);
-    setTimeout(()=>{ enhanceLinkedRecords(document); injectRecordMapLinks(); updateReadabilityState(); },900);
-    setTimeout(()=>{ enhanceLinkedRecords(document); injectRecordMapLinks(); updateReadabilityState(); },1800);
+
+    // Atmosphere restore: hover alert cue disabled; visual warning only.
   });
 })();
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch56:'Record Link Codebook + Map Readability Cleanup'});
 
-// PATCH 5.6.2 — ArchiveTransitionCleanup + MapResidualOverlayFix
-// Scope: archive transition separation and normal-mode map ghost/label/link cleanup.
+// MapPatch 5.13.3c — SideMenu_AnalogArchive_Rework.
+// Keeps the existing page/router behavior and adds archive-record/damaged-node directory actions.
 (function(){
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
   ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(shell) shell.classList.add('map-patch562');
-    function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-    function ensureToast(){
-      let t=document.querySelector('.pc562-archive-toast');
-      if(t) return t;
-      t=document.createElement('div');
-      t.className='pc562-archive-toast';
-      t.innerHTML='<b></b><span></span><i></i>';
-      document.body.appendChild(t);
-      return t;
+    document.body.classList.add('pc5133c-side-archive');
+
+    function audioCue(name, cooldown){
+      if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function'){
+        window.ProjectCurseAudio.playCue(name, cooldown || 160);
+      }
     }
-    let toastTimer=0;
-    function archiveToast(title,body){
-      return;
+
+    function ensureNotice(){
+      let el=document.querySelector('.pc5133c-node-notice');
+      if(el) return el;
+      el=document.createElement('div');
+      el.className='pc5133c-node-notice';
+      el.setAttribute('aria-live','polite');
+      document.body.appendChild(el);
+      return el;
     }
-    // Separate the three archive effects: menu entry, record-tab remap, and individual file open.
-    document.querySelectorAll('.side-menu a[data-target="archive-entry"]').forEach(a=>{
-      if(a.dataset.pc562ArchiveEntry) return;
-      a.dataset.pc562ArchiveEntry='1';
-      a.addEventListener('click',()=>archiveToast('ARCHIVE INDEX','색인 잠금 해제 / 문서 상태 대조 / 열람 가능 기록 정렬'),true);
-    });
-    document.querySelectorAll('.page-tab,.sub-tab').forEach(btn=>{
-      if(btn.dataset.pc562Surface) return;
-      btn.dataset.pc562Surface='1';
-      btn.addEventListener('click',()=>{
-        const inRecord=btn.closest('#archive-entry,.record-content,.paged-record,.nested-record');
-        if(inRecord) archiveToast('RECORD PAGE','상단 스캔라인 1회 / 기록면 색인 재정렬');
-      },true);
-    });
-    document.querySelectorAll('.open-record[data-record]').forEach(btn=>{
-      if(btn.dataset.pc562RecordOpen) return;
-      btn.dataset.pc562RecordOpen='1';
-      btn.addEventListener('click',()=>archiveToast('RECORD FILE OPEN','기록 파일 호출 / 열람 권한 유지 / 문서 섹터 확인'),true);
-    });
-    document.querySelectorAll('.record-back').forEach(btn=>{
-      if(btn.dataset.pc562Back) return;
-      btn.dataset.pc562Back='1';
-      btn.addEventListener('click',()=>archiveToast('ARCHIVE INDEX RESTORED','기록 목록으로 복귀 / 임시 열람 상태 해제'),true);
+
+    function showNotice(code, label){
+      const el=ensureNotice();
+      el.innerHTML=`<b>${label || 'NODE'}</b><span>${code || 'SIGNAL DEGRADED'}</span>`;
+      el.classList.add('show');
+      clearTimeout(el._pc5133cTimer);
+      el._pc5133cTimer=setTimeout(()=>el.classList.remove('show'),1500);
+    }
+
+    function openRecord(recordId){
+      if(!recordId) return;
+      const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
+      if(archiveLink) archiveLink.click();
+      setTimeout(()=>{
+        if(typeof window.ProjectCurseShowInternalRecord==='function'){
+          window.ProjectCurseShowInternalRecord(recordId);
+          document.body.classList.add('pc5133c-record-jump');
+          setTimeout(()=>document.body.classList.remove('pc5133c-record-jump'),900);
+        }
+      },120);
+    }
+
+    document.querySelectorAll('[data-pc5133c-record]').forEach(btn=>{
+      if(btn.dataset.bound5133c) return;
+      btn.dataset.bound5133c='1';
+      btn.addEventListener('click',e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        const id=btn.getAttribute('data-pc5133c-record') || '';
+        openRecord(id);
+        audioCue(btn.classList.contains('restricted') ? 'restricted' : 'record', 220);
+      });
     });
 
-    // Map residual overlay cleanup: track selected marker and allow only related visualization layers in normal mode.
-    if(!shell) return;
-    function activePanel(){return shell.querySelector('.continent-panel.active')||shell.querySelector('.continent-panel');}
-    function frames(){return Array.from(shell.querySelectorAll('.continent-map-frame'));}
-    function clearSelection(frame){
-      (frame? [frame] : frames()).forEach(f=>{
-        f.classList.remove('pc562-has-selection');
-        delete f.dataset.pc562SelectedCode;
-        f.querySelectorAll('[data-map-item].pc562-selected').forEach(el=>el.classList.remove('pc562-selected'));
-        f.querySelectorAll('.pc562-related').forEach(el=>el.classList.remove('pc562-related'));
+    document.querySelectorAll('[data-pc5133c-damaged]').forEach(btn=>{
+      if(btn.dataset.bound5133c) return;
+      btn.dataset.bound5133c='1';
+      btn.addEventListener('click',e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        const label=(btn.querySelector('b') && btn.querySelector('b').textContent) || 'NODE';
+        const code=(btn.querySelector('small') && btn.querySelector('small').textContent) || 'SIGNAL DEGRADED';
+        showNotice(code, label);
+        audioCue(btn.classList.contains('restricted') ? 'denied' : 'drawer', 260);
       });
-    }
-    function markRelated(frame,code){
-      if(!frame||!code) return;
-      frame.classList.add('pc562-has-selection');
-      frame.dataset.pc562SelectedCode=code;
-      frame.querySelectorAll('[data-map-item]').forEach(el=>el.classList.toggle('pc562-selected',(el.getAttribute('data-code')||'')===code));
-      frame.querySelectorAll('.pc557-hatch,.pc557-radius,.pc557-mini-card,.pc557-facility-cell,.pc557-link').forEach(el=>{
-        const node=el.getAttribute('data-node-code')||'';
-        const src=el.getAttribute('data-source-code')||'';
-        const tgt=el.getAttribute('data-target-code')||'';
-        const rel=(node===code||src===code||tgt===code);
-        el.classList.toggle('pc562-related',rel);
-      });
-    }
-    function selectMarker(marker){
-      if(!marker) return;
-      const frame=marker.closest('.continent-map-frame');
-      const code=marker.getAttribute('data-code')||'';
-      clearSelection(frame);
-      if(code) markRelated(frame,code);
-    }
-    shell.addEventListener('click',function(e){
-      const marker=e.target.closest('[data-map-item]');
-      if(marker){ setTimeout(()=>selectMarker(marker),80); return; }
-      if(e.target.closest('.continent-tab,.continent-filter')){ setTimeout(()=>{ clearSelection(); const p=activePanel(); const card=p?.querySelector?.('.map-detail-card'); if(card&&!card.classList.contains('pc56-detail-active')) clearSelection(p?.querySelector?.('.continent-map-frame')); },160); }
-      if(e.target.closest('.map-viewport-tools button')){ setTimeout(()=>{ const card=activePanel()?.querySelector?.('.map-detail-card.pc56-detail-active'); if(!card) clearSelection(activePanel()?.querySelector?.('.continent-map-frame')); },160); }
-    },true);
-    // Stack-panel selection eventually dispatches marker click; this pass catches any detail-card-only changes.
-    const mo=new MutationObserver(()=>{
-      clearTimeout(shell._pc562Mo);
-      shell._pc562Mo=setTimeout(()=>{
-        const p=activePanel(); const frame=p?.querySelector?.('.continent-map-frame');
-        const activeCard=p?.querySelector?.('.map-detail-card.pc56-detail-active, .map-detail-card.detail-551, .map-detail-card.detail-552, .map-detail-card.detail-553');
-        if(!activeCard||!frame) return;
-        const codeEl=activeCard.querySelector('.detail-code,.detail-code-row .detail-code');
-        const code=(codeEl?codeEl.textContent.trim():activeCard.querySelector('b')?.textContent?.trim()||'');
-        const marker=code?frame.querySelector('[data-map-item][data-code="'+(window.CSS&&CSS.escape?CSS.escape(code):code.replace(/"/g,'\\"'))+'"]'):null;
-        if(marker) selectMarker(marker);
-      },180);
     });
-    mo.observe(shell,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
-    setTimeout(()=>{clearSelection();},550);
   });
 })();
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch562:'Archive Transition Cleanup + Map Residual Overlay Fix'});
 
-
-// PATCH 5.6.3 — FactionRelationVisualUpgrade
-// U.A.C centered radial relation matrix, status tags, richer analysis panel, and row/node focus sync.
+// MapPatch 5.13.4 — FactionNetwork_UI_Rebuild.
+// Rebuilds faction relation/info presentation as U.A.C closed-network intelligence analysis.
+// Existing faction lore bodies are not rewritten.
 (function(){
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
   ready(function(){
-    const section=document.getElementById('faction-relation');
-    if(!section || section.dataset.pc563Ready) return;
-    section.dataset.pc563Ready='1';
-    section.classList.add('pc563-faction-relation');
+    document.body.classList.add('pc5134-faction-network-ready');
 
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const prefix=(document.body&&document.body.dataset&&document.body.dataset.basePath)||'';
+    const esc=(v)=>String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const mark=(key)=>`assets/faction_marks/${key}.webp`;
 
-    const statusClass={
-      '통제':'control','감시':'watch','적대':'hostile','불명':'unknown','비공식 접촉':'informal','협력':'control','연구':'watch'
+    const factionIntel={
+      uac:{name:'U.A.C',role:'중앙 통제 / 기록 권한',status:'CORE-0',trust:'CONTROL',risk:'전역 감시',op:'세계 상황판',records:['Redzone_881120','NHC_Manual_891219'],links:['N.H.C','S.I.D','F.H.C','C.P.D','A.R.F'],note:'구역 분류와 기록 권한을 집중 보유한다. 모든 기관 파일은 U.A.C 노드를 경유한다.'},
+      nhc:{name:'N.H.C',role:'현장 작전 / 봉쇄선',status:'FIELD-1',trust:'CONTROLLED',risk:'작전 손실',op:'부산 / 란저우',records:['NHC_Manual_891219','FCR_Archive_890402'],links:['U.A.C','C.P.D','A.R.F'],note:'레드존 투입과 회수·소각 절차의 최전선. 장비 손실 시 오염 확산 위험이 상승한다.'},
+      sid:{name:'S.I.D',role:'정보 / 감청 / 진술 검증',status:'INTEL-1',trust:'WATCHED',risk:'신호 오염',op:'동아시아 감시권',records:['Sakuma_Tape_991028','Redzone_881120'],links:['U.A.C','F.H.C','하이문'],note:'감청 기록과 귀환자 진술을 대조한다. Ghost Channel 계열 자료와 직접 연결된다.'},
+      fhc:{name:'F.H.C',role:'봉인 기록 / 극비 분석',status:'SEAL-1',trust:'RESTRICTED',risk:'기록 역오염',op:'북해-함부르크',records:['Cults_871104','불명_Record1_860204'],links:['U.A.C','S.I.D','아마리온'],note:'오컬트 기록과 비인가 연구 자료를 봉인한다. 열람 흔적 자체가 추적 대상이 될 수 있다.'},
+      amarion:{name:'Amarion',role:'비인가 연구 / 기업 자료',status:'RESEARCH-WATCH',trust:'UNSTABLE',risk:'Black Site 연계',op:'감시 후보',records:['불명_Record1_860204','불명_Record5_940626'],links:['F.H.C','U.A.C'],note:'공식 협력 범위를 넘어선 연구 흔적이 확인된다. 회수 영상은 교육 자료로 위장되어 있다.'},
+      syndicate:{name:'Syndicate',role:'이탈 네트워크 / 오염 장비',status:'HOSTILE-WATCH',trust:'HOSTILE',risk:'오염 장비 유통',op:'북미 외곽 감시권',records:['불명_Record3_920711','불명_Record4_930314'],links:['N.H.C','A.R.F','Red Wolf'],note:'이탈 부대와 오염 장비 유통망이 연결된다. 공식 조직으로 분류하기 어렵다.'},
+      ushinoda:{name:'Ushnoda Cult / 우시노다교',role:'의식성 오염 / 적대 종교망',status:'HOSTILE',trust:'BLOCKED',risk:'Blood Gate / 인신공양',op:'란저우 / 도심 침투권',records:['Cults_871104','Sakuma_Tape_991028'],links:['S.I.D','F.H.C','하이문'],note:'의식성 오염의 중심. 일부 기록은 우시노다교 대신 Ushnoda Cult 명칭으로 봉인되어 있다.'},
+      haimun:{name:'Haimun / 하이문',role:'불명 정보 중개망',status:'WATCH',trust:'UNKNOWN',risk:'은닉 루트',op:'도심 침투권',records:['Cults_871104'],links:['S.I.D','신디케이트','우시노다교'],note:'흔적은 확인되나 구조가 불명확하다. 정보 중개와 의식 거점 연결 정황이 남아 있다.'},
+      ashcrew:{name:'Ash Crew',role:'오염 처리 / 소각',status:'ASH-1',trust:'CONTROLLED',risk:'현장 누락',op:'회수·소각 구역',records:['NHC_Manual_891219'],links:['N.H.C','A.R.F'],note:'오염 처리 구역과 소각 절차에 연결된다. 공식 기관 밖에서 움직이는 경우가 있어 추적이 필요하다.'},
+      arf:{name:'A.R.F',role:'회수 / 복구 / 분류',status:'REC-1',trust:'CONTROLLED',risk:'회수물 역오염',op:'부산 / 란저우',records:['NHC_Manual_891219','FCR_Archive_890402'],links:['U.A.C','N.H.C','C.P.D'],note:'사체, 장비, 기록 매체 회수 및 분류를 담당한다. 회수 실패 자료는 별도 격리된다.'},
+      cpd:{name:'C.P.D',role:'민간 보호 / 검문 / 선별',status:'CIV-1',trust:'CONTROLLED',risk:'귀환자 선별 실패',op:'부산 / 델리',records:['FCR_Archive_890402'],links:['U.A.C','N.H.C','A.R.F'],note:'대피 회랑과 검문소를 관리한다. 귀환자 선별 실패 시 민간 보호선 전체가 오염될 수 있다.'}
     };
-    const nodes={
-      uac:{name:'U.A.C',img:'uac.webp',tag:'통제',role:'상위 조정기관',x:50,y:50,summary:'권역 등급, 기록 통제, 현장 투입 기준을 하나의 관제망으로 묶는 중심 노드.'},
-      nhc:{name:'N.H.C',img:'nhc.webp',tag:'통제',role:'현장 작전',x:50,y:16,summary:'레드존과 블랙존 인접 구역에 투입되는 고위험 현장 대응 조직.'},
-      sid:{name:'S.I.D',img:'sid.webp',tag:'감시',role:'특수 조사',x:78,y:30,summary:'실종, 오컬트 범죄, 의식 흔적, 이상현상 전조를 추적하는 조사 기관.'},
-      fhc:{name:'F.H.C',img:'fhc.webp',tag:'감시',role:'극비 연구',x:78,y:70,summary:'초상 기술과 생체 샘플을 분석하지만 은폐 가능성 때문에 감시가 유지되는 연구 노드.'},
-      amarion:{name:'Amarion',img:'amarion.webp',tag:'비공식 접촉',role:'민간 연구망',x:65,y:87,summary:'F.H.C 연구망과 연결된 제약·생명공학 조직. 협력과 위험이 동시에 기록된다.'},
-      syndicate:{name:'Syndicate',img:'syndicate.webp',tag:'적대',role:'이탈 네트워크',x:35,y:87,summary:'비공식 무장 네트워크. 레드울프 계열 이탈 기록과 연결된 추적 대상.'},
-      ushinoda:{name:'Ushnoda Cult',img:'ushinoda.webp',tag:'적대',role:'의식 범죄',x:22,y:70,summary:'의식성 오염, 인신공양, 블랙존화 징후와 직접 연결되는 핵심 적대 세력.'},
-      haimun:{name:'Haimun',img:'haimun.webp',tag:'불명',role:'도심 침투',x:22,y:30,summary:'도심권 납치와 의식 흔적에 반복적으로 등장하지만 지휘 구조는 불명으로 남아 있다.'},
-      arf:{name:'A.R.F',img:'arf.webp',tag:'통제',role:'회수 부대',x:34,y:17,summary:'N.H.C가 확보한 현장에 후속 진입하여 생존자, 샘플, 기록 매체를 회수한다.'},
-      ashcrew:{name:'Ash Crew',img:'ashcrew.webp',tag:'통제',role:'오염 처리',x:66,y:17,summary:'오염 사체, 장비, 잔류물을 봉인·회수·소각하는 N.H.C 후속 처리반.'},
-      cpd:{name:'C.P.D',img:'cpd.webp',tag:'감시',role:'민간 통제',x:14,y:50,summary:'검문, 피난민 분리, 귀환자 선별 같은 민간 통제 축을 담당한다. C.P.D 대피버스는 관계도 노드에서 제외한다.'}
-    };
-    const edges=[
-      {a:'uac',b:'nhc',type:'command',label:'작전 통제',desc:'U.A.C가 구역 정보와 봉쇄 명령을 제공하고 N.H.C가 현장 진입을 수행한다.'},
-      {a:'uac',b:'sid',type:'watch',label:'조사 감시',desc:'S.I.D는 현장 조사와 기록을 U.A.C 관제망으로 송신한다.'},
-      {a:'uac',b:'fhc',type:'watch',label:'상호 감시',desc:'F.H.C 연구 자료는 필요하지만 은폐 위험 때문에 U.A.C 감시가 유지된다.'},
-      {a:'uac',b:'cpd',type:'command',label:'민간 통제',desc:'C.P.D는 검문과 대피 통제를 수행하되 U.A.C 행정 명령 아래 움직인다.'},
-      {a:'nhc',b:'arf',type:'command',label:'후속 회수',desc:'현장 확보 이후 A.R.F가 생존자와 자료를 회수한다.'},
-      {a:'nhc',b:'ashcrew',type:'command',label:'오염 처리',desc:'Ash Crew는 전투 후 남은 오염 잔류물을 봉인하거나 소각한다.'},
-      {a:'nhc',b:'syndicate',type:'hostile',label:'이탈 추적',desc:'신디케이트 내부 레드울프 계열은 N.H.C 이탈 기록과 연결된다.'},
-      {a:'sid',b:'ushinoda',type:'hostile',label:'의식 추적',desc:'우시노다교는 S.I.D가 추적하는 핵심 의식 범죄 세력이다.'},
-      {a:'ushinoda',b:'haimun',type:'ritual',label:'도심 침투',desc:'하이문은 우시노다교의 도심 침투와 납치, 의식 흔적에 연결된다.'},
-      {a:'fhc',b:'amarion',type:'informal',label:'연구 연결',desc:'아마리온은 F.H.C 연구망과 접촉하지만 비인가 실험 때문에 별도 감시된다.'},
-      {a:'fhc',b:'syndicate',type:'informal',label:'비공식 접촉',desc:'자금·용병·실험 자료 흐름에서 비공식 접촉 가능성이 남아 있다.'},
-      {a:'uac',b:'ushinoda',type:'hostile',label:'적대 차단',desc:'U.A.C 관제망의 최종 목적은 의식성 오염과 블랙존 확산 차단이다.'}
+
+    const relationRows=[
+      ['CONTROL','U.A.C','N.H.C','현장 투입 / 봉쇄 명령','CONTROLLED'],
+      ['INTEL','U.A.C','S.I.D','감청 / 진술 검증','WATCHED'],
+      ['SEAL','U.A.C','F.H.C','기록 봉인 / 제한 열람','RESTRICTED'],
+      ['CIV','U.A.C','C.P.D','대피 회랑 / 귀환자 선별','CONTROLLED'],
+      ['REC','U.A.C','A.R.F','회수물 / 기록 매체 복구','CONTROLLED'],
+      ['HOSTILE','U.A.C','Ushnoda Cult','의식성 오염 / Blood Gate 차단','BLOCKED'],
+      ['WATCH','S.I.D','Haimun','비인가 정보 흐름 추적','SIGNAL DEGRADED'],
+      ['HOSTILE','N.H.C','Syndicate','오염 장비 유통 차단','ACTIVE WATCH'],
+      ['RESEARCH','F.H.C','Amarion','비인가 연구 자료 봉인','CLEARANCE MISMATCH']
     ];
-    const relatedMap={};
-    Object.keys(nodes).forEach(k=>relatedMap[k]=new Set([k]));
-    edges.forEach(e=>{relatedMap[e.a].add(e.b);relatedMap[e.b].add(e.a);});
 
-    function lineSvg(){
-      const line=(e)=>{
-        const a=nodes[e.a],b=nodes[e.b];
-        return '<line class="pc563-edge pc563-edge-'+esc(e.type)+'" data-edge-a="'+esc(e.a)+'" data-edge-b="'+esc(e.b)+'" x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'"><title>'+esc(e.label+' / '+e.desc)+'</title></line>';
-      };
-      return '<svg class="pc563-radial-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'
-        +'<defs><radialGradient id="pc563Core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#8ed9e9" stop-opacity=".22"/><stop offset="60%" stop-color="#8ed9e9" stop-opacity=".045"/><stop offset="100%" stop-color="#000" stop-opacity="0"/></radialGradient></defs>'
-        +'<circle cx="50" cy="50" r="16" class="pc563-ring pc563-ring-core"/><circle cx="50" cy="50" r="30" class="pc563-ring"/><circle cx="50" cy="50" r="43" class="pc563-ring pc563-ring-outer"/><circle cx="50" cy="50" r="48" fill="url(#pc563Core)"/>'
-        +edges.map(line).join('')+'</svg>';
+    function chipList(list){
+      return (list||[]).map(x=>`<span>${esc(x)}</span>`).join('');
     }
-    function nodeHtml(key){
-      const n=nodes[key];
-      const cls=statusClass[n.tag]||'unknown';
-      return '<button class="pc563-node pc563-status-'+cls+(key==='uac'?' pc563-uac':'')+'" type="button" data-faction-key="'+esc(key)+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-label="'+esc(n.name)+' 관계 분석">'
-        +'<img src="'+esc(prefix)+'assets/faction_marks/'+esc(n.img)+'" alt="'+esc(n.name)+'"/>'
-        +'<b>'+esc(n.name)+'</b><small>'+esc(n.role)+'</small><span class="pc563-tag">'+esc(n.tag)+'</span>'
-        +'</button>';
-    }
-    function render(){
-      const tree=section.querySelector('.relation-tree-panel');
-      if(!tree) return;
-      tree.classList.add('pc563-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 세력 관계 기록');
-      const order=['nhc','arf','ashcrew','sid','fhc','amarion','syndicate','ushinoda','haimun','cpd','uac'];
-      tree.innerHTML='<div class="pc563-relation-matrix">'
-        +'<div class="pc563-matrix-title"><b>RELATION LIST</b><span>U.A.C 중심 관계 추적 행렬 / 감시·통제·적대 경로 분리</span></div>'
-        +lineSvg()+order.map(nodeHtml).join('')+'</div>';
-      const brief=section.querySelector('.section-brief');
-      if(brief){
-        brief.innerHTML='U.A.C 관계도는 조직의 우호 여부를 단순히 나열하지 않는다. 현장 통제, 감시 의존, 연구 불신, 비공식 접촉, 의식성 적대 경로를 하나의 추적 행렬로 묶어 표시한다. 선택한 노드와 직접 연결된 경로만 밝게 유지되며, 나머지는 관제망 뒤편으로 후퇴한다.';
+
+    function renderNetwork(){
+      const root=document.getElementById('pc584-relation-root');
+      if(!root) return;
+      root.classList.add('pc5134-intel-network-root');
+      const nodes=['uac','nhc','sid','fhc','cpd','arf','ushinoda','haimun','syndicate','amarion'];
+      root.innerHTML=`
+        <div class="pc5134-network-shell">
+          <aside class="pc5134-network-left">
+            <div class="pc5134-node-header"><span>NETWORK INDEX</span><b>U.A.C CENTERED</b><small>PARTIAL CONNECTION LOG</small></div>
+            <div class="pc5134-node-list">
+              ${nodes.map(key=>{
+                const d=factionIntel[key];
+                const imgKey=key==='ushinoda'?'ushinoda':key;
+                return `<button type="button" data-pc5134-node="${esc(key)}"><img src="${mark(imgKey)}" alt="${esc(d.name)}"><b>${esc(d.name)}</b><small>${esc(d.status)} / ${esc(d.trust)}</small></button>`;
+              }).join('')}
+            </div>
+          </aside>
+          <section class="pc5134-network-center">
+            <div class="pc5134-signal-frame">
+              <div class="pc5134-signal-line horizontal"></div>
+              <div class="pc5134-signal-line vertical"></div>
+              <button type="button" class="pc5134-map-node core" data-pc5134-node="uac">U.A.C</button>
+              <button type="button" class="pc5134-map-node n1" data-pc5134-node="nhc">N.H.C</button>
+              <button type="button" class="pc5134-map-node n2" data-pc5134-node="sid">S.I.D</button>
+              <button type="button" class="pc5134-map-node n3" data-pc5134-node="fhc">F.H.C</button>
+              <button type="button" class="pc5134-map-node n4" data-pc5134-node="cpd">C.P.D</button>
+              <button type="button" class="pc5134-map-node n5" data-pc5134-node="arf">A.R.F</button>
+              <button type="button" class="pc5134-map-node hostile h1" data-pc5134-node="ushinoda">Ushnoda Cult</button>
+              <button type="button" class="pc5134-map-node watch h2" data-pc5134-node="haimun">Haimun</button>
+              <button type="button" class="pc5134-map-node hostile h3" data-pc5134-node="syndicate">Syndicate</button>
+              <button type="button" class="pc5134-map-node watch h4" data-pc5134-node="amarion">Amarion</button>
+            </div>
+            <div class="pc5134-relation-log">
+              <b>CONNECTION LOG</b>
+              ${relationRows.map(r=>`<div data-pc5134-row="${esc(r[1]+' '+r[2])}"><i>${esc(r[0])}</i><span>${esc(r[1])} ↔ ${esc(r[2])}</span><small>${esc(r[3])} / ${esc(r[4])}</small></div>`).join('')}
+            </div>
+          </section>
+          <aside class="pc5134-network-right">
+            <div class="pc5134-dossier-head"><span>SELECTED NODE</span><b data-pc5134-name>U.A.C</b><small data-pc5134-status>CORE-0</small></div>
+            <div class="pc5134-dossier-grid">
+              <span>역할</span><b data-pc5134-role>중앙 통제</b>
+              <span>감시 상태</span><b data-pc5134-trust>CONTROL</b>
+              <span>위험 항목</span><b data-pc5134-risk>전역 감시</b>
+              <span>관할 범위</span><b data-pc5134-op>세계 상황판</b>
+            </div>
+            <section><b>직접 연결</b><div data-pc5134-links></div></section>
+            <section><b>관련 기록</b><div data-pc5134-records></div></section>
+            <section class="pc5134-node-note"><b>U.A.C 판단</b><p data-pc5134-note></p></section>
+          </aside>
+        </div>`;
+
+      function select(key){
+        const d=factionIntel[key]||factionIntel.uac;
+        root.querySelectorAll('[data-pc5134-node]').forEach(el=>el.classList.toggle('active',el.getAttribute('data-pc5134-node')===key));
+        root.querySelector('[data-pc5134-name]').textContent=d.name;
+        root.querySelector('[data-pc5134-status]').textContent=d.status;
+        root.querySelector('[data-pc5134-role]').textContent=d.role;
+        root.querySelector('[data-pc5134-trust]').textContent=d.trust;
+        root.querySelector('[data-pc5134-risk]').textContent=d.risk;
+        root.querySelector('[data-pc5134-op]').textContent=d.op;
+        root.querySelector('[data-pc5134-links]').innerHTML=chipList(d.links);
+        root.querySelector('[data-pc5134-records]').innerHTML=(d.records||[]).map(id=>`<button type="button" data-pc5134-record="${esc(id)}">${esc(id)}</button>`).join('');
+        root.querySelector('[data-pc5134-note]').textContent=d.note;
+        root.querySelectorAll('[data-pc5134-row]').forEach(row=>row.classList.toggle('active',(row.getAttribute('data-pc5134-row')||'').toLowerCase().includes((d.name.split('/')[0]||'').trim().toLowerCase())));
+        if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('drawer',180);
       }
-      const cap=section.querySelector('.map-caption');
-      if(cap){
-        cap.textContent='관계도는 기관·세력 단위만 표시한다. 차량, 장비, 대피버스, 지도 마커는 관계도 노드에서 제외한다.';
-      }
-      let strip=section.querySelector('.pc563-status-strip');
-      if(!strip){
-        strip=document.createElement('div');
-        strip.className='pc563-status-strip';
-        strip.innerHTML=['통제','감시','적대','불명','비공식 접촉'].map(s=>'<span class="pc563-mini-status pc563-status-'+(statusClass[s]||'unknown')+'">'+esc(s)+'</span>').join('');
-        section.querySelector('.relation-legend')?.insertAdjacentElement('afterend',strip);
-      }
-    }
-    function ensurePanel(){
-      let p=section.querySelector('.pc563-analysis-panel');
-      if(p) return p;
-      p=document.createElement('div');
-      p.className='pc563-analysis-panel';
-      p.innerHTML='<div class="pc563-analysis-head"><b>TRACE ANALYSIS</b><span data-pc563-panel-state>NODE STANDBY</span></div><div class="pc563-analysis-grid"><span><b>선택 세력</b><i data-pc563-name>U.A.C</i></span><span><b>상태 태그</b><i data-pc563-status>통제</i></span><span><b>직접 연결</b><i data-pc563-links>N.H.C / S.I.D / F.H.C</i></span><span class="wide"><b>분석</b><i data-pc563-summary>중앙 통제 노드 대기 중.</i></span></div><div class="pc563-edge-note" data-pc563-edge-note>관계선을 선택하거나 세력 노드를 선택하십시오.</div>';
-      const tree=section.querySelector('.relation-tree-panel');
-      if(tree) tree.insertAdjacentElement('afterend',p); else section.appendChild(p);
-      return p;
-    }
-    function edgeTextFor(key){
-      return edges.filter(e=>e.a===key||e.b===key).map(e=>nodes[e.a===key?e.b:e.a].name+' · '+e.label).join(' / ') || '직접 연결 없음';
-    }
-    function pulseTone(){ return; }
-    function focus(key,opts={}){
-      if(!nodes[key]) key='uac';
-      const n=nodes[key];
-      const related=relatedMap[key]||new Set([key]);
-      section.dataset.pc563Focus=key;
-      section.dataset.pc563Status=statusClass[n.tag]||'unknown';
-      section.querySelectorAll('.pc563-node').forEach(btn=>{
-        const k=btn.dataset.factionKey;
-        btn.classList.toggle('pc563-selected',k===key);
-        btn.classList.toggle('pc563-related',k!==key && related.has(k));
-        btn.classList.toggle('pc563-muted',!related.has(k));
-      });
-      section.querySelectorAll('.pc563-edge').forEach(line=>{
-        const a=line.dataset.edgeA,b=line.dataset.edgeB;
-        const active=(a===key||b===key||key==='uac');
-        line.classList.toggle('pc563-edge-active',active);
-        line.classList.toggle('pc563-edge-muted',!active);
-      });
-      const panel=ensurePanel();
-      panel.querySelector('[data-pc563-name]').textContent=n.name+' / '+n.role;
-      panel.querySelector('[data-pc563-status]').textContent=n.tag;
-      panel.querySelector('[data-pc563-links]').textContent=edgeTextFor(key);
-      panel.querySelector('[data-pc563-summary]').textContent=n.summary;
-      panel.querySelector('[data-pc563-panel-state]').textContent='NODE: '+n.name+' / TRACE ACTIVE';
-      const edgeNote=edges.filter(e=>e.a===key||e.b===key).slice(0,3).map(e=>'['+e.label+'] '+e.desc).join('  ');
-      panel.querySelector('[data-pc563-edge-note]').textContent=edgeNote||'선택 노드 주변 관계 자료 부족.';
-      section.querySelectorAll('.relation-table tbody tr').forEach(row=>{
-        const tx=row.textContent||'';
-        const name=n.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-        const active=key==='uac' ? /U\.A\.C|UAC/.test(tx) : (tx.includes(n.name)||tx.includes(n.name.replace(' Cult',''))||tx.includes(n.role));
-        row.classList.toggle('relation-row-active',active);
-        row.classList.toggle('relation-row-muted',!active);
-      });
-      const notice=document.querySelector('[data-srv-notice]');
-      const trace=document.querySelector('[data-srv-trace]');
-      if(notice) notice.textContent='RELATION LIST / '+n.name+' / '+n.tag;
-      if(trace){ trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map'; }
-      if(!opts.silent) pulseTone((statusClass[n.tag]||'control'));
-    }
-    function bind(){
-      section.querySelectorAll('.pc563-node').forEach(btn=>{
-        if(btn.dataset.pc563Bound) return;
-        btn.dataset.pc563Bound='1';
-        btn.addEventListener('click',()=>focus(btn.dataset.factionKey));
-        btn.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault(); focus(btn.dataset.factionKey);} });
-      });
-      section.querySelectorAll('.relation-table tbody tr').forEach(row=>{
-        if(row.dataset.pc563Bound) return;
-        row.dataset.pc563Bound='1';
-        row.setAttribute('tabindex','0');
-        row.addEventListener('click',()=>{
-          const tx=row.textContent||'';
-          const k=Object.keys(nodes).find(key=>tx.includes(nodes[key].name)||tx.includes(nodes[key].name.replace(' Cult',''))||tx.includes(nodes[key].role));
-          if(k) focus(k);
+
+      root.querySelectorAll('[data-pc5134-node]').forEach(btn=>{
+        btn.addEventListener('click',e=>{
+          e.preventDefault();
+          select(btn.getAttribute('data-pc5134-node')||'uac');
         });
       });
-      document.querySelectorAll('.side-menu a[data-target="faction-relation"]').forEach(a=>{
-        if(a.dataset.pc563Menu) return;
-        a.dataset.pc563Menu='1';
-        a.addEventListener('click',()=>{
-          const notice=document.querySelector('[data-srv-notice]');
-          const trace=document.querySelector('[data-srv-trace]');
-          if(notice) notice.textContent='RELATION LIST / 중심 기관 확인: U.A.C / 경로 분리';
-          if(trace){ trace.textContent='RELATION LIST: ONLINE'; trace.className='status-field status-map'; }
-          setTimeout(()=>focus('uac',{silent:true}),160);
+
+      root.addEventListener('click',e=>{
+        const rec=e.target.closest && e.target.closest('[data-pc5134-record]');
+        if(!rec) return;
+        e.preventDefault();
+        const id=rec.getAttribute('data-pc5134-record');
+        const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
+        if(archiveLink) archiveLink.click();
+        setTimeout(()=>{ if(typeof window.ProjectCurseShowInternalRecord==='function') window.ProjectCurseShowInternalRecord(id); },120);
+      });
+
+      select('uac');
+    }
+
+    function enhanceFactionDetail(){
+      const detail=document.getElementById('factionDetail');
+      if(!detail || detail.dataset.pc5134Enhanced==='1') return;
+      const active=document.querySelector('.faction-tile.active');
+      const key=(active && active.dataset.key) || 'uac';
+      const d=factionIntel[key] || factionIntel.uac;
+      detail.dataset.pc5134Enhanced='1';
+      detail.classList.add('pc5134-faction-dossier');
+      const panel=document.createElement('aside');
+      panel.className='pc5134-faction-side';
+      panel.innerHTML=`<div class="pc5134-side-head"><span>AGENCY NODE</span><b>${esc(d.status)}</b></div>
+        <div class="pc5134-side-grid"><span>역할</span><b>${esc(d.role)}</b><span>감시</span><b>${esc(d.trust)}</b><span>위험</span><b>${esc(d.risk)}</b><span>관할</span><b>${esc(d.op)}</b></div>
+        <section><b>직접 연결</b><div>${chipList(d.links)}</div></section>
+        <section><b>관련 기록</b><div>${(d.records||[]).map(id=>`<button type="button" data-pc5134-record="${esc(id)}">${esc(id)}</button>`).join('')}</div></section>
+        <section><b>상태 주석</b><p>${esc(d.note)}</p></section>`;
+      detail.appendChild(panel);
+      panel.querySelectorAll('[data-pc5134-record]').forEach(btn=>{
+        btn.addEventListener('click',e=>{
+          e.preventDefault();
+          const id=btn.getAttribute('data-pc5134-record');
+          const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
+          if(archiveLink) archiveLink.click();
+          setTimeout(()=>{ if(typeof window.ProjectCurseShowInternalRecord==='function') window.ProjectCurseShowInternalRecord(id); },120);
+        });
+      });
+    }
+
+    function bindFactionDetailEnhance(){
+      setTimeout(enhanceFactionDetail,140);
+      document.querySelectorAll('.faction-tile').forEach(tile=>{
+        if(tile.dataset.pc5134Bound) return;
+        tile.dataset.pc5134Bound='1';
+        tile.addEventListener('click',()=>{
+          const detail=document.getElementById('factionDetail');
+          if(detail) detail.dataset.pc5134Enhanced='0';
+          setTimeout(enhanceFactionDetail,60);
         },true);
       });
     }
-    render();
-    ensurePanel();
-    bind();
-    focus('uac',{silent:true});
+
+    renderNetwork();
+    setTimeout(renderNetwork,400);
+    bindFactionDetailEnhance();
   });
 })();
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch563:'Faction Relation Visual Upgrade'});
 
-// PATCH 5.6.4 — MenuEntryFXPolish + Faction Relation Layout Fix
-// Adds menu-specific entry overlays and folds the faction relation layout hotfix into the originally planned menu polish patch.
+// MapPatch 5.14.0 — EntityArchive_Add.
+// Adds a damaged institutional entity archive. No existing record body is rewritten.
 (function(){
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
   ready(function(){
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const prefix=(document.body&&document.body.dataset&&document.body.dataset.basePath)||'';
-    const menuFx={
-      history:{cls:'archive',title:'WORLD OVERVIEW ACCESS',sub:'연대 기록 색인 재구성',lines:['사건 연표 확인','기록 단절 구간 보정','세계 기록면 개방']},
-      'faction-info':{cls:'faction',title:'FACTION DOSSIER ACCESS',sub:'세력 기록철 접근',lines:['식별 코드 대조','관계 등급 확인','세력 파일 목록 개방']},
-      'faction-relation':{cls:'faction',title:'RELATION LIST',sub:'관계 추적 행렬 전개',lines:['중심 기관 확인: U.A.C','연결 세력 조회','감시·통제·적대 경로 분리']},
-      'zone-map':{cls:'map',title:'REGION MAP ACCESS',sub:'권역 관제면 연결',lines:['감시망 수신','좌표면 정렬','봉쇄선 레이어 동기화']},
-      'archive-entry':{cls:'archive',title:'ARCHIVE INDEX',sub:'기록보관서 색인 개방',lines:['색인 잠금 해제','문서 상태 대조','열람 가능 기록 정렬']}
-    };
-    let fx=document.querySelector('.pc564-menu-fx');
-    if(!fx){ fx=document.createElement('div'); fx.className='pc564-menu-fx'; fx.setAttribute('aria-hidden','true'); document.body.appendChild(fx); }
-    let fxTimer=null;
-    function showMenuFx(target){
-      return;
+    document.body.classList.add('pc5140-entity-archive-ready');
+
+    const esc=(v)=>String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    const entityFiles=[
+      {id:'ENT-860722-FERAL-01',className:'타락 개체',name:'신원불명의 신자',status:'FIELD RED',threat:'근접 접촉 금지',zone:'란저우 / 도심 침투권',op:'lanzhou',record:'타락 개체_860722',img:'assets/resources/86ed1a163d79930b0874dbd5eb93adf2.webp',source:'F.H.C 봉인 기록 / 타락교 기록면',reaction:'육체 변형 / 인육 섭취 후 일시적 안정',note:'일반인 위장 가능성이 있어 C.P.D 선별 절차와 분리해야 한다.'},
+      {id:'ENT-860722-SUP-02',className:'상위 개체',name:'가면을 쓴 존재',status:'SEAL WATCH',threat:'정신 오염 / 명령 전달',zone:'우시노다교 흔적권',op:'lanzhou',record:'Cults_871104',img:'assets/resources/83d311da1ab7310a567c6023f6151e6c.webp',source:'F.H.C 극비 보안 문서',reaction:'의식 지휘 / 하위 신자 통제',note:'직접 교전보다 기록 오염과 추적 실패가 먼저 발생한다.'},
+      {id:'ENT-881120-MIMIC-03',className:'미믹 개체',name:'귀환자 위장 반응체',status:'CIV SCREEN',threat:'검문선 침투',zone:'부산 선별 부두 / 델리 선별권',op:'busan',record:'FCR_Archive_890402',img:'assets/resources/c85c636bb85c747508df07e1115a9b89.webp',source:'타락 개체 분류 추가 보고서',reaction:'기억 손실 위장 / 지연 신체 반응',note:'귀환자를 즉시 타락 개체로 기록하지 않되, 가족 접촉은 보류한다.'},
+      {id:'ENT-890402-MIX-04',className:'혼합 개체',name:'오염 장비 접촉 변이체',status:'RECOVERY FAIL',threat:'장비 매개 확산',zone:'북해-함부르크 / 회수 실패 구역',op:'northsea',record:'Redzone_881120',img:'assets/resources/0a8342297ac1a847461c57a2726d98b7.webp',source:'레드존 이상현상 및 오염 기준 문서',reaction:'오염된 장비와 생체 반응이 결합',note:'장비 회수보다 현장 소각과 봉쇄선 유지가 우선된다.'},
+      {id:'ENT-891219-CMD-05',className:'명령 반응체',name:'무전 응답 개체',status:'SIGNAL DEGRADED',threat:'통신 유인',zone:'Dead Hour / Ghost Channel 구역',op:'world',record:'Redzone_881120',img:'assets/resources/e39a87391183a4f564af26c1dd3b7bbd.webp',source:'N.H.C 생존 규칙 / 레드존 통신 오염',reaction:'사망자 무전 또는 반복 명령에 반응',note:'사망자 무전에 응답하지 않는다. 동일 명령 반복은 후퇴 기준이다.'},
+      {id:'ENT-860204-ART-06',className:'인공 개체',name:'아마리온 연구 부산물',status:'BLACK SITE WATCH',threat:'비인가 연구 확산',zone:'Black Site 후보 / 기업 연구권',op:'world',record:'불명_Record1_860204',img:'assets/resources/734d86c7b7d166024a3be1993b9ed78a.webp',source:'아마리온 회수 영상 기록',reaction:'현실 외부 공간 / 고응축 자원 반응',note:'교육 영상처럼 위장된 연구 자료에서 파생 가능성이 확인된다.'},
+      {id:'ENT-QTYPE-07',className:'Queen-Type',name:'중심 반응핵 후보',status:'BLACK CORE',threat:'구역 블랙존화',zone:'호주 중앙 심부 / 란저우 지하 반응핵',op:'australia',record:'Redzone_881120',img:'assets/resources/05cdc0276694d090f3829c4dc6e5a30b.webp',source:'레드존 장기 방치 단계 / 블랙존화 징후',reaction:'주변 개체 반응과 오염권을 동기화',note:'실체보다 반응핵 후보로 먼저 기록된다. 접근보다 관측 축 유지가 우선이다.'},
+      {id:'ENT-RETURN-08',className:'귀환자 위장 개체',name:'지연 신체 반응 귀환자',status:'CIV HOLD',threat:'대피선 내부 확산',zone:'부산 / 델리 / 귀환자 집결지',op:'delhi',record:'FCR_Archive_890402',img:'assets/resources/fb5ead8ded766fd8d05938b1caf6a18e.webp',source:'귀환자 이상 반응 추가 보고',reaction:'정상 진술 이후 지연 변이',note:'C.P.D 대피 회랑에 합류시키기 전 2차 선별과 무전 기록 대조가 필요하다.'}
+    ];
+
+    const classOrder=['전체','타락 개체','상위 개체','미믹 개체','혼합 개체','명령 반응체','인공 개체','Queen-Type','귀환자 위장 개체'];
+
+    function chips(items){
+      return (items||[]).map(x=>`<span>${esc(x)}</span>`).join('');
     }
-    document.querySelectorAll('.side-menu a[data-target]').forEach(a=>{
-      if(a.dataset.pc564MenuFx) return;
-      a.dataset.pc564MenuFx='1';
-      a.addEventListener('click',()=>showMenuFx(a.dataset.target),true);
+
+    function renderEntityArchive(){
+      const root=document.getElementById('pc5140EntityRoot');
+      if(!root) return;
+      root.innerHTML=`
+        <div class="pc5140-entity-shell" data-filter="전체">
+          <aside class="pc5140-entity-left">
+            <div class="pc5140-node-head"><span>ENTITY FILE INDEX</span><b>FIELD CLASSIFICATION</b><small>RECOVERED / PARTIAL</small></div>
+            <div class="pc5140-filter-list">
+              ${classOrder.map((name,i)=>`<button type="button" class="${i===0?'active':''}" data-pc5140-filter="${esc(name)}"><i>${String(i).padStart(2,'0')}</i><span>${esc(name)}</span></button>`).join('')}
+            </div>
+            <div class="pc5140-entity-warning"><b>주의</b><p>이 색인은 개체 도감이 아니다. 회수 이미지와 현장 진술이 충돌할 경우 현장 기록을 우선한다.</p></div>
+          </aside>
+          <section class="pc5140-entity-list" aria-label="개체 파일 목록"></section>
+          <aside class="pc5140-entity-detail" aria-label="선택 개체 파일"></aside>
+        </div>`;
+
+      const shell=root.querySelector('.pc5140-entity-shell');
+      const listEl=root.querySelector('.pc5140-entity-list');
+      const detailEl=root.querySelector('.pc5140-entity-detail');
+
+      function visibleList(){
+        const filter=shell.dataset.filter||'전체';
+        return filter==='전체' ? entityFiles : entityFiles.filter(x=>x.className===filter);
+      }
+
+      function renderList(activeId){
+        const list=visibleList();
+        listEl.innerHTML=list.map(file=>`
+          <button type="button" class="pc5140-entity-row ${file.id===activeId?'active':''}" data-pc5140-entity="${esc(file.id)}">
+            <i>${esc(file.id)}</i>
+            <b>${esc(file.name)}</b>
+            <span>${esc(file.className)} / ${esc(file.status)}</span>
+            <small>${esc(file.threat)}</small>
+          </button>
+        `).join('') || '<div class="pc5140-empty">NO RECOVERED FILE</div>';
+        listEl.querySelectorAll('[data-pc5140-entity]').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            selectEntity(btn.getAttribute('data-pc5140-entity'));
+            if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('drawer',180);
+          });
+        });
+      }
+
+      function selectEntity(id){
+        const file=entityFiles.find(x=>x.id===id) || visibleList()[0] || entityFiles[0];
+        if(!file) return;
+        renderList(file.id);
+        detailEl.innerHTML=`
+          <div class="pc5140-detail-head">
+            <span>SELECTED ENTITY FILE</span>
+            <b>${esc(file.name)}</b>
+            <small>${esc(file.id)}</small>
+          </div>
+          <figure class="pc5140-recovered-image">
+            <img src="${esc(file.img)}" alt="${esc(file.name)} 회수 이미지" loading="lazy">
+            <figcaption>RECOVERED IMAGE / QUALITY DEGRADED</figcaption>
+          </figure>
+          <div class="pc5140-detail-grid">
+            <span>분류</span><b>${esc(file.className)}</b>
+            <span>상태</span><b>${esc(file.status)}</b>
+            <span>위협</span><b>${esc(file.threat)}</b>
+            <span>관련 작전권</span><b>${esc(file.zone)}</b>
+            <span>출처</span><b>${esc(file.source)}</b>
+            <span>반응</span><b>${esc(file.reaction)}</b>
+          </div>
+          <section><b>현장 메모</b><p>${esc(file.note)}</p></section>
+          <div class="pc5140-detail-actions">
+            <button type="button" data-pc5140-open-record="${esc(file.record)}">관련 기록 열람</button>
+            <button type="button" data-pc5140-open-op="${esc(file.op)}">관련 작전권 열기</button>
+          </div>`;
+
+        detailEl.querySelectorAll('[data-pc5140-open-record]').forEach(btn=>{
+          btn.addEventListener('click',e=>{
+            e.preventDefault();
+            const id=btn.getAttribute('data-pc5140-open-record');
+            const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
+            if(archiveLink) archiveLink.click();
+            setTimeout(()=>{ if(typeof window.ProjectCurseShowInternalRecord==='function') window.ProjectCurseShowInternalRecord(id); },120);
+          });
+        });
+        detailEl.querySelectorAll('[data-pc5140-open-op]').forEach(btn=>{
+          btn.addEventListener('click',e=>{
+            e.preventDefault();
+            const op=btn.getAttribute('data-pc5140-open-op')||'world';
+            if(typeof window.ProjectCurseSelectOperation==='function') window.ProjectCurseSelectOperation(op,{show:true,closeMap:true});
+          });
+        });
+      }
+
+      root.querySelectorAll('[data-pc5140-filter]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          shell.dataset.filter=btn.getAttribute('data-pc5140-filter')||'전체';
+          root.querySelectorAll('[data-pc5140-filter]').forEach(x=>x.classList.toggle('active',x===btn));
+          const first=visibleList()[0] || entityFiles[0];
+          selectEntity(first && first.id);
+        });
+      });
+
+      selectEntity(entityFiles[0].id);
+    }
+
+    renderEntityArchive();
+    setTimeout(renderEntityArchive,260);
+  });
+})();
+
+
+// MapPatch 5.14.1 — ReturnedCivilianRegistry_Add.
+// Adds C.P.D / U.A.C returned civilian screening registry. Existing record bodies are not rewritten.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
+  ready(function(){
+    document.body.classList.add('pc5141-returned-registry-ready');
+
+    const esc=(v)=>String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    const returnedFiles=[
+      {id:'RC-CPD-00-117',grade:'R-0 정상',name:'부산 항만 귀환자 / 임시 정상',status:'RELEASE PENDING',contact:'가족 접촉 제한 해제 대기',evac:'C.P.D 대피버스 조건부 합류',quarantine:'12시간 관찰',zone:'부산 해상 통제 허브',op:'busan',record:'FCR_Archive_890402',img:'assets/resources/c85c636bb85c747508df07e1115a9b89.webp',memo:'초기 진술과 무전 기록이 일치한다. 단, 레드존 외곽 체류 시간이 길어 2차 체온·혈액 반응 검사를 유지한다.'},
+      {id:'RC-CPD-01-204',grade:'R-1 기억 손실',name:'란저우 외곽 회수 민간인',status:'SCREENING HOLD',contact:'가족 접촉 보류',evac:'대피버스 합류 보류',quarantine:'24시간 격리',zone:'란저우 내륙 레드존',op:'lanzhou',record:'타락 개체_860722',img:'assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp',memo:'귀환 직전 3시간의 기억이 공백 상태다. 우시노다교 의식성 오염 흔적은 확인되지 않았으나 동일 문장을 반복한다.'},
+      {id:'RC-CPD-02-311',grade:'R-2 시간 불일치',name:'서울 Core 검문선 통과자',status:'TIME MISMATCH',contact:'가족 접촉 녹취 후 제한',evac:'대피선 후방 배치',quarantine:'48시간 격리',zone:'서울 Core / 한강 봉쇄권',op:'seoul',record:'Redzone_881120',img:'assets/resources/0a8342297ac1a847461c57a2726d98b7.webp',memo:'본인 진술의 체류 시간과 검문소 시각 기록이 일치하지 않는다. Ghost Channel 계열 시간 오염 가능성을 배제할 수 없다.'},
+      {id:'RC-CPD-03-408',grade:'R-3 지연 신체 반응',name:'델리 귀환자 집결지 등록자',status:'BODY RESPONSE DELAYED',contact:'가족 접촉 금지',evac:'대피버스 합류 금지',quarantine:'72시간 격리 / 의료 관찰',zone:'델리 귀환자 선별권',op:'delhi',record:'FCR_Archive_890402',img:'assets/resources/fb5ead8ded766fd8d05938b1caf6a18e.webp',memo:'초기 검사는 정상이었으나 9시간 뒤 피부 반점과 맥박 불일치가 발생했다. 귀환자 위장 개체 가능성은 낮지만 관찰 지속.'},
+      {id:'RC-CPD-04-512',grade:'R-4 오염된 침묵',name:'북해 봉인 항만 회수자',status:'SILENCE CONTAMINATED',contact:'가족 접촉 전면 금지',evac:'민간 대피선 접근 금지',quarantine:'봉인실 이관',zone:'북해-함부르크 봉인 항만',op:'northsea',record:'Cults_871104',img:'assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp',memo:'어떤 질문에도 응답하지 않지만, F.H.C 봉인 문구를 들을 때 심박과 안구 반응이 동기화된다. 침묵 자체를 오염 반응으로 분류한다.'},
+      {id:'RC-CPD-05-666',grade:'R-5 위장 귀환 개체',name:'신원 불일치 귀환자',status:'FALSE RETURN',contact:'가족 접촉 금지 / 신원 폐기',evac:'C.P.D 대피버스 접근 금지',quarantine:'N.H.C 인계 / 소각 대기',zone:'란저우 내륙 레드존',op:'lanzhou',record:'타락 개체_860722',img:'assets/resources/86ed1a163d79930b0874dbd5eb93adf2.webp',memo:'지문·치아 기록은 실종자와 일치하나 생년과 가족 구성 진술이 반복적으로 어긋난다. 귀환자가 아니라 귀환자 위장 개체로 재분류한다.'},
+      {id:'RC-CPD-02-702',grade:'R-2 시간 불일치',name:'부산 대피 회랑 지연 귀환자',status:'SECONDARY CHECK REQUIRED',contact:'가족 통화 3분 제한',evac:'후속 차량 대기',quarantine:'36시간 관찰',zone:'부산 해상 통제 허브',op:'busan',record:'NHC_Manual_891219',img:'assets/resources/e39a87391183a4f564af26c1dd3b7bbd.webp',memo:'대피 회랑 진입 당시 무전 기록이 11분 늦게 수신되었다. 검문소 CCTV에는 정상적으로 통과한 것으로 보이나 음성 기록만 뒤틀려 있다.'},
+      {id:'RC-CPD-03-811',grade:'R-3 지연 신체 반응',name:'호주 중앙 심부 외곽 구조자',status:'BLACK CORE WATCH',contact:'가족 접촉 금지',evac:'이동 금지',quarantine:'격리 컨테이너 유지',zone:'호주 중앙 심부 반응점',op:'australia',record:'Redzone_881120',img:'assets/resources/05cdc0276694d090f3829c4dc6e5a30b.webp',memo:'구조 직후에는 정상 보행과 정상 문답이 가능했으나, 블랙코어 반응 기록 재생 시 비자발적 안면 경련이 발생했다.'}
+    ];
+
+    const grades=['전체','R-0 정상','R-1 기억 손실','R-2 시간 불일치','R-3 지연 신체 반응','R-4 오염된 침묵','R-5 위장 귀환 개체'];
+
+    function renderReturnedRegistry(){
+      const root=document.getElementById('pc5141ReturnedRoot');
+      if(!root) return;
+      root.innerHTML=`
+        <div class="pc5141-registry-shell" data-filter="전체">
+          <aside class="pc5141-registry-left">
+            <div class="pc5141-node-head"><span>C.P.D SCREENING NODE</span><b>RETURNED CIVILIAN</b><small>U.A.C REVIEW / PARTIAL</small></div>
+            <div class="pc5141-grade-list">
+              ${grades.map((grade,i)=>`<button type="button" class="${i===0?'active':''}" data-pc5141-grade="${esc(grade)}"><i>${grade==='전체'?'ALL':grade.split(' ')[0]}</i><span>${esc(grade)}</span></button>`).join('')}
+            </div>
+            <div class="pc5141-registry-warning"><b>검문 주의</b><p>귀환자는 생존자로 확정되지 않는다. 가족 접촉과 C.P.D 대피버스 합류는 2차 선별 이후에만 허용한다.</p></div>
+          </aside>
+          <section class="pc5141-registry-list" aria-label="귀환자 선별 파일 목록"></section>
+          <aside class="pc5141-registry-detail" aria-label="선택 귀환자 선별 파일"></aside>
+        </div>`;
+
+      const shell=root.querySelector('.pc5141-registry-shell');
+      const listEl=root.querySelector('.pc5141-registry-list');
+      const detailEl=root.querySelector('.pc5141-registry-detail');
+
+      function visibleList(){
+        const filter=shell.dataset.filter||'전체';
+        return filter==='전체' ? returnedFiles : returnedFiles.filter(x=>x.grade===filter);
+      }
+
+      function renderList(activeId){
+        const list=visibleList();
+        listEl.innerHTML=list.map(file=>`
+          <button type="button" class="pc5141-returned-row ${file.id===activeId?'active':''}" data-pc5141-returned="${esc(file.id)}">
+            <i>${esc(file.id)}</i>
+            <b>${esc(file.name)}</b>
+            <span>${esc(file.grade)} / ${esc(file.status)}</span>
+            <small>${esc(file.contact)}</small>
+          </button>
+        `).join('') || '<div class="pc5141-empty">NO SCREENING FILE</div>';
+        listEl.querySelectorAll('[data-pc5141-returned]').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            selectReturned(btn.getAttribute('data-pc5141-returned'));
+            if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('drawer',180);
+          });
+        });
+      }
+
+      function selectReturned(id){
+        const file=returnedFiles.find(x=>x.id===id) || visibleList()[0] || returnedFiles[0];
+        if(!file) return;
+        renderList(file.id);
+        detailEl.innerHTML=`
+          <div class="pc5141-detail-head">
+            <span>SELECTED SCREENING FILE</span>
+            <b>${esc(file.name)}</b>
+            <small>${esc(file.id)}</small>
+          </div>
+          <figure class="pc5141-screening-image">
+            <img src="${esc(file.img)}" alt="${esc(file.name)} 선별 자료" loading="lazy">
+            <figcaption>SCREENING IMAGE / LOW QUALITY COPY</figcaption>
+          </figure>
+          <div class="pc5141-detail-grid">
+            <span>R 등급</span><b>${esc(file.grade)}</b>
+            <span>상태</span><b>${esc(file.status)}</b>
+            <span>가족 접촉</span><b>${esc(file.contact)}</b>
+            <span>대피선</span><b>${esc(file.evac)}</b>
+            <span>격리</span><b>${esc(file.quarantine)}</b>
+            <span>관련 작전권</span><b>${esc(file.zone)}</b>
+          </div>
+          <section><b>선별 메모</b><p>${esc(file.memo)}</p></section>
+          <div class="pc5141-detail-actions">
+            <button type="button" data-pc5141-open-record="${esc(file.record)}">관련 기록 열람</button>
+            <button type="button" data-pc5141-open-op="${esc(file.op)}">관련 작전권 열기</button>
+          </div>`;
+
+        detailEl.querySelectorAll('[data-pc5141-open-record]').forEach(btn=>{
+          btn.addEventListener('click',e=>{
+            e.preventDefault();
+            const id=btn.getAttribute('data-pc5141-open-record');
+            const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
+            if(archiveLink) archiveLink.click();
+            setTimeout(()=>{ if(typeof window.ProjectCurseShowInternalRecord==='function') window.ProjectCurseShowInternalRecord(id); },120);
+          });
+        });
+        detailEl.querySelectorAll('[data-pc5141-open-op]').forEach(btn=>{
+          btn.addEventListener('click',e=>{
+            e.preventDefault();
+            const op=btn.getAttribute('data-pc5141-open-op')||'world';
+            if(typeof window.ProjectCurseSelectOperation==='function') window.ProjectCurseSelectOperation(op,{show:true,closeMap:true});
+          });
+        });
+      }
+
+      root.querySelectorAll('[data-pc5141-grade]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          shell.dataset.filter=btn.getAttribute('data-pc5141-grade')||'전체';
+          root.querySelectorAll('[data-pc5141-grade]').forEach(x=>x.classList.toggle('active',x===btn));
+          const first=visibleList()[0] || returnedFiles[0];
+          selectReturned(first && first.id);
+        });
+      });
+
+      selectReturned(returnedFiles[0].id);
+    }
+
+    renderReturnedRegistry();
+    setTimeout(renderReturnedRegistry,260);
+  });
+})();
+
+
+// MapPatch 5.15.0 — EquipmentCodex_Interactive.
+// Adds recovered equipment codex as N.H.C/A.R.F handling records. Existing record bodies are not rewritten.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
+  ready(function(){
+    document.body.classList.add('pc5150-equipment-codex-ready');
+
+    const esc=(v)=>String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    const equipmentFiles=[
+      {id:'EQ-NHC-CG-001',category:'오염된 장비',name:'회수된 돌격소총 / 오염 반응',status:'BURN AFTER CHECK',handler:'N.H.C / A.R.F',contamination:'혈액성 잔류 반응',op:'lanzhou',zone:'란저우 내륙 레드존',record:'NHC_Manual_891219',img:'assets/resources/548f1c4456dc240389f61115de660a7f.webp',caution:'사용 금지 / 탄창 분리 후 소각 대기',note:'작동 가능한 상태로 회수되었지만 손잡이와 장전부에서 생체 반응이 검출되었다. 재사용이 아니라 회수 경로 역추적용으로만 보관한다.'},
+      {id:'EQ-UAC-WC-014',category:'W-Coat',name:'W-Coat 현장 방호막',status:'FIELD LIMITED',handler:'N.H.C 장비반',contamination:'외부 오염 차단 / 내부 잔류 가능',op:'busan',zone:'부산 해상 통제 허브',record:'NHC_Manual_891219',img:'assets/resources/0a8342297ac1a847461c57a2726d98b7.webp',caution:'찢김 발생 시 즉시 폐기',note:'단기 투입용 방호 코팅. 레드존 장기 체류를 보장하지 않으며, 귀환자 선별 구역으로 반입할 수 없다.'},
+      {id:'EQ-UAC-WF-027',category:'W-Fiber',name:'W-Fiber 보강 내피',status:'RECOVERED SAMPLE',handler:'A.R.F 회수반',contamination:'섬유층 미세 오염 흡착',op:'seoul',zone:'서울 Core / 한강 봉쇄권',record:'Redzone_881120',img:'assets/resources/4cd826918a7fd80a89342fb22aad527f.webp',caution:'세척 재사용 금지',note:'방호복 내피로 사용된 흔적이 있으나, 섬유 내부에 미세 오염 물질이 남아 반복 착용자를 오염시킬 수 있다.'},
+      {id:'EQ-FHC-BM-104',category:'혈무',name:'혈무 / 봉인 실패품',status:'F.H.C SEALED',handler:'F.H.C / S.I.D',contamination:'의식성 오염 / 접촉 반응',op:'lanzhou',zone:'우시노다교 흔적권',record:'Cults_871104',img:'assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp',caution:'직접 접촉 금지 / 봉인 태그 유지',note:'제압 도구로 기록되어 있으나 제작 과정 자체가 의식성 오염과 연결된다. N.H.C 일반 장비고에 보관할 수 없다.'},
+      {id:'EQ-SID-WG-211',category:'파동기',name:'현장 파동기 / 신호 교란형',status:'SIGNAL UNSTABLE',handler:'S.I.D 감청반',contamination:'Ghost Channel 간섭',op:'world',zone:'Dead Hour / 통신 오염권',record:'Redzone_881120',img:'assets/resources/e39a87391183a4f564af26c1dd3b7bbd.webp',caution:'사망자 무전 수신 시 전원 차단',note:'오염 신호를 밀어내기 위한 장비지만 특정 주파수에서 오히려 명령 반응체를 유인할 수 있다.'},
+      {id:'EQ-UAC-NC-305',category:'Null Coating',name:'Null Coating 봉쇄 패널',status:'CONTAINMENT USE',handler:'U.A.C 시설반',contamination:'표면 안정 / 균열 시 역류',op:'northsea',zone:'북해-함부르크 봉인 항만',record:'Redzone_881120',img:'assets/resources/1ff34fadd4be71392d17f458d5d43313.webp',caution:'균열 발견 시 접근 금지',note:'봉쇄선과 임시 격리실 표면에 적용된다. 표면이 안정적일 때만 유효하며 균열 이후에는 오염을 막는 대신 가둬둔 신호가 역류한다.'},
+      {id:'EQ-NHC-AM-410',category:'특수탄약',name:'Null Round / 현장 지급 탄약',status:'CONTROLLED AMMO',handler:'N.H.C 화기반',contamination:'잔류 분말 회수 필요',op:'busan',zone:'부산 / 레드존 외곽 작전권',record:'NHC_Manual_891219',img:'assets/resources/57674a652af43e6aec284bbc33018b06.webp',caution:'소모 탄피 전량 회수',note:'타락 개체 제압용으로 제한 지급된다. 탄피와 잔류 분말이 회수되지 않으면 2차 오염 증거가 누락된다.'},
+      {id:'EQ-CPD-BUS-502',category:'차량·시설·봉쇄 인프라',name:'C.P.D 대피버스 / 검문 이동체',status:'CIV ROUTE HOLD',handler:'C.P.D / U.A.C',contamination:'탑승자 선별 실패 위험',op:'delhi',zone:'델리 귀환자 선별권',record:'FCR_Archive_890402',img:'assets/resources/c85c636bb85c747508df07e1115a9b89.webp',caution:'R-3 이상 탑승 금지',note:'대피 수단이지만 이동식 검문선으로도 운용된다. 귀환자 분류가 확정되지 않은 인원을 태우면 차량 전체가 격리된다.'},
+      {id:'EQ-UAC-GATE-620',category:'차량·시설·봉쇄 인프라',name:'임시 Blood Gate 차단 프레임',status:'PARTIAL FAILURE',handler:'U.A.C / F.H.C',contamination:'의식 잔향 / 봉인 태그 손상',op:'lanzhou',zone:'란저우 지하 반응권',record:'Cults_871104',img:'assets/resources/83d311da1ab7310a567c6023f6151e6c.webp',caution:'완전 폐쇄 기록 없음',note:'Blood Gate 주변에 설치된 임시 프레임. 차단 장비로 분류되지만 실제로는 확산 속도를 늦추는 장치에 가깝다.'},
+      {id:'EQ-ARF-REC-777',category:'오염된 장비',name:'회수 태그 / 손상된 기록 매체',status:'INDEX DAMAGED',handler:'A.R.F 기록반',contamination:'데이터 손상 / 시각 노이즈',op:'world',zone:'세계 상황판 / 회수 자료',record:'불명_Record1_860204',img:'assets/resources/734d86c7b7d166024a3be1993b9ed78a.webp',caution:'원본 덮어쓰기 금지',note:'장비 자체보다 장비에 남은 영상·음성 기록이 더 위험한 경우가 있다. 복구 전용 단말기 외부에서는 열람하지 않는다.'}
+    ];
+
+    const categories=['전체','오염된 장비','W-Coat','W-Fiber','혈무','파동기','Null Coating','특수탄약','차량·시설·봉쇄 인프라'];
+
+    function renderEquipmentCodex(){
+      const root=document.getElementById('pc5150EquipmentRoot');
+      if(!root) return;
+      root.innerHTML=`
+        <div class="pc5150-equipment-shell" data-filter="전체">
+          <aside class="pc5150-equipment-left">
+            <div class="pc5150-node-head"><span>N.H.C EQUIPMENT NODE</span><b>RECOVERED CODEX</b><small>FIELD HANDLING / PARTIAL</small></div>
+            <div class="pc5150-category-list">
+              ${categories.map((cat,i)=>`<button type="button" class="${i===0?'active':''}" data-pc5150-category="${esc(cat)}"><i>${String(i).padStart(2,'0')}</i><span>${esc(cat)}</span></button>`).join('')}
+            </div>
+            <div class="pc5150-equipment-warning"><b>취급 경고</b><p>이 화면은 무기 목록이 아니다. 회수 장비는 재사용보다 오염 경로 확인과 폐기 여부 판단을 우선한다.</p></div>
+          </aside>
+          <section class="pc5150-equipment-list" aria-label="회수 장비 파일 목록"></section>
+          <aside class="pc5150-equipment-detail" aria-label="선택 장비 취급 파일"></aside>
+        </div>`;
+
+      const shell=root.querySelector('.pc5150-equipment-shell');
+      const listEl=root.querySelector('.pc5150-equipment-list');
+      const detailEl=root.querySelector('.pc5150-equipment-detail');
+
+      function visibleList(){
+        const filter=shell.dataset.filter||'전체';
+        return filter==='전체' ? equipmentFiles : equipmentFiles.filter(x=>x.category===filter);
+      }
+
+      function renderList(activeId){
+        const list=visibleList();
+        listEl.innerHTML=list.map(file=>`
+          <button type="button" class="pc5150-equipment-row ${file.id===activeId?'active':''}" data-pc5150-equipment="${esc(file.id)}">
+            <i>${esc(file.id)}</i>
+            <b>${esc(file.name)}</b>
+            <span>${esc(file.category)} / ${esc(file.status)}</span>
+            <small>${esc(file.caution)}</small>
+          </button>
+        `).join('') || '<div class="pc5150-empty">NO RECOVERED EQUIPMENT FILE</div>';
+        listEl.querySelectorAll('[data-pc5150-equipment]').forEach(btn=>{
+          btn.addEventListener('click',()=>{
+            selectEquipment(btn.getAttribute('data-pc5150-equipment'));
+            if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('drawer',180);
+          });
+        });
+      }
+
+      function selectEquipment(id){
+        const file=equipmentFiles.find(x=>x.id===id) || visibleList()[0] || equipmentFiles[0];
+        if(!file) return;
+        renderList(file.id);
+        detailEl.innerHTML=`
+          <div class="pc5150-detail-head">
+            <span>SELECTED EQUIPMENT FILE</span>
+            <b>${esc(file.name)}</b>
+            <small>${esc(file.id)}</small>
+          </div>
+          <figure class="pc5150-equipment-image">
+            <img src="${esc(file.img)}" alt="${esc(file.name)} 회수 장비 자료" loading="lazy">
+            <figcaption>RECOVERED EQUIPMENT IMAGE / ARCHIVE COPY</figcaption>
+          </figure>
+          <div class="pc5150-detail-grid">
+            <span>분류</span><b>${esc(file.category)}</b>
+            <span>상태</span><b>${esc(file.status)}</b>
+            <span>취급 기관</span><b>${esc(file.handler)}</b>
+            <span>오염 상태</span><b>${esc(file.contamination)}</b>
+            <span>관련 작전권</span><b>${esc(file.zone)}</b>
+            <span>취급 경고</span><b>${esc(file.caution)}</b>
+          </div>
+          <section><b>현장 취급 메모</b><p>${esc(file.note)}</p></section>
+          <div class="pc5150-detail-actions">
+            <button type="button" data-pc5150-open-record="${esc(file.record)}">관련 기록 열람</button>
+            <button type="button" data-pc5150-open-op="${esc(file.op)}">관련 작전권 열기</button>
+          </div>`;
+
+        detailEl.querySelectorAll('[data-pc5150-open-record]').forEach(btn=>{
+          btn.addEventListener('click',e=>{
+            e.preventDefault();
+            const id=btn.getAttribute('data-pc5150-open-record');
+            const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
+            if(archiveLink) archiveLink.click();
+            setTimeout(()=>{ if(typeof window.ProjectCurseShowInternalRecord==='function') window.ProjectCurseShowInternalRecord(id); },120);
+          });
+        });
+        detailEl.querySelectorAll('[data-pc5150-open-op]').forEach(btn=>{
+          btn.addEventListener('click',e=>{
+            e.preventDefault();
+            const op=btn.getAttribute('data-pc5150-open-op')||'world';
+            if(typeof window.ProjectCurseSelectOperation==='function') window.ProjectCurseSelectOperation(op,{show:true,closeMap:true});
+          });
+        });
+      }
+
+      root.querySelectorAll('[data-pc5150-category]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          shell.dataset.filter=btn.getAttribute('data-pc5150-category')||'전체';
+          root.querySelectorAll('[data-pc5150-category]').forEach(x=>x.classList.toggle('active',x===btn));
+          const first=visibleList()[0] || equipmentFiles[0];
+          selectEquipment(first && first.id);
+        });
+      });
+
+      selectEquipment(equipmentFiles[0].id);
+    }
+
+    renderEquipmentCodex();
+    setTimeout(renderEquipmentCodex,260);
+  });
+})();
+
+
+// MapPatch 5.15.1 — InterfaceReset_ArchiveTerminal.
+// Restores the interface around four root archive drawers and demotes recent feature pages to archive sub-indexes.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
+  ready(function(){
+    document.body.classList.add('pc5151-interface-reset');
+
+    function playCue(name,cooldown){
+      if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function'){
+        window.ProjectCurseAudio.playCue(name,cooldown||180);
+      }
+    }
+
+    function showPageById(id){
+      if(!id) return;
+      const sideLink=document.querySelector(`.side-menu a[data-target="${CSS.escape(id)}"]`);
+      if(sideLink){
+        sideLink.click();
+        return;
+      }
+      const pages=Array.from(document.querySelectorAll('.content-page'));
+      if(!pages.some(p=>p.id===id)) return;
+      pages.forEach(p=>p.classList.toggle('active',p.id===id));
+      history.replaceState(null,'','#'+id);
+      const c=document.querySelector('.legacy-content');
+      if(c) c.scrollTop=0;
+      playCue('drawer',200);
+    }
+
+    document.querySelectorAll('[data-pc5151-page]').forEach(btn=>{
+      if(btn.dataset.bound5151) return;
+      btn.dataset.bound5151='1';
+      btn.addEventListener('click',e=>{
+        e.preventDefault();
+        showPageById(btn.getAttribute('data-pc5151-page'));
+      });
     });
 
-    const section=document.getElementById('faction-relation');
-    if(!section || section.dataset.pc564Ready) return;
-    section.dataset.pc564Ready='1';
-    section.classList.add('pc564-faction-layout-fix');
-    const statusClass={'통제':'control','감시':'watch','적대':'hostile','불명':'unknown','비공식 접촉':'informal'};
-    const nodes={
-      uac:{name:'U.A.C',img:'uac.webp',tag:'통제',role:'상위 조정기관',x:50,y:50,grade:'CORE-0',risk:'중심 통제',watch:'상시 관제',records:'권역 지도 / 봉쇄 규정',summary:'U.A.C는 현장 작전, 조사 기록, 연구 자료, 민간 통제를 하나의 관제망으로 묶어 최종 판단을 내리는 중심 기관이다.'},
-      nhc:{name:'N.H.C',img:'nhc.webp',tag:'통제',role:'현장 작전',x:50,y:22,grade:'OP-1',risk:'고위험 투입',watch:'직접 지휘',records:'현장 작전·장비·봉쇄 규정',summary:'N.H.C는 레드존과 블랙존 외곽에 진입하는 주 현장 전력이며, U.A.C 명령에 따라 봉쇄·구출·교전 기준을 수행한다.'},
-      sid:{name:'S.I.D',img:'sid.webp',tag:'감시',role:'특수 조사',x:73,y:36,grade:'INV-2',risk:'정보 민감',watch:'기록 송신',records:'사건 좌표 / 현상 기록',summary:'S.I.D는 실종, 오컬트 범죄, 우시노다교 흔적을 추적하며 조사 결과를 U.A.C 중앙 기록망으로 송신한다.'},
-      fhc:{name:'F.H.C',img:'fhc.webp',tag:'감시',role:'극비 연구',x:73,y:64,grade:'LAB-2',risk:'은폐 가능성',watch:'상호 감시',records:'F.H.C 극비 보안 문서',summary:'F.H.C의 연구 자료는 대응에 필요하지만, 생체 실험과 자료 은폐 가능성 때문에 U.A.C의 감시선 안에 묶인다.'},
-      cpd:{name:'C.P.D',img:'cpd.webp',tag:'감시',role:'민간 통제국',x:27,y:50,grade:'CIV-3',risk:'민간 접촉',watch:'행정 감시',records:'대피·검문·선별 기록',summary:'C.P.D는 검문, 피난민 분리, 귀환자 선별 같은 민간 통제 축을 담당한다. 대피버스·차량 단위는 관계도 노드에서 제외된다.'},
-      arf:{name:'A.R.F',img:'arf.webp',tag:'통제',role:'회수 부대',x:35,y:22,grade:'REC-2',risk:'오염 회수',watch:'N.H.C 연계',records:'회수·소각 절차',summary:'A.R.F는 N.H.C가 확보한 현장에 후속 진입하여 생존자, 샘플, 기록 매체를 회수한다.'},
-      ashcrew:{name:'Ash Crew',img:'ashcrew.webp',tag:'통제',role:'오염 처리',x:65,y:22,grade:'ASH-2',risk:'잔류 오염',watch:'N.H.C 연계',records:'오염된 장비 / 소각 기록',summary:'Ash Crew는 전투 후 남은 오염 장비, 사체, 잔류물을 봉인·회수·소각하는 후속 처리반이다.'},
-      amarion:{name:'Amarion',img:'amarion.webp',tag:'비공식 접촉',role:'민간 연구망',x:66,y:82,grade:'BIO-4',risk:'비인가 실험',watch:'F.H.C 경유',records:'연구 연결 / 비인가 자료',summary:'Amarion은 제약·생명공학 자료를 통해 F.H.C와 연결되지만, 비인가 실험 기록 때문에 공식 협력으로 분류되지 않는다.'},
-      syndicate:{name:'Syndicate',img:'syndicate.webp',tag:'적대',role:'이탈 네트워크',x:34,y:82,grade:'HOST-1',risk:'교전 가능',watch:'추적 대상',records:'레드울프 이탈 기록',summary:'Syndicate는 비공식 무장 네트워크이며, 레드울프 계열 이탈 작전 집단과 연결된 추적 대상이다.'},
-      ushinoda:{name:'Ushnoda Cult',img:'ushinoda.webp',tag:'적대',role:'의식 범죄',x:21,y:68,grade:'RIT-0',risk:'블랙존화',watch:'차단 대상',records:'우시노다교 의식성 오염',summary:'Ushnoda Cult는 의식성 오염, 기억 왜곡, 인신공양, 블랙존화 징후와 직접 연결되는 핵심 적대 세력이다.'},
-      haimun:{name:'Haimun',img:'haimun.webp',tag:'불명',role:'도심 침투',x:21,y:32,grade:'UNK-3',risk:'구조 불명',watch:'잠복 감시',records:'하이문 도심 침투 기록',summary:'Haimun은 도심권 납치와 의식 흔적에 반복적으로 등장하지만 지휘 구조와 상위 연결은 아직 불명으로 남아 있다.'}
-    };
-    const edges=[
-      {a:'uac',b:'nhc',type:'command',label:'작전 통제',desc:'U.A.C가 구역 정보와 봉쇄 명령을 제공하고 N.H.C가 현장 진입을 수행한다.'},
-      {a:'uac',b:'sid',type:'watch',label:'조사 감시',desc:'S.I.D는 조사 결과를 U.A.C 중앙 기록망으로 송신한다.'},
-      {a:'uac',b:'fhc',type:'watch',label:'상호 감시',desc:'F.H.C 연구 자료는 필요하지만 은폐 가능성 때문에 감시가 유지된다.'},
-      {a:'uac',b:'cpd',type:'command',label:'민간 통제',desc:'C.P.D는 검문과 대피 통제를 수행하되 U.A.C 행정 명령 아래 움직인다.'},
-      {a:'uac',b:'ushinoda',type:'hostile',label:'적대 차단',desc:'U.A.C 관제망은 의식성 오염과 블랙존 확산 차단을 우선한다.'},
-      {a:'nhc',b:'arf',type:'command',label:'후속 회수',desc:'현장 확보 이후 A.R.F가 생존자와 자료를 회수한다.'},
-      {a:'nhc',b:'ashcrew',type:'command',label:'오염 처리',desc:'Ash Crew는 전투 후 남은 오염 잔류물을 봉인하거나 소각한다.'},
-      {a:'nhc',b:'syndicate',type:'hostile',label:'이탈 추적',desc:'Syndicate 내부 레드울프 계열은 N.H.C 이탈 기록과 연결된다.'},
-      {a:'sid',b:'ushinoda',type:'hostile',label:'의식 추적',desc:'Ushnoda Cult는 S.I.D가 추적하는 핵심 의식 범죄 세력이다.'},
-      {a:'ushinoda',b:'haimun',type:'ritual',label:'도심 침투',desc:'Haimun은 Ushnoda Cult의 도심 침투와 납치, 의식 흔적에 연결된다.'},
-      {a:'fhc',b:'amarion',type:'informal',label:'연구 연결',desc:'Amarion은 F.H.C 연구망과 접촉하지만 비인가 실험 때문에 별도 감시된다.'},
-      {a:'fhc',b:'syndicate',type:'informal',label:'비공식 접촉',desc:'자금·용병·실험 자료 흐름에서 비공식 접촉 가능성이 남아 있다.'}
-    ];
-    const related={}; Object.keys(nodes).forEach(k=>related[k]=new Set([k])); edges.forEach(e=>{related[e.a].add(e.b);related[e.b].add(e.a);});
-    function pathFor(e){
-      const a=nodes[e.a],b=nodes[e.b];
-      if(e.a==='uac'||e.b==='uac') return 'M '+a.x+' '+a.y+' L '+b.x+' '+b.y;
-      const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-      const dx=mx-50,dy=my-50;
-      const len=Math.max(1,Math.sqrt(dx*dx+dy*dy));
-      const cx=50+(dx/len)*34, cy=50+(dy/len)*26;
-      return 'M '+a.x+' '+a.y+' Q '+cx+' '+cy+' '+b.x+' '+b.y;
-    }
-    function edgeHtml(e){ return '<path class="pc564-edge '+esc(e.type)+'" data-edge-a="'+esc(e.a)+'" data-edge-b="'+esc(e.b)+'" d="'+pathFor(e)+'"><title>'+esc(e.label+' / '+e.desc)+'</title></path>'; }
-    function nodeHtml(k){
-      const n=nodes[k],cls=statusClass[n.tag]||'unknown';
-      return '<button type="button" class="pc564-node '+cls+(k==='uac'?' uac':'')+'" data-faction-key="'+esc(k)+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-label="'+esc(n.name)+' 관계 분석">'
-        +'<img src="'+esc(prefix)+'assets/faction_marks/'+esc(n.img)+'" alt="'+esc(n.name)+'"/><b>'+esc(n.name)+'</b><small>'+esc(n.role)+'</small><span class="pc564-tag">'+esc(n.tag)+'</span></button>';
-    }
-    function render(){
-      const tree=section.querySelector('.relation-tree-panel'); if(!tree) return;
-      tree.classList.add('pc563-radial-panel','pc564-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 세력 관계도');
-      const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','amarion','syndicate','ushinoda','haimun'];
-      tree.innerHTML='<div class="pc564-matrix"><div class="pc564-title"><b>RELATION LIST</b><span>중심 통제 / 감시 의존 / 비공식 접촉 / 의식성 적대 경로 분리</span></div>'
-        +'<svg class="pc564-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc564-ring inner" cx="50" cy="50" r="17"/><circle class="pc564-ring" cx="50" cy="50" r="30"/><circle class="pc564-ring outer" cx="50" cy="50" r="42"/><circle class="pc564-ring outer" cx="50" cy="50" r="47"/>'+edges.map(edgeHtml).join('')+'</svg>'
-        +order.map(nodeHtml).join('')+'</div>';
-      const brief=section.querySelector('.section-brief');
-      if(brief) brief.innerHTML='U.A.C 관계도는 세력의 우호 여부만 나열하지 않는다. 현장 통제, 조사 감시, 연구 불신, 비공식 접촉, 의식성 적대 경로를 하나의 추적 행렬로 묶어 보여준다. 선택한 노드와 직접 연결된 경로만 밝게 유지되고, 무관한 노드와 선은 관제면 뒤로 후퇴한다.';
-      const cap=section.querySelector('.map-caption');
-      if(cap) cap.textContent='관계도는 기관·세력 단위만 표시한다. C.P.D 대피버스, 차량, 장비, 지도 마커는 관계도 노드에서 제외한다.';
-      section.querySelector('.pc563-status-strip')?.remove();
-      const legend=section.querySelector('.relation-legend');
-      if(legend && !section.querySelector('.pc564-status-strip')){
-        const strip=document.createElement('div'); strip.className='pc563-status-strip pc564-status-strip';
-        strip.innerHTML=['통제','감시','적대','불명','비공식 접촉'].map(s=>'<span class="pc563-mini-status pc563-status-'+(statusClass[s]||'unknown')+'">'+esc(s)+'</span>').join('');
-        legend.insertAdjacentElement('afterend',strip);
-      }
-    }
-    function ensurePanel(){
-      section.querySelector('.pc563-analysis-panel')?.remove();
-      let p=section.querySelector('.pc564-analysis-panel'); if(p) return p;
-      p=document.createElement('div'); p.className='pc564-analysis-panel';
-      p.innerHTML='<div class="pc564-analysis-head"><b>TRACE ANALYSIS</b><span data-pc564-state>NODE STANDBY</span></div><div class="pc564-analysis-grid"><span><b>선택 세력</b><i data-pc564-name>U.A.C</i></span><span><b>상태 태그</b><i data-pc564-status>통제</i></span><span><b>관계 등급</b><i data-pc564-grade>CORE-0</i></span><span><b>감시 상태</b><i data-pc564-watch>상시 관제</i></span><span><b>직접 연결</b><i data-pc564-links>N.H.C / S.I.D / F.H.C</i></span><span><b>위험도</b><i data-pc564-risk>중심 통제</i></span><span><b>관련 기록</b><i data-pc564-records>권역 지도 / 봉쇄 규정</i></span><span class="wide"><b>U.A.C 판단</b><i data-pc564-summary>중앙 통제 노드 대기 중.</i></span></div>';
-      const tree=section.querySelector('.relation-tree-panel'); if(tree) tree.insertAdjacentElement('afterend',p); else section.appendChild(p); return p;
-    }
-    function edgeText(k){ return edges.filter(e=>e.a===k||e.b===k).map(e=>nodes[e.a===k?e.b:e.a].name+' · '+e.label).join(' / ') || '직접 연결 없음'; }
-    function tone(){ return; }
-    function focus(k,opts={}){
-      if(!nodes[k]) k='uac'; const n=nodes[k]; const rel=related[k]||new Set([k]);
-      section.dataset.pc564Focus=k; section.dataset.pc563Focus=k; section.dataset.pc563Status=statusClass[n.tag]||'unknown';
-      section.querySelectorAll('.pc564-node').forEach(btn=>{ const key=btn.dataset.factionKey; btn.classList.toggle('selected',key===k); btn.classList.toggle('related',key!==k&&rel.has(key)); btn.classList.toggle('muted',!rel.has(key)); });
-      section.querySelectorAll('.pc564-edge').forEach(edge=>{ const a=edge.dataset.edgeA,b=edge.dataset.edgeB; const active=(a===k||b===k||k==='uac'&&(a==='uac'||b==='uac')); edge.classList.toggle('focus',active); edge.classList.toggle('dim',!active); });
-      const p=ensurePanel();
-      p.querySelector('[data-pc564-name]').textContent=n.name+' / '+n.role;
-      p.querySelector('[data-pc564-status]').textContent=n.tag;
-      p.querySelector('[data-pc564-grade]').textContent=n.grade;
-      p.querySelector('[data-pc564-watch]').textContent=n.watch;
-      p.querySelector('[data-pc564-links]').textContent=edgeText(k);
-      p.querySelector('[data-pc564-risk]').textContent=n.risk;
-      p.querySelector('[data-pc564-records]').textContent=n.records;
-      p.querySelector('[data-pc564-summary]').textContent=n.summary;
-      p.querySelector('[data-pc564-state]').textContent='NODE: '+n.name+' / TRACE ACTIVE';
-      section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const tx=row.textContent||''; const active=k==='uac'?/U\.A\.C|UAC/.test(tx):(tx.includes(n.name)||tx.includes(n.name.replace(' Cult',''))||tx.includes(n.role)); row.classList.toggle('pc564-row-active',active); row.classList.toggle('pc564-row-muted',!active); row.classList.remove('relation-row-active','relation-row-muted'); });
-      const notice=document.querySelector('[data-srv-notice]'); const trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION LIST / '+n.name+' / '+n.tag; if(trace){trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map';}
-      if(!opts.silent) tone(k);
-    }
-    function bind(){
-      section.querySelectorAll('.pc564-node').forEach(btn=>{ btn.addEventListener('click',()=>focus(btn.dataset.factionKey)); btn.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault(); focus(btn.dataset.factionKey);} }); });
-      section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ row.setAttribute('tabindex','0'); row.addEventListener('click',()=>{ const tx=row.textContent||''; const k=Object.keys(nodes).find(key=>tx.includes(nodes[key].name)||tx.includes(nodes[key].name.replace(' Cult',''))||tx.includes(nodes[key].role)); if(k) focus(k); }); });
-      document.querySelectorAll('.side-menu a[data-target="faction-relation"]').forEach(a=>{ a.addEventListener('click',()=>setTimeout(()=>focus('uac',{silent:true}),180),true); });
-    }
-    render(); ensurePanel(); bind(); focus('uac',{silent:true});
+    // Make root archive grouping explicit for later patches.
+    window.ProjectCurseArchiveRoot = Object.assign(window.ProjectCurseArchiveRoot || {}, {
+      patch:'5.15.1',
+      rootOrder:['세계 개요','세력','지도','기록보관소'],
+      archiveSubIndexes:['entity-archive','returned-registry','equipment-codex']
+    });
   });
 })();
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch564:'Menu Entry FX Polish + Faction Relation Layout Fix'});
 
-
-// PATCH 5.6.4.1 — FactionRelationLayoutRelationHotfix
-// Restores node readability, rebuilds the U.A.C-centered relation rings, and expands relation descriptions.
+// MapPatch 5.15.2 — AnalogHorror_UI_Retrofit.
+// Art-direction retrofit for 2000~2010 analog-horror recovered-video atmosphere.
+// No new feature modules; existing records/maps remain intact.
 (function(){
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
   ready(function(){
-    const section=document.getElementById('faction-relation');
-    if(!section || section.dataset.pc5641Ready) return;
-    section.dataset.pc5641Ready='1';
-    section.classList.add('pc5641-faction-relation-hotfix');
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const prefix=(document.body&&document.body.dataset&&document.body.dataset.basePath)||'';
-    const statusClass={'통제':'control','감시':'watch','적대':'hostile','불명':'unknown','비공식 접촉':'informal','제한 협력':'limited'};
-    const typeLabel={command:'작전 통제',watch:'조사/감시',limited:'제한 협력',hostile:'적대/교전',ritual:'의식성 침투',informal:'비공식 접촉',unknown:'불명/자료 부족'};
-    const nodes={
-      uac:{name:'U.A.C',img:'uac.webp',tag:'통제',role:'상위 조정기관',ring:'중심 관제',x:50,y:50,grade:'CORE-0',risk:'중심 통제',watch:'상시 관제',records:'권역 지도 / 봉쇄 규정 / 기록 통제',summary:'U.A.C는 현장 작전, 조사 기록, 연구 자료, 민간 통제 기준을 하나의 관제망으로 묶어 최종 판단을 내리는 중심 기관이다.'},
-      nhc:{name:'N.H.C',img:'nhc.webp',tag:'통제',role:'현장 작전',ring:'1차 작전권',x:50,y:20,grade:'OP-1',risk:'고위험 투입',watch:'직접 지휘',records:'N.H.C 현장 작전·장비·봉쇄 규정',summary:'N.H.C는 레드존과 블랙존 외곽에 진입하는 주 현장 전력이며, U.A.C 명령에 따라 봉쇄·구출·교전 기준을 수행한다.'},
-      sid:{name:'S.I.D',img:'sid.webp',tag:'감시',role:'특수 조사',ring:'1차 작전권',x:70,y:38,grade:'INV-2',risk:'정보 민감',watch:'기록 송신',records:'사건 좌표 / 현상 기록 / 실종 조사',summary:'S.I.D는 실종, 오컬트 범죄, 우시노다교 흔적을 추적하며 조사 결과를 U.A.C 중앙 기록망으로 송신한다.'},
-      fhc:{name:'F.H.C',img:'fhc.webp',tag:'감시',role:'극비 연구',ring:'1차 감시권',x:70,y:62,grade:'LAB-2',risk:'은폐 가능성',watch:'상호 감시',records:'F.H.C 극비 보안 문서',summary:'F.H.C의 연구 자료는 대응에 필요하지만, 생체 실험과 자료 은폐 가능성 때문에 U.A.C의 감시선 안에 묶인다.'},
-      cpd:{name:'C.P.D',img:'cpd.webp',tag:'감시',role:'민간 통제국',ring:'1차 작전권',x:30,y:50,grade:'CIV-3',risk:'민간 접촉',watch:'행정 감시',records:'대피·검문·선별 기록',summary:'C.P.D는 검문, 피난민 분리, 귀환자 선별 같은 민간 통제 축을 담당한다. C.P.D 대피버스·차량 단위는 관계도 노드에서 제외된다.'},
-      arf:{name:'A.R.F',img:'arf.webp',tag:'통제',role:'회수 부대',ring:'2차 후속권',x:38,y:28,grade:'REC-2',risk:'오염 회수',watch:'N.H.C 연계',records:'회수·소각 연계 절차',summary:'A.R.F는 N.H.C가 확보한 현장에 후속 진입하여 생존자, 샘플, 기록 매체를 회수한다. 독자 행동 시 U.A.C 감시 대상으로 전환된다.'},
-      ashcrew:{name:'Ash Crew',img:'ashcrew.webp',tag:'통제',role:'오염 처리',ring:'2차 후속권',x:62,y:28,grade:'ASH-2',risk:'잔류 오염',watch:'N.H.C 연계',records:'오염된 장비 / 소각 기록',summary:'Ash Crew는 전투 후 남은 오염 장비, 사체, 잔류물을 봉인·회수·소각하는 후속 처리반이다.'},
-      amarion:{name:'Amarion',img:'amarion.webp',tag:'비공식 접촉',role:'민간 연구망',ring:'2차 위험권',x:64,y:80,grade:'BIO-4',risk:'비인가 실험',watch:'F.H.C 경유 감시',records:'연구 연결 / 비인가 자료',summary:'Amarion은 제약·생명공학 자료를 통해 F.H.C와 연결되지만, 비인가 실험 기록 때문에 공식 협력으로 분류되지 않는다.'},
-      syndicate:{name:'Syndicate',img:'syndicate.webp',tag:'적대',role:'이탈 네트워크',ring:'2차 위험권',x:36,y:80,grade:'HOST-1',risk:'교전 가능',watch:'추적 대상',records:'레드울프 이탈 기록',summary:'Syndicate는 비공식 무장 네트워크이며, 레드울프 계열 이탈 작전 집단과 연결된 추적 대상이다.'},
-      ushinoda:{name:'Ushnoda Cult',img:'ushinoda.webp',tag:'적대',role:'의식 범죄',ring:'외곽 적대권',x:23,y:68,grade:'RIT-0',risk:'블랙존화',watch:'차단 대상',records:'우시노다교 의식성 오염',summary:'Ushnoda Cult는 의식성 오염, 기억 왜곡, 인신공양, 블랙존화 징후와 직접 연결되는 핵심 적대 세력이다.'},
-      haimun:{name:'Haimun',img:'haimun.webp',tag:'불명',role:'도심 침투',ring:'외곽 불명권',x:23,y:32,grade:'UNK-3',risk:'구조 불명',watch:'잠복 감시',records:'하이문 도심 침투 기록',summary:'Haimun은 도심권 납치와 의식 흔적에 반복적으로 등장하지만 지휘 구조와 상위 연결은 아직 불명으로 남아 있다.'}
-    };
-    const edges=[
-      {a:'uac',b:'nhc',type:'command',label:'작전 통제',desc:'U.A.C가 권역 대응 기준을 내리고 N.H.C가 현장 투입과 봉쇄 작전을 수행한다.'},
-      {a:'uac',b:'sid',type:'watch',label:'조사/감시',desc:'S.I.D는 현장 조사와 기록 검증을 담당하고, U.A.C에 정보와 징후를 보고한다.'},
-      {a:'uac',b:'fhc',type:'limited',label:'제한 협력 / 감시',desc:'F.H.C 연구 자료는 필요하지만 위험성이 높아 U.A.C가 지속 감시한다.'},
-      {a:'uac',b:'cpd',type:'command',label:'민간 통제',desc:'민간 대피, 검문, 도시 통제 기준을 공유한다.'},
-      {a:'uac',b:'arf',type:'watch',label:'감시 / 제한 접촉',desc:'회수·복구 활동은 허용되지만 독자 행동 때문에 감시 대상이다.'},
-      {a:'uac',b:'ushinoda',type:'hostile',label:'적대 차단',desc:'의식성 오염 확산과 정보 교란으로 U.A.C 대응 체계와 충돌한다.'},
-      {a:'uac',b:'haimun',type:'unknown',label:'불명 / 위험',desc:'명확한 지휘체계는 불명이나, 여러 오염 사건에서 반복적으로 언급된다.'},
-      {a:'nhc',b:'sid',type:'command',label:'현장 정보 공유',desc:'N.H.C가 확보한 현장 데이터를 S.I.D가 분석·검증한다.'},
-      {a:'nhc',b:'cpd',type:'command',label:'봉쇄/대피 협력',desc:'민간 통제선, 대피 루트, 검문소 운영에서 협력한다.'},
-      {a:'nhc',b:'fhc',type:'limited',label:'회수 자료 인계 / 불신',desc:'개체·장비·오염 샘플 인계는 있으나 현장 부대는 F.H.C를 신뢰하지 않는다.'},
-      {a:'nhc',b:'arf',type:'command',label:'후속 회수',desc:'현장 확보 이후 A.R.F가 생존자, 장비, 기록 매체를 회수한다.'},
-      {a:'nhc',b:'ashcrew',type:'command',label:'오염 처리',desc:'Ash Crew는 전투 후 남은 오염 잔류물을 봉인하거나 소각한다.'},
-      {a:'nhc',b:'ushinoda',type:'hostile',label:'현장 교전',desc:'우시노다교 의식 오염과 현장 교전 기록이 다수 존재한다.'},
-      {a:'nhc',b:'syndicate',type:'hostile',label:'이탈 추적',desc:'Syndicate 내부 레드울프 계열은 N.H.C 이탈 기록과 연결된다.'},
-      {a:'sid',b:'ushinoda',type:'watch',label:'조사 대상',desc:'S.I.D가 우시노다교 신호, 문서, 현장 잔류 의식을 추적한다.'},
-      {a:'sid',b:'haimun',type:'watch',label:'감시',desc:'하이문 관련 기록은 직접 증거보다 간접 신호가 많아 감시 상태가 유지된다.'},
-      {a:'fhc',b:'syndicate',type:'informal',label:'비공식 접촉',desc:'비인가 장비·샘플·연구 자재 유통 의혹이 남아 있다.'},
-      {a:'fhc',b:'amarion',type:'informal',label:'비공식 연구 접촉',desc:'인공 개체, 혼합 개체, 비인가 실험과의 연계가 의심된다.'},
-      {a:'syndicate',b:'ashcrew',type:'informal',label:'거래/회수 루트',desc:'오염지대 잔해, 장비, 회수품을 둘러싼 비공식 거래망 정황이 있다.'},
-      {a:'syndicate',b:'amarion',type:'informal',label:'은닉 지원',desc:'실험 시설과 자금 흐름이 간접적으로 연결된 정황이 있다.'},
-      {a:'ushinoda',b:'haimun',type:'ritual',label:'의식성 접촉 / 불명',desc:'우시노다교 의식과 하이문 측 오염 기록 사이의 반복적 접점이 확인된다.'}
-    ];
-    const related={}; Object.keys(nodes).forEach(k=>related[k]=new Set([k])); edges.forEach(e=>{related[e.a].add(e.b); related[e.b].add(e.a);});
-    function curve(e){
-      const a=nodes[e.a], b=nodes[e.b];
-      if(e.a==='uac'||e.b==='uac') return 'M '+a.x+' '+a.y+' L '+b.x+' '+b.y;
-      const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
-      const dx=mx-50, dy=my-50, len=Math.max(1,Math.sqrt(dx*dx+dy*dy));
-      const push=(e.type==='hostile'||e.type==='ritual')?10:e.type==='informal'?7:5;
-      const cx=mx+(dx/len)*push, cy=my+(dy/len)*push;
-      return 'M '+a.x+' '+a.y+' Q '+cx+' '+cy+' '+b.x+' '+b.y;
-    }
-    function edgeHtml(e,i){return '<path class="pc5641-edge '+esc(e.type)+'" data-edge-index="'+i+'" data-edge-a="'+esc(e.a)+'" data-edge-b="'+esc(e.b)+'" d="'+curve(e)+'"><title>'+esc(nodes[e.a].name+' ↔ '+nodes[e.b].name+' / '+e.label+' / '+e.desc)+'</title></path>';}
-    function nodeHtml(k){const n=nodes[k], cls=statusClass[n.tag]||'unknown'; return '<button type="button" class="pc5641-node '+cls+(k==='uac'?' uac':'')+'" data-faction-key="'+esc(k)+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-label="'+esc(n.name)+' 관계 분석"><img src="'+esc(prefix)+'assets/faction_marks/'+esc(n.img)+'" alt="'+esc(n.name)+'"><b>'+esc(n.name)+'</b><small>'+esc(n.role)+'</small><span class="pc5641-tag">'+esc(n.tag)+'</span></button>';}
-    function buildTable(){
-      const tbody=section.querySelector('.relation-table tbody'); if(!tbody) return;
-      const rowClass={command:'friendly',watch:'neutral',limited:'neutral',hostile:'hostile',ritual:'hostile',informal:'neutral',unknown:'neutral'};
-      tbody.innerHTML=edges.map((e,i)=>'<tr data-edge-index="'+i+'" data-edge-a="'+esc(e.a)+'" data-edge-b="'+esc(e.b)+'"><td class="'+(rowClass[e.type]||'neutral')+'">'+esc(typeLabel[e.type]||e.type)+'</td><td>'+esc(nodes[e.a].name+' ↔ '+nodes[e.b].name)+'</td><td>'+esc(e.label)+'</td><td>'+esc(e.desc)+'</td></tr>').join('');
-    }
-    function render(){
-      const tree=section.querySelector('.relation-tree-panel'); if(!tree) return;
-      section.classList.add('pc5641-default-view');
-      tree.classList.add('pc5641-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 계층형 세력 관계도');
-      const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','amarion','syndicate','ushinoda','haimun'];
-      tree.innerHTML='<div class="pc5641-matrix"><div class="pc5641-title"><b>RELATION LIST</b><span>U.A.C 중심 계층형 / 작전권·위험권·외곽 불명권 분리</span></div><div class="pc5641-ring-label core">중심 관제</div><div class="pc5641-ring-label inner">1차 작전권</div><div class="pc5641-ring-label outer">외곽 위험권</div><svg class="pc5641-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc5641-ring core" cx="50" cy="50" r="14"/><circle class="pc5641-ring inner" cx="50" cy="50" r="25"/><circle class="pc5641-ring mid" cx="50" cy="50" r="36"/><circle class="pc5641-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
-      const brief=section.querySelector('.section-brief');
-      if(brief) brief.innerHTML='U.A.C 관계도는 우호 여부를 단순 나열하지 않는다. 중심 관제, 1차 작전권, 후속 회수권, 연구 불신, 비공식 접촉, 의식성 적대 경로를 하나의 추적 행렬로 묶어 표시한다. 기본 상태에서는 모든 노드를 확인할 수 있으며, 노드를 선택하면 해당 세력과 직접 연결된 경로만 강조된다.';
-      const cap=section.querySelector('.map-caption');
-      if(cap) cap.textContent='관계도는 기관·세력 단위만 표시한다. C.P.D 대피버스, 차량, 장비, 지도 마커는 관계도 노드에서 제외한다.';
-      buildTable();
-      section.querySelector('.pc563-status-strip')?.remove();
-      if(!section.querySelector('.pc5641-status-strip')){
-        const legend=section.querySelector('.relation-legend');
-        const strip=document.createElement('div'); strip.className='pc5641-status-strip';
-        strip.innerHTML=['통제','감시','적대','불명','비공식 접촉','제한 협력'].map(s=>'<span class="pc5641-mini-status '+(statusClass[s]||'unknown')+'">'+esc(s)+'</span>').join('');
-        (legend||section.querySelector('.pc5641-matrix')).insertAdjacentElement('afterend',strip);
-      }
-    }
-    function ensurePanel(){
-      section.querySelector('.pc563-analysis-panel')?.remove();
-      section.querySelector('.pc564-analysis-panel')?.remove();
-      let p=section.querySelector('.pc5641-analysis-panel'); if(p) return p;
-      p=document.createElement('div'); p.className='pc5641-analysis-panel';
-      p.innerHTML='<div class="pc5641-analysis-head"><b>TRACE ANALYSIS</b><span data-pc5641-state>NO NODE SELECTED / ALL NODES VISIBLE</span></div><div class="pc5641-analysis-grid"><span><b>선택 세력</b><i data-pc5641-name>대기 중</i></span><span><b>상태 태그</b><i data-pc5641-status>전체 표시</i></span><span><b>관계 등급</b><i data-pc5641-grade>STANDBY</i></span><span><b>감시 상태</b><i data-pc5641-watch>선택 대기</i></span><span><b>직접 연결</b><i data-pc5641-links>노드를 선택하면 직접 연결 경로가 표시된다.</i></span><span><b>위험도</b><i data-pc5641-risk>전체 관제</i></span><span><b>관련 기록</b><i data-pc5641-records>기록 연결 대기</i></span><span class="wide"><b>U.A.C 판단</b><i data-pc5641-summary>기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다. 흐림 처리는 세력 노드 선택 후에만 적용된다.</i></span><span class="wide"><b>관계 기록</b><i data-pc5641-edge-note>선택된 세력 없음.</i></span></div>';
-      const tree=section.querySelector('.relation-tree-panel'); if(tree) tree.insertAdjacentElement('afterend',p); else section.appendChild(p); return p;
-    }
-    function edgeList(k){return edges.filter(e=>e.a===k||e.b===k).map(e=>{const other=e.a===k?e.b:e.a; return nodes[other].name+' · '+e.label+' — '+e.desc;});}
-    function reset(){
-      section.dataset.pc5641Focus=''; section.classList.add('pc5641-default-view');
-      section.querySelectorAll('.pc5641-node').forEach(btn=>btn.classList.remove('selected','related','muted'));
-      section.querySelectorAll('.pc5641-edge').forEach(edge=>edge.classList.remove('focus','dim'));
-      section.querySelectorAll('.relation-table tbody tr').forEach(row=>row.classList.remove('pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted'));
-      const p=ensurePanel();
-      p.querySelector('[data-pc5641-state]').textContent='NO NODE SELECTED / ALL NODES VISIBLE';
-      p.querySelector('[data-pc5641-name]').textContent='대기 중';
-      p.querySelector('[data-pc5641-status]').textContent='전체 표시';
-      p.querySelector('[data-pc5641-grade]').textContent='STANDBY';
-      p.querySelector('[data-pc5641-watch]').textContent='선택 대기';
-      p.querySelector('[data-pc5641-links]').textContent='노드를 선택하면 직접 연결 경로가 표시된다.';
-      p.querySelector('[data-pc5641-risk]').textContent='전체 관제';
-      p.querySelector('[data-pc5641-records]').textContent='기록 연결 대기';
-      p.querySelector('[data-pc5641-summary]').textContent='기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다. 흐림 처리는 세력 노드 선택 후에만 적용된다.';
-      p.querySelector('[data-pc5641-edge-note]').textContent='선택된 세력 없음.';
-    }
-    function tone(){ return; }
-    function focus(k,opts={}){
-      if(!nodes[k]) return reset();
-      const n=nodes[k], rel=related[k]||new Set([k]);
-      section.classList.remove('pc5641-default-view'); section.dataset.pc5641Focus=k; section.dataset.pc563Focus=k; section.dataset.pc563Status=statusClass[n.tag]||'unknown';
-      section.querySelectorAll('.pc5641-node').forEach(btn=>{ const key=btn.dataset.factionKey; btn.classList.toggle('selected',key===k); btn.classList.toggle('related',key!==k&&rel.has(key)); btn.classList.toggle('muted',!rel.has(key)); });
-      section.querySelectorAll('.pc5641-edge').forEach(edge=>{ const a=edge.dataset.edgeA,b=edge.dataset.edgeB; const active=(a===k||b===k); edge.classList.toggle('focus',active); edge.classList.toggle('dim',!active); });
-      section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const active=(row.dataset.edgeA===k||row.dataset.edgeB===k); row.classList.toggle('pc5641-row-active',active); row.classList.toggle('pc5641-row-muted',!active); row.classList.remove('pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted'); });
-      const p=ensurePanel();
-      p.querySelector('[data-pc5641-state]').textContent='NODE: '+n.name+' / TRACE ACTIVE';
-      p.querySelector('[data-pc5641-name]').textContent=n.name+' / '+n.role+' / '+n.ring;
-      p.querySelector('[data-pc5641-status]').textContent=n.tag;
-      p.querySelector('[data-pc5641-grade]').textContent=n.grade;
-      p.querySelector('[data-pc5641-watch]').textContent=n.watch;
-      p.querySelector('[data-pc5641-links]').textContent=Array.from(rel).filter(x=>x!==k).map(x=>nodes[x].name).join(' / ') || '직접 연결 없음';
-      p.querySelector('[data-pc5641-risk]').textContent=n.risk;
-      p.querySelector('[data-pc5641-records]').textContent=n.records;
-      p.querySelector('[data-pc5641-summary]').textContent=n.summary;
-      p.querySelector('[data-pc5641-edge-note]').textContent=edgeList(k).join('  |  ') || '관계 기록 없음';
-      const notice=document.querySelector('[data-srv-notice]'), trace=document.querySelector('[data-srv-trace]');
-      if(notice) notice.textContent='RELATION LIST / '+n.name+' / '+n.tag;
-      if(trace){ trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map'; }
-      if(!opts.silent) tone(k);
-    }
-    function bind(){
-      section.querySelectorAll('.pc5641-node').forEach(btn=>{ btn.addEventListener('click',()=>focus(btn.dataset.factionKey)); btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();focus(btn.dataset.factionKey);}}); });
-      section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ row.setAttribute('tabindex','0'); row.addEventListener('click',()=>{ focus(row.dataset.edgeA||'uac'); }); });
-      section.querySelector('.pc5641-title')?.addEventListener('dblclick',reset);
-      document.querySelectorAll('.side-menu a[data-target="faction-relation"]').forEach(a=>{ a.addEventListener('click',()=>setTimeout(reset,230),true); });
-    }
-    render(); ensurePanel(); bind(); reset();
-  });
-})();
+    document.body.classList.add('pc5152-analog-horror-retrofit');
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch5641:'Faction Relation Layout + Relation Hotfix'});
-
-// PATCH 5.7 — Audio FX Polish + Faction Relation Node Visibility Fix
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  // Lightweight audio polish: avoid duplicate rapid-fire playback of the same short UI sound.
-  (function installAudioGate(){
-    if(window.__pc57AudioGateInstalled) return; window.__pc57AudioGateInstalled=true;
-    try{
-      const nativePlay=HTMLMediaElement.prototype.play;
-      const last=new Map();
-      HTMLMediaElement.prototype.play=function(){
-        try{
-          const src=this.currentSrc||this.src||'';
-          if(src && !/ambient_loop/i.test(src)){
-            const now=performance.now();
-            const prev=last.get(src)||0;
-            if(now-prev<85) return Promise.resolve();
-            last.set(src,now);
-          }
-        }catch(e){}
-        return nativePlay.apply(this,arguments);
+    function dimAudioBus(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      const v={
+        menu:.018, open:.038, page:.026, boot:.04, ambient:.022, load:.034,
+        drawer:.026, command:.024, restricted:.042, video:.034, radio:.022,
+        marker:.009, alert:.032, denied:.038
       };
-    }catch(e){}
-  })();
-  ready(function(){
-    const section=document.getElementById('faction-relation');
-    if(!section) return;
-    section.classList.add('pc57-faction-node-fix');
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const prefix=(document.body&&document.body.dataset&&document.body.dataset.basePath)||'';
-    const statusClass={'통제':'control','감시':'watch','적대':'hostile','불명':'unknown','비공식 접촉':'informal','제한 협력':'limited'};
-    const typeLabel={command:'작전 통제',watch:'조사/감시',limited:'제한 협력',hostile:'적대/교전',ritual:'의식성 침투',informal:'비공식 접촉',unknown:'불명/자료 부족'};
-    const nodes={
-      uac:{name:'U.A.C',img:'uac.webp',tag:'통제',role:'상위 조정기관',ring:'중심 관제',x:50,y:50,grade:'CORE-0',risk:'중심 통제',watch:'상시 관제',records:'권역 지도 / 봉쇄 규정 / 기록 통제',summary:'U.A.C는 현장 작전, 조사 기록, 연구 자료, 민간 통제 기준을 하나의 관제망으로 묶어 최종 판단을 내리는 중심 기관이다.'},
-      nhc:{name:'N.H.C',img:'nhc.webp',tag:'통제',role:'현장 작전',ring:'1차 작전권',x:50,y:21,grade:'OP-1',risk:'고위험 투입',watch:'직접 지휘',records:'N.H.C 현장 작전·장비·봉쇄 규정',summary:'N.H.C는 레드존과 블랙존 외곽에 진입하는 주 현장 전력이며, U.A.C 명령에 따라 봉쇄·구출·교전 기준을 수행한다.'},
-      sid:{name:'S.I.D',img:'sid.webp',tag:'감시',role:'특수 조사',ring:'1차 작전권',x:72,y:36,grade:'INV-2',risk:'정보 민감',watch:'기록 송신',records:'사건 좌표 / 현상 기록 / 실종 조사',summary:'S.I.D는 실종, 오컬트 범죄, 우시노다교 흔적을 추적하며 조사 결과를 U.A.C 중앙 기록망으로 송신한다.'},
-      fhc:{name:'F.H.C',img:'fhc.webp',tag:'감시',role:'극비 연구',ring:'1차 감시권',x:72,y:64,grade:'LAB-2',risk:'은폐 가능성',watch:'상호 감시',records:'F.H.C 극비 보안 문서',summary:'F.H.C의 연구 자료는 대응에 필요하지만, 생체 실험과 자료 은폐 가능성 때문에 U.A.C의 감시선 안에 묶인다.'},
-      cpd:{name:'C.P.D',img:'cpd.webp',tag:'감시',role:'민간 통제국',ring:'1차 작전권',x:28,y:50,grade:'CIV-3',risk:'민간 접촉',watch:'행정 감시',records:'대피·검문·선별 기록',summary:'C.P.D는 검문, 피난민 분리, 귀환자 선별 같은 민간 통제 축을 담당한다. C.P.D 대피버스·차량 단위는 관계도 노드에서 제외된다.'},
-      arf:{name:'A.R.F',img:'arf.webp',tag:'통제',role:'회수 부대',ring:'2차 후속권',x:35,y:30,grade:'REC-2',risk:'오염 회수',watch:'N.H.C 연계',records:'회수·소각 연계 절차',summary:'A.R.F는 N.H.C가 확보한 현장에 후속 진입하여 생존자, 샘플, 기록 매체를 회수한다. 독자 행동 시 U.A.C 감시 대상으로 전환된다.'},
-      ashcrew:{name:'Ash Crew',img:'ashcrew.webp',tag:'통제',role:'오염 처리',ring:'2차 후속권',x:65,y:30,grade:'ASH-2',risk:'잔류 오염',watch:'N.H.C 연계',records:'오염된 장비 / 소각 기록',summary:'Ash Crew는 전투 후 남은 오염 장비, 사체, 잔류물을 봉인·회수·소각하는 후속 처리반이다.'},
-      amarion:{name:'Amarion',img:'amarion.webp',tag:'비공식 접촉',role:'민간 연구망',ring:'2차 위험권',x:64,y:78,grade:'BIO-4',risk:'비인가 실험',watch:'F.H.C 경유 감시',records:'연구 연결 / 비인가 자료',summary:'Amarion은 제약·생명공학 자료를 통해 F.H.C와 연결되지만, 비인가 실험 기록 때문에 공식 협력으로 분류되지 않는다.'},
-      syndicate:{name:'Syndicate',img:'syndicate.webp',tag:'적대',role:'이탈 네트워크',ring:'2차 위험권',x:36,y:78,grade:'HOST-1',risk:'교전 가능',watch:'추적 대상',records:'레드울프 이탈 기록',summary:'Syndicate는 비공식 무장 네트워크이며, 레드울프 계열 이탈 작전 집단과 연결된 추적 대상이다.'},
-      ushinoda:{name:'Ushnoda Cult',img:'ushinoda.webp',tag:'적대',role:'의식 범죄',ring:'외곽 적대권',x:18,y:67,grade:'RIT-0',risk:'블랙존화',watch:'차단 대상',records:'우시노다교 의식성 오염',summary:'Ushnoda Cult는 의식성 오염, 기억 왜곡, 인신공양, 블랙존화 징후와 직접 연결되는 핵심 적대 세력이다.'},
-      haimun:{name:'Haimun',img:'haimun.webp',tag:'불명',role:'도심 침투',ring:'외곽 불명권',x:18,y:33,grade:'UNK-3',risk:'구조 불명',watch:'잠복 감시',records:'하이문 도심 침투 기록',summary:'Haimun은 도심권 납치와 의식 흔적에 반복적으로 등장하지만 지휘 구조와 상위 연결은 아직 불명으로 남아 있다.'}
-    };
-    const edges=[
-      {a:'uac',b:'nhc',type:'command',label:'작전 통제',desc:'U.A.C가 권역 대응 기준을 내리고 N.H.C가 현장 투입과 봉쇄 작전을 수행한다.'},
-      {a:'uac',b:'sid',type:'watch',label:'조사/감시',desc:'S.I.D는 현장 조사와 기록 검증을 담당하고 U.A.C에 정보와 징후를 보고한다.'},
-      {a:'uac',b:'fhc',type:'limited',label:'제한 협력 / 감시',desc:'F.H.C 연구 자료는 필요하지만 위험성이 높아 U.A.C가 지속 감시한다.'},
-      {a:'uac',b:'cpd',type:'command',label:'민간 통제',desc:'민간 대피, 검문, 도시 통제 기준을 공유한다.'},
-      {a:'uac',b:'arf',type:'watch',label:'감시 / 제한 접촉',desc:'회수·복구 활동은 허용되지만 독자 행동 때문에 감시 대상이다.'},
-      {a:'uac',b:'ushinoda',type:'hostile',label:'적대 차단',desc:'의식성 오염 확산과 정보 교란으로 U.A.C 대응 체계와 충돌한다.'},
-      {a:'uac',b:'haimun',type:'unknown',label:'불명 / 위험',desc:'명확한 지휘체계는 불명이나 여러 오염 사건에서 반복적으로 언급된다.'},
-      {a:'nhc',b:'sid',type:'command',label:'현장 정보 공유',desc:'N.H.C가 확보한 현장 데이터를 S.I.D가 분석·검증한다.'},
-      {a:'nhc',b:'cpd',type:'command',label:'봉쇄/대피 협력',desc:'민간 통제선, 대피 루트, 검문소 운영에서 협력한다.'},
-      {a:'nhc',b:'fhc',type:'limited',label:'회수 자료 인계 / 불신',desc:'개체·장비·오염 샘플 인계는 있으나 현장 부대는 F.H.C를 신뢰하지 않는다.'},
-      {a:'nhc',b:'arf',type:'command',label:'후속 회수',desc:'현장 확보 이후 A.R.F가 생존자, 장비, 기록 매체를 회수한다.'},
-      {a:'nhc',b:'ashcrew',type:'command',label:'오염 처리',desc:'Ash Crew는 전투 후 남은 오염 잔류물을 봉인하거나 소각한다.'},
-      {a:'nhc',b:'ushinoda',type:'hostile',label:'현장 교전',desc:'우시노다교 의식 오염과 현장 교전 기록이 다수 존재한다.'},
-      {a:'nhc',b:'syndicate',type:'hostile',label:'이탈 추적',desc:'Syndicate 내부 레드울프 계열은 N.H.C 이탈 기록과 연결된다.'},
-      {a:'sid',b:'ushinoda',type:'watch',label:'조사 대상',desc:'S.I.D가 우시노다교 신호, 문서, 현장 잔류 의식을 추적한다.'},
-      {a:'sid',b:'haimun',type:'watch',label:'감시',desc:'하이문 관련 기록은 직접 증거보다 간접 신호가 많아 감시 상태가 유지된다.'},
-      {a:'fhc',b:'syndicate',type:'informal',label:'비공식 접촉',desc:'비인가 장비·샘플·연구 자재 유통 의혹이 남아 있다.'},
-      {a:'fhc',b:'amarion',type:'informal',label:'비공식 연구 접촉',desc:'인공 개체, 혼합 개체, 비인가 실험과의 연계가 의심된다.'},
-      {a:'syndicate',b:'ashcrew',type:'informal',label:'거래/회수 루트',desc:'오염지대 잔해, 장비, 회수품을 둘러싼 비공식 거래망 정황이 있다.'},
-      {a:'syndicate',b:'amarion',type:'informal',label:'은닉 지원',desc:'실험 시설과 자금 흐름이 간접적으로 연결된 정황이 있다.'},
-      {a:'ushinoda',b:'haimun',type:'ritual',label:'의식성 접촉 / 불명',desc:'우시노다교 의식과 하이문 측 오염 기록 사이의 반복적 접점이 확인된다.'}
-    ];
-    const related={}; Object.keys(nodes).forEach(k=>related[k]=new Set([k])); edges.forEach(e=>{related[e.a].add(e.b); related[e.b].add(e.a);});
-    function curve(e){ const a=nodes[e.a],b=nodes[e.b]; if(!a||!b) return ''; if(e.a==='uac'||e.b==='uac') return 'M '+a.x+' '+a.y+' L '+b.x+' '+b.y; const mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=mx-50,dy=my-50,len=Math.max(1,Math.sqrt(dx*dx+dy*dy)),push=(e.type==='hostile'||e.type==='ritual')?9:e.type==='informal'?7:5,cx=mx+(dx/len)*push,cy=my+(dy/len)*push; return 'M '+a.x+' '+a.y+' Q '+cx+' '+cy+' '+b.x+' '+b.y; }
-    function edgeHtml(e,i){ return '<path class="pc57-edge '+esc(e.type)+'" data-edge-index="'+i+'" data-edge-a="'+esc(e.a)+'" data-edge-b="'+esc(e.b)+'" d="'+curve(e)+'"><title>'+esc(nodes[e.a].name+' ↔ '+nodes[e.b].name+' / '+e.label+' / '+e.desc)+'</title></path>'; }
-    function nodeHtml(k){ const n=nodes[k],cls=statusClass[n.tag]||'unknown'; return '<button type="button" class="pc57-node '+cls+(k==='uac'?' uac':'')+'" data-faction-key="'+esc(k)+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-label="'+esc(n.name)+' 관계 분석"><img src="'+esc(prefix)+'assets/faction_marks/'+esc(n.img)+'" alt="'+esc(n.name)+'"><b>'+esc(n.name)+'</b><small>'+esc(n.role)+'</small><span class="pc57-tag">'+esc(n.tag)+'</span></button>'; }
-    function buildTable(){ const tbody=section.querySelector('.relation-table tbody'); if(!tbody) return; const rowClass={command:'friendly',watch:'neutral',limited:'neutral',hostile:'hostile',ritual:'hostile',informal:'neutral',unknown:'neutral'}; tbody.innerHTML=edges.map((e,i)=>'<tr data-edge-index="'+i+'" data-edge-a="'+esc(e.a)+'" data-edge-b="'+esc(e.b)+'"><td class="'+(rowClass[e.type]||'neutral')+'">'+esc(typeLabel[e.type]||e.type)+'</td><td>'+esc(nodes[e.a].name+' ↔ '+nodes[e.b].name)+'</td><td>'+esc(e.label)+'</td><td>'+esc(e.desc)+'</td></tr>').join(''); }
-    function render(){
-      const tree=section.querySelector('.relation-tree-panel'); if(!tree) return;
-      section.classList.add('pc57-default-view');
-      tree.classList.add('pc57-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 계층형 세력 관계도');
-      const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','amarion','syndicate','ushinoda','haimun'];
-      tree.innerHTML='<div class="pc57-matrix"><div class="pc57-title"><b>RELATION LIST</b><span>U.A.C 중심 계층형 / 연결 노드 가시성 복구 / 오디오 중복 재생 억제</span></div><svg class="pc57-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc57-ring core" cx="50" cy="50" r="14"/><circle class="pc57-ring inner" cx="50" cy="50" r="25"/><circle class="pc57-ring mid" cx="50" cy="50" r="36"/><circle class="pc57-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
-      const brief=section.querySelector('.section-brief');
-      if(brief) brief.innerHTML='U.A.C 관계도는 조직 노드와 직접 연결 경로를 우선 표시한다. 기본 상태에서는 모든 세력이 선명하게 보이고, 노드를 선택한 뒤에만 선택 세력·직접 연결 세력·비관련 세력이 단계적으로 구분된다. C.P.D 대피버스·차량·장비 단위는 관계도 노드에서 제외된다.';
-      const cap=section.querySelector('.map-caption'); if(cap) cap.textContent='기본 상태에서는 모든 노드가 표시된다. 노드 선택 시 직접 연결 경로만 강조되며, 무관 노드는 완전히 숨기지 않고 낮은 명도로만 후퇴한다.';
-      buildTable();
-      section.querySelectorAll('.pc563-status-strip,.pc5641-status-strip,.pc57-status-strip').forEach(el=>el.remove());
-      const legend=section.querySelector('.relation-legend');
-      if(legend){ const strip=document.createElement('div'); strip.className='pc57-status-strip'; strip.innerHTML=['통제','감시','적대','불명','비공식 접촉','제한 협력'].map(s=>'<span class="pc57-mini-status '+(statusClass[s]||'unknown')+'">'+esc(s)+'</span>').join(''); legend.insertAdjacentElement('afterend',strip); }
+      Object.keys(v).forEach(k=>{
+        try{ if(bus.audio[k]) bus.audio[k].volume=v[k]; }catch(e){}
+      });
     }
-    function ensurePanel(){ section.querySelectorAll('.pc563-analysis-panel,.pc564-analysis-panel,.pc5641-analysis-panel').forEach(el=>el.remove()); let p=section.querySelector('.pc57-analysis-panel'); if(p) return p; p=document.createElement('div'); p.className='pc57-analysis-panel'; p.innerHTML='<div class="pc57-analysis-head"><b>TRACE ANALYSIS</b><span data-pc57-state>NO NODE SELECTED / ALL NODES VISIBLE</span></div><div class="pc57-analysis-grid"><span><b>선택 세력</b><i data-pc57-name>대기 중</i></span><span><b>상태 태그</b><i data-pc57-status>전체 표시</i></span><span><b>관계 등급</b><i data-pc57-grade>STANDBY</i></span><span><b>감시 상태</b><i data-pc57-watch>선택 대기</i></span><span><b>직접 연결</b><i data-pc57-links>노드를 선택하면 직접 연결 경로가 표시된다.</i></span><span><b>위험도</b><i data-pc57-risk>전체 관제</i></span><span><b>관련 기록</b><i data-pc57-records>기록 연결 대기</i></span><span class="wide"><b>U.A.C 판단</b><i data-pc57-summary>기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다.</i></span><span class="wide"><b>관계 기록</b><i data-pc57-edge-note>선택된 세력 없음.</i></span></div>'; const tree=section.querySelector('.relation-tree-panel'); if(tree) tree.insertAdjacentElement('afterend',p); else section.appendChild(p); return p; }
-    function edgeList(k){return edges.filter(e=>e.a===k||e.b===k).map(e=>{const other=e.a===k?e.b:e.a; return nodes[other].name+' · '+e.label+' — '+e.desc;});}
-    function reset(){ section.dataset.pc57Focus=''; section.classList.add('pc57-default-view'); section.querySelectorAll('.pc57-node').forEach(btn=>btn.classList.remove('selected','related','muted')); section.querySelectorAll('.pc57-edge').forEach(edge=>edge.classList.remove('focus','dim')); section.querySelectorAll('.relation-table tbody tr').forEach(row=>row.classList.remove('pc57-row-active','pc57-row-muted','pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted')); const p=ensurePanel(); p.querySelector('[data-pc57-state]').textContent='NO NODE SELECTED / ALL NODES VISIBLE'; p.querySelector('[data-pc57-name]').textContent='대기 중'; p.querySelector('[data-pc57-status]').textContent='전체 표시'; p.querySelector('[data-pc57-grade]').textContent='STANDBY'; p.querySelector('[data-pc57-watch]').textContent='선택 대기'; p.querySelector('[data-pc57-links]').textContent='노드를 선택하면 직접 연결 경로가 표시된다.'; p.querySelector('[data-pc57-risk]').textContent='전체 관제'; p.querySelector('[data-pc57-records]').textContent='기록 연결 대기'; p.querySelector('[data-pc57-summary]').textContent='기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다.'; p.querySelector('[data-pc57-edge-note]').textContent='선택된 세력 없음.'; }
-    function tone(){ return; }
-    function focus(k,opts={}){ if(!nodes[k]) return reset(); const n=nodes[k],rel=related[k]||new Set([k]); section.classList.remove('pc57-default-view'); section.dataset.pc57Focus=k; section.querySelectorAll('.pc57-node').forEach(btn=>{ const key=btn.dataset.factionKey; btn.classList.toggle('selected',key===k); btn.classList.toggle('related',key!==k&&rel.has(key)); btn.classList.toggle('muted',!rel.has(key)); }); section.querySelectorAll('.pc57-edge').forEach(edge=>{ const a=edge.dataset.edgeA,b=edge.dataset.edgeB,active=(a===k||b===k); edge.classList.toggle('focus',active); edge.classList.toggle('dim',!active); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const active=(row.dataset.edgeA===k||row.dataset.edgeB===k); row.classList.toggle('pc57-row-active',active); row.classList.toggle('pc57-row-muted',!active); row.classList.remove('pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted'); }); const p=ensurePanel(); p.querySelector('[data-pc57-state]').textContent='NODE: '+n.name+' / TRACE ACTIVE'; p.querySelector('[data-pc57-name]').textContent=n.name+' / '+n.role+' / '+n.ring; p.querySelector('[data-pc57-status]').textContent=n.tag; p.querySelector('[data-pc57-grade]').textContent=n.grade; p.querySelector('[data-pc57-watch]').textContent=n.watch; p.querySelector('[data-pc57-links]').textContent=Array.from(rel).filter(x=>x!==k).map(x=>nodes[x].name).join(' / ') || '직접 연결 없음'; p.querySelector('[data-pc57-risk]').textContent=n.risk; p.querySelector('[data-pc57-records]').textContent=n.records; p.querySelector('[data-pc57-summary]').textContent=n.summary; p.querySelector('[data-pc57-edge-note]').textContent=edgeList(k).join('  |  ') || '관계 기록 없음'; const notice=document.querySelector('[data-srv-notice]'),trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION LIST / '+n.name+' / '+n.tag; if(trace){ trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map'; } if(!opts.silent) tone(k); }
-    function bind(){ section.querySelectorAll('.pc57-node').forEach(btn=>{ btn.addEventListener('click',()=>focus(btn.dataset.factionKey)); btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();focus(btn.dataset.factionKey);}}); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ row.setAttribute('tabindex','0'); row.addEventListener('click',()=>focus(row.dataset.edgeA||'uac')); }); section.querySelector('.pc57-title')?.addEventListener('dblclick',reset); document.querySelectorAll('.side-menu a[data-target="faction-relation"]').forEach(a=>{ a.addEventListener('click',()=>setTimeout(()=>{render();ensurePanel();bind();reset();},310),true); }); }
-    render(); ensurePanel(); bind(); reset();
+
+    function addSignalOverlay(){
+      if(document.querySelector('.pc5152-signal-overlay')) return;
+      const overlay=document.createElement('div');
+      overlay.className='pc5152-signal-overlay';
+      overlay.setAttribute('aria-hidden','true');
+      overlay.innerHTML='<i></i><i></i><i></i>';
+      document.body.appendChild(overlay);
+    }
+
+    function addFrameReadout(){
+      const app=document.getElementById('app');
+      if(!app || document.querySelector('.pc5152-frame-id')) return;
+      const r=document.createElement('div');
+      r.className='pc5152-frame-id';
+      r.setAttribute('aria-hidden','true');
+      r.textContent='UAC-PC03 / RECOVERED COPY / SIGNAL DEGRADED';
+      app.appendChild(r);
+    }
+
+    dimAudioBus();
+    addSignalOverlay();
+    addFrameReadout();
+
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152:'AnalogHorror UI Retrofit',
+      artDirection:'2000-2010 recovered broadcast / damaged institutional archive'
+    });
   });
 })();
 
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch57:'Audio FX Polish + Faction Relation Node Visibility Fix'});
 
-// PATCH 5.7.1 — RestrictedRecordFXAudit + FactionRelationFocusLogicFix
+// MapPatch 5.15.2a — FellonReference_SignalDrift_TonePass.
+// Adds slow top-to-bottom analog signal drift and pushes the interface closer to rough animated horror archive footage.
+// This is a tone pass only; no new feature modules.
 (function(){
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
   ready(function(){
-    const section=document.getElementById('faction-relation');
-    if(!section) return;
-    const esc=(s)=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    const prefix=(document.body&&document.body.dataset&&document.body.dataset.basePath)||'';
-    const statusClass={'통제':'control','감시':'watch','적대':'hostile','불명':'unknown','비공식 접촉':'informal','제한 협력':'limited'};
-    const typeLabel={command:'작전 통제',watch:'조사/감시',limited:'제한 협력',hostile:'적대/교전',ritual:'의식성 침투',informal:'비공식 접촉',unknown:'불명/자료 부족'};
-    const nodes={
-      uac:{name:'U.A.C',img:'uac.webp',tag:'통제',role:'상위 조정기관',ring:'중심 관제',x:50,y:50,grade:'CORE-0',risk:'중심 통제',watch:'상시 관제',records:'권역 지도 / 봉쇄 규정 / 기록 통제',summary:'U.A.C는 현장 작전, 조사 기록, 연구 자료, 민간 통제 기준을 하나의 관제망으로 묶어 최종 판단을 내리는 중심 기관이다.'},
-      nhc:{name:'N.H.C',img:'nhc.webp',tag:'통제',role:'현장 작전',ring:'1차 작전권',x:50,y:22,grade:'OP-1',risk:'고위험 투입',watch:'직접 지휘',records:'N.H.C 현장 작전·장비·봉쇄 규정',summary:'N.H.C는 레드존과 블랙존 외곽에 진입하는 주 현장 전력이며, U.A.C 명령에 따라 봉쇄·구출·교전 기준을 수행한다.'},
-      sid:{name:'S.I.D',img:'sid.webp',tag:'감시',role:'특수 조사',ring:'1차 작전권',x:72,y:36,grade:'INV-2',risk:'정보 민감',watch:'기록 송신',records:'사건 좌표 / 현상 기록 / 실종 조사',summary:'S.I.D는 실종, 오컬트 범죄, 우시노다교 흔적을 추적하며 조사 결과를 U.A.C 중앙 기록망으로 송신한다.'},
-      fhc:{name:'F.H.C',img:'fhc.webp',tag:'감시',role:'극비 연구',ring:'1차 감시권',x:72,y:64,grade:'LAB-2',risk:'은폐 가능성',watch:'상호 감시',records:'F.H.C 극비 보안 문서',summary:'F.H.C의 연구 자료는 대응에 필요하지만, 생체 실험과 자료 은폐 가능성 때문에 U.A.C의 감시선 안에 묶인다.'},
-      cpd:{name:'C.P.D',img:'cpd.webp',tag:'감시',role:'민간 통제국',ring:'1차 작전권',x:28,y:50,grade:'CIV-3',risk:'민간 접촉',watch:'행정 감시',records:'대피·검문·선별 기록',summary:'C.P.D는 검문, 피난민 분리, 귀환자 선별 같은 민간 통제 축을 담당한다. C.P.D 대피버스·차량 단위는 관계도 노드에서 제외된다.'},
-      arf:{name:'A.R.F',img:'arf.webp',tag:'통제',role:'회수 부대',ring:'2차 후속권',x:34,y:30,grade:'REC-2',risk:'오염 회수',watch:'N.H.C 연계',records:'회수·소각 연계 절차',summary:'A.R.F는 N.H.C가 확보한 현장에 후속 진입하여 생존자, 샘플, 기록 매체를 회수한다. 독자 행동 시 U.A.C 감시 대상으로 전환된다.'},
-      ashcrew:{name:'Ash Crew',img:'ashcrew.webp',tag:'통제',role:'오염 처리',ring:'2차 후속권',x:66,y:30,grade:'ASH-2',risk:'잔류 오염',watch:'N.H.C 연계',records:'오염된 장비 / 소각 기록',summary:'Ash Crew는 전투 후 남은 오염 장비, 사체, 잔류물을 봉인·회수·소각하는 후속 처리반이다.'},
-      amarion:{name:'Amarion',img:'amarion.webp',tag:'비공식 접촉',role:'민간 연구망',ring:'2차 위험권',x:66,y:78,grade:'BIO-4',risk:'비인가 실험',watch:'F.H.C 경유 감시',records:'연구 연결 / 비인가 자료',summary:'Amarion은 제약·생명공학 자료를 통해 F.H.C와 연결되지만, 비인가 실험 기록 때문에 공식 협력으로 분류되지 않는다.'},
-      syndicate:{name:'Syndicate',img:'syndicate.webp',tag:'적대',role:'이탈 네트워크',ring:'2차 위험권',x:34,y:78,grade:'HOST-1',risk:'교전 가능',watch:'추적 대상',records:'레드울프 이탈 기록',summary:'Syndicate는 비공식 무장 네트워크이며, 레드울프 계열 이탈 작전 집단과 연결된 추적 대상이다.'},
-      ushinoda:{name:'Ushnoda Cult',img:'ushinoda.webp',tag:'적대',role:'의식 범죄',ring:'외곽 적대권',x:17,y:66,grade:'RIT-0',risk:'블랙존화',watch:'차단 대상',records:'우시노다교 의식성 오염',summary:'Ushnoda Cult는 의식성 오염, 기억 왜곡, 인신공양, 블랙존화 징후와 직접 연결되는 핵심 적대 세력이다.'},
-      haimun:{name:'Haimun',img:'haimun.webp',tag:'불명',role:'도심 침투',ring:'외곽 불명권',x:17,y:34,grade:'UNK-3',risk:'구조 불명',watch:'잠복 감시',records:'하이문 도심 침투 기록',summary:'Haimun은 도심권 납치와 의식 흔적에 반복적으로 등장하지만 지휘 구조와 상위 연결은 아직 불명으로 남아 있다.'}
-    };
-    const idAlias={uac:'uac',UAC:'uac','U.A.C':'uac',nhc:'nhc','N.H.C':'nhc',sid:'sid','S.I.D':'sid',fhc:'fhc','F.H.C':'fhc',cpd:'cpd','C.P.D':'cpd',arf:'arf','A.R.F':'arf',ashcrew:'ashcrew','Ash Crew':'ashcrew',syndicate:'syndicate','Syndicate':'syndicate',ushinoda:'ushinoda',ushnoda:'ushinoda','Ushnoda Cult':'ushinoda','Ushinoda Cult':'ushinoda',haimun:'haimun','Haimun':'haimun',amarion:'amarion','Amarion':'amarion'};
-    const canon=(v)=>idAlias[v]||idAlias[String(v||'').trim()]||String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'');
-    const edges=[
-      {a:'uac',b:'nhc',type:'command',label:'작전 통제',desc:'U.A.C가 권역 대응 기준을 내리고 N.H.C가 현장 투입과 봉쇄 작전을 수행한다.'},
-      {a:'uac',b:'sid',type:'watch',label:'조사/감시',desc:'S.I.D는 현장 조사와 기록 검증을 담당하고 U.A.C에 정보와 징후를 보고한다.'},
-      {a:'uac',b:'fhc',type:'limited',label:'제한 협력 / 감시',desc:'F.H.C 연구 자료는 필요하지만 위험성이 높아 U.A.C가 지속 감시한다.'},
-      {a:'uac',b:'cpd',type:'command',label:'민간 통제',desc:'민간 대피, 검문, 도시 통제 기준을 공유한다.'},
-      {a:'uac',b:'arf',type:'watch',label:'감시 / 제한 접촉',desc:'회수·복구 활동은 허용되지만 독자 행동 때문에 감시 대상이다.'},
-      {a:'uac',b:'ushinoda',type:'hostile',label:'적대 차단',desc:'의식성 오염 확산과 정보 교란으로 U.A.C 대응 체계와 충돌한다.'},
-      {a:'uac',b:'haimun',type:'unknown',label:'불명 / 위험',desc:'명확한 지휘체계는 불명이나 여러 오염 사건에서 반복적으로 언급된다.'},
-      {a:'nhc',b:'sid',type:'command',label:'현장 정보 공유',desc:'N.H.C가 확보한 현장 데이터를 S.I.D가 분석·검증한다.'},
-      {a:'nhc',b:'cpd',type:'command',label:'봉쇄/대피 협력',desc:'민간 통제선, 대피 루트, 검문소 운영에서 협력한다.'},
-      {a:'nhc',b:'fhc',type:'limited',label:'회수 자료 인계 / 불신',desc:'개체·장비·오염 샘플 인계는 있으나 현장 부대는 F.H.C를 신뢰하지 않는다.'},
-      {a:'nhc',b:'arf',type:'command',label:'후속 회수',desc:'현장 확보 이후 A.R.F가 생존자, 장비, 기록 매체를 회수한다.'},
-      {a:'nhc',b:'ashcrew',type:'command',label:'오염 처리',desc:'Ash Crew는 전투 후 남은 오염 잔류물을 봉인하거나 소각한다.'},
-      {a:'nhc',b:'ushinoda',type:'hostile',label:'현장 교전',desc:'우시노다교 의식 오염과 현장 교전 기록이 다수 존재한다.'},
-      {a:'nhc',b:'syndicate',type:'hostile',label:'이탈 추적',desc:'Syndicate 내부 레드울프 계열은 N.H.C 이탈 기록과 연결된다.'},
-      {a:'sid',b:'ushinoda',type:'watch',label:'조사 대상',desc:'S.I.D가 우시노다교 신호, 문서, 현장 잔류 의식을 추적한다.'},
-      {a:'sid',b:'haimun',type:'watch',label:'감시',desc:'하이문 관련 기록은 직접 증거보다 간접 신호가 많아 감시 상태가 유지된다.'},
-      {a:'fhc',b:'syndicate',type:'informal',label:'비공식 접촉',desc:'비인가 장비·샘플·연구 자재 유통 의혹이 남아 있다.'},
-      {a:'fhc',b:'amarion',type:'informal',label:'비공식 연구 접촉',desc:'인공 개체, 혼합 개체, 비인가 실험과의 연계가 의심된다.'},
-      {a:'syndicate',b:'ashcrew',type:'informal',label:'거래/회수 루트',desc:'오염지대 잔해, 장비, 회수품을 둘러싼 비공식 거래망 정황이 있다.'},
-      {a:'syndicate',b:'amarion',type:'informal',label:'은닉 지원',desc:'실험 시설과 자금 흐름이 간접적으로 연결된 정황이 있다.'},
-      {a:'ushinoda',b:'haimun',type:'ritual',label:'의식성 접촉 / 불명',desc:'우시노다교 의식과 하이문 측 오염 기록 사이의 반복적 접점이 확인된다.'}
-    ].map(e=>Object.assign({},e,{a:canon(e.a),b:canon(e.b)}));
-    const related={}; Object.keys(nodes).forEach(k=>related[k]=new Set([k])); edges.forEach(e=>{ if(nodes[e.a]&&nodes[e.b]){ related[e.a].add(e.b); related[e.b].add(e.a); }});
-    function secondarySet(k){ const out=new Set(); (related[k]||new Set()).forEach(r=>{ (related[r]||new Set()).forEach(x=>{ if(x!==k && !(related[k]||new Set()).has(x)) out.add(x); }); }); return out; }
-    function curve(e){ const a=nodes[e.a],b=nodes[e.b]; if(!a||!b) return ''; if(e.a==='uac'||e.b==='uac') return 'M '+a.x+' '+a.y+' L '+b.x+' '+b.y; const mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=mx-50,dy=my-50,len=Math.max(1,Math.sqrt(dx*dx+dy*dy)),push=(e.type==='hostile'||e.type==='ritual')?8:e.type==='informal'?6:4,cx=mx+(dx/len)*push,cy=my+(dy/len)*push; return 'M '+a.x+' '+a.y+' Q '+cx+' '+cy+' '+b.x+' '+b.y; }
-    function edgeHtml(e,i){ return '<path class="pc571-edge '+esc(e.type)+'" data-edge-index="'+i+'" data-edge-a="'+esc(e.a)+'" data-edge-b="'+esc(e.b)+'" d="'+curve(e)+'"><title>'+esc(nodes[e.a].name+' ↔ '+nodes[e.b].name+' / '+e.label+' / '+e.desc)+'</title></path>'; }
-    function nodeHtml(k){ const n=nodes[k],cls=statusClass[n.tag]||'unknown'; return '<button type="button" class="pc571-node '+cls+(k==='uac'?' uac':'')+'" data-faction-key="'+esc(k)+'" style="left:'+n.x+'%;top:'+n.y+'%" aria-label="'+esc(n.name)+' 관계 분석"><img src="'+esc(prefix)+'assets/faction_marks/'+esc(n.img)+'" alt="'+esc(n.name)+'"><b>'+esc(n.name)+'</b><small>'+esc(n.role)+'</small><span class="pc571-tag">'+esc(n.tag)+'</span></button>'; }
-    function buildTable(){ const tbody=section.querySelector('.relation-table tbody'); if(!tbody) return; const rowClass={command:'friendly',watch:'neutral',limited:'neutral',hostile:'hostile',ritual:'hostile',informal:'neutral',unknown:'neutral'}; tbody.innerHTML=edges.map((e,i)=>'<tr data-edge-index="'+i+'" data-edge-a="'+esc(e.a)+'" data-edge-b="'+esc(e.b)+'"><td class="'+(rowClass[e.type]||'neutral')+'">'+esc(typeLabel[e.type]||e.type)+'</td><td>'+esc(nodes[e.a].name+' ↔ '+nodes[e.b].name)+'</td><td>'+esc(e.label)+'</td><td>'+esc(e.desc)+'</td></tr>').join(''); }
-    function renderRelation(){
-      const tree=section.querySelector('.relation-tree-panel'); if(!tree) return;
-      section.classList.add('pc571-faction-focus-fix','pc571-default-view');
-      tree.classList.add('pc571-radial-panel');
-      tree.setAttribute('aria-label','U.A.C 중심 계층형 세력 관계도');
-      const order=['uac','nhc','sid','fhc','cpd','arf','ashcrew','amarion','syndicate','ushinoda','haimun'];
-      tree.innerHTML='<div class="pc571-matrix"><div class="pc571-title"><b>RELATION LIST</b><span>U.A.C 선택 시 직접 연결 노드가 드러나도록 포커스 판정 보정</span></div><div class="pc571-ring-label core">중심 관제</div><div class="pc571-ring-label inner">1차 작전권</div><div class="pc571-ring-label mid">후속/위험권</div><div class="pc571-ring-label outer">외곽 불명권</div><svg class="pc571-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><circle class="pc571-ring core" cx="50" cy="50" r="14"/><circle class="pc571-ring inner" cx="50" cy="50" r="25"/><circle class="pc571-ring mid" cx="50" cy="50" r="36"/><circle class="pc571-ring outer" cx="50" cy="50" r="44"/>'+edges.map(edgeHtml).join('')+'</svg>'+order.map(nodeHtml).join('')+'</div>';
-      const brief=section.querySelector('.section-brief');
-      if(brief) brief.innerHTML='U.A.C 관계도는 선택한 세력을 중심으로 직접 연결 노드를 드러내고, 2차 연결 노드는 중간 명도로 유지한다. 기본 상태에서는 모든 조직 노드가 표시되며, C.P.D 대피버스·차량·장비 단위는 관계도 노드에서 제외된다.';
-      const cap=section.querySelector('.map-caption'); if(cap) cap.textContent='U.A.C를 선택하면 N.H.C, S.I.D, F.H.C, C.P.D, A.R.F, Ushnoda Cult, Haimun이 직접 연결 노드로 강조된다.';
-      buildTable();
-      section.querySelectorAll('.pc563-status-strip,.pc5641-status-strip,.pc57-status-strip,.pc571-status-strip').forEach(el=>el.remove());
-      const legend=section.querySelector('.relation-legend');
-      if(legend){ const strip=document.createElement('div'); strip.className='pc571-status-strip'; strip.innerHTML=['통제','감시','적대','불명','비공식 접촉','제한 협력'].map(s=>'<span class="pc571-mini-status '+(statusClass[s]||'unknown')+'">'+esc(s)+'</span>').join(''); legend.insertAdjacentElement('afterend',strip); }
-    }
-    function ensurePanel(){ section.querySelectorAll('.pc563-analysis-panel,.pc564-analysis-panel,.pc5641-analysis-panel,.pc57-analysis-panel').forEach(el=>el.remove()); let p=section.querySelector('.pc571-analysis-panel'); if(p) return p; p=document.createElement('div'); p.className='pc571-analysis-panel'; p.innerHTML='<div class="pc571-analysis-head"><b>TRACE ANALYSIS</b><span data-pc571-state>NO NODE SELECTED / ALL NODES VISIBLE</span></div><div class="pc571-analysis-grid"><span><b>선택 세력</b><i data-pc571-name>대기 중</i></span><span><b>상태 태그</b><i data-pc571-status>전체 표시</i></span><span><b>관계 등급</b><i data-pc571-grade>STANDBY</i></span><span><b>감시 상태</b><i data-pc571-watch>선택 대기</i></span><span><b>직접 연결</b><i data-pc571-links>노드를 선택하면 직접 연결 경로가 표시된다.</i></span><span><b>2차 연결</b><i data-pc571-secondary>선택 대기</i></span><span><b>관련 기록</b><i data-pc571-records>기록 연결 대기</i></span><span class="wide"><b>U.A.C 판단</b><i data-pc571-summary>기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다.</i></span><span class="wide"><b>관계 기록</b><i data-pc571-edge-note>선택된 세력 없음.</i></span></div>'; const tree=section.querySelector('.relation-tree-panel'); if(tree) tree.insertAdjacentElement('afterend',p); else section.appendChild(p); return p; }
-    function edgeList(k){return edges.filter(e=>e.a===k||e.b===k).map(e=>{const other=e.a===k?e.b:e.a; return nodes[other].name+' · '+e.label+' — '+e.desc;});}
-    function reset(){ section.dataset.pc571Focus=''; section.classList.add('pc571-default-view'); section.querySelectorAll('.pc571-node').forEach(btn=>btn.classList.remove('selected','related','secondary','muted')); section.querySelectorAll('.pc571-edge').forEach(edge=>edge.classList.remove('focus','secondary','dim')); section.querySelectorAll('.relation-table tbody tr').forEach(row=>row.classList.remove('pc571-row-active','pc571-row-muted','pc57-row-active','pc57-row-muted','pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted')); const p=ensurePanel(); p.querySelector('[data-pc571-state]').textContent='NO NODE SELECTED / ALL NODES VISIBLE'; p.querySelector('[data-pc571-name]').textContent='대기 중'; p.querySelector('[data-pc571-status]').textContent='전체 표시'; p.querySelector('[data-pc571-grade]').textContent='STANDBY'; p.querySelector('[data-pc571-watch]').textContent='선택 대기'; p.querySelector('[data-pc571-links]').textContent='노드를 선택하면 직접 연결 경로가 표시된다.'; p.querySelector('[data-pc571-secondary]').textContent='선택 대기'; p.querySelector('[data-pc571-records]').textContent='기록 연결 대기'; p.querySelector('[data-pc571-summary]').textContent='기본 상태에서는 모든 노드와 주요 관계선을 가시 상태로 유지한다.'; p.querySelector('[data-pc571-edge-note]').textContent='선택된 세력 없음.'; }
-    function focus(rawKey,opts={}){ const k=canon(rawKey); if(!nodes[k]) return reset(); const n=nodes[k],rel=related[k]||new Set([k]),sec=secondarySet(k); section.classList.remove('pc571-default-view'); section.dataset.pc571Focus=k; section.querySelectorAll('.pc571-node').forEach(btn=>{ const key=canon(btn.dataset.factionKey); const isSelected=key===k, isRelated=key!==k && rel.has(key), isSecondary=key!==k && !rel.has(key) && sec.has(key); btn.classList.toggle('selected',isSelected); btn.classList.toggle('related',isRelated); btn.classList.toggle('secondary',isSecondary); btn.classList.toggle('muted',!isSelected&&!isRelated&&!isSecondary); }); section.querySelectorAll('.pc571-edge').forEach(edge=>{ const a=canon(edge.dataset.edgeA),b=canon(edge.dataset.edgeB),active=(a===k||b===k),secondary=(rel.has(a)||rel.has(b)); edge.classList.toggle('focus',active); edge.classList.toggle('secondary',!active&&secondary); edge.classList.toggle('dim',!active&&!secondary); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ const a=canon(row.dataset.edgeA),b=canon(row.dataset.edgeB),active=(a===k||b===k); row.classList.toggle('pc571-row-active',active); row.classList.toggle('pc571-row-muted',!active); row.classList.remove('pc57-row-active','pc57-row-muted','pc5641-row-active','pc5641-row-muted','pc564-row-active','pc564-row-muted','relation-row-active','relation-row-muted'); }); const p=ensurePanel(); const direct=Array.from(rel).filter(x=>x!==k&&nodes[x]); const second=Array.from(sec).filter(x=>nodes[x]); p.querySelector('[data-pc571-state]').textContent='NODE: '+n.name+' / DIRECT LINKS VISIBLE'; p.querySelector('[data-pc571-name]').textContent=n.name+' / '+n.role+' / '+n.ring; p.querySelector('[data-pc571-status]').textContent=n.tag; p.querySelector('[data-pc571-grade]').textContent=n.grade; p.querySelector('[data-pc571-watch]').textContent=n.watch; p.querySelector('[data-pc571-links]').textContent=direct.map(x=>nodes[x].name).join(' / ') || '직접 연결 없음'; p.querySelector('[data-pc571-secondary]').textContent=second.map(x=>nodes[x].name).join(' / ') || '2차 연결 없음'; p.querySelector('[data-pc571-records]').textContent=n.records; p.querySelector('[data-pc571-summary]').textContent=n.summary; p.querySelector('[data-pc571-edge-note]').textContent=edgeList(k).join('  |  ') || '관계 기록 없음'; const notice=document.querySelector('[data-srv-notice]'),trace=document.querySelector('[data-srv-trace]'); if(notice) notice.textContent='RELATION LIST / '+n.name+' / DIRECT NODES VISIBLE'; if(trace){ trace.textContent='RELATION LIST: '+n.name; trace.className='status-field status-map'; } if(!opts.silent && window.__pc57LastTone!==k){ window.__pc57LastTone=k; setTimeout(()=>{ if(window.__pc57LastTone===k) window.__pc57LastTone=''; },120); }
-    }
-    function bindRelation(){ section.querySelectorAll('.pc571-node').forEach(btn=>{ if(btn.dataset.pc571Bound) return; btn.dataset.pc571Bound='1'; btn.addEventListener('click',ev=>{ev.stopPropagation();focus(btn.dataset.factionKey);},true); btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();focus(btn.dataset.factionKey);}},true); }); section.querySelectorAll('.relation-table tbody tr').forEach(row=>{ row.setAttribute('tabindex','0'); if(row.dataset.pc571Bound) return; row.dataset.pc571Bound='1'; row.addEventListener('click',()=>focus(row.dataset.edgeA||'uac'),true); }); const title=section.querySelector('.pc571-title'); if(title&&!title.dataset.pc571Bound){title.dataset.pc571Bound='1'; title.addEventListener('dblclick',reset,true);} }
-    function install(){ renderRelation(); ensurePanel(); bindRelation(); reset(); }
-    install();
-    const menu=document.querySelectorAll('.side-menu a[data-target="faction-relation"]');
-    menu.forEach(a=>a.addEventListener('click',()=>{setTimeout(install,360);setTimeout(install,620);},true));
-    let installing=false;
-    const tree=section.querySelector('.relation-tree-panel');
-    if(tree && window.MutationObserver){
-      const mo=new MutationObserver(()=>{ if(installing) return; if(section.offsetParent===null) return; if(!section.querySelector('.pc571-matrix')){ installing=true; setTimeout(()=>{install(); installing=false;},60); } });
-      mo.observe(tree,{childList:true,subtree:false});
+    document.body.classList.add('pc5152a-fellon-signal-pass');
+
+    function installSlowSignalDrift(){
+      if(document.querySelector('.pc5152a-slow-drift')) return;
+      const drift=document.createElement('div');
+      drift.className='pc5152a-slow-drift';
+      drift.setAttribute('aria-hidden','true');
+      drift.innerHTML='<span></span><b></b>';
+      document.body.appendChild(drift);
     }
 
-    // Restricted record FX audit scope: keep F.H.C/video/bio special effects inside their own record groups only.
-    const FHC=new Set(['Cults_871104']);
-    const VIDEO=new Set(['Immortality_860201','Sakuma_Tape_991028','불명_Record1_860204']);
-    const BIO=new Set(['타락 개체_860722','불명_Record2_860205','FCR_Archive_890402','불명_Record5_940626']);
-    function auditRecords(){
-      document.querySelectorAll('.record-detail').forEach(root=>{
-        const id=root.dataset.record||'';
-        root.classList.remove('pc571-restricted-audit','pc571-video-audit','pc571-bio-audit');
-        root.querySelectorAll('.pc571-audit-badge').forEach(el=>el.remove());
-        let label='';
-        if(FHC.has(id)){root.classList.add('pc571-restricted-audit'); label='RESTRICTED FX AUDIT / F.H.C ONLY';}
-        else if(VIDEO.has(id)){root.classList.add('pc571-video-audit'); label='DAMAGED VIDEO FX AUDIT / VIDEO ONLY';}
-        else if(BIO.has(id)){root.classList.add('pc571-bio-audit'); label='BIO TRACE FX AUDIT / ENTITY ONLY';}
-        if(label){ const header=root.querySelector('.doc-header'); if(header&&!header.querySelector('.pc571-audit-badge')){ const badge=document.createElement('div'); badge.className='pc571-audit-badge'; badge.textContent=label; header.insertAdjacentElement('afterend',badge); } }
-      });
-    }
-    auditRecords();
-    document.querySelectorAll('.open-record,.record-back,.side-menu a').forEach(el=>el.addEventListener('click',()=>setTimeout(auditRecords,180),true));
-    if(window.MutationObserver){ const viewer=document.getElementById('archiveRecordViewer'); if(viewer){ new MutationObserver(()=>setTimeout(auditRecords,60)).observe(viewer,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class']}); } }
-  });
-})();
-
-window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch571:'Restricted Record FX Audit + Faction Focus Logic Fix'});
-
-// PATCH 5.8 — FinalUIPerformanceQA + Faction Focus Polish
-// Keeps the originally planned final QA pass, while tightening faction relation focus readability:
-// selected/direct nodes stay readable, indirect nodes step back, unrelated nodes/lines disappear from the active trace.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch58:'Final UI Performance QA + Faction Focus Polish'});
-    const section=document.getElementById('faction-relation');
-    if(!section) return;
-    const canon=(v)=>String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'').replace(/^uac$/,'uac').replace(/^nhc$/,'nhc').replace(/^sid$/,'sid').replace(/^fhc$/,'fhc').replace(/^cpd$/,'cpd').replace(/^arf$/,'arf').replace(/^ushnodacult$|^ushinodacult$|^ushnoda$|^ushinoda$/,'ushinoda').replace(/^ashcrew$/,'ashcrew').replace(/^haimun$/,'haimun').replace(/^amarion$/,'amarion').replace(/^syndicate$/,'syndicate');
-    function getNodes(){ return Array.from(section.querySelectorAll('.pc571-node')); }
-    function getEdges(){ return Array.from(section.querySelectorAll('.pc571-edge')); }
-    function buildAdj(){
-      const adj={};
-      getNodes().forEach(n=>{ adj[canon(n.dataset.factionKey)]=new Set(); });
-      getEdges().forEach(e=>{
-        const a=canon(e.dataset.edgeA), b=canon(e.dataset.edgeB);
-        if(!a||!b) return;
-        if(!adj[a]) adj[a]=new Set();
-        if(!adj[b]) adj[b]=new Set();
-        adj[a].add(b); adj[b].add(a);
-      });
-      return adj;
-    }
-    function directOf(key,adj){ return new Set([key,...Array.from((adj&&adj[key])||[])]); }
-    function secondaryOf(key,adj,direct){
-      const out=new Set();
-      Array.from(direct||[]).forEach(k=>{
-        Array.from((adj&&adj[k])||[]).forEach(x=>{ if(x!==key && !(direct||new Set()).has(x)) out.add(x); });
-      });
-      return out;
-    }
-    function currentFocus(){
-      const selected=section.querySelector('.pc571-node.selected');
-      if(selected) return canon(selected.dataset.factionKey);
-      return canon(section.dataset.pc571Focus||'');
-    }
-    function resetPolish(){
-      section.classList.add('pc58-faction-focus-polish','pc58-default-view');
-      section.classList.remove('pc58-trace-active');
-      getNodes().forEach(n=>n.classList.remove('pc58-selected','pc58-direct','pc58-secondary','pc58-muted'));
-      getEdges().forEach(e=>e.classList.remove('pc58-focus','pc58-secondary','pc58-hidden'));
-      const state=section.querySelector('[data-pc571-state]');
-      if(state && !section.dataset.pc571Focus) state.textContent='NO NODE SELECTED / ALL NODES VISIBLE';
-    }
-    function applyPolish(key){
-      const nodes=getNodes(), edges=getEdges();
-      if(!nodes.length || !edges.length) return;
-      key=canon(key||currentFocus());
-      if(!key){ resetPolish(); return; }
-      const adj=buildAdj();
-      if(!adj[key]){ resetPolish(); return; }
-      const direct=directOf(key,adj);
-      const secondary=secondaryOf(key,adj,direct);
-      section.classList.add('pc58-faction-focus-polish','pc58-trace-active');
-      section.classList.remove('pc58-default-view');
-      nodes.forEach(node=>{
-        const k=canon(node.dataset.factionKey);
-        const selected=k===key;
-        const isDirect=!selected && direct.has(k);
-        const isSecondary=!selected && !isDirect && secondary.has(k);
-        node.classList.toggle('pc58-selected',selected);
-        node.classList.toggle('pc58-direct',isDirect);
-        node.classList.toggle('pc58-secondary',isSecondary);
-        node.classList.toggle('pc58-muted',!selected && !isDirect && !isSecondary);
-      });
-      edges.forEach(edge=>{
-        const a=canon(edge.dataset.edgeA), b=canon(edge.dataset.edgeB);
-        const focus=(a===key||b===key);
-        const directPair=!focus && direct.has(a) && direct.has(b);
-        const secondLink=!focus && !directPair && ((direct.has(a)&&secondary.has(b))||(direct.has(b)&&secondary.has(a)));
-        const visibleSecondary=directPair || secondLink;
-        edge.classList.toggle('pc58-focus',focus);
-        edge.classList.toggle('pc58-secondary',visibleSecondary);
-        // If neither endpoint belongs to the selected trace path, remove the line from the visual trace.
-        edge.classList.toggle('pc58-hidden',!focus && !visibleSecondary);
-      });
-      const state=section.querySelector('[data-pc571-state]');
-      if(state) state.textContent='NODE: '+(section.querySelector('.pc571-node.pc58-selected b')?.textContent||key)+' / CONNECTED TRACE ONLY';
-    }
-    function bind(){
-      section.classList.add('pc58-faction-focus-polish');
-      getNodes().forEach(node=>{
-        if(node.dataset.pc58Bound) return;
-        node.dataset.pc58Bound='1';
-        node.addEventListener('click',()=>setTimeout(()=>applyPolish(node.dataset.factionKey),0),true);
-        node.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' ') setTimeout(()=>applyPolish(node.dataset.factionKey),0); },true);
-      });
-      section.querySelectorAll('.relation-table tbody tr').forEach(row=>{
-        if(row.dataset.pc58Bound) return;
-        row.dataset.pc58Bound='1';
-        row.addEventListener('click',()=>setTimeout(()=>applyPolish(row.dataset.edgeA||row.dataset.edgeB||'uac'),0),true);
-      });
-      const title=section.querySelector('.pc571-title,.pc57-title,.pc5641-title');
-      if(title && !title.dataset.pc58Bound){
-        title.dataset.pc58Bound='1';
-        title.addEventListener('dblclick',()=>setTimeout(resetPolish,0),true);
-      }
-      const focus=currentFocus();
-      if(focus) applyPolish(focus); else resetPolish();
-    }
-    function schedule(){ setTimeout(bind,80); setTimeout(bind,360); setTimeout(bind,760); }
-    schedule();
-    document.querySelectorAll('.side-menu a[data-target="faction-relation"]').forEach(a=>a.addEventListener('click',schedule,true));
-    if(window.MutationObserver){
-      const tree=section.querySelector('.relation-tree-panel')||section;
-      const mo=new MutationObserver(()=>{ if(section.querySelector('.pc571-node')) schedule(); });
-      mo.observe(tree,{childList:true,subtree:true});
-    }
-  });
-})();
-
-// PATCH 5.8.1 — FinalHotfix SourceCleanup + Faction Trace Clarity
-// Finalizes the recommended hotfix pass: keep only selected-node direct relation lines visible,
-// push unrelated nodes further back, and leave a deployment/source sanity marker for GitHub uploads.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch581:'Final Hotfix SourceCleanup + Faction Trace Clarity'});
-    const section=document.getElementById('faction-relation');
-    if(!section) return;
-    const canon=(v)=>String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'')
-      .replace(/^uac$/,'uac').replace(/^nhc$/,'nhc').replace(/^sid$/,'sid').replace(/^fhc$/,'fhc')
-      .replace(/^cpd$/,'cpd').replace(/^arf$/,'arf')
-      .replace(/^ushnodacult$|^ushinodacult$|^ushnoda$|^ushinoda$/,'ushinoda')
-      .replace(/^ashcrew$/,'ashcrew').replace(/^haimun$/,'haimun').replace(/^amarion$/,'amarion').replace(/^syndicate$/,'syndicate');
-    function nodes(){ return Array.from(section.querySelectorAll('.pc571-node')); }
-    function edges(){ return Array.from(section.querySelectorAll('.pc571-edge')); }
-    function rows(){ return Array.from(section.querySelectorAll('.relation-table tbody tr')); }
-    function adjacency(){
-      const adj={};
-      nodes().forEach(n=>{ adj[canon(n.dataset.factionKey)]=new Set(); });
-      edges().forEach(e=>{
-        const a=canon(e.dataset.edgeA), b=canon(e.dataset.edgeB);
-        if(!a||!b) return;
-        if(!adj[a]) adj[a]=new Set();
-        if(!adj[b]) adj[b]=new Set();
-        adj[a].add(b); adj[b].add(a);
-      });
-      return adj;
-    }
-    function selectedKey(){
-      const picked=section.querySelector('.pc571-node.selected,.pc571-node.pc58-selected,.pc571-node.pc581-selected');
-      return canon((picked&&picked.dataset.factionKey)||section.dataset.pc571Focus||'');
-    }
-    function clear581(){
-      section.classList.add('pc581-source-cleanup','pc581-default-view');
-      section.classList.remove('pc581-trace-active');
-      nodes().forEach(n=>n.classList.remove('pc581-selected','pc581-direct','pc581-secondary','pc581-muted'));
-      edges().forEach(e=>e.classList.remove('pc581-focus','pc581-hidden'));
-      rows().forEach(r=>r.classList.remove('pc581-row-active','pc581-row-muted','pc581-row-hidden'));
-      const state=section.querySelector('[data-pc571-state]');
-      if(state && !section.dataset.pc571Focus) state.textContent='NO NODE SELECTED / ALL NODES VISIBLE / 5.8.1 CLEAN';
-    }
-    function apply581(rawKey){
-      const ns=nodes(), es=edges();
-      if(!ns.length||!es.length) return;
-      const key=canon(rawKey||selectedKey());
-      const adj=adjacency();
-      if(!key||!adj[key]){ clear581(); return; }
-      const direct=new Set([key,...Array.from(adj[key]||[])]);
-      const second=new Set();
-      Array.from(direct).forEach(k=>Array.from(adj[k]||[]).forEach(x=>{ if(x!==key&&!direct.has(x)) second.add(x); }));
-      section.classList.add('pc581-source-cleanup','pc581-trace-active');
-      section.classList.remove('pc581-default-view');
-      ns.forEach(node=>{
-        const k=canon(node.dataset.factionKey);
-        const selected=k===key;
-        const isDirect=!selected&&direct.has(k);
-        const isSecond=!selected&&!isDirect&&second.has(k);
-        node.classList.toggle('pc581-selected',selected);
-        node.classList.toggle('pc581-direct',isDirect);
-        node.classList.toggle('pc581-secondary',isSecond);
-        node.classList.toggle('pc581-muted',!selected&&!isDirect&&!isSecond);
-      });
-      es.forEach(edge=>{
-        const a=canon(edge.dataset.edgeA), b=canon(edge.dataset.edgeB);
-        const focus=(a===key||b===key);
-        edge.classList.toggle('pc581-focus',focus);
-        // 5.8.1 rule: when a node is selected, lines not directly attached to that node disappear.
-        edge.classList.toggle('pc581-hidden',!focus);
-      });
-      rows().forEach(row=>{
-        const a=canon(row.dataset.edgeA), b=canon(row.dataset.edgeB);
-        const active=(a===key||b===key);
-        const near=!active && (direct.has(a)||direct.has(b));
-        row.classList.toggle('pc581-row-active',active);
-        row.classList.toggle('pc581-row-muted',near);
-        row.classList.toggle('pc581-row-hidden',!active&&!near);
-      });
-      const state=section.querySelector('[data-pc571-state]');
-      const label=section.querySelector('.pc571-node.pc581-selected b')?.textContent||key;
-      if(state) state.textContent='NODE: '+label+' / DIRECT RELATION LINES ONLY / 5.8.1';
-      const note=section.querySelector('[data-pc571-edge-note]');
-      if(note && note.textContent) note.textContent=note.textContent.replace(/\s+\|\s+/g,'  |  ');
-    }
-    function bind581(){
-      section.classList.add('pc581-source-cleanup');
-      nodes().forEach(node=>{
-        if(node.dataset.pc581Bound) return;
-        node.dataset.pc581Bound='1';
-        node.addEventListener('click',()=>{ setTimeout(()=>apply581(node.dataset.factionKey),20); setTimeout(()=>apply581(node.dataset.factionKey),160); },true);
-        node.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') setTimeout(()=>apply581(node.dataset.factionKey),20); },true);
-      });
-      rows().forEach(row=>{
-        if(row.dataset.pc581Bound) return;
-        row.dataset.pc581Bound='1';
-        row.addEventListener('click',()=>setTimeout(()=>apply581(row.dataset.edgeA||row.dataset.edgeB||'uac'),20),true);
-      });
-      const title=section.querySelector('.pc571-title,.pc57-title,.pc5641-title');
-      if(title&&!title.dataset.pc581Bound){
-        title.dataset.pc581Bound='1';
-        title.addEventListener('dblclick',()=>setTimeout(clear581,40),true);
-      }
-      const focus=selectedKey();
-      if(focus) apply581(focus); else clear581();
-    }
-    function schedule(){ setTimeout(bind581,120); setTimeout(bind581,420); setTimeout(bind581,900); }
-    schedule();
-    document.querySelectorAll('.side-menu a[data-target="faction-relation"]').forEach(a=>a.addEventListener('click',schedule,true));
-    if(window.MutationObserver){
-      const tree=section.querySelector('.relation-tree-panel')||section;
-      new MutationObserver(()=>{ if(section.querySelector('.pc571-node')) schedule(); }).observe(tree,{childList:true,subtree:true});
-    }
-  });
-})();
-
-
-/* PATCH6_MOBILE_RECORD_SYSTEM_RESTRUCTURE
-   실제 소스 기반 개조 패치:
-   - 모바일 오프캔버스 메뉴
-   - 4대 사이드 메뉴 접기/펼치기
-   - 지역지도 세계 권역 선택 전용 UX
-   - 기록보관서 문서 내부 목차 자동 생성
-*/
-(function(){
-  function ready(fn){
-    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
-    else fn();
-  }
-  ready(function(){
-    const body=document.body;
-    const sidebar=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
-    const openBtn=document.getElementById('uacMenuToggle');
-    const closeBtn=document.getElementById('uacMenuClose');
-    const pathLabel=document.getElementById('mobileCurrentPath');
-    const legacyContent=document.querySelector('.legacy-content');
-
-    let backdrop=document.querySelector('.uac-menu-backdrop');
-    if(!backdrop){
-      backdrop=document.createElement('div');
-      backdrop.className='uac-menu-backdrop';
-      document.body.appendChild(backdrop);
+    function installArchiveNoiseMeter(){
+      const app=document.getElementById('app');
+      if(!app || document.querySelector('.pc5152a-tape-meter')) return;
+      const meter=document.createElement('div');
+      meter.className='pc5152a-tape-meter';
+      meter.setAttribute('aria-hidden','true');
+      meter.innerHTML='<i>TRACK 03</i><i>HEAD DIRTY</i><i>DROP FRAME</i>';
+      app.appendChild(meter);
     }
 
-    function setPathLabel(text){
-      if(pathLabel && text) pathLabel.textContent=text;
-    }
-    function openMenu(){
-      body.classList.add('uac-menu-open');
-      backdrop.classList.add('is-open');
-    }
-    function closeMenu(){
-      body.classList.remove('uac-menu-open');
-      backdrop.classList.remove('is-open');
-    }
-
-    if(openBtn) openBtn.addEventListener('click', openMenu);
-    if(closeBtn) closeBtn.addEventListener('click', closeMenu);
-    if(backdrop) backdrop.addEventListener('click', closeMenu);
-
-    document.querySelectorAll('.side-menu-group').forEach(group=>{
-      group.addEventListener('toggle', function(){
-        if(!group.open) return;
-        document.querySelectorAll('.side-menu-group').forEach(other=>{
-          if(other!==group) other.open=false;
-        });
-      });
-    });
-
-    document.querySelectorAll('.side-menu a[data-target]').forEach(link=>{
-      link.addEventListener('click', function(){
-        setPathLabel(link.dataset.pathLabel || link.textContent.trim());
-        closeMenu();
-      });
-    });
-
-    function goArchiveAndOpenRecord(recordId, label){
-      const archiveLink=document.querySelector('.side-menu a[data-target="archive-entry"]');
-      if(archiveLink) archiveLink.click();
-      setPathLabel(label || 'U.A.C 기록 단말기 / 기록보관서 / 문서 열람');
-      setTimeout(function(){
-        if(typeof window.ProjectCurseShowInternalRecord === 'function'){
-          window.ProjectCurseShowInternalRecord(recordId);
-          setTimeout(buildRecordToc, 260);
-          setTimeout(buildRecordToc, 620);
-        }
-      }, 80);
-      closeMenu();
-    }
-
-    document.querySelectorAll('.side-record-link[data-side-record]').forEach(btn=>{
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
-        goArchiveAndOpenRecord(btn.dataset.sideRecord, btn.dataset.pathLabel);
-      });
-    });
-
-    function goMapRegion(region, label){
-      const mapLink=document.querySelector('.side-menu a[data-target="zone-map"]');
-      if(mapLink) mapLink.click();
-      setPathLabel(label || '지역지도');
-      setTimeout(function(){
-        const tab=document.querySelector('.continent-tab[data-continent="'+region+'"]');
-        if(tab) tab.click();
-      }, 80);
-      closeMenu();
-    }
-
-    document.querySelectorAll('.side-map-jump[data-map-jump], .world-region-button[data-map-jump]').forEach(btn=>{
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
-        const label=btn.dataset.pathLabel || ('지역지도 / ' + btn.textContent.trim());
-        goMapRegion(btn.dataset.mapJump, label);
-      });
-    });
-
-    function syncMapState(){
-      const shell=document.querySelector('.continental-map-shell');
-      if(!shell) return;
-      const active=shell.querySelector('.continent-tab.active');
-      shell.dataset.currentContinent = active ? active.dataset.continent : 'world';
-    }
-    syncMapState();
-    document.querySelectorAll('.continent-tab').forEach(tab=>{
-      tab.addEventListener('click', function(){
-        const name=tab.textContent.trim();
-        setPathLabel(name==='세계' ? 'U.A.C 기록 단말기 / 지역지도 / 세계' : 'U.A.C 기록 단말기 / 지역지도 / '+name);
-        setTimeout(syncMapState, 0);
-      });
-    });
-
-    function isVisible(el){
-      return !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
-    }
-    function slug(text, i){
-      return 'uac-record-section-' + i + '-' + String(text || 'section').replace(/\s+/g,'-').replace(/[^\w\-가-힣]/g,'').slice(0,28);
-    }
-    function buildRecordToc(){
-      const toc=document.getElementById('recordLocalToc');
-      if(!toc) return;
-      const selected=document.querySelector('.record-detail:not([hidden])');
-      if(!selected){
-        toc.innerHTML='<div class="toc-kicker">[SECTION LIST]</div><div class="toc-empty">기록을 열면 문서 목차가 표시됩니다.</div>';
-        return;
-      }
-
-      const title=(selected.querySelector('.doc-title') || selected.querySelector('h1'));
-      const headings=Array.from(selected.querySelectorAll('.record-content h1, .record-content h2, .record-content h3'))
-        .filter(isVisible)
-        .filter((el, idx, arr)=> {
-          const txt=el.textContent.trim();
-          if(!txt) return false;
-          return arr.findIndex(x=>x.textContent.trim()===txt)===idx;
-        })
-        .slice(0, 18);
-
-      let html='<div class="toc-kicker">[SECTION LIST]</div>';
-      html+='<span class="toc-chip">INTERNAL DOCUMENT</span>';
-      html+='<h3>'+ (title ? title.textContent.trim() : '문서 목차') +'</h3>';
-
-      if(!headings.length){
-        html+='<div class="toc-empty">현재 기록면에서 이동 가능한 섹션을 찾지 못했습니다.</div>';
-        toc.innerHTML=html;
-        return;
-      }
-
-      headings.forEach((h,i)=>{
-        if(!h.id) h.id=slug(h.textContent.trim(),i+1);
-        const num=String(i+1).padStart(2,'0');
-        html+='<a href="#'+h.id+'">'+num+'. '+h.textContent.trim()+'</a>';
-      });
-      toc.innerHTML=html;
-      toc.classList.remove('is-expanded');
-
-      const titleEl=toc.querySelector('h3');
-      if(titleEl){
-        titleEl.addEventListener('click', function(){
-          toc.classList.toggle('is-expanded');
-        });
-      }
-      toc.querySelectorAll('a').forEach(a=>{
-        a.addEventListener('click', function(){
-          if(window.innerWidth <= 900) toc.classList.remove('is-expanded');
-        });
-      });
-    }
-
-    window.ProjectCurseBuildRecordToc=buildRecordToc;
-
-    const archiveViewer=document.getElementById('archiveRecordViewer');
-    if(archiveViewer){
-      const observer=new MutationObserver(function(){ setTimeout(buildRecordToc, 40); });
-      observer.observe(archiveViewer, {subtree:true, attributes:true, attributeFilter:['hidden','class']});
-    }
-
-    document.querySelectorAll('.open-record[data-record]').forEach(btn=>{
-      btn.addEventListener('click', function(){
-        setPathLabel('U.A.C 기록 단말기 / 기록보관서 / 문서 열람');
-        setTimeout(buildRecordToc, 260);
-        setTimeout(buildRecordToc, 620);
-      });
-    });
-    document.querySelectorAll('.record-back').forEach(btn=>{
-      btn.addEventListener('click', function(){
-        setPathLabel('U.A.C 기록 단말기 / 기록보관서');
-        setTimeout(buildRecordToc, 80);
-      });
-    });
-    document.querySelectorAll('.page-tab,.sub-tab').forEach(btn=>{
-      btn.addEventListener('click', function(){
-        setTimeout(buildRecordToc, 40);
-        setTimeout(buildRecordToc, 160);
-      });
-    });
-
-    if(legacyContent){
-      legacyContent.addEventListener('scroll', function(){
-        closeMenu();
-      }, {once:true, passive:true});
-    }
-
-    // 초기 모바일 경로 라벨
-    const activeLink=document.querySelector('.side-menu a.active[data-path-label]');
-    if(activeLink) setPathLabel(activeLink.dataset.pathLabel);
-  });
-})();
-
-
-/* PATCH6_2_NAV_AUDIO_STATUSBAR_FINAL
-   - top-left hamburger controls the only global side menu
-   - side menu summary clicks use analog-17 only
-   - no transient remap/status popups
-   - terminal statusbar keeps only path + short status
-*/
-(function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
-  ready(function(){
-    const body=document.body;
-    const sidebar=document.getElementById('uacSideMenu');
-    const openBtn=document.getElementById('uacMenuToggle');
-    const closeBtn=document.getElementById('uacMenuClose');
-    const backdrop=document.querySelector('.uac-menu-backdrop') || (function(){const d=document.createElement('div'); d.className='uac-menu-backdrop'; document.body.appendChild(d); return d;})();
-    const pathLabel=document.getElementById('mobileCurrentPath');
-    const status=document.getElementById('terminalStatusText');
-    function playMenu(){ try{ if(window.ProjectCursePlayAudio && window.ProjectCurseAudio) window.ProjectCursePlayAudio(window.ProjectCurseAudio.menu); }catch(e){} }
-    function openMenu(){ body.classList.add('uac-menu-open'); backdrop.classList.add('is-open'); }
-    function closeMenu(){ body.classList.remove('uac-menu-open'); backdrop.classList.remove('is-open'); }
-    if(openBtn){ openBtn.addEventListener('click',function(e){ e.preventDefault(); if(body.classList.contains('uac-menu-open')) closeMenu(); else openMenu(); }); }
-    if(closeBtn){ closeBtn.addEventListener('click',function(e){ e.preventDefault(); closeMenu(); }); }
-    if(backdrop){ backdrop.addEventListener('click',closeMenu); }
-    document.querySelectorAll('.side-menu-group > summary').forEach(function(summary){
-      summary.addEventListener('click',function(){ playMenu(); });
-    });
-    document.querySelectorAll('.side-menu a[data-path-label], .side-menu button[data-path-label]').forEach(function(el){
-      el.addEventListener('click',function(){
-        if(pathLabel && el.dataset.pathLabel) pathLabel.textContent=el.dataset.pathLabel;
-        if(status){
-          const t=el.dataset.pathLabel || el.textContent || '';
-          if(t.includes('지역지도')) status.textContent='MAP STANDBY';
-          else if(t.includes('세력')) status.textContent='RELATION FILE';
-          else if(t.includes('기록보관서')) status.textContent='ACCESS PARTIAL';
-          else status.textContent='NODE ONLINE';
-        }
-      }, true);
-    });
-    if(pathLabel && !pathLabel.textContent.trim()) pathLabel.textContent='U.A.C 기록 단말기 / 세계 개요';
-    if(sidebar) sidebar.setAttribute('aria-hidden', body.classList.contains('uac-menu-open') ? 'false' : 'true');
-    // Patch6.2.4: duplicate sidebar aria MutationObserver removed; final nav handler owns aria state.
-  });
-})();
-
-
-/* PATCH6_2_1_NAVFIX_LIGHTAUDIO
-   Final hotfix:
-   - Previous Patch6/6.2 modules both bound the hamburger button; open then immediate close happened.
-   - Clone the menu controls once after all older listeners are registered, then bind a single clean handler.
-   - Keep menu/audio scope minimal. No remap popups, no WebAudio tones.
-*/
-(function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
-  ready(function(){
-    const body=document.body;
-    const sidebar=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
-    let backdrop=document.querySelector('.uac-menu-backdrop');
-    if(!backdrop){
-      backdrop=document.createElement('div');
-      backdrop.className='uac-menu-backdrop';
-      document.body.appendChild(backdrop);
-    }
-
-    function cloneControl(id){
-      const old=document.getElementById(id);
-      if(!old || !old.parentNode) return old;
-      const fresh=old.cloneNode(true);
-      old.parentNode.replaceChild(fresh, old);
-      return fresh;
-    }
-
-    const openBtn=cloneControl('uacMenuToggle');
-    const closeBtn=cloneControl('uacMenuClose');
-    const pathLabel=document.getElementById('mobileCurrentPath');
-    const status=document.getElementById('terminalStatusText');
-
-    function setOpen(isOpen){
-      body.classList.toggle('uac-menu-open', !!isOpen);
-      backdrop.classList.toggle('is-open', !!isOpen);
-      if(sidebar) sidebar.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-      if(openBtn) openBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    }
-    function openMenu(){ setOpen(true); }
-    function closeMenu(){ setOpen(false); }
-    function toggleMenu(){ setOpen(!body.classList.contains('uac-menu-open')); }
-    function menuAudio(){
+    function retuneSoundBus(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      const prefix=(function(){const p=location.pathname; if(p.includes('/docs/'))return '../../'; if(p.includes('/archive/'))return '../'; return '';})();
       try{
-        if(window.ProjectCursePlayAudio && window.ProjectCurseAudio && window.ProjectCurseAudio.menu){
-          window.ProjectCursePlayAudio(window.ProjectCurseAudio.menu);
-        }
+        bus.audio.ambient = new Audio(prefix+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient.loop = true;
+        bus.audio.video = new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.radio = new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.load = new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.open = new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav');
       }catch(e){}
-    }
-    function updateStatus(label){
-      if(pathLabel && label) pathLabel.textContent=label;
-      if(!status || !label) return;
-      if(label.includes('지역지도')) status.textContent='MAP STANDBY';
-      else if(label.includes('세력')) status.textContent='RELATION FILE';
-      else if(label.includes('기록보관서')) status.textContent='ACCESS PARTIAL';
-      else status.textContent='NODE ONLINE';
+      const v={menu:.012,open:.028,page:.018,boot:.026,ambient:.020,load:.026,drawer:.018,command:.017,restricted:.032,video:.028,radio:.022,marker:.006,alert:.024,denied:.030};
+      Object.keys(v).forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=v[k]; }catch(e){}});
     }
 
-    if(openBtn){
-      openBtn.setAttribute('aria-controls','uacSideMenu');
-      openBtn.setAttribute('aria-expanded','false');
-      openBtn.addEventListener('click',function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        toggleMenu();
-      }, true);
-    }
-    if(closeBtn){ closeBtn.addEventListener('click',function(e){ e.preventDefault(); closeMenu(); }, true); }
-    backdrop.addEventListener('click',function(e){ e.preventDefault(); closeMenu(); }, true);
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeMenu(); });
+    installSlowSignalDrift();
+    installArchiveNoiseMeter();
+    retuneSoundBus();
 
-    document.querySelectorAll('.side-menu-group').forEach(function(group){
-      group.addEventListener('toggle',function(){
-        if(!group.open) return;
-        document.querySelectorAll('.side-menu-group').forEach(function(other){ if(other!==group) other.open=false; });
-      });
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152a:'FellonReference SignalDrift TonePass',
+      drift:'slow top-to-bottom analog noise pass',
+      visualReference:'rough animated horror archive / recovered tape record'
     });
-
-    document.querySelectorAll('.side-menu-group > summary').forEach(function(summary){
-      if(summary.dataset.patch621Bound) return;
-      summary.dataset.patch621Bound='1';
-      summary.addEventListener('click',function(){ menuAudio(); }, true);
-    });
-    document.querySelectorAll('.side-menu a[data-path-label], .side-menu button[data-path-label]').forEach(function(el){
-      if(el.dataset.patch621Bound) return;
-      el.dataset.patch621Bound='1';
-      el.addEventListener('click',function(){
-        updateStatus(el.dataset.pathLabel || el.textContent.trim());
-        closeMenu();
-      }, true);
-    });
-
-    setOpen(false);
   });
 })();
 
 
-/* PATCH6_2_2_NO_TRANSITION_POPUPS_PAGECLICK
-   Hard-disable all transient surface/link/index/menu/record/faction overlay nodes.
-   Record-face and nested record-page tabs use the same click as faction mark buttons.
-*/
+// MapPatch 5.15.2b — CurseSeries_ReferenceRecalibration.
+// Recalibrates UI/source notes around user-supplied Curse:The Series playlist structure.
+// No direct copying; Project Curse remains independent.
 (function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
   ready(function(){
-    function playFactionClick(){
-      try{
-        if(window.ProjectCursePlayAudio && window.ProjectCurseAudio && window.ProjectCurseAudio.faction){
-          window.ProjectCursePlayAudio(window.ProjectCurseAudio.faction);
-        }
-      }catch(e){}
-    }
-    // Remove any transient panels that older patches may have already injected.
-    function purgeTransientPanels(){
-      document.querySelectorAll([
-        '.pc551-menu-loader',
-        '.pc564-menu-fx',
-        '.pc562-archive-toast',
-        '.record-surface-loader',
-        '.uac-map-code-loader',
-        '.uac-layer-boot',
-        '.record-loading.show'
-      ].join(',')).forEach(function(el){
-        if(el && el.parentNode) el.parentNode.removeChild(el);
-      });
-      document.querySelectorAll('.faction-detail-loading,.record-surface-active').forEach(function(el){
-        el.classList.remove('faction-detail-loading','record-surface-active');
-      });
-    }
-    purgeTransientPanels();
-    // Patch6.2.4: removed always-on popup MutationObserver; cleanup runs on interaction only.
+    document.body.classList.add('pc5152b-curse-series-recalibrated');
 
-    // Record-face and nested page tabs: same mechanical click as faction mark buttons.
-    document.querySelectorAll('.page-tab,.sub-tab').forEach(function(btn){
-      if(btn.dataset.patch622PageClick) return;
-      btn.dataset.patch622PageClick='1';
-      btn.addEventListener('click',function(){ playFactionClick(); }, true);
-    });
-  });
-})();
-
-
-/* PATCH6_2_3_RESPONSIVE_STABILITY_ARCHIVE_LOADING
-   Adds controlled 2000s terminal-style loading only for approved transitions,
-   adds mobile relation cards, keeps forbidden legacy popups disabled, and hardens PC/mobile state cleanup.
-*/
-(function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
-  ready(function(){
-    const body=document.body;
-    const forbiddenSelector=[
-      '.pc551-menu-loader',
-      '.pc564-menu-fx',
-      '.pc562-archive-toast',
-      '.record-surface-loader',
-      '.uac-map-code-loader',
-      '.uac-layer-boot',
-      '.record-loading.show',
-      '.pc55-sync-hud.is-active'
-    ].join(',');
-
-    function purgeForbiddenPanels(){
-      document.querySelectorAll(forbiddenSelector).forEach(function(el){
-        if(el && el.parentNode) el.parentNode.removeChild(el);
-      });
-      document.querySelectorAll('.faction-detail-loading,.record-surface-active').forEach(function(el){
-        el.classList.remove('faction-detail-loading','record-surface-active');
-      });
-    }
-
-    function closeOffcanvasMenu(){
-      body.classList.remove('uac-menu-open');
-      document.querySelectorAll('.uac-menu-backdrop').forEach(function(b){ b.classList.remove('is-open'); });
-      const btn=document.getElementById('uacMenuToggle');
-      if(btn) btn.setAttribute('aria-expanded','false');
-      const sidebar=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
-      if(sidebar) sidebar.setAttribute('aria-hidden','true');
-    }
-
-    window.ProjectCurseResetUiState=function(opts){
-      opts=opts||{};
-      if(!opts.keepMenu) closeOffcanvasMenu();
-      purgeForbiddenPanels();
-      if(!opts.keepLoaders){
-        document.querySelectorAll('.uac-data-access-loader.show').forEach(function(el){el.classList.add('hide'); setTimeout(()=>el.classList.remove('show','hide'),220);});
-      }
-    };
-
-    // Keep old transient nodes from coming back without deleting the approved archive loader.
-    purgeForbiddenPanels();
-    // Patch6.2.4: removed always-on forbidden-panel MutationObserver; cleanup runs on interaction only.
-
-    function ensureDataLoader(){
-      let el=document.getElementById('uacDataAccessLoader');
-      if(!el){
-        el=document.createElement('div');
-        el.id='uacDataAccessLoader';
-        el.className='uac-data-access-loader uac-gauge-loader';
-        el.innerHTML='<div class="uac-data-access-box terminal-gauge-box"><div class="uac-data-kicker">[DATA ACCESS]</div><div class="uac-data-title">화면 데이터 호출 중</div><div class="uac-data-lines"><span>색인 확인</span><span>표시 권한 확인</span></div><div class="terminal-gauge"><i data-gauge-fill></i><em data-gauge-percent>000%</em></div></div>';
-        document.body.appendChild(el);
-      }
-      return el;
-    }
-    let dataTimer=0;
-    function setDataLoaderText(title, lines){
-      const el=ensureDataLoader();
-      el.querySelector('.uac-data-kicker').textContent='['+(title.code||'DATA ACCESS')+']';
-      el.querySelector('.uac-data-title').textContent=title.title||'화면 데이터 호출 중';
-      el.querySelector('.uac-data-lines').innerHTML=(lines||['색인 확인','표시 권한 확인']).map(function(t){return '<span>'+String(t)+'</span>';}).join('');
-      return el;
-    }
-    function dataDuration(kind){
-      if(kind==='world') return 520;
-      if(kind==='worldmap') return 900;
-      if(kind==='region') return 1040;
-      if(kind==='archive') return 820;
-      if(kind==='relation' || kind==='faction') return 820;
-      return 760;
-    }
-    function showDataAccess(kind){
-      let cfg={code:'DATA ACCESS',title:'화면 데이터 호출 중',lines:['색인 확인','표시 권한 확인']};
-      if(kind==='world') cfg={code:'WORLD OVERVIEW',title:'세계 개요 호출 중',lines:['세계 상태 색인 확인','기록 위치 갱신']};
-      if(kind==='relation') cfg={code:'RELATION TRACE',title:'세력관계도 호출 중',lines:['중심 노드 확인','관계 기록 연결']};
-      if(kind==='faction') cfg={code:'FACTION RECORD',title:'세력 기록 호출 중',lines:['세력 색인 확인','기록 카드 정렬']};
-      if(kind==='worldmap') cfg={code:'WORLD MAP',title:'권역 선택 관제도 호출 중',lines:['권역 표면 확인','작전 구역 색인 정렬']};
-      if(kind==='region') cfg={code:'REGION MAP',title:'권역 작전도 불러오는 중',lines:['오염 구역 대조','작전 시설 확인','봉쇄선 레이어 정렬']};
-      if(kind==='archive') cfg={code:'ARCHIVE INDEX',title:'기록보관서 색인 호출 중',lines:['문서 목록 확인','내부 기록 위치 갱신']};
-      const duration=dataDuration(kind);
-      if(window.ProjectCurseTerminalLoader && window.ProjectCurseTerminalLoader.showData){
-        return window.ProjectCurseTerminalLoader.showData(kind,cfg,duration);
-      }
-      const el=setDataLoaderText({code:cfg.code,title:cfg.title},cfg.lines);
-      runTerminalGauge(el,duration);
-    }
-    window.ProjectCurseShowDataAccess=showDataAccess;
-
-    // Controlled short terminal loader for main menu movements only.
-    document.querySelectorAll('.side-menu a[data-target]').forEach(function(el){
-      if(el.dataset.pc623LoaderBound) return;
-      el.dataset.pc623LoaderBound='1';
-      el.addEventListener('click',function(){
-        const id=el.dataset.target;
-        if(id==='history') showDataAccess('world');
-        else if(id==='faction-relation') showDataAccess('relation');
-        else if(id==='faction-info') showDataAccess('faction');
-        else if(id==='zone-map') showDataAccess('worldmap');
-        else if(id==='archive-entry') showDataAccess('archive');
-        setTimeout(function(){ if(window.ProjectCurseResetUiState) window.ProjectCurseResetUiState({keepLoaders:true}); },60);
-      },true);
-    });
-    document.querySelectorAll('.side-map-jump,.world-region-button,.continent-tab').forEach(function(el){
-      if(el.dataset.pc623RegionLoaderBound) return;
-      el.dataset.pc623RegionLoaderBound='1';
-      el.addEventListener('click',function(){ showDataAccess(el.dataset.continent==='world' ? 'worldmap':'region'); },true);
-    });
-
-    // Mobile relation view: create readable relation cards from the table and hide cramped radial/tree graphics on small screens.
-    function buildMobileRelationCards(){
-      const root=document.getElementById('faction-relation');
-      if(!root || root.querySelector('.pc623-relation-mobile-cards')) return;
-      const table=root.querySelector('.relation-table');
-      if(!table) return;
-      const cards=document.createElement('section');
-      cards.className='pc623-relation-mobile-cards';
-      cards.innerHTML='<div class="pc623-mobile-relation-head"><b>[RELATION LIST]</b><span>모바일에서는 전체 원형 배치 대신 관계 기록 카드로 표시합니다.</span></div>';
-      table.querySelectorAll('tbody tr').forEach(function(row){
-        const cells=row.querySelectorAll('td');
-        if(cells.length<4) return;
-        const card=document.createElement('article');
-        card.className='pc623-relation-card '+(cells[0].className||'');
-        card.innerHTML='<small>'+cells[0].textContent.trim()+'</small><h3>'+cells[1].textContent.trim()+'</h3><b>'+cells[2].textContent.trim()+'</b><p>'+cells[3].textContent.trim()+'</p>';
-        cards.appendChild(card);
-      });
-      const caption=root.querySelector('.map-caption') || table;
-      caption.parentNode.insertBefore(cards, caption.nextSibling);
-    }
-    buildMobileRelationCards();
-
-    // Semi-abstract operational-surface marker labels for maps without discarding the existing data.
-    document.querySelectorAll('.continent-map-frame').forEach(function(frame){
-      if(frame.querySelector('.pc623-surface-tag')) return;
-      const tag=document.createElement('div');
-      tag.className='pc623-surface-tag';
-      const region=(frame.dataset.mapRegion||'world').toUpperCase();
-      tag.textContent= region==='WORLD' ? '[WORLD REGION SELECTOR]' : '['+region+' OPERATIONAL SURFACE]';
-      frame.appendChild(tag);
-    });
-
-    // Page tabs and inner page tabs stay fast: click only, no loaders.
-    document.querySelectorAll('.page-tab,.sub-tab').forEach(function(btn){
-      if(btn.dataset.pc623NoLoader) return;
-      btn.dataset.pc623NoLoader='1';
-      btn.addEventListener('click',function(){ purgeForbiddenPanels(); },true);
-    });
-  });
-})();
-
-
-/* PATCH6_2_4_CLEANRUNTIME_FASTRESPONSE
-   Runtime cleanup pass: faster terminal response, no permanent popup observer,
-   final status text, direct cleanup on interactions, and mobile-safe relation fallback.
-*/
-(function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
-  ready(function(){
-    var body=document.body;
-    var forbidden='.pc551-menu-loader,.pc564-menu-fx,.pc562-archive-toast,.record-surface-loader,.uac-map-code-loader,.uac-layer-boot,.record-loading.show,.pc55-sync-hud.is-active';
-    function purge(){
-      document.querySelectorAll(forbidden).forEach(function(el){ if(el && el.parentNode) el.parentNode.removeChild(el); });
-      document.querySelectorAll('.faction-detail-loading,.record-surface-active').forEach(function(el){ el.classList.remove('faction-detail-loading','record-surface-active'); });
-    }
-    function closeMenu(){
-      body.classList.remove('uac-menu-open');
-      document.querySelectorAll('.uac-menu-backdrop').forEach(function(b){ b.classList.remove('is-open'); });
-      var btn=document.getElementById('uacMenuToggle');
-      var side=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
-      if(btn) btn.setAttribute('aria-expanded','false');
-      if(side) side.setAttribute('aria-hidden','true');
-    }
-    window.ProjectCurseCleanRuntimeFastResponse={purge:purge,closeMenu:closeMenu,version:'6.2.4'};
-    purge();
-    document.addEventListener('click',function(e){
-      if(e.target && e.target.closest('.side-menu a,.side-menu button,.continent-tab,.continent-filter,.page-tab,.sub-tab,.open-record,.record-back,.faction-tile')){
-        setTimeout(purge,0); setTimeout(purge,180);
-      }
-    },true);
-    document.querySelectorAll('.side-menu a,.side-menu button').forEach(function(el){
-      if(el.dataset.pc624Bound) return;
-      el.dataset.pc624Bound='1';
-      el.addEventListener('click',function(){ setTimeout(closeMenu,0); },true);
-    });
-    var status=document.getElementById('terminalStatusText');
-    var path=document.getElementById('mobileCurrentPath');
-    function calmStatus(label){
-      if(path && label) path.textContent=label;
-      if(!status) return;
-      var t=label || (path ? path.textContent : '');
-      if(t.indexOf('지역지도')>-1) status.textContent='MAP STANDBY';
-      else if(t.indexOf('세력')>-1) status.textContent='RELATION FILE';
-      else if(t.indexOf('기록보관서')>-1) status.textContent='ACCESS PARTIAL';
-      else status.textContent='NODE ONLINE';
-    }
-    document.querySelectorAll('.side-menu a[data-path-label],.side-menu button[data-path-label]').forEach(function(el){
-      el.addEventListener('click',function(){ calmStatus(el.dataset.pathLabel || el.textContent.trim()); },true);
-    });
-    if(path) calmStatus(path.textContent || 'U.A.C 기록 단말기 / 세계 개요');
-    document.querySelectorAll('.uac-server-statusbar').forEach(function(el){ el.remove(); });
-    if(document.body.classList.contains('has-uac-statusbar')) document.body.classList.remove('has-uac-statusbar');
-  });
-})();
-
-
-/* PATCH6_2_5_VISIBLEGAUGE_ABSTRACTOPSMAP
-   Final semi-abstract operational map renderer. It does not use geographic lon/lat data.
-*/
-(function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
-  ready(function(){
-    const shell=document.querySelector('.continental-map-shell.datamap-v3');
-    if(!shell) return;
-    shell.classList.add('abstract-ops-map');
-    const NS='http://www.w3.org/2000/svg';
-    const W=1600,H=900;
-    const regionName={world:'세계',east:'동아시아',europe:'유럽',north:'북미',southasia:'남아시아',seindian:'동남아·인도양',oceania:'오세아니아',mideast:'중동',africa:'아프리카'};
-    const regionCode={east:'EA',europe:'EU',north:'NA',southasia:'SA',seindian:'SI',oceania:'OC',mideast:'ME',africa:'AF'};
-    const zoneName={red:'레드존',yellow:'옐로우존',green:'그린존',white:'화이트존',black:'블랙존'};
-    const typeName={zone:'오염 구역',facility:'작전 시설',anomaly:'현상 기록',incident:'사건 좌표',blockade:'봉쇄선'};
-    const DATA={"east": [{"type": "zone", "zone": "red", "name": "란저우 내륙 레드존", "status": "내륙 오염권 중심. 관측기지와 봉쇄선이 외곽에 붙어 있다.", "x": 470, "y": 350, "rx": 170, "ry": 95, "sector": "내륙 오염권", "records": "레드존 이상현상 및 오염 기준 / N.H.C 현장 운용 절차"}, {"type": "zone", "zone": "black", "name": "란저우 심부 반응 후보지", "status": "레드존 내부 심부 반응. 외곽 마커와 겹치지 않게 중앙부에 묶는다.", "x": 505, "y": 360, "rx": 55, "ry": 38, "sector": "내륙 오염권", "records": "레드존 이상현상 및 오염 기준"}, {"type": "blockade", "name": "란저우 동부 차단선", "status": "레드존 외곽을 감싸는 대형 육상 차단선.", "points": [[610, 285], [700, 340], [710, 445]], "sector": "내륙 오염권", "records": "N.H.C 현장 운용 절차"}, {"type": "facility", "org": "nhc", "name": "N.H.C 란저우 전방 관측기지", "status": "레드존 동측 외곽 관측기지. 레드존과 가깝되 겹치지 않는다.", "x": 680, "y": 365, "sector": "내륙 오염권", "records": "N.H.C 현장 운용 절차"}, {"type": "zone", "zone": "white", "name": "홍콩 격리 항만 관리권", "status": "항만 검역과 귀환자 선별을 담당하는 화이트존.", "x": 770, "y": 625, "rx": 105, "ry": 58, "sector": "항만 검문권", "records": "구역 위험도 분류 / 지역지도"}, {"type": "facility", "org": "cpd", "name": "홍콩 격리 항만 검문소", "status": "화이트존 내부 검문소. 항만 관리권과 붙어 배치한다.", "x": 815, "y": 640, "sector": "항만 검문권", "records": "지역지도"}, {"type": "incident", "name": "홍콩 항만 집단 실종 사건", "status": "항만 화이트존 인접 사건 좌표.", "x": 870, "y": 610, "sector": "항만 검문권", "records": "타락 개체 분류 추가 보고서"}, {"type": "facility", "org": "uac", "name": "부산 해상 통제 허브", "status": "동아시아 해상 통제와 항만 검문을 연결하는 허브.", "x": 990, "y": 340, "sector": "한반도·해상 통제", "records": "지역지도"}, {"type": "zone", "zone": "green", "name": "일본 서남부 그린존", "status": "후방 작전과 회수지원이 가능한 안전권.", "x": 1165, "y": 515, "rx": 95, "ry": 55, "sector": "일본 후방권", "records": "구역 위험도 분류"}, {"type": "anomaly", "name": "황허 변류 이상현상", "status": "레드존 주변 하천 기록의 방향 불일치.", "x": 585, "y": 455, "sector": "내륙 오염권", "records": "레드존 이상현상 및 오염 기준"}, {"type": "blockade", "name": "동중국해 감시권", "status": "해상 감시선. 항만 검문권과 부산 허브를 잇는 점선권.", "points": [[990, 620], [1130, 640], [1300, 690]], "sector": "해상 감시권", "records": "지역지도"}], "europe": [{"type": "zone", "zone": "red", "name": "피의 호수 레드존", "status": "북부 사건권의 핵심 레드존.", "x": 470, "y": 335, "rx": 180, "ry": 95, "sector": "북부 레드존 외곽", "records": "피의 호수 부검 기록 / 레드존 이상현상"}, {"type": "zone", "zone": "black", "name": "피의 호수 중심 블랙존 후보지", "status": "혈색 수면 중심부 심부 반응.", "x": 475, "y": 337, "rx": 58, "ry": 40, "sector": "북부 레드존 외곽", "records": "피의 호수 부검 기록"}, {"type": "blockade", "name": "독일-덴마크 이중 봉쇄선", "status": "레드존 외곽을 감싸는 완전 봉쇄선.", "points": [[255, 440], [435, 470], [650, 435]], "sector": "북부 레드존 외곽", "records": "N.H.C 현장 운용 절차"}, {"type": "facility", "org": "nhc", "name": "함부르크 봉쇄사령 거점", "status": "피의 호수 후방 통제소.", "x": 650, "y": 420, "sector": "북부 레드존 외곽", "records": "지역지도"}, {"type": "zone", "zone": "white", "name": "코펜하겐 검문 관리권", "status": "민간 대피와 검문이 집중된 북유럽 관리권.", "x": 765, "y": 285, "rx": 96, "ry": 55, "sector": "중앙 봉쇄권", "records": "구역 위험도 분류"}, {"type": "zone", "zone": "yellow", "name": "북독일 옐로우존", "status": "레드존 외곽 감시 완충권.", "x": 735, "y": 520, "rx": 125, "ry": 70, "sector": "중앙 봉쇄권", "records": "지역지도"}, {"type": "blockade", "name": "북해 해상 감시권", "status": "해상 점선 감시권. 피의 호수 사건과 분리 표기한다.", "points": [[230, 625], [440, 590], [690, 610]], "sector": "북해 감시권", "records": "피의 호수 부검 기록"}, {"type": "incident", "name": "피의 호수 사건 좌표", "status": "1986년 혈액성 이상현상 회수 지점.", "x": 430, "y": 305, "sector": "북부 레드존 외곽", "records": "피의 호수 부검 기록"}, {"type": "anomaly", "name": "사망자 무전 반복 지점", "status": "죽은 시간 계열 통신 오염 기록.", "x": 555, "y": 435, "sector": "북부 레드존 외곽", "records": "레드존 이상현상"}, {"type": "facility", "org": "cpd", "name": "남부 대피 연결소", "status": "대피 축 후방 검문소.", "x": 1035, "y": 625, "sector": "남부 대피 축", "records": "지역지도"}], "north": [{"type": "zone", "zone": "red", "name": "캐나다 북부 레드존", "status": "북부 광역 봉쇄권의 핵심 레드존.", "x": 470, "y": 260, "rx": 190, "ry": 95, "sector": "북부 광역 봉쇄권", "records": "레드존 이상현상 / N.H.C 현장 운용"}, {"type": "zone", "zone": "black", "name": "북부 심부 반응 후보지", "status": "광역 오염권 내부 블랙존 후보.", "x": 515, "y": 263, "rx": 62, "ry": 42, "sector": "북부 광역 봉쇄권", "records": "레드존 이상현상"}, {"type": "facility", "org": "nhc", "name": "알래스카 전방 관측기지", "status": "북부 레드존 서측 외곽 관측기지.", "x": 265, "y": 315, "sector": "북부 광역 봉쇄권", "records": "N.H.C 현장 운용"}, {"type": "blockade", "name": "중부 장거리 봉쇄선", "status": "북부 오염권의 남하를 막는 장거리 차단선.", "points": [[235, 535], [480, 510], [790, 540]], "sector": "중부 장거리 차단선", "records": "지역지도"}, {"type": "zone", "zone": "yellow", "name": "오대호 감시권", "status": "도시 통제권으로 확장되는 완충 감시권.", "x": 970, "y": 425, "rx": 125, "ry": 70, "sector": "동부 도시 통제권", "records": "지역지도"}, {"type": "zone", "zone": "white", "name": "동부 도시 검문권", "status": "민간 이동 제한과 선별을 담당하는 화이트존.", "x": 1105, "y": 470, "rx": 95, "ry": 55, "sector": "동부 도시 통제권", "records": "구역 위험도 분류"}, {"type": "facility", "org": "cpd", "name": "동부 도시 통제소", "status": "화이트존 내부 검문 거점.", "x": 1135, "y": 475, "sector": "동부 도시 통제권", "records": "지역지도"}, {"type": "incident", "name": "북부 귀환자 소실 기록", "status": "봉쇄권 외곽 구조 실패 기록.", "x": 640, "y": 340, "sector": "북부 광역 봉쇄권", "records": "귀환자 분류 기록"}, {"type": "anomaly", "name": "빙원 통신 단절권", "status": "장거리 무전과 위치 신호가 동시에 끊기는 구역.", "x": 575, "y": 200, "sector": "북부 광역 봉쇄권", "records": "레드존 이상현상"}, {"type": "zone", "zone": "green", "name": "남부 이동 제한 후방권", "status": "검문 후방 운영 가능한 그린존.", "x": 560, "y": 710, "rx": 120, "ry": 55, "sector": "남부 이동 제한권", "records": "구역 위험도 분류"}], "southasia": [{"type": "zone", "zone": "yellow", "name": "히말라야 산악 감시권", "status": "북부 산악권 이상징후 감시 구역.", "x": 465, "y": 300, "rx": 175, "ry": 80, "sector": "북부 산악 감시권", "records": "지역지도"}, {"type": "anomaly", "name": "갠지스 상류 시간 왜곡", "status": "강유역의 위치·시간 기록 불일치.", "x": 610, "y": 505, "sector": "강유역 이상권", "records": "레드존 이상현상"}, {"type": "zone", "zone": "red", "name": "강유역 레드존 후보", "status": "귀환자 붕괴 사건과 연결된 레드존 후보.", "x": 720, "y": 520, "rx": 130, "ry": 70, "sector": "강유역 이상권", "records": "타락 개체 분류 추가 보고서"}, {"type": "facility", "org": "uac", "name": "델리 후방 분석소", "status": "산악 감시권과 강유역 이상권을 연결하는 분석소.", "x": 710, "y": 400, "sector": "강유역 이상권", "records": "지역지도"}, {"type": "zone", "zone": "white", "name": "동부 검문 관리권", "status": "대피 이동과 민간 선별 관리권.", "x": 1075, "y": 335, "rx": 95, "ry": 55, "sector": "동부 검문권", "records": "구역 위험도 분류"}, {"type": "facility", "org": "cpd", "name": "동부 대피 검문소", "status": "화이트존 내부 검문소.", "x": 1105, "y": 352, "sector": "동부 검문권", "records": "지역지도"}, {"type": "blockade", "name": "인도양 항로 감시선", "status": "남부 항로 해상 감시선.", "points": [[910, 720], [1110, 700], [1360, 735]], "sector": "인도양 항로 감시선", "records": "지역지도"}, {"type": "incident", "name": "콜카타 항만 실종 기록", "status": "동부 검문권 인접 사건 좌표.", "x": 1035, "y": 420, "sector": "동부 검문권", "records": "타락 개체 분류 추가 보고서"}, {"type": "zone", "zone": "green", "name": "남부 후방 운영권", "status": "회수지원과 대피 동선이 유지되는 그린존.", "x": 610, "y": 665, "rx": 105, "ry": 52, "sector": "강유역 이상권", "records": "구역 위험도 분류"}], "seindian": [{"type": "zone", "zone": "white", "name": "싱가포르 검문 허브", "status": "말라카 검문권 중심 화이트존.", "x": 450, "y": 300, "rx": 105, "ry": 58, "sector": "말라카 검문권", "records": "지역지도"}, {"type": "facility", "org": "cpd", "name": "싱가포르 검문소", "status": "항로 선별과 민간 이동 통제.", "x": 470, "y": 310, "sector": "말라카 검문권", "records": "지역지도"}, {"type": "zone", "zone": "yellow", "name": "군도 오염 감시권", "status": "군도 전역의 반복 통신 이상 감시권.", "x": 880, "y": 390, "rx": 190, "ry": 90, "sector": "군도 오염 감시권", "records": "레드존 이상현상"}, {"type": "anomaly", "name": "보르네오 해상 이상신호", "status": "오염 무전이 반복 수신되는 해상 통신권.", "x": 940, "y": 340, "sector": "군도 오염 감시권", "records": "레드존 이상현상"}, {"type": "zone", "zone": "red", "name": "자바 해역 사건권", "status": "집단 실종 기록이 집중된 레드존 후보 해역.", "x": 1150, "y": 602, "rx": 130, "ry": 65, "sector": "자바 사건권", "records": "지역지도"}, {"type": "facility", "org": "uac", "name": "자카르타 해상 감시소", "status": "자바 사건권 외곽 감시소.", "x": 1045, "y": 570, "sector": "자바 사건권", "records": "지역지도"}, {"type": "incident", "name": "자바 해역 집단 실종 사건", "status": "해상 집단 실종 기록.", "x": 1205, "y": 615, "sector": "자바 사건권", "records": "지역지도"}, {"type": "blockade", "name": "인도양 해상 통제선", "status": "말라카-자바-인도양 감시선을 잇는 해상 통제선.", "points": [[390, 640], [680, 590], [940, 610], [1230, 690]], "sector": "인도양 해상 통제권", "records": "지역지도"}, {"type": "zone", "zone": "green", "name": "동남아 후방 보급권", "status": "검문 허브 후방 운영권.", "x": 605, "y": 210, "rx": 105, "ry": 55, "sector": "말라카 검문권", "records": "구역 위험도 분류"}], "oceania": [{"type": "zone", "zone": "red", "name": "호주 남중부 레드존", "status": "호주 내륙 오염권의 주요 레드존.", "x": 620, "y": 500, "rx": 190, "ry": 105, "sector": "호주 내륙 오염권", "records": "레드존 이상현상 / N.H.C 현장 운용"}, {"type": "zone", "zone": "black", "name": "호주 중앙 블랙존 후보지", "status": "심부 반응 중심.", "x": 600, "y": 390, "rx": 60, "ry": 42, "sector": "호주 내륙 오염권", "records": "레드존 이상현상"}, {"type": "anomaly", "name": "사막 지하 진동 기록점", "status": "블랙존 후보 주변 지하 진동.", "x": 650, "y": 385, "sector": "호주 내륙 오염권", "records": "레드존 이상현상"}, {"type": "blockade", "name": "내륙-해안 방어선", "status": "호주 내륙 오염권을 해안 후방권과 분리하는 차단선.", "points": [[405, 610], [615, 655], [845, 612]], "sector": "호주 내륙 오염권", "records": "N.H.C 현장 운용"}, {"type": "facility", "org": "nhc", "name": "애들레이드 차단 거점", "status": "남부 차단선의 핵심 거점.", "x": 820, "y": 638, "sector": "호주 내륙 오염권", "records": "지역지도"}, {"type": "zone", "zone": "green", "name": "남동부 후방 운영권", "status": "후방 병참 및 회수지원 그린존.", "x": 980, "y": 604, "rx": 120, "ry": 60, "sector": "남동부 후방권", "records": "구역 위험도 분류"}, {"type": "facility", "org": "uac", "name": "멜버른 후방 병참기지", "status": "남동부 후방 작전 거점.", "x": 1015, "y": 625, "sector": "남동부 후방권", "records": "지역지도"}, {"type": "facility", "org": "cpd", "name": "다윈 검역기지", "status": "북부 항만 검역 거점.", "x": 530, "y": 250, "sector": "호주 내륙 오염권", "records": "지역지도"}, {"type": "blockade", "name": "남태평양 감시권", "status": "뉴질랜드 북방과 남태평양 해상 감시권.", "points": [[1100, 345], [1260, 320], [1450, 390]], "sector": "남태평양 감시권", "records": "지역지도"}, {"type": "incident", "name": "호주 중앙 심부 반응점", "status": "중앙 내륙 심부 반응 기록.", "x": 600, "y": 390, "sector": "호주 내륙 오염권", "records": "레드존 이상현상"}], "mideast": [{"type": "zone", "zone": "yellow", "name": "중동 사막 감시권", "status": "이라크-시리아-사우디 북부 장기 감시권.", "x": 555, "y": 360, "rx": 210, "ry": 100, "sector": "사막 장기 감시권", "records": "지역지도"}, {"type": "zone", "zone": "red", "name": "시리아-이라크 경계 이상 발화권", "status": "사막 경계의 소형 레드존.", "x": 880, "y": 270, "rx": 110, "ry": 62, "sector": "경계 이상 발화권", "records": "레드존 이상현상"}, {"type": "incident", "name": "경계 이상 발화점", "status": "반복 발화와 오염 무전이 묶인 사건 좌표.", "x": 900, "y": 292, "sector": "경계 이상 발화권", "records": "레드존 이상현상"}, {"type": "anomaly", "name": "사막 오염 무전 반복 구역", "status": "모래폭풍 내부에서 사망자 음성이 반복 수신됨.", "x": 610, "y": 410, "sector": "사막 장기 감시권", "records": "레드존 이상현상"}, {"type": "blockade", "name": "사막 횡단 차단선", "status": "장기 감시권 남측을 가르는 육상 차단선.", "points": [[310, 620], [540, 585], [840, 625]], "sector": "사막 횡단 차단선", "records": "N.H.C 현장 운용"}, {"type": "facility", "org": "nhc", "name": "리야드 사막 관측기지", "status": "사막 감시권 남측 관측기지.", "x": 705, "y": 495, "sector": "사막 장기 감시권", "records": "지역지도"}, {"type": "facility", "org": "uac", "name": "바그다드 후방 분석소", "status": "감시권 후방 분석소.", "x": 665, "y": 335, "sector": "사막 장기 감시권", "records": "지역지도"}, {"type": "zone", "zone": "white", "name": "수에즈-홍해 북부 관리권", "status": "해상 항로 검문 관리권.", "x": 1075, "y": 590, "rx": 115, "ry": 60, "sector": "홍해·수에즈 항로", "records": "구역 위험도 분류"}, {"type": "facility", "org": "cpd", "name": "수에즈 항로 봉쇄통제소", "status": "수에즈 항로 검문과 봉쇄 통제.", "x": 1030, "y": 580, "sector": "홍해·수에즈 항로", "records": "지역지도"}, {"type": "blockade", "name": "홍해 해상 감시선", "status": "홍해 항로의 점선 감시권.", "points": [[990, 645], [1130, 610], [1365, 635]], "sector": "홍해·수에즈 항로", "records": "지역지도"}], "africa": [{"type": "zone", "zone": "black", "name": "북아프리카 흑색 후보권", "status": "리비아 남부-알제리 동부 사막권 블랙존 후보.", "x": 545, "y": 310, "rx": 135, "ry": 75, "sector": "북아프리카 후보권", "records": "레드존 이상현상"}, {"type": "facility", "org": "uac", "name": "카이로 검문 통합허브", "status": "북아프리카 검문 통합허브.", "x": 760, "y": 285, "sector": "북아프리카 후보권", "records": "지역지도"}, {"type": "zone", "zone": "yellow", "name": "사헬 감시권", "status": "사헬 횡단 감시선과 연결된 완충 감시권.", "x": 690, "y": 535, "rx": 220, "ry": 85, "sector": "사헬 횡단 감시권", "records": "지역지도"}, {"type": "blockade", "name": "사헬 횡단 감시선", "status": "북아프리카와 동아프리카를 가르는 장거리 감시선.", "points": [[320, 585], [600, 555], [1040, 585]], "sector": "사헬 횡단 감시권", "records": "지역지도"}, {"type": "incident", "name": "리비아 남부 유물 회수 실패", "status": "흑색 후보권 주변 회수 실패 사건.", "x": 500, "y": 370, "sector": "북아프리카 후보권", "records": "지역지도"}, {"type": "zone", "zone": "red", "name": "동아프리카 귀환자 붕괴권", "status": "귀환자 집단 붕괴와 연결된 레드존 후보.", "x": 1050, "y": 690, "rx": 115, "ry": 60, "sector": "동아프리카 사건권", "records": "타락 개체 분류 추가 보고서"}, {"type": "facility", "org": "arf", "name": "나이로비 회수지원 거점", "status": "동아프리카 사건권 외곽 회수지원 거점.", "x": 980, "y": 690, "sector": "동아프리카 사건권", "records": "지역지도"}, {"type": "incident", "name": "케냐 북부 귀환자 집단 붕괴", "status": "귀환자 선별 실패와 붕괴 사건 기록.", "x": 1085, "y": 675, "sector": "동아프리카 사건권", "records": "타락 개체 분류 추가 보고서"}, {"type": "zone", "zone": "white", "name": "카이로 검문 관리권", "status": "북아프리카 연안 검문 화이트존.", "x": 835, "y": 315, "rx": 92, "ry": 50, "sector": "북아프리카 후보권", "records": "구역 위험도 분류"}, {"type": "blockade", "name": "지중해 남부 해상 감시권", "status": "북아프리카 연안 해상 감시권.", "points": [[210, 205], [450, 170], [820, 185]], "sector": "지중해 남부 감시권", "records": "지역지도"}]};
-    function el(n,a){const x=document.createElementNS(NS,n); Object.entries(a||{}).forEach(([k,v])=>x.setAttribute(k,v)); return x;}
-    function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-    function pathBlob(cx,cy,rx,ry){
-      const pts=[]; for(let i=0;i<10;i++){const a=(Math.PI*2*i/10)-Math.PI/2; const j=(i%3===0?1.12:(i%2===0?.88:1.02)); pts.push([cx+Math.cos(a)*rx*j,cy+Math.sin(a)*ry*j]);}
-      return 'M'+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join('L')+'Z';
-    }
-    function classify(item){ return item.type==='zone' ? 'zone' : item.type; }
-    function match(item,filter){ if(filter==='all') return true; if(filter==='zone') return item.type==='zone'; if(filter && filter.startsWith('zone-')) return item.type==='zone' && item.zone===filter.replace('zone-',''); return classify(item)===filter; }
-    function itemCode(region,item,idx){ if(item.type==='zone') return ({red:'RZ',yellow:'YZ',green:'GZ',white:'WZ',black:'BZ'}[item.zone]||'ZN')+'-'+(idx+1); if(item.type==='facility') return 'FAC-'+(idx+1); if(item.type==='incident') return 'INC-'+(idx+1); if(item.type==='anomaly') return 'ANM-'+(idx+1); return 'BLK-'+(idx+1); }
-    function addDatum(g,item,region,idx){ g.dataset.mapItem='1'; g.dataset.filter=classify(item); if(item.zone) g.dataset.zone=item.zone; g.setAttribute('tabindex','0'); g.setAttribute('role','button'); g.dataset.title=item.name; g.dataset.status=item.status; g.dataset.records=item.records||'지역지도'; g.dataset.sector=item.sector||regionName[region]||region; g.dataset.code=itemCode(region,item,idx); }
-    function drawZone(layer,item,region,idx){ const g=el('g',{'class':'ops-map-item ops-zone zone-'+item.zone}); addDatum(g,item,region,idx); const outer=el('path',{d:pathBlob(item.x,item.y,item.rx,item.ry),'class':'ops-zone-blob outer zone-'+item.zone}); g.appendChild(outer); if(item.zone==='red'){g.appendChild(el('path',{d:pathBlob(item.x,item.y,item.rx*.42,item.ry*.42),'class':'ops-zone-blob core zone-red'}));} if(item.zone==='black'){g.appendChild(el('path',{d:pathBlob(item.x,item.y,item.rx*.58,item.ry*.58),'class':'ops-zone-blob core zone-black'}));} const t=el('text',{x:item.x+item.rx*.45,y:item.y-item.ry*.75,'class':'ops-label'}); t.textContent=item.name; g.appendChild(t); layer.appendChild(g); return g; }
-    function drawLine(layer,item,region,idx){ const g=el('g',{'class':'ops-map-item ops-line'}); addDatum(g,item,region,idx); const d='M'+item.points.map(p=>p[0]+','+p[1]).join('L'); g.appendChild(el('path',{d,'class':'ops-blockade-line'})); item.points.forEach((p,i)=>{ if(i===0||i===item.points.length-1) g.appendChild(el('rect',{x:p[0]-7,y:p[1]-7,width:14,height:14,'class':'ops-blockade-node'})); }); const mid=item.points[Math.floor(item.points.length/2)]; const t=el('text',{x:mid[0]+20,y:mid[1]-18,'class':'ops-label ops-line-label'}); t.textContent=item.name; g.appendChild(t); layer.appendChild(g); return g; }
-    function drawNode(layer,item,region,idx){ const g=el('g',{'class':'ops-map-item ops-node ops-'+item.type+(item.org?' org-'+item.org:'')}); addDatum(g,item,region,idx); let shape; if(item.type==='facility') shape=el('polygon',{points:`${item.x},${item.y-14} ${item.x+14},${item.y} ${item.x},${item.y+14} ${item.x-14},${item.y}`,'class':'ops-node-shape'}); else if(item.type==='incident') shape=el('rect',{x:item.x-10,y:item.y-10,width:20,height:20,transform:`rotate(45 ${item.x} ${item.y})`,'class':'ops-node-shape'}); else shape=el('path',{d:`M${item.x},${item.y-15} L${item.x+15},${item.y+12} L${item.x-15},${item.y+12} Z`,'class':'ops-node-shape'}); g.appendChild(shape); g.appendChild(el('circle',{cx:item.x,cy:item.y,r:3.5,'class':'ops-node-dot'})); const t=el('text',{x:item.x+18,y:item.y-16,'class':'ops-label'}); t.textContent=item.name; g.appendChild(t); layer.appendChild(g); return g; }
-    function updateCard(panel,item,region,idx){ const card=panel.querySelector('.map-detail-card'); if(!card) return; if(!item){card.innerHTML='<b>WORLD REGION SELECTOR</b><p>세계지도는 권역 선택 전용 관제면입니다. 세부 오염권·시설·사건·봉쇄선은 각 권역 작전구역도에서 확인합니다.</p><small>표현 기준: 반추상 U.A.C 작전 관제도</small>'; return;} const code=itemCode(region,item,idx); const cls=item.type==='zone' ? zoneName[item.zone] : typeName[item.type]; card.innerHTML='<b>'+esc(code+' · '+item.name)+'</b><p>'+esc(item.status)+'</p><small>분류: '+esc(cls)+'<br>작전권: '+esc(item.sector||regionName[region])+'<br>표현 기준: 실제 좌표가 아닌 작전 관계 배치<br>관련 기록: '+esc(item.records||'지역지도')+'</small>'; }
-    function render(region){ const panel=shell.querySelector(`[data-continent-panel="${region}"]`); if(!panel) return; const layer=panel.querySelector('.map-data-layer'); const list=panel.querySelector('.continent-point-list'); if(!layer) return; layer.setAttribute('viewBox','0 0 '+W+' '+H); layer.innerHTML=''; if(list) list.innerHTML=''; if(region==='world'){ updateCard(panel,null,region,0); if(list) list.innerHTML='<div class="continent-point"><b>WORLD SELECTOR</b><span>세계지도는 권역 선택 전용입니다.</span></div>'; return; } const filter=shell.dataset.filter||'all'; const items=DATA[region]||[]; items.forEach((item,idx)=>{ let g=item.type==='zone'?drawZone(layer,item,region,idx):(item.type==='blockade'?drawLine(layer,item,region,idx):drawNode(layer,item,region,idx)); g.style.display=match(item,filter)?'':'none'; g.addEventListener('click',()=>updateCard(panel,item,region,idx)); g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault(); updateCard(panel,item,region,idx);}}); if(list){ const li=document.createElement('div'); li.className='continent-point ops-point'+(item.type==='zone'?' zone-'+item.zone:''); li.dataset.filter=classify(item); if(item.zone) li.dataset.zone=item.zone; li.style.display=match(item,filter)?'':'none'; li.innerHTML='<b>'+esc(itemCode(region,item,idx)+' · '+(item.type==='zone'?zoneName[item.zone]:typeName[item.type]))+'</b><span>'+esc(item.name)+'<small>'+esc(item.sector||regionName[region])+' · '+esc(item.status)+'</small></span>'; li.addEventListener('click',()=>updateCard(panel,item,region,idx)); list.appendChild(li); } }); const first=items.find(it=>match(it,filter)) || items[0]; updateCard(panel,first,region,items.indexOf(first)); }
-    function activeRegion(){ return shell.querySelector('.continent-panel.active')?.dataset.continentPanel || shell.dataset.currentContinent || 'world'; }
-    function applyFilter(){ const region=activeRegion(); render(region); }
-    shell.querySelectorAll('.continent-panel').forEach(p=>render(p.dataset.continentPanel));
-    shell.querySelectorAll('.continent-filter').forEach(btn=>{ btn.addEventListener('click',function(){ shell.dataset.filter=btn.dataset.mapFilter||'all'; shell.querySelectorAll('.continent-filter').forEach(b=>b.classList.toggle('active',b===btn)); setTimeout(applyFilter,0); },true); });
-    shell.querySelectorAll('.continent-tab').forEach(btn=>{ btn.addEventListener('click',function(){ const key=btn.dataset.continent||'world'; shell.dataset.currentContinent=key; setTimeout(()=>render(key),30); setTimeout(()=>render(key),260); },true); });
-    document.querySelectorAll('.side-map-jump,.world-region-button').forEach(btn=>{ btn.addEventListener('click',function(){ const key=btn.dataset.mapJump||btn.dataset.worldRegion; if(!key) return; shell.dataset.currentContinent=key; setTimeout(()=>render(key),60); setTimeout(()=>render(key),360); },true); });
-    setTimeout(()=>render(activeRegion()),600);
-  });
-})();
-
-
-/* PATCH6_2_6_QARUNTIME_GAUGEFIX
-   Self-diagnostic runtime, loader fallback, and QA simulation mode.
-   Open index.html?uac_qa=1 to run the in-browser test pass and copy results. */
-(function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true}); else fn(); }
-  const QA_VERSION='6.2.7';
-  const forbiddenSelectors='.pc551-menu-loader,.pc551-menu-box,.pc564-menu-fx,.pc562-archive-toast,.record-surface-loader,.uac-map-code-loader,.uac-layer-boot,.pc55-sync-hud,.uac-server-statusbar';
-  const forbiddenText=[['REGIONAL','SURFACE','LINK'],['TERMINAL','PANEL','SYNC'],['CHRONICLE','INDEX','REBUILD'],['ARCHIVE','SURFACE','OPEN'],['RECORD','SURFACE','REMAP'],['FACTION','FILE','REMAP']].map(function(parts){return parts.join(' ');});
-  const durations={world:560,relation:880,faction:880,worldmap:960,region:1080,archive:840,default:820};
-  const messages={
-    world:{code:'WORLD OVERVIEW',title:'세계 개요 호출 중',lines:['세계 상태 색인 확인','기록 위치 갱신','노드 응답 확인']},
-    relation:{code:'RELATION TRACE',title:'세력관계도 호출 중',lines:['중심 노드 확인','관계 기록 연결','관계 목록 대조']},
-    faction:{code:'FACTION RECORD',title:'세력 기록 호출 중',lines:['세력 색인 확인','기록 카드 정렬','문서 연결 확인']},
-    worldmap:{code:'WORLD MAP',title:'권역 선택 관제도 호출 중',lines:['권역 표면 확인','작전 구역 색인 정렬','마커 레이어 제한']},
-    region:{code:'REGION MAP',title:'권역 작전도 불러오는 중',lines:['오염 구역 대조','작전 시설 확인','봉쇄선 레이어 정렬']},
-    archive:{code:'ARCHIVE INDEX',title:'기록보관서 색인 호출 중',lines:['문서 목록 확인','내부 기록 위치 갱신','열람 노드 대기']},
-    default:{code:'DATA ACCESS',title:'화면 데이터 호출 중',lines:['색인 확인','표시 권한 확인','노드 응답 확인']}
-  };
-  let dataHideTimer=0;
-  function purgeForbidden(){
-    document.querySelectorAll(forbiddenSelectors).forEach(function(el){ if(el && el.parentNode) el.parentNode.removeChild(el); });
-    document.querySelectorAll('.faction-detail-loading,.record-surface-active').forEach(function(el){ el.classList.remove('faction-detail-loading','record-surface-active'); });
-    // Text-level guard for legacy central panels that may be reintroduced by older scripts.
-    document.querySelectorAll('body *').forEach(function(el){
-      if(!el || !el.textContent || el.children.length>5) return;
-      const t=el.textContent.trim();
-      if(forbiddenText.some(function(f){return t.indexOf(f)>-1;})){
-        if(!el.closest('.patch-note,.qa-panel,.uac-qa-panel')) el.remove();
-      }
-    });
-  }
-  function ensureDataLoader(){
-    let el=document.getElementById('uacDataAccessLoader');
-    if(!el){
-      el=document.createElement('div');
-      el.id='uacDataAccessLoader';
-      el.className='uac-data-access-loader uac-gauge-loader pc626-loader';
-      el.innerHTML='<div class="uac-data-access-box terminal-gauge-box"><div class="uac-data-kicker">[DATA ACCESS]</div><div class="uac-data-title">화면 데이터 호출 중</div><div class="uac-data-lines"><span>색인 확인</span><span>표시 권한 확인</span><span>노드 응답 확인</span></div><div class="terminal-gauge"><i data-gauge-fill></i><em data-gauge-percent>000%</em></div><div class="pc626-loader-foot">PC-03 LEGACY TERMINAL / LOW RESOLUTION ACCESS</div></div>';
+    function installTapeSequenceOverlay(){
+      if(document.querySelector('.pc5152b-tape-sequence-overlay')) return;
+      const el=document.createElement('div');
+      el.className='pc5152b-tape-sequence-overlay';
+      el.setAttribute('aria-hidden','true');
+      el.innerHTML='<span>CURSE REF / STRUCTURE ONLY</span><b>FHC TAPE INDEX DAMAGED</b><i>SEQ 01 / SEQ 02 / SEQ ??</i>';
       document.body.appendChild(el);
     }
-    return el;
-  }
-  function setText(el,cfg){
-    cfg=cfg||messages.default;
-    const k=el.querySelector('.uac-data-kicker');
-    const title=el.querySelector('.uac-data-title');
-    const lines=el.querySelector('.uac-data-lines');
-    if(k) k.textContent='['+(cfg.code||'DATA ACCESS')+']';
-    if(title) title.textContent=cfg.title||'화면 데이터 호출 중';
-    if(lines) lines.innerHTML=(cfg.lines||messages.default.lines).map(function(x){return '<span>'+String(x)+'</span>';}).join('');
-  }
-  function showDataAccess(kind){
-    kind=kind||'default';
-    purgeForbidden();
-    const cfg=messages[kind]||messages.default;
-    const duration=durations[kind]||durations.default;
-    if(window.ProjectCurseTerminalLoader && window.ProjectCurseTerminalLoader.showData){
-      window.ProjectCurseTerminalLoader.showData(kind,cfg,duration);
-      return {element:document.getElementById('uacDataAccessLoader'),duration:duration,kind:kind};
+
+    function tagArchiveCards(){
+      const cards=Array.from(document.querySelectorAll('#archive-entry .doc-card'));
+      cards.forEach((card,idx)=>{
+        if(card.dataset.pc5152bTape) return;
+        const code=(card.querySelector('.code') && card.querySelector('.code').textContent.trim()) || ('REC-'+String(idx+1).padStart(2,'0'));
+        card.dataset.pc5152bTape='TAPE-'+String(idx+1).padStart(2,'0');
+        card.style.setProperty('--pc5152b-tape-label', '"'+card.dataset.pc5152bTape+' / '+code.replace(/"/g,'')+'"');
+      });
     }
-    const el=ensureDataLoader();
-    setText(el,cfg);
-    try{ window.runTerminalGauge(el,duration,{steps:[0,8,17,29,42,48,66,81,92,98,100]}); }
-    catch(err){ console.error('[UAC QA] gauge failed',err); }
-    return {element:el,duration:duration,kind:kind};
-  }
-  function kindFromElement(el){
-    if(!el) return 'default';
-    const target=el.dataset.target;
-    if(target==='history') return 'world';
-    if(target==='faction-relation') return 'relation';
-    if(target==='faction-info') return 'faction';
-    if(target==='zone-map') return 'worldmap';
-    if(target==='archive-entry') return 'archive';
-    const jump=el.dataset.continent||el.dataset.mapJump||el.dataset.worldRegion;
-    if(jump) return jump==='world' ? 'worldmap' : 'region';
-    return 'default';
-  }
-  function bindLoaders(){
-    document.querySelectorAll('.side-menu a[data-target],.side-menu button[data-target],.side-map-jump,.world-region-button,.continent-tab').forEach(function(el){
-      if(el.dataset.pc626GaugeBound) return;
-      el.dataset.pc626GaugeBound='1';
-      el.addEventListener('click',function(){ showDataAccess(kindFromElement(el)); },true);
-    });
-    document.querySelectorAll('.page-tab,.sub-tab,.faction-tile').forEach(function(el){
-      if(el.dataset.pc626FastBound) return;
-      el.dataset.pc626FastBound='1';
-      el.addEventListener('click',function(){ purgeForbidden(); },true);
-    });
-  }
-  function closeMenu(){
-    document.body.classList.remove('uac-menu-open');
-    const btn=document.getElementById('uacMenuToggle');
-    const side=document.getElementById('uacSideMenu') || document.querySelector('.legacy-sidebar');
-    if(btn) btn.setAttribute('aria-expanded','false');
-    if(side) side.setAttribute('aria-hidden','true');
-    document.querySelectorAll('.uac-menu-backdrop').forEach(function(b){b.classList.remove('is-open');});
-  }
-  function staticRuntimeChecks(){
-    return {
-      version:QA_VERSION,
-      hasGauge:typeof window.runTerminalGauge==='function',
-      hasDataLoader:!!document.getElementById('uacDataAccessLoader') || true,
-      sideLinks:document.querySelectorAll('.side-menu a[data-target]').length,
-      regionControls:document.querySelectorAll('.side-map-jump,.world-region-button,.continent-tab').length,
-      recordOpenButtons:document.querySelectorAll('.open-record[data-record]').length,
-      oldMapRefs:[].slice.call(document.querySelectorAll('img[src],image[href]')).filter(function(n){return /world_actual_base|global_zone_map|continent_/.test(n.getAttribute('src')||n.getAttribute('href')||'');}).length,
-      forbiddenNodes:document.querySelectorAll(forbiddenSelectors).length
-    };
-  }
-  function makeQaPanel(){
-    let panel=document.getElementById('uacQaPanel');
-    if(panel) return panel;
-    panel=document.createElement('aside');
-    panel.id='uacQaPanel';
-    panel.className='uac-qa-panel';
-    panel.innerHTML='<h2>[U.A.C QA RUNTIME]</h2><p>자동 클릭 시뮬레이션과 로딩 게이지 검사를 실행합니다.</p><div class="uac-qa-results"></div><div class="uac-qa-actions"><button type="button" data-qa-copy>QA 결과 복사</button><button type="button" data-qa-hide>닫기</button></div>';
-    document.body.appendChild(panel);
-    panel.querySelector('[data-qa-hide]').addEventListener('click',function(){panel.remove();});
-    panel.querySelector('[data-qa-copy]').addEventListener('click',function(){
-      const data=JSON.stringify(window.ProjectCurseQA.lastResult||{},null,2);
-      if(navigator.clipboard) navigator.clipboard.writeText(data).catch(()=>{});
-    });
-    return panel;
-  }
-  function renderQa(results){
-    const panel=makeQaPanel();
-    const box=panel.querySelector('.uac-qa-results');
-    box.innerHTML=results.map(function(r){return '<div class="'+(r.pass?'pass':'fail')+'"><b>'+(r.pass?'PASS':'FAIL')+'</b><span>'+r.name+'</span><small>'+String(r.detail||'')+'</small></div>';}).join('');
-  }
-  function wait(ms){return new Promise(function(res){setTimeout(res,ms);});}
-  async function qaClickTest(name,selector,expectActive,kind){
-    const el=document.querySelector(selector);
-    if(!el) return {name:name,pass:false,detail:'missing '+selector};
-    purgeForbidden();
-    el.click();
-    await wait(80);
-    const loader=document.getElementById('uacDataAccessLoader');
-    const showed=!!(loader && loader.classList.contains('show'));
-    await wait((durations[kind||kindFromElement(el)]||820)+520);
-    const activeOk=!expectActive || !!document.querySelector(expectActive+'.active, '+expectActive+':not([hidden])');
-    const hiddenOk=!(loader && loader.classList.contains('show'));
-    const forbiddenOk=document.querySelectorAll(forbiddenSelectors).length===0;
-    return {name:name,pass:showed && hiddenOk && activeOk && forbiddenOk,detail:'loader='+showed+', hidden='+hiddenOk+', active='+activeOk+', forbiddenClear='+forbiddenOk};
-  }
-  async function runQA(){
-    bindLoaders(); purgeForbidden();
-    const results=[];
-    const errors=[];
-    const onErr=function(e){errors.push(e.message||String(e));};
-    const onRej=function(e){errors.push((e.reason&&e.reason.message)||String(e.reason||e));};
-    window.addEventListener('error',onErr);
-    window.addEventListener('unhandledrejection',onRej);
-    const checks=staticRuntimeChecks();
-    results.push({name:'global runTerminalGauge exists',pass:checks.hasGauge,detail:typeof window.runTerminalGauge});
-    results.push({name:'side menu links present',pass:checks.sideLinks>=4,detail:checks.sideLinks});
-    results.push({name:'region controls present',pass:checks.regionControls>=8,detail:checks.regionControls});
-    results.push({name:'old map image refs removed',pass:checks.oldMapRefs===0,detail:checks.oldMapRefs});
-    results.push(await qaClickTest('세계 개요 menu gauge','[data-target="history"]','#history','world'));
-    results.push(await qaClickTest('세력관계도 menu gauge','[data-target="faction-relation"]','#faction-relation','relation'));
-    results.push(await qaClickTest('세력기록 menu gauge','[data-target="faction-info"]','#faction-info','faction'));
-    results.push(await qaClickTest('지역지도 menu gauge','[data-target="zone-map"]','#zone-map','worldmap'));
-    const region=document.querySelector('.continent-tab[data-continent]:not([data-continent="world"])');
-    if(region) results.push(await qaClickTest('대륙 작전구역도 gauge','.continent-tab[data-continent]:not([data-continent="world"])',null,'region'));
-    results.push(await qaClickTest('기록보관서 menu gauge','[data-target="archive-entry"]','#archive-entry','archive'));
-    const rec=document.querySelector('.open-record[data-record]');
-    if(rec){
-      rec.click();
-      await wait(100);
-      const ar=document.getElementById('archiveAccessLoader');
-      const showed=!!(ar && ar.classList.contains('show'));
-      await wait(2600);
-      results.push({name:'기록 열람 archive loader',pass:showed && !(ar&&ar.classList.contains('show')),detail:'loader='+showed});
+
+    function bindSeriesShelf(){
+      document.querySelectorAll('.pc5152b-tape-row').forEach((row,idx)=>{
+        if(row.dataset.bound5152b) return;
+        row.dataset.bound5152b='1';
+        row.addEventListener('click',()=>{
+          if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function'){
+            window.ProjectCurseAudio.playCue(idx===0?'video':idx===1?'load':'restricted',320);
+          }
+        });
+      });
     }
-    purgeForbidden();
-    if(errors.length) results.push({name:'runtime JS errors',pass:false,detail:errors.slice(0,5).join(' | ')});
-    else results.push({name:'runtime JS errors',pass:true,detail:'none'});
-    window.removeEventListener('error',onErr);
-    window.removeEventListener('unhandledrejection',onRej);
-    window.ProjectCurseQA.lastResult={version:QA_VERSION,when:new Date().toISOString(),checks:checks,results:results,errors:errors};
-    try{localStorage.setItem('uac_last_qa_result',JSON.stringify(window.ProjectCurseQA.lastResult));}catch(e){}
-    renderQa(results);
-    return window.ProjectCurseQA.lastResult;
-  }
+
+    installTapeSequenceOverlay();
+    tagArchiveCards();
+    bindSeriesShelf();
+
+    window.ProjectCurseReferenceNotes = Object.assign(window.ProjectCurseReferenceNotes || {}, {
+      patch5152b:'CurseSeries Reference Recalibration',
+      suppliedReferenceSets:['curse VHS','curse series','hatred series'],
+      usageRule:'structure, tone, pacing, rough archival presentation only; no direct copying'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2c — ArchiveAndAudio_Cleanup.
+// Restores audible background ambience, replaces button/loading cues, and temporarily hides cross-link style archive connectors.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
   ready(function(){
-    bindLoaders(); purgeForbidden();
-    window.ProjectCurseQA={version:QA_VERSION,run:runQA,bindLoaders:bindLoaders,purge:purgeForbidden,showLoader:showDataAccess,lastResult:null,checks:staticRuntimeChecks,visualRules:true,loreRules:true};
-    window.ProjectCurseShowDataAccess=showDataAccess;
-    window.ProjectCurseResetUiState=function(opts){ opts=opts||{}; if(!opts.keepMenu) closeMenu(); if(!opts.keepLoaders){ document.querySelectorAll('.uac-data-access-loader.show').forEach(function(el){el.classList.add('hide');}); } purgeForbidden(); };
-    document.addEventListener('click',function(e){ if(e.target && e.target.closest('.side-menu a,.side-menu button,.continent-tab,.continent-filter,.page-tab,.sub-tab,.open-record,.record-back,.faction-tile')) setTimeout(purgeForbidden,80); },true);
-    if(/[?&]uac_qa=1\b/.test(location.search)) setTimeout(runQA,900);
+    document.body.classList.add('pc5152c-archive-audio-cleanup');
+
+    function prefix(){
+      const p=location.pathname;
+      if(p.includes('/docs/'))return '../../';
+      if(p.includes('/archive/'))return '../';
+      return '';
+    }
+
+    function retuneAudio(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      const pre=prefix();
+      try{
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient.loop = true;
+        bus.audio.menu = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.drawer = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.command = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.marker = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.open = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.page = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.load = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.video = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.radio = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.restricted = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.denied = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+      }catch(e){}
+      const v={
+        menu:.040, open:.052, page:.042, boot:.042, ambient:.064, load:.055,
+        drawer:.034, command:.034, restricted:.045, video:.050, radio:.044,
+        marker:.020, alert:.034, denied:.044
+      };
+      Object.keys(v).forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=v[k]; }catch(e){}});
+      try{ if(typeof bus.startAmbient==='function') bus.startAmbient(); }catch(e){}
+    }
+
+    function disableArchiveCrossLinks(){
+      // Archive storage should temporarily behave as a list of original setting texts only.
+      document.querySelectorAll('#archive-entry [data-pc5151-page], #archive-entry .pc5151-archive-subindex, #archive-entry .pc5152b-series-shelf').forEach(el=>{
+        el.setAttribute('aria-hidden','true');
+        el.classList.add('pc5152c-temporarily-hidden-link');
+      });
+
+      // Hide related-record / related-operation buttons in derived sub-index pages and case-file side panels for this cleanup pass.
+      const selectors=[
+        '[data-pc5140-open-record]','[data-pc5140-open-op]',
+        '[data-pc5141-open-record]','[data-pc5141-open-op]',
+        '[data-pc5150-open-record]','[data-pc5150-open-op]',
+        '[data-case-open-record]','[data-case-open-op]',
+        '.pc5133-case-links','.pc5133-case-actions',
+        '.pc5140-detail-actions','.pc5141-detail-actions','.pc5150-detail-actions'
+      ];
+      selectors.forEach(sel=>{
+        document.querySelectorAll(sel).forEach(el=>{
+          el.classList.add('pc5152c-link-disabled');
+          el.setAttribute('aria-hidden','true');
+          if(el.tagName==='BUTTON' || el.tagName==='A') el.setAttribute('tabindex','-1');
+        });
+      });
+    }
+
+    function keepWorldOverviewClean(){
+      const worldGroup=document.querySelector('[data-menu-group="world-overview"] .pc5151-root-list');
+      if(!worldGroup) return;
+      Array.from(worldGroup.children).forEach((child,idx)=>{
+        const target=child.getAttribute && child.getAttribute('data-target');
+        if(idx>0 || target!=='history') child.classList.add('pc5152c-world-extra-hidden');
+      });
+    }
+
+    retuneAudio();
+    disableArchiveCrossLinks();
+    keepWorldOverviewClean();
+
+    // Re-run link cleanup after dynamically rendered sub-index detail panels appear.
+    setTimeout(disableArchiveCrossLinks, 340);
+    setTimeout(disableArchiveCrossLinks, 900);
+
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152c:'ArchiveAndAudio Cleanup',
+      archiveMode:'original setting texts only',
+      audioMode:'audible broadcast roomtone + dry relay/tape mount cues'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2d — AudioFactionArchive_Hotfix.
+// Fixes low SFX levels, removes legacy faction trace panel/noise, and restores archive record opening via full-row click.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
+  ready(function(){
+    document.body.classList.add('pc5152d-audio-faction-archive-hotfix');
+
+    function prefix(){
+      const p=location.pathname;
+      if(p.includes('/docs/'))return '../../';
+      if(p.includes('/archive/'))return '../';
+      return '';
+    }
+
+    function retuneAudioStrong(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      const pre=prefix();
+      try{
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient.loop = true;
+        bus.audio.menu = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.drawer = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.command = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.marker = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.alert = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.restricted = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.denied = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.open = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.page = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.load = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.video = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.radio = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+      }catch(e){}
+
+      // User reported SFX too small; raise UI cues while keeping background controlled.
+      const v={
+        menu:.095, drawer:.085, command:.085, marker:.060,
+        open:.105, page:.088, restricted:.095, denied:.090, alert:.090,
+        load:.100, video:.090, radio:.082, boot:.070, ambient:.072
+      };
+      Object.keys(v).forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=v[k]; }catch(e){}});
+    }
+
+    function removeLegacyFactionTracePanel(){
+      document.querySelectorAll('.relation-trace-panel').forEach(el=>el.remove());
+      const section=document.getElementById('faction-relation');
+      if(section){
+        section.classList.add('pc5152d-legacy-trace-removed');
+        delete section.dataset.traceKind;
+        delete section.dataset.traceFocus;
+      }
+    }
+
+    function cleanupFactionAudioRoutes(){
+      // Ensure faction mark/tile/node controls use only the new analog bus cue and do not sound silent.
+      const controls=document.querySelectorAll('.faction-mark-large, [data-pc5134-node], .pc5134-map-node, .tree-node');
+      controls.forEach(el=>{
+        if(el.dataset.pc5152dAudioBound) return;
+        el.dataset.pc5152dAudioBound='1';
+        el.addEventListener('pointerdown',()=>{
+          try{
+            if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function'){
+              window.ProjectCurseAudio.playCue(el.classList.contains('hostile') ? 'restricted' : 'drawer', 220);
+            }
+          }catch(e){}
+        }, {passive:true});
+      });
+    }
+
+    function restoreArchiveOpenRuntime(){
+      const archive=document.getElementById('archive-entry');
+      if(!archive) return;
+      archive.classList.add('pc5152d-archive-open-restored');
+
+      archive.querySelectorAll('#archiveListWrap .doc-card').forEach((card,idx)=>{
+        const button=card.querySelector('.open-record[data-record]');
+        if(!button) return;
+        const id=button.getAttribute('data-record');
+        card.dataset.pc5152dRecord=id;
+        card.removeAttribute('role');
+        card.removeAttribute('tabindex');
+        card.removeAttribute('aria-label');
+        card.querySelectorAll('.pc5152d-open-cue').forEach(el=>el.remove());
+        if(button.dataset.pc5152dTextPatched!=='1'){
+          button.textContent='열람';
+          button.dataset.pc5152dTextPatched='1';
+        }
+        if(card.dataset.pc5152dOpenBound) return;
+        card.dataset.pc5152dOpenBound='1';
+
+        const open=(e)=>{
+          if(e){
+            const tag=(e.target && e.target.tagName || '').toLowerCase();
+            if(tag==='summary' || tag==='details') return;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function'){
+            window.ProjectCurseAudio.playCue('load',360);
+          }
+          if(typeof window.ProjectCurseShowInternalRecord==='function'){
+            window.ProjectCurseShowInternalRecord(id);
+          }else{
+            button.click();
+          }
+        };
+
+        button.addEventListener('click',open, true);
+      });
+    }
+
+    function makeArchiveReadable(){
+      const wrap=document.getElementById('archiveListWrap');
+      if(wrap){
+        wrap.querySelectorAll('details').forEach(d=>d.open=true);
+      }
+      const archive=document.getElementById('archive-entry');
+      if(archive){
+        archive.querySelectorAll('summary').forEach(s=>{
+          if(!s.querySelector('.pc5152d-summary-note')){
+            const note=document.createElement('span');
+            note.className='pc5152d-summary-note';
+            note.textContent=' / SETTING TEXTS';
+            s.appendChild(note);
+          }
+        });
+      }
+    }
+
+    retuneAudioStrong();
+    removeLegacyFactionTracePanel();
+    cleanupFactionAudioRoutes();
+    restoreArchiveOpenRuntime();
+    makeArchiveReadable();
+
+    // Dynamic faction/archive renderers can recreate nodes; repeat cleanup safely.
+    [160,480,1100,1900].forEach(t=>setTimeout(()=>{
+      retuneAudioStrong();
+      removeLegacyFactionTracePanel();
+      cleanupFactionAudioRoutes();
+      restoreArchiveOpenRuntime();
+      makeArchiveReadable();
+    },t));
+
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152d:'AudioFactionArchive Hotfix',
+      audioMode:'stronger analog button/load cues',
+      archiveMode:'full row open restored',
+      factionCleanup:'legacy trace panel removed and synth beep suppressed'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2e — AudioTone_DeGameify_Hotfix.
+// Replaces typewriter-like button attack and over-performed loading sound with dull tape-deck/server-relay cues.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
+  ready(function(){
+    document.body.classList.add('pc5152e-audio-tone-degameify');
+
+    function prefix(){
+      const p=location.pathname;
+      if(p.includes('/docs/'))return '../../';
+      if(p.includes('/archive/'))return '../';
+      return '';
+    }
+
+    function retuneDeGameifiedAudio(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      const pre=prefix();
+      try{
+        bus.audio.menu = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.drawer = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.command = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.marker = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+
+        bus.audio.open = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.page = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+
+        bus.audio.load = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.video = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.radio = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+
+        bus.audio.alert = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+        bus.audio.restricted = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+        bus.audio.denied = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+
+        // Keep the restored background bed from 5.15.2c/2d.
+        if(!bus.audio.ambient || !String(bus.audio.ambient.src||'').includes('pc5152c_broadcast_roomtone.wav')){
+          bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+          bus.audio.ambient.loop = true;
+        }
+      }catch(e){}
+
+      // Maintain audibility but pull attacks and theatrical loading back.
+      const v={
+        menu:.082, drawer:.076, command:.076, marker:.050,
+        open:.088, page:.074,
+        load:.078, video:.068, radio:.064,
+        restricted:.080, denied:.076, alert:.074,
+        boot:.060, ambient:.070
+      };
+      Object.keys(v).forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=v[k]; }catch(e){}});
+    }
+
+    function markAudioDiagnostic(){
+      const meter=document.querySelector('.pc5152a-tape-meter');
+      if(meter && !meter.querySelector('.pc5152e-audio-note')){
+        const n=document.createElement('span');
+        n.className='pc5152e-audio-note';
+        n.textContent=' / SFX DULL BUS';
+        meter.appendChild(n);
+      }
+    }
+
+    retuneDeGameifiedAudio();
+    markAudioDiagnostic();
+
+    // Re-apply after older late patch blocks touch the same audio bus.
+    [120,420,1000,2200].forEach(t=>setTimeout(()=>{
+      retuneDeGameifiedAudio();
+      markAudioDiagnostic();
+    },t));
+
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152e:'AudioTone DeGameify Hotfix',
+      audioMode:'dull tape deck / server relay, no typewriter click, no theatrical load'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2f — AudioReference_Rebuild.
+// Rebuilds the audio bus around the user's uploaded reference sounds:
+// old computer bed, computer starting, analog contact, and computer startup boot.
+// Goal: old electronic recording equipment in operation, not UI SFX.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
+  ready(function(){
+    document.body.classList.add('pc5152f-audio-reference-rebuild');
+
+    function prefix(){
+      const p=location.pathname;
+      if(p.includes('/docs/'))return '../../';
+      if(p.includes('/archive/'))return '../';
+      return '';
+    }
+
+    function installReferenceAudioBus(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      const pre=prefix();
+      try{
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient.loop = true;
+
+        // Short contact: analog-17 reference, softened. Used for ordinary UI input only.
+        bus.audio.menu = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.drawer = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.command = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.marker = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+
+        // Record access: dull tape latch / equipment engaging.
+        bus.audio.open = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.page = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+
+        // Loading / video / radio: equipment reading record medium.
+        bus.audio.load = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.video = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.radio = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+
+        // Rare major boot/access cue.
+        bus.audio.boot = new Audio(pre+'assets/audio/pc5152f_boot_access_oldpc.wav');
+
+        // Low denied/restricted: old equipment refusal, no arcade beep.
+        bus.audio.alert = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+        bus.audio.restricted = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+        bus.audio.denied = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+      }catch(e){}
+
+      // Tuned from the reference set: audible but mostly "machine presence", not button performance.
+      const v={
+        ambient:.118,
+        menu:.070, drawer:.064, command:.064, marker:.042,
+        page:.050, open:.070,
+        load:.074, video:.066, radio:.060,
+        boot:.068,
+        restricted:.068, denied:.066, alert:.060
+      };
+      Object.keys(v).forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=v[k]; }catch(e){}});
+    }
+
+    function suppressClickiness(){
+      // The reference pass should not feel like rapid key typing.
+      document.querySelectorAll('[data-pc5134-node], .pc5134-map-node, .tree-node, .pc5151-root-list a, .pc5151-root-list button').forEach(el=>{
+        if(el.dataset.pc5152fAudioBound) return;
+        el.dataset.pc5152fAudioBound='1';
+        el.addEventListener('pointerdown',()=>{
+          try{
+            if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function'){
+              const heavy = el.closest && (el.closest('#archive-entry') || el.closest('#faction-relation'));
+              window.ProjectCurseAudio.playCue(heavy ? 'open' : 'menu', heavy ? 520 : 340);
+            }
+          }catch(e){}
+        }, {passive:true});
+      });
+    }
+
+    function updateAudioDiagnostics(){
+      const meter=document.querySelector('.pc5152a-tape-meter');
+      if(meter && !meter.querySelector('.pc5152f-audio-note')){
+        const note=document.createElement('span');
+        note.className='pc5152f-audio-note';
+        note.textContent=' / OLD COMPUTER REF';
+        meter.appendChild(note);
+      }
+      const seq=document.querySelector('.pc5152b-tape-sequence-overlay');
+      if(seq) seq.setAttribute('data-audio-ref','OLD COMPUTER / ANALOG CONTACT / RECORD MOUNT');
+    }
+
+    installReferenceAudioBus();
+    suppressClickiness();
+    updateAudioDiagnostics();
+
+    // Late patches may reassign volumes or dynamic nodes may re-render. Keep this stable.
+    [160,520,1200,2400].forEach(t=>setTimeout(()=>{
+      installReferenceAudioBus();
+      suppressClickiness();
+      updateAudioDiagnostics();
+    },t));
+
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152f:'AudioReference Rebuild',
+      audioMode:'old computer roomtone + analog contact + record mount',
+      referenceFiles:[
+        '331946__bennohansen__old_computer.mp3',
+        '841814__izzint__computer-starting.wav',
+        '795374__tobbler__analog-17.wav',
+        '403566__lamamakesmusic__computer_startup_boot.wav'
+      ]
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2g — CleanRuntime_RedBlackTerminal_Rebase.
+// Red/black terminal interface pass + runtime cleanup confirmation.
+// No new feature routes; keeps world/archive scope locked.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
+  ready(function(){
+    document.body.classList.add('pc5152g-redblack-terminal-rebase');
+
+    function prefix(){
+      const p=location.pathname;
+      if(p.includes('/docs/'))return '../../';
+      if(p.includes('/archive/'))return '../';
+      return '';
+    }
+
+    function enforceCleanAudioBus(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      const pre=prefix();
+      try{
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient.loop = true;
+        bus.audio.menu = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.drawer = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.command = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.marker = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.page = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
+        bus.audio.open = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.load = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.video = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.radio = new Audio(pre+'assets/audio/pc5152f_record_mount_soft.wav');
+        bus.audio.boot = new Audio(pre+'assets/audio/pc5152f_boot_access_oldpc.wav');
+        bus.audio.alert = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+        bus.audio.restricted = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+        bus.audio.denied = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+      }catch(e){}
+      const v={
+        ambient:.114,
+        menu:.062, drawer:.058, command:.058, marker:.040, page:.046,
+        open:.064, load:.066, video:.060, radio:.056,
+        boot:.062, alert:.058, restricted:.064, denied:.060
+      };
+      Object.keys(v).forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=v[k]; }catch(e){}});
+    }
+
+    function relabelRootMenu(){
+      document.querySelectorAll('.pc5151-root-label').forEach((el,idx)=>{
+        el.setAttribute('data-pc5152g-index', String(idx+1).padStart(2,'0'));
+      });
+      document.querySelectorAll('.pc5151-root-list a, .pc5151-root-list button').forEach(el=>{
+        if(el.dataset.pc5152gLine) return;
+        el.dataset.pc5152gLine='1';
+        const code=el.querySelector('i');
+        const small=el.querySelector('small');
+        if(code) code.textContent='['+code.textContent.replace(/[\[\]]/g,'').trim()+']';
+        if(small && !small.textContent.includes('LOCAL')) small.textContent=small.textContent.replace('GLOBAL BOARD','READ ONLY BOARD').replace('AREA BOARD','LOCAL BOARD');
+      });
+    }
+
+    function markArchiveRows(){
+      document.querySelectorAll('#archive-entry .doc-card').forEach(card=>{
+        card.classList.add('pc5152g-file-row');
+        card.querySelectorAll('.pc5152g-row-status').forEach(el=>el.remove());
+      });
+    }
+
+    function redblackLoaderState(){
+      const loader=document.getElementById('loader');
+      if(loader) loader.classList.add('pc5152g-redblack-loader-live');
+      const recordLoading=document.getElementById('recordLoading');
+      if(recordLoading) recordLoading.classList.add('pc5152g-record-mount-loader');
+    }
+
+    enforceCleanAudioBus();
+    relabelRootMenu();
+    markArchiveRows();
+    redblackLoaderState();
+
+    [120,520,1200,2400].forEach(t=>setTimeout(()=>{
+      enforceCleanAudioBus();
+      relabelRootMenu();
+      markArchiveRows();
+      redblackLoaderState();
+    },t));
+
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152g:'CleanRuntime RedBlackTerminal Rebase',
+      audioAssets:'pc5152f-only runtime audio',
+      interfaceMode:'black terminal with red error/code accents',
+      loaderMode:'PC-03 boot log / record mount log',
+      archiveMode:'file index rows, original setting text only'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2h — AudioClarity_SideContent_TerminalNoise_RecordSequence.
+// Clarifies ordinary UI audio, reduces global TV/VHS feel, rebases side content,
+// and adds a click-gated damaged-record sequence only for Cults_871104.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+
+  ready(function(){
+    document.body.classList.add('pc5152h-audio-sidecontent-terminal-sequence');
+
+    const IMMORTALITY_RECORD='Immortality_860201';
+    const SEQUENCE_RECORDS = new Set(['Cults_871104', IMMORTALITY_RECORD]);
+    const state = {
+      overlay:null,
+      pageIndex:0,
+      canAdvance:false,
+      timer:null,
+      bgm:null,
+      cut:null,
+      frame:null,
+      activeRecord:null,
+      nativeShow: window.ProjectCurseShowInternalRecord || null,
+      finishing:false,
+      lineTimer:null,
+      lineEls:[],
+      nextLineIndex:0,
+      currentLineDelay:2500,
+      pages:null,
+      bgmSrc:'',
+      endingPlayed:false,
+      endingPlaying:false,
+      immortalityStep:null,
+      photoClick:null,
+      dialogCue:null,
+      latePulse:null,
+      latePulseTimer:null,
+      latePulseActive:false
+    };
+
+    const pages = [
+      {
+        group:'system',
+        code:'VIDEO ATTACHMENT / PARTIAL',
+        title:'RECOVERED SIGNAL',
+        subtitle:'Damaged Record Surface',
+        image:'',
+        frame:'SIGNAL BUS / DEGRADED',
+        lineDelay:2300,
+        lines:[
+          '손상된 의식성 오염 기록을 복구했습니다.',
+          '영상 프레임과 신원 정보 일부는 완전하지 않습니다.'
+        ]
+      },
+      {
+        group:'cult',
+        code:'FRAME 01 / CULT TRACE',
+        title:'타락교',
+        subtitle:'Corrupted Cult',
+        image:'assets/resources/83d311da1ab7310a567c6023f6151e6c.webp',
+        frame:'CULT TRACE / RECOVERED',
+        lineDelay:2500,
+        lines:[
+          '타락교는 우시노다를 신으로 숭배하는 오염 신앙 계열이다.',
+          '이들은 저주의 힘을 신성한 축복으로 받아들이며, 인간의 육체와 정신을 변질시키는 힘을 축복이라 부른다.',
+          '특징: 우시노다를 신으로 숭배한다.',
+          '타락의 힘을 저주가 아닌 축복으로 받아들인다.',
+          '육체 변형과 불멸성을 신앙의 증거로 여긴다.',
+          '인육 섭취와 의식을 통해 변형을 억제하거나 강화한다.',
+          '현대 사회 내부에 비밀 조직 형태로 침투해 있다.'
+        ]
+      },
+      {
+        group:'cult',
+        code:'FRAME 02 / ID FAILED',
+        title:'신원불명의 신자',
+        subtitle:'Unidentified Believer',
+        image:'assets/resources/86ed1a163d79930b0874dbd5eb93adf2.webp',
+        frame:'ID MATCH / FAILED',
+        lineDelay:2500,
+        lines:[
+          '신원불명의 신자는 타락교 내부에서 가장 일반적으로 발견되는 신자 유형이다.',
+          '타락의 힘을 받아들인 뒤 신체 변형을 겪으며, 인간으로서의 원래 형태를 점차 잃어간다.',
+          '행동 양상: 단독 또는 소규모 집단으로 활동한다.',
+          '일반인처럼 위장할 수 있다.',
+          '신체 곳곳에 타락의 흔적이 남아 있다.',
+          '살해 후 신선한 살을 섭취하는 습성이 있다.',
+          '섭취 행위로 일시적으로 원래 모습을 회복한다.'
+        ]
+      },
+      {
+        group:'cult',
+        code:'FRAME 03 / MASKED FORM',
+        title:'가면을 쓴 존재',
+        subtitle:'Masked Entity',
+        image:'assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp',
+        frame:'FACE TRACK / BLOCKED',
+        lineDelay:2500,
+        lines:[
+          '가면을 쓴 존재는 타락교의 보호를 받는 특수 괴이 개체다.',
+          '본래 야생의 짐승이었으나 우시노다의 타락에 의해 변형된 것으로 추정된다.',
+          '특징: 야생 동물 기반의 변형 개체로 추정된다.',
+          '가면 또는 가면과 유사한 외골격을 지닌다.',
+          '타락교 내부에서 신성한 동물로 취급된다.',
+          '의식장 중심부에서 발견되는 경우가 많다.',
+          '일부 개체는 신자들에게 명령을 내리는 듯한 행동을 보인다.'
+        ]
+      },
+      {
+        group:'cult',
+        code:'FRAME 04 / DEGRADATION STAGE',
+        title:'타락의 과정 및 형태',
+        subtitle:'Corruption Process',
+        image:'assets/resources/646468c8e709d197314f9d40e286986b.webp',
+        frame:'FORM SHIFT / PARTIAL',
+        lineDelay:2500,
+        lines:[
+          '타락의 힘을 받아들인 생명체는 점진적인 신체 변형을 겪는다.',
+          '초기에는 피부 변색, 체온 변화, 감각 이상, 골격 통증이 보고된다.',
+          '관찰된 변형 증상: 골격 뒤틀림과 뼈의 비정상적 성장.',
+          '피부 파열과 근육 구조 변형.',
+          '감각 기관 손실과 자아 붕괴.',
+          '기억 손상과 폭력성 증가.',
+          '인간 형태의 일시적 회복.'
+        ]
+      },
+      {
+        group:'blood',
+        code:'FRAME 05 / BLOOD TRACE',
+        title:'혈교',
+        subtitle:'Blood Cult',
+        image:'assets/resources/8668a15590e2ae00b18d68db57a85c95.webp',
+        frame:'BLOOD TRACE / RECOVERED',
+        lineDelay:2500,
+        lines:[
+          '혈교는 피의 길을 숭배하는 의식 계열이다.',
+          '피를 생명 유지 물질이 아니라 문을 열고, 형태를 만들고, 힘을 전달하는 매개체로 취급한다.',
+          '특징: 피의 길을 숭배한다.',
+          '피를 의식의 핵심 매개체로 사용한다.',
+          '피를 이용해 무기, 경로, 덫, 저장소를 만든다.',
+          '대량 출혈, 희생 의식, 혈액 저장 의식과 관련되어 있다.'
+        ]
+      },
+      {
+        group:'blood',
+        code:'FRAME 06 / ROUTE CONTROL',
+        title:'혈액 이동 경로 조정',
+        subtitle:'Blood Route Control',
+        image:'assets/resources/89eeb37859d35d979b1d217e11f5148f.webp',
+        frame:'BLOOD ROUTE / CONTROL',
+        lineDelay:2500,
+        lines:[
+          '혈액을 이용한 능력은 혈액의 이동 경로를 조정할 수 있는 것으로 확인되었다.',
+          '출혈을 막거나, 외부 혈액을 응고시켜 무기와 방어 수단으로 활용한다.',
+          '출혈로 인한 사망 방지.',
+          '혈액 흐름 제어.',
+          '혈액 응고를 이용한 방어막 생성.',
+          '혈액을 칼날, 창, 사슬 형태로 변형.'
+        ]
+      },
+      {
+        group:'blood',
+        code:'FRAME 07 / BLOOD WEAPON',
+        title:'혈무의 제작 과정',
+        subtitle:'혈무 Creation',
+        image:'assets/resources/5a2db6abec6308c441b2b430a3da59c2.webp',
+        frame:'WEAPON FORM / PARTIAL',
+        lineDelay:2500,
+        lines:[
+          '혈무는 혈액을 근접 무기에 덮은 뒤 피의 의식을 통해 강화한 무기를 뜻한다.',
+          '의식이 완료된 혈무는 기존 무기보다 높은 공격력과 내구성을 지닌다.',
+          '근접 무기에 혈액을 덮어 제작한다.',
+          '피의 의식이 필요하다.',
+          '무기의 내구성과 절삭력이 증가한다.',
+          '타락체에게 높은 피해를 입힌다.'
+        ]
+      },
+      {
+        group:'blood',
+        code:'FRAME 08 / BLOOD LAKE',
+        title:'피의 호수를 거니는 자들',
+        subtitle:'Walking Through the Lake of Blood',
+        image:'assets/resources/1ab6ba9fba9b6b8b9493045c7bf4836d.webp',
+        frame:'LAKE PATH / WARNING',
+        lineDelay:2500,
+        lines:[
+          '혈액 웅덩이는 혈교 신자들에게 저장소이자 이동 경로로 사용된다.',
+          '현장 대응 인원은 혈액 웅덩이를 단순한 오염 물질로 판단해서는 안 된다.',
+          '혈액 웅덩이에 접근하지 말 것.',
+          '웅덩이 내부 은닉 가능성을 고려할 것.',
+          '혈액용기를 사용해 회수 및 격리할 것.',
+          '고열 장비로 확산을 차단할 것.'
+        ]
+      },
+      {
+        group:'blood',
+        code:'FRAME 09 / RESERVOIR',
+        title:'혈액 저장소',
+        subtitle:'Blood Reservoir',
+        image:'assets/resources/458cf4194ba894dce7e907244d2fd1f0.webp',
+        frame:'RESERVOIR / SEALED',
+        lineDelay:2500,
+        lines:[
+          '혈액 저장소는 혈액 사용자들의 보급 수단이며, 전투 중 손실된 혈액을 보충하는 용도로 사용된다.',
+          '일부 의식에서는 중심 물체로 쓰이기도 한다.',
+          '대량의 혈액이 저장되어 있다.',
+          '전투 중 회복 수단으로 사용된다.',
+          '오염 가능성이 높아 일반 접촉은 금지된다.',
+          '회수 시 밀폐형 혈액용기 사용이 권장된다.'
+        ]
+      },
+      {
+        group:'blood',
+        code:'FRAME 10 / SUPPRESSED ENTITY',
+        title:'제압된 타락체',
+        subtitle:'Suppressed Corrupted Entity',
+        image:'assets/resources/7af3eeca599cebbf7235e0a1368f2517.webp',
+        frame:'SUPPRESSION / CONFIRMED',
+        lineDelay:2500,
+        lines:[
+          '혈무와 화염을 함께 사용한 공격은 타락체의 재생 능력과 신체 변형을 억제하는 데 효과적이다.',
+          '혈무를 이용한 근접 절단.',
+          '화염을 이용한 조직 소각.',
+          '혈액 경로 봉쇄.',
+          '타락 조직의 재생 차단.',
+          '봉인구와 병행 사용.'
+        ]
+      },
+      {
+        group:'compare',
+        code:'FRAME 11 / CROSS CHECK',
+        title:'타락교와 혈교 비교',
+        subtitle:'비교 기록',
+        image:'',
+        frame:'CROSS-CHECK / TEXT ONLY',
+        lineDelay:2500,
+        lines:[
+          '타락교는 우시노다의 타락과 신체 변형을 숭배한다.',
+          '혈교는 피의 길과 혈액 의식을 중심으로 움직인다.',
+          '타락교의 핵심 위협은 괴이화와 불멸성이다.',
+          '혈교의 핵심 위협은 혈액 무기화와 이동 경로 조작이다.',
+          '두 계열 모두 우시노다교 통합 위협 안에서 관리된다.'
+        ]
+      },
+      {
+        group:'warning',
+        code:'FRAME 12 / FIELD WARNING',
+        title:'현장 대응 경고',
+        subtitle:'작전 지침',
+        image:'',
+        frame:'FIELD RESPONSE / WARNING',
+        lineDelay:2500,
+        lines:[
+          '타락교 신자는 인간의 외형을 유지하고 있어도 안전하지 않다.',
+          '혈교가 남긴 혈액 웅덩이는 단순한 혈흔이 아니다.',
+          '혈액 웅덩이는 이동 경로, 저장소, 덫, 원거리 공격 수단으로 사용될 수 있다.',
+          '단독 접근 금지.',
+          'N.H.C 또는 S.I.D 동행 필수.',
+          '혈액 웅덩이 접촉 금지.',
+          '의식장 발견 시 현장 봉쇄 우선.'
+        ]
+      },
+      {
+        group:'return',
+        code:'SEQUENCE END / RETURN',
+        title:'기록보관소 복귀',
+        subtitle:'Archive List Ready',
+        image:'',
+        frame:'ARCHIVE LIST / READY',
+        lineDelay:2300,
+        lines:[
+          '손상 영상 첨부 확인이 끝났습니다.',
+          '화면 선택 시 본문 열람으로 진입하지 않고 기록보관소 목록으로 복귀합니다.'
+        ]
+      }
+    ];
+
+    const immortalityPages = [
+      {
+            "group": "imm_original",
+            "code": "IMMORTALITY / ORIGINAL RECORD",
+            "title": "불멸을 향해",
+            "subtitle": "Blood Lake Incident File",
+            "image": "",
+            "frame": "ORIGINAL RECORD / OVERVIEW",
+            "lineDelay": 2300,
+            "lines": [
+                  "독일 본토 [검열] 지역에서 이상현상 감지됨",
+                  "XX 정찰 부대에 의해 최초 발견",
+                  "이 문서는 독일 본토 [검열] 지역에서 발생한 피의 호수 관련 이상현상과, 현장 촬영 및 통신 임무를 수행하던 유닛2의 작전 기록을 정리한 사건 파일이다",
+                  "현장 인근 주민들의 제보에 따르면 붉은 액체가 강을 뒤덮었으며, 피로 뒤덮이거나 살이 찢겨진 야생 동물들이 마을을 덮친 것으로 보고되었다",
+                  "해당 현상은 혈교 또는 혈액성 의식과 관련된 사건으로 추정되며, 이후 피의 호수 와 연결되는 다수의 이상현상이 확인되었다"
+            ]
+      },
+      {
+            "group": "imm_original",
+            "code": "IMMORTALITY / RECORD INFO",
+            "title": "기록 정보",
+            "subtitle": "문서 분류",
+            "image": "assets/resources/b1f6105c9de718ff230e00b702ada13b.webp",
+            "frame": "CASE INFO / BLOOD LAKE",
+            "lineDelay": 2300,
+            "lines": [
+                  "분류명: 불멸을 향해",
+                  "영문명: Blood Lake Incident File",
+                  "기록 형태: 작전 로그 / 현장 촬영 기록 / 통신 기록 / 이상현상 보고서",
+                  "관련 지역: 독일 본토 [검열] 지역",
+                  "관련 현상:  피의 호수 / 혈액성 잔류물 / 이상 안개 / 야생 동물 변질",
+                  "관련 피해자: 마렌 예거트 / 요나스 밀로 / 유닛4 / 유닛7",
+                  "보안 등급: 기밀",
+                  "위험도:  높음 ~ 극한",
+                  "사건 개요",
+                  "독일 본토 [검열] 지역에서 붉은 액체가 강을 뒤덮는 이상현상이 보고되었다",
+                  "현장 근처에 거주하던 주민들은 피로 뒤덮인 야생 동물, 살이 찢겨진 짐승, 안개에 가려진 언덕길, 나무 위에 매달린 미확인 물체 등을 목격했다고 진술하였다",
+                  "해당 지역은 초기에는 화이트존 으로 분류되었으나, 현장 기록과 통신 두절, 피의 호수 발견 이후 레드존 후보 지역으로 재분류되었다",
+                  "본 기록은 유닛2가 현장에 투입된 이후 전송한 사진, 통신, 위치 추적 자료, 심리 상태 기록을 기반으로 복구되었다"
+            ]
+      },
+      {
+            "group": "imm_original",
+            "code": "IMMORTALITY / UNIT 2",
+            "title": "작전 투입 기록",
+            "subtitle": "유닛2",
+            "layout": "peoplePair",
+            "image": "",
+            "frame": "UNIT 2 / PERSONNEL",
+            "lineDelay": 2300,
+            "people": [
+                  {
+                        "name": "마렌 예거트",
+                        "role": "현장 촬영 및 통신 담당",
+                        "image": "assets/resources/9b4094a85c1863367b1b86cc915ec814.webp"
+                  },
+                  {
+                        "name": "요나스 밀로",
+                        "role": "기술 지원 전문가",
+                        "image": "assets/resources/9eb253063ee6ca8cc712efd4f22b7498.webp"
+                  }
+            ],
+            "lines": []
+      },
+      {
+            "group": "imm_original",
+            "code": "IMMORTALITY / UNIT 2 EQUIPMENT",
+            "title": "지급 장비",
+            "subtitle": "대기 병력",
+            "image": "",
+            "frame": "UNIT 2 / EQUIPMENT AND STANDBY",
+            "lineDelay": 2300,
+            "lines": [
+                  "유닛2에게는 현장 정찰을 위한 3일치의 보급품과 손전등, 통신 장비, 특수 촬영 장비, I.P.D 장치, N.H.C 에서 사용하는 대화력 무기가 지급되었다.",
+                  "해당 장비는 이상현상 감지 지역에서의 생존, 위치 추적, 심리 상태 측정, 고위험 개체와의 교전 가능성을 고려하여 지급된 것으로 확인된다.",
+                  "유닛2의 구조 요청이 확인될 경우 즉시 대응할 수 있도록 중무장팀이 인근 대기 지점에 배치되었다.",
+                  "그러나 현장 통신 상태가 불안정해지면서 구조 요청의 정확한 수신 여부와 위치 확인에 문제가 발생하였다."
+            ]
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 16:10",
+            "title": "16:10",
+            "subtitle": "유닛2 현장 도착",
+            "image": "",
+            "frame": "FIELD LOG / 16:10",
+            "lineDelay": 1500,
+            "lines": [
+                  "유닛2가 현장에 도착",
+                  "유닛2에는 다음 장비가 지급되었다.",
+                  "3일치 보급품",
+                  "휴대용 손전등",
+                  "N.H.C 규격 대화력 무기",
+                  "개인 추적용 I.P.D 장치",
+                  "현장 촬영 장비",
+                  "혈액 오염 감지 키트",
+                  "단거리 통신 장치",
+                  "유닛2의 구조 요청이 확인될 경우 즉시 대응할 중무장 지원팀이 대기 상태에 들어갔다."
+            ],
+            "layout": "redLog",
+            "logTime": "16:10",
+            "logTitle": "유닛2 현장 도착",
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 16:27",
+            "title": "16:27",
+            "subtitle": "초기 통신 연결",
+            "image": "",
+            "frame": "FIELD LOG / 16:27",
+            "lineDelay": 1500,
+            "lines": [
+                  "〔예거트〕: 본부로 사진 전송 중, 확인 바람.",
+                  "〔본부〕: 전송 확인됨. 대기하라."
+            ],
+            "layout": "redLog",
+            "logTime": "16:27",
+            "logTitle": "초기 통신 연결",
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 16:31",
+            "title": "16:31",
+            "subtitle": "IMG001",
+            "image": "assets/resources/f59b02e8f859bfc95d683636bcf39500.webp",
+            "frame": "FIELD LOG / 16:31",
+            "lineDelay": 1650,
+            "lines": [
+                  "고화질 사진 전송 확인",
+                  "안개로 인해 언덕길의 시야 확보가 불가능한 상태.",
+                  "가시거리는 극히 제한적이며, 기온 하강 및 습도 상승이 동반됨.",
+                  "본부 분석",
+                  "해당 안개는 자연 발생 안개와 성분이 일부 다르며, 미세한 혈액성 입자 반응이 감지됨."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": true,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 16:46",
+            "title": "16:46",
+            "subtitle": "IMG002",
+            "image": "assets/resources/dec4cbe943147076943a62681048ad35.webp",
+            "frame": "FIELD LOG / 16:46",
+            "lineDelay": 1650,
+            "lines": [
+                  "다수의 나무 위에 미확인 물체 발견",
+                  "현장 주변 나무 위에 다수의 미확인 물체가 매달려 있는 것이 확인되었다.",
+                  "형태는 불명확하며, 시신 또는 찢긴 동물의 사체일 가능성이 제기되었다.",
+                  "〔본부〕: 해당 지점과 거리를 유지한 채 이동하라."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": true,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 17:02",
+            "title": "17:02",
+            "subtitle": "버려진 텐트 발견",
+            "image": "",
+            "frame": "FIELD LOG / 17:02",
+            "lineDelay": 1500,
+            "lines": [
+                  "〔예거트〕: 버려진 텐트가 보인다.",
+                  "〔밀로〕: 나라면 저기로 안 갈 거야.",
+                  "〔예거트〕: 아직 작전지의 절반도 오지 않았어. 겁쟁이처럼 굴지 마. 본부, 텐트 내부를 수색해도 될지 승인 여부 바람.",
+                  "〔본부〕: 특수 장치로 촬영한 사진 전송 바람. 확인 후 승인 여부를 알려주겠다."
+            ],
+            "layout": "redLog",
+            "logTime": "17:02",
+            "logTitle": "버려진 텐트 발견",
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 17:09",
+            "title": "17:09",
+            "subtitle": "IMG003",
+            "image": "assets/resources/11f2f935e0339690ace785966d7e436f.webp",
+            "frame": "FIELD LOG / 17:09",
+            "lineDelay": 1650,
+            "lines": [
+                  "텐트 외부 확인",
+                  "특수 장치로 촬영된 텐트 외부 사진 분석 결과, 명확한 이상현상은 발견되지 않음.",
+                  "〔본부〕: 텐트 내부 수색을 승인한다. 단, 5분 이상 체류하지 마라. 날이 어두워진다."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": true,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 17:16",
+            "title": "17:16",
+            "subtitle": "IMG004",
+            "image": "assets/resources/fa10a34b64ccc7605b0966af4c017d99.webp",
+            "frame": "FIELD LOG / 17:16",
+            "lineDelay": 1650,
+            "lines": [
+                  "텐트 내부 수색 결과",
+                  "텐트 내부에서는 민간인이 머물렀던 흔적이 발견되었다.",
+                  "확인된 물품은 다음과 같다.",
+                  "이어폰 2개",
+                  "침낭",
+                  "MP3 플레이어",
+                  "다량의 혈흔",
+                  "현장 상태를 바탕으로 최소 2명의 민간인이 해당 장소에 머물렀던 것으로 추정된다.",
+                  "〔예거트〕: 본부?",
+                  "〔본부〕: 계속 이동해라."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": true,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 17:41",
+            "title": "17:41",
+            "subtitle": "강변 접근",
+            "image": "",
+            "frame": "FIELD LOG / 17:41",
+            "lineDelay": 1500,
+            "lines": [
+                  "유닛2가 강변 지대에 접근하였다.",
+                  "현장 영상에서 강물의 색이 정상 범위를 벗어난 것으로 확인되었다.",
+                  "본부 분석",
+                  "강물은 단순한 적색 오염수가 아니며, 혈액과 유사한 점도 및 응고 반응을 보인다."
+            ],
+            "layout": "redLog",
+            "logTime": "17:41",
+            "logTitle": "강변 접근",
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 17:58",
+            "title": "17:58",
+            "subtitle": "IMG005",
+            "image": "assets/resources/d537338b8d854ef34d0e3638d436cb01.webp",
+            "frame": "FIELD LOG / 17:58",
+            "lineDelay": 1650,
+            "lines": [
+                  "거대한 개체 및 피의 호수 발견",
+                  "현장 깊숙한 지점에서 대규모 혈액성 액체 웅덩이, 이른바 피의 호수 가 발견되었다.",
+                  "동시에 그 주변에서 비정상적으로 거대한 개체의 실루엣이 포착되었다.",
+                  "피의 호수 는 정적인 액체가 아니라, 마치 내부에서 미세한 파동과 움직임이 감지되는 형태로 보고되었다.",
+                  "〔예거트〕: 무서워.",
+                  "〔본부〕: 이유는?",
+                  "〔예거트〕: 나도 잘 모르겠다, 본부."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": true,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:06",
+            "title": "18:06",
+            "subtitle": "심리 상태 이상 감지",
+            "image": "",
+            "frame": "FIELD LOG / 18:06",
+            "lineDelay": 1500,
+            "lines": [
+                  "예거트에게 부착된 I.P.D 장치에서 심박수 증가, 호흡 불안정, 손 떨림, 방향 감각 저하가 감지되었다.",
+                  "본부 기록",
+                  "외상 없음. 적성 개체와의 직접 접촉 없음.",
+                  "정신 간섭형 이상 반응 가능성 있음."
+            ],
+            "layout": "redLog",
+            "logTime": "18:06",
+            "logTitle": "심리 상태 이상 감지",
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:14",
+            "title": "18:14",
+            "subtitle": "유닛4 통신 두절",
+            "image": "assets/resources/b5f9b2c2ddea9084ff8f6e8dfdc6549b.webp",
+            "frame": "FIELD LOG / 18:14",
+            "lineDelay": 1650,
+            "lines": [
+                  "유닛4와의 통신이 완전히 두절되었다.",
+                  "동시에 전반적인 통신 상태 불량이 보고되었다.",
+                  "유닛4에게 부착된 I.P.D 장치가 강제 활성화되었으며, 위치 추적 시스템에 연결되었다."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": false,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:22",
+            "title": "18:22",
+            "subtitle": "유닛7 이동 개시",
+            "image": "",
+            "frame": "FIELD LOG / 18:22",
+            "lineDelay": 1500,
+            "lines": [
+                  "〔본부〕: 유닛7이 현재 유닛4에게로 향하는 중이다. 계속 강을 따라서 이동해라. 걱정마라.",
+                  "〔예거트〕: 무서워."
+            ],
+            "layout": "redLog",
+            "logTime": "18:22",
+            "logTitle": "유닛7 이동 개시",
+            "latePulse": false,
+            "photoSfx": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:29",
+            "title": "18:29",
+            "subtitle": "예거트 심리 안정 수치 불안정",
+            "image": "assets/resources/ea33a51515476e2946267ea56b453760.webp",
+            "frame": "FIELD LOG / 18:29",
+            "lineDelay": 1650,
+            "lines": [
+                  "예거트에게 부착된 I.P.D 장치에서 심리 안정 상태가 불안정함을 확인하였다.",
+                  "심리 치료팀 대기.",
+                  "그러나 현장 상황상 즉각 회수는 불가능.",
+                  "본부 기록",
+                  "움직임이 좋지 않다.",
+                  "보행 속도가 일정하지 않고, 같은 지점에서 반복적으로 멈추는 현상이 확인됨."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": false,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:37",
+            "title": "18:37",
+            "subtitle": "밀로 I.P.D 장치 활성화",
+            "image": "assets/resources/c5b5c946c876fbf1bd5fc2f0f1616478.webp",
+            "frame": "FIELD LOG / 18:37",
+            "lineDelay": 1650,
+            "lines": [
+                  "밀로에게 부착된 I.P.D 장치 활성화 확인.",
+                  "위치 추적 시스템에 연결됨.",
+                  "밀로는 예거트의 후방 약 300m 지점에서 이동 중인 것으로 표시되었다."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": false,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:42",
+            "title": "18:42",
+            "subtitle": "이상 이동 패턴 감지",
+            "image": "assets/resources/8da1d79fd90b59063f33aa00f1eb742a.webp",
+            "frame": "FIELD LOG / 18:42",
+            "lineDelay": 1650,
+            "lines": [
+                  ".....뭔가 이상하다.",
+                  "밀로의 움직임이 비정상적이다.",
+                  "밀로의 이동 경로는 일반적인 인간의 보행 패턴과 일치하지 않는다.",
+                  "짧은 시간 동안 지나치게 빠르게 접근하거나, 특정 지점에서 비정상적으로 정지하는 양상이 반복된다.",
+                  "〔본부〕: 예거트, 즉시 총기를 꺼내라. 위험 상황에 대비하라."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": false,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:44",
+            "title": "18:44",
+            "subtitle": "비인가 통신 기록",
+            "image": "assets/resources/4af91e95281c83ead7c52b06dfbdca38.webp",
+            "frame": "FIELD LOG / 18:44",
+            "lineDelay": 1650,
+            "lines": [
+                  "우리가 전부 미안해, 예거트",
+                  "이 문장은 본부 기록에 남아 있으나, 누가 어떤 의도로 해당 표현을 사용했는지는 불명이다.",
+                  "일부 분석관은 이를 단순 오기록이 아닌, 통신망에 개입한 제3의 존재 또는 혈교 의식으로 인해 왜곡된 송신으로 추정한다."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": false,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:51",
+            "title": "18:51",
+            "subtitle": "마지막 정상 통신",
+            "image": "",
+            "frame": "FIELD LOG / 18:51",
+            "lineDelay": 1500,
+            "lines": [
+                  "〔본부〕: 유닛7 이동 중임을 확인. 보고하라.",
+                  "〔#%$〕: .......",
+                  "이후 통신 품질이 급격히 저하되었다."
+            ],
+            "layout": "redLog",
+            "logTime": "18:51",
+            "logTitle": "마지막 정상 통신",
+            "latePulse": false,
+            "photoSfx": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 18:56",
+            "title": "18:56",
+            "subtitle": "IMG006",
+            "image": "assets/resources/05cdc0276694d090f3829c4dc6e5a30b.webp",
+            "frame": "FIELD LOG / 18:56",
+            "lineDelay": 1650,
+            "lines": [
+                  "마지막 이미지 전송",
+                  "호수가 당신을 기다린다... 수천 개의 손이 당신을....",
+                  "마지막으로 전송된 이미지에는 피의 호수 표면으로부터 다수의 손과 유사한 형상이 솟아오르는 장면이 담겨 있었다.",
+                  "형상은 인간의 손과 유사했으나, 관절 구조와 길이가 비정상적으로 뒤틀려 있었다.",
+                  "이미지 표면에는 분석이 불가능한 문장 일부가 노이즈처럼 남아 있었다."
+            ],
+            "layout": "photoLarge",
+            "photoSfx": false,
+            "latePulse": false
+      },
+      {
+            "group": "imm_log",
+            "code": "TIME LOG / 19:00",
+            "title": "기록보관소로 복귀",
+            "subtitle": "19:00 / 임무 상태: 완료",
+            "image": "",
+            "frame": "FIELD LOG / 19:00",
+            "lineDelay": 1500,
+            "lines": [
+                  "시스템상 임무는 완료로 처리되었다.",
+                  "기록 열람을 종료합니다.",
+                  "입력 시 기록보관소 목록으로 복귀합니다."
+            ],
+            "layout": "redLog",
+            "logTime": "19:00",
+            "logTitle": "기록보관소로 복귀",
+            "latePulse": false,
+            "photoSfx": false
+      }
+];
+
+    function getActivePages(){
+      return state.pages || pages;
+    }
+
+    function getSequenceConfig(){
+      if(state.activeRecord===IMMORTALITY_RECORD){
+        return {
+          key:'immortality',
+          sourceLabel:'U.A.C / ORIGINAL RECORD',
+          bodyClass:'pc5152q-immortality-sequence',
+          introVideo:'assets/video/pc5152r_immortality_recordopen_static_13_27.mp4',
+          transitionVideo:'assets/video/pc5152q_immortality_fhc_transition_204_209.mp4',
+          endingVideo:'',
+          bgm:'assets/audio/pc5152v_immortality_scp087_vcr_ambient_mix.mp3',
+          bgmVolume:.30,
+          introVolume:.09,
+          transitionVolume:.72,
+          introFallback:14650,
+          transitionFallback:5650,
+          mountTitle:'RECORD MOUNT',
+          mountLines:[
+            'F.H.C SOURCE ....... DETECTED',
+            'VIDEO MARK ......... CONFIRMED',
+            'TEXT BLOCK ......... PARTIAL',
+            'LOCAL ACCESS ....... ACCEPTED'
+          ],
+          mountHint:'READ PERMISSION: ORIGINAL RECORD / IMMORTALITY ATTACHED'
+        };
+      }
+      return {
+        key:'cult',
+        sourceLabel:'F.H.C / LOCAL COPY',
+        bodyClass:'pc5152h-cult-source-sequence',
+        introVideo:'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4',
+        transitionVideo:'assets/video/pc5152m_vhs_transition_18_21_sound.mp4',
+        endingVideo:'',
+        bgm:'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
+        bgmVolume:.54,
+        introVolume:.68,
+        transitionVolume:.78,
+        introFallback:10450,
+        transitionFallback:3750,
+        mountTitle:'RECORD MOUNT',
+        mountLines:[
+          'VIDEO FRAME ....... DAMAGED',
+          'TEXT BLOCK ........ PARTIAL',
+          'LOCAL ACCESS ...... ACCEPTED'
+        ],
+        mountHint:'READ PERMISSION: LOCAL / SEQUENCE ATTACHED'
+      };
+    }
+
+
+    function prefix(){
+      const p=location.pathname;
+      if(p.includes('/docs/'))return '../../';
+      if(p.includes('/archive/'))return '../';
+      return '';
+    }
+
+    function installClearAudioBus(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      const pre=prefix();
+      try{
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient.loop = true;
+
+        bus.audio.menu = new Audio(pre+'assets/audio/pc5152h_terminal_contact_clear.wav');
+        bus.audio.drawer = new Audio(pre+'assets/audio/pc5152h_terminal_contact_clear.wav');
+        bus.audio.command = new Audio(pre+'assets/audio/pc5152h_terminal_contact_clear.wav');
+        bus.audio.marker = new Audio(pre+'assets/audio/pc5152h_terminal_contact_clear.wav');
+        bus.audio.page = new Audio(pre+'assets/audio/pc5152h_terminal_contact_clear.wav');
+
+        bus.audio.open = new Audio(pre+'assets/audio/pc5152h_record_mount_clear.wav');
+        bus.audio.load = new Audio(pre+'assets/audio/pc5152h_record_mount_clear.wav');
+        bus.audio.video = new Audio(pre+'assets/audio/pc5152h_record_mount_clear.wav');
+        bus.audio.radio = new Audio(pre+'assets/audio/pc5152h_record_mount_clear.wav');
+
+        bus.audio.boot = new Audio(pre+'assets/audio/pc5152f_boot_access_oldpc.wav');
+        bus.audio.alert = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+        bus.audio.restricted = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+        bus.audio.denied = new Audio(pre+'assets/audio/pc5152f_low_denied_oldpc.wav');
+      }catch(e){}
+      const v={
+        ambient:.088,
+        menu:.078, drawer:.070, command:.070, marker:.052, page:.062,
+        open:.078, load:.080, video:.070, radio:.064,
+        boot:.060, alert:.058, restricted:.064, denied:.060
+      };
+      Object.keys(v).forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=v[k]; }catch(e){}});
+    }
+
+    function ensureSpecialAudio(){
+      const pre=prefix();
+      const cfg=getSequenceConfig();
+      if(cfg.bgm){
+        const bgmPath=pre+cfg.bgm;
+        if(!state.bgm || state.bgmSrc!==bgmPath){
+          try{ if(state.bgm){ state.bgm.pause(); state.bgm.currentTime=0; } }catch(e){}
+          state.bgm = new Audio(bgmPath);
+          state.bgm.loop = true;
+          state.bgmSrc = bgmPath;
+        }
+        state.bgm.volume = Number(cfg.bgmVolume||.78);
+      }else{
+        try{ if(state.bgm){ state.bgm.pause(); state.bgm.currentTime=0; } }catch(e){}
+        state.bgm = null;
+        state.bgmSrc = '';
+      }
+      if(!state.internalStep){
+        state.internalStep = new Audio(pre+'assets/audio/pc5152p_internal_projector_vhs_step.wav');
+        state.internalStep.volume = .58;
+      }
+      if(!state.immortalityStep){
+        state.immortalityStep = new Audio(pre+'assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3');
+        state.immortalityStep.volume = .0;
+      }
+      if(!state.photoClick){
+        state.photoClick = new Audio(pre+'assets/audio/pc5152v_field_photo_click_42s.mp3');
+        state.photoClick.volume = .58;
+      }
+      if(!state.dialogCue){
+        state.dialogCue = new Audio(pre+'assets/audio/pc5152v_comm_line_cue_73_74.mp3');
+        state.dialogCue.volume = .42;
+      }
+      if(!state.latePulse){
+        state.latePulse = new Audio(pre+'assets/audio/pc5152x_late_log_beep_195s.mp3');
+        state.latePulse.volume = .0;
+      }
+      if(!state.frame){
+        state.frame = new Audio(pre+'assets/audio/pc5152h_frame_pop.wav');
+        state.frame.volume = .0;
+      }
+    }
+
+    function playLocal(a){
+      if(!a) return;
+      try{ a.currentTime=0; a.play().catch(()=>{}); }catch(e){}
+    }
+
+    function stopImmortalityLatePulse(){
+      if(state.latePulseTimer){
+        clearInterval(state.latePulseTimer);
+        state.latePulseTimer=null;
+      }
+      state.latePulseActive=false;
+      try{ if(state.latePulse){ state.latePulse.pause(); state.latePulse.currentTime=0; } }catch(e){}
+    }
+
+    function updateImmortalityLatePulse(page){
+      if(state.activeRecord!==IMMORTALITY_RECORD || !page || !page.latePulse){
+        stopImmortalityLatePulse();
+        return;
+      }
+      if(state.latePulseActive) return;
+      state.latePulseActive=true;
+      setTimeout(()=>{ if(state.latePulseActive) playLocal(state.latePulse); }, 250);
+      state.latePulseTimer=setInterval(()=>{ playLocal(state.latePulse); }, 2000);
+    }
+
+    function escSeq(v){
+      return String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function highlightImmortalityNames(text){
+      return String(text)
+        .replace(/(마렌 예거트|요나스 밀로|예거트|밀로)/g,'<span class="pc5152v-name-blue">$1</span>')
+        .replace(/(본부)/g,'<span class="pc5152v-name-mint">$1</span>');
+    }
+
+    function isDialogueLike(line){
+      const s=String(line||'');
+      return /^〔[^〕]+〕\s*:/.test(s) || s.includes('우리가 전부 미안해');
+    }
+
+    function formatImmortalityLine(line,i,page){
+      const raw=String(line||'');
+      const safe=escSeq(raw);
+      const dialog=isDialogueLike(raw);
+      const m=raw.match(/^〔([^〕]+)〕\s*:\s*(.*)$/);
+      let cls='pc5152k-seq-line pc5152v-red-line';
+      let attrs=' data-line="'+i+'"';
+      if(dialog) attrs+=' data-dialog="1"';
+      if(m){
+        const speaker=m[1];
+        const body=highlightImmortalityNames(escSeq(m[2]||''));
+        let scls='pc5152v-speaker-red';
+        if(/예거트|밀로/.test(speaker)) scls='pc5152v-speaker-blue';
+        else if(/본부/.test(speaker)) scls='pc5152v-speaker-mint';
+        else if(/#|%|\$|\?/.test(speaker)) scls='pc5152v-speaker-corrupt';
+        return '<span class="'+cls+' pc5152v-dialog-line"'+attrs+'><b class="'+scls+'">〔'+escSeq(speaker)+'〕:</b><em>'+body+'</em></span>';
+      }
+      if(dialog){
+        return '<span class="'+cls+' pc5152v-dialog-line pc5152v-unauthorized-line"'+attrs+'>'+highlightImmortalityNames(safe)+'</span>';
+      }
+      return '<span class="'+cls+'"'+attrs+'>'+highlightImmortalityNames(safe)+'</span>';
+    }
+
+    function buildSequenceLines(page){
+      return (page.lines||[]).map((line,i)=>{
+        if(state.activeRecord===IMMORTALITY_RECORD) return formatImmortalityLine(line,i,page);
+        return '<span class="pc5152k-seq-line" data-line="'+i+'">'+escSeq(line)+'</span>';
+      }).join('');
+    }
+
+    function buildRedLogBlock(page,lines){
+      const header='<span class="pc5152k-seq-line pc5152v-log-header" data-line="0"><b>LOG '+escSeq(page.logTime||page.title||'--:--')+'</b><em>'+escSeq(page.logTitle||page.subtitle||'FIELD LOG')+'</em></span>';
+      const shifted=(page.lines||[]).map((line,i)=>formatImmortalityLine(line,i+1,page)).join('');
+      return '<div class="pc5152v-red-log">'+header+shifted+'</div>';
+    }
+
+    function buildPhotoLargeBlock(page,lines){
+      const cap=escSeq(page.subtitle||page.frame||'FIELD IMAGE');
+      const img='<figure class="pc5152v-large-photo pc5152k-seq-line" data-line="0" data-photo="1"><img src="'+prefix()+page.image+'" alt="'+cap+'"/><figcaption>'+cap+'</figcaption></figure>';
+      const shifted=(page.lines||[]).map((line,i)=>formatImmortalityLine(line,i+1,page)).join('');
+      return '<div class="pc5152v-photo-page">'+img+'<div class="pc5152v-photo-lines">'+shifted+'</div></div>';
+    }
+
+
+    function stopSequenceAudio(){
+      stopImmortalityLatePulse();
+      try{
+        if(state.bgm){
+          state.bgm.pause();
+          state.bgm.currentTime=0;
+        }
+        if(state.photoClick){ state.photoClick.pause(); state.photoClick.currentTime=0; }
+        if(state.dialogCue){ state.dialogCue.pause(); state.dialogCue.currentTime=0; }
+      }catch(e){}
+    }
+
+    function ensureOverlay(){
+      if(state.overlay) return state.overlay;
+      const pre=prefix();
+      const el=document.createElement('div');
+      el.className='pc5152h-cult-sequence';
+      el.setAttribute('aria-hidden','true');
+      el.innerHTML=[
+        '<video class="pc5152h-seq-video" playsinline preload="auto" src="'+pre+'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4"></video>',
+        '<video class="pc5152m-transition-video" playsinline preload="auto" src="'+pre+'assets/video/pc5152m_vhs_transition_18_21_sound.mp4"></video>',
+        '<video class="pc5152q-ending-video" playsinline preload="auto"></video>',
+        '<div class="pc5152h-seq-black"></div>',
+        '<div class="pc5152h-seq-scan"></div>',
+        '<button class="pc5152x-seq-return" type="button">돌아가기</button>',
+        '<div class="pc5152h-seq-panel">',
+          '<div class="pc5152h-seq-meta"><span data-seq-code></span><b data-seq-source>F.H.C / LOCAL COPY</b></div>',
+          '<div class="pc5152h-seq-body">',
+            '<div class="pc5152h-seq-text">',
+              '<h2 data-seq-title></h2>',
+              '<div class="pc5152k-seq-linebox" data-seq-body></div>',
+            '</div>',
+            '<figure class="pc5152h-seq-frame" data-seq-figure>',
+              '<img data-seq-image alt="손상 기록 프레임"/>',
+              '<figcaption data-seq-frame></figcaption>',
+            '</figure>',
+          '</div>',
+          '<div class="pc5152h-seq-footer">',
+            '<span data-seq-status>SIGNAL READING...</span>',
+            '<small data-seq-counter></small>',
+          '</div>',
+        '</div>'
+      ].join('');
+      document.body.appendChild(el);
+      state.overlay=el;
+      return el;
+    }
+
+    function showMountLoader(done){
+      const cfg=getSequenceConfig();
+      const el=document.getElementById('recordLoading') || document.createElement('div');
+      if(!el.id){
+        el.id='recordLoading';
+        el.className='record-loading pc5152h-record-mount-loader';
+        document.body.appendChild(el);
+      }
+      el.classList.add('pc5152h-record-mount-loader');
+      const lines=(cfg.mountLines||[]).map(line=>'<div class="logline">'+line+'</div>').join('');
+      el.innerHTML='<div class="box"><div class="title">'+(cfg.mountTitle||'RECORD MOUNT')+'</div>'+lines+'<div class="bars"><i></i></div><div class="loader-hint">'+(cfg.mountHint||'READ PERMISSION: LOCAL / SEQUENCE ATTACHED')+'</div></div>';
+      el.classList.remove('done');
+      void el.offsetWidth;
+      el.classList.add('show');
+      try{ if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('load',220); }catch(e){}
+      setTimeout(()=>{
+        el.classList.add('done');
+        el.classList.remove('show');
+        if(typeof done==='function') done();
+      }, 850);
+    }
+
+    function clearSequenceTimers(){
+      clearTimeout(state.timer);
+      clearTimeout(state.lineTimer);
+      if(state.revealTimers && state.revealTimers.length){
+        state.revealTimers.forEach(t=>clearTimeout(t));
+      }
+      state.revealTimers=[];
+      state.lineEls=[];
+      state.nextLineIndex=0;
+    }
+
+
+    function isInternalProjectorTransition(current,next){
+      return !!(current && next && current.group===next.group && (current.group==='cult' || current.group==='blood'));
+    }
+
+    function isVideoMajorTransition(current,next){
+      if(state.activeRecord===IMMORTALITY_RECORD){
+        return false;
+      }
+      return !!(current && next && (
+        (current.group==='system' && next.group==='cult') ||
+        (current.group==='cult' && next.group==='blood') ||
+        (current.group==='blood' && next.group==='compare') ||
+        (current.group==='compare' && next.group==='warning')
+      ));
+    }
+
+    function beginBlackTransition(nextIndex){
+      const el=ensureOverlay();
+      const activePages=getActivePages();
+      const current=activePages[state.pageIndex] || {};
+      const next=activePages[nextIndex] || {};
+      const videoMajor=isVideoMajorTransition(current,next);
+      const cfg=getSequenceConfig();
+      const hold=videoMajor ? Number(cfg.transitionFallback||3100) : (state.activeRecord===IMMORTALITY_RECORD ? 4050 : 2000);
+      state.canAdvance=false;
+      state.transitioning=true;
+      clearSequenceTimers();
+      el.classList.remove('input-ready','frame-ready','page-reveal');
+      el.classList.add('black-transition');
+      el.classList.toggle('major-transition', !!videoMajor);
+      el.classList.toggle('video-transition', !!videoMajor);
+      el.classList.toggle('normal-transition', !videoMajor);
+      const immortalityBlack = state.activeRecord===IMMORTALITY_RECORD && !videoMajor;
+      el.querySelector('[data-seq-code]').textContent=videoMajor?'VHS INSERT / RECORD FACE SWITCH':(immortalityBlack?'F.H.C BLACK NOISE / PAGE STEP':'TRACKING CUT / PAGE STEP');
+      el.querySelector('[data-seq-title]').textContent='';
+      el.querySelector('[data-seq-body]').innerHTML='';
+      el.querySelector('[data-seq-frame]').textContent=videoMajor?'VIDEO INSERT 18-21 / SOUND ON':(immortalityBlack?'BLACK SIGNAL / BEEP 51-55':'VHS BLACK / HOLD');
+      el.querySelector('[data-seq-counter]').textContent='';
+      const source=el.querySelector('[data-seq-source]');
+      if(source && immortalityBlack) source.textContent=cfg.sourceLabel||'F.H.C / RECOVERED SOURCE';
+      const fig=el.querySelector('[data-seq-figure]');
+      if(fig) fig.hidden=true;
+      const status=el.querySelector('[data-seq-status]');
+      status.textContent=videoMajor?'VHS INSERT PLAYBACK':(immortalityBlack?'BLACK NOISE / AUDIO PULSE':'NOISE HOLD / PAGE RECOVER');
+
+      if(videoMajor){
+        const tv=el.querySelector('.pc5152m-transition-video');
+        let moved=false;
+        const finish=()=>{
+          if(moved) return;
+          moved=true;
+          clearTimeout(state.timer);
+          try{ tv.pause(); tv.currentTime=0; }catch(e){}
+          try{ if(state.bgm && !state.bgm.paused) state.bgm.volume=Number(cfg.bgmVolume||.78); }catch(e){}
+          state.transitioning=false;
+          el.classList.remove('black-transition','major-transition','normal-transition','video-transition');
+          state.pageIndex=nextIndex;
+          renderPage();
+        };
+        try{
+          if(state.bgm && !state.bgm.paused) state.bgm.volume=.30;
+          tv.loop=false;
+          tv.muted=false;
+          tv.volume=Number(cfg.transitionVolume||.78);
+          if(tv.getAttribute('src')!==prefix()+cfg.transitionVideo){ tv.src=prefix()+cfg.transitionVideo; }
+          tv.currentTime=0;
+          tv.onended=finish;
+          const playPromise=tv.play();
+          if(playPromise && playPromise.catch) playPromise.catch(()=>setTimeout(finish, hold));
+        }catch(e){
+          setTimeout(finish, hold);
+        }
+        state.timer=setTimeout(finish, hold+650);
+        return;
+      }
+
+      // Immortality pages use only a noisy black hold plus the 51s-55s beep cue.
+      // Cult/blood internal subpages keep the VHS-treated slide projector cue.
+      if(state.activeRecord===IMMORTALITY_RECORD){
+        try{ if(state.bgm && !state.bgm.paused) state.bgm.volume=.24; }catch(e){}
+        playLocal(state.immortalityStep);
+      }else if(isInternalProjectorTransition(current,next)){
+        playLocal(state.internalStep);
+      }
+      state.timer=setTimeout(()=>{
+        try{ if(state.activeRecord===IMMORTALITY_RECORD && state.bgm && !state.bgm.paused) state.bgm.volume=Number(cfg.bgmVolume||.62); }catch(e){}
+        state.transitioning=false;
+        el.classList.remove('black-transition','major-transition','normal-transition','video-transition');
+        state.pageIndex=nextIndex;
+        renderPage();
+      }, hold);
+    }
+
+    function setSequenceInputAvailable(){
+      const el=ensureOverlay();
+      const status=el.querySelector('[data-seq-status]');
+      state.canAdvance=true;
+      el.classList.add('input-ready');
+      if(status) status.innerHTML='INPUT AVAILABLE <em>화면 선택 시 다음 기록면으로 이동</em>';
+    }
+
+    function scheduleNextSequenceLine(delay){
+      clearTimeout(state.lineTimer);
+      state.lineTimer=setTimeout(()=>{ revealNextSequenceLine(false); }, Number(delay||2500));
+    }
+
+    function revealNextSequenceLine(manual){
+      if(state.transitioning) return false;
+      const el=ensureOverlay();
+      if(el.classList.contains('intro-mode') || document.body.classList.contains('pc5152i-sequence-intro-playing')) return false;
+      const lines=state.lineEls || [];
+      if(!lines.length){
+        setSequenceInputAvailable();
+        return false;
+      }
+      if(state.nextLineIndex >= lines.length){
+        setSequenceInputAvailable();
+        return false;
+      }
+      const lineEl=lines[state.nextLineIndex];
+      if(lineEl){
+        lineEl.classList.add('visible');
+        if(state.activeRecord===IMMORTALITY_RECORD && lineEl.dataset && lineEl.dataset.dialog==='1'){
+          playLocal(state.dialogCue);
+        }
+      }
+      state.nextLineIndex += 1;
+      if(state.nextLineIndex >= lines.length){
+        clearTimeout(state.lineTimer);
+        setSequenceInputAvailable();
+      }else{
+        const nextDelay=(state.activeRecord===IMMORTALITY_RECORD && lineEl && lineEl.dataset && lineEl.dataset.dialog==='1') ? 3600 : (state.currentLineDelay || 2500);
+        scheduleNextSequenceLine(nextDelay);
+      }
+      return true;
+    }
+
+    function renderPage(){
+      const el=ensureOverlay();
+      const activePages=getActivePages();
+      const cfg=getSequenceConfig();
+      const page=activePages[state.pageIndex] || activePages[0];
+      state.canAdvance=false;
+      state.transitioning=false;
+      clearSequenceTimers();
+      el.classList.remove('input-ready','frame-ready','page-reveal','black-transition','major-transition','normal-transition');
+      void el.offsetWidth;
+      el.classList.add('page-reveal');
+      el.classList.toggle('pc5152u-people-page', page.layout==='peoplePair');
+      el.classList.toggle('pc5152v-photo-large-page', page.layout==='photoLarge');
+      el.classList.toggle('pc5152v-red-log-page', page.layout==='redLog');
+      el.querySelector('[data-seq-code]').textContent=page.code;
+      const source=el.querySelector('[data-seq-source]');
+      if(source) source.textContent=cfg.sourceLabel||'F.H.C / LOCAL COPY';
+      el.querySelector('[data-seq-title]').textContent=page.layout==='redLog' ? '' : page.title;
+      const bodyEl=el.querySelector('[data-seq-body]');
+      const lines=buildSequenceLines(page);
+      if(page.layout==='peoplePair' && Array.isArray(page.people)){
+        const people=page.people.map((person,i)=>'<figure class="pc5152u-person-card pc5152k-seq-line" data-line="'+i+'"><img src="'+prefix()+person.image+'" alt="'+escSeq(person.name)+'"/><figcaption class="pc5152w-person-caption"><b class="pc5152v-name-blue">'+escSeq(person.name)+'</b><span>'+escSeq(person.role)+'</span></figcaption></figure>').join('');
+        bodyEl.innerHTML='<h3 class="pc5152k-seq-subtitle">'+escSeq(page.subtitle||'')+'</h3><div class="pc5152u-people-pair">'+people+'</div>';
+      }else if(page.layout==='photoLarge' && page.image){
+        bodyEl.innerHTML=buildPhotoLargeBlock(page,lines);
+      }else if(page.layout==='redLog'){
+        bodyEl.innerHTML=buildRedLogBlock(page,lines);
+      }else{
+        bodyEl.innerHTML='<h3 class="pc5152k-seq-subtitle">'+escSeq(page.subtitle||'')+'</h3><div class="pc5152k-seq-lines pc5152v-default-red-lines">'+lines+'</div>';
+      }
+      el.querySelector('[data-seq-frame]').textContent=page.frame;
+      el.querySelector('[data-seq-counter]').textContent=String(state.pageIndex+1).padStart(2,'0')+' / '+String(activePages.length).padStart(2,'0');
+      const img=el.querySelector('[data-seq-image]');
+      const fig=el.querySelector('[data-seq-figure]');
+      if(page.layout==='peoplePair' || page.layout==='photoLarge'){
+        img.removeAttribute('src');
+        fig.hidden=true;
+        state.revealTimers.push(setTimeout(()=>{ 
+          el.classList.add('frame-ready'); 
+          if(state.activeRecord===IMMORTALITY_RECORD && page.photoSfx) playLocal(state.photoClick);
+        }, 650));
+      }else if(page.image){
+        img.src=prefix()+page.image;
+        fig.hidden=false;
+        state.revealTimers.push(setTimeout(()=>{ 
+          el.classList.add('frame-ready'); 
+          if(state.activeRecord===IMMORTALITY_RECORD && page.photoSfx) playLocal(state.photoClick);
+        }, 900));
+      }else{
+        img.removeAttribute('src');
+        fig.hidden=true;
+      }
+      const status=el.querySelector('[data-seq-status]');
+      status.textContent='SIGNAL READING...';
+      state.lineEls=[...bodyEl.querySelectorAll('.pc5152k-seq-line')];
+      state.nextLineIndex=0;
+      state.currentLineDelay=Number(page.lineDelay||2500);
+      updateImmortalityLatePulse(page);
+      if(state.lineEls.length){
+        scheduleNextSequenceLine(page.layout==='photoLarge' ? 420 : 650);
+      }else{
+        state.timer=setTimeout(()=>setSequenceInputAvailable(), 900);
+      }
+    }
+
+    function startSequence(recordId){
+      if(!SEQUENCE_RECORDS.has(recordId)) return false;
+      if(state.overlay && state.overlay.classList.contains('show')) return true;
+      state.activeRecord=recordId;
+      state.pages=(recordId===IMMORTALITY_RECORD)?immortalityPages:pages;
+      state.pageIndex=0;
+      state.finishing=false;
+      state.endingPlayed=false;
+      state.endingPlaying=false;
+      state.canAdvance=false;
+      ensureSpecialAudio();
+      const cfg=getSequenceConfig();
+      showMountLoader(()=>{
+        const el=ensureOverlay();
+        const video=el.querySelector('.pc5152h-seq-video');
+        const tv=el.querySelector('.pc5152m-transition-video');
+        const endingVideo=el.querySelector('.pc5152q-ending-video');
+        document.body.classList.remove('pc5152q-immortality-sequence','pc5152h-cult-source-sequence');
+        document.body.classList.add('pc5152h-sequence-open','pc5152i-sequence-intro-playing',cfg.bodyClass||'pc5152h-cult-source-sequence');
+        el.classList.remove('pc5152q-immortality-mode','pc5152h-cult-mode','ending-mode');
+        el.classList.add(cfg.key==='immortality'?'pc5152q-immortality-mode':'pc5152h-cult-mode');
+        if(video && video.getAttribute('src')!==prefix()+cfg.introVideo){ video.src=prefix()+cfg.introVideo; }
+        if(tv && tv.getAttribute('src')!==prefix()+cfg.transitionVideo){ tv.src=prefix()+cfg.transitionVideo; }
+        if(endingVideo && cfg.endingVideo && endingVideo.getAttribute('src')!==prefix()+cfg.endingVideo){ endingVideo.src=prefix()+cfg.endingVideo; }
+        if(recordId==='Cults_871104' && cfg.bgm && state.bgm){
+          try{
+            state.bgm.currentTime=0;
+            state.bgm.volume=Number(cfg.bgmVolume||.54);
+            state.bgm.play().catch(()=>{});
+          }catch(e){}
+        }
+        el.setAttribute('aria-hidden','false');
+        el.classList.add('show','intro-mode');
+        el.classList.remove('pages-mode','input-ready','frame-ready','page-reveal');
+        el.querySelector('[data-seq-code]').textContent='DAMAGED SIGNAL / PLAYBACK';
+        el.querySelector('[data-seq-title]').textContent='';
+        el.querySelector('[data-seq-body]').textContent='';
+        el.querySelector('[data-seq-frame]').textContent='';
+        el.querySelector('[data-seq-counter]').textContent='';
+        el.querySelector('[data-seq-status]').textContent='VIDEO SIGNAL PLAYBACK...';
+        const fig=el.querySelector('[data-seq-figure]');
+        if(fig) fig.hidden=true;
+
+        let moved=false;
+        const beginSequencePages=()=>{
+          if(moved) return;
+          moved=true;
+          clearTimeout(state.timer);
+          try{ video.pause(); video.currentTime=0; }catch(e){}
+        try{ if(tv){ tv.pause(); tv.currentTime=0; } }catch(e){}
+        try{ if(endingVideo){ endingVideo.pause(); endingVideo.currentTime=0; } }catch(e){}
+          el.classList.remove('intro-mode','input-ready','frame-ready','page-reveal');
+          el.classList.add('pages-mode');
+          document.body.classList.remove('pc5152i-sequence-intro-playing');
+          try{
+            if(cfg.bgm && state.bgm){
+              if(recordId!=='Cults_871104') state.bgm.currentTime=0;
+              state.bgm.volume=Number(cfg.bgmVolume||.78);
+              if(state.bgm.paused) state.bgm.play().catch(()=>{});
+            }
+          }catch(e){}
+          renderPage();
+        };
+
+        try{
+          video.loop=false;
+          video.muted=false;
+          video.volume=Number(cfg.introVolume||.68);
+          video.currentTime=0;
+          video.onended=beginSequencePages;
+          const playPromise=video.play();
+          if(playPromise && playPromise.catch) playPromise.catch(()=>setTimeout(beginSequencePages,900));
+        }catch(e){
+          setTimeout(beginSequencePages,900);
+        }
+        // Safety fallback for browsers that do not fire ended.
+        state.timer=setTimeout(beginSequencePages,Number(cfg.introFallback||10450));
+      });
+      return true;
+    }
+
+    function openRecordBodyDirect(recordId){
+      const archiveViewer=document.getElementById('archiveRecordViewer');
+      const archiveListWrap=document.getElementById('archiveListWrap');
+      if(!archiveViewer) return;
+      const selected=archiveViewer.querySelector('.record-detail[data-record="'+recordId.replace(/"/g,'\\"')+'"]');
+      if(!selected){
+        if(state.nativeShow) state.nativeShow(recordId);
+        return;
+      }
+      if(archiveListWrap){
+        archiveListWrap.classList.add('is-hidden');
+        archiveListWrap.querySelectorAll('details').forEach(d=>d.open=true);
+      }
+      archiveViewer.hidden=false;
+      archiveViewer.querySelectorAll('.record-detail').forEach(el=>{el.hidden=true;});
+      selected.hidden=false;
+      document.body.classList.add('pc5133-case-file-open','pc5152h-sidecontent-rebased');
+      const c=document.querySelector('.legacy-content');
+      if(c) c.scrollTop=0;
+      try{ if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('open',200); }catch(e){}
+    }
+
+    function finishSequence(skipEnding){
+      if(state.finishing) return;
+      const cfg=getSequenceConfig();
+      const el=state.overlay;
+      if(!skipEnding && cfg.endingVideo && !state.endingPlayed && el){
+        state.endingPlayed=true;
+        state.endingPlaying=true;
+        state.canAdvance=false;
+        state.transitioning=true;
+        clearSequenceTimers();
+        stopSequenceAudio();
+        const ending=el.querySelector('.pc5152q-ending-video');
+        el.classList.remove('input-ready','frame-ready','page-reveal','intro-mode','pages-mode','black-transition','major-transition','normal-transition','video-transition');
+        el.classList.add('show','ending-mode');
+        el.setAttribute('aria-hidden','false');
+        el.querySelector('[data-seq-code]').textContent='F.H.C END MARK / PLAYBACK';
+        el.querySelector('[data-seq-title]').textContent='';
+        el.querySelector('[data-seq-body]').innerHTML='';
+        el.querySelector('[data-seq-frame]').textContent='WAY TO THE ETERNITY';
+        el.querySelector('[data-seq-counter]').textContent='';
+        const source=el.querySelector('[data-seq-source]');
+        if(source) source.textContent=cfg.sourceLabel||'F.H.C / RECOVERED SOURCE';
+        const fig=el.querySelector('[data-seq-figure]');
+        if(fig) fig.hidden=true;
+        el.querySelector('[data-seq-status]').textContent='F.H.C ENDING MARKER';
+        let ended=false;
+        const complete=()=>{
+          if(ended) return;
+          ended=true;
+          clearTimeout(state.timer);
+          state.endingPlaying=false;
+          state.transitioning=false;
+          try{ ending.pause(); ending.currentTime=0; }catch(e){}
+          finishSequence(true);
+        };
+        try{
+          if(ending.getAttribute('src')!==prefix()+cfg.endingVideo) ending.src=prefix()+cfg.endingVideo;
+          ending.loop=false;
+          ending.muted=false;
+          ending.volume=.82;
+          ending.currentTime=0;
+          ending.onended=complete;
+          const playPromise=ending.play();
+          if(playPromise && playPromise.catch) playPromise.catch(()=>setTimeout(complete,900));
+        }catch(e){
+          setTimeout(complete,900);
+        }
+        state.timer=setTimeout(complete,17000);
+        return;
+      }
+      state.finishing=true;
+      clearSequenceTimers();
+      stopSequenceAudio();
+      if(el){
+        const video=el.querySelector('.pc5152h-seq-video');
+        const tv=el.querySelector('.pc5152m-transition-video');
+        const ending=el.querySelector('.pc5152q-ending-video');
+        try{ video.pause(); video.currentTime=0; }catch(e){}
+        try{ tv.pause(); tv.currentTime=0; }catch(e){}
+        try{ ending.pause(); ending.currentTime=0; }catch(e){}
+        try{ if(state.immortalityStep){ state.immortalityStep.pause(); state.immortalityStep.currentTime=0; } }catch(e){}
+        el.classList.remove('show','input-ready','frame-ready','page-reveal','intro-mode','pages-mode','ending-mode','pc5152q-immortality-mode','pc5152h-cult-mode','pc5152u-people-page','pc5152v-photo-large-page','pc5152v-red-log-page');
+        el.setAttribute('aria-hidden','true');
+      }
+      document.body.classList.remove('pc5152h-sequence-open','pc5152i-sequence-intro-playing','pc5133-case-file-open','pc5152q-immortality-sequence','pc5152h-cult-source-sequence');
+      const archiveViewer=document.getElementById('archiveRecordViewer');
+      const archiveListWrap=document.getElementById('archiveListWrap');
+      if(archiveViewer){
+        archiveViewer.hidden=true;
+        archiveViewer.querySelectorAll('.record-detail').forEach(el=>{el.hidden=true;});
+      }
+      if(archiveListWrap){
+        archiveListWrap.classList.remove('is-hidden');
+        archiveListWrap.querySelectorAll('details').forEach(d=>d.open=true);
+      }
+      const c=document.querySelector('.legacy-content');
+      if(c) c.scrollTop=0;
+      try{ if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('menu',180); }catch(e){}
+    }
+
+    function advanceSequence(){
+      const el=state.overlay;
+      if(el && (el.classList.contains('intro-mode') || el.classList.contains('ending-mode') || document.body.classList.contains('pc5152i-sequence-intro-playing'))) return;
+      if(state.transitioning) return;
+      if(!state.canAdvance){
+        revealNextSequenceLine(true);
+        return;
+      }
+      if(state.pageIndex < getActivePages().length-1){
+        if(state.activeRecord===IMMORTALITY_RECORD){
+          state.canAdvance=false;
+          state.pageIndex += 1;
+          renderPage();
+        }else{
+          beginBlackTransition(state.pageIndex + 1);
+        }
+      }else{
+        finishSequence();
+      }
+    }
+
+    function getRecordIdFromEventTarget(target){
+      const btn=target.closest && target.closest('.open-record[data-record]');
+      if(btn && btn.closest && btn.closest('#archiveListWrap .doc-card')) return btn.dataset.record;
+      return null;
+    }
+
+    document.addEventListener('click', function(e){
+      if(state.overlay && state.overlay.classList.contains('show') && e.target.closest && e.target.closest('.pc5152x-seq-return')){
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        finishSequence(true);
+        return;
+      }
+      if(state.overlay && state.overlay.classList.contains('show')){
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        advanceSequence();
+        return;
+      }
+      const id=getRecordIdFromEventTarget(e.target);
+      if(SEQUENCE_RECORDS.has(id)){
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        startSequence(id);
+      }
+    }, true);
+
+    
+    document.addEventListener('touchend', function(e){
+      if(state.overlay && state.overlay.classList.contains('show') && e.target.closest && e.target.closest('.pc5152x-seq-return')){
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        finishSequence(true);
+        return;
+      }
+      if(state.overlay && state.overlay.classList.contains('show')){
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        advanceSequence();
+      }
+    }, {capture:true, passive:false});
+
+    document.addEventListener('keydown', function(e){
+      if(!(state.overlay && state.overlay.classList.contains('show'))) return;
+      if(e.key==='Enter' || e.key===' '){
+        e.preventDefault();
+        advanceSequence();
+      }
+    }, true);
+
+    document.addEventListener('click', function(e){
+      if(e.target.closest && e.target.closest('.record-back')){
+        stopSequenceAudio();
+        document.body.classList.remove('pc5152h-sequence-open','pc5152i-sequence-intro-playing');
+      }
+    }, true);
+
+    if(state.nativeShow){
+      window.ProjectCurseShowInternalRecord=function(id){
+        if(SEQUENCE_RECORDS.has(id)) return startSequence(id);
+        return state.nativeShow(id);
+      };
+    }
+
+    function markSideContent(){
+      document.querySelectorAll('.content-page, .record-detail, .archive-record-viewer').forEach(el=>el.classList.add('pc5152h-terminal-doc'));
+      const viewer=document.getElementById('archiveRecordViewer');
+      if(viewer) viewer.classList.add('pc5152h-record-viewer');
+      const cultCard=[...document.querySelectorAll('.doc-card')].find(card=>{
+        const b=card.querySelector('.open-record[data-record="Cults_871104"]');
+        return !!b;
+      });
+      if(cultCard){
+        cultCard.classList.add('pc5152h-sequence-card');
+        if(!cultCard.querySelector('.pc5152h-seq-chip')){
+          const chip=document.createElement('span');
+          chip.className='pc5152h-seq-chip';
+          chip.textContent='SEQUENCE ATTACHED';
+          (cultCard.querySelector('.status-row')||cultCard).appendChild(chip);
+        }
+      }
+    }
+
+    installClearAudioBus();
+    markSideContent();
+    [160,520,1200,2400].forEach(t=>setTimeout(()=>{
+      installClearAudioBus();
+      markSideContent();
+    },t));
+
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152h:'AudioClarity SideContent TerminalNoise RecordSequence',
+      audioMode:'clearer terminal contact + special cult sequence bgm only inside sequence',
+      recordSequence:'Cults_871104 only; timed input gate; click advances after INPUT AVAILABLE',
+      noiseMode:'global terminal noise reduced; VHS/video overlay isolated to sequence'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2i — RecordSequence_FullscreenIntro_FlowFix marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152i-fullscreen-intro-flowfix');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152i:'RecordSequence FullscreenIntro FlowFix',
+      sequenceIntroFlow:'RECORD MOUNT -> fullscreen damaged video -> record surfaces with BGM',
+      pageStepAudio:'disabled by 5.15.2n video insert transitions'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2j — RecordSequence_TextImage_ReturnFix marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152j-recordsequence-textimage-returnfix');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152j:'RecordSequence TextImage ReturnFix',
+      sequenceText:'restored longer record text and bullets in sequence pages',
+      sequenceImages:'uncropped contain-mode image frames',
+      sequenceEnd:'returns to archive list instead of opening original body',
+      pageAdvanceAudio:'disabled by 5.15.2n; video insert audio only during page advance'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2k — RecordSequence_ReadFlow_AudioFullScope marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152k-recordsequence-readflow-audiofullscope');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152k:'RecordSequence ReadFlow AudioFullScope',
+      introVideo:'fullscreen damaged video with sound',
+      sequenceBgm:'pc5152l_vcr_hiss_sequence_bgm_audible.mp3 lower-volume first MP3',
+      groupTransition:'disabled by 5.15.2n video insert transitions',
+      lineReveal:'title/subtitle first; explanation lines reveal every 4-5 seconds; input after all lines',
+      pagesIncluded:'cult pages, blood cult pages, comparison record, field warning, return page'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2l — Sequence_ClickReveal_LineAdvance marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152l-sequence-clickreveal-lineadvance');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152l:'Sequence ClickReveal LineAdvance',
+      sequenceBgm:'pc5152l_vcr_hiss_sequence_bgm_audible.mp3 at raised audible volume',
+      lineRevealMode:'automatic 2-3s reveal plus click/touch immediate next-line reveal',
+      advanceRule:'click reveals hidden line first; page advances only after all lines are visible'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2m — MajorTransition_VideoInsert marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152m-majortransition-videoinsert');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152m:'MajorTransition VideoInsert',
+      transitionVideo:'pc5152m_vhs_transition_18_21_sound.mp4',
+      affectedTransitions:'cult-to-blood and blood-to-compare use video segment with sound instead of glitch effect',
+      sourceRange:'18s-21s'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2n — TransitionVideo_AllPages_BgmBoost marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152n-transitionvideo-allpages-bgmboost');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152n:'TransitionVideo AllPages BgmBoost',
+      transitionVideo:'18-21s VHS insert is used only for major record-face transitions',
+      separateTransitionSfx:'removed; internal page advances use quiet 2s VHS black hold',
+      sequenceBgm:'first MP3 background raised to .78 runtime volume'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2o — MajorTransitionScopeFix_Bgm15 marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152o-majortransition-scopefix-bgm15');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152o:'MajorTransitionScopeFix_Bgm15_ImageBoost',
+      transitionVideoScope:'guide-to-cult, cult-to-blood, blood-to-compare, compare-to-warning only',
+      internalPageTransitions:'quiet 2s VHS black hold; no inserted video',
+      sequenceBgm:'explanation-page BGM raised from .52 to .78 runtime volume',
+      transitionDuck:'BGM ducks to .30 during transition video and restores to .78'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2p — InternalPage_ProjectorStep marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152p-internalpage-projectorstep');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152p:'InternalPage ProjectorStep',
+      internalStepAudio:'pc5152p_internal_projector_vhs_step.wav',
+      internalStepScope:'cult and blood internal subpage transitions only',
+      majorTransitions:'18-21s VHS video only; no projector step'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2q — Immortality_FHC_SourceSequence marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152q-immortality-fhc-source-sequence-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152q:'Immortality FHC Source Sequence',
+      immortalityRecord:'Immortality_860201',
+      immortalityScope:'F.H.C source playback sequence only for 불멸을 향해',
+      cultSequencePreserved:'Cults_871104 existing sequence retained'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2r — Immortality_RecordOpenStatic_13_27 marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152r-immortality-recordopen-static-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152r:'Immortality RecordOpen Static 13-27',
+      immortalityIntroVideo:'pc5152r_immortality_recordopen_static_13_27.mp4',
+      immortalityIntroSourceRange:'VHS static noise 13s-27s',
+      scope:'Immortality_860201 record-open intro only'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2s — Immortality_BlackNoise_PageStep marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152s-immortality-blacknoise-pagestep-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152s:'Immortality BlackNoise PageStep',
+      immortalityPageTransition:'black noisy hold only; no transition video',
+      immortalityPageStepAudio:'pc5152s_immortality_page_black_beep_51_55.mp3',
+      immortalityPageStepSourceRange:'f-lake.mp4 51s-55s',
+      cultSequencePreserved:'Cults_871104 unchanged'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2t — Immortality_OriginalText_NoBGM marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152t-immortality-originaltext-nobgm-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152t:'Immortality OriginalText NoBGM',
+      immortalityPages:'restored from existing archive record text',
+      immortalityBGM:'disabled',
+      immortalityPageStepAudio:'kept 51s-55s beep during black page hold',
+      cultSequencePreserved:'Cults_871104 unchanged'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2u — Immortality_Unit2Split_IntroVolumeDown marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152u-immortality-unit2-split-introvol-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152u:'Immortality Unit2 Split IntroVolumeDown',
+      immortalityIntroVolume:'.45',
+      immortalityUnit2Page:'people pair layout for Maren Jegert and Jonas Milo',
+      immortalityEquipmentPage:'split into next page',
+      cultSequencePreserved:'Cults_871104 unchanged'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2v — Immortality_LogPhoto_AudioRework marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152v-immortality-logphoto-audio-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152v:'Immortality LogPhoto Audio Rework',
+      immortalityIntroVolume:'.09',
+      immortalityBGM:'SCP087 theme mixed with VCR hiss',
+      immortalityTransitions:'direct page advance, no black transition hold',
+      futureRecords:'classified until future release'
+    });
+
+    const publicRecords=new Set(['Immortality_860201','Cults_871104']);
+    const classifyCard=(card)=>{
+      if(!card || card.dataset.pc5152vClassified) return;
+      const btn=card.querySelector('.open-record[data-record]');
+      if(!btn || publicRecords.has(btn.dataset.record)) return;
+      card.dataset.pc5152vClassified='1';
+      card.classList.add('pc5152v-classified-card');
+      const muted=card.querySelector('.muted');
+      if(muted) muted.textContent='기밀 처리됨 — 추후 공개 예정.';
+      btn.dataset.pc5152vOriginalRecord=btn.dataset.record||'';
+      btn.removeAttribute('data-record');
+      btn.classList.remove('open-record');
+      btn.textContent='기밀 처리됨';
+      btn.classList.add('pc5152v-classified-button');
+      btn.setAttribute('aria-label','기밀 처리됨 — 추후 공개 예정');
+    };
+    document.querySelectorAll('#archiveListWrap .doc-card').forEach(classifyCard);
+    document.addEventListener('click',function(e){
+      const btn=e.target.closest && e.target.closest('.pc5152v-classified-button');
+      if(!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      try{
+        if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('denied',240);
+      }catch(err){}
+      const loading=document.getElementById('recordLoading') || document.createElement('div');
+      if(!loading.id){
+        loading.id='recordLoading';
+        loading.className='record-loading';
+        document.body.appendChild(loading);
+      }
+      loading.innerHTML='<div class="box"><div class="title">CLASSIFIED</div><div class="logline">ACCESS STATUS ..... SEALED</div><div class="logline">DISCLOSURE ........ PENDING</div><div class="logline">RELEASE FLAG ...... FUTURE</div><div class="bars"><i></i></div><div class="loader-hint">기밀 처리됨 — 추후 공개 예정</div></div>';
+      loading.classList.remove('done');
+      loading.classList.add('show');
+      setTimeout(()=>{ loading.classList.add('done'); loading.classList.remove('show'); }, 980);
+    },true);
+  });
+})();
+
+
+// MapPatch 5.15.2w — Immortality_PulseCaptionPacingFix marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152w-immortality-pulse-caption-pacing-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152w:'Immortality Pulse Caption Pacing Fix',
+      latePulseSource:'f-lake 3:04-3:06',
+      latePulseInterval:'2 seconds',
+      personCaptions:'forced visible under Maren/Jonas photos',
+      dialoguePacing:'3.6 seconds after each dialogue/comm line',
+      immortalityBgmVolume:'.30'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2x — Immortality_ReturnButton_EndReturn_SideMapRemove marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152x-immortality-returnbutton-sidemapremove-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152x:'Immortality ReturnButton EndReturn SideMapRemove',
+      sideMenuMap:'removed',
+      archiveMenu:'moved to 03',
+      regionMap:'hidden',
+      mainMenuSlowDrift:'disabled outside record viewing',
+      latePulseSource:'f-lake 3:15',
+      latePulseStop:'18:51',
+      latePhotoClick:'disabled after 18:14',
+      endingVideo:'disabled; return to archive',
+      sequenceReturnButton:'enabled'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2y — CultsBGM_ImmortalityNoLatePulse marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152y-cultsbgm-immortality-nolatepulse-ready');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152y:'CultsBGM ImmortalityNoLatePulse',
+      cultsBgm:'pc5152y_cults_banalities_radio_static_bgm.mp3',
+      cultsBgmStart:'starts with first intro video after record open',
+      immortalityLatePulse:'disabled'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2aa — ArchiveAccessLock_MapDataPrune.
+// Only Cults_871104 and Immortality_860201 are openable in the current archive build.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152aa-archive-lock-map-prune');
+    const PUBLIC_RECORDS = new Set(['Cults_871104','Immortality_860201']);
+    window.ProjectCursePublicRecords = PUBLIC_RECORDS;
+
+    function denyCue(){
+      try{ if(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.playCue==='function') window.ProjectCurseAudio.playCue('denied',260); }catch(e){}
+    }
+
+    function lockArchiveCards(){
+      document.querySelectorAll('#archiveListWrap .doc-card').forEach(card=>{
+        const code = (card.querySelector('.code') && card.querySelector('.code').textContent.trim()) || card.getAttribute('data-sealed-record') || '';
+        const btn = card.querySelector('button');
+        if(PUBLIC_RECORDS.has(code)){
+          card.dataset.access='open';
+          card.classList.add('pc5152aa-public-record');
+          card.classList.remove('pc5152aa-sealed-record','pc5152v-classified-card');
+          if(btn){
+            btn.disabled=false;
+            btn.removeAttribute('aria-disabled');
+            btn.classList.add('btn','open-record','pc5152aa-public-open');
+            btn.classList.remove('pc5152aa-locked-record','pc5152v-classified-button');
+            btn.setAttribute('data-record', code);
+            btn.textContent='기록 열람';
+          }
+          return;
+        }
+        card.dataset.access='sealed';
+        card.dataset.sealedRecord=code;
+        card.classList.add('pc5152aa-sealed-record');
+        card.classList.remove('pc5152d-open-card','pc5152h-sequence-card');
+        card.removeAttribute('role');
+        card.removeAttribute('tabindex');
+        card.removeAttribute('aria-label');
+        delete card.dataset.pc5152dRecord;
+        delete card.dataset.pc5152dOpenBound;
+        const muted=card.querySelector('.muted');
+        if(muted) muted.textContent='기밀 처리됨 — 열람 권한 없음.';
+        if(btn){
+          btn.disabled=true;
+          btn.removeAttribute('data-record');
+          btn.classList.remove('open-record','pc5152aa-public-open');
+          btn.classList.add('pc5152aa-locked-record');
+          btn.setAttribute('aria-disabled','true');
+          btn.textContent='기밀 처리됨';
+        }
+      });
+      const viewer=document.getElementById('archiveRecordViewer');
+      if(viewer){
+        viewer.querySelectorAll('.record-detail[data-record]').forEach(el=>{
+          if(!PUBLIC_RECORDS.has(el.getAttribute('data-record')||'')) el.remove();
+        });
+      }
+    }
+
+    lockArchiveCards();
+    [120,420,900,1800,3200].forEach(t=>setTimeout(lockArchiveCards,t));
+
+    const nativeShow = window.ProjectCurseShowInternalRecord;
+    window.ProjectCurseShowInternalRecord = function(id){
+      if(!PUBLIC_RECORDS.has(String(id||''))){ denyCue(); return false; }
+      return nativeShow ? nativeShow(id) : false;
+    };
+
+    const nativeActivateOperation = window.ProjectCurseActivateOperation;
+    window.ProjectCurseSelectOperation = function(){
+      if(typeof window.showPage === 'function') window.showPage('history');
+      return false;
+    };
+    window.ProjectCurseActivateOperation = function(){ return false; };
+
+    document.addEventListener('click', function(e){
+      const card = e.target.closest && e.target.closest('#archiveListWrap .doc-card');
+      const btn = e.target.closest && e.target.closest('.open-record[data-record], .pc5152aa-locked-record, .pc5152v-classified-button');
+      const id = btn && btn.getAttribute ? (btn.getAttribute('data-record') || '') : '';
+      if(card && card.dataset.access === 'sealed'){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); denyCue(); return;
+      }
+      if(btn && id && !PUBLIC_RECORDS.has(id)){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); denyCue(); return;
+      }
+      if(btn && !id && (btn.classList.contains('pc5152aa-locked-record') || btn.classList.contains('pc5152v-classified-button'))){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); denyCue(); return;
+      }
+      const zoneLink = e.target.closest && e.target.closest('[data-target="zone-map"], [href="#zone-map"], [data-pc5140-open-op], [data-pc5141-open-op], [data-pc5150-open-op], [data-case-open-op]');
+      if(zoneLink){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        return;
+      }
+    }, true);
+
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152aa:'ArchiveAccessLock MapDataPrune',
+      openRecords:'Cults_871104 / Immortality_860201',
+      sealedRecords:'non-public archive records are disabled and body data removed',
+      mapRuntime:'region/operation map data and assets removed from current build'
+    });
+  });
+})();
+
+
+
+// MapPatch 5.15.2ac — EventDedup_ArchiveClickGuard_UIPrune
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152ac-event-dedup-archive-clickguard');
+    document.querySelectorAll('.pc5152ab-breadcrumb').forEach(el=>el.remove());
+    const rel=document.querySelector('#faction-relation .section-brief'); if(rel) rel.remove();
+    const infoP=document.querySelector('#faction-info > p'); if(infoP) infoP.remove();
+    document.querySelectorAll('#archiveListWrap .doc-card').forEach(card=>{
+      card.removeAttribute('role');
+      card.removeAttribute('tabindex');
+      card.removeAttribute('aria-label');
+      card.querySelectorAll('.pc5152d-open-cue').forEach(el=>el.remove());
+    });
+    // Capture guard: only the explicit record button can mount public sequence records.
+    document.addEventListener('click',function(e){
+      const openCard=e.target.closest && e.target.closest('#archiveListWrap .doc-card[data-access="open"]');
+      const openBtn=e.target.closest && e.target.closest('#archiveListWrap .doc-card[data-access="open"] .open-record[data-record]');
+      if(openCard && !openBtn){
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return false;
+      }
+    }, true);
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152ac:'EventDedup ArchiveClickGuard UIPrune',
+      factionTileAudio:'single click cue only',
+      archiveOpen:'button-only',
+      breadcrumbs:'removed from visible UI',
+      relationBrief:'removed from visible UI'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2ad — PCSidebarRestore_UIDiet_AudioSync_NoVHS
+// PC-first cleanup: no mobile drawer, no main-menu VHS/noise, restored drawer toggle, single UI sound gate.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.remove('scan','pc5152ab-visibility-mobile-audio','pc5152ab-menu-open');
+    body.classList.add('pc5152ad-pc-ui','pc584-city-operation-ready');
+    document.querySelectorAll('#pc5152abMobileMenu,#pc5152abMobileBackdrop,.pc5152ab-mobile-menu-toggle,.pc5152ab-mobile-backdrop,.pc5152ab-breadcrumb,.side-note').forEach(el=>el.remove());
+    document.querySelectorAll('#faction-relation .section-brief,#faction-info > p,#archive-entry > p').forEach(el=>el.remove());
+    document.querySelectorAll('.pc5152a-slow-drift,.pc5152-signal-overlay,.pc5152a-tape-meter').forEach(el=>el.remove());
+
+    // Audio gate: one UI cue per user action, with pointerdown/hover noises suppressed.
+    const bus=window.ProjectCurseAudio;
+    if(bus && typeof bus.playCue==='function' && !bus.pc5152adWrapped){
+      const native=bus.playCue.bind(bus);
+      let lastAt=0;
+      let lastName='';
+      bus.playCue=function(name,cooldown){
+        const now=performance.now();
+        const n=String(name||'menu');
+        if(now-lastAt<125) return;
+        lastAt=now; lastName=n;
+        const normalized=(n==='drawer'||n==='command'||n==='marker')?'menu':n;
+        return native(normalized, Math.max(cooldown||0, 135));
+      };
+      bus.pc5152adWrapped=true;
+    }
+    document.addEventListener('pointerdown',function(e){
+      const t=e.target && e.target.closest ? e.target.closest('.side-menu a,.pc585-menu-heading,.faction-tile,.pc584-relation-node,.pc584-main-drawer-toggle,.open-record,.record-back') : null;
+      if(!t) return;
+      try{ window.ProjectCurseAudio && window.ProjectCurseAudio.startAmbient && window.ProjectCurseAudio.startAmbient(); }catch(err){}
+      e.stopPropagation();
+    },true);
+
+    const pages=Array.from(document.querySelectorAll('.content-page,.panel')).filter(p=>p.id);
+    const links=Array.from(document.querySelectorAll('.side-menu a[data-target]'));
+    function showPage(id){
+      if(!pages.some(p=>p.id===id)) id='history';
+      if(id==='zone-map') id='history';
+      pages.forEach(p=>p.classList.toggle('active',p.id===id));
+      links.forEach(a=>a.classList.toggle('active',(a.dataset.target||'')===id));
+      const content=document.querySelector('.legacy-content');
+      if(content) content.scrollTop=0;
+      try{ history.replaceState(null,'','#'+id); }catch(e){}
+    }
+    window.showPage=showPage;
+    const initial=(location.hash||'#history').slice(1)||'history';
+    showPage(initial==='zone-map'?'history':initial);
+
+    function syncGroupFor(link){
+      document.querySelectorAll('.pc585-menu-group').forEach(group=>{
+        const open=!!(link && group.contains(link));
+        if(open){
+          group.classList.add('open');
+          const h=group.querySelector('.pc585-menu-heading');
+          if(h){h.setAttribute('aria-expanded','true'); const s=h.querySelector('span'); if(s) s.textContent='▾';}
+        }
+      });
+    }
+
+    // Restore PC drawer toggle. No mobile drawer classes are used.
+    document.querySelectorAll('.pc584-main-drawer-toggle,.pc584-drawer-backdrop').forEach(el=>el.remove());
+    const toggle=document.createElement('button');
+    toggle.type='button';
+    toggle.className='pc584-main-drawer-toggle';
+    toggle.setAttribute('aria-label','사이드 메뉴 열기/닫기');
+    toggle.setAttribute('aria-expanded','false');
+    toggle.textContent='☰';
+    const backdrop=document.createElement('div');
+    backdrop.className='pc584-drawer-backdrop';
+    document.body.append(toggle,backdrop);
+    function setDrawer(open){
+      body.classList.toggle('pc584-main-drawer-open',!!open);
+      toggle.textContent=open?'×':'☰';
+      toggle.setAttribute('aria-expanded',open?'true':'false');
+    }
+    setDrawer(false);
+    toggle.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('menu',150)}catch(err){}
+      setDrawer(!body.classList.contains('pc584-main-drawer-open'));
+    },true);
+    backdrop.addEventListener('click',function(e){ e.preventDefault(); setDrawer(false); },true);
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') setDrawer(false); });
+
+    document.addEventListener('click',function(e){
+      const heading=e.target.closest && e.target.closest('.pc585-menu-heading');
+      if(heading){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        const group=heading.closest('.pc585-menu-group');
+        const open=!(group && group.classList.contains('open'));
+        if(group) group.classList.toggle('open',open);
+        heading.setAttribute('aria-expanded',open?'true':'false');
+        const s=heading.querySelector('span'); if(s) s.textContent=open?'▾':'▸';
+        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('menu',150)}catch(err){}
+        return false;
+      }
+      const link=e.target.closest && e.target.closest('.side-menu a[data-target]');
+      if(link){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        const id=link.dataset.target||'history';
+        showPage(id==='zone-map'?'history':id);
+        syncGroupFor(link);
+        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('menu',150)}catch(err){}
+        setDrawer(false);
+        return false;
+      }
+      const openCard=e.target.closest && e.target.closest('#archiveListWrap .doc-card[data-access="open"]');
+      const openBtn=e.target.closest && e.target.closest('#archiveListWrap .doc-card[data-access="open"] .open-record[data-record]');
+      if(openCard && !openBtn){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        return false;
+      }
+      const sealed=e.target.closest && e.target.closest('#archiveListWrap .doc-card[data-access="sealed"],#archiveListWrap .pc5152aa-locked-record');
+      if(sealed){
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('denied',260)}catch(err){}
+        return false;
+      }
+    },true);
+
+    // Re-state public archive locks after older renderers mutate cards.
+    const PUBLIC=new Set(['Cults_871104','Immortality_860201']);
+    function relockArchive(){
+      document.querySelectorAll('#archiveListWrap .doc-card').forEach(card=>{
+        const code=(card.querySelector('.code')&&card.querySelector('.code').textContent.trim())||card.dataset.sealedRecord||'';
+        const btn=card.querySelector('button');
+        const open=PUBLIC.has(code);
+        card.dataset.access=open?'open':'sealed';
+        card.classList.toggle('pc5152aa-public-record',open);
+        card.classList.toggle('pc5152aa-sealed-record',!open);
+        card.removeAttribute('role'); card.removeAttribute('tabindex'); card.removeAttribute('aria-label');
+        card.querySelectorAll('.pc5152d-open-cue').forEach(el=>el.remove());
+        if(btn){
+          if(open){
+            btn.disabled=false; btn.removeAttribute('aria-disabled'); btn.setAttribute('data-record',code);
+            btn.classList.add('open-record','pc5152aa-public-open'); btn.classList.remove('pc5152aa-locked-record','pc5152v-classified-button');
+            btn.textContent='기록 열람';
+          }else{
+            btn.disabled=true; btn.removeAttribute('data-record'); btn.setAttribute('aria-disabled','true');
+            btn.classList.remove('open-record','pc5152aa-public-open'); btn.classList.add('pc5152aa-locked-record');
+            btn.textContent='기밀 처리됨';
+          }
+        }
+      });
+    }
+    relockArchive(); [160,600,1400,2800].forEach(t=>setTimeout(relockArchive,t));
+
+    // Simple PC sound controls; no mobile drawer settings.
+    const PRESETS={low:{label:'낮음',scale:.55},normal:{label:'보통',scale:.82},high:{label:'높음',scale:1}};
+    const order=['low','normal','high'];
+    const getPreset=()=>PRESETS[localStorage.getItem('pc5152ad_volume')||'normal']?localStorage.getItem('pc5152ad_volume')||'normal':'normal';
+    function ambientOn(){return localStorage.getItem('pc5152ad_ambient')!=='off';}
+    function applyVolumes(){
+      const scale=PRESETS[getPreset()].scale;
+      const b=window.ProjectCurseAudio;
+      if(b && b.audio){
+        Object.entries(b.audio).forEach(([k,a])=>{
+          try{
+            const cap=k==='ambient'?.035:(k==='denied'||k==='restricted')?.075:.065;
+            a.volume=Math.max(0,Math.min(cap,cap*scale));
+            if(k==='ambient' && !ambientOn()) a.pause();
+          }catch(e){}
+        });
+      }
+      const vol=document.getElementById('pc5152adVolumeToggle');
+      if(vol) vol.textContent='볼륨: '+PRESETS[getPreset()].label;
+      const amb=document.getElementById('pc5152adAmbientToggle');
+      if(amb) amb.textContent=ambientOn()?'배경음: 켜짐':'배경음: 꺼짐';
+    }
+    applyVolumes();
+    const vol=document.getElementById('pc5152adVolumeToggle');
+    if(vol && !vol.dataset.pc5152adBound){
+      vol.dataset.pc5152adBound='1';
+      vol.addEventListener('click',function(e){
+        e.preventDefault(); e.stopPropagation();
+        const next=order[(order.indexOf(getPreset())+1)%order.length];
+        localStorage.setItem('pc5152ad_volume',next);
+        applyVolumes();
+        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('menu',150)}catch(err){}
+      },true);
+    }
+    const amb=document.getElementById('pc5152adAmbientToggle');
+    if(amb && !amb.dataset.pc5152adBound){
+      amb.dataset.pc5152adBound='1';
+      amb.addEventListener('click',function(e){
+        e.preventDefault(); e.stopPropagation();
+        localStorage.setItem('pc5152ad_ambient',ambientOn()?'off':'on');
+        applyVolumes();
+        if(ambientOn()) try{window.ProjectCurseAudio&&window.ProjectCurseAudio.startAmbient&&window.ProjectCurseAudio.startAmbient()}catch(err){}
+      },true);
+    }
+    setInterval(applyVolumes,2200);
+
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152ad:'PCSidebarRestore UIDiet AudioSync NoVHS',
+      mobile:'not included in this build',
+      sidebar:'PC drawer restored',
+      audio:'single action cue gate + simple volume preset',
+      archiveOpen:'button-only public records',
+      visualEffects:'main-menu scan/noise/VHS overlays removed'
+    });
   });
 })();

@@ -1,0 +1,445 @@
+PROJECT CURSE ART DIRECTION GUIDE
+Source note after: MapPatch5.13.3b ArtDirectionGuide_SourceNote
+
+#0. Core Theme
+
+Project Curse must feel like a damaged archive and operation terminal from a 2000~2010-era institutional security network.
+
+It is not a modern game hub.
+It is not a clean sci-fi HUD.
+It is not a polished mobile/admin dashboard.
+
+The user experience should feel like viewing recovered material from a closed U.A.C / F.H.C / S.I.D / N.H.C system.
+
+---
+
+#1. One-Line Definition
+
+```text
+Project Curse is not "a game UI decorated with analog horror."
+Project Curse is "a 2000~2010-era institutional archive where damaged records, maps, CCTV footage, and operation files are being accessed under restricted clearance."
+```
+
+---
+
+#2. World Mood
+
+##Required mood
+- Cold
+- Dry
+- Suppressed
+- Institutional
+- Low-resolution
+- Incomplete
+- Quietly hostile
+- More archival than cinematic
+- More classified file than entertainment screen
+
+##Horror direction
+Use fear through:
+- missing data
+- corrupted files
+- damaged video
+- partial redaction
+- unexplained logs
+- signal loss
+- access restrictions
+- archival evidence
+- incomplete context
+
+Avoid fear through:
+- jump scares
+- flashy effects
+- loud stingers
+- bright warning flashes
+- game-like fail/clear sounds
+- overly theatrical horror presentation
+
+---
+
+#3. Time Period Reference
+
+Primary reference era:
+
+```text
+2000~2010
+Analog horror / digital transition period
+```
+
+This means:
+- CRT monitors still exist
+- early LCD monitors exist
+- CCTV and DV camcorder material feel appropriate
+- compression artifacts are common
+- 4:3 footage is natural
+- early institutional intranet / archive terminal UI is appropriate
+- modern responsive dashboard polish is inappropriate unless heavily degraded
+
+---
+
+#4. Visual Texture
+
+##Correct
+- CRT scanline hints
+- weak interlace
+- low contrast
+- muted colors
+- slight blur
+- compression noise
+- dirty black/gray UI
+- old institutional terminal frames
+- rough archival panels
+- damaged image/video surfaces
+
+##Incorrect
+- sharp neon HUD
+- glossy cyberpunk
+- clean game interface
+- bright SaaS dashboard
+- mobile-app smoothness
+- colorful achievement-style feedback
+- crisp sci-fi hologram feeling
+
+---
+
+#5. Color Rules
+
+##Base palette
+- black
+- charcoal
+- dark gray
+- dull green
+- dark teal
+- faded white
+- dirty beige/yellow for caution
+- dull red only for danger/seal/contamination
+
+##Color behavior
+Color must be functional, not decorative.
+
+```text
+normal state = gray / dark teal / faded white
+warning state = dull yellow / dirty amber
+danger state = dull red
+restricted / sealed = dark red / near black
+information = faded cyan or gray-blue, never neon blue
+```
+
+##Avoid
+- neon cyan
+- bright blue sci-fi UI
+- bright green hacker UI
+- high-saturation red
+- colorful module cards
+- game reward colors
+
+---
+
+#6. Interface Direction
+
+##Correct interface identity
+The UI should feel like:
+- U.A.C operation terminal
+- internal archive viewer
+- closed network server
+- security office machine
+- field record recovery terminal
+- old command board
+- damaged government/agency intranet
+
+##Incorrect interface identity
+Avoid:
+- game mission select screen
+- minigame panel
+- hero-card dashboard
+- clean modern admin UI
+- futuristic tactical HUD
+- mobile app style
+- colorful card grid
+
+##UI structure preferences
+Prefer:
+- old lists
+- dense text rows
+- divided panels
+- document tabs
+- terminal sections
+- file codes
+- status lines
+- archival categories
+- restrained buttons
+
+Use cards only if they look like dull file blocks or status sheets, not modern UI cards.
+
+---
+
+#7. Buttons and Interaction
+
+##Correct
+Buttons should feel like:
+- terminal line selection
+- old security terminal control
+- file row access
+- dry mechanical input
+
+##Incorrect
+Buttons should not feel like:
+- game menu buttons
+- big modern CTA buttons
+- mission cards
+- mobile UI chips
+- colorful unlock buttons
+
+##Interaction rules
+- hover effects should be weak
+- glow should be rare
+- transitions should be short
+- no bouncy animation
+- no playful confirmation feedback
+- no reward-like effects
+
+---
+
+#8. Sound Direction
+
+##Correct sounds
+- dry key press
+- relay click
+- dull mechanical load
+- CRT hum
+- server fan
+- low electrical buzz
+- weak tape noise
+- low access denied tone
+- muffled record loading
+- radio/static texture
+
+##Incorrect sounds
+- bright ping
+- cute beep
+- minigame select tone
+- reward chime
+- hover tick spam
+- clean sci-fi blip
+- loud alert sting
+- musical success/failure cue
+
+##Sound rules
+- quiet by default
+- low-frequency preferred
+- short and dry
+- no jump scare
+- no hover sound unless necessary
+- sound cooldown required
+- ambient must stay low and background-like
+- access denied should sound like old equipment refusing access, not game failure
+
+---
+
+#9. Record Viewer Direction
+
+The record viewer should feel like:
+- recovered case file
+- internal archive file
+- restricted agency document
+- damaged attachment bundle
+
+It should not feel like:
+- polished wiki page
+- trading-card database
+- RPG codex screen
+- modern dashboard detail page
+
+##Required record elements
+- file code
+- security grade
+- record origin
+- related operation area
+- related faction
+- related equipment
+- related anomaly/entity
+- attachments/sub-records
+- system annotation
+- corrupted/missing/restricted hints when appropriate
+
+##Body text rule
+Do not rewrite record body text unless a patch explicitly targets lore/content.
+
+UI shell and metadata may change.
+Lore body must remain stable by default.
+
+---
+
+#10. Map / Operation Board Direction
+
+Maps must feel like:
+- institutional operation board
+- surveillance map
+- containment board
+- static command board
+- recovered tactical overlay
+
+Maps must not feel like:
+- mobile map app
+- colorful strategy game map
+- neon tactical HUD
+- abstract art map
+- minigame map
+
+##Map rules
+- real geography/urban structure should remain readable when possible
+- overlays must not overpower base geography
+- marker labels should be short
+- detailed explanation belongs in dock/panel
+- no zoom/drag/FIT/RESET unless a future patch explicitly redefines the map system
+- operation board must feel fixed and classified
+
+---
+
+#11. Video / CCTV / Recovered Footage Direction
+
+Correct footage feeling:
+- 4:3
+- low-resolution
+- CCTV
+- DV camcorder
+- damaged recording
+- compressed video
+- weak timestamp
+- signal loss
+- recovered feed
+- frame loss
+- audio degradation
+- incomplete image
+
+Avoid:
+- cinematic trailer
+- modern high-definition horror
+- too-clean ARG screen
+- flashy VHS effect overuse
+- fake glitch that looks stylish rather than damaged
+
+---
+
+#12. Typography and Text
+
+##Correct text tone
+- security note
+- field report
+- archive log
+- operation status
+- warning notice
+- restricted access
+- corrupted file note
+- system message
+
+##Avoid overly friendly UX text
+Avoid:
+- "click here"
+- "learn more"
+- "recommended"
+- "start"
+- "congratulations"
+- "completed"
+- "nice"
+- "new feature"
+
+Use instead:
+- ACCESS RESTRICTED
+- FILE PARTIALLY RECOVERED
+- SIGNAL DEGRADED
+- RECORD SEALED
+- FIELD REVIEW ONLY
+- NODE OFFLINE
+- ARCHIVE LINKED
+- CLEARANCE MISMATCH
+- CONTAINMENT STATUS
+
+---
+
+#13. Faction / Agency Presentation
+
+Factions are not character factions in a game menu.
+They are institutional files and intelligence nodes.
+
+##Correct presentation
+- agency record
+- authority level
+- operational role
+- current activity
+- known tension
+- linked incidents
+- related operation zones
+- related equipment
+- risk / trust / control rating
+
+##Avoid
+- flashy faction cards
+- colorful character banners
+- RPG-style faction reputation UI
+- overly clean relationship diagrams
+
+---
+
+#14. Future Patch Rules
+
+Every future patch should pass this checklist:
+
+```text
+Does it look like a 2000~2010 institutional terminal?
+Does it avoid modern game UI?
+Are sounds dull/low/dry rather than bright?
+Is the interface more archive/operation file than entertainment hub?
+Are colors low-saturation?
+Is red used only for danger/restriction/contamination?
+Is information partially constrained rather than too friendly?
+Are record bodies preserved unless content editing is explicitly requested?
+```
+
+---
+
+#15. Absolute Do-Not-Do List
+
+Do not:
+- turn Project Curse into a modern game dashboard
+- use bright mini-game sounds
+- use reward/confirmation chimes
+- overuse cards
+- use neon sci-fi HUD style
+- make everything too clean
+- make all information too easy and friendly
+- use high-saturation color blocks
+- make UI feel like a mobile app
+- make map markers look like toys
+- make horror too theatrical
+
+---
+
+#16. Project Curse Patch Priority
+
+##Highest priority
+- atmosphere preservation
+- analog horror period correctness
+- institutional archive identity
+- low-saturation terminal UI
+- quiet sound design
+- damaged record feeling
+
+##Secondary priority
+- feature richness
+- convenience
+- visual clarity
+- module expansion
+
+##Rule
+If a feature makes the project feel like a modern game UI, reduce or redesign it.
+
+---
+
+#17. Final Summary
+
+```text
+Project Curse must feel like a closed U.A.C archive and operation terminal from the 2000~2010 analog-horror/digital-transition era.
+
+The user should feel like they are browsing damaged institutional records, not playing a modern UI-driven game hub.
+```
