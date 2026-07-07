@@ -11215,3 +11215,174 @@ body.pc5152ah-archive-4k-overlay-bgm .faction-detail{overflow-wrap:anywhere;word
   body.pc5152ah-archive-4k-overlay-bgm .legacy-content{padding-left:8px!important;padding-right:8px!important;}
   body.pc5152ah-archive-4k-overlay-bgm .legacy-sidebar{width:90vw!important;max-width:90vw!important;}
 }
+
+
+/* MapPatch 5.15.2ai — ViewportQA_GlobalResponsive_SilentMenu_BGM
+   Global responsive QA pass: mobile side-menu touch fix, silent menu actions, 4K/mobile layout density, archive card containment. */
+body.pc5152ai-global-responsive-silent-menu{
+  --pc-ai-content-max: clamp(1320px, 74vw, 2480px);
+  --pc-ai-content-pad-x: clamp(18px, 3.2vw, 132px);
+  --pc-ai-panel-pad: clamp(14px, 1.1vw, 26px);
+  --pc-ai-card-min: clamp(300px, 15.2vw, 380px);
+  --pc-ai-sidebar-w: clamp(300px, 34vw, 560px);
+  --pc-ai-mobile-sidebar: min(86vw, 420px);
+  --pc-ai-text: clamp(13px, .76vw, 15.5px);
+  --pc-ai-title: clamp(21px, 1.18vw, 28px);
+}
+body.pc5152ai-global-responsive-silent-menu,
+body.pc5152ai-global-responsive-silent-menu *{box-sizing:border-box;min-width:0;}
+body.pc5152ai-global-responsive-silent-menu img,
+body.pc5152ai-global-responsive-silent-menu video,
+body.pc5152ai-global-responsive-silent-menu iframe,
+body.pc5152ai-global-responsive-silent-menu svg,
+body.pc5152ai-global-responsive-silent-menu canvas{max-width:100%!important;}
+body.pc5152ai-global-responsive-silent-menu img,
+body.pc5152ai-global-responsive-silent-menu video{height:auto!important;object-fit:contain!important;}
+body.pc5152ai-global-responsive-silent-menu p,
+body.pc5152ai-global-responsive-silent-menu li,
+body.pc5152ai-global-responsive-silent-menu td,
+body.pc5152ai-global-responsive-silent-menu th,
+body.pc5152ai-global-responsive-silent-menu .code,
+body.pc5152ai-global-responsive-silent-menu .doc-card,
+body.pc5152ai-global-responsive-silent-menu .record-page,
+body.pc5152ai-global-responsive-silent-menu .faction-detail,
+body.pc5152ai-global-responsive-silent-menu .timeline-list>div{overflow-wrap:anywhere;word-break:keep-all;}
+body.pc5152ai-global-responsive-silent-menu .content-page,
+body.pc5152ai-global-responsive-silent-menu .panel,
+body.pc5152ai-global-responsive-silent-menu .doc-shell,
+body.pc5152ai-global-responsive-silent-menu .wrap{
+  width:min(100%, var(--pc-ai-content-max))!important;
+  max-width:var(--pc-ai-content-max)!important;
+  margin-inline:auto!important;
+  min-height:0!important;
+}
+body.pc5152ai-global-responsive-silent-menu .legacy-content{
+  overflow-x:hidden!important;
+  padding-left:clamp(76px,4.5vw,148px)!important;
+  padding-right:var(--pc-ai-content-pad-x)!important;
+}
+body.pc5152ai-global-responsive-silent-menu .content-page,
+body.pc5152ai-global-responsive-silent-menu .panel{padding:var(--pc-ai-panel-pad)!important;}
+body.pc5152ai-global-responsive-silent-menu .content-page h2,
+body.pc5152ai-global-responsive-silent-menu .panel h2,
+body.pc5152ai-global-responsive-silent-menu .doc-title{font-size:var(--pc-ai-title)!important;line-height:1.22!important;}
+body.pc5152ai-global-responsive-silent-menu .content-page p,
+body.pc5152ai-global-responsive-silent-menu .panel p,
+body.pc5152ai-global-responsive-silent-menu .record-page div,
+body.pc5152ai-global-responsive-silent-menu .record-page p,
+body.pc5152ai-global-responsive-silent-menu .record-page li{font-size:var(--pc-ai-text)!important;line-height:1.58!important;}
+
+/* Sidebar overlay: do not shrink content; ensure mobile menu links are touchable. */
+body.pc5152ai-global-responsive-silent-menu .legacy-layout{overflow:hidden!important;}
+body.pc5152ai-global-responsive-silent-menu .legacy-sidebar{
+  position:fixed!important;
+  left:0!important;top:0!important;bottom:auto!important;
+  width:min(50vw, var(--pc-ai-sidebar-w))!important;
+  min-width:300px!important;max-width:50vw!important;height:100dvh!important;
+  z-index:520!important;transform:translateX(-106%)!important;transition:transform .16s ease!important;
+  overflow-y:auto!important;overscroll-behavior:contain!important;pointer-events:auto!important;
+  box-shadow:18px 0 38px rgba(0,0,0,.64)!important;
+}
+body.pc5152ai-global-responsive-silent-menu.pc584-main-drawer-open .legacy-sidebar{transform:translateX(0)!important;}
+body.pc5152ai-global-responsive-silent-menu .side-menu,
+body.pc5152ai-global-responsive-silent-menu .side-menu *,
+body.pc5152ai-global-responsive-silent-menu .pc585-menu-heading,
+body.pc5152ai-global-responsive-silent-menu .side-menu a[data-target]{pointer-events:auto!important;position:relative;z-index:535;}
+body.pc5152ai-global-responsive-silent-menu .side-menu a[data-target]{min-height:44px!important;touch-action:manipulation!important;cursor:pointer!important;}
+body.pc5152ai-global-responsive-silent-menu .pc584-main-drawer-toggle{
+  position:fixed!important;left:max(12px,env(safe-area-inset-left))!important;top:max(12px,env(safe-area-inset-top))!important;
+  width:44px!important;height:44px!important;z-index:610!important;line-height:42px!important;touch-action:manipulation!important;
+}
+body.pc5152ai-global-responsive-silent-menu.pc584-main-drawer-open .pc584-main-drawer-toggle{left:min(calc(var(--pc-ai-sidebar-w) - 56px), calc(50vw - 56px))!important;}
+body.pc5152ai-global-responsive-silent-menu .pc584-drawer-backdrop{z-index:500!important;pointer-events:none!important;background:rgba(0,0,0,.54)!important;}
+body.pc5152ai-global-responsive-silent-menu.pc584-main-drawer-open .pc584-drawer-backdrop{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;}
+body.pc5152ai-global-responsive-silent-menu.pc584-main-drawer-open .legacy-sidebar ~ .pc584-drawer-backdrop{z-index:500!important;}
+
+/* Archive index: card internals stay inside boxes; only public open button is a real action. */
+body.pc5152ai-global-responsive-silent-menu #archive-entry .archive-groups{width:100%!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .archive-groups details{width:100%!important;overflow:visible!important;margin:12px 0!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .archive-list{
+  display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,var(--pc-ai-card-min)),1fr))!important;
+  gap:clamp(10px,.75vw,16px)!important;align-items:stretch!important;overflow:visible!important;padding:clamp(10px,.85vw,16px)!important;
+}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card{
+  display:grid!important;grid-template-columns:1fr!important;grid-template-rows:auto auto auto 1fr auto!important;
+  grid-template-areas:"code" "title" "status" "desc" "action"!important;
+  gap:7px!important;min-height:clamp(150px,8vw,188px)!important;height:auto!important;
+  padding:clamp(13px,.88vw,18px)!important;overflow:hidden!important;isolation:isolate!important;position:relative!important;z-index:1!important;
+  cursor:default!important;align-items:start!important;
+}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card[data-access="open"]{z-index:8!important;border-left:4px solid rgba(207,74,84,.86)!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card .code{grid-area:code!important;display:block!important;font-weight:900!important;overflow-wrap:anywhere!important;line-height:1.24!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card h3{grid-area:title!important;display:block!important;margin:0!important;line-height:1.32!important;overflow-wrap:anywhere!important;word-break:keep-all!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card .status-row{grid-area:status!important;display:flex!important;justify-content:flex-start!important;align-items:center!important;flex-wrap:wrap!important;margin:0!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card p,
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card .muted{grid-area:desc!important;display:block!important;margin:0!important;max-width:100%!important;overflow-wrap:anywhere!important;word-break:keep-all!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card .btn,
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card button{grid-area:action!important;align-self:end!important;justify-self:start!important;position:relative!important;z-index:50!important;pointer-events:auto!important;margin-top:8px!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card button[disabled],
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card .pc5152aa-locked-record{pointer-events:none!important;cursor:default!important;opacity:.48!important;filter:saturate(.65)!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card .pc5152aa-public-open{pointer-events:auto!important;cursor:pointer!important;}
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card::before,
+body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card::after,
+body.pc5152ai-global-responsive-silent-menu .pc5152-signal-overlay,
+body.pc5152ai-global-responsive-silent-menu .pc5152a-slow-drift,
+body.pc5152ai-global-responsive-silent-menu .pc5152b-tape-sequence-overlay,
+body.pc5152ai-global-responsive-silent-menu .pc5152-frame-id,
+body.pc5152ai-global-responsive-silent-menu .pc5152a-tape-meter{pointer-events:none!important;}
+
+/* World timeline/mobile density: reduce odd spacing and PC-box shrink on small screens. */
+body.pc5152ai-global-responsive-silent-menu #history .pc5130-legacy-history>p{max-width:72ch;margin-bottom:14px!important;}
+body.pc5152ai-global-responsive-silent-menu #history .overview-stats{gap:clamp(8px,.8vw,14px)!important;margin:12px 0!important;}
+body.pc5152ai-global-responsive-silent-menu #history .stat-card{min-height:0!important;padding:clamp(10px,.8vw,14px)!important;}
+body.pc5152ai-global-responsive-silent-menu #history .timeline-list{gap:clamp(8px,.75vw,14px)!important;}
+body.pc5152ai-global-responsive-silent-menu #history .timeline-list>div{padding:clamp(11px,.9vw,16px)!important;min-height:0!important;}
+body.pc5152ai-global-responsive-silent-menu #history .timeline-list b{display:block!important;line-height:1.38!important;}
+body.pc5152ai-global-responsive-silent-menu #history .timeline-list p{margin-top:6px!important;line-height:1.58!important;}
+
+@media (min-width:3000px){
+  body.pc5152ai-global-responsive-silent-menu{--pc-ai-content-max:2480px;--pc-ai-content-pad-x:clamp(96px,5vw,190px);--pc-ai-card-min:350px;}
+}
+@media (min-width:1920px) and (max-width:2999px){
+  body.pc5152ai-global-responsive-silent-menu{--pc-ai-content-max:2180px;--pc-ai-card-min:330px;}
+}
+@media (min-width:1025px) and (max-width:1600px){
+  body.pc5152ai-global-responsive-silent-menu{--pc-ai-content-max:1380px;--pc-ai-card-min:290px;}
+  body.pc5152ai-global-responsive-silent-menu .legacy-content{padding-right:clamp(26px,3vw,64px)!important;}
+}
+@media (max-width:1024px){
+  body.pc5152ai-global-responsive-silent-menu{--pc-ai-content-max:100%;--pc-ai-panel-pad:14px;--pc-ai-card-min:100%;--pc-ai-mobile-sidebar:min(86vw,420px);--pc-ai-title:22px;--pc-ai-text:13.5px;}
+  body.pc5152ai-global-responsive-silent-menu .legacy-content{height:100dvh!important;overflow:auto!important;padding:60px 12px 28px!important;width:100%!important;}
+  body.pc5152ai-global-responsive-silent-menu .content-page,
+  body.pc5152ai-global-responsive-silent-menu .panel{width:100%!important;max-width:100%!important;padding:14px!important;}
+  body.pc5152ai-global-responsive-silent-menu .legacy-sidebar{
+    width:var(--pc-ai-mobile-sidebar)!important;min-width:0!important;max-width:86vw!important;z-index:560!important;
+  }
+  body.pc5152ai-global-responsive-silent-menu.pc584-main-drawer-open .pc584-main-drawer-toggle{left:min(calc(86vw - 54px),366px)!important;z-index:630!important;}
+  body.pc5152ai-global-responsive-silent-menu .side-menu a[data-target],
+  body.pc5152ai-global-responsive-silent-menu .pc585-menu-heading{min-height:48px!important;}
+  body.pc5152ai-global-responsive-silent-menu .overview-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  body.pc5152ai-global-responsive-silent-menu .timeline-list{grid-template-columns:1fr!important;display:grid!important;}
+  body.pc5152ai-global-responsive-silent-menu .timeline-list>div{padding:12px!important;}
+  body.pc5152ai-global-responsive-silent-menu #archive-entry .archive-list{grid-template-columns:1fr!important;padding:8px!important;}
+  body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card{min-height:0!important;padding:13px!important;}
+  body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card .btn,
+  body.pc5152ai-global-responsive-silent-menu #archive-entry .doc-card button{width:100%!important;min-height:44px!important;}
+  body.pc5152ai-global-responsive-silent-menu .faction-terminal,
+  body.pc5152ai-global-responsive-silent-menu .pc5134-network-shell,
+  body.pc5152ai-global-responsive-silent-menu .pc5133-case-frame{grid-template-columns:1fr!important;display:grid!important;gap:12px!important;}
+  body.pc5152ai-global-responsive-silent-menu .page-tabs,
+  body.pc5152ai-global-responsive-silent-menu .sub-tabs,
+  body.pc5152ai-global-responsive-silent-menu .detail-tabs{flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:thin!important;padding-bottom:6px!important;}
+  body.pc5152ai-global-responsive-silent-menu .page-tab,
+  body.pc5152ai-global-responsive-silent-menu .sub-tab,
+  body.pc5152ai-global-responsive-silent-menu .detail-tab{white-space:nowrap!important;flex:0 0 auto!important;min-height:44px!important;}
+}
+@media (max-width:430px){
+  body.pc5152ai-global-responsive-silent-menu{--pc-ai-mobile-sidebar:min(88vw,390px);--pc-ai-title:21px;--pc-ai-text:13px;}
+  body.pc5152ai-global-responsive-silent-menu .legacy-content{padding-left:9px!important;padding-right:9px!important;}
+  body.pc5152ai-global-responsive-silent-menu .overview-stats{grid-template-columns:1fr!important;}
+  body.pc5152ai-global-responsive-silent-menu .content-page,
+  body.pc5152ai-global-responsive-silent-menu .panel{padding:12px!important;}
+  body.pc5152ai-global-responsive-silent-menu.pc584-main-drawer-open .pc584-main-drawer-toggle{left:min(calc(88vw - 54px),336px)!important;}
+}

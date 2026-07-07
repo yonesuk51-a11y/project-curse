@@ -5216,3 +5216,164 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     });
   });
 })();
+
+
+// MapPatch 5.15.2ai — ViewportQA_GlobalResponsive_SilentMenu_BGM
+// Same-link PC/mobile QA: fix mobile side-menu touch, shorten menu labels, silence menu clicks, boost main ambient BGM, keep Immortality internal cues intact.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152ai-global-responsive-silent-menu');
+
+    function renameMenuLabels(){
+      document.querySelectorAll('.side-menu a[data-target="faction-info"] b').forEach(el=>{el.textContent='세력';});
+      document.querySelectorAll('.side-menu a[data-target="faction-relation"] b').forEach(el=>{el.textContent='관계도';});
+      document.querySelectorAll('.side-menu a[data-target="archive-entry"] b').forEach(el=>{el.textContent='기록보관소';});
+    }
+
+    function pages(){return Array.from(document.querySelectorAll('.content-page'));}
+    function sideLinks(){return Array.from(document.querySelectorAll('.side-menu a[data-target]'));}
+    function openPage(id){
+      if(!id || !pages().some(p=>p.id===id)) id='history';
+      pages().forEach(p=>p.classList.toggle('active', p.id===id));
+      sideLinks().forEach(a=>a.classList.toggle('active', a.dataset.target===id));
+      const link=document.querySelector(`.side-menu a[data-target="${CSS.escape(id)}"]`);
+      if(link){
+        document.querySelectorAll('.pc585-menu-group').forEach(group=>{
+          if(group.contains(link)){
+            group.classList.add('open');
+            const head=group.querySelector('.pc585-menu-heading');
+            if(head){
+              head.setAttribute('aria-expanded','true');
+              const icon=head.querySelector('span'); if(icon) icon.textContent='▾';
+            }
+          }
+        });
+      }
+      const content=document.querySelector('.legacy-content');
+      if(content) content.scrollTop=0;
+      try{ history.replaceState(null,'','#'+id); }catch(e){}
+    }
+    function closeDrawerOnMobile(){
+      const isMobile=(window.innerWidth||0)<=1024 || (window.matchMedia && window.matchMedia('(pointer:coarse)').matches && (window.innerWidth||0)<=940);
+      if(isMobile) body.classList.remove('pc584-main-drawer-open');
+      const toggle=document.querySelector('.pc584-main-drawer-toggle');
+      if(toggle && isMobile){
+        toggle.textContent='☰';
+        toggle.setAttribute('aria-expanded','false');
+      }
+    }
+
+    // Force mobile side-menu links to be selectable even if an older layer/listener is present.
+    sideLinks().forEach(link=>{
+      if(link.dataset.pc5152aiTouch==='1') return;
+      link.dataset.pc5152aiTouch='1';
+      link.style.pointerEvents='auto';
+      link.addEventListener('pointerup',function(e){
+        const isMobile=(window.innerWidth||0)<=1024 || (window.matchMedia && window.matchMedia('(pointer:coarse)').matches && (window.innerWidth||0)<=940);
+        if(!isMobile) return;
+        e.preventDefault();
+        e.stopPropagation();
+        openPage(link.dataset.target || 'history');
+        closeDrawerOnMobile();
+      },true);
+      link.addEventListener('click',function(e){
+        const isMobile=(window.innerWidth||0)<=1024 || (window.matchMedia && window.matchMedia('(pointer:coarse)').matches && (window.innerWidth||0)<=940);
+        if(!isMobile) return;
+        e.preventDefault();
+        e.stopPropagation();
+        openPage(link.dataset.target || 'history');
+        closeDrawerOnMobile();
+      },true);
+    });
+
+    // Menu actions should be silent. Keep boot, record-open, access-denied, main BGM, and Immortality sequence cues.
+    function applySilentMenuAndBgm(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      ['menu','drawer','command','marker'].forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=0; }catch(e){}});
+      // Page/tab relays are treated as menu UI in this build, so keep them silent too.
+      try{ if(bus.audio.page) bus.audio.page.volume=0; }catch(e){}
+      // Main menu/background ambience should be audible on PC and mobile without making UI clicks harsh.
+      try{
+        if(bus.audio.ambient){
+          bus.audio.ambient.volume = body.classList.contains('pc5152ah-phone') || (window.innerWidth||0)<=940 ? .18 : .135;
+          bus.audio.ambient.loop = true;
+        }
+      }catch(e){}
+    }
+
+    // Normalize archive cards after older patch code mutates them.
+    function fixArchiveCards(){
+      const archive=document.getElementById('archive-entry');
+      if(!archive) return;
+      const openIds=new Set(['Cults_871104','Immortality_860201']);
+      archive.querySelectorAll('.doc-card').forEach(card=>{
+        const btn=card.querySelector('button[data-record],button.open-record,.pc5152aa-public-open');
+        const code=(card.querySelector('.code')?.textContent||btn?.getAttribute('data-record')||card.getAttribute('data-sealed-record')||'').trim();
+        const id=btn?.getAttribute('data-record') || code;
+        const open=openIds.has(id) || openIds.has(code);
+        card.setAttribute('data-access', open?'open':'sealed');
+        card.style.pointerEvents='auto';
+        card.style.overflow='hidden';
+        card.style.position='relative';
+        card.style.zIndex=open?'8':'1';
+        card.querySelectorAll('.thumb,.open-file-cue,.pc5152ac-open-cue,.pc5152ad-card-cue,.doc-status-badge').forEach(el=>el.remove());
+        if(btn){
+          btn.type='button';
+          if(open){
+            btn.classList.add('btn','open-record','pc5152aa-public-open');
+            btn.removeAttribute('disabled');
+            btn.removeAttribute('aria-disabled');
+            btn.textContent='기록 열람';
+            btn.style.pointerEvents='auto';
+            btn.style.position='relative';
+            btn.style.zIndex='60';
+          }else{
+            btn.classList.remove('open-record','pc5152aa-public-open');
+            btn.classList.add('pc5152aa-locked-record');
+            btn.setAttribute('disabled','');
+            btn.setAttribute('aria-disabled','true');
+            btn.textContent='기밀 처리됨';
+            btn.style.pointerEvents='none';
+          }
+        }
+      });
+    }
+
+    const archive=document.getElementById('archive-entry');
+    if(archive && archive.dataset.pc5152aiClickGuard!=='1'){
+      archive.dataset.pc5152aiClickGuard='1';
+      archive.addEventListener('click',function(e){
+        const btn=e.target.closest && e.target.closest('button.open-record.pc5152aa-public-open[data-record]');
+        if(btn) return;
+        const card=e.target.closest && e.target.closest('.doc-card');
+        if(card){ e.preventDefault(); e.stopPropagation(); }
+      },true);
+    }
+
+    function syncViewportClass(){
+      const w=window.innerWidth||document.documentElement.clientWidth||0;
+      body.classList.toggle('pc5152ai-phone', w<=760 || (window.matchMedia && window.matchMedia('(pointer:coarse)').matches && w<=940));
+      body.classList.toggle('pc5152ai-4k', w>=3000);
+      applySilentMenuAndBgm();
+    }
+
+    renameMenuLabels();
+    fixArchiveCards();
+    syncViewportClass();
+    [50,250,700,1400,3000].forEach(t=>setTimeout(()=>{renameMenuLabels();fixArchiveCards();syncViewportClass();},t));
+    window.addEventListener('resize',syncViewportClass,{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(syncViewportClass,80),{passive:true});
+    document.addEventListener('pointerdown',()=>setTimeout(applySilentMenuAndBgm,0),true);
+    document.addEventListener('click',()=>setTimeout(()=>{fixArchiveCards();applySilentMenuAndBgm();},0),true);
+
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152ai:'ViewportQA GlobalResponsive SilentMenu BGM',
+      menu:'mobile side-menu touch fixed; 세력/관계도 short labels; menu click sounds muted',
+      audio:'main ambient BGM boosted; record and Immortality internal cues preserved',
+      layout:'global PC/mobile responsive containment and archive card stacking guard'
+    });
+  });
+})();
