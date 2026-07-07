@@ -1,5 +1,10 @@
-# Project Curse U.A.C Server
+# Project Curse U.A.C Server — MapPatch 5.15.2ak
 
-Current package: MapPatch5.15.2aj MobileSidebarRouter_WidthHotfix.
+MobileLayoutPass_RelationRecordFix build.
 
-This build fixes mobile side-menu tap routing, removes the old sidebar grid column from mobile/overlay layout, keeps short side-menu labels, preserves silent menu clicks, and keeps Project Curse/U.A.C visual identity intact.
+Current runtime focus:
+- Mobile relation page no longer uses PC-like overlapped panels.
+- Mobile world/timeline, archive, faction, relation, and record-detail pages use wider and denser mobile layouts.
+- Mobile side-menu routing is reinforced and section scroll is reset on navigation.
+- Cults / Immortality record access rules remain unchanged.
+- Immortality internal sound/sequence cues are preserved.

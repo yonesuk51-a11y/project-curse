@@ -5536,3 +5536,168 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     });
   });
 })();
+
+// MapPatch 5.15.2ak — MobileLayoutPass_RelationRecordFix
+// Global mobile page density pass, relation graph/log split support, record detail spacing, and section scroll hard reset.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152ak-mobile-layout-pass');
+    const originalTitles = new Map();
+    function isMobile(){
+      const w=window.innerWidth||document.documentElement.clientWidth||0;
+      return w<=820 || ((window.matchMedia&&window.matchMedia('(pointer:coarse)').matches) && w<=1180);
+    }
+    function q(sel,root=document){return root.querySelector(sel);}
+    function qa(sel,root=document){return Array.from(root.querySelectorAll(sel));}
+    function setTitle(id,text,full){
+      const h=q(`#${id} > h2`);
+      if(!h) return;
+      if(!originalTitles.has(h)) originalTitles.set(h, full || h.textContent);
+      h.textContent=isMobile()?text:originalTitles.get(h);
+    }
+    function mobileTitlePass(){
+      setTitle('faction-info','세력','기관 파일 / 감시 대상 색인');
+      setTitle('faction-relation','관계도','기관 관계망 / 감청 분석 노드');
+      setTitle('archive-entry','기록보관소','기록보관소 / 기록 파일 색인');
+    }
+    function resetScroll(){
+      const content=q('.legacy-content');
+      if(content) content.scrollTop=0;
+      try{ document.scrollingElement.scrollTop=0; }catch(e){}
+      try{ window.scrollTo(0,0); }catch(e){}
+    }
+    function activeId(){
+      const hash=(location.hash||'').replace('#','');
+      return hash || 'history';
+    }
+    function hardActivate(id){
+      if(!id || !q('#'+CSS.escape(id))) id='history';
+      qa('.content-page,.panel').forEach(p=>{
+        if(!p.id) return;
+        const on=p.id===id;
+        p.classList.toggle('active',on);
+        p.toggleAttribute('inert',!on);
+        p.style.pointerEvents=on?'auto':'none';
+      });
+      qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',a.dataset.target===id));
+      resetScroll();
+      setTimeout(resetScroll,30);
+      setTimeout(resetScroll,160);
+    }
+    function scrubInactive(){
+      qa('.content-page:not(.active),.panel:not(.active)').forEach(p=>{
+        p.style.pointerEvents='none';
+        p.setAttribute('aria-hidden','true');
+        p.setAttribute('inert','');
+      });
+      qa('.content-page.active,.panel.active').forEach(p=>{
+        p.style.pointerEvents='auto';
+        p.removeAttribute('aria-hidden');
+        p.removeAttribute('inert');
+      });
+    }
+    function relationPass(){
+      const root=q('#faction-relation .pc5152ag-relation-root');
+      if(!root) return;
+      root.dataset.pc5152akMobileLayout=isMobile()?'mobile':'desktop';
+      if(isMobile()){
+        const center=q('.pc5152ag-network-center',root);
+        const signal=q('.pc5152ag-signal-frame',root);
+        const log=q('.pc5152ag-relation-log',root);
+        const focus=q('.pc5152ag-focus-line',root);
+        if(center && signal && log){
+          signal.style.order='1';
+          if(focus) focus.style.order='2';
+          log.style.order='3';
+        }
+      }
+    }
+    function archivePass(){
+      const openIds=new Set(['Cults_871104','Immortality_860201']);
+      qa('#archive-entry .doc-card').forEach(card=>{
+        const code=(q('.code',card)?.textContent||'').trim();
+        const btn=q('button[data-record],button.open-record,.pc5152aa-public-open,.pc5152aa-locked-record',card);
+        const id=(btn?.getAttribute('data-record')||code).trim();
+        const open=openIds.has(id)||openIds.has(code);
+        card.dataset.access=open?'open':'sealed';
+        card.style.display='flex';
+        card.style.flexDirection='column';
+        card.style.overflow='hidden';
+        card.style.isolation='isolate';
+        card.style.position='relative';
+        if(btn){
+          btn.type='button';
+          if(open){
+            btn.disabled=false;
+            btn.removeAttribute('aria-disabled');
+            btn.classList.add('open-record','pc5152aa-public-open','btn');
+            btn.textContent='기록 열람';
+            btn.style.pointerEvents='auto';
+            btn.style.position='relative';
+            btn.style.zIndex='10';
+          }else{
+            btn.disabled=true;
+            btn.setAttribute('aria-disabled','true');
+            btn.classList.remove('open-record','pc5152aa-public-open');
+            btn.classList.add('pc5152aa-locked-record');
+            btn.textContent='기밀 처리됨';
+            btn.style.pointerEvents='none';
+          }
+        }
+      });
+    }
+    function sideMenuHardRoute(e){
+      if(!isMobile()) return;
+      const link=e.target && e.target.closest ? e.target.closest('.legacy-sidebar .side-menu a[data-target]') : null;
+      const heading=e.target && e.target.closest ? e.target.closest('.legacy-sidebar .pc585-menu-heading') : null;
+      if(!link && !heading) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      if(heading){
+        const group=heading.closest('.pc585-menu-group');
+        if(group){
+          const open=!group.classList.contains('open');
+          group.classList.toggle('open',open);
+          heading.setAttribute('aria-expanded',open?'true':'false');
+          const icon=heading.querySelector('span'); if(icon) icon.textContent=open?'▾':'▸';
+        }
+        return;
+      }
+      const id=link.dataset.target || 'history';
+      hardActivate(id);
+      try{ history.replaceState(null,'','#'+id); }catch(err){}
+      body.classList.remove('pc584-main-drawer-open');
+      const toggle=q('.pc584-main-drawer-toggle');
+      if(toggle){toggle.textContent='☰';toggle.setAttribute('aria-expanded','false');}
+    }
+    ['touchend','pointerup','click'].forEach(type=>document.addEventListener(type,sideMenuHardRoute,{capture:true,passive:false}));
+    function apply(){
+      mobileTitlePass();
+      relationPass();
+      archivePass();
+      scrubInactive();
+      body.classList.toggle('pc5152ak-phone',isMobile());
+      if(isMobile()){
+        qa('.pc584-drawer-backdrop,.mobile-backdrop,.drawer-backdrop,.content-dim,.menu-overlay,.frame-overlay,.noise-layer,.scan-layer').forEach(el=>{
+          el.style.display='none';el.style.visibility='hidden';el.style.pointerEvents='none';el.style.opacity='0';
+        });
+      }
+    }
+    apply();
+    hardActivate(activeId());
+    [80,260,700,1500,3200].forEach(t=>setTimeout(()=>{apply();hardActivate(activeId());},t));
+    window.addEventListener('hashchange',()=>{setTimeout(()=>{apply();hardActivate(activeId());},0);},{passive:true});
+    window.addEventListener('resize',()=>setTimeout(apply,60),{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(()=>{apply();hardActivate(activeId());},160),{passive:true});
+    document.addEventListener('click',()=>setTimeout(()=>{apply();scrubInactive();},30),true);
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152ak:'MobileLayoutPass RelationRecordFix',
+      mobile:'relation graph/log split; tighter timeline/faction/record layout; full-width mobile pages',
+      router:'mobile section taps routed via capture; section scroll resets to top; inactive panels inert',
+      preserved:'Immortality internal sequence cues untouched; PC 4K layout preserved'
+    });
+  });
+})();
