@@ -12058,3 +12058,2284 @@ body.pc5152ak-mobile-layout-pass .record-page{
   body.pc5152ak-mobile-layout-pass .panel > h2{font-size:clamp(24px,7.6vw,30px)!important;}
   body.pc5152ak-mobile-layout-pass #faction-relation .pc5152ag-map-node{font-size:8.5px!important;min-width:52px!important;}
 }
+
+
+/* MapPatch 5.15.2al — MobileReadableLayout_SystemPass
+   Reduces excessive gutters, switches relation page to readable summary rows/cards,
+   and tightens vertical density across all menu pages without importing external-world styling. */
+body.pc5152al-mobile-readable-system-pass{
+  --pc-al-page-max: min(calc(100vw - 72px), 3000px);
+  --pc-al-page-pad-x: clamp(18px,1.55vw,52px);
+  --pc-al-page-pad-y: clamp(18px,1.5vw,34px);
+  --pc-al-card-pad: clamp(12px,.85vw,18px);
+}
+body.pc5152al-mobile-readable-system-pass,
+body.pc5152al-mobile-readable-system-pass *{box-sizing:border-box;min-width:0;}
+body.pc5152al-mobile-readable-system-pass .legacy-content{
+  padding:var(--pc-al-page-pad-y) var(--pc-al-page-pad-x)!important;
+}
+body.pc5152al-mobile-readable-system-pass .wrap,
+body.pc5152al-mobile-readable-system-pass .content-page,
+body.pc5152al-mobile-readable-system-pass .panel,
+body.pc5152al-mobile-readable-system-pass .doc-shell{
+  width:var(--pc-al-page-max)!important;
+  max-width:var(--pc-al-page-max)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body.pc5152al-mobile-readable-system-pass .content-page,
+body.pc5152al-mobile-readable-system-pass .panel{
+  padding:clamp(14px,1vw,22px)!important;
+}
+body.pc5152al-mobile-readable-system-pass .content-page > h2,
+body.pc5152al-mobile-readable-system-pass .panel > h2{
+  max-width:100%!important;
+  overflow-wrap:break-word!important;
+}
+body.pc5152al-mobile-readable-system-pass #history .pc5130-legacy-history,
+body.pc5152al-mobile-readable-system-pass .faction-terminal,
+body.pc5152al-mobile-readable-system-pass .archive-groups,
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-root{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+body.pc5152al-mobile-readable-system-pass #history .pc5130-legacy-history{
+  padding:clamp(12px,.95vw,18px)!important;
+}
+body.pc5152al-mobile-readable-system-pass #history .overview-stats{
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important;
+}
+body.pc5152al-mobile-readable-system-pass #history .timeline-list.expanded{
+  gap:8px!important;
+}
+body.pc5152al-mobile-readable-system-pass #history .timeline-list.expanded > div{
+  padding:var(--pc-al-card-pad)!important;
+}
+body.pc5152al-mobile-readable-system-pass #archive-entry .archive-list{
+  grid-template-columns:repeat(auto-fit,minmax(310px,1fr))!important;
+  gap:10px!important;
+}
+body.pc5152al-mobile-readable-system-pass #archive-entry .doc-card{
+  padding:var(--pc-al-card-pad)!important;
+}
+
+/* Relation page: readable list/table first, node graph removed from the main reading path. */
+body.pc5152al-mobile-readable-system-pass #faction-relation .pc5152al-relation-root{
+  display:grid!important;
+  gap:12px!important;
+  border:1px solid rgba(116,132,132,.22)!important;
+  background:rgba(5,8,9,.72)!important;
+  padding:12px!important;
+  overflow:hidden!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-head{
+  display:flex!important;
+  align-items:end!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  border-bottom:1px solid rgba(116,132,132,.18)!important;
+  padding-bottom:10px!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-head b{
+  color:rgba(220,224,223,.92)!important;
+  font-size:clamp(15px,1vw,18px)!important;
+  letter-spacing:.04em!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-head span{
+  font:700 11px/1.2 Consolas,monospace!important;
+  color:rgba(172,82,86,.82)!important;
+  letter-spacing:.12em!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:6px!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend i,
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-type{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:28px!important;
+  padding:4px 9px!important;
+  border:1px solid rgba(132,150,150,.22)!important;
+  background:rgba(10,13,14,.62)!important;
+  color:rgba(222,228,225,.86)!important;
+  font:700 11px/1.15 Consolas,monospace!important;
+  letter-spacing:.08em!important;
+  white-space:nowrap!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend i[data-type="통제"],
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-type[data-type="통제"]{border-color:rgba(170,190,190,.34)!important;color:rgba(226,232,230,.92)!important;}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend i[data-type="감시"],
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-type[data-type="감시"]{border-color:rgba(172,154,94,.38)!important;color:rgba(226,206,142,.90)!important;}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend i[data-type="봉인"],
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-type[data-type="봉인"]{border-color:rgba(160,172,190,.34)!important;color:rgba(205,215,230,.86)!important;}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend i[data-type="적대"],
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-type[data-type="적대"]{border-color:rgba(180,56,64,.55)!important;color:rgba(236,120,126,.95)!important;}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend i[data-type="연구"],
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-type[data-type="연구"]{border-color:rgba(128,104,148,.38)!important;color:rgba(206,190,222,.86)!important;}
+body.pc5152al-mobile-readable-system-pass .pc5152al-relation-table{
+  display:grid!important;
+  gap:0!important;
+  border:1px solid rgba(116,132,132,.17)!important;
+  background:rgba(6,9,10,.48)!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-row{
+  display:grid!important;
+  grid-template-columns:minmax(170px,1.05fr) minmax(88px,.36fr) minmax(260px,1.65fr)!important;
+  align-items:stretch!important;
+  gap:0!important;
+  border-bottom:1px solid rgba(116,132,132,.15)!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-row:last-child{border-bottom:0!important;}
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-row > div{
+  padding:12px 14px!important;
+  border-right:1px solid rgba(116,132,132,.12)!important;
+  display:flex!important;
+  align-items:center!important;
+  overflow-wrap:anywhere!important;
+  word-break:keep-all!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-row > div:last-child{border-right:0!important;}
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-link{
+  font:700 clamp(13px,.9vw,16px)/1.45 'Malgun Gothic',sans-serif!important;
+  color:rgba(224,228,226,.92)!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-rel-desc{
+  color:rgba(201,211,208,.80)!important;
+  font-size:clamp(13px,.82vw,15px)!important;
+  line-height:1.62!important;
+}
+body.pc5152al-mobile-readable-system-pass .pc5152al-network-note{
+  display:flex!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  color:rgba(168,178,176,.62)!important;
+  font:700 11px/1.45 Consolas,monospace!important;
+  letter-spacing:.08em!important;
+}
+
+@media (max-width:1024px){
+  body.pc5152al-mobile-readable-system-pass{
+    --pc-al-phone-gutter:6px;
+    --pc-al-page-max:calc(100vw - (var(--pc-al-phone-gutter) * 2));
+    --pc-al-card-pad:10px;
+  }
+  body.pc5152al-mobile-readable-system-pass .legacy-content{
+    width:100vw!important;
+    padding:58px var(--pc-al-phone-gutter) 44px var(--pc-al-phone-gutter)!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .wrap,
+  body.pc5152al-mobile-readable-system-pass .content-page,
+  body.pc5152al-mobile-readable-system-pass .panel,
+  body.pc5152al-mobile-readable-system-pass .doc-shell,
+  body.pc5152al-mobile-readable-system-pass .record-content{
+    width:var(--pc-al-page-max)!important;
+    max-width:var(--pc-al-page-max)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .content-page,
+  body.pc5152al-mobile-readable-system-pass .panel{
+    padding:8px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .content-page > .label,
+  body.pc5152al-mobile-readable-system-pass .panel > .label{
+    font-size:10px!important;
+    margin-bottom:6px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .content-page > h2,
+  body.pc5152al-mobile-readable-system-pass .panel > h2,
+  body.pc5152al-mobile-readable-system-pass .doc-title{
+    font-size:clamp(22px,6.4vw,30px)!important;
+    line-height:1.12!important;
+    margin-bottom:10px!important;
+    letter-spacing:-.045em!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .panel h3,
+  body.pc5152al-mobile-readable-system-pass .content-page h3{
+    font-size:clamp(18px,4.9vw,23px)!important;
+    margin:14px 0 8px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .panel p,
+  body.pc5152al-mobile-readable-system-pass .content-page p,
+  body.pc5152al-mobile-readable-system-pass .record-page div,
+  body.pc5152al-mobile-readable-system-pass .record-page p,
+  body.pc5152al-mobile-readable-system-pass .record-page li{
+    font-size:clamp(13.5px,3.8vw,15.5px)!important;
+    line-height:1.60!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #history .pc5130-legacy-history{
+    margin:0!important;
+    padding:10px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #history .pc5130-legacy-history > p{
+    margin-bottom:10px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #history .overview-stats,
+  body.pc5152al-mobile-readable-system-pass #history .timeline-list.expanded{
+    gap:7px!important;
+    margin:9px 0!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #history .stat-card{
+    padding:10px 12px!important;
+    min-height:0!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #history .stat-card b{
+    font-size:clamp(21px,6.1vw,28px)!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #history .stat-card span{
+    font-size:13px!important;
+    line-height:1.4!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #history .timeline-list.expanded > div{
+    padding:10px 11px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .faction-terminal,
+  body.pc5152al-mobile-readable-system-pass .archive-list,
+  body.pc5152al-mobile-readable-system-pass .overview-stats,
+  body.pc5152al-mobile-readable-system-pass .timeline-list,
+  body.pc5152al-mobile-readable-system-pass .pc5152al-relation-table{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #faction-info .faction-tile{
+    min-height:58px!important;
+    padding:8px 10px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #faction-info .faction-tile img{
+    width:34px!important;height:34px!important;max-width:34px!important;max-height:34px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #archive-entry .archive-list{
+    grid-template-columns:1fr!important;
+    padding:6px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #archive-entry .doc-card{
+    padding:10px!important;
+    min-height:0!important;
+  }
+  body.pc5152al-mobile-readable-system-pass #archive-entry .doc-card button,
+  body.pc5152al-mobile-readable-system-pass #archive-entry .doc-card .btn{
+    width:100%!important;
+    min-height:40px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .pc5152al-relation-head{
+    display:grid!important;
+    gap:7px!important;
+    align-items:start!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .pc5152al-relation-root{
+    padding:8px!important;
+    gap:8px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend{gap:5px!important;}
+  body.pc5152al-mobile-readable-system-pass .pc5152al-relation-legend i{min-height:26px!important;padding:4px 8px!important;font-size:10px!important;}
+  body.pc5152al-mobile-readable-system-pass .pc5152al-rel-row{
+    grid-template-columns:1fr!important;
+    border:1px solid rgba(116,132,132,.16)!important;
+    margin-bottom:7px!important;
+    background:rgba(10,13,14,.55)!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .pc5152al-rel-row > div{
+    padding:8px 10px!important;
+    border-right:0!important;
+    border-bottom:1px solid rgba(116,132,132,.10)!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .pc5152al-rel-row > div:last-child{border-bottom:0!important;}
+  body.pc5152al-mobile-readable-system-pass .pc5152al-rel-type{
+    width:auto!important;
+    justify-self:start!important;
+    min-height:24px!important;
+    font-size:10px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .pc5152al-rel-desc{
+    font-size:13px!important;
+    line-height:1.55!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .pc5152al-network-note{
+    display:grid!important;
+    gap:4px!important;
+    font-size:10px!important;
+  }
+  body.pc5152al-mobile-readable-system-pass .record-content,
+  body.pc5152al-mobile-readable-system-pass .record-page{
+    padding:10px!important;
+  }
+}
+@media (max-width:380px){
+  body.pc5152al-mobile-readable-system-pass{--pc-al-phone-gutter:5px;}
+  body.pc5152al-mobile-readable-system-pass .content-page,
+  body.pc5152al-mobile-readable-system-pass .panel{padding:7px!important;}
+}
+@media (min-width:3000px){
+  body.pc5152al-mobile-readable-system-pass{
+    --pc-al-page-max:min(calc(100vw - 96px), 3180px);
+    --pc-al-page-pad-x:clamp(32px,1.9vw,78px);
+  }
+  body.pc5152al-mobile-readable-system-pass #archive-entry .archive-list{grid-template-columns:repeat(auto-fit,minmax(360px,1fr))!important;}
+}
+
+/* MapPatch 5.15.2am — AudioReplace_CultTraceVHS_LayoutBalance
+   Cults_871104 medium signal effect + PC/mobile layout balance. */
+body.pc5152am-audio-cult-vhs-layout-balance{
+  --pc-am-page-max: min(calc(100vw - 72px), 2360px);
+  --pc-am-gutter: clamp(10px, 1.25vw, 28px);
+}
+body.pc5152am-audio-cult-vhs-layout-balance .legacy-content{
+  padding-inline: var(--pc-am-gutter)!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .content-page,
+body.pc5152am-audio-cult-vhs-layout-balance .panel{
+  width: var(--pc-am-page-max)!important;
+  max-width: var(--pc-am-page-max)!important;
+  margin-inline:auto!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance #history .pc5130-legacy-history,
+body.pc5152am-audio-cult-vhs-layout-balance #archive-entry,
+body.pc5152am-audio-cult-vhs-layout-balance #faction-info,
+body.pc5152am-audio-cult-vhs-layout-balance #faction-relation{
+  min-height:0!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .overview-stats{
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr))!important;
+  gap:10px!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .timeline-list.expanded{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(440px,1fr))!important;
+  gap:8px!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .timeline-list.expanded>div{
+  min-height:118px!important;
+  padding:12px 14px!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .archive-list{
+  grid-template-columns:repeat(auto-fit,minmax(310px,1fr))!important;
+  gap:10px!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .doc-card{
+  min-height:132px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:6px!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .doc-card .btn{
+  align-self:flex-start!important;
+  margin-top:auto!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .doc-card[data-access="sealed"] .btn,
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152aa-locked-record{
+  border-color:rgba(130,135,138,.22)!important;
+  color:rgba(170,174,174,.42)!important;
+  background:rgba(10,12,14,.42)!important;
+  box-shadow:none!important;
+  cursor:not-allowed!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152al-relation-root{
+  width:100%!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152al-relation-table{
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152al-rel-row{
+  grid-template-columns:minmax(190px,.58fr) minmax(72px,.16fr) minmax(0,1.4fr)!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-relation-support{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-relation-support article,
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-faction-card{
+  border:1px solid rgba(110,125,128,.18);
+  background:rgba(7,10,12,.74);
+  padding:10px 12px;
+  min-height:86px;
+  box-shadow:inset 3px 0 0 rgba(160,55,62,.34);
+}
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-relation-support b,
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-faction-card b{
+  display:block;
+  color:rgba(232,236,234,.82);
+  font:900 12px/1.2 Consolas,"Noto Sans KR",sans-serif;
+  letter-spacing:.04em;
+  margin-bottom:7px;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-relation-support span,
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-faction-card span{
+  display:block;
+  color:rgba(196,207,203,.64);
+  font:700 11px/1.55 Consolas,"Noto Sans KR",sans-serif;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-faction-balance{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .faction-terminal{
+  grid-template-columns:minmax(230px,300px) minmax(0,1fr)!important;
+  gap:10px!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .faction-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:7px!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .faction-tile{
+  min-height:58px!important;
+  display:grid!important;
+  grid-template-columns:34px minmax(0,1fr)!important;
+  grid-template-rows:auto auto!important;
+  align-items:center!important;
+  text-align:left!important;
+  padding:7px 9px!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .faction-tile img{
+  grid-row:1 / span 2;
+  width:28px!important;height:28px!important;max-width:28px!important;max-height:28px!important;
+  margin:0!important;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .faction-tile span,
+body.pc5152am-audio-cult-vhs-layout-balance .faction-tile small{text-align:left!important;}
+body.pc5152am-audio-cult-vhs-layout-balance .record-detail[data-record="Cults_871104"] .record-figure{
+  position:relative;
+  max-width:min(760px,100%)!important;
+  border:1px solid rgba(134,72,76,.38);
+  background:rgba(0,0,0,.74);
+  padding:10px;
+  box-shadow:0 0 22px rgba(90,0,10,.16);
+}
+body.pc5152am-audio-cult-vhs-layout-balance .record-detail[data-record="Cults_871104"] .record-figure::after{
+  content:"";
+  position:absolute;inset:10px;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px),radial-gradient(circle at 50% 50%,transparent 0 55%,rgba(0,0,0,.26) 100%);
+  mix-blend-mode:screen;
+  opacity:.22;
+}
+body.pc5152am-audio-cult-vhs-layout-balance .record-detail[data-record="Cults_871104"] .record-figure figcaption{
+  text-align:left!important;
+  margin-top:8px!important;
+  color:rgba(205,128,132,.82)!important;
+  font:800 11px/1.45 Consolas,"Noto Sans KR",monospace!important;
+  letter-spacing:.08em;
+}
+body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode)::after{
+  content:"";
+  position:absolute;inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 4px),linear-gradient(90deg,rgba(170,20,35,.035),transparent 28%,rgba(40,80,88,.025) 60%,transparent);
+  opacity:.18;
+  mix-blend-mode:screen;
+  animation:pc5152amTracePulse 1.2s steps(2,end) infinite;
+  z-index:8;
+}
+body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode).intro-mode::after,
+body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode).video-transition::after,
+body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode).black-transition::after{
+  opacity:.34;
+}
+body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode) .pc5152h-seq-frame{
+  box-shadow:0 0 0 1px rgba(146,80,84,.34),0 0 34px rgba(90,0,12,.20)!important;
+}
+body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode) .pc5152h-seq-frame::after{
+  content:"";
+  position:absolute;inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 5px);
+  opacity:.20;
+  mix-blend-mode:screen;
+}
+@keyframes pc5152amTracePulse{0%,100%{transform:translate(0,0);opacity:.16}45%{transform:translate(1px,-1px);opacity:.24}62%{transform:translate(-1px,1px);opacity:.19}}
+@media (min-width:3000px){
+  body.pc5152am-audio-cult-vhs-layout-balance .archive-list{grid-template-columns:repeat(4,minmax(300px,1fr))!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .timeline-list.expanded{grid-template-columns:repeat(3,minmax(380px,1fr))!important;}
+}
+@media (max-width:1024px){
+  body.pc5152am-audio-cult-vhs-layout-balance{
+    --pc-am-page-max: calc(100vw - 16px);
+    --pc-am-gutter:8px;
+  }
+  body.pc5152am-audio-cult-vhs-layout-balance .legacy-content{padding-inline:8px!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .content-page,
+  body.pc5152am-audio-cult-vhs-layout-balance .panel{width:calc(100vw - 16px)!important;max-width:none!important;margin-inline:8px!important;padding:12px!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .overview-stats{grid-template-columns:1fr!important;gap:7px!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .timeline-list.expanded{grid-template-columns:1fr!important;gap:7px!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .timeline-list.expanded>div{min-height:0!important;padding:10px 11px!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .archive-list{grid-template-columns:1fr!important;padding:8px!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .pc5152al-rel-row{display:grid!important;grid-template-columns:1fr!important;gap:6px!important;padding:9px 10px!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-relation-support,
+  body.pc5152am-audio-cult-vhs-layout-balance .pc5152am-faction-balance{grid-template-columns:1fr!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .faction-terminal{grid-template-columns:1fr!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .faction-grid{grid-template-columns:1fr!important;}
+  body.pc5152am-audio-cult-vhs-layout-balance .faction-detail{min-height:0!important;padding:12px!important;}
+  body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode)::after{opacity:.10;}
+  body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode).intro-mode::after,
+  body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode).video-transition::after,
+  body.pc5152am-cult-vhs-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode).black-transition::after{opacity:.18;}
+}
+
+
+/* MapPatch 5.15.2an — SystemFrame_KST_RecordLayout_AudioBusFix */
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix{
+  --pc-an-frame-h:44px;
+  --pc-an-gutter:clamp(8px,1vw,28px);
+  --pc-an-border:rgba(136,148,148,.22);
+  --pc-an-ink:rgba(218,225,220,.88);
+  --pc-an-dim:rgba(150,160,154,.56);
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix *{box-sizing:border-box;min-width:0;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-systembar{
+  position:fixed;left:0;right:0;top:0;z-index:9200;height:var(--pc-an-frame-h);
+  display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;align-items:center;gap:10px;
+  padding:5px var(--pc-an-gutter);
+  border-bottom:1px solid var(--pc-an-border);
+  background:linear-gradient(180deg,rgba(6,8,9,.96),rgba(4,5,6,.90));
+  box-shadow:0 10px 34px rgba(0,0,0,.48), inset 0 -1px 0 rgba(255,255,255,.035);
+  color:var(--pc-an-ink);font-family:Consolas,"Noto Sans KR",monospace;
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-systembar::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(120,18,24,.10),transparent 32%,rgba(165,170,150,.045) 70%,transparent);
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-menu{
+  position:relative;z-index:2;width:32px;height:30px;border:1px solid rgba(180,190,184,.22);background:rgba(10,12,13,.86);color:rgba(230,235,228,.88);
+  font:900 18px/1 Consolas,monospace;cursor:pointer;padding:0;border-radius:0;
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-menu:hover{background:rgba(44,20,22,.82);border-color:rgba(168,68,74,.34);}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-server,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-current,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-clock,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-flags{position:relative;z-index:2;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-server b{font:900 13px/1 Consolas,monospace;letter-spacing:.08em;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-server span,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-current small,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-clock small{color:var(--pc-an-dim);font:900 9px/1 Consolas,monospace;letter-spacing:.10em;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-current{justify-content:center;border-left:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06);padding-inline:12px;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-current b{overflow:hidden;text-overflow:ellipsis;font:900 12px/1 "Noto Sans KR",Consolas,monospace;letter-spacing:.03em;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-clock b{font:900 12px/1 Consolas,monospace;color:rgba(222,226,218,.88);}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-flags span{border:1px solid rgba(255,255,255,.10);padding:5px 7px;color:rgba(170,180,172,.70);font:900 9px/1 Consolas,monospace;letter-spacing:.08em;background:rgba(255,255,255,.025);}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc584-main-drawer-toggle{display:none!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .legacy-content{
+  padding-top:calc(var(--pc-an-frame-h) + 8px)!important;
+  padding-left:var(--pc-an-gutter)!important;
+  padding-right:var(--pc-an-gutter)!important;
+  padding-bottom:12px!important;
+  width:100vw!important;max-width:none!important;margin:0!important;
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .legacy-sidebar{padding-top:calc(var(--pc-an-frame-h) + 14px)!important;z-index:9100!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .content-page,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .panel,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .doc-shell,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-content{
+  width:calc(100vw - (var(--pc-an-gutter) * 2))!important;
+  max-width:min(3520px,calc(100vw - (var(--pc-an-gutter) * 2)))!important;
+  margin-inline:auto!important;
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .content-page,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .panel,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .doc-shell{padding:clamp(12px,1.05vw,24px)!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .content-page > .label,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .panel > .label{margin-bottom:5px!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .content-page h2,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .panel h2{margin-block:4px 8px!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .overview-stats,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .timeline-list.expanded,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .archive-list,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152am-relation-support,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152am-faction-balance{gap:clamp(8px,.65vw,16px)!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .timeline-list.expanded>div,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .doc-card,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .stat-card,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152am-relation-support article,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152am-faction-card{padding:clamp(11px,.8vw,18px)!important;}
+@media (min-width:2200px){
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix #history .timeline-list.expanded{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix #archive-entry .archive-list{grid-template-columns:repeat(4,minmax(300px,1fr))!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix #history .overview-stats{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
+}
+@media (min-width:1500px) and (max-width:2199px){
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix #history .timeline-list.expanded{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix #archive-entry .archive-list{grid-template-columns:repeat(3,minmax(300px,1fr))!important;}
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-page:not(:has(> .nested-record)):has(> .record-figure){
+  display:grid!important;grid-template-columns:minmax(420px,1.05fr) minmax(360px,.95fr)!important;column-gap:clamp(18px,2vw,46px)!important;row-gap:10px!important;align-items:start!important;
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-page:not(:has(> .nested-record)):has(> .record-figure) > .record-figure{grid-column:1!important;grid-row:1 / span 80!important;margin:0!important;width:100%!important;max-width:none!important;position:relative;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-page:not(:has(> .nested-record)):has(> .record-figure) > :not(.record-figure){grid-column:2!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-figure,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-attachment-figure{
+  border:1px solid rgba(130,138,132,.20)!important;background:rgba(0,0,0,.46)!important;padding:10px!important;box-shadow:0 0 30px rgba(0,0,0,.22)!important;
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-figure img,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-attachment-figure img{display:block;width:100%!important;max-height:min(64vh,860px)!important;object-fit:contain!important;background:#010101!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-figure figcaption,
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-attachment-figure figcaption{display:block!important;margin-top:8px!important;color:rgba(186,194,184,.72)!important;font:800 11px/1.45 Consolas,"Noto Sans KR",monospace!important;letter-spacing:.04em;text-align:left!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-figure figcaption b{display:block;color:rgba(212,218,208,.82)!important;letter-spacing:.08em;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-figure figcaption span{display:block;color:rgba(152,162,154,.68)!important;margin-top:2px;}
+body.pc5152an-cult-vhs-overlay-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode) .pc5152an-vhs-overlay-video{
+  display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;
+  opacity:.24!important;filter:contrast(1.35) brightness(.72) saturate(.18) grayscale(.65)!important;mix-blend-mode:screen!important;pointer-events:none!important;z-index:7!important;
+}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence:not(.pc5152q-immortality-mode) .pc5152an-vhs-overlay-video{display:none;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence:not(.pc5152q-immortality-mode)::after{z-index:8!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence .pc5152h-seq-panel{z-index:12!important;}
+body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence .pc5152x-seq-return{z-index:15!important;}
+@media (max-width:940px){
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix{--pc-an-frame-h:58px;--pc-an-gutter:6px;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-systembar{grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:26px 22px;height:var(--pc-an-frame-h);gap:2px 8px;padding:4px 6px;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-menu{grid-row:1 / span 2;width:34px;height:48px;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-server{grid-column:2;grid-row:1;overflow:hidden;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-server span{display:none;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-current{grid-column:2;grid-row:2;justify-content:flex-start;border:0;padding:0;overflow:hidden;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-clock{grid-column:3;grid-row:1;justify-content:flex-end;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-clock small{display:none;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-clock b{font-size:10px;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-flags{grid-column:3;grid-row:2;justify-content:flex-end;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-flags span{font-size:8px;padding:3px 4px;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-flags span+span{display:none;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .legacy-content{padding-top:calc(var(--pc-an-frame-h) + 5px)!important;padding-left:6px!important;padding-right:6px!important;padding-bottom:8px!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .content-page,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .panel,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .doc-shell,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-content{width:calc(100vw - 12px)!important;max-width:calc(100vw - 12px)!important;margin-inline:6px!important;padding:9px!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .legacy-sidebar{padding-top:calc(var(--pc-an-frame-h) + 8px)!important;width:min(88vw,420px)!important;max-width:88vw!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .timeline-list.expanded,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .overview-stats,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .archive-list{grid-template-columns:1fr!important;gap:7px!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-page:not(:has(> .nested-record)):has(> .record-figure){display:flex!important;flex-direction:column!important;gap:8px!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-page:not(:has(> .nested-record)):has(> .record-figure) > .record-figure{order:-1!important;width:100%!important;margin:0 0 4px!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .record-figure img{max-height:52vh!important;object-fit:contain!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence.intro-mode .pc5152h-seq-video,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence.video-transition .pc5152m-transition-video,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence.ending-mode .pc5152q-ending-video,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-contained-media{object-fit:contain!important;background:#000!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152k-recordsequence-readflow-audiofullscope .pc5152h-cult-sequence.pages-mode .pc5152h-seq-body,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-body{grid-template-columns:1fr!important;min-height:0!important;height:auto!important;gap:10px!important;align-items:start!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{padding:calc(var(--pc-an-frame-h) + 10px) 10px 14px!important;overflow:auto!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-frame{height:clamp(220px,46vh,520px)!important;max-height:52vh!important;order:-1!important;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-frame img{width:100%!important;height:100%!important;object-fit:contain!important;padding:6px!important;}
+  body.pc5152an-cult-vhs-overlay-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode) .pc5152an-vhs-overlay-video{opacity:.14!important;object-fit:cover!important;}
+  body.pc5152an-cult-vhs-overlay-active .pc5152h-cult-sequence:not(.pc5152q-immortality-mode)::after{opacity:.12!important;}
+}
+@media (max-width:420px){
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-server b{font-size:10px;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-current b{font-size:10px;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .pc5152an-clock b{font-size:9px;}
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .content-page,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .panel,
+  body.pc5152an-systemframe-kst-recordlayout-audiobusfix .doc-shell{padding:7px!important;}
+}
+
+/* MapPatch 5.15.2ao — BootLoopFix_SystemFrameSafe */
+body.pc5152ao-boot-safe .loader,
+body.pc5121-boot-complete .loader{
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  display:none!important;
+}
+body.pc5152ao-boot-safe #app,
+body.pc5152ao-boot-safe .app,
+body.pc5121-boot-complete #app,
+body.pc5121-boot-complete .app{
+  opacity:1!important;
+  visibility:visible!important;
+}
+body.pc5152ao-boot-safe.pc5121-boot-pending,
+body.pc5121-boot-complete.pc5121-boot-pending{
+  cursor:auto!important;
+}
+body.pc5152ao-boot-safe .pc5152an-systembar,
+body.pc5121-boot-complete .pc5152an-systembar{
+  pointer-events:auto!important;
+}
+
+/* MapPatch 5.15.2ar — FrameAudio_RebaseSafe
+   AppShell / responsive sidebar / audio-panel removal / archive containment.
+   This patch intentionally preserves the 5.15.2ap record-detail document flow. */
+body.pc5152ar-frameaudio-rebasesafe{
+  --pc-ar-topbar:56px;
+  --pc-ar-sidebar:292px;
+  --pc-ar-gap:24px;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152ad-audio-panel,
+body.pc5152ar-frameaudio-rebasesafe #audioToggle,
+body.pc5152ar-frameaudio-rebasesafe #pc5152adVolumeToggle,
+body.pc5152ar-frameaudio-rebasesafe #pc5152adAmbientToggle{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc584-main-drawer-toggle{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-systembar{
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  top:0!important;
+  height:var(--pc-ar-topbar)!important;
+  z-index:420!important;
+  display:grid!important;
+  grid-template-columns:52px minmax(0,1fr) auto auto!important;
+  align-items:center!important;
+  gap:12px!important;
+  padding:0 16px!important;
+  border-bottom:1px solid rgba(120,130,140,.30)!important;
+  background:linear-gradient(180deg,rgba(10,13,16,.98),rgba(5,7,10,.96))!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.46)!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-systembar .pc5152an-current{
+  display:none!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-menu{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  padding:0!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid rgba(150,160,170,.36)!important;
+  background:#0b0f13!important;
+  color:#eef2f3!important;
+  font:700 21px/1 Consolas,'Malgun Gothic',monospace!important;
+  cursor:pointer!important;
+  border-radius:3px!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-menu:hover{
+  border-color:rgba(190,85,92,.70)!important;
+  background:#171014!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-server{
+  min-width:0!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-server b{
+  display:block!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-server span{
+  display:block!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-clock,
+body.pc5152ar-frameaudio-rebasesafe .pc5152an-flags{
+  white-space:nowrap!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .legacy-layout{
+  display:block!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  overflow:hidden!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .legacy-sidebar{
+  position:fixed!important;
+  left:0!important;
+  top:var(--pc-ar-topbar)!important;
+  bottom:0!important;
+  width:var(--pc-ar-sidebar)!important;
+  height:calc(100dvh - var(--pc-ar-topbar))!important;
+  z-index:360!important;
+  transform:translateX(-105%)!important;
+  transition:transform .18s ease!important;
+  padding:16px 14px 18px!important;
+  overflow:auto!important;
+  background:#07090c!important;
+  border-right:1px solid rgba(120,130,140,.25)!important;
+  box-shadow:18px 0 40px rgba(0,0,0,.48)!important;
+}
+body.pc5152ar-frameaudio-rebasesafe.pc584-main-drawer-open .legacy-sidebar{
+  transform:translateX(0)!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .legacy-content{
+  position:relative!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  overflow:auto!important;
+  padding:calc(var(--pc-ar-topbar) + 24px) 28px 34px!important;
+  margin-left:0!important;
+  transition:margin-left .18s ease, padding .18s ease!important;
+}
+@media (min-width:900px){
+  body.pc5152ar-frameaudio-rebasesafe.pc584-main-drawer-open .legacy-content{
+    margin-left:var(--pc-ar-sidebar)!important;
+  }
+  body.pc5152ar-frameaudio-rebasesafe .pc5152ar-drawer-backdrop{
+    display:none!important;
+    pointer-events:none!important;
+  }
+}
+body.pc5152ar-frameaudio-rebasesafe .pc5152ar-drawer-backdrop{
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  top:var(--pc-ar-topbar)!important;
+  bottom:0!important;
+  z-index:330!important;
+  background:rgba(0,0,0,.58)!important;
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  transition:opacity .16s ease,visibility .16s ease!important;
+}
+body.pc5152ar-frameaudio-rebasesafe.pc584-main-drawer-open.pc5152ar-mobile .pc5152ar-drawer-backdrop{
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .side-menu,
+body.pc5152ar-frameaudio-rebasesafe .pc5151-root-list{
+  min-width:0!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .side-menu a,
+body.pc5152ar-frameaudio-rebasesafe .side-menu button,
+body.pc5152ar-frameaudio-rebasesafe .pc585-menu-heading{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .side-menu a b,
+body.pc5152ar-frameaudio-rebasesafe .side-menu a small,
+body.pc5152ar-frameaudio-rebasesafe .pc585-menu-heading{
+  overflow-wrap:anywhere!important;
+}
+body.pc5152ar-frameaudio-rebasesafe #archive-entry,
+body.pc5152ar-frameaudio-rebasesafe #archiveListWrap,
+body.pc5152ar-frameaudio-rebasesafe #archive-entry .archive-groups,
+body.pc5152ar-frameaudio-rebasesafe #archive-entry details{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+body.pc5152ar-frameaudio-rebasesafe #archive-entry .archive-list{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))!important;
+  gap:12px!important;
+  padding:12px!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+body.pc5152ar-frameaudio-rebasesafe #archive-entry .doc-card{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  overflow-wrap:anywhere!important;
+  word-break:keep-all!important;
+}
+body.pc5152ar-frameaudio-rebasesafe #archive-entry .doc-card h3,
+body.pc5152ar-frameaudio-rebasesafe #archive-entry .doc-card p,
+body.pc5152ar-frameaudio-rebasesafe #archive-entry .doc-card .code{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-wrap:anywhere!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .record-detail,
+body.pc5152ar-frameaudio-rebasesafe .record-content,
+body.pc5152ar-frameaudio-rebasesafe .record-page,
+body.pc5152ar-frameaudio-rebasesafe .paged-record{
+  min-width:0!important;
+  max-width:100%!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .record-page .record-figure,
+body.pc5152ar-frameaudio-rebasesafe .record-page figure,
+body.pc5152ar-frameaudio-rebasesafe .record-detail .record-figure,
+body.pc5152ar-frameaudio-rebasesafe .record-detail figure{
+  position:static!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  max-width:min(700px,100%)!important;
+  margin:14px auto!important;
+}
+body.pc5152ar-frameaudio-rebasesafe .record-page img,
+body.pc5152ar-frameaudio-rebasesafe .record-detail img{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  max-width:100%!important;
+  height:auto!important;
+}
+@media (max-width:899px){
+  body.pc5152ar-frameaudio-rebasesafe{
+    --pc-ar-sidebar:min(88vw,360px);
+    --pc-ar-topbar:54px;
+  }
+  body.pc5152ar-frameaudio-rebasesafe .pc5152an-systembar{
+    height:var(--pc-ar-topbar)!important;
+    grid-template-columns:46px minmax(0,1fr) auto!important;
+    gap:8px!important;
+    padding:0 10px!important;
+  }
+  body.pc5152ar-frameaudio-rebasesafe .pc5152an-clock small,
+  body.pc5152ar-frameaudio-rebasesafe .pc5152an-flags{
+    display:none!important;
+  }
+  body.pc5152ar-frameaudio-rebasesafe .legacy-sidebar{
+    width:var(--pc-ar-sidebar)!important;
+    max-width:88vw!important;
+    padding:14px 12px 18px!important;
+    box-shadow:18px 0 42px rgba(0,0,0,.76)!important;
+  }
+  body.pc5152ar-frameaudio-rebasesafe .legacy-content{
+    margin-left:0!important;
+    padding:calc(var(--pc-ar-topbar) + 12px) 10px 26px!important;
+  }
+  body.pc5152ar-frameaudio-rebasesafe .side-menu{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:8px!important;
+  }
+  body.pc5152ar-frameaudio-rebasesafe #archive-entry .archive-list{
+    grid-template-columns:1fr!important;
+    padding:8px!important;
+  }
+  body.pc5152ar-frameaudio-rebasesafe .panel,
+  body.pc5152ar-frameaudio-rebasesafe .content-page{
+    padding:14px!important;
+  }
+}
+@media (max-width:480px){
+  body.pc5152ar-frameaudio-rebasesafe .pc5152an-server span,
+  body.pc5152ar-frameaudio-rebasesafe .pc5152an-clock{
+    display:none!important;
+  }
+  body.pc5152ar-frameaudio-rebasesafe .pc5152an-systembar{
+    grid-template-columns:44px minmax(0,1fr)!important;
+  }
+}
+
+
+/* MapPatch 5.15.2as — RecordSequence_StageViewerInspired
+   Sequence-only visual language inspired by the provided reference videos.
+   This intentionally does not touch the native record document flow. */
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel::before,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  z-index:0;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel::before{
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(160,24,20,.08),transparent 15%,transparent 85%,rgba(160,24,20,.05)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.020),rgba(255,255,255,.020) 1px,transparent 1px,transparent 4px);
+  opacity:.54;
+  mix-blend-mode:screen;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel::after{
+  left:8.5vw;
+  right:8.5vw;
+  bottom:6.2vh;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(185,34,30,.30),transparent);
+  opacity:.72;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-body,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-footer{
+  position:relative;
+  z-index:1;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta{
+  color:rgba(140,148,140,.48)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta b{
+  color:rgba(190,48,42,.78)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta span{
+  color:rgba(196,204,194,.40)!important;
+}
+
+/* F.H.C: warning/title cards use the empty black stage from the reference rather than card UI. */
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-title .pc5152h-seq-body,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-end-card .pc5152h-seq-body,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-card .pc5152h-seq-body,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-brief-text .pc5152h-seq-body{
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  min-height:56vh!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-title .pc5152h-seq-text,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-end-card .pc5152h-seq-text,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-card .pc5152h-seq-text,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-brief-text .pc5152h-seq-text{
+  width:min(820px,100%);
+  text-align:center;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-title .pc5152h-seq-text h2,
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-end-card .pc5152h-seq-text h2{
+  font-size:clamp(36px,5vw,78px)!important;
+  letter-spacing:.08em!important;
+  color:rgba(232,234,224,.78)!important;
+  text-shadow:0 0 28px rgba(160,0,0,.22);
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-card .pc5152h-seq-text h2{
+  color:rgba(220,44,36,.90)!important;
+  text-shadow:0 0 22px rgba(170,0,0,.34);
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-card .pc5152k-seq-line{
+  color:rgba(220,70,62,.82)!important;
+}
+
+/* F.H.C: ordinary report pages retain the stable two-column briefing screen. */
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-body{
+  grid-template-columns:minmax(420px,1fr) minmax(300px,35vw)!important;
+  gap:5.4vw!important;
+  align-items:center!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-text h2{
+  font-size:clamp(34px,4.4vw,66px)!important;
+  line-height:.98!important;
+  color:rgba(230,232,222,.80)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame{
+  height:min(44vh,380px)!important;
+  border-color:rgba(210,210,195,.14)!important;
+  box-shadow:0 0 0 1px rgba(0,0,0,.85), 0 0 32px rgba(120,0,0,.12)!important;
+}
+
+/* F.H.C: selected evidence-photo pages copy the reference grammar: image first, caption/text underneath. */
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-body{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:18px!important;
+  min-height:62vh!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame{
+  order:1;
+  width:min(660px,78vw)!important;
+  height:min(46vh,430px)!important;
+  margin:0 auto!important;
+  border-color:rgba(210,210,195,.16)!important;
+  background:#020202!important;
+  box-shadow:0 0 0 1px rgba(0,0,0,.90), 0 0 44px rgba(80,0,0,.18)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame img{
+  object-fit:contain!important;
+  filter:grayscale(.28) contrast(.92) brightness(.58) saturate(.54)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame figcaption{
+  left:50%!important;
+  transform:translateX(-50%);
+  bottom:-28px!important;
+  background:transparent!important;
+  color:rgba(220,220,210,.62)!important;
+  font-size:10px!important;
+  letter-spacing:.14em!important;
+  white-space:nowrap;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-text{
+  order:2;
+  width:min(760px,88vw)!important;
+  margin-top:26px;
+  text-align:center!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-text h2{
+  font-size:clamp(24px,2.9vw,42px)!important;
+  color:rgba(226,226,216,.72)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152k-seq-subtitle{
+  text-align:center!important;
+  color:rgba(170,48,43,.70)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152k-seq-lines{
+  max-width:760px;
+  margin:0 auto;
+  text-align:left;
+  border-top:1px solid rgba(180,48,42,.18);
+  padding-top:14px;
+}
+
+/* Immortality: keep it as incomplete terminal/field-log footage, not a formal report. */
+.pc5152as-recordsequence-stageviewer .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pages-mode .pc5152h-seq-panel{
+  background:
+    radial-gradient(circle at 52% 48%,rgba(100,0,0,.08),transparent 31%),
+    linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.98))!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pc5152as-layout-terminal-brief .pc5152h-seq-body,
+.pc5152as-recordsequence-stageviewer .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-body{
+  display:block!important;
+  max-width:960px!important;
+  margin:0 auto!important;
+  min-height:52vh!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pc5152as-layout-terminal-log .pc5152v-red-log{
+  border-color:rgba(210,38,30,.28)!important;
+  background:
+    linear-gradient(180deg,rgba(32,0,0,.24),rgba(0,0,0,.54)),
+    repeating-linear-gradient(0deg,rgba(255,16,8,.025),rgba(255,16,8,.025) 1px,transparent 1px,transparent 6px)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pc5152as-layout-field-photo .pc5152v-large-photo{
+  width:min(690px,78vw)!important;
+  background:#010101!important;
+  border-color:rgba(210,210,195,.15)!important;
+}
+.pc5152as-recordsequence-stageviewer .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pc5152as-layout-field-photo .pc5152v-large-photo img{
+  max-height:390px!important;
+  filter:grayscale(.16) contrast(.96) brightness(.60) saturate(.60)!important;
+}
+
+/* Mobile: every stage collapses to one readable column without absolute/hidden media changes. */
+@media (max-width:900px){
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{
+    padding:72px 20px 64px!important;
+    overflow:auto!important;
+  }
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta{
+    margin-bottom:28px!important;
+  }
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-body,
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-body{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:20px!important;
+    min-height:auto!important;
+  }
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame,
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame{
+    order:1;
+    width:100%!important;
+    height:min(42vh,300px)!important;
+  }
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-text,
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-text{
+    order:2;
+    width:100%!important;
+    text-align:left!important;
+  }
+  .pc5152as-recordsequence-stageviewer .pc5152h-cult-sequence.pages-mode .pc5152h-seq-footer{
+    position:fixed!important;
+    left:18px!important;
+    right:18px!important;
+    bottom:12px!important;
+  }
+}
+
+
+/* MapPatch 5.15.2au — OrderRestore_ContentSafe: metadata-only era marker; no record layout rewrite. */
+body.pc5152au-orderrestore-contentsafe .pc5152an-clock small{letter-spacing:.12em;}
+body.pc5152au-orderrestore-contentsafe .pc5152an-clock b{white-space:nowrap;}
+
+
+/* MapPatch 5.15.2av — EvidenceStageScale_TypographyPass
+   Visual-only correction after 5.15.2au: evidence images were too small and titles/text felt disconnected.
+   This patch changes only sequence overlay sizing/typography; content/order remains untouched. */
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{
+  padding:5.6vh 6.4vw 6.2vh!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta{
+  margin-bottom:4.2vh!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pages-mode .pc5152h-seq-text h2{
+  font-size:clamp(30px,3.45vw,54px)!important;
+  line-height:1.02!important;
+  letter-spacing:.038em!important;
+  margin-bottom:12px!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152k-seq-subtitle{
+  font-size:clamp(13px,1.12vw,17px)!important;
+  margin-bottom:18px!important;
+  letter-spacing:.085em!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152k-seq-lines{
+  gap:8px!important;
+  min-height:auto!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152k-seq-line{
+  font-size:clamp(13px,1.04vw,16px)!important;
+  line-height:1.58!important;
+  min-height:1.25em!important;
+}
+
+/* Standard F.H.C image report pages: make the image panel meaningful, but keep the report text first. */
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-body{
+  grid-template-columns:minmax(380px,1fr) minmax(420px,42vw)!important;
+  gap:4.6vw!important;
+  min-height:68vh!important;
+  height:68vh!important;
+  align-items:center!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame{
+  width:100%!important;
+  height:min(58vh,560px)!important;
+  min-height:330px!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-text h2{
+  font-size:clamp(30px,3.3vw,50px)!important;
+}
+
+/* Evidence pages: switch from small centered thumbnail to evidence-dossier split screen. */
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-body{
+  display:grid!important;
+  grid-template-columns:minmax(520px,1.28fr) minmax(340px,.72fr)!important;
+  grid-template-areas:"photo report"!important;
+  gap:4.2vw!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:70vh!important;
+  height:70vh!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame{
+  grid-area:photo!important;
+  order:initial!important;
+  width:100%!important;
+  height:min(64vh,650px)!important;
+  min-height:420px!important;
+  margin:0!important;
+  border-color:rgba(210,210,195,.20)!important;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(60,0,0,.16),transparent 58%),
+    #010101!important;
+  box-shadow:0 0 0 1px rgba(0,0,0,.92), 0 0 54px rgba(95,0,0,.22)!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  padding:12px!important;
+  filter:grayscale(.22) contrast(.96) brightness(.64) saturate(.58)!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame figcaption{
+  left:12px!important;
+  right:auto!important;
+  bottom:10px!important;
+  transform:none!important;
+  background:rgba(0,0,0,.62)!important;
+  padding:4px 7px!important;
+  font-size:9px!important;
+  color:rgba(218,218,206,.66)!important;
+  letter-spacing:.13em!important;
+  white-space:normal!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-text{
+  grid-area:report!important;
+  order:initial!important;
+  width:100%!important;
+  max-width:520px!important;
+  margin:0!important;
+  text-align:left!important;
+  align-self:center!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-text h2{
+  font-size:clamp(31px,3.05vw,48px)!important;
+  line-height:1.04!important;
+  color:rgba(232,232,222,.78)!important;
+  text-align:left!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152k-seq-subtitle{
+  text-align:left!important;
+  color:rgba(186,52,46,.76)!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152k-seq-lines{
+  max-width:520px!important;
+  margin:0!important;
+  padding-top:14px!important;
+  border-top:1px solid rgba(180,48,42,.20)!important;
+  text-align:left!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152k-seq-line{
+  color:rgba(214,72,62,.84)!important;
+  font-size:clamp(13px,1.02vw,16px)!important;
+}
+
+/* Immortality large field photos: scale up without changing the restored order/text. */
+body.pc5152av-evidence-stage-scale .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pc5152as-layout-field-photo .pc5152v-large-photo{
+  width:min(880px,82vw)!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pc5152as-layout-field-photo .pc5152v-large-photo img{
+  max-height:min(62vh,620px)!important;
+}
+body.pc5152av-evidence-stage-scale .pc5152q-immortality-sequence .pc5152h-cult-sequence.pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-body{
+  max-width:1120px!important;
+}
+
+@media (max-width:1100px){
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-body,
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-body{
+    grid-template-columns:1fr!important;
+    grid-template-areas:"photo" "report"!important;
+    height:auto!important;
+    min-height:auto!important;
+    gap:22px!important;
+    align-items:start!important;
+  }
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame,
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame{
+    grid-area:photo!important;
+    width:100%!important;
+    height:min(54vh,560px)!important;
+    min-height:300px!important;
+  }
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-text,
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-text{
+    grid-area:report!important;
+    width:100%!important;
+    max-width:none!important;
+    text-align:left!important;
+  }
+}
+
+@media (max-width:900px){
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{
+    padding:66px 18px 70px!important;
+  }
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta{
+    margin-bottom:20px!important;
+  }
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pages-mode .pc5152h-seq-text h2{
+    font-size:clamp(25px,7vw,36px)!important;
+  }
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame,
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame{
+    height:min(50vh,430px)!important;
+    min-height:260px!important;
+  }
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame img,
+  body.pc5152av-evidence-stage-scale .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame img{
+    padding:8px!important;
+  }
+  body.pc5152av-evidence-stage-scale .pc5152k-seq-line{
+    font-size:13px!important;
+    line-height:1.55!important;
+  }
+}
+
+/* MapPatch 5.15.2aw — ReligionSequence_ContentLayoutPass */
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence .pc5152k-seq-line{
+  opacity:0!important;
+  transform:none!important;
+  filter:none!important;
+  transition:none!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence .pc5152k-seq-line.visible{
+  opacity:1!important;
+  animation:pc5152awLinePop .12s steps(2,end) 1!important;
+}
+@keyframes pc5152awLinePop{
+  0%{opacity:0;filter:brightness(1.9)}
+  34%{opacity:1;filter:brightness(2.2)}
+  62%{opacity:1;filter:brightness(.92)}
+  100%{opacity:1;filter:none}
+}
+
+/* Right-image explanation pages: pull text and figure closer together and enlarge figure. */
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-body{
+  grid-template-columns:minmax(420px,1fr) minmax(370px,.90fr)!important;
+  gap:2.3vw!important;
+  min-height:68vh!important;
+  height:68vh!important;
+  align-items:center!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame{
+  width:100%!important;
+  height:min(60vh,590px)!important;
+  min-height:340px!important;
+  background:#020202!important;
+  box-shadow:0 0 0 1px rgba(0,0,0,.92),0 0 44px rgba(84,0,0,.16)!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  padding:0!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-text{
+  max-width:640px!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152k-seq-lines{
+  padding-top:12px!important;
+}
+
+/* Evidence photo pages: reduce empty padding and use a bigger dossier image block. */
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-body{
+  grid-template-columns:minmax(500px,1.12fr) minmax(350px,.88fr)!important;
+  gap:2.2vw!important;
+  min-height:70vh!important;
+  height:70vh!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame{
+  height:min(66vh,680px)!important;
+  min-height:430px!important;
+  margin:0!important;
+  padding:0!important;
+  background:#010101!important;
+  box-shadow:0 0 0 1px rgba(0,0,0,.94),0 0 56px rgba(92,0,0,.20)!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  padding:0!important;
+  filter:grayscale(.18) contrast(.98) brightness(.68) saturate(.62)!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame figcaption{
+  left:10px!important;
+  bottom:10px!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-text{
+  max-width:560px!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152k-seq-lines{
+  padding-top:12px!important;
+}
+
+/* Warning cards: keep the sudden centered corruption notice look. */
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-card .pc5152h-seq-body,
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-title .pc5152h-seq-body{
+  min-height:64vh!important;
+}
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-card .pc5152k-seq-line,
+body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-warning-title .pc5152k-seq-line{
+  color:rgba(214,70,64,.88)!important;
+}
+
+@media (max-width:1100px){
+  body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-body,
+  body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-body{
+    grid-template-columns:1fr!important;
+    grid-template-areas:"photo" "report"!important;
+    gap:20px!important;
+    height:auto!important;
+    min-height:auto!important;
+  }
+  body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame,
+  body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame{
+    height:min(52vh,530px)!important;
+    min-height:280px!important;
+  }
+}
+
+@media (max-width:900px){
+  body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{
+    padding:64px 18px 70px!important;
+  }
+  body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame,
+  body.pc5152aw-religion-sequence-pass .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-photo .pc5152h-seq-frame{
+    height:min(48vh,430px)!important;
+    min-height:250px!important;
+  }
+}
+
+/* MapPatch 5.15.2ax — EvidenceCenter_BlockRevealPass */
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-center .pc5152h-seq-body{
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  min-height:70vh!important;
+  height:70vh!important;
+  max-width:1180px!important;
+  margin:0 auto!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-center .pc5152h-seq-text{
+  width:100%!important;
+  max-width:980px!important;
+  margin:0 auto!important;
+  text-align:left!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-center .pc5152h-seq-text > h2,
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-center .pc5152k-seq-subtitle{
+  display:none!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-center .pc5152k-seq-linebox{
+  width:100%!important;
+  max-width:980px!important;
+  margin:0 auto!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-center{
+  width:min(900px,88vw)!important;
+  margin:0 auto!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:14px!important;
+  opacity:0!important;
+  transform:none!important;
+  transition:none!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-center.visible{
+  opacity:1!important;
+  animation:pc5152axBlockPop .14s steps(2,end) 1!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card{
+  width:min(760px,84vw)!important;
+  margin:0 auto!important;
+  padding:0!important;
+  background:#010101!important;
+  border:1px solid rgba(210,210,195,.18)!important;
+  box-shadow:0 0 0 1px rgba(0,0,0,.92),0 0 54px rgba(92,0,0,.20)!important;
+  overflow:hidden!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card img{
+  display:block!important;
+  width:100%!important;
+  max-height:min(50vh,520px)!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  margin:0 auto!important;
+  padding:0!important;
+  background:#000!important;
+  filter:grayscale(.16) contrast(.98) brightness(.70) saturate(.62)!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card figcaption{
+  border-top:1px solid rgba(210,210,195,.12)!important;
+  padding:9px 12px 10px!important;
+  background:linear-gradient(180deg,rgba(12,0,0,.92),rgba(0,0,0,.88))!important;
+  color:rgba(210,210,198,.72)!important;
+  font:800 11px/1.46 "Noto Sans KR",Consolas,monospace!important;
+  letter-spacing:.035em!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card figcaption b{
+  display:block!important;
+  color:rgba(214,66,58,.82)!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+  letter-spacing:.13em!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card figcaption span{
+  display:block!important;
+  margin-top:2px!important;
+  color:rgba(232,232,220,.86)!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card figcaption em{
+  display:block!important;
+  margin-top:3px!important;
+  color:rgba(180,180,170,.62)!important;
+  font-style:normal!important;
+  font-size:10px!important;
+  line-height:1.4!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-report{
+  width:min(760px,84vw)!important;
+  margin:0 auto!important;
+  padding:0 2px!important;
+  color:rgba(218,218,206,.76)!important;
+  font:800 clamp(13px,1.02vw,16px)/1.72 "Noto Sans KR",Consolas,monospace!important;
+  letter-spacing:.015em!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-report p{
+  margin:0 0 10px!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-report p:last-child{
+  margin-bottom:0!important;
+  color:rgba(214,84,74,.78)!important;
+}
+
+/* block reveal for cult sequence: no per-line slide. */
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode .pc5152k-seq-line{
+  transform:none!important;
+  transition:none!important;
+  filter:none!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode .pc5152k-seq-line.visible{
+  opacity:1!important;
+  animation:pc5152axBlockPop .14s steps(2,end) 1!important;
+}
+@keyframes pc5152axBlockPop{
+  0%{opacity:0;filter:brightness(2.0) contrast(1.4)}
+  38%{opacity:1;filter:brightness(2.25) contrast(1.1)}
+  70%{opacity:1;filter:brightness(.82) contrast(1.05)}
+  100%{opacity:1;filter:none}
+}
+
+/* Only 타락교/혈교 remain explanation pages. Keep them close and readable. */
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-body{
+  grid-template-columns:minmax(420px,1fr) minmax(330px,.72fr)!important;
+  gap:2vw!important;
+  max-width:1120px!important;
+  margin:0 auto!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame{
+  height:min(56vh,540px)!important;
+  min-height:320px!important;
+}
+body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-two-column .pc5152h-seq-frame img{
+  object-fit:cover!important;
+  padding:0!important;
+}
+
+@media (max-width:1100px){
+  body.pc5152ax-evidence-center-blockreveal .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-center .pc5152h-seq-body{
+    height:auto!important;
+    min-height:auto!important;
+    align-items:flex-start!important;
+  }
+  body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card img{
+    max-height:min(46vh,460px)!important;
+  }
+}
+@media (max-width:760px){
+  body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-center,
+  body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card,
+  body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-report{
+    width:min(94vw,680px)!important;
+  }
+  body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-card img{
+    max-height:min(43vh,390px)!important;
+  }
+  body.pc5152ax-evidence-center-blockreveal .pc5152ax-evidence-report{
+    font-size:13px!important;
+    line-height:1.62!important;
+  }
+}
+
+
+/* MapPatch 5.15.2ay — ReferenceRollback_ReligionSequenceFix */
+body.pc5152ay-reference-rollback-religionfix .pc5152as-layout-evidence-center .pc5152ax-evidence-card figcaption{
+  text-align:left;
+  padding:10px 12px 8px;
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ay-evidence-idline{
+  display:flex;
+  align-items:baseline;
+  justify-content:flex-start;
+  gap:10px;
+  width:100%;
+  letter-spacing:.045em;
+  text-transform:none;
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ay-evidence-idline b{
+  flex:0 0 auto;
+  color:#d8d8d0;
+  font-family:var(--mono, monospace);
+  font-size:clamp(.88rem,1vw,1.04rem);
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ay-evidence-idline span{
+  color:#f0eee4;
+  font-weight:800;
+  font-size:clamp(.95rem,1.05vw,1.12rem);
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ax-evidence-card figcaption small{
+  display:block;
+  margin-top:2px;
+  color:rgba(232,230,218,.58);
+  font-size:.72rem;
+  letter-spacing:.08em;
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ax-evidence-card figcaption em{
+  display:block;
+  margin-top:5px;
+  color:rgba(232,230,218,.42);
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ay-red-alert{
+  margin-top:10px;
+  color:#9b1414;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-shadow:0 0 8px rgba(150,0,0,.42), 1px 0 rgba(255,0,0,.24);
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ay-delayed-alert{
+  opacity:0;
+  transform:translateY(2px);
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ay-delayed-alert.visible{
+  opacity:1;
+  transform:none;
+  animation:pc5152ayRedPop .36s steps(2,end) both;
+}
+body.pc5152ay-reference-rollback-religionfix .pc5152ay-mutating-now{
+  animation:pc5152ayTextCorrupt .46s steps(3,end) both;
+}
+@keyframes pc5152ayRedPop{
+  0%{opacity:0;filter:blur(2px);transform:translateY(2px) skewX(-2deg)}
+  35%{opacity:1;filter:contrast(1.8);transform:translateY(0) skewX(2deg)}
+  55%{opacity:.35;transform:translateX(-2px)}
+  100%{opacity:1;filter:none;transform:none}
+}
+@keyframes pc5152ayTextCorrupt{
+  0%{filter:none;transform:none}
+  30%{filter:contrast(2.2) brightness(1.25);transform:translateX(-2px)}
+  55%{filter:invert(.12) contrast(1.6);transform:translateX(2px)}
+  100%{filter:none;transform:none}
+}
+@media(max-width:760px){
+  body.pc5152ay-reference-rollback-religionfix .pc5152ay-evidence-idline{gap:7px;flex-wrap:wrap}
+  body.pc5152ay-reference-rollback-religionfix .pc5152ax-evidence-card figcaption{padding:8px 9px 7px}
+}
+
+
+/* MapPatch 5.15.2az — ImmortalityFieldBriefingPass */
+body.pc5152az-immortality-fieldbriefing-pass .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-body{
+  grid-template-columns:minmax(0,1fr) minmax(220px,28vw);
+  align-items:start;
+  gap:clamp(18px,3vw,44px);
+}
+body.pc5152az-immortality-fieldbriefing-pass .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-text{
+  max-width:760px;
+}
+body.pc5152az-immortality-fieldbriefing-pass .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152v-default-red-lines{
+  margin-top:10px;
+  display:grid;
+  gap:16px;
+}
+body.pc5152az-immortality-fieldbriefing-pass .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame{
+  width:min(28vw,360px);
+  max-height:min(66vh,620px);
+  justify-self:end;
+}
+body.pc5152az-immortality-fieldbriefing-pass .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame img{
+  object-fit:contain;
+  max-height:min(66vh,620px);
+}
+body.pc5152az-immortality-fieldbriefing-pass .pc5152q-immortality-mode .pc5152v-photo-lines .pc5152v-red-line:last-child{
+  letter-spacing:.08em;
+}
+@media(max-width:860px){
+  body.pc5152az-immortality-fieldbriefing-pass .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-body{
+    grid-template-columns:1fr;
+  }
+  body.pc5152az-immortality-fieldbriefing-pass .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame{
+    width:min(72vw,320px);
+    justify-self:center;
+    order:-1;
+  }
+}
+
+
+/* MapPatch 5.15.2ba — TitleImg_MobileSequenceFix */
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{
+  width:min(1080px,92vw)!important;
+  max-height:calc(100dvh - 34px)!important;
+  overflow:auto!important;
+  padding:clamp(18px,2.2vw,28px)!important;
+}
+
+/* Religion evidence pages: IMG + title is now a real visible title line under the image. */
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152h-cult-sequence.pc5152h-cult-mode.pc5152as-layout-evidence-center .pc5152h-seq-body{
+  height:auto!important;
+  min-height:0!important;
+  align-items:center!important;
+  padding:4px 0 12px!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-center{
+  gap:10px!important;
+  width:min(840px,86vw)!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-card{
+  width:min(760px,84vw)!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-card figcaption{
+  display:none!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-card img{
+  max-height:min(52vh,560px)!important;
+  object-fit:contain!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-titleline{
+  width:min(760px,84vw)!important;
+  display:flex!important;
+  align-items:baseline!important;
+  justify-content:flex-start!important;
+  gap:12px!important;
+  margin:2px auto 0!important;
+  padding:0 2px!important;
+  font-family:Consolas,"Noto Sans KR",monospace!important;
+  letter-spacing:.045em!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-titleline b{
+  flex:0 0 auto!important;
+  color:rgba(225,68,58,.92)!important;
+  font:900 clamp(13px,1.08vw,17px)/1.25 Consolas,"Noto Sans KR",monospace!important;
+  letter-spacing:.12em!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-titleline span{
+  color:rgba(236,234,222,.94)!important;
+  font:900 clamp(14px,1.15vw,18px)/1.3 "Noto Sans KR",Consolas,monospace!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-subtitle,
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-caption{
+  width:min(760px,84vw)!important;
+  display:block!important;
+  margin:0 auto!important;
+  color:rgba(210,210,196,.42)!important;
+  font:800 10px/1.4 Consolas,"Noto Sans KR",monospace!important;
+  letter-spacing:.08em!important;
+  font-style:normal!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-report{
+  width:min(760px,84vw)!important;
+  margin-top:4px!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-click-mutated .pc5152ba-evidence-titleline span,
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-click-mutated .pc5152ax-evidence-report p:last-child{
+  color:rgba(220,42,34,.92)!important;
+  text-shadow:0 0 12px rgba(200,0,0,.28)!important;
+}
+
+/* Immortality opening: no large Korean/English title; briefing copy + right image only. */
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-text > h2,
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152k-seq-subtitle{
+  display:none!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-body{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(260px,360px)!important;
+  align-items:center!important;
+  gap:clamp(22px,3vw,46px)!important;
+  max-width:980px!important;
+  min-height:0!important;
+  margin:0 auto!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame{
+  width:100%!important;
+  height:min(56vh,560px)!important;
+  max-height:560px!important;
+  justify-self:end!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152v-default-red-lines{
+  gap:14px!important;
+  max-width:620px!important;
+}
+
+/* Immortality field photo pages: time no longer appears as a giant page title. */
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152v-photo-large-page .pc5152h-seq-text > h2,
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152v-photo-large-page .pc5152k-seq-subtitle{
+  display:none!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-photo-page{
+  width:min(820px,86vw)!important;
+  margin:0 auto!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-large-photo{
+  width:min(800px,86vw)!important;
+  margin-bottom:10px!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-large-photo img{
+  max-height:min(54vh,560px)!important;
+  object-fit:contain!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-large-photo figcaption{
+  text-align:left!important;
+  padding:9px 4px 1px!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-photo-idline{
+  display:flex!important;
+  align-items:baseline!important;
+  gap:12px!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-photo-idline b{
+  color:rgba(225,62,52,.92)!important;
+  font:900 clamp(12px,1vw,15px)/1.3 Consolas,"Noto Sans KR",monospace!important;
+  letter-spacing:.14em!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-photo-idline span{
+  color:rgba(232,230,218,.82)!important;
+  font:900 clamp(12px,1vw,15px)/1.3 Consolas,"Noto Sans KR",monospace!important;
+  letter-spacing:.09em!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-large-photo figcaption em{
+  display:block!important;
+  margin-top:3px!important;
+  color:rgba(205,48,42,.62)!important;
+  font-style:normal!important;
+  letter-spacing:.06em!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-photo-lines{
+  width:min(800px,86vw)!important;
+  padding:8px 4px 0!important;
+}
+
+/* Personnel page: keep the two cards centered and less empty. */
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152u-people-pair{
+  width:min(700px,86vw)!important;
+  gap:18px!important;
+  justify-content:center!important;
+}
+body.pc5152ba-titleimg-mobile-sequencefix .pc5152u-person-card img{
+  height:min(32vh,300px)!important;
+  object-fit:cover!important;
+}
+
+@media(max-width:900px){
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{
+    position:absolute!important;
+    left:0!important;
+    top:0!important;
+    transform:none!important;
+    width:100vw!important;
+    min-height:100dvh!important;
+    max-height:100dvh!important;
+    padding:calc(var(--pc-an-frame-h,44px) + 12px) 14px 74px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+  }
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-body,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-body{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    gap:14px!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-height:0!important;
+  }
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame{
+    order:-1!important;
+    width:min(78vw,340px)!important;
+    height:min(42dvh,360px)!important;
+    justify-self:center!important;
+  }
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-center,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-card,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-titleline,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-subtitle,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-caption,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-report,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-photo-page,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-large-photo,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-photo-lines{
+    width:min(94vw,680px)!important;
+  }
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ax-evidence-card img,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152v-large-photo img{
+    max-height:min(42dvh,390px)!important;
+    object-fit:contain!important;
+  }
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-evidence-titleline,
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152ba-photo-idline{
+    flex-wrap:wrap!important;
+    gap:7px!important;
+  }
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152u-people-pair{
+    grid-template-columns:1fr!important;
+    width:min(86vw,360px)!important;
+  }
+  body.pc5152ba-titleimg-mobile-sequencefix .pc5152u-person-card img{
+    height:min(32dvh,230px)!important;
+  }
+}
+
+
+/* MapPatch 5.15.2bb — StageTemplate_ResponsiveHubFix
+   Fixes the PC-stage issue where evidence/photo templates inherited a left split column.
+   The page type now owns its parent stage: briefing may split, evidence/photo/log/personnel center themselves. */
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{
+  left:0!important;
+  top:0!important;
+  transform:none!important;
+  width:100vw!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  max-height:100dvh!important;
+  padding:clamp(48px,6.2vh,76px) clamp(34px,6vw,96px) clamp(54px,7vh,86px)!important;
+  border:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+  background:
+    radial-gradient(circle at 50% 46%,rgba(120,0,0,.085),transparent 34%),
+    linear-gradient(180deg,rgba(0,0,0,.88),rgba(0,0,0,.985))!important;
+  box-shadow:none!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta{
+  flex:0 0 auto!important;
+  width:min(1220px,100%)!important;
+  margin:0 auto clamp(18px,3vh,34px)!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-footer{
+  flex:0 0 auto!important;
+  left:clamp(18px,5vw,90px)!important;
+  right:clamp(18px,5vw,90px)!important;
+  bottom:clamp(16px,3.8vh,46px)!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-body{
+  flex:1 1 auto!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:0!important;
+  height:auto!important;
+  margin:0!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-text{
+  min-width:0!important;
+  max-width:none!important;
+  max-height:none!important;
+  height:auto!important;
+  overflow:visible!important;
+  padding-right:0!important;
+}
+
+/* Briefing split: only real briefing pages may use left text + right image. */
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-two-column .pc5152h-seq-body,
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-body{
+  display:grid!important;
+  grid-template-columns:minmax(420px,1.02fr) minmax(300px,.72fr)!important;
+  gap:clamp(30px,5vw,78px)!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:min(1220px,92vw)!important;
+  margin:auto!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-two-column .pc5152h-seq-frame,
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame{
+  width:100%!important;
+  height:min(56dvh,600px)!important;
+  max-height:600px!important;
+  justify-self:end!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-two-column .pc5152h-seq-frame img,
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-text > h2,
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152k-seq-subtitle{
+  display:none!important;
+}
+
+/* Evidence-center: no inherited split column. The whole evidence card is centered in the viewport stage. */
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-evidence-center .pc5152h-seq-body{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:calc(100dvh - 210px)!important;
+  height:auto!important;
+  padding:0!important;
+  margin:0 auto!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-evidence-center .pc5152h-seq-text{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:left!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-evidence-center .pc5152h-seq-text > h2,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-evidence-center .pc5152k-seq-subtitle{
+  display:none!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-center{
+  width:min(980px,88vw)!important;
+  max-width:980px!important;
+  margin:0 auto!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-card,
+body.pc5152bb-stage-template-responsivefix .pc5152ba-evidence-titleline,
+body.pc5152bb-stage-template-responsivefix .pc5152ba-evidence-subtitle,
+body.pc5152bb-stage-template-responsivefix .pc5152ba-evidence-caption,
+body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-report{
+  width:min(920px,88vw)!important;
+  max-width:920px!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-card{
+  margin:0 auto!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-card img{
+  width:100%!important;
+  max-height:min(58dvh,650px)!important;
+  object-fit:contain!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152ba-evidence-titleline{
+  margin:4px auto 0!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-report{
+  margin:4px auto 0!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-report p{
+  max-width:none!important;
+}
+
+/* Immortality field photos: image/time/IMG/content stay in a single centered photo template. */
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152v-photo-large-page .pc5152h-seq-body{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:calc(100dvh - 210px)!important;
+  height:auto!important;
+  padding:0!important;
+  margin:0 auto!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152v-photo-large-page .pc5152h-seq-text{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152v-photo-large-page .pc5152h-seq-text > h2,
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152v-photo-large-page .pc5152k-seq-subtitle{
+  display:none!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152v-photo-page{
+  width:min(980px,88vw)!important;
+  max-width:980px!important;
+  margin:0 auto!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152v-large-photo,
+body.pc5152bb-stage-template-responsivefix .pc5152v-photo-lines{
+  width:min(940px,88vw)!important;
+  max-width:940px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152v-large-photo img{
+  width:100%!important;
+  max-height:min(58dvh,650px)!important;
+  object-fit:contain!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152v-photo-lines{
+  padding-top:8px!important;
+}
+
+/* Terminal/log and personnel templates are centered as their own templates, not as left-side residue. */
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152v-red-log-page .pc5152h-seq-body,
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-terminal-log .pc5152h-seq-body,
+body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-terminal-brief .pc5152h-seq-body,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152u-people-page .pc5152h-seq-body{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:calc(100dvh - 210px)!important;
+  height:auto!important;
+  margin:0 auto!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152v-red-log{
+  width:min(780px,84vw)!important;
+  margin:0 auto!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152u-people-pair{
+  width:min(860px,88vw)!important;
+  margin:0 auto!important;
+  gap:clamp(18px,3vw,34px)!important;
+}
+body.pc5152bb-stage-template-responsivefix .pc5152u-person-card img{
+  height:min(38dvh,360px)!important;
+  object-fit:cover!important;
+}
+
+/* Side-menu and hub shell: keep PC as a stable command rail, mobile as a drawer/stack, without changing the lore structure yet. */
+body.pc5152bb-stage-template-responsivefix .legacy-layout{
+  grid-template-columns:clamp(230px,17vw,292px) minmax(0,1fr)!important;
+}
+body.pc5152bb-stage-template-responsivefix .legacy-content{
+  padding:clamp(18px,2.1vw,34px)!important;
+}
+body.pc5152bb-stage-template-responsivefix .wrap{
+  max-width:min(1480px,100%)!important;
+}
+body.pc5152bb-stage-template-responsivefix .side-menu{
+  gap:7px!important;
+}
+body.pc5152bb-stage-template-responsivefix .side-menu a,
+body.pc5152bb-stage-template-responsivefix .side-menu button{
+  min-height:38px!important;
+}
+
+@media(max-width:900px){
+  body.pc5152bb-stage-template-responsivefix .legacy-layout{
+    grid-template-columns:1fr!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .legacy-content{
+    padding:14px!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-panel{
+    position:absolute!important;
+    left:0!important;
+    top:0!important;
+    transform:none!important;
+    width:100vw!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
+    max-height:100dvh!important;
+    padding:calc(var(--pc-an-frame-h,44px) + 12px) 14px 76px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-meta{
+    width:100%!important;
+    margin-bottom:14px!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-body,
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-two-column .pc5152h-seq-body,
+  body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-body,
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-evidence-center .pc5152h-seq-body,
+  body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152v-photo-large-page .pc5152h-seq-body,
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152v-red-log-page .pc5152h-seq-body,
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152u-people-page .pc5152h-seq-body{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:14px!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-height:0!important;
+    height:auto!important;
+    margin:0 auto!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-two-column .pc5152h-seq-frame,
+  body.pc5152bb-stage-template-responsivefix .pc5152q-immortality-mode.pc5152as-layout-field-brief .pc5152h-seq-frame{
+    order:-1!important;
+    width:min(88vw,420px)!important;
+    height:min(42dvh,380px)!important;
+    justify-self:center!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-center,
+  body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-card,
+  body.pc5152bb-stage-template-responsivefix .pc5152ba-evidence-titleline,
+  body.pc5152bb-stage-template-responsivefix .pc5152ba-evidence-subtitle,
+  body.pc5152bb-stage-template-responsivefix .pc5152ba-evidence-caption,
+  body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-report,
+  body.pc5152bb-stage-template-responsivefix .pc5152v-photo-page,
+  body.pc5152bb-stage-template-responsivefix .pc5152v-large-photo,
+  body.pc5152bb-stage-template-responsivefix .pc5152v-photo-lines,
+  body.pc5152bb-stage-template-responsivefix .pc5152v-red-log{
+    width:min(94vw,680px)!important;
+    max-width:94vw!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152ax-evidence-card img,
+  body.pc5152bb-stage-template-responsivefix .pc5152v-large-photo img{
+    max-height:min(43dvh,410px)!important;
+    object-fit:contain!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152ba-evidence-titleline,
+  body.pc5152bb-stage-template-responsivefix .pc5152ba-photo-idline{
+    flex-wrap:wrap!important;
+    gap:7px!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152u-people-pair{
+    grid-template-columns:1fr!important;
+    width:min(88vw,390px)!important;
+  }
+  body.pc5152bb-stage-template-responsivefix .pc5152u-person-card img{
+    height:min(32dvh,240px)!important;
+  }
+}

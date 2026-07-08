@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     open:new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav'),
     page:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
     boot:new Audio(prefix+'assets/audio/pc5152f_boot_access_oldpc.wav'),
-    ambient:new Audio(prefix+'assets/audio/pc5152f_old_terminal_roomtone.wav'),
+    ambient:new Audio(prefix+'assets/audio/pc5152am_menu_old_computer.mp3'),
     load:new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav'),
     drawer:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
     command:new Audio(prefix+'assets/audio/pc5152f_analog_contact_soft.wav'),
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const bootLines=Array.from(document.querySelectorAll('#bootLines p'));
   bootLines.forEach((line,i)=>setTimeout(()=>line.classList.add('show'),220+i*260));
   if(loader){setTimeout(()=>{loader.classList.add('hide'); if(app)app.classList.add('ready'); document.body.classList.add('pc5121-boot-complete'); document.body.classList.remove('pc5121-boot-pending'); playCue('boot',260);},2350);} else {if(app)app.classList.add('ready'); document.body.classList.add('pc5121-boot-complete'); document.body.classList.remove('pc5121-boot-pending');}
-  document.querySelectorAll('#audioToggle').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem('pc_audio_legacy2003_fixed',isOn()?'off':'on'); syncBtns(); if(isOn())playCue('menu',90);}));
+  document.querySelectorAll('#audioToggle').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem('pc_audio_legacy2003_fixed',isOn()?'off':'on'); syncBtns();}));
   const pages=Array.from(document.querySelectorAll('.content-page'));
   const links=Array.from(document.querySelectorAll('.side-menu a[data-target]'));
   function show(id){
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     links.forEach(a=>a.classList.toggle('active',a.dataset.target===id));
     const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
   }
-  links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault(); startAmbient(); playCue('menu',140); show(a.dataset.target); history.replaceState(null,'','#'+a.dataset.target);}));
+  links.forEach(a=>a.addEventListener('click',e=>{e.preventDefault(); startAmbient();  show(a.dataset.target); history.replaceState(null,'','#'+a.dataset.target);}));
   if(pages.length){show((location.hash||'#history').slice(1));}
   document.querySelectorAll('[data-open-record], .archive-list a, .backline a, .btn:not(.open-record):not(.record-back)').forEach(a=>a.addEventListener('click',()=>play(audio.open)));
   const factionData={"uac": {"img": "uac.webp", "name": "U.A.C", "meta": "Urban Anomaly 봉쇄 / 도시 이상현상 격리국", "summary": "도시 이상현상과 우시노다교 의식, 괴이 출현, 레드존 확산을 감시하고 격리하는 상위 통제 기관.", "pages": [{"title": "개요", "body": "<p>U.A.C는 도시 내부에서 발생하는 이상현상, 괴이 출현, 우시노다교 의식, 오컬트 재난, 적성 종교 세력의 침투를 감시하고 격리하기 위해 설립된 국가 안보 기관이다.</p><p>정식 명칭은 Urban Anomaly 봉쇄이며, 한국어 명칭으로는 도시 이상현상 격리국이라 불린다. U.A.C는 단순한 수사 기관이나 군사 조직이 아니라, 도시 단위의 초상 재난을 감시하고 위험 구역을 분류하며 이상현상의 확산을 막기 위해 각 기관을 조율하는 상위 통제 기관에 가깝다.</p>"}, {"title": "창설 배경", "body": "<p>U.A.C의 창설 기점은 1986년으로 기록된다. 당시 정부는 대규모 인신공양 사건을 저지하기 위해 불멸을 향해 및 Blood Lake Incident File 작전을 승인하였다.</p><p>해당 작전은 우시노다교가 준비하던 대규모 인신공양 의식을 차단하기 위한 특수 작전이었으며, 의식의 완전한 진행은 저지되었다. 그러나 작전 이후 다수의 괴이체, 비정상적인 생체 변이, 오염된 의식 흔적, 기존 법집행기관으로는 설명하거나 통제할 수 없는 이상현상이 확인되었다.</p><p>정부는 이 사건을 계기로 일시적인 대응팀이 아닌, 영구적으로 이상현상을 감시하고 격리할 전문 기관이 필요하다고 판단하였다. 그 결과 설립된 조직이 U.A.C이다.</p>"}, {"title": "초기 조직 체계", "body": "<p>창설 초기에는 S.I.D와 N.H.C가 각각 조사 부서와 현장 진압 부서로서 U.A.C 산하에 편제되어 있었다. 우시노다교 의식, 괴이 출현, 인신공양 사건에 대응할 전문 기관이 부족했기 때문에 조사, 정보 수집, 현장 진압 기능이 모두 U.A.C 내부 체계에 묶여 있었다.</p><ul><li>U.A.C : 상위 통제 기관</li><li>S.I.D : 특수 조사 부서</li><li>N.H.C : 현장 진압 부서</li></ul>"}, {"title": "현재 조직 체계", "body": "<p>우시노다 현상, 괴이 출현, 레드존 확산, 혈교 의식, 블랙존화 사건이 증가하면서 기존 U.A.C 내부 부서 체계만으로는 대응이 어려워졌다.</p><p>이후 조직 개편을 통해 S.I.D와 N.H.C는 U.A.C 산하 하위 부서에서 분리되어 독립 기관으로 재편되었다. 현재 U.A.C는 도시 이상현상의 상위 통제와 구역 분류, 정보 관리, 기관 간 작전 조율을 담당하며, S.I.D와 N.H.C는 독립 기관으로서 U.A.C와 협력한다.</p><ul><li>U.A.C : 상위 통제, 구역 분류, 정보 관리</li><li>S.I.D : 독립 특수 조사 기관</li><li>N.H.C : 독립 현장 대응 조직</li></ul>"}, {"title": "핵심 목표", "body": "<p>U.A.C의 핵심 목표는 우시노다교의 인신공양 의식을 사전에 차단하고, 그로 인해 발생하는 타락 개체을 제거 또는 통제하는 것이다.</p><p>이후 우시노다 현상과 혈교 의식, 타락교 하위 조직, 인공 괴이, 피의 호수, 변이 균주와 같은 사건들이 늘어나면서 U.A.C의 임무 범위는 확장되었다. 현재 U.A.C는 괴이를 제거하는 기관이 아니라, 도시 전체가 레드존 또는 블랙존으로 변질되는 것을 막기 위한 최종 통제선으로 기능한다.</p>"}, {"title": "주요 임무", "body": "<ul><li>우시노다교 인신공양 의식 사전 차단</li><li>타락 개체 출현 감시</li><li>그린존, 옐로우존, 레드존, 화이트존, 블랙존 분류</li><li>이상현상 발생 지역 봉쇄 및 정보 통제</li><li>현장 기록, CCTV, 오디오, 생체 샘플 회수</li><li>S.I.D, N.H.C, F.H.C, A.R.F, C.P.D와의 작전 조율</li><li>위험 인물 및 비인가 연구자 감시</li><li>오컬트 생명체, 미확인 균주, 변이 조직 분석</li><li>민간 사회로의 정보 유출 차단</li></ul>"}, {"title": "정보 수집 부서", "body": "<p>U.A.C 정보 수집 부서는 도시 전역의 감시 영상, 통신 기록, 오디오 파일, 암호화 CCTV, 현장 데이터를 수집하고 복구하는 정보 부서이다. 이 부서는 U.A.C의 눈으로 불리며, 이상현상이 발생하기 전의 징후를 포착하고 이미 발생한 사건의 기록을 복원하는 역할을 맡는다.</p><p>주로 N.H.C 내부 이탈 징후, S.I.D 현장 보고, F.H.C 회수 문서, 타락교 및 혈교 활동 기록을 분석한다. 레드울프 이탈 기록과 축복으로 위장된 병기는 해당 부서가 복구한 감시 자료로 분류된다.</p><ul><li>암호화 영상 복호화</li><li>감시 데이터 수집</li><li>통신 기록 분석</li><li>내부 반역 징후 감시</li><li>적성 세력 활동 추적</li><li>위험 인물 파일 작성</li><li>비인가 오디오 및 CCTV 자료 복구</li><li>우시노다 현상 발생 전조 감지</li></ul>"}, {"title": "도시 격리 집행부", "body": "<p>U.A.C 도시 격리 집행부는 확인된 이상현상 발생 지역을 봉쇄하고, 괴이 및 오염 요소의 확산을 차단하는 실행 부서이다. 이 부서는 U.A.C의 망치로 불리며, 직접적인 전투만을 담당하는 조직이라기보다는 현장 봉쇄, 격리 명령, 출입 통제, 구역 등급 격상, 지원 부대 호출 권한을 가진 작전 집행 체계에 가깝다.</p><ul><li>이상현상 발생 지역 봉쇄</li><li>구역 출입 통제</li><li>민간인 대피 명령 승인</li><li>현장 격리선 설치</li><li>N.H.C 및 A.R.F 투입 요청</li><li>C.P.D와 연계한 피난민 통제</li><li>레드존 및 블랙존화 징후 감시</li><li>우시노다교 의식장 차단</li><li>괴이체 확산 경로 봉쇄</li></ul>"}, {"title": "오컬트 생명 과학 부서", "body": "<p>U.A.C 오컬트 생명 과학 부서는 괴이, 타락체, 피의 호수, 미확인 균주, 변이 조직을 연구하는 생체 분석 부서이다. 일반적인 생물학이나 법의학으로 설명할 수 없는 사체, 조직, 체액, 균주, 장기 반응을 조사한다.</p><p>피의 호수 부검 기록에서 마렌 예거트의 시신을 분석했으며, BL-088 균주를 최초로 임시 분류한 부서로 기록된다.</p><ul><li>괴이 조직 분석</li><li>타락 생명체 부검</li><li>미확인 균주 분류</li><li>생체 부패 정지 반응 연구</li><li>혈액성 잔류물 분석</li><li>괴이 유전자 자료 대조</li><li>F.H.C 분석 부서와 샘플 공유</li><li>타락 개체 변이 과정 기록</li></ul>"}]}, "nhc": {"img": "nhc.webp", "name": "N.H.C", "meta": "National Hazard Control / 국가 위난 격리 사령부", "summary": "레드존과 블랙존 인접 지역에 투입되는 고위험 현장 대응 조직.", "pages": [{"title": "개요", "body": "<p>N.H.C는 레드존, 옐로우존, 블랙존 인접 지역에 투입되는 고위험 현장 대응 조직이다. 초기에는 U.A.C 산하 현장 진압 부서로 운용되었으나, 레드존 확산과 블랙존화 사건이 증가하면서 독립적인 현장 대응 조직으로 재편되었다.</p><p>괴이 섬멸, 방어선 유지, 고위험 구역 봉쇄, 생존자 회수, 적성 무장 세력 제압을 담당한다. U.A.C가 전체 통제와 정보 관리를 담당한다면, N.H.C는 직접적인 전투와 현장 작전을 수행하는 조직이다.</p>"}, {"title": "레드울프 이탈", "body": "<p>과거 N.H.C 산하에는 레드울프가 1차 작전팀으로 존재했다. 그러나 그린존 붕괴 이후 이어진 사건을 계기로 해당 팀은 사실상 이탈하였고, 현재는 신디케이트 주요팀으로 분류된다.</p>"}, {"title": "주요 임무", "body": "<ul><li>레드존 방어선 유지</li><li>괴이 및 타락체 섬멸</li><li>고위험 구역 봉쇄</li><li>생존자 제한 구조</li><li>적성 무장 세력 제압</li><li>블랙존화 징후 감시</li><li>오염 구역 정화 및 소각 판단</li></ul>"}, {"title": "전술 및 특수 자산", "body": "<p>N.H.C는 일반 화기뿐만 아니라 타락 개체의 재생력을 억제하는 고주파 소각탄, 혈액 변이를 중단시키는 화학 중화 가스, 대괴이 특수 탄약 등 우시노다 현상에 특화된 독점 병기를 운용한다.</p><p>포획된 변이체를 해부하여 약점을 찾아내고, 인간 요원들에게 초자연적 저항력을 부여하는 위험한 시술 시설을 보유하고 있다는 의혹도 존재한다.</p>"}, {"title": "위버맨시", "body": "<p>위버맨시는 N.H.C의 기술력으로 탄생한 대생명체 전용 강화병이다. 우시노다 현상, 혈교 의식, 타락교 정신 오염, 그림자 계열 이상현상에 대응하기 위해 만들어진 극비 전력이다.</p><p>타락 개체와 대등하게 싸울 수 있는 유일한 인간형 전력으로 평가되지만, 시술 부작용으로 인해 서서히 인간성을 잃거나 결국 스스로가 격리 대상이 되는 경우가 있다.</p>"}, {"title": "기본 핵심 능력", "body": "<h4>혈액 중화 및 강화</h4><p>혈교의 혈액 마법에 대응하기 위해 자신의 혈액을 특수 화학 물질로 치환한 개체군이다. 이 혈액은 괴이체의 산성 혈액에 부식되지 않으며, 상처 부위를 빠르게 응고시키는 초재생 반응을 제공한다.</p><h4>신경계 가속</h4><p>그림자 계열 이상현상에 대응하기 위해 신경계를 기계적으로 가속한 개체군이다. 그림자 속에서 적이 나타나는 찰나의 움직임을 포착할 수 있는 초감각적 반사신경을 가진다.</p><h4>정신 격벽</h4><p>타락교의 정신 오염을 차단하기 위해 뇌에 인지 필터 칩을 삽입한 개체군이다. 환각이나 공포를 노이즈로 처리하여 무시할 수 있지만, 부작용으로 인간적인 감정까지 거세되어 기계처럼 차가운 성격이 되는 경우가 있다.</p>"}, {"title": "교단 분파별 사냥 전술", "body": "<h4>타락교 대응</h4><p>S.I.D가 특수 전파 교란기로 공간 왜곡을 억제하는 동안, 위버맨시는 정신 격벽을 활성화한 채 안개를 뚫고 진입한다.</p><h4>혈교 대응</h4><p>위버맨시는 대괴이용 무기를 사용하여 혈교의 경질화된 피와 뼈 무기를 절단한다. 혈액 마법에 전염되지 않는 특수 방호복과 중화 혈액 덕분에 강제 변이 공격을 무시하며 육탄전으로 괴물들을 제압한다.</p><h4>그림자교 대응</h4><p>고광도 UV 조명탄과 음파 탐지기로 그림자교의 은신처를 강제로 노출시킨다. 그림자 속으로 숨으려는 적을 가속된 신경계로 추적하여 비물질화가 풀리는 짧은 순간을 노려 특수 탄환으로 사살한다.</p>"}]}, "sid": {"img": "sid.webp", "name": "S.I.D", "meta": "Special Investigation Department / 특수 수사과", "summary": "이상현상, 오컬트 사건, 실종 사건, 심각 범죄를 조사하는 특수 조사 조직.", "pages": [{"title": "개요", "body": "<p>S.I.D는 이상현상, 심각 범죄, 괴이 출현, 오컬트 사건을 조사하는 특수 조사 조직이다. 초기에는 U.A.C 산하 특수 조사 부서로 운용되었으나, 사건 규모가 확대되고 지역별 독립 조사가 필요해지면서 독립 기관으로 재편되었다.</p><p>일반적인 수사 기관으로 해결하기 어려운 사건을 담당하며, 현장 조사, 피해자 기록, 의식 흔적 분석, 민간 구역 감시를 수행한다. 그린존 내부의 치안 유지와 이상현상 감시 역시 S.I.D의 주요 임무 중 하나이다.</p>"}, {"title": "핵심 임무", "body": "<ul><li>도심 및 일상 공간에서 발생하는 기괴한 징후 감지</li><li>피의 연못, 그림자 전이, 신체 변이 등 초상 현상 추적</li><li>우시노다 현상 발생 경로 분석</li><li>교단 은신처 및 의식장 식별</li><li>초자연적 에너지 잔류량 측정</li><li>F.H.C, 타락교, 혈교 관련 의도적 의식 여부 판별</li><li>현장 1차 봉쇄 및 정보 검열</li></ul>"}, {"title": "N.H.C와의 공조", "body": "<p>S.I.D는 수집된 데이터를 분석하여 N.H.C가 화력을 집중할 지점을 지목한다. 현상 발생 시 가장 먼저 현장에 도착하여 반경 수 킬로미터를 물리적으로 폐쇄하고, 외부인의 출입을 막으며 진실이 유출되지 않도록 정보 검열을 병행한다.</p><p>상황이 걷잡을 수 없이 커질 경우 N.H.C의 정규군 병력에 배속되어 현장 가이드 및 전술 지원팀으로 직접 전투에 참여한다.</p>"}, {"title": "무장 및 전술 지위", "body": "<p>S.I.D는 경찰 계열 조사 조직이지만 일반 총기 외에도 대크리처 전용 특수 탄환, 전파 교란기, 고감도 열화상 탐지기 등 군사 수준의 장비를 운용한다.</p><p>주 임무는 조사와 차단이지만, 초기 대응 실패 시 N.H.C가 도착하기 전까지 1차 봉쇄선을 유지해야 한다.</p>"}, {"title": "오컬트 부서", "body": "<p>S.I.D 오컬트 부서는 우시노다 현상, 괴이 출현, 타락교 관련 사건, 혈교 의식 흔적 등을 조사하는 전문 부서이다. 현장 조사관, 특수 효과 분석 담당자, 기록 담당자, 심각 범죄 분석관으로 구성되어 있다.</p><p>사쿠마 유타 실종 사건 보고서는 S.I.D 일본 도쿄 지부 오컬트 부서가 관리하던 사건 기록으로 분류된다.</p><ul><li>오컬트 범죄 현장 조사</li><li>괴이 흔적 판독</li><li>우시노다교 관련 문서 회수</li><li>피해자 관계 인물 조사</li><li>정신 오염 가능성 판정</li><li>U.A.C 및 F.H.C로 자료 이관</li></ul>"}]}, "ashcrew": {"img": "ashcrew.webp", "name": "Ash Crew", "meta": "괴이 사체 처리반 / N.H.C 산하 특수 처리반", "summary": "전투 이후 남은 오염 사체, 괴이 잔해, Blood Gate 잔류물, 오염된 장비를 봉인·회수·소각하는 처리반.", "pages": [{"title": "개요", "body": "<p>Ash Crew는 독립 세력이 아니라 N.H.C 산하 특수 처리반이다. 일반 N.H.C 전투조가 진압과 봉쇄를 담당한다면, Ash Crew는 전투 이후 남은 오염 사체, 괴이 잔해, 블랙 태그 대상, 오염된 장비, Blood Gate 잔류물을 봉인하고 소각한다.</p><p>이 부대는 전투의 승패가 결정된 뒤에도 끝나지 않는 현장 오염을 처리하기 위해 운용된다. 잔해 하나가 새로운 오염 매개체가 될 수 있기 때문에, Ash Crew의 임무는 단순한 청소가 아니라 2차 재난 차단에 가깝다.</p>"}, {"title": "오염 사체 처리", "body": "<p>괴이 사체, 타락 개체 잔해, 부패 정지 상태의 인체 조직, 혈액성 잔류물은 일반 의료·군수 절차로 처리하지 않는다. Ash Crew는 블랙 태그 봉인 백과 고열 소각 장비를 사용해 현장 반출 전 오염 수치를 측정하고, 회수 불가 판정 시 현장에서 소각한다.</p><ul><li>괴이 사체의 부위별 분리 봉인</li><li>혈액성 잔류물의 중화 및 소각</li><li>감염 가능 장비의 임시 격납</li><li>귀환자 접촉 흔적의 별도 기록</li></ul>"}, {"title": "블랙 태그", "body": "<p>블랙 태그 대상은 일반 회수 대상으로 분류되지 않는다. 해당 대상은 살아있는 생존자처럼 보이더라도 오염 매개체, 위장 개체, 자율 증식 조직일 가능성이 있어 Ash Crew 또는 U.A.C 고위 승인 없이는 반출할 수 없다.</p><p>A.R.F가 회수 작전을 수행하더라도 블랙 태그 대상은 Ash Crew의 현장 판정을 거친 뒤 봉인·소각·격리 중 하나로 처리된다.</p>"}, {"title": "오염된 장비", "body": "<p>오염된 장비는 현장 인원이 사용했거나 접촉한 장비가 의식 잔류물, 혈액성 반응, Ghost Channel 노이즈와 결합해 독립 위험물로 변한 것을 뜻한다. Ash Crew는 해당 장비를 군수품으로 회수하지 않고 별도 저주 오염 장비로 분류한다.</p><ul><li>손상된 혈무 또는 오염 탄창</li><li>Ghost Channel 반응을 보이는 무전기</li><li>피의 호수 잔류물에 노출된 방호복</li><li>사용자 사망 후에도 반응하는 장비</li></ul>"}, {"title": "주요 장비", "body": "<ul><li>블랙 태그 봉인 백</li><li>고열 소각기</li><li>CI-O 오염 측정기</li><li>Ghost Channel 차단기</li><li>Ash Truck 현장 처리 차량</li><li>오염 장비 임시 격납 케이스</li><li>혈액성 잔류물 중화 팩</li></ul>"}, {"title": "협력 기관", "body": "<p>Ash Crew는 N.H.C의 후속 처리반이지만 단독으로 모든 결정을 내리지 않는다. S.I.D가 현장 증거를 확인하고, A.R.F가 회수 가능한 물리 자료를 선별하며, F.H.C는 일부 샘플의 분석 필요성을 제기한다. 다만 블랙 태그 대상의 최종 반출 여부는 U.A.C 통제권 아래 결정된다.</p>"}]}, "arf": {"img": "arf.webp", "name": "A.R.F", "meta": "Anomaly Recovery Force / 이상현상 회수 부대", "summary": "전면 교전보다 생존자, 샘플, 기록 매체, 장비, 시신, 기밀 자산 회수에 특화된 조직.", "pages": [{"title": "개요", "body": "<p>A.R.F는 이상현상 회수 부대다. 전면 교전보다 생존자, 샘플, 기록 매체, 장비, 시신, 기밀 자산을 회수하는 역할에 특화되어 있다.</p><p>이들은 N.H.C가 교전 구역을 확보한 뒤 후속 진입하며, 아직 완전히 안전하지 않은 현장에서 정보와 물증을 보존하는 역할을 맡는다.</p>"}, {"title": "회수 임무", "body": "<ul><li>생존자 제한 구조 및 이송</li><li>시신과 신원 불명 인체 잔해 반출</li><li>현장 기록 매체, 카메라, 오디오 장비 회수</li><li>괴이 조직과 혈액 샘플의 1차 격납</li><li>기밀 장비와 오염 문서 회수</li></ul>"}, {"title": "작전 구조", "body": "<p>A.R.F는 선두 전투부대가 아니다. N.H.C가 위험 개체를 제압하거나 방어선을 확보한 뒤 진입하며, S.I.D가 지정한 증거물과 U.A.C가 요구한 기록 매체를 우선 회수한다.</p><p>현장 상황이 불안정할 경우 A.R.F는 회수보다 봉쇄선 외곽 대기를 우선하며, N.H.C 호위 없이 레드존 심부로 진입하지 않는다.</p>"}, {"title": "F.H.C 분석 전 단계", "body": "<p>F.H.C가 분석하는 대부분의 샘플은 A.R.F가 먼저 물리적으로 회수한다. A.R.F는 연구 조직이 아니라 회수 조직이므로, 샘플의 의미를 해석하기보다 원형 보존과 오염 확산 방지를 우선한다.</p><ul><li>샘플 원형 보존</li><li>현장 좌표 및 회수 시간 기록</li><li>동행 인원 오염 노출 기록</li><li>분석기관 이송 전 봉인 확인</li></ul>"}, {"title": "Ash Crew와의 차이", "body": "<p>A.R.F는 회수 가능한 자료와 생존자를 반출하는 부대이고, Ash Crew는 회수 불가 또는 위험성이 높은 사체·장비를 처리하는 부대다. 블랙 태그 대상은 A.R.F가 단독 회수하지 않고 Ash Crew 또는 U.A.C의 판단을 따른다.</p>"}]}, "cpd": {"img": "cpd.webp", "name": "C.P.D", "meta": "Civilian Protection Division / 민간 보호 조직", "summary": "민간 보호와 외곽 질서 유지, 피난민 관리, 귀환자 분리 절차를 담당하는 조직.", "pages": [{"title": "개요", "body": "<p>C.P.D는 민간 보호와 외곽 질서 유지를 담당하는 조직이다. 레드존 안쪽으로 깊게 들어가기보다는 검문선, 대피소, 보호 구역, 귀환자 분리 절차를 관리한다.</p><p>U.A.C와 N.H.C가 이상현상과 교전을 관리한다면, C.P.D는 그 바깥에서 민간 사회가 완전히 붕괴하지 않도록 질서를 유지한다.</p>"}, {"title": "피난민 관리", "body": "<ul><li>피난민 대기 구역 관리</li><li>대피 경로 통제</li><li>가족 단위 신원 확인</li><li>오염 노출자와 일반 민간인 분리</li><li>식량, 의료품, 임시 거주 구역 배정</li></ul>"}, {"title": "검문 게이트", "body": "<p>C.P.D 검문 게이트는 그린존과 옐로우존, 옐로우존과 레드존 외곽을 나누는 민간 통제선이다. 모든 통과 인원은 신분 확인, 오염 반응 검사, 귀환자 판정을 거친다.</p><p>의심 인원은 S.I.D나 U.A.C 조사반으로 이관되며, 폭동이나 강제 돌파 시 N.H.C 외곽 경계대가 지원된다.</p>"}, {"title": "귀환자", "body": "<p>귀환자는 실종 이후 돌아온 민간인 중 기억 공백, 생체 반응 이상, 타인의 신원 모방, Ghost Channel 반응을 보이는 대상을 말한다. C.P.D는 이들을 일반 피난민과 분리하고 S.I.D 조사 전까지 보호 격리한다.</p>"}, {"title": "C.P.D 대피버스", "body": "<p>C.P.D 대피버스는 레드존 외곽과 옐로우존에서 민간인을 그린 코어 또는 임시 대피소로 옮기는 이동 수단이다. 단순 수송 차량이 아니라 이동식 검문·분리 절차를 수행하는 민간 보호 장비로 운용된다.</p>"}, {"title": "기관 관계", "body": "<p>C.P.D는 U.A.C 행정 통제 아래 운영되며, S.I.D와는 민간 구역 조사 및 실종자 자료 공유를, N.H.C와는 외곽 봉쇄 및 대피 지원을, A.R.F와는 생존자 이송 절차를 공유한다.</p>"}]}, "fhc": {"img": "fhc.webp", "name": "F.H.C", "meta": "Foremost Hitech Cooperation / 포레모스트 하이테크 기업", "summary": "초상 기술, 괴이 조직, 타락·혈액 샘플, 비인가 연구 자료를 분석하고 회수하는 고위 기술 조직.", "pages": [{"title": "개요", "body": "<p>F.H.C는 초상 기술, 괴이 조직, 타락 및 혈액 관련 샘플, 비인가 연구 자료를 분석하고 회수하는 고위 기술 조직이다. 표면적으로는 첨단 기술 개발, 교육 서비스, 사회 복지, 의료 기술, 특수 산업 연구를 제공하는 세계적인 초거대 기업이다.</p><p>그러나 내부적으로는 초자연과학, 오컬트 생명공학, 현실 접속 기술, 생체 병기화 가능성을 다루는 극비 부서를 보유하고 있다. F.H.C는 U.A.C, S.I.D, N.H.C가 회수한 자료를 분석하며, 특히 아마리온 제약과 공식 협력 관계를 맺고 있다.</p>"}, {"title": "표면적 정체", "body": "<ul><li>첨단 기술 개발 기업</li><li>교육 서비스 및 연구 지원 기관</li><li>사회 복지 및 의료 지원 기업</li><li>고위 산업 기술 협력체</li><li>아마리온 제약과 공식 연구 협력 관계 유지</li></ul>"}, {"title": "실질적 정체", "body": "<p>F.H.C는 초상 기술과 오컬트 현상을 기술적으로 실용화하려는 오컬트 과학 복합체에 가깝다. 이들은 외신, 우시노다 현상, 괴이 조직, 혈액 의식, 현실 왜곡, 생명 연장, 생체 병기화 가능성 등을 연구한다.</p><p>공식적으로는 U.A.C와 협력하는 기술 분석 기관이지만, 일부 내부 부서와 자금 흐름에서 우시노다교와의 유착 정황이 확인되고 있다. 따라서 F.H.C는 협력 기관이자 감시 대상에 가까운 이중적 세력이다.</p>"}, {"title": "사회적 영향력", "body": "<p>F.H.C는 수많은 학원, 학교, 연구소, 복지 시설을 운영하며 인재 육성과 사회 기여를 명분으로 영향력을 확장하고 있다. 그러나 일부 시설은 우시노다 현상이 발생하는 주요 지점을 감시하고 제어하기 위한 거점으로 활용된다는 의혹이 존재한다.</p><p>세련된 디자인의 선전 포스터와 출판물을 통해 우시노다와 관련된 철학을 현대적인 자기계발, 첨단 과학, 진화론적 인류 개선 사상으로 위장하여 대중에게 배포한다는 기록도 있다.</p>"}, {"title": "극비 분석 부서", "body": "<p>F.H.C 극비 분석 부서는 괴이, 혈교, 타락교, 우시노다 현상, 비인가 생체 연구 자료, 초상 기술을 분석하고 회수하는 고위 보안 부서이다.</p><p>특히 아마리온 제약, BL-088 균주, 괴이 유전자 디지털화 기술, 저접근 자기 변형 시스템과 관련된 자료를 별도 관리하는 것으로 추정된다.</p><ul><li>초상 기술 분석</li><li>괴이 조직 샘플 연구</li><li>회수 문서 해독</li><li>비인가 연구자 추적</li><li>아마리온 협력 자료 검토</li><li>생체 병기화 가능성 평가</li><li>타락 및 혈액 관련 기술 분류</li><li>우시노다교 유착 의혹 자료 추적</li></ul>"}, {"title": "무력 체계와 조사 기록", "body": "<p>F.H.C는 기업 보안을 명분으로 정규군에 필적하는 사설 무장 세력을 보유하고 있다. 이들은 외부 조사기관의 접근을 차단하거나, 실험 도중 통제를 벗어난 괴이체를 비밀리에 처리한다.</p><p>표면적으로는 합법적인 기업 활동을 하나, 내부 기밀 문서와 자금 흐름을 추적한 결과 우시노다교의 핵심 성소 및 일부 의식 거점과 물리적·재정적으로 연결되어 있다는 정황이 발견되었다.</p>"}]}, "amarion": {"img": "amarion.webp", "name": "Amarion", "meta": "Amarion Pharmaceuticals / 아마리온 제약", "summary": "의약품과 생명공학을 표면에 둔 민간 제약 기업이자 F.H.C 협력·감시 대상.", "pages": [{"title": "개요", "body": "<p>아마리온 제약은 표면적으로는 의약품, 생명공학, 특수 자원 연구를 수행하는 대형 민간 제약 기업이다. 공식적으로는 F.H.C와 연구 협력 관계를 맺고 있으며, 초자연과학, 생명 연장, 고응축 자원, 특수 물질 분석 분야에서 기술 지원을 제공하는 협력 기관으로 분류된다.</p><p>그러나 아마리온은 F.H.C의 승인 범위를 넘어선 비인가 실험을 여러 차례 진행한 정황이 있으며, 현재는 협력 기관이자 고위험 감시 대상이라는 이중적 위치에 놓여 있다.</p>"}, {"title": "F.H.C와의 관계", "body": "<p>F.H.C는 아마리온의 기술력과 연구 성과를 필요로 하지만, 아마리온이 보유한 기술이 너무 위험하기 때문에 완전히 신뢰하지 않는다. 따라서 아마리온은 F.H.C의 협력 기업이면서도 동시에 감시와 통제를 받는 민간 연구 조직으로 분류된다.</p>"}, {"title": "초자연과학 연구 부서", "body": "<p>아마리온 초자연과학 연구 부서는 아마리온 제약 내부에 존재했던 비공개 연구 부서이다. 이 부서는 일반적인 질병 치료나 의약품 개발이 아니라 현실 왜곡, 비가시적 공간 접속, 생체 변형, 고응축 자원 회수, 불멸 연구와 관련된 실험을 진행한 것으로 추정된다.</p><p>공식 기록상 대부분의 자료는 삭제되었으나, F.H.C가 회수한 사전교육 영상에서 해당 부서의 존재가 확인되었다.</p>"}, {"title": "대표 기술", "body": "<p>저접근 자기 변형 시스템은 현실 세계와 비가시적 공간 사이의 접점을 형성하기 위해 개발된 초기형 관문 기술로 추정된다. 아마리온은 이를 자원 확보와 인류 생존 기반 확장 기술로 홍보했으나, F.H.C 분석 기록에 따르면 현실 외부 공간 접촉 실험에 가까운 것으로 분류된다.</p>"}]}, "syndicate": {"img": "syndicate.webp", "name": "Syndicate", "meta": "신디케이트 / 비공식 사설 군사 네트워크", "summary": "국가 기관, 기업, 종교 집단, 무장 조직 사이에서 활동하는 비공식 사설 군사 조직.", "pages": [{"title": "개요", "body": "<p>신디케이트는 국가 기관, 기업, 종교 집단, 무장 조직 사이의 틈에서 활동하는 비공식 사설 군사 조직이자 무장 네트워크이다. 현재 일부 작전은 F.H.C의 거대 자본에 고용되어 움직이지만, 본질적으로는 독자적인 이해관계와 생존 논리를 가진 예측 불가능한 집단이다.</p><p>이들은 국가 체계를 거부하면서도 우시노다의 힘을 군사 전술에 결합하려는 시도를 보이며, 정부와 교단 양쪽 모두에게 위험한 세력으로 분류된다.</p>"}, {"title": "군사 전술과 우시노다", "body": "<p>신디케이트는 우시노다교처럼 숭배에 매몰되지 않는다. 대신 우시노다의 힘을 철저히 효율적인 무기로 취급한다. 현대적 군사 전술에 초자연적인 변이 능력을 덧입혀 정부군인 N.H.C조차 당혹하게 만드는 변칙적인 전투를 수행한다.</p>"}, {"title": "독자 노선", "body": "<p>신디케이트는 작전 단위로 F.H.C의 명령을 따르거나 자금을 받을 수 있지만, 완전히 F.H.C에 종속된 조직은 아니다. 정부에게는 체제를 위협하는 테러리스트이며, 교단에게는 신성한 힘을 도구로 모독하는 약탈자이다.</p><p>이들은 오직 자신들의 독립된 세력을 유지하고 힘을 키우는 데 관심이 있다.</p>"}, {"title": "기만 전술", "body": "<p>신디케이트의 가장 특징적인 전술은 더미 요원 활용이다. 현장에서 포로로 잡히거나 정보가 유출되는 것을 막기 위해 실제 인간 요원 대신 정교하게 제작된 인조체나 세뇌된 소모품 병사를 전면에 내세운다.</p><p>이로 인해 U.A.C가 이들을 소탕하더라도 본대의 실체나 거점은 늘 안개 속에 가려져 있다.</p>"}, {"title": "레드울프", "body": "<p>레드울프는 현재 신디케이트 내부에서 가장 핵심적인 전투 및 현장 작전팀 중 하나로 분류된다. 이들은 원래 N.H.C 1차 작전팀으로 활동했던 고위험 대응팀이었으나, 그린존 붕괴 사건 및 그 이후 이어진 일련의 사건을 거치며 기존 지휘 체계에서 이탈하였다.</p><ul><li>이전 명칭 : N.H.C 1차 작전팀 레드울프</li><li>현재 분류 : 신디케이트 주요팀 레드울프</li><li>변동 사유 : 그린존 붕괴 이후 지휘 체계 붕괴, 상부와의 결별, 생존 인원 재편, 비공식 세력화</li></ul>"}, {"title": "켈베로스 파벌", "body": "<p>켈베로스 파벌은 레드울프 전체를 의미하는 명칭이 아니라, 현재 신디케이트 주요팀으로 활동 중인 레드울프 내부에서 웨이드 밀렌을 중심으로 형성될 가능성이 있는 비인가 독자 행동 세력을 뜻한다.</p><p>밀렌은 과거 N.H.C 시절부터 상부 명령에 대한 불신을 보였으며, 레드울프가 신디케이트 소속으로 재편된 이후에는 독자적인 질서와 권력을 세우려는 방향으로 움직이고 있다. 이후 기록에서는 우시노다의 힘을 감염 병기와 억제제로 전환하려는 계획이 확인되었다.</p>"}]}, "ushinoda": {"img": "ushinoda.webp", "name": "Ushnoda Cult", "meta": "우시노다교 / 타락교·혈교·그림자교를 포함한 통합 교단", "summary": "우시노다의 힘을 숭배하며 인신공양과 이상현상을 통해 세계 재편을 시도하는 적대 종교 세력.", "pages": [{"title": "개요", "body": "<p>우시노다교는 고대 존재 우시노다의 힘을 숭배하며, 그를 향한 맹목적인 믿음을 바탕으로 인류의 도덕성을 완전히 저버린 최악의 광신도 집단이다. 이들은 단순히 신을 믿는 것을 넘어 잔혹한 반인류적 행위를 신성한 의식으로 여기며 인간을 초월한 신인류라는 왜곡된 이상을 꿈꾼다.</p>"}, {"title": "연합된 세 가지 교단", "body": "<p>현재 우시노다교는 각기 다른 힘과 성향을 가진 세 분파가 하나의 목적을 위해 손을 잡은 교단 연합 체제로 운영되고 있다. 이들의 세력은 이미 비밀리에 전 세계 구석구석까지 뻗어 나가 있으며, 도시 내부의 공공 시설, 학교, 병원, 연구소, 복지 기관에 침투한 정황이 확인되고 있다.</p>"}, {"title": "타락교", "body": "<p>타락교는 인간의 정신을 오염시키고 자아를 붕괴시켜 우시노다의 의지에 완전히 종속되게 만드는 심리적 잠식을 담당한다. 이들은 우시노다의 타락의 힘을 축복으로 받아들이며, 신체 변형과 불멸성을 신앙의 증거로 여긴다.</p><h4>핵심 능력 : 현실 부식</h4><ul><li>공포의 안개 : 오염된 기운에 노출된 자는 가장 끔찍한 트라우마를 환각으로 본다.</li><li>자아 와해 : 상대의 이성을 마비시켜 자신이 누구인지 잊게 만들거나 스스로를 해치게 만든다.</li><li>공간 뒤틀림 : 문을 열면 다른 장소가 나오거나 복도가 무한히 길어지는 공간 왜곡을 일으킨다.</li></ul>"}, {"title": "혈교", "body": "<p>혈교는 혈액 마법과 신체 변이에 집착하는 분파이며, 인체를 기괴하게 뒤틀어 타락 개체을 만들어내는 실무적인 무력 집단이다.</p><h4>핵심 능력 : 과부하 변이</h4><ul><li>경질화 혈액 : 피를 강철보다 단단한 칼날이나 가시로 굳혀 공격한다.</li><li>신체 재구성 : 뼈를 검으로 쓰거나 등에서 촉수를 돋게 하며, 부상을 입을수록 더 강력한 형태로 변이한다.</li><li>강제 전이 : 적의 몸속에 자신의 피를 주입하여 장기를 뒤틀거나 타락 개체로 강제 변이시킨다.</li></ul>"}, {"title": "그림자교", "body": "<p>그림자교는 실체가 없는 공포를 이용하는 분파이다. 어둠 속에서 은밀하게 움직이며 요인을 암살하거나, 보이지 않는 곳에서 이상현상을 유도하여 사회적 혼란을 야기한다.</p><h4>핵심 능력 : 심연의 수의</h4><ul><li>그림자 전이 : 모든 그림자를 통로로 삼아 순간이동한다.</li><li>비물질화 : 일시적으로 신체를 그림자 상태로 만들어 총알이나 물리 공격이 통과하게 만든다.</li><li>그림자 구속 : 상대의 그림자를 물리적으로 고정하거나 목을 조르는 끈으로 변형시킨다.</li></ul>"}, {"title": "인신공양과 이상현상", "body": "<p>우시노다교에게 가장 중요한 행위는 인신공양이다. 무고한 생명을 제물로 바침으로써 현실 세계의 물리 법칙을 뒤트는 이상현상을 강제로 발생시키며, 이를 통해 우시노다의 강림을 앞당기려 한다.</p>"}, {"title": "영향력과 암약", "body": "<p>우시노다교는 정체를 숨긴 채 F.H.C와 같은 거대 자본 뒤에 숨어 활동하거나, 학교와 병원 같은 공공 시설에 침투하여 일반인을 서서히 오염시킨다.</p><p>최종 목표는 기존 인류를 멸절시키고, 우시노다의 축복을 받은 변이된 인류로 세상을 재편하는 것이다.</p>"}]}, "haimun": {"img": "haimun.webp", "name": "Haimun", "meta": "For Our Future / 하이문", "summary": "우시노다교의 타락교와 혈교 교리에 심취한 범죄 조직이자 초인간주의 신봉자 단체.", "pages": [{"title": "개요", "body": "<p>하이문은 우시노다교의 분파 중 가장 과격한 타락교와 혈교의 교리에 심취하여, 인류의 멸망과 새로운 세상의 도래를 꿈꾸는 범죄 조직이자 초인간주의 신봉자 단체이다.</p><p>우리의 미래를 위하여라는 슬로건 아래 기존의 인간성을 버리고 괴물로 진화하는 것을 유일한 구원으로 믿는다.</p>"}, {"title": "도심 속 공포", "body": "<p>하이문은 U.A.C의 감시를 피해 도심 깊숙이 뿌리를 내리고 있다. 현재 도시 곳곳에서 산발적으로 발생하는 우시노다 현상의 압도적인 다수는 이들의 소행으로 추정된다.</p><p>이들은 인신공양을 위해 일반 시민들을 납치하거나, 도심 한복판에서 금기된 의식을 강행하여 도시를 아수라장으로 만든다.</p>"}, {"title": "초인간주의 사상", "body": "<p>하이문의 구성원들은 인간이라는 종의 나약함에 환멸을 느낀 자들이다. 타락교의 정신 오염과 혈교의 신체 변이를 적극적으로 받아들이며, 스스로 기괴한 존재가 되는 것을 진화라고 부른다.</p><p>이들은 인간은 곧 사라질 구시대의 유물이며, 우시노다의 축복을 받은 우리만이 미래라고 주장한다.</p>"}, {"title": "리더십", "body": "<p>대부분 평범한 인간들로 구성되어 활동하지만, 이들을 하나로 묶고 거대한 테러를 기획하는 리더의 정체는 철저히 베일에 싸여 있다. 조직원들조차 리더를 직접 본 적이 없으며, 오직 우시노다의 목소리를 대변하는 전언을 통해서만 명령을 하달받는다고 알려져 있다.</p>"}, {"title": "추적 대상", "body": "<p>하이문은 도심 내부에서 인신공양, 실종 사건, 우시노다 현상, 괴이 출현을 유발하는 주요 세력으로 분류된다. S.I.D는 은신처와 의식 거점을 추적하며, U.A.C는 하이문이 활동한 구역을 옐로우존 또는 레드존으로 격상할 수 있다. N.H.C는 대규모 의식이나 타락 개체 양산 정황이 확인될 경우 즉시 투입된다.</p>"}]}};
@@ -101,17 +101,17 @@ document.addEventListener('DOMContentLoaded',()=>{
   function renderFaction(key){
     const d=factionData[key]||factionData.uac; if(!detail)return;
     detail.innerHTML=`<img class="faction-mark-large" src="${prefix}assets/faction_marks/${d.img}" alt="${d.name}"><h3>${d.name}</h3><div class="meta">${d.meta}</div><p class="faction-summary">${d.summary||''}</p><div class="detail-tabs">${d.pages.map((p,i)=>`<button class="detail-tab ${i===0?'active':''}" data-i="${i}" type="button">${p.title}</button>`).join('')}</div><div class="detail-body"></div>`;
-    function showPage(i,sound=true){const p=d.pages[i]||d.pages[0]; detail.querySelectorAll('.detail-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); detail.querySelector('.detail-body').innerHTML=`<h4>${p.title}</h4>${p.body}`; if(sound)play(audio.page);}
+    function showPage(i,sound=true){const p=d.pages[i]||d.pages[0]; detail.querySelectorAll('.detail-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); detail.querySelector('.detail-body').innerHTML=`<h4>${p.title}</h4>${p.body}`; }
     detail.querySelectorAll('.detail-tab').forEach((b,i)=>b.addEventListener('click',()=>showPage(i,true)));
     showPage(0,false);
     document.querySelectorAll('.faction-tile').forEach(b=>b.classList.toggle('active',b.dataset.key===key));
   }
-  document.querySelectorAll('.faction-tile').forEach(b=>b.addEventListener('click',()=>{playCue('menu',160); renderFaction(b.dataset.key)})); if(detail) renderFaction('uac');
+  document.querySelectorAll('.faction-tile').forEach(b=>b.addEventListener('click',()=>{ renderFaction(b.dataset.key)})); if(detail) renderFaction('uac');
   document.querySelectorAll('.paged-record').forEach(box=>{
     const recPages=Array.from(box.querySelectorAll(':scope > .record-page'));
     const tabs=box.querySelector(':scope > .page-tabs');
     if(!recPages.length||!tabs) return;
-    function showRec(i,sound=true){recPages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .page-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page); const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; else window.scrollTo(0,0);}
+    function showRec(i,sound=true){recPages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .page-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i));  const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0; else window.scrollTo(0,0);}
     tabs.querySelectorAll(':scope > .page-tab').forEach((b,i)=>b.addEventListener('click',()=>showRec(i,true)));
     showRec(0,false);
   });
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const pages=Array.from(box.querySelectorAll(':scope .sub-pages > .sub-page'));
     const tabs=box.querySelector(':scope > .sub-tabs');
     if(!pages.length||!tabs) return;
-    function showSub(i,sound=true){pages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .sub-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); if(sound)play(audio.page);}
+    function showSub(i,sound=true){pages.forEach((p,idx)=>p.classList.toggle('active',idx===i)); tabs.querySelectorAll(':scope > .sub-tab').forEach((b,idx)=>b.classList.toggle('active',idx===i)); }
     tabs.querySelectorAll(':scope > .sub-tab').forEach((b,i)=>b.addEventListener('click',()=>showSub(i,true)));
     showSub(0,false);
   });
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       pages.forEach((p,i)=>{const on=p.classList.contains(cls)||(!key && i===0); if(on) matched=true; p.classList.toggle('active',on);});
       if(!matched && pages[0]) pages[0].classList.add('active');
       tabs.forEach(t=>t.classList.toggle('active', t.dataset.zone===key));
-      if(sound){startAmbient(); play(audio.page);}
+      
     }
     tabs.forEach(t=>t.addEventListener('click',()=>showZone(t.dataset.zone,true)));
   });
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   /* MapPatch 5.13.3 — U.A.C case-file record viewer shell.
      Existing record bodies are preserved; this only wraps them with metadata / links / sub-record navigation. */
   const recordCaseMeta = {
-    'Cults_871104':{grade:'F.H.C / SEALED',tone:'restricted',type:'오컬트 봉인 기록',map:'란저우 / 우시노다교 흔적',op:'lanzhou',factions:['F.H.C','S.I.D','Ushnoda Cult'],equipment:['봉인 태그','오염 표식 샘플','혈무'],phenomena:['의식성 오염','Blood Gate 잔향','타락교'],attachments:['타락교 기록면','혈교 기록면','현장 대응 경고'],annotation:'F.H.C 봉인 기록. 일부 문장은 부분 공개 상태로 유지한다.'},
+    'Cults_871104':{grade:'F.H.C / SEALED',tone:'restricted',type:'종교 기록',map:'란저우 / 우시노다교 흔적',op:'lanzhou',factions:['F.H.C','S.I.D','Ushnoda Cult'],equipment:['봉인 태그','오염 표식 샘플','혈무'],phenomena:['의식성 오염','Blood Gate 잔향','타락교'],attachments:['타락교 기록면','혈교 기록면','침묵성 타락','현장 대응 경고'],annotation:'종교 기록 정리본. 일부 문장은 부분 공개 상태로 유지한다.'},
     '타락 개체_860722':{grade:'ENTITY / RED',tone:'bio',type:'개체 분류 기록',map:'세계 상황판 / 레드존 개체권',op:'world',factions:['U.A.C','N.H.C','S.I.D'],equipment:['Null Round','W-Coat','회수 태그'],phenomena:['타락 개체','상위 개체','미믹 개체'],attachments:['개체 분류','부검 메모','회수 이미지'],annotation:'생체 반응과 위협 분류를 먼저 확인한다.'},
     '불명_Record2_860205':{grade:'BIO / HIGH',tone:'bio',type:'부검·오염 기록',map:'북해-함부르크 봉인 항만',op:'northsea',factions:['F.H.C','A.R.F','U.A.C'],equipment:['생체 샘플 키트','Black Tag Charge'],phenomena:['피의 호수','혈액성 잔류물','부패 정지 반응'],attachments:['부검 사진','샘플 기록','오염 판정'],annotation:'생체 샘플 접촉 금지. 회수보다 격리 우선.'},
     'Redzone_881120':{grade:'REDZONE / FIELD-2',tone:'redzone',type:'레드존 이상현상 기준',map:'부산 / 란저우 / 전역 레드권',op:'busan',factions:['U.A.C','S.I.D','F.H.C'],equipment:['Chrono Anchor','해상 감청 장비','봉쇄 게이트'],phenomena:['Dead Hour','Ghost Channel','Blood Gate','시간 오염'],attachments:['오염 기준','장기 방치 단계','격상/하향 기준'],annotation:'오염 기준과 봉쇄 판단에 연결되는 핵심 기준 문서.'},
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         const pageTabs=root.querySelectorAll('.paged-record > .page-tabs > .page-tab');
         if(pageTabs[i]) pageTabs[i].click();
         updateCaseRail(root);
-        if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('command',120);
+        
       });
     });
     root.querySelectorAll('.paged-record > .page-tabs > .page-tab').forEach(btn=>{
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         e.preventDefault();
         const op=btn.getAttribute('data-pc5133-open-op')||'world';
         if(typeof window.ProjectCurseSelectOperation==='function') window.ProjectCurseSelectOperation(op,{show:true,closeMap:true});
-        if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('command',140);
+        
       });
     });
     updateCaseRail(root);
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.body.classList.remove('pc5133-case-file-open');
     if(archiveListWrap){archiveListWrap.classList.remove('is-hidden'); archiveListWrap.querySelectorAll('details').forEach(d=>d.open=true);}
     const c=document.querySelector('.legacy-content'); if(c)c.scrollTop=0;
-    playCue('menu',160);
+    
   }
   window.ProjectCurseShowInternalRecord=showInternalRecord;
   window.ProjectCurseCloseInternalRecord=closeInternalRecord;
@@ -1396,7 +1396,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         root.querySelector('[data-pc5134-records]').innerHTML=(d.records||[]).map(id=>`<button type="button" data-pc5134-record="${esc(id)}">${esc(id)}</button>`).join('');
         root.querySelector('[data-pc5134-note]').textContent=d.note;
         root.querySelectorAll('[data-pc5134-row]').forEach(row=>row.classList.toggle('active',(row.getAttribute('data-pc5134-row')||'').toLowerCase().includes((d.name.split('/')[0]||'').trim().toLowerCase())));
-        if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('drawer',180);
+        
       }
 
       root.querySelectorAll('[data-pc5134-node]').forEach(btn=>{
@@ -1478,7 +1478,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 
     const entityFiles=[
       {id:'ENT-860722-FERAL-01',className:'타락 개체',name:'신원불명의 신자',status:'FIELD RED',threat:'근접 접촉 금지',zone:'란저우 / 도심 침투권',op:'lanzhou',record:'타락 개체_860722',img:'assets/resources/86ed1a163d79930b0874dbd5eb93adf2.webp',source:'F.H.C 봉인 기록 / 타락교 기록면',reaction:'육체 변형 / 인육 섭취 후 일시적 안정',note:'일반인 위장 가능성이 있어 C.P.D 선별 절차와 분리해야 한다.'},
-      {id:'ENT-860722-SUP-02',className:'상위 개체',name:'가면을 쓴 존재',status:'SEAL WATCH',threat:'정신 오염 / 명령 전달',zone:'우시노다교 흔적권',op:'lanzhou',record:'Cults_871104',img:'assets/resources/83d311da1ab7310a567c6023f6151e6c.webp',source:'F.H.C 극비 보안 문서',reaction:'의식 지휘 / 하위 신자 통제',note:'직접 교전보다 기록 오염과 추적 실패가 먼저 발생한다.'},
+      {id:'ENT-860722-SUP-02',className:'상위 개체',name:'가면을 쓴 존재',status:'SEAL WATCH',threat:'정신 오염 / 명령 전달',zone:'우시노다교 흔적권',op:'lanzhou',record:'Cults_871104',img:'assets/resources/83d311da1ab7310a567c6023f6151e6c.webp',source:'종교',reaction:'의식 지휘 / 하위 신자 통제',note:'직접 교전보다 기록 오염과 추적 실패가 먼저 발생한다.'},
       {id:'ENT-881120-MIMIC-03',className:'미믹 개체',name:'귀환자 위장 반응체',status:'CIV SCREEN',threat:'검문선 침투',zone:'부산 선별 부두 / 델리 선별권',op:'busan',record:'FCR_Archive_890402',img:'assets/resources/c85c636bb85c747508df07e1115a9b89.webp',source:'타락 개체 분류 추가 보고서',reaction:'기억 손실 위장 / 지연 신체 반응',note:'귀환자를 즉시 타락 개체로 기록하지 않되, 가족 접촉은 보류한다.'},
       {id:'ENT-890402-MIX-04',className:'혼합 개체',name:'오염 장비 접촉 변이체',status:'RECOVERY FAIL',threat:'장비 매개 확산',zone:'북해-함부르크 / 회수 실패 구역',op:'northsea',record:'Redzone_881120',img:'assets/resources/0a8342297ac1a847461c57a2726d98b7.webp',source:'레드존 이상현상 및 오염 기준 문서',reaction:'오염된 장비와 생체 반응이 결합',note:'장비 회수보다 현장 소각과 봉쇄선 유지가 우선된다.'},
       {id:'ENT-891219-CMD-05',className:'명령 반응체',name:'무전 응답 개체',status:'SIGNAL DEGRADED',threat:'통신 유인',zone:'Dead Hour / Ghost Channel 구역',op:'world',record:'Redzone_881120',img:'assets/resources/e39a87391183a4f564af26c1dd3b7bbd.webp',source:'N.H.C 생존 규칙 / 레드존 통신 오염',reaction:'사망자 무전 또는 반복 명령에 반응',note:'사망자 무전에 응답하지 않는다. 동일 명령 반복은 후퇴 기준이다.'},
@@ -1531,7 +1531,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         listEl.querySelectorAll('[data-pc5140-entity]').forEach(btn=>{
           btn.addEventListener('click',()=>{
             selectEntity(btn.getAttribute('data-pc5140-entity'));
-            if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('drawer',180);
+            
           });
         });
       }
@@ -1661,7 +1661,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         listEl.querySelectorAll('[data-pc5141-returned]').forEach(btn=>{
           btn.addEventListener('click',()=>{
             selectReturned(btn.getAttribute('data-pc5141-returned'));
-            if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('drawer',180);
+            
           });
         });
       }
@@ -1793,7 +1793,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         listEl.querySelectorAll('[data-pc5150-equipment]').forEach(btn=>{
           btn.addEventListener('click',()=>{
             selectEquipment(btn.getAttribute('data-pc5150-equipment'));
-            if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('drawer',180);
+            
           });
         });
       }
@@ -1889,7 +1889,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       history.replaceState(null,'','#'+id);
       const c=document.querySelector('.legacy-content');
       if(c) c.scrollTop=0;
-      playCue('drawer',200);
+      
     }
 
     document.querySelectorAll('[data-pc5151-page]').forEach(btn=>{
@@ -1997,7 +1997,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       if(!bus || !bus.audio) return;
       const prefix=(function(){const p=location.pathname; if(p.includes('/docs/'))return '../../'; if(p.includes('/archive/'))return '../'; return '';})();
       try{
-        bus.audio.ambient = new Audio(prefix+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient = new Audio(prefix+'assets/audio/pc5152am_menu_old_computer.mp3');
         bus.audio.ambient.loop = true;
         bus.audio.video = new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav');
         bus.audio.radio = new Audio(prefix+'assets/audio/pc5152f_record_mount_soft.wav');
@@ -2094,7 +2094,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       if(!bus || !bus.audio) return;
       const pre=prefix();
       try{
-        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152am_menu_old_computer.mp3');
         bus.audio.ambient.loop = true;
         bus.audio.menu = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
         bus.audio.drawer = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
@@ -2188,7 +2188,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       if(!bus || !bus.audio) return;
       const pre=prefix();
       try{
-        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152am_menu_old_computer.mp3');
         bus.audio.ambient.loop = true;
         bus.audio.menu = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
         bus.audio.drawer = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
@@ -2362,7 +2362,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 
         // Keep the restored background bed from 5.15.2c/2d.
         if(!bus.audio.ambient || !String(bus.audio.ambient.src||'').includes('pc5152c_broadcast_roomtone.wav')){
-          bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+          bus.audio.ambient = new Audio(pre+'assets/audio/pc5152am_menu_old_computer.mp3');
           bus.audio.ambient.loop = true;
         }
       }catch(e){}
@@ -2427,7 +2427,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       if(!bus || !bus.audio) return;
       const pre=prefix();
       try{
-        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152am_menu_old_computer.mp3');
         bus.audio.ambient.loop = true;
 
         // Short contact: analog-17 reference, softened. Used for ordinary UI input only.
@@ -2540,7 +2540,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       if(!bus || !bus.audio) return;
       const pre=prefix();
       try{
-        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152am_menu_old_computer.mp3');
         bus.audio.ambient.loop = true;
         bus.audio.menu = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
         bus.audio.drawer = new Audio(pre+'assets/audio/pc5152f_analog_contact_soft.wav');
@@ -2624,6 +2624,11 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 
   ready(function(){
     document.body.classList.add('pc5152h-audio-sidecontent-terminal-sequence');
+    document.body.classList.add('pc5152as-recordsequence-stageviewer');
+    document.body.classList.add('pc5152ay-reference-rollback-religionfix');
+    document.body.classList.add('pc5152az-immortality-fieldbriefing-pass');
+    document.body.classList.add('pc5152ba-titleimg-mobile-sequencefix');
+    document.body.classList.add('pc5152bb-stage-template-responsivefix');
 
     const IMMORTALITY_RECORD='Immortality_860201';
     const SEQUENCE_RECORDS = new Set(['Cults_871104', IMMORTALITY_RECORD]);
@@ -2651,296 +2656,306 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       dialogCue:null,
       latePulse:null,
       latePulseTimer:null,
-      latePulseActive:false
+      latePulseActive:false,
+      mutationAppliedPage:-1,
+      runId:0
     };
 
     const pages = [
       {
-        group:'system',
-        code:'VIDEO ATTACHMENT / PARTIAL',
-        title:'RECOVERED SIGNAL',
-        subtitle:'Damaged Record Surface',
-        image:'',
-        frame:'SIGNAL BUS / DEGRADED',
-        lineDelay:2300,
-        lines:[
-          '손상된 의식성 오염 기록을 복구했습니다.',
-          '영상 프레임과 신원 정보 일부는 완전하지 않습니다.'
-        ]
+            "group": "system",
+            "code": "VIDEO ATTACHMENT / PARTIAL",
+            "title": "RECOVERED SIGNAL",
+            "subtitle": "Damaged Record Surface",
+            "image": "",
+            "frame": "SIGNAL BUS / DEGRADED",
+            "lineDelay": 900,
+            "lines": [
+                  "손상된 종교 기록을 복구했습니다.",
+                  "영상 프레임과 텍스트 블록 일부는 부분 복원 상태입니다."
+            ]
       },
       {
-        group:'cult',
-        code:'FRAME 01 / CULT TRACE',
-        title:'타락교',
-        subtitle:'Corrupted Cult',
-        image:'assets/resources/83d311da1ab7310a567c6023f6151e6c.webp',
-        frame:'CULT TRACE / RECOVERED',
-        lineDelay:2500,
-        lines:[
-          '타락교는 우시노다를 신으로 숭배하는 오염 신앙 계열이다.',
-          '이들은 저주의 힘을 신성한 축복으로 받아들이며, 인간의 육체와 정신을 변질시키는 힘을 축복이라 부른다.',
-          '특징: 우시노다를 신으로 숭배한다.',
-          '타락의 힘을 저주가 아닌 축복으로 받아들인다.',
-          '육체 변형과 불멸성을 신앙의 증거로 여긴다.',
-          '인육 섭취와 의식을 통해 변형을 억제하거나 강화한다.',
-          '현대 사회 내부에 비밀 조직 형태로 침투해 있다.'
-        ]
+            "group": "cult",
+            "code": "FRAME 01 / CULT TRACE",
+            "title": "타락교",
+            "subtitle": "Corrupted Cult",
+            "image": "assets/resources/83d311da1ab7310a567c6023f6151e6c.webp",
+            "frame": "CULT TRACE / RECOVERED",
+            "layout": "twoColumn",
+            "lineDelay": 900,
+            "lines": [
+                  "타락교는 암흑기에 흩어진 종파들이 이어져 형성된 오염 신앙 계열로 추정된다.",
+                  "역대 지도층은 확인되지 않았으며, 현대에는 여러 국가에 침투해 사회 내부를 잠식한다.",
+                  "저주와 신체 변형을 축복으로 받아들이고, 불멸성을 신앙의 증거로 삼는다.",
+                  "개별 신자 하나하나가 실질적 위협이 되며, 일반 사회 내부에 비밀 조직 형태로 남아 있다."
+            ]
       },
       {
-        group:'cult',
-        code:'FRAME 02 / ID FAILED',
-        title:'신원불명의 신자',
-        subtitle:'Unidentified Believer',
-        image:'assets/resources/86ed1a163d79930b0874dbd5eb93adf2.webp',
-        frame:'ID MATCH / FAILED',
-        lineDelay:2500,
-        lines:[
-          '신원불명의 신자는 타락교 내부에서 가장 일반적으로 발견되는 신자 유형이다.',
-          '타락의 힘을 받아들인 뒤 신체 변형을 겪으며, 인간으로서의 원래 형태를 점차 잃어간다.',
-          '행동 양상: 단독 또는 소규모 집단으로 활동한다.',
-          '일반인처럼 위장할 수 있다.',
-          '신체 곳곳에 타락의 흔적이 남아 있다.',
-          '살해 후 신선한 살을 섭취하는 습성이 있다.',
-          '섭취 행위로 일시적으로 원래 모습을 회복한다.'
-        ]
+            "group": "cult",
+            "code": "FRAME 02 / ID FAILED",
+            "title": "신원불명의 신자",
+            "subtitle": "Unidentified Believer",
+            "image": "assets/resources/86ed1a163d79930b0874dbd5eb93adf2.webp",
+            "frame": "IMAGE-860722 / UNIDENTIFIED BELIEVER",
+            "imageCode": "IMG-860722",
+            "layout": "evidenceCenter",
+            "caption": "일반인 위장 가능 · 인육 섭취 후 형태 안정 사례 보고",
+            "lineDelay": 900,
+            "report": [
+                  "신원불명의 신자는 현장에서 가장 흔히 확인되는 타락교 하위 신자 유형이다. 겉으로는 인간과 비슷하지만 신체 내부와 행동 패턴은 이미 오염 단계에 들어간 경우가 많다.",
+                  "신선한 살을 섭취한 뒤 일시적으로 형태가 안정되는 사례가 보고되었다. 소규모 집단 행동과 은밀한 접근을 우선 경계해야 한다."
+            ]
       },
       {
-        group:'cult',
-        code:'FRAME 03 / MASKED FORM',
-        title:'가면을 쓴 존재',
-        subtitle:'Masked Entity',
-        image:'assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp',
-        frame:'FACE TRACK / BLOCKED',
-        lineDelay:2500,
-        lines:[
-          '가면을 쓴 존재는 타락교의 보호를 받는 특수 괴이 개체다.',
-          '본래 야생의 짐승이었으나 우시노다의 타락에 의해 변형된 것으로 추정된다.',
-          '특징: 야생 동물 기반의 변형 개체로 추정된다.',
-          '가면 또는 가면과 유사한 외골격을 지닌다.',
-          '타락교 내부에서 신성한 동물로 취급된다.',
-          '의식장 중심부에서 발견되는 경우가 많다.',
-          '일부 개체는 신자들에게 명령을 내리는 듯한 행동을 보인다.'
-        ]
+            "group": "cult",
+            "code": "FRAME 03 / MASKED FORM",
+            "title": "가면을 쓴 존재",
+            "subtitle": "Masked Entity",
+            "image": "assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp",
+            "frame": "IMAGE-860723 / MASKED ENTITY",
+            "imageCode": "IMG-860723",
+            "layout": "evidenceCenter",
+            "caption": "의식장 중심부 출현 · 정신 오염 반응 동반",
+            "lineDelay": 900,
+            "report": [
+                  "가면을 쓴 존재는 타락교 의식장 주변에서 반복적으로 포착되는 특수 개체다. 야생 동물 기반 변형체로 추정되며, 일부 신자들은 이를 성물처럼 보호한다.",
+                  "직접 교전보다 정신 오염과 추적 실패가 먼저 발생한다. 의식장 중심부에서 발견될 경우 즉시 봉쇄 등급을 올려야 한다."
+            ]
       },
       {
-        group:'cult',
-        code:'FRAME 04 / DEGRADATION STAGE',
-        title:'타락의 과정 및 형태',
-        subtitle:'Corruption Process',
-        image:'assets/resources/646468c8e709d197314f9d40e286986b.webp',
-        frame:'FORM SHIFT / PARTIAL',
-        lineDelay:2500,
-        lines:[
-          '타락의 힘을 받아들인 생명체는 점진적인 신체 변형을 겪는다.',
-          '초기에는 피부 변색, 체온 변화, 감각 이상, 골격 통증이 보고된다.',
-          '관찰된 변형 증상: 골격 뒤틀림과 뼈의 비정상적 성장.',
-          '피부 파열과 근육 구조 변형.',
-          '감각 기관 손실과 자아 붕괴.',
-          '기억 손상과 폭력성 증가.',
-          '인간 형태의 일시적 회복.'
-        ]
+            "group": "cult",
+            "code": "FRAME 04 / CORRUPTION PROCESS",
+            "title": "타락의 과정 및 형태",
+            "subtitle": "Corruption Process",
+            "image": "assets/resources/646468c8e709d197314f9d40e286986b.webp",
+            "frame": "IMAGE-0923 / CORRUPTION PROCESS",
+            "imageCode": "IMG-0923",
+            "layout": "evidenceCenter",
+            "caption": "살의 길 반복 사용 · 신체 형성물 · 자가포식 위험",
+            "lineDelay": 900,
+            "alertDelay": 950,
+            "redAlert": "자가포식으로 이어질 수 있음",
+            "report": [
+                  "살의 길을 반복적으로 사용하면 늦거나 빠르게 침묵성 타락이 시작된다. 몸 곳곳에 새로운 기관과 형성물이 자라나며, 날카로운 치아를 가진 구강 구조와 감각 기관이 동반되는 경우가 많다.",
+                  "이 과정은 비현실감과 인격 소실을 함께 일으킨다. 심한 경우 피해자는 자신의 신체를 먹어 치우는 자가포식 단계로 넘어간다."
+            ]
       },
       {
-        group:'blood',
-        code:'FRAME 05 / BLOOD TRACE',
-        title:'혈교',
-        subtitle:'Blood Cult',
-        image:'assets/resources/8668a15590e2ae00b18d68db57a85c95.webp',
-        frame:'BLOOD TRACE / RECOVERED',
-        lineDelay:2500,
-        lines:[
-          '혈교는 피의 길을 숭배하는 의식 계열이다.',
-          '피를 생명 유지 물질이 아니라 문을 열고, 형태를 만들고, 힘을 전달하는 매개체로 취급한다.',
-          '특징: 피의 길을 숭배한다.',
-          '피를 의식의 핵심 매개체로 사용한다.',
-          '피를 이용해 무기, 경로, 덫, 저장소를 만든다.',
-          '대량 출혈, 희생 의식, 혈액 저장 의식과 관련되어 있다.'
-        ]
+            "group": "cult",
+            "code": "FRAME 05 / SILENT CORRUPTION",
+            "title": "침묵성 타락",
+            "subtitle": "Silent Corruption",
+            "image": "assets/resources/pc5152ay_silent_corruption.png",
+            "frame": "IMAGE-1293A / SILENT CORRUPTION",
+            "imageCode": "IMG-1293A",
+            "layout": "evidenceCenter",
+            "caption": "빙의 없음 · 내부 오염 성장 · 잠복성 변형",
+            "lineDelay": 900,
+            "report": [
+                  "침묵성 타락은 빙의 없이 피해자 내부에서 오염이 자라나는 사례를 뜻한다. 초기에는 정상 상태처럼 보이지만, 통증과 무기력, 이상 조직 성장이 뒤늦게 드러난다.",
+                  "학교와 주거지 내부 사례가 증가하고 있다. 발견이 늦을수록 회복 가능성은 급격히 낮아진다."
+            ]
       },
       {
-        group:'blood',
-        code:'FRAME 06 / ROUTE CONTROL',
-        title:'혈액 이동 경로 조정',
-        subtitle:'Blood Route Control',
-        image:'assets/resources/89eeb37859d35d979b1d217e11f5148f.webp',
-        frame:'BLOOD ROUTE / CONTROL',
-        lineDelay:2500,
-        lines:[
-          '혈액을 이용한 능력은 혈액의 이동 경로를 조정할 수 있는 것으로 확인되었다.',
-          '출혈을 막거나, 외부 혈액을 응고시켜 무기와 방어 수단으로 활용한다.',
-          '출혈로 인한 사망 방지.',
-          '혈액 흐름 제어.',
-          '혈액 응고를 이용한 방어막 생성.',
-          '혈액을 칼날, 창, 사슬 형태로 변형.'
-        ]
+            "group": "cult",
+            "code": "FRAME 06 / HYBRIDIZATION",
+            "title": "융합성 타락",
+            "subtitle": "Hybridized Corruption",
+            "image": "assets/resources/pc5152ay_hybrid_corruption.png",
+            "frame": "IMAGE-1293B / HYBRIDIZED CORRUPTION",
+            "imageCode": "IMG-1293B",
+            "layout": "evidenceCenter",
+            "caption": "교단 의식 개입 · 피해자 내부 통합 · 혼성화",
+            "lineDelay": 900,
+            "mutation": {
+                  "mode": "click",
+                  "delay": 1450,
+                  "readyDelay": 2900,
+                  "imageCode": "IMG-1293C",
+                  "title": "융합성 타락 / 변조됨",
+                  "caption": "공공 안내문 위장 · 행동 통제성 문장 삽입",
+                  "redAlert": "당신의 행동에 책임을 지십시오",
+                  "report": [
+                        "일부 기록은 정상적인 설명문처럼 시작하다가 교단식 안내문으로 순간 변조된다. 아이들을 감시하라, 학생들은 이미 어른이다, 인증된 교단과만 접촉하라는 식의 문장이 대표적이다.",
+                        "이 유형은 정보 오염 또는 의식성 간섭 흔적으로 분류한다. 기록면 자체를 2차 오염원으로 취급해야 한다."
+                  ]
+            },
+            "report": [
+                  "일반적인 타락은 대개 되돌릴 수 없으며 피해자를 타락 생명체로 전환한다. 그러나 일부 교단은 의식을 통해 타락을 피해자 내부에 통합시키는 융합 과정을 강제로 유도한다.",
+                  "인간 자아와 타락 조직이 동시에 남아 있을 수 있다. 외형 일부만 변형되어 발견이 늦어지는 경우가 많다."
+            ]
       },
       {
-        group:'blood',
-        code:'FRAME 07 / BLOOD WEAPON',
-        title:'혈무의 제작 과정',
-        subtitle:'혈무 Creation',
-        image:'assets/resources/5a2db6abec6308c441b2b430a3da59c2.webp',
-        frame:'WEAPON FORM / PARTIAL',
-        lineDelay:2500,
-        lines:[
-          '혈무는 혈액을 근접 무기에 덮은 뒤 피의 의식을 통해 강화한 무기를 뜻한다.',
-          '의식이 완료된 혈무는 기존 무기보다 높은 공격력과 내구성을 지닌다.',
-          '근접 무기에 혈액을 덮어 제작한다.',
-          '피의 의식이 필요하다.',
-          '무기의 내구성과 절삭력이 증가한다.',
-          '타락체에게 높은 피해를 입힌다.'
-        ]
+            "group": "blood",
+            "code": "FRAME 07 / BLOOD TRACE",
+            "title": "혈교",
+            "subtitle": "Blood Cult",
+            "image": "assets/resources/8668a15590e2ae00b18d68db57a85c95.webp",
+            "frame": "BLOOD TRACE / RECOVERED",
+            "layout": "twoColumn",
+            "lineDelay": 900,
+            "lines": [
+                  "혈교는 오래된 혈액 의식 전통에서 갈라져 나온 분파이며, 타락체 자체보다 피의 의미와 경로를 중시한다.",
+                  "피를 생명 유지 물질이 아니라 문, 무기, 경로, 저장소를 여는 매개체로 취급한다.",
+                  "피의 길 자체가 즉시 타락을 유발하지는 않지만, 과도한 사용은 대량 출혈과 탈수로 이어진다.",
+                  "현장에서는 의식적 사혈, 혈액 무기화, 이동 경로 조작을 우선 감시한다."
+            ]
       },
       {
-        group:'blood',
-        code:'FRAME 08 / BLOOD LAKE',
-        title:'피의 호수를 거니는 자들',
-        subtitle:'Walking Through the Lake of Blood',
-        image:'assets/resources/1ab6ba9fba9b6b8b9493045c7bf4836d.webp',
-        frame:'LAKE PATH / WARNING',
-        lineDelay:2500,
-        lines:[
-          '혈액 웅덩이는 혈교 신자들에게 저장소이자 이동 경로로 사용된다.',
-          '현장 대응 인원은 혈액 웅덩이를 단순한 오염 물질로 판단해서는 안 된다.',
-          '혈액 웅덩이에 접근하지 말 것.',
-          '웅덩이 내부 은닉 가능성을 고려할 것.',
-          '혈액용기를 사용해 회수 및 격리할 것.',
-          '고열 장비로 확산을 차단할 것.'
-        ]
+            "group": "blood",
+            "code": "FRAME 08 / ROUTE CONTROL",
+            "title": "혈액 이동 경로 조정",
+            "subtitle": "Blood Route Control",
+            "image": "assets/resources/89eeb37859d35d979b1d217e11f5148f.webp",
+            "frame": "IMAGE-880614 / BLOOD ROUTE CONTROL",
+            "imageCode": "IMG-880614",
+            "layout": "evidenceCenter",
+            "caption": "혈류 조정 · 응고 방어막 · 혈액 무기 형성",
+            "lineDelay": 900,
+            "report": [
+                  "혈액 사용자들은 체내와 외부 혈액의 이동 경로를 조정해 전투 흐름을 바꾼다. 출혈 제어와 응고 조작이 동시에 가능하며, 방어막과 즉석 무기 형성에 응용된다.",
+                  "장기전일수록 사용자 체력 소모가 커진다. 혈액 손실이 누적되면 조작 정확도가 떨어지고 급성 탈수 증상이 뒤따른다."
+            ]
       },
       {
-        group:'blood',
-        code:'FRAME 09 / RESERVOIR',
-        title:'혈액 저장소',
-        subtitle:'Blood Reservoir',
-        image:'assets/resources/458cf4194ba894dce7e907244d2fd1f0.webp',
-        frame:'RESERVOIR / SEALED',
-        lineDelay:2500,
-        lines:[
-          '혈액 저장소는 혈액 사용자들의 보급 수단이며, 전투 중 손실된 혈액을 보충하는 용도로 사용된다.',
-          '일부 의식에서는 중심 물체로 쓰이기도 한다.',
-          '대량의 혈액이 저장되어 있다.',
-          '전투 중 회복 수단으로 사용된다.',
-          '오염 가능성이 높아 일반 접촉은 금지된다.',
-          '회수 시 밀폐형 혈액용기 사용이 권장된다.'
-        ]
+            "group": "blood",
+            "code": "FRAME 09 / BLOOD WEAPON",
+            "title": "혈무의 제작 과정",
+            "subtitle": "혈무 Creation",
+            "image": "assets/resources/5a2db6abec6308c441b2b430a3da59c2.webp",
+            "frame": "IMAGE-880615 / BLOOD WEAPON FORM",
+            "imageCode": "IMG-880615",
+            "layout": "evidenceCenter",
+            "caption": "근접 무기 기반 · 피의 의식 고정 · 타락 조직 억제",
+            "lineDelay": 900,
+            "report": [
+                  "혈무는 기존 근접 무기에 혈액을 덮고, 피의 의식으로 고정해 만든 의식성 병기다.",
+                  "완성된 혈무는 일반 무기보다 오래 버티며, 타락 조직을 절단하고 재생을 늦추는 데 사용된다."
+            ]
       },
       {
-        group:'blood',
-        code:'FRAME 10 / SUPPRESSED ENTITY',
-        title:'제압된 타락체',
-        subtitle:'Suppressed Corrupted Entity',
-        image:'assets/resources/7af3eeca599cebbf7235e0a1368f2517.webp',
-        frame:'SUPPRESSION / CONFIRMED',
-        lineDelay:2500,
-        lines:[
-          '혈무와 화염을 함께 사용한 공격은 타락체의 재생 능력과 신체 변형을 억제하는 데 효과적이다.',
-          '혈무를 이용한 근접 절단.',
-          '화염을 이용한 조직 소각.',
-          '혈액 경로 봉쇄.',
-          '타락 조직의 재생 차단.',
-          '봉인구와 병행 사용.'
-        ]
+            "group": "blood",
+            "code": "FRAME 10 / BLOOD LAKE",
+            "title": "피의 호수를 거니는 자들",
+            "subtitle": "Walking Through the Lake of Blood",
+            "image": "assets/resources/1ab6ba9fba9b6b8b9493045c7bf4836d.webp",
+            "frame": "IMAGE-880616 / BLOOD LAKE WALKER",
+            "imageCode": "IMG-880616",
+            "layout": "evidenceCenter",
+            "caption": "혈액 웅덩이 내부 이동 · 매복 가능 · 단순 혈흔 아님",
+            "lineDelay": 900,
+            "report": [
+                  "혈액 웅덩이는 저장소이자 이동 경로로 사용된다. 혈교 신자는 수면 아래에 숨어 이동하거나 매복할 수 있다.",
+                  "현장 인원은 이를 단순 혈흔으로 판단해서는 안 된다. 접근 전 고열 장비와 밀폐 회수 절차를 준비해야 한다."
+            ]
       },
       {
-        group:'compare',
-        code:'FRAME 11 / CROSS CHECK',
-        title:'타락교와 혈교 비교',
-        subtitle:'비교 기록',
-        image:'',
-        frame:'CROSS-CHECK / TEXT ONLY',
-        lineDelay:2500,
-        lines:[
-          '타락교는 우시노다의 타락과 신체 변형을 숭배한다.',
-          '혈교는 피의 길과 혈액 의식을 중심으로 움직인다.',
-          '타락교의 핵심 위협은 괴이화와 불멸성이다.',
-          '혈교의 핵심 위협은 혈액 무기화와 이동 경로 조작이다.',
-          '두 계열 모두 우시노다교 통합 위협 안에서 관리된다.'
-        ]
+            "group": "blood",
+            "code": "FRAME 11 / RESERVOIR",
+            "title": "혈액 저장소",
+            "subtitle": "Blood Reservoir",
+            "image": "assets/resources/458cf4194ba894dce7e907244d2fd1f0.webp",
+            "frame": "IMAGE-880617 / BLOOD RESERVOIR",
+            "imageCode": "IMG-880617",
+            "layout": "evidenceCenter",
+            "caption": "대량 혈액 저장 · 의식 보급원 · 개봉 전 오염 수치 확인",
+            "lineDelay": 900,
+            "report": [
+                  "대량의 혈액이 내부에 저장되어 있으며, 혈교 사용자들은 이를 전투 중 회복 수단이나 의식 보급원으로 사용한다.",
+                  "직접 접촉은 금지된다. 개봉 전 오염 수치 확인과 밀폐 반출 절차가 필요하다."
+            ]
       },
       {
-        group:'warning',
-        code:'FRAME 12 / FIELD WARNING',
-        title:'현장 대응 경고',
-        subtitle:'작전 지침',
-        image:'',
-        frame:'FIELD RESPONSE / WARNING',
-        lineDelay:2500,
-        lines:[
-          '타락교 신자는 인간의 외형을 유지하고 있어도 안전하지 않다.',
-          '혈교가 남긴 혈액 웅덩이는 단순한 혈흔이 아니다.',
-          '혈액 웅덩이는 이동 경로, 저장소, 덫, 원거리 공격 수단으로 사용될 수 있다.',
-          '단독 접근 금지.',
-          'N.H.C 또는 S.I.D 동행 필수.',
-          '혈액 웅덩이 접촉 금지.',
-          '의식장 발견 시 현장 봉쇄 우선.'
-        ]
+            "group": "blood",
+            "code": "FRAME 12 / SUPPRESSED ENTITY",
+            "title": "제압된 타락체",
+            "subtitle": "Suppressed Corrupted Entity",
+            "image": "assets/resources/7af3eeca599cebbf7235e0a1368f2517.webp",
+            "frame": "IMAGE-880618 / SUPPRESSED ENTITY",
+            "imageCode": "IMG-880618",
+            "layout": "evidenceCenter",
+            "caption": "혈무 절단 · 화염 소각 · 혈액 경로 봉쇄",
+            "lineDelay": 900,
+            "report": [
+                  "혈무와 화염을 병행한 제압은 타락체의 재생과 변형을 억제하는 데 효과적이다.",
+                  "절단 후 즉시 소각하거나 혈액 경로를 봉쇄해야 재생 반응을 안정적으로 차단할 수 있다. 봉인구와 회수 절차는 반드시 병행한다."
+            ]
       },
       {
-        group:'return',
-        code:'SEQUENCE END / RETURN',
-        title:'기록보관소 복귀',
-        subtitle:'Archive List Ready',
-        image:'',
-        frame:'ARCHIVE LIST / READY',
-        lineDelay:2300,
-        lines:[
-          '손상 영상 첨부 확인이 끝났습니다.',
-          '화면 선택 시 본문 열람으로 진입하지 않고 기록보관소 목록으로 복귀합니다.'
-        ]
+            "group": "compare",
+            "code": "FRAME 13 / CROSS CHECK",
+            "title": "타락교와 혈교 비교",
+            "subtitle": "비교 기록",
+            "image": "",
+            "frame": "CROSS-CHECK / TEXT ONLY",
+            "lineDelay": 900,
+            "lines": [
+                  "타락교는 정신·육체 오염과 불멸성 숭배에 무게를 둔다.",
+                  "혈교는 피의 길, 혈액 매개술, 저장소 운용에 무게를 둔다.",
+                  "타락교의 핵심 위협은 잠복 오염과 개체화다.",
+                  "혈교의 핵심 위협은 혈액 무기화와 경로 조작이다.",
+                  "두 계열 모두 우시노다교 통합 위협 안에서 관리된다."
+            ]
+      },
+      {
+            "group": "warning",
+            "code": "FRAME 14 / FIELD WARNING",
+            "title": "현장 대응 경고",
+            "subtitle": "작전 지침",
+            "image": "",
+            "frame": "FIELD RESPONSE / WARNING",
+            "layout": "warningCard",
+            "lineDelay": 900,
+            "lines": [
+                  "인간 외형 유지 여부와 상관없이 타락교 신자는 잠재 위협으로 간주한다.",
+                  "혈교가 남긴 혈액 웅덩이와 저장소는 이동 경로, 덫, 공격 수단으로 동시에 기능할 수 있다.",
+                  "단독 접근 금지.",
+                  "N.H.C 또는 S.I.D 동행 필수.",
+                  "의식장 발견 시 현장 봉쇄를 우선한다."
+            ]
+      },
+      {
+            "group": "return",
+            "code": "SEQUENCE END / RETURN",
+            "title": "기록보관소 복귀",
+            "subtitle": "Archive List Ready",
+            "image": "",
+            "frame": "ARCHIVE LIST / READY",
+            "lineDelay": 900,
+            "lines": [
+                  "손상 영상 첨부 확인이 끝났습니다.",
+                  "화면 선택 시 기록보관소 목록으로 복귀합니다."
+            ]
       }
-    ];
+];
 
     const immortalityPages = [
       {
-            "group": "imm_original",
-            "code": "IMMORTALITY / ORIGINAL RECORD",
-            "title": "불멸을 향해",
-            "subtitle": "Blood Lake Incident File",
-            "image": "",
-            "frame": "ORIGINAL RECORD / OVERVIEW",
-            "lineDelay": 2300,
-            "lines": [
-                  "독일 본토 [검열] 지역에서 이상현상 감지됨",
-                  "XX 정찰 부대에 의해 최초 발견",
-                  "이 문서는 독일 본토 [검열] 지역에서 발생한 피의 호수 관련 이상현상과, 현장 촬영 및 통신 임무를 수행하던 유닛2의 작전 기록을 정리한 사건 파일이다",
-                  "현장 인근 주민들의 제보에 따르면 붉은 액체가 강을 뒤덮었으며, 피로 뒤덮이거나 살이 찢겨진 야생 동물들이 마을을 덮친 것으로 보고되었다",
-                  "해당 현상은 혈교 또는 혈액성 의식과 관련된 사건으로 추정되며, 이후 피의 호수 와 연결되는 다수의 이상현상이 확인되었다"
-            ]
-      },
-      {
-            "group": "imm_original",
-            "code": "IMMORTALITY / RECORD INFO",
-            "title": "기록 정보",
-            "subtitle": "문서 분류",
+            "group": "imm_brief",
+            "code": "IMMORTALITY / FIELD BRIEFING",
+            "title": "",
+            "subtitle": "",
+            "hideTitle": true,
             "image": "assets/resources/b1f6105c9de718ff230e00b702ada13b.webp",
-            "frame": "CASE INFO / BLOOD LAKE",
-            "lineDelay": 2300,
+            "frame": "BLI-006 / PRE-ENTRY STILL",
+            "lineDelay": 1700,
             "lines": [
-                  "분류명: 불멸을 향해",
-                  "영문명: Blood Lake Incident File",
-                  "기록 형태: 작전 로그 / 현장 촬영 기록 / 통신 기록 / 이상현상 보고서",
-                  "관련 지역: 독일 본토 [검열] 지역",
-                  "관련 현상:  피의 호수 / 혈액성 잔류물 / 이상 안개 / 야생 동물 변질",
-                  "관련 피해자: 마렌 예거트 / 요나스 밀로 / 유닛4 / 유닛7",
-                  "보안 등급: 기밀",
-                  "위험도:  높음 ~ 극한",
-                  "사건 개요",
-                  "독일 본토 [검열] 지역에서 붉은 액체가 강을 뒤덮는 이상현상이 보고되었다",
-                  "현장 근처에 거주하던 주민들은 피로 뒤덮인 야생 동물, 살이 찢겨진 짐승, 안개에 가려진 언덕길, 나무 위에 매달린 미확인 물체 등을 목격했다고 진술하였다",
-                  "해당 지역은 초기에는 화이트존 으로 분류되었으나, 현장 기록과 통신 두절, 피의 호수 발견 이후 레드존 후보 지역으로 재분류되었다",
-                  "본 기록은 유닛2가 현장에 투입된 이후 전송한 사진, 통신, 위치 추적 자료, 심리 상태 기록을 기반으로 복구되었다"
+                  "독일 본토 [검열] 지역에서 붉은 액체로 이루어진 이상 수역이 확인되었다.",
+                  "초기 발견은 유닛2의 현장 진입 기록과 단절 직전의 위치 신호를 통해 복구되었다.",
+                  "해당 수역은 정상적인 강이나 호수로 분류되지 않는다. 이후 기록에서는 이 현상을 ‘피의 호수’로 지칭한다.",
+                  "FILE: BLI-006 / CLEARANCE: HIGH / SIGNAL: UNSTABLE"
             ]
       },
       {
-            "group": "imm_original",
+            "group": "imm_brief",
             "code": "IMMORTALITY / UNIT 2",
             "title": "작전 투입 기록",
             "subtitle": "유닛2",
             "layout": "peoplePair",
             "image": "",
             "frame": "UNIT 2 / PERSONNEL",
-            "lineDelay": 2300,
+            "lineDelay": 1600,
             "people": [
                   {
                         "name": "마렌 예거트",
@@ -2956,18 +2971,18 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "lines": []
       },
       {
-            "group": "imm_original",
-            "code": "IMMORTALITY / UNIT 2 EQUIPMENT",
+            "group": "imm_brief",
+            "code": "IMMORTALITY / EQUIPMENT",
             "title": "지급 장비",
             "subtitle": "대기 병력",
             "image": "",
             "frame": "UNIT 2 / EQUIPMENT AND STANDBY",
-            "lineDelay": 2300,
+            "lineDelay": 1500,
             "lines": [
-                  "유닛2에게는 현장 정찰을 위한 3일치의 보급품과 손전등, 통신 장비, 특수 촬영 장비, I.P.D 장치, N.H.C 에서 사용하는 대화력 무기가 지급되었다.",
-                  "해당 장비는 이상현상 감지 지역에서의 생존, 위치 추적, 심리 상태 측정, 고위험 개체와의 교전 가능성을 고려하여 지급된 것으로 확인된다.",
-                  "유닛2의 구조 요청이 확인될 경우 즉시 대응할 수 있도록 중무장팀이 인근 대기 지점에 배치되었다.",
-                  "그러나 현장 통신 상태가 불안정해지면서 구조 요청의 정확한 수신 여부와 위치 확인에 문제가 발생하였다."
+                  "유닛2에게는 3일치 보급품, 손전등, 통신 장비, 특수 촬영 장비, I.P.D 장치가 지급되었다.",
+                  "N.H.C 규격 대화력 무기는 교전 가능성만을 전제로 지급되었다.",
+                  "구조 요청 확인 시 투입될 중무장 지원팀은 외곽 대기 상태로 배치되었다.",
+                  "현장 통신은 진입 직후부터 불안정했다."
             ]
       },
       {
@@ -2977,18 +2992,12 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "subtitle": "유닛2 현장 도착",
             "image": "",
             "frame": "FIELD LOG / 16:10",
-            "lineDelay": 1500,
+            "lineDelay": 1350,
             "lines": [
-                  "유닛2가 현장에 도착",
-                  "유닛2에는 다음 장비가 지급되었다.",
-                  "3일치 보급품",
-                  "휴대용 손전등",
-                  "N.H.C 규격 대화력 무기",
-                  "개인 추적용 I.P.D 장치",
-                  "현장 촬영 장비",
-                  "혈액 오염 감지 키트",
-                  "단거리 통신 장치",
-                  "유닛2의 구조 요청이 확인될 경우 즉시 대응할 중무장 지원팀이 대기 상태에 들어갔다."
+                  "유닛2 현장 진입.",
+                  "기상 악화 확인.",
+                  "1차 촬영 개시.",
+                  "지원팀 외곽 대기."
             ],
             "layout": "redLog",
             "logTime": "16:10",
@@ -3002,7 +3011,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "subtitle": "초기 통신 연결",
             "image": "",
             "frame": "FIELD LOG / 16:27",
-            "lineDelay": 1500,
+            "lineDelay": 1350,
             "lines": [
                   "〔예거트〕: 본부로 사진 전송 중, 확인 바람.",
                   "〔본부〕: 전송 확인됨. 대기하라."
@@ -3017,15 +3026,16 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 16:31",
             "title": "16:31",
             "subtitle": "IMG001",
+            "imageCode": "IMG001",
+            "logTime": "16:31",
+            "photoCaption": "고화질 사진 전송 확인",
             "image": "assets/resources/f59b02e8f859bfc95d683636bcf39500.webp",
             "frame": "FIELD LOG / 16:31",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
-                  "고화질 사진 전송 확인",
-                  "안개로 인해 언덕길의 시야 확보가 불가능한 상태.",
-                  "가시거리는 극히 제한적이며, 기온 하강 및 습도 상승이 동반됨.",
-                  "본부 분석",
-                  "해당 안개는 자연 발생 안개와 성분이 일부 다르며, 미세한 혈액성 입자 반응이 감지됨."
+                  "안개로 인해 언덕길의 시야 확보가 불가능하다.",
+                  "기온 하강과 습도 상승이 동반됨.",
+                  "혈액성 입자 반응 미량 감지."
             ],
             "layout": "photoLarge",
             "photoSfx": true,
@@ -3036,13 +3046,14 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 16:46",
             "title": "16:46",
             "subtitle": "IMG002",
+            "imageCode": "IMG002",
+            "logTime": "16:46",
+            "photoCaption": "다수의 나무 위에 미확인 물체 발견",
             "image": "assets/resources/dec4cbe943147076943a62681048ad35.webp",
             "frame": "FIELD LOG / 16:46",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
-                  "다수의 나무 위에 미확인 물체 발견",
-                  "현장 주변 나무 위에 다수의 미확인 물체가 매달려 있는 것이 확인되었다.",
-                  "형태는 불명확하며, 시신 또는 찢긴 동물의 사체일 가능성이 제기되었다.",
+                  "형태 불명. 시신 또는 찢긴 동물 사체 가능성.",
                   "〔본부〕: 해당 지점과 거리를 유지한 채 이동하라."
             ],
             "layout": "photoLarge",
@@ -3056,12 +3067,12 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "subtitle": "버려진 텐트 발견",
             "image": "",
             "frame": "FIELD LOG / 17:02",
-            "lineDelay": 1500,
+            "lineDelay": 1350,
             "lines": [
                   "〔예거트〕: 버려진 텐트가 보인다.",
                   "〔밀로〕: 나라면 저기로 안 갈 거야.",
-                  "〔예거트〕: 아직 작전지의 절반도 오지 않았어. 겁쟁이처럼 굴지 마. 본부, 텐트 내부를 수색해도 될지 승인 여부 바람.",
-                  "〔본부〕: 특수 장치로 촬영한 사진 전송 바람. 확인 후 승인 여부를 알려주겠다."
+                  "〔예거트〕: 본부, 텐트 내부 수색 승인 여부 바람.",
+                  "〔본부〕: 촬영 자료 전송. 확인 후 승인하겠다."
             ],
             "layout": "redLog",
             "logTime": "17:02",
@@ -3073,13 +3084,15 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 17:09",
             "title": "17:09",
             "subtitle": "IMG003",
+            "imageCode": "IMG003",
+            "logTime": "17:09",
+            "photoCaption": "텐트 외부 확인",
             "image": "assets/resources/11f2f935e0339690ace785966d7e436f.webp",
             "frame": "FIELD LOG / 17:09",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
-                  "텐트 외부 확인",
-                  "특수 장치로 촬영된 텐트 외부 사진 분석 결과, 명확한 이상현상은 발견되지 않음.",
-                  "〔본부〕: 텐트 내부 수색을 승인한다. 단, 5분 이상 체류하지 마라. 날이 어두워진다."
+                  "명확한 이상현상은 발견되지 않음.",
+                  "〔본부〕: 내부 수색 승인. 5분 이상 체류하지 마라."
             ],
             "layout": "photoLarge",
             "photoSfx": true,
@@ -3090,18 +3103,14 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 17:16",
             "title": "17:16",
             "subtitle": "IMG004",
+            "imageCode": "IMG004",
+            "logTime": "17:16",
+            "photoCaption": "텐트 내부 수색 결과",
             "image": "assets/resources/fa10a34b64ccc7605b0966af4c017d99.webp",
             "frame": "FIELD LOG / 17:16",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
-                  "텐트 내부 수색 결과",
-                  "텐트 내부에서는 민간인이 머물렀던 흔적이 발견되었다.",
-                  "확인된 물품은 다음과 같다.",
-                  "이어폰 2개",
-                  "침낭",
-                  "MP3 플레이어",
-                  "다량의 혈흔",
-                  "현장 상태를 바탕으로 최소 2명의 민간인이 해당 장소에 머물렀던 것으로 추정된다.",
+                  "이어폰 2개, 침낭, MP3 플레이어, 다량의 혈흔 확인.",
                   "〔예거트〕: 본부?",
                   "〔본부〕: 계속 이동해라."
             ],
@@ -3116,12 +3125,11 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "subtitle": "강변 접근",
             "image": "",
             "frame": "FIELD LOG / 17:41",
-            "lineDelay": 1500,
+            "lineDelay": 1350,
             "lines": [
-                  "유닛2가 강변 지대에 접근하였다.",
-                  "현장 영상에서 강물의 색이 정상 범위를 벗어난 것으로 확인되었다.",
-                  "본부 분석",
-                  "강물은 단순한 적색 오염수가 아니며, 혈액과 유사한 점도 및 응고 반응을 보인다."
+                  "유닛2 강변 지대 접근.",
+                  "강물의 색이 정상 범위를 벗어남.",
+                  "혈액과 유사한 점도 및 응고 반응 확인."
             ],
             "layout": "redLog",
             "logTime": "17:41",
@@ -3133,14 +3141,15 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 17:58",
             "title": "17:58",
             "subtitle": "IMG005",
+            "imageCode": "IMG005",
+            "logTime": "17:58",
+            "photoCaption": "거대한 개체 및 피의 호수 발견",
             "image": "assets/resources/d537338b8d854ef34d0e3638d436cb01.webp",
             "frame": "FIELD LOG / 17:58",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
-                  "거대한 개체 및 피의 호수 발견",
-                  "현장 깊숙한 지점에서 대규모 혈액성 액체 웅덩이, 이른바 피의 호수 가 발견되었다.",
-                  "동시에 그 주변에서 비정상적으로 거대한 개체의 실루엣이 포착되었다.",
-                  "피의 호수 는 정적인 액체가 아니라, 마치 내부에서 미세한 파동과 움직임이 감지되는 형태로 보고되었다.",
+                  "대규모 혈액성 액체 웅덩이 확인.",
+                  "주변에서 비정상적으로 거대한 실루엣 포착.",
                   "〔예거트〕: 무서워.",
                   "〔본부〕: 이유는?",
                   "〔예거트〕: 나도 잘 모르겠다, 본부."
@@ -3156,11 +3165,11 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "subtitle": "심리 상태 이상 감지",
             "image": "",
             "frame": "FIELD LOG / 18:06",
-            "lineDelay": 1500,
+            "lineDelay": 1350,
             "lines": [
-                  "예거트에게 부착된 I.P.D 장치에서 심박수 증가, 호흡 불안정, 손 떨림, 방향 감각 저하가 감지되었다.",
-                  "본부 기록",
-                  "외상 없음. 적성 개체와의 직접 접촉 없음.",
+                  "예거트 I.P.D 장치에서 심박수 증가 확인.",
+                  "호흡 불안정, 손 떨림, 방향 감각 저하 감지.",
+                  "외상 없음. 직접 접촉 없음.",
                   "정신 간섭형 이상 반응 가능성 있음."
             ],
             "layout": "redLog",
@@ -3173,13 +3182,15 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 18:14",
             "title": "18:14",
             "subtitle": "유닛4 통신 두절",
+            "imageCode": "IPD-041",
+            "logTime": "18:14",
+            "photoCaption": "유닛4 통신 두절",
             "image": "assets/resources/b5f9b2c2ddea9084ff8f6e8dfdc6549b.webp",
             "frame": "FIELD LOG / 18:14",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
-                  "유닛4와의 통신이 완전히 두절되었다.",
-                  "동시에 전반적인 통신 상태 불량이 보고되었다.",
-                  "유닛4에게 부착된 I.P.D 장치가 강제 활성화되었으며, 위치 추적 시스템에 연결되었다."
+                  "전반적인 통신 상태 불량 보고.",
+                  "유닛4 I.P.D 장치 강제 활성화."
             ],
             "layout": "photoLarge",
             "photoSfx": false,
@@ -3192,9 +3203,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "subtitle": "유닛7 이동 개시",
             "image": "",
             "frame": "FIELD LOG / 18:22",
-            "lineDelay": 1500,
+            "lineDelay": 1350,
             "lines": [
-                  "〔본부〕: 유닛7이 현재 유닛4에게로 향하는 중이다. 계속 강을 따라서 이동해라. 걱정마라.",
+                  "〔본부〕: 유닛7이 현재 유닛4에게로 향하는 중이다. 계속 강을 따라서 이동해라.",
                   "〔예거트〕: 무서워."
             ],
             "layout": "redLog",
@@ -3208,16 +3219,16 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 18:29",
             "title": "18:29",
             "subtitle": "예거트 심리 안정 수치 불안정",
+            "imageCode": "IPD-029",
+            "logTime": "18:29",
+            "photoCaption": "예거트 심리 안정 수치 불안정",
             "image": "assets/resources/ea33a51515476e2946267ea56b453760.webp",
             "frame": "FIELD LOG / 18:29",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
-                  "예거트에게 부착된 I.P.D 장치에서 심리 안정 상태가 불안정함을 확인하였다.",
                   "심리 치료팀 대기.",
-                  "그러나 현장 상황상 즉각 회수는 불가능.",
-                  "본부 기록",
-                  "움직임이 좋지 않다.",
-                  "보행 속도가 일정하지 않고, 같은 지점에서 반복적으로 멈추는 현상이 확인됨."
+                  "즉각 회수 불가.",
+                  "보행 속도 불규칙. 같은 지점에서 반복 정지."
             ],
             "layout": "photoLarge",
             "photoSfx": false,
@@ -3228,13 +3239,15 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 18:37",
             "title": "18:37",
             "subtitle": "밀로 I.P.D 장치 활성화",
+            "imageCode": "IPD-037",
+            "logTime": "18:37",
+            "photoCaption": "밀로 I.P.D 장치 활성화",
             "image": "assets/resources/c5b5c946c876fbf1bd5fc2f0f1616478.webp",
             "frame": "FIELD LOG / 18:37",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
-                  "밀로에게 부착된 I.P.D 장치 활성화 확인.",
-                  "위치 추적 시스템에 연결됨.",
-                  "밀로는 예거트의 후방 약 300m 지점에서 이동 중인 것으로 표시되었다."
+                  "위치 추적 시스템 연결.",
+                  "밀로는 예거트 후방 약 300m 지점에서 이동 중."
             ],
             "layout": "photoLarge",
             "photoSfx": false,
@@ -3245,14 +3258,16 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 18:42",
             "title": "18:42",
             "subtitle": "이상 이동 패턴 감지",
+            "imageCode": "IMG-MOVE",
+            "logTime": "18:42",
+            "photoCaption": "이상 이동 패턴 감지",
             "image": "assets/resources/8da1d79fd90b59063f33aa00f1eb742a.webp",
             "frame": "FIELD LOG / 18:42",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
                   ".....뭔가 이상하다.",
                   "밀로의 움직임이 비정상적이다.",
-                  "밀로의 이동 경로는 일반적인 인간의 보행 패턴과 일치하지 않는다.",
-                  "짧은 시간 동안 지나치게 빠르게 접근하거나, 특정 지점에서 비정상적으로 정지하는 양상이 반복된다.",
+                  "짧은 접근과 정지가 반복됨.",
                   "〔본부〕: 예거트, 즉시 총기를 꺼내라. 위험 상황에 대비하라."
             ],
             "layout": "photoLarge",
@@ -3264,13 +3279,16 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 18:44",
             "title": "18:44",
             "subtitle": "비인가 통신 기록",
+            "imageCode": "IMG-COMM",
+            "logTime": "18:44",
+            "photoCaption": "비인가 통신 기록",
             "image": "assets/resources/4af91e95281c83ead7c52b06dfbdca38.webp",
             "frame": "FIELD LOG / 18:44",
-            "lineDelay": 1650,
+            "lineDelay": 1450,
             "lines": [
                   "우리가 전부 미안해, 예거트",
-                  "이 문장은 본부 기록에 남아 있으나, 누가 어떤 의도로 해당 표현을 사용했는지는 불명이다.",
-                  "일부 분석관은 이를 단순 오기록이 아닌, 통신망에 개입한 제3의 존재 또는 혈교 의식으로 인해 왜곡된 송신으로 추정한다."
+                  "발신자 불명.",
+                  "본부 통신망 외부에서 삽입된 문장으로 추정."
             ],
             "layout": "photoLarge",
             "photoSfx": false,
@@ -3283,7 +3301,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "subtitle": "마지막 정상 통신",
             "image": "",
             "frame": "FIELD LOG / 18:51",
-            "lineDelay": 1500,
+            "lineDelay": 1350,
             "lines": [
                   "〔본부〕: 유닛7 이동 중임을 확인. 보고하라.",
                   "〔#%$〕: .......",
@@ -3300,15 +3318,16 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "code": "TIME LOG / 18:56",
             "title": "18:56",
             "subtitle": "IMG006",
+            "imageCode": "IMG006",
+            "logTime": "18:56",
+            "photoCaption": "마지막 이미지 전송",
             "image": "assets/resources/05cdc0276694d090f3829c4dc6e5a30b.webp",
             "frame": "FIELD LOG / 18:56",
-            "lineDelay": 1650,
+            "lineDelay": 1500,
             "lines": [
-                  "마지막 이미지 전송",
-                  "호수가 당신을 기다린다... 수천 개의 손이 당신을....",
-                  "마지막으로 전송된 이미지에는 피의 호수 표면으로부터 다수의 손과 유사한 형상이 솟아오르는 장면이 담겨 있었다.",
-                  "형상은 인간의 손과 유사했으나, 관절 구조와 길이가 비정상적으로 뒤틀려 있었다.",
-                  "이미지 표면에는 분석이 불가능한 문장 일부가 노이즈처럼 남아 있었다."
+                  "호수가 당신을 기다린다...",
+                  "수천 개의 손이 당신을...",
+                  "SIGNAL LOST"
             ],
             "layout": "photoLarge",
             "photoSfx": false,
@@ -3321,7 +3340,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
             "subtitle": "19:00 / 임무 상태: 완료",
             "image": "",
             "frame": "FIELD LOG / 19:00",
-            "lineDelay": 1500,
+            "lineDelay": 1350,
             "lines": [
                   "시스템상 임무는 완료로 처리되었다.",
                   "기록 열람을 종료합니다.",
@@ -3348,8 +3367,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
           introVideo:'assets/video/pc5152r_immortality_recordopen_static_13_27.mp4',
           transitionVideo:'assets/video/pc5152q_immortality_fhc_transition_204_209.mp4',
           endingVideo:'',
-          bgm:'assets/audio/pc5152v_immortality_scp087_vcr_ambient_mix.mp3',
-          bgmVolume:.86,
+          bgm:'assets/audio/pc5152am_immortality_scp087_theme.mp3',
+          bgmVolume:.52,
           introVolume:.09,
           transitionVolume:.72,
           introFallback:14650,
@@ -3371,10 +3390,10 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         introVideo:'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4',
         transitionVideo:'assets/video/pc5152m_vhs_transition_18_21_sound.mp4',
         endingVideo:'',
-        bgm:'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
-        bgmVolume:.54,
-        introVolume:.68,
-        transitionVolume:.78,
+        bgm:'assets/audio/pc5152h_cult_sequence_bgm.mp3',
+        bgmVolume:.30,
+        introVolume:.18,
+        transitionVolume:.24,
         introFallback:10450,
         transitionFallback:3750,
         mountTitle:'RECORD MOUNT',
@@ -3400,7 +3419,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       if(!bus || !bus.audio) return;
       const pre=prefix();
       try{
-        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152f_old_terminal_roomtone.wav');
+        bus.audio.ambient = new Audio(pre+'assets/audio/pc5152am_menu_old_computer.mp3');
         bus.audio.ambient.loop = true;
 
         bus.audio.menu = new Audio(pre+'assets/audio/pc5152h_terminal_contact_clear.wav');
@@ -3548,10 +3567,68 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     }
 
     function buildPhotoLargeBlock(page,lines){
-      const cap=escSeq(page.subtitle||page.frame||'FIELD IMAGE');
-      const img='<figure class="pc5152v-large-photo pc5152k-seq-line" data-line="0" data-photo="1"><img src="'+prefix()+page.image+'" alt="'+cap+'"/><figcaption>'+cap+'</figcaption></figure>';
+      const code=escSeq(page.imageCode || page.subtitle || 'IMG---');
+      const time=escSeq(page.logTime || page.title || '');
+      const cap=escSeq(page.photoCaption || page.frame || 'FIELD IMAGE');
+      const img='<figure class="pc5152v-large-photo pc5152k-seq-line" data-line="0" data-photo="1"><img src="'+prefix()+page.image+'" alt="'+cap+'"/><figcaption><div class="pc5152ba-photo-idline"><b>'+code+'</b>'+(time?'<span>'+time+'</span>':'')+'</div>'+(cap?'<em>'+cap+'</em>':'')+'</figcaption></figure>';
       const shifted=(page.lines||[]).map((line,i)=>formatImmortalityLine(line,i+1,page)).join('');
       return '<div class="pc5152v-photo-page">'+img+'<div class="pc5152v-photo-lines">'+shifted+'</div></div>';
+    }
+
+
+    function buildEvidenceReportHtml(list, redAlert, delayed){
+      const reportList=Array.isArray(list)?list:[];
+      const report=reportList.filter(v=>String(v||'').trim()).map((line)=>'<p>'+escSeq(line)+'</p>').join('');
+      const alert=redAlert?'<p class="pc5152ay-red-alert '+(delayed?'pc5152ay-delayed-alert':'')+'" data-evidence-alert>'+escSeq(redAlert)+'</p>':'';
+      return report+alert;
+    }
+
+    function buildEvidenceCenterBlock(page){
+      const pfx=prefix();
+      const title=escSeq(page.title||'기록');
+      const subtitle=escSeq(page.subtitle||'');
+      const imageCode=escSeq(page.imageCode||page.frame||page.code||'IMG-0000');
+      const caption=escSeq(page.caption||'');
+      const imgAlt=escSeq((page.title||'증거 이미지')+' 회수 이미지');
+      const reportList=Array.isArray(page.report)?page.report:(Array.isArray(page.lines)?page.lines:[]);
+      const report=buildEvidenceReportHtml(reportList, page.redAlert, !!page.alertDelay);
+      return '<div class="pc5152ax-evidence-center pc5152k-seq-line" data-line="0">'
+        +'<figure class="pc5152ax-evidence-card"><img src="'+pfx+page.image+'" alt="'+imgAlt+'"/></figure>'
+        +'<div class="pc5152ba-evidence-titleline"><b data-evidence-code>'+imageCode+'</b><span data-evidence-title>'+title+'</span></div>'
+        +(subtitle?'<small class="pc5152ba-evidence-subtitle">'+subtitle+'</small>':'')
+        +(caption?'<em class="pc5152ba-evidence-caption" data-evidence-caption>'+caption+'</em>':'<em class="pc5152ba-evidence-caption" data-evidence-caption></em>')
+        +'<div class="pc5152ax-evidence-report" data-evidence-report>'+report+'</div>'
+        +'</div>';
+    }
+
+    function applyEvidenceMutation(page, bodyEl){
+      if(!page || !page.mutation || !bodyEl) return false;
+      const card=bodyEl.querySelector('.pc5152ax-evidence-center');
+      const code=bodyEl.querySelector('[data-evidence-code]');
+      const title=bodyEl.querySelector('[data-evidence-title]');
+      const cap=bodyEl.querySelector('[data-evidence-caption]');
+      const report=bodyEl.querySelector('[data-evidence-report]');
+      if(card) card.classList.add('pc5152ay-mutating-now','pc5152ba-click-mutated');
+      if(code && page.mutation.imageCode) code.textContent=page.mutation.imageCode;
+      if(title && page.mutation.title) title.textContent=page.mutation.title;
+      if(cap && page.mutation.caption) cap.textContent=page.mutation.caption;
+      if(report) report.innerHTML=buildEvidenceReportHtml(page.mutation.report||[], page.mutation.redAlert, false);
+      state.revealTimers.push(setTimeout(()=>{ if(card) card.classList.remove('pc5152ay-mutating-now'); }, 560));
+      return true;
+    }
+
+    function runEvidencePostReveal(page, bodyEl, runId){
+      if(!page || !bodyEl) return 0;
+      let hold=0;
+      if(page.alertDelay && page.redAlert){
+        hold=Math.max(hold, Number(page.alertDelay||0)+650);
+        state.revealTimers.push(setTimeout(()=>{
+          if(runId!==state.runId) return;
+          const alert=bodyEl.querySelector('[data-evidence-alert]');
+          if(alert) alert.classList.add('visible');
+        }, Number(page.alertDelay||900)));
+      }
+      return hold;
     }
 
 
@@ -3567,6 +3644,41 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       }catch(e){}
     }
 
+
+    function hardResetSequenceRuntime(){
+      state.runId=(state.runId||0)+1;
+      clearSequenceTimers();
+      stopSequenceAudio();
+      state.pageIndex=0;
+      state.canAdvance=false;
+      state.transitioning=false;
+      state.finishing=false;
+      state.endingPlayed=false;
+      state.endingPlaying=false;
+      state.lineEls=[];
+      state.nextLineIndex=0;
+      state.mutationAppliedPage=-1;
+      const el=state.overlay;
+      if(el){
+        ['.pc5152h-seq-video','.pc5152m-transition-video','.pc5152q-ending-video'].forEach(sel=>{
+          const v=el.querySelector(sel);
+          if(v){ try{ v.onended=null; v.pause(); v.currentTime=0; }catch(e){} }
+        });
+        const fig=el.querySelector('[data-seq-figure]');
+        const img=el.querySelector('[data-seq-image]');
+        if(img) img.removeAttribute('src');
+        if(fig) fig.hidden=true;
+        el.classList.remove('show','intro-mode','pages-mode','input-ready','frame-ready','page-reveal','black-transition','major-transition','normal-transition','video-transition','ending-mode','pc5152q-immortality-mode','pc5152h-cult-mode','pc5152u-people-page','pc5152v-photo-large-page','pc5152v-red-log-page');
+        el.className=el.className.replace(/pc5152as-layout-[^\s]+/g,'').replace(/\s{2,}/g,' ').trim();
+        el.removeAttribute('data-pc5152as-layout');
+        el.removeAttribute('data-pc5152as-group');
+        el.setAttribute('aria-hidden','true');
+        const body=el.querySelector('[data-seq-body]');
+        if(body) body.innerHTML='';
+      }
+      document.body.classList.remove('pc5152h-sequence-open','pc5152i-sequence-intro-playing','pc5133-case-file-open','pc5152q-immortality-sequence','pc5152h-cult-source-sequence');
+    }
+
     function ensureOverlay(){
       if(state.overlay) return state.overlay;
       const pre=prefix();
@@ -3577,6 +3689,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         '<video class="pc5152h-seq-video" playsinline preload="auto" src="'+pre+'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4"></video>',
         '<video class="pc5152m-transition-video" playsinline preload="auto" src="'+pre+'assets/video/pc5152m_vhs_transition_18_21_sound.mp4"></video>',
         '<video class="pc5152q-ending-video" playsinline preload="auto"></video>',
+        '<video class="pc5152an-vhs-overlay-video" muted playsinline loop preload="auto" src="'+pre+'assets/video/pc5152am_cult_trace_vhs_noise.mp4"></video>',
         '<div class="pc5152h-seq-black"></div>',
         '<div class="pc5152h-seq-scan"></div>',
         '<button class="pc5152x-seq-return" type="button">돌아가기</button>',
@@ -3617,7 +3730,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       el.classList.remove('done');
       void el.offsetWidth;
       el.classList.add('show');
-      try{ if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('load',220); }catch(e){}
+      try{ playCue('load',220); }catch(e){}
       setTimeout(()=>{
         el.classList.add('done');
         el.classList.remove('show');
@@ -3721,7 +3834,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       }else if(isInternalProjectorTransition(current,next)){
         playLocal(state.internalStep);
       }
+      const runId=state.runId;
       state.timer=setTimeout(()=>{
+        if(runId!==state.runId) return;
         try{ if(state.activeRecord===IMMORTALITY_RECORD && state.bgm && !state.bgm.paused) state.bgm.volume=Number(cfg.bgmVolume||.86); }catch(e){}
         state.transitioning=false;
         el.classList.remove('black-transition','major-transition','normal-transition','video-transition');
@@ -3740,7 +3855,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 
     function scheduleNextSequenceLine(delay){
       clearTimeout(state.lineTimer);
-      state.lineTimer=setTimeout(()=>{ revealNextSequenceLine(false); }, Number(delay||2500));
+      const runId=state.runId;
+      state.lineTimer=setTimeout(()=>{ if(runId===state.runId) revealNextSequenceLine(false); }, Number(delay||2500));
     }
 
     function revealNextSequenceLine(manual){
@@ -3783,6 +3899,28 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       state.transitioning=false;
       clearSequenceTimers();
       el.classList.remove('input-ready','frame-ready','page-reveal','black-transition','major-transition','normal-transition');
+      el.className = el.className.replace(/\bpc5152as-layout-[^\s]+/g,'').replace(/\s{2,}/g,' ').trim();
+      const stageLayout = (function(){
+        if(state.activeRecord===IMMORTALITY_RECORD){
+          if(page.layout==='photoLarge') return 'field-photo';
+          if(page.layout==='redLog') return 'terminal-log';
+          if(page.layout==='peoplePair') return 'personnel';
+          return page.image ? 'field-brief' : 'terminal-brief';
+        }
+        if(page.layout==='warningCard') return 'warning-card';
+        if(page.layout==='evidenceCenter') return 'evidence-center';
+        if(page.layout==='evidencePhoto') return 'evidence-photo';
+        if(page.layout==='twoColumn') return 'two-column';
+        if(page.group==='system') return 'warning-title';
+        if(page.group==='warning') return 'warning-card';
+        if(page.group==='return') return 'end-card';
+        if(page.image && /MASKED FORM|BLOOD LAKE|SUPPRESSED ENTITY/.test(String(page.code||''))) return 'evidence-photo';
+        if(page.image) return 'two-column';
+        return 'brief-text';
+      })();
+      el.dataset.pc5152asLayout = stageLayout;
+      el.dataset.pc5152asGroup = page.group || '';
+      el.classList.add('pc5152as-layout-'+stageLayout);
       void el.offsetWidth;
       el.classList.add('page-reveal');
       el.classList.toggle('pc5152u-people-page', page.layout==='peoplePair');
@@ -3791,7 +3929,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       el.querySelector('[data-seq-code]').textContent=page.code;
       const source=el.querySelector('[data-seq-source]');
       if(source) source.textContent=cfg.sourceLabel||'F.H.C / LOCAL COPY';
-      el.querySelector('[data-seq-title]').textContent=page.layout==='redLog' ? '' : page.title;
+      el.querySelector('[data-seq-title]').textContent=(page.hideTitle || page.layout==='redLog' || page.layout==='evidenceCenter' || page.layout==='photoLarge') ? '' : page.title;
       const bodyEl=el.querySelector('[data-seq-body]');
       const lines=buildSequenceLines(page);
       if(page.layout==='peoplePair' && Array.isArray(page.people)){
@@ -3799,16 +3937,18 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         bodyEl.innerHTML='<h3 class="pc5152k-seq-subtitle">'+escSeq(page.subtitle||'')+'</h3><div class="pc5152u-people-pair">'+people+'</div>';
       }else if(page.layout==='photoLarge' && page.image){
         bodyEl.innerHTML=buildPhotoLargeBlock(page,lines);
+      }else if(page.layout==='evidenceCenter' && page.image){
+        bodyEl.innerHTML=buildEvidenceCenterBlock(page);
       }else if(page.layout==='redLog'){
         bodyEl.innerHTML=buildRedLogBlock(page,lines);
       }else{
-        bodyEl.innerHTML='<h3 class="pc5152k-seq-subtitle">'+escSeq(page.subtitle||'')+'</h3><div class="pc5152k-seq-lines pc5152v-default-red-lines">'+lines+'</div>';
+        bodyEl.innerHTML=(page.subtitle?'<h3 class="pc5152k-seq-subtitle">'+escSeq(page.subtitle)+'</h3>':'')+'<div class="pc5152k-seq-lines pc5152v-default-red-lines">'+lines+'</div>';
       }
       el.querySelector('[data-seq-frame]').textContent=page.frame;
       el.querySelector('[data-seq-counter]').textContent=String(state.pageIndex+1).padStart(2,'0')+' / '+String(activePages.length).padStart(2,'0');
       const img=el.querySelector('[data-seq-image]');
       const fig=el.querySelector('[data-seq-figure]');
-      if(page.layout==='peoplePair' || page.layout==='photoLarge'){
+      if(page.layout==='peoplePair' || page.layout==='photoLarge' || page.layout==='evidenceCenter'){
         img.removeAttribute('src');
         fig.hidden=true;
         state.revealTimers.push(setTimeout(()=>{ 
@@ -3831,17 +3971,34 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       state.lineEls=[...bodyEl.querySelectorAll('.pc5152k-seq-line')];
       state.nextLineIndex=0;
       state.currentLineDelay=Number(page.lineDelay||2500);
+      state.mutationAppliedPage=-1;
       updateImmortalityLatePulse(page);
       if(state.lineEls.length){
-        scheduleNextSequenceLine(page.layout==='photoLarge' ? 420 : 650);
+        if(state.activeRecord!==IMMORTALITY_RECORD){
+          const runId=state.runId;
+          state.revealTimers.push(setTimeout(()=>{
+            if(runId!==state.runId) return;
+            state.lineEls.forEach(line=>line.classList.add('visible'));
+            state.nextLineIndex=state.lineEls.length;
+            const postHold=runEvidencePostReveal(page, bodyEl, runId);
+            if(postHold>0){
+              state.revealTimers.push(setTimeout(()=>{ if(runId===state.runId) setSequenceInputAvailable(); }, postHold));
+            }else{
+              setSequenceInputAvailable();
+            }
+          }, Number(page.blockDelay||220)));
+        }else{
+          scheduleNextSequenceLine(page.layout==='photoLarge' ? 420 : 650);
+        }
       }else{
-        state.timer=setTimeout(()=>setSequenceInputAvailable(), 900);
+        const runId=state.runId;
+        state.timer=setTimeout(()=>{ if(runId===state.runId) setSequenceInputAvailable(); }, 900);
       }
     }
 
     function startSequence(recordId){
       if(!SEQUENCE_RECORDS.has(recordId)) return false;
-      if(state.overlay && state.overlay.classList.contains('show')) return true;
+      hardResetSequenceRuntime();
       state.activeRecord=recordId;
       state.pages=(recordId===IMMORTALITY_RECORD)?immortalityPages:pages;
       state.pageIndex=0;
@@ -3851,7 +4008,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       state.canAdvance=false;
       ensureSpecialAudio();
       const cfg=getSequenceConfig();
+      const runId=state.runId;
       showMountLoader(()=>{
+        if(runId!==state.runId) return;
         const el=ensureOverlay();
         const video=el.querySelector('.pc5152h-seq-video');
         const tv=el.querySelector('.pc5152m-transition-video');
@@ -3884,6 +4043,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 
         let moved=false;
         const beginSequencePages=()=>{
+          if(runId!==state.runId) return;
           if(moved) return;
           moved=true;
           clearTimeout(state.timer);
@@ -3910,12 +4070,12 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
           video.currentTime=0;
           video.onended=beginSequencePages;
           const playPromise=video.play();
-          if(playPromise && playPromise.catch) playPromise.catch(()=>setTimeout(beginSequencePages,900));
+          if(playPromise && playPromise.catch) playPromise.catch(()=>setTimeout(()=>{ if(runId===state.runId) beginSequencePages(); },900));
         }catch(e){
-          setTimeout(beginSequencePages,900);
+          setTimeout(()=>{ if(runId===state.runId) beginSequencePages(); },900);
         }
         // Safety fallback for browsers that do not fire ended.
-        state.timer=setTimeout(beginSequencePages,Number(cfg.introFallback||10450));
+        state.timer=setTimeout(()=>{ if(runId===state.runId) beginSequencePages(); },Number(cfg.introFallback||10450));
       });
       return true;
     }
@@ -3939,7 +4099,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       document.body.classList.add('pc5133-case-file-open','pc5152h-sidecontent-rebased');
       const c=document.querySelector('.legacy-content');
       if(c) c.scrollTop=0;
-      try{ if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('open',200); }catch(e){}
+      try{ playCue('open',200); }catch(e){}
     }
 
     function finishSequence(skipEnding){
@@ -3999,11 +4159,14 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         const video=el.querySelector('.pc5152h-seq-video');
         const tv=el.querySelector('.pc5152m-transition-video');
         const ending=el.querySelector('.pc5152q-ending-video');
-        try{ video.pause(); video.currentTime=0; }catch(e){}
-        try{ tv.pause(); tv.currentTime=0; }catch(e){}
-        try{ ending.pause(); ending.currentTime=0; }catch(e){}
+        try{ video.onended=null; video.pause(); video.currentTime=0; }catch(e){}
+        try{ tv.onended=null; tv.pause(); tv.currentTime=0; }catch(e){}
+        try{ ending.onended=null; ending.pause(); ending.currentTime=0; }catch(e){}
         try{ if(state.immortalityStep){ state.immortalityStep.pause(); state.immortalityStep.currentTime=0; } }catch(e){}
         el.classList.remove('show','input-ready','frame-ready','page-reveal','intro-mode','pages-mode','ending-mode','pc5152q-immortality-mode','pc5152h-cult-mode','pc5152u-people-page','pc5152v-photo-large-page','pc5152v-red-log-page');
+        el.className = el.className.replace(/\bpc5152as-layout-[^\s]+/g,'').replace(/\s{2,}/g,' ').trim();
+        el.removeAttribute('data-pc5152as-layout');
+        el.removeAttribute('data-pc5152as-group');
         el.setAttribute('aria-hidden','true');
       }
       document.body.classList.remove('pc5152h-sequence-open','pc5152i-sequence-intro-playing','pc5133-case-file-open','pc5152q-immortality-sequence','pc5152h-cult-source-sequence');
@@ -4019,7 +4182,18 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       }
       const c=document.querySelector('.legacy-content');
       if(c) c.scrollTop=0;
-      try{ if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('menu',180); }catch(e){}
+      state.activeRecord=null;
+      state.pages=null;
+      state.pageIndex=0;
+      state.canAdvance=false;
+      state.transitioning=false;
+      state.finishing=false;
+      state.endingPlaying=false;
+      state.endingPlayed=false;
+      state.lineEls=[];
+      state.nextLineIndex=0;
+      state.runId=(state.runId||0)+1;
+      try{  }catch(e){}
     }
 
     function advanceSequence(){
@@ -4029,6 +4203,15 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       if(!state.canAdvance){
         revealNextSequenceLine(true);
         return;
+      }
+      const currentPage=getActivePages()[state.pageIndex] || null;
+      if(state.activeRecord!=='Immortality_860201' && currentPage && currentPage.mutation && state.mutationAppliedPage!==state.pageIndex){
+        const bodyEl=el ? el.querySelector('[data-seq-body]') : null;
+        if(applyEvidenceMutation(currentPage, bodyEl)){
+          state.mutationAppliedPage=state.pageIndex;
+          state.canAdvance=true;
+          return;
+        }
       }
       if(state.pageIndex < getActivePages().length-1){
         if(state.activeRecord===IMMORTALITY_RECORD){
@@ -4310,7 +4493,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       patch5152s:'Immortality BlackNoise PageStep',
       immortalityPageTransition:'black noisy hold only; no transition video',
       immortalityPageStepAudio:'pc5152s_immortality_page_black_beep_51_55.mp3',
-      immortalityPageStepSourceRange:'f-lake.mp4 51s-55s',
+      immortalityPageStepSourceRange:'internal cue retained; no new reference asset added',
       cultSequencePreserved:'Cults_871104 unchanged'
     });
   });
@@ -4386,7 +4569,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       e.stopPropagation();
       e.stopImmediatePropagation();
       try{
-        if(window.ProjectCurseAudio) window.ProjectCurseAudio.playCue('denied',240);
+        playCue('denied',240);
       }catch(err){}
       const loading=document.getElementById('recordLoading') || document.createElement('div');
       if(!loading.id){
@@ -4410,7 +4593,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     document.body.classList.add('pc5152w-immortality-pulse-caption-pacing-ready');
     window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
       patch5152w:'Immortality Pulse Caption Pacing Fix',
-      latePulseSource:'f-lake 3:04-3:06',
+      latePulseSource:'internal late-pulse cue retained',
       latePulseInterval:'2 seconds',
       personCaptions:'forced visible under Maren/Jonas photos',
       dialoguePacing:'3.6 seconds after each dialogue/comm line',
@@ -4431,7 +4614,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       archiveMenu:'moved to 03',
       regionMap:'hidden',
       mainMenuSlowDrift:'disabled outside record viewing',
-      latePulseSource:'f-lake 3:15',
+      latePulseSource:'internal late-pulse cue retained',
       latePulseStop:'18:51',
       latePhotoClick:'disabled after 18:14',
       endingVideo:'disabled; return to archive',
@@ -4678,7 +4861,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     setDrawer(false);
     toggle.addEventListener('click',function(e){
       e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-      try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('menu',150)}catch(err){}
+      try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&void 0}catch(err){}
       setDrawer(!body.classList.contains('pc584-main-drawer-open'));
     },true);
     backdrop.addEventListener('click',function(e){ e.preventDefault(); setDrawer(false); },true);
@@ -4693,7 +4876,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         if(group) group.classList.toggle('open',open);
         heading.setAttribute('aria-expanded',open?'true':'false');
         const s=heading.querySelector('span'); if(s) s.textContent=open?'▾':'▸';
-        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('menu',150)}catch(err){}
+        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&void 0}catch(err){}
         return false;
       }
       const link=e.target.closest && e.target.closest('.side-menu a[data-target]');
@@ -4702,7 +4885,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         const id=link.dataset.target||'history';
         showPage(id==='zone-map'?'history':id);
         syncGroupFor(link);
-        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('menu',150)}catch(err){}
+        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&void 0}catch(err){}
         setDrawer(false);
         return false;
       }
@@ -4778,7 +4961,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         const next=order[(order.indexOf(getPreset())+1)%order.length];
         localStorage.setItem('pc5152ad_volume',next);
         applyVolumes();
-        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&window.ProjectCurseAudio.playCue('menu',150)}catch(err){}
+        try{window.ProjectCurseAudio&&window.ProjectCurseAudio.playCue&&void 0}catch(err){}
       },true);
     }
     const amb=document.getElementById('pc5152adAmbientToggle');
@@ -5085,7 +5268,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         const on=line.getAttribute('data-link-a')===key || line.getAttribute('data-link-b')===key || key==='uac';
         line.style.opacity=on?'.78':'.20';
       });
-      if(window.ProjectCurseAudio && !root.dataset.pc5152agInit) window.ProjectCurseAudio.playCue('drawer',180);
+      // MapPatch 5.15.2ap — RuntimeFix_MetadataClean
+      // Keep relation-node selection silent and mark the first render safely.
       root.dataset.pc5152agInit='1';
     }
     root.querySelectorAll('[data-pc5152ag-node]').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault(); e.stopPropagation(); select(btn.getAttribute('data-pc5152ag-node')||'uac');}));
@@ -5194,7 +5378,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         const audios=[...document.querySelectorAll('audio')];
         audios.forEach(a=>{
           const src=a.currentSrc||a.src||'';
-          if(src.includes('pc5152v_immortality_scp087_vcr_ambient_mix')){
+          if(src.includes('pc5152am_immortality_scp087_theme')){
             a.volume = Math.max(a.volume||0, body.classList.contains('pc5152ah-phone') ? .92 : .86);
           }
         });
@@ -5698,6 +5882,835 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       mobile:'relation graph/log split; tighter timeline/faction/record layout; full-width mobile pages',
       router:'mobile section taps routed via capture; section scroll resets to top; inactive panels inert',
       preserved:'Immortality internal sequence cues untouched; PC 4K layout preserved'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2al — MobileReadableLayout_SystemPass
+// Converts relation view to a readable relation-summary table/cards and tightens global gutters.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  const esc=(v)=>String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const relations=[
+    ['U.A.C ↔ N.H.C','통제','레드존 투입과 봉쇄선 유지 권한을 공유한다. 현장 전투와 봉쇄선 운용은 N.H.C가 담당한다.'],
+    ['U.A.C ↔ S.I.D','감시','감청 기록, 귀환자 진술, 통신 이상을 대조한다. Ghost Channel 계열 자료는 S.I.D를 경유한다.'],
+    ['U.A.C ↔ F.H.C','봉인','기밀 기록과 위험 연구 자료는 제한 열람으로 봉인된다. 일부 기록은 U.A.C 색인에만 흔적이 남는다.'],
+    ['U.A.C ↔ C.P.D','통제','대피 회랑, 검문 절차, 귀환자 1차 선별을 관리한다. 민간 보호 구역의 오염 확산을 차단한다.'],
+    ['U.A.C ↔ A.R.F','통제','회수물, 기록 매체, 시신 및 오염 잔재 복구를 담당한다. 소각·폐기 절차와 연결된다.'],
+    ['N.H.C ↔ Ash Crew','통제','교전 이후 오염 처리와 소각 후속 절차를 연결한다. 현장 진입은 N.H.C 승인 뒤 이뤄진다.'],
+    ['U.A.C ↔ Ushnoda Cult','적대','의식성 오염, Blood Gate, 우시노다교 확산 흔적을 차단 대상으로 관리한다.'],
+    ['S.I.D ↔ Haimun','감시','도심 침투 흔적과 이상 통신을 장기 감시한다. 신호 열화가 지속되는 연결로 분류된다.'],
+    ['N.H.C ↔ Syndicate','적대','오염 장비 유통과 이탈 네트워크를 차단한다. 교전 가능성이 높은 관계로 유지된다.'],
+    ['F.H.C ↔ Amarion','연구','비인가 연구 자료와 기업 자산 회수 기록이 봉인된다. 접근 권한 불일치가 반복 보고된다.'],
+    ['Ushnoda Cult ↔ Haimun','감시','의식 거점과 도심 은닉 루트가 연결된다. S.I.D 감청 대상에 포함된다.'],
+    ['Syndicate ↔ Amarion','적대','회수 자원과 연구 자료의 암거래 의혹이 남아 있다. 안정적 협력으로 보지 않는다.']
+  ];
+  function renderRelationSummary(){
+    const root=document.getElementById('pc584-relation-root');
+    if(!root) return;
+    root.className='pc5152al-relation-root';
+    root.innerHTML=`
+      <div class="pc5152al-relation-head">
+        <div><span>RELATION SUMMARY</span><b>기관 연결 요약</b></div>
+        <div class="pc5152al-relation-legend"><i data-type="통제">통제</i><i data-type="감시">감시</i><i data-type="봉인">봉인</i><i data-type="적대">적대</i><i data-type="연구">연구</i></div>
+      </div>
+      <div class="pc5152al-relation-table" role="table" aria-label="U.A.C 세력 관계 요약">
+        ${relations.map(r=>`<div class="pc5152al-rel-row" role="row"><div class="pc5152al-rel-link" role="cell">${esc(r[0])}</div><div role="cell"><span class="pc5152al-rel-type" data-type="${esc(r[1])}">${esc(r[1])}</span></div><div class="pc5152al-rel-desc" role="cell">${esc(r[2])}</div></div>`).join('')}
+      </div>
+      <div class="pc5152al-network-note"><span>NODE GRAPH: 보조 시각 자료로 축소됨</span><span>기본 열람: 관계 요약 / 감청 로그 중심</span></div>`;
+  }
+  function applyLayout(){
+    document.body.classList.add('pc5152al-mobile-readable-system-pass');
+    const relTitle=document.querySelector('#faction-relation > h2');
+    if(relTitle) relTitle.textContent=(window.innerWidth<=1024?'관계도':'관계도 / 감청 연결 로그');
+    const factionTitle=document.querySelector('#faction-info > h2');
+    if(factionTitle && window.innerWidth<=1024) factionTitle.textContent='세력';
+    const archiveTitle=document.querySelector('#archive-entry > h2');
+    if(archiveTitle && window.innerWidth<=1024) archiveTitle.textContent='기록보관소';
+    renderRelationSummary();
+  }
+  ready(function(){
+    applyLayout();
+    [80,320,900,1800].forEach(t=>setTimeout(applyLayout,t));
+    window.addEventListener('resize',()=>setTimeout(applyLayout,80),{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(applyLayout,180),{passive:true});
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152al:'MobileReadableLayout SystemPass',
+      relation:'summary table/card view replaces primary node graph',
+      layout:'reduced gutters and compact full-width mobile cards',
+      preserved:'menu silence, BGM balance, Immortality internal sequence cues'
+    });
+  });
+})();
+
+// MapPatch 5.15.2am — AudioReplace_CultTraceVHS_LayoutBalance
+// Replaces menu/Immortality BGM, applies Cults_871104 medium VHS trace, and balances PC/mobile layout density.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  const esc=(v)=>String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function prefix(){const p=location.pathname; if(p.includes('/docs/'))return '../../'; if(p.includes('/archive/'))return '../'; return '';}
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152am-audio-cult-vhs-layout-balance');
+    const relationSupport=[
+      ['고위험 연결','U.A.C ↔ Ushnoda Cult / N.H.C ↔ Syndicate / F.H.C ↔ Amarion'],
+      ['감청 우선순위','S.I.D ↔ Haimun / Ushnoda Cult ↔ Haimun / Ghost Channel 자료'],
+      ['운용 기준','표형 관계 요약을 기본 열람으로 유지하고 노드형 그래프는 보조 시각 자료로 취급']
+    ];
+    const factionCards={
+      uac:['관련 기록','Redzone_881120 / NHC_Manual_891219','위험 연결','우시노다교 의식성 오염 / 레드존 확산','작전 권한','기록 권한 / 봉쇄 지휘 / 기관 조율'],
+      nhc:['관련 기록','NHC_Manual_891219 / FCR_Archive_890402','위험 연결','레드존 전투 / Syndicate 오염 장비','작전 권한','현장 진입 / 봉쇄선 유지 / 고위험 제압'],
+      sid:['관련 기록','Sakuma_Tape_991028 / Redzone_881120','위험 연결','Ghost Channel / Haimun 도심 침투','작전 권한','감청 / 진술 검증 / 통신 이상 분석'],
+      fhc:['관련 기록','Cults_871104 / FCR_Archive_890402','위험 연결','봉인 기록 / Amarion 비인가 연구','작전 권한','자료 봉인 / 제한 열람 / 실험 잔재 분석'],
+      ushinoda:['관련 기록','Cults_871104 / Sakuma_Tape_991028','위험 연결','Blood Gate / 의식성 오염 / Haimun 침투','작전 권한','적대 세력. 접근 권한 없음.'],
+      default:['관련 기록','현재 선택 세력의 연결 기록 색인','위험 연결','감시 또는 봉인 대상 연결','작전 권한','선택 세력 기준으로 갱신됨']
+    };
+    function enforceAudio(){
+      try{
+        const bus=window.ProjectCurseAudio;
+        const pre=prefix();
+        if(bus && bus.audio){
+          const amb=bus.audio.ambient;
+          if(!amb || !String(amb.src||'').includes('pc5152am_menu_old_computer.mp3')){
+            bus.audio.ambient=new Audio(pre+'assets/audio/pc5152am_menu_old_computer.mp3');
+            bus.audio.ambient.loop=true;
+          }
+          bus.audio.ambient.volume=(window.innerWidth<=940||body.classList.contains('pc5152ah-phone'))?.18:.135;
+        }
+        document.querySelectorAll('audio').forEach(a=>{
+          const src=a.currentSrc||a.src||'';
+          if(src.includes('pc5152am_immortality_scp087_theme.mp3')){
+            a.volume=Math.max(a.volume||0,(window.innerWidth<=940)?.92:.86);
+            a.loop=true;
+          }
+          if(src.includes('pc5152am_menu_old_computer.mp3')){
+            a.volume=Math.max(a.volume||0,(window.innerWidth<=940)?.18:.135);
+            a.loop=true;
+          }
+        });
+      }catch(e){}
+    }
+    function enhanceRelation(){
+      const root=document.querySelector('#pc584-relation-root.pc5152al-relation-root');
+      if(!root) return;
+      let support=root.querySelector('.pc5152am-relation-support');
+      if(!support){
+        support=document.createElement('div');
+        support.className='pc5152am-relation-support';
+        support.innerHTML=relationSupport.map(([b,s])=>`<article><b>${esc(b)}</b><span>${esc(s)}</span></article>`).join('');
+        root.appendChild(support);
+      }
+      const legend=root.querySelector('.pc5152al-relation-legend');
+      if(legend && legend.dataset.pc5152amFilter!=='1'){
+        legend.dataset.pc5152amFilter='1';
+        const all=document.createElement('i'); all.textContent='전체'; all.dataset.type='전체';
+        legend.insertBefore(all,legend.firstChild);
+        legend.addEventListener('click',e=>{
+          const chip=e.target.closest('i[data-type]'); if(!chip) return;
+          const type=chip.dataset.type;
+          legend.querySelectorAll('i').forEach(i=>i.classList.toggle('active',i===chip));
+          root.querySelectorAll('.pc5152al-rel-row').forEach(row=>{
+            const rowType=(row.querySelector('.pc5152al-rel-type')?.dataset.type||row.querySelector('.pc5152al-rel-type')?.textContent||'').trim();
+            row.hidden = !(type==='전체'||rowType===type);
+          });
+        });
+      }
+    }
+    function updateFactionBalance(){
+      const section=document.getElementById('faction-info');
+      const term=section && section.querySelector('.faction-terminal');
+      if(!term) return;
+      let holder=term.querySelector('.pc5152am-faction-balance');
+      if(!holder){
+        holder=document.createElement('div');
+        holder.className='pc5152am-faction-balance';
+        term.appendChild(holder);
+      }
+      const active=term.querySelector('.faction-tile.active');
+      const key=active?.dataset.key || 'uac';
+      const data=factionCards[key] || factionCards.default;
+      holder.innerHTML=`<article class="pc5152am-faction-card"><b>${esc(data[0])}</b><span>${esc(data[1])}</span></article><article class="pc5152am-faction-card"><b>${esc(data[2])}</b><span>${esc(data[3])}</span></article><article class="pc5152am-faction-card"><b>${esc(data[4])}</b><span>${esc(data[5])}</span></article>`;
+    }
+    function addCultCaptions(){
+      const caps=[
+        ['IMAGE3101 / CULT TRACE','우시노다교 신앙 기록에서 회수된 오염 신앙 프레임.'],
+        ['IMAGE3102 / HOST FACE','우시노다교 보호 아래 은폐된 타락 개체로 추정. 일부 신도 집단은 해당 개체를 성물로 취급한다.'],
+        ['IMAGE3103 / MASKED FORM','가면 또는 외골격성 얼굴 구조가 확인된 특수 개체 기록.'],
+        ['IMAGE3104 / CORRUPTION STAGE','타락 과정의 신체 변형 징후가 남은 회수 이미지.'],
+        ['IMAGE3105 / BLOOD TRACE','혈교 의식 기록과 연결되는 피의 길 오염 흔적.']
+      ];
+      document.querySelectorAll('.record-detail[data-record="Cults_871104"] .record-figure').forEach((fig,i)=>{
+        if(fig.querySelector('figcaption')) return;
+        const cap=document.createElement('figcaption');
+        const c=caps[i]||[`IMAGE31${String(i+1).padStart(2,'0')} / RECOVERED FRAME`,'F.H.C 로컬 복구 이미지.'];
+        cap.innerHTML=`<b>${esc(c[0])}</b><br>${esc(c[1])}`;
+        fig.appendChild(cap);
+      });
+    }
+    function syncCultVhsClass(){
+      const cult=body.classList.contains('pc5152h-cult-source-sequence') && !body.classList.contains('pc5152q-immortality-sequence');
+      body.classList.toggle('pc5152am-cult-vhs-active',!!cult);
+      document.querySelectorAll('.pc5152h-cult-sequence:not(.pc5152q-immortality-mode) video').forEach(v=>{
+        const src=v.currentSrc||v.src||'';
+        if(src.includes('pc5152am_cult_trace_vhs_noise.mp4')){
+          v.volume=Math.min(v.volume||.2, window.innerWidth<=940 ? .12 : .22);
+        }
+      });
+    }
+    function layoutSync(){
+      enforceAudio(); enhanceRelation(); updateFactionBalance(); addCultCaptions(); syncCultVhsClass();
+    }
+    layoutSync();
+    [80,250,700,1500,3200].forEach(t=>setTimeout(layoutSync,t));
+    window.addEventListener('resize',()=>setTimeout(layoutSync,80),{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(layoutSync,160),{passive:true});
+    document.addEventListener('click',()=>setTimeout(layoutSync,40),true);
+    new MutationObserver(layoutSync).observe(document.body,{attributes:true,attributeFilter:['class']});
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152am:'AudioReplace CultTraceVHS LayoutBalance',
+      audio:'menu ambient uses old_computer mp3; Immortality BGM uses uploaded SCP087 theme mp3',
+      cults:'Cults_871104-only medium VHS trace effect and image captions; no global VHS overlay',
+      layout:'relation support cards, faction summary cards, archive 4K columns, reduced gutters retained'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2an — SystemFrame_KST_RecordLayout_AudioBusFix
+// Top system frame, KST status clock, record media containment, Cults VHS overlay/static layer, and silent menu audio bus.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152an-systemframe-kst-recordlayout-audiobusfix');
+    function pre(){const p=location.pathname; if(p.includes('/docs/')) return '../../'; if(p.includes('/archive/')) return '../'; return '';}
+    function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+    function currentLabel(){
+      const docTitle=document.querySelector('.doc-title');
+      if(docTitle) return docTitle.textContent.trim() || '기록 열람';
+      const active=document.querySelector('.content-page.active');
+      const map={history:'세계 사건 연표','faction-relation':'관계도','faction-info':'세력','archive-entry':'기록보관소'};
+      if(active && map[active.id]) return map[active.id];
+      const activeLink=document.querySelector('.side-menu a.active b');
+      return activeLink ? activeLink.textContent.trim() : '세계 사건 연표';
+    }
+
+    function installSystemFrame(){
+      if(document.querySelector('.pc5152an-systembar')) return;
+      const bar=document.createElement('div');
+      bar.className='pc5152an-systembar';
+      bar.innerHTML='<button class="pc5152an-menu" type="button" aria-label="메뉴 열기">☰</button><div class="pc5152an-server"><b>U.A.C CLOSED SERVER</b><span>PC-03 / LOCAL ARCHIVE</span></div><div class="pc5152an-current"><small>CURRENT</small><b data-pc5152an-current></b></div><div class="pc5152an-clock"><small>KST</small><b data-pc5152an-clock>--:--:--</b></div><div class="pc5152an-flags"><span data-pc5152an-audio>AUDIO ACTIVE</span><span>ACCESS LIMITED</span></div>';
+      document.body.prepend(bar);
+      bar.querySelector('.pc5152an-menu').addEventListener('click',function(e){
+        e.preventDefault(); e.stopPropagation();
+        body.classList.toggle('pc584-main-drawer-open');
+        try{ localStorage.setItem('pc-main-drawer-open', body.classList.contains('pc584-main-drawer-open')?'open':'closed'); }catch(_e){}
+      });
+    }
+
+    const fmtDate=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'});
+    const fmtTime=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+    function updateSystemFrame(){
+      const c=document.querySelector('[data-pc5152an-current]');
+      const t=document.querySelector('[data-pc5152an-clock]');
+      const a=document.querySelector('[data-pc5152an-audio]');
+      if(c){ const label=currentLabel(); if(c.textContent!==label) c.textContent=label; }
+      if(t){ const now=new Date(); const stamp=fmtDate.format(now).replace(/\.\s?/g,'-').replace(/-$/,'')+' '+fmtTime.format(now); if(t.textContent!==stamp) t.textContent=stamp; }
+      if(a){
+        const on=!(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.isOn==='function') || window.ProjectCurseAudio.isOn();
+        const label=on?'AUDIO ACTIVE':'AUDIO MUTED';
+        if(a.textContent!==label) a.textContent=label;
+      }
+    }
+
+    let staticAudio=null;
+    function ensureStaticAudio(){
+      if(staticAudio) return staticAudio;
+      staticAudio=new Audio(pre()+'assets/audio/pc5152an_cult_radio_static_layer.mp3');
+      staticAudio.loop=true;
+      staticAudio.volume=window.innerWidth<=940 ? .10 : .17;
+      return staticAudio;
+    }
+    function cultActive(){
+      return body.classList.contains('pc5152h-cult-source-sequence') && !body.classList.contains('pc5152q-immortality-sequence');
+    }
+    function syncCultOverlay(){
+      const active=cultActive();
+      body.classList.toggle('pc5152an-cult-vhs-overlay-active', active);
+      const overlay=document.querySelector('.pc5152an-vhs-overlay-video');
+      if(overlay){
+        overlay.muted=true; overlay.loop=true;
+        overlay.style.pointerEvents='none';
+        if(active){ try{ if(overlay.paused) overlay.play().catch(()=>{}); }catch(_e){} }
+        else { try{ overlay.pause(); }catch(_e){} }
+      }
+      const a=ensureStaticAudio();
+      a.volume=window.innerWidth<=940 ? .10 : .17;
+      const audioOn=!(window.ProjectCurseAudio && typeof window.ProjectCurseAudio.isOn==='function') || window.ProjectCurseAudio.isOn();
+      if(active && audioOn){ try{ if(a.paused) a.play().catch(()=>{}); }catch(_e){} }
+      else { try{ a.pause(); a.currentTime=0; }catch(_e){} }
+    }
+
+    function silenceMenuBus(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio) return;
+      ['menu','drawer','command','marker','page','radio'].forEach(k=>{try{ if(bus.audio[k]) bus.audio[k].volume=0; }catch(_e){}});
+      try{ if(bus.audio.ambient){ bus.audio.ambient.loop=true; bus.audio.ambient.volume=window.innerWidth<=940 ? .074 : .096; } }catch(_e){}
+      if(!bus.__pc5152anPlayCueWrapped && typeof bus.playCue==='function'){
+        const old=bus.playCue.bind(bus);
+        bus.playCue=function(name,cooldown){
+          if(['menu','drawer','command','marker','page','radio'].includes(String(name))) return;
+          return old(name,cooldown);
+        };
+        bus.__pc5152anPlayCueWrapped=true;
+      }
+    }
+
+    function normalizeRecordFigures(){
+      document.querySelectorAll('.record-page > .record-figure').forEach((fig,idx)=>{
+        fig.classList.add('pc5152an-attachment-figure');
+        if(!fig.querySelector('figcaption')){
+          const cap=document.createElement('figcaption');
+          const doc=document.querySelector('.doc-title')?.textContent?.trim() || 'RECOVERED RECORD';
+          cap.innerHTML='<b>IMAGE '+String(idx+1).padStart(4,'0')+' / RECOVERED FRAME</b><span>'+esc(doc)+' 로컬 기록면에 첨부된 회수 이미지.</span>';
+          fig.appendChild(cap);
+        }
+      });
+      document.querySelectorAll('.record-content video, .doc-shell video, .record-page video').forEach(v=>{
+        v.classList.add('pc5152an-contained-media');
+        v.setAttribute('playsinline','');
+      });
+    }
+
+    function forceBootComplete(){
+      try{
+        const loader=document.getElementById('loader');
+        const app=document.getElementById('app');
+        if(loader) loader.classList.add('hide');
+        if(app) app.classList.add('ready');
+        body.classList.add('pc5121-boot-complete','pc5152ao-boot-safe');
+        body.classList.remove('pc5121-boot-pending');
+      }catch(_e){}
+    }
+    function safeRefresh(){
+      try{ updateSystemFrame(); }catch(_e){}
+      try{ syncCultOverlay(); }catch(_e){}
+      try{ silenceMenuBus(); }catch(_e){}
+      try{ normalizeRecordFigures(); }catch(_e){}
+    }
+    let refreshTimer=0;
+    function queueRefresh(delay){
+      clearTimeout(refreshTimer);
+      refreshTimer=setTimeout(safeRefresh, delay==null?90:delay);
+    }
+
+    installSystemFrame();
+    safeRefresh();
+    setTimeout(forceBootComplete,3200);
+    setTimeout(forceBootComplete,5200);
+    window.addEventListener('error',()=>setTimeout(forceBootComplete,0));
+    window.addEventListener('unhandledrejection',()=>setTimeout(forceBootComplete,0));
+
+    // 2ao: keep the KST clock, but do not observe the whole DOM. In 2an the
+    // status-clock text mutations could retrigger the global observer and trap
+    // the app behind the boot loader on some browsers/devices.
+    setInterval(()=>{ try{ updateSystemFrame(); }catch(_e){} },1000);
+    ['hashchange','resize','orientationchange','pageshow','visibilitychange'].forEach(ev=>window.addEventListener(ev,()=>queueRefresh(120),{passive:true}));
+    document.addEventListener('click',()=>queueRefresh(120),true);
+
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152an:'SystemFrame KST RecordLayout AudioBusFix',
+      patch5152ao:'BootLoopFix SystemFrameSafe',
+      systemFrame:'fixed U.A.C status bar with Asia/Seoul realtime clock; whole-DOM observer removed',
+      boot:'loader fail-safe added; app enters ready state even if a noncritical enhancement stalls',
+      media:'mobile record videos use contained framing instead of center crop; desktop remains large/fullscreen',
+      cults:'original Cults_871104 intro/transition retained; uploaded VHS video remains overlay only; radio static low-volume layer retained',
+      audio:'menu/drawer/page click cue calls remain disabled; menu BGM is not reset by menu navigation'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2ar — FrameAudio_RebaseSafe
+// Rebased from 5.15.2ap: keep original record layouts, stabilize shell/sidebar/audio state.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    const body=document.body;
+    body.classList.add('pc5152ar-frameaudio-rebasesafe');
+
+    function prefix(){
+      const p=location.pathname;
+      if(p.includes('/docs/')) return '../../';
+      if(p.includes('/archive/')) return '../';
+      return '';
+    }
+    function q(sel,root=document){ return root.querySelector(sel); }
+    function qa(sel,root=document){ return Array.from(root.querySelectorAll(sel)); }
+
+    function removeLegacyAudioPanel(){
+      qa('.pc5152ad-audio-panel,#audioToggle,#pc5152adVolumeToggle,#pc5152adAmbientToggle').forEach(el=>{
+        const panel=el.closest && el.closest('.pc5152ad-audio-panel');
+        (panel||el).remove();
+      });
+    }
+
+    function ensureSystemBar(){
+      let bar=q('.pc5152an-systembar');
+      if(!bar){
+        bar=document.createElement('div');
+        bar.className='pc5152an-systembar pc5152ar-systembar';
+        bar.innerHTML='<button class="pc5152an-menu" type="button" aria-label="사이드 메뉴 열기">☰</button><div class="pc5152an-server"><b>U.A.C CLOSED SERVER</b><span>PC-03 / LOCAL ARCHIVE</span></div><div class="pc5152an-clock"><small>KST</small><b data-pc5152an-clock>--:--:--</b></div><div class="pc5152an-flags"><span>ACCESS LIMITED</span></div>';
+        document.body.prepend(bar);
+      }
+      qa('.pc5152an-current',bar).forEach(el=>el.remove());
+      const menu=q('.pc5152an-menu',bar);
+      if(menu){
+        menu.textContent=body.classList.contains('pc584-main-drawer-open')?'×':'☰';
+        menu.setAttribute('aria-expanded',body.classList.contains('pc584-main-drawer-open')?'true':'false');
+      }
+      return bar;
+    }
+
+    function ensureBackdrop(){
+      let bd=q('.pc5152ar-drawer-backdrop');
+      if(!bd){
+        bd=document.createElement('div');
+        bd.className='pc5152ar-drawer-backdrop';
+        document.body.appendChild(bd);
+      }
+      return bd;
+    }
+
+    function removeFloatingDrawerButtons(){
+      qa('.pc584-main-drawer-toggle').forEach(el=>el.remove());
+      // Keep older backdrops inert; 5.15.2ar uses its own mobile-only backdrop.
+      qa('.pc584-drawer-backdrop,.mobile-backdrop,.drawer-backdrop,.content-dim,.menu-overlay').forEach(el=>{
+        if(el.classList && el.classList.contains('pc5152ar-drawer-backdrop')) return;
+        el.style.display='none';
+        el.style.pointerEvents='none';
+        el.setAttribute('aria-hidden','true');
+      });
+    }
+
+    function isDesktop(){ return (window.innerWidth||document.documentElement.clientWidth||0) >= 900; }
+    function setDrawer(open){
+      body.classList.toggle('pc584-main-drawer-open',!!open);
+      const menu=q('.pc5152an-menu');
+      if(menu){
+        menu.textContent=open?'×':'☰';
+        menu.setAttribute('aria-expanded',open?'true':'false');
+        menu.setAttribute('aria-label',open?'사이드 메뉴 접기':'사이드 메뉴 열기');
+      }
+      try{ localStorage.setItem('pc-main-drawer-open',open?'open':'closed'); }catch(_e){}
+    }
+
+    function getPageId(){
+      const active=q('.content-page.active');
+      if(active && active.id) return active.id;
+      return (location.hash||'#history').slice(1)||'history';
+    }
+    function isRecordAudioState(){
+      if(body.classList.contains('pc5152h-sequence-open') ||
+         body.classList.contains('pc5152i-sequence-intro-playing') ||
+         body.classList.contains('pc5152q-immortality-sequence') ||
+         body.classList.contains('pc5152h-cult-source-sequence') ||
+         body.classList.contains('pc5133-case-file-open')) return true;
+      const viewer=q('#archiveRecordViewer');
+      if(viewer && !viewer.hidden){
+        const visible=qa('.record-detail[data-record]',viewer).some(el=>!el.hidden);
+        if(visible) return true;
+      }
+      return false;
+    }
+
+    let userAudioGesture=false;
+    function audioOn(){
+      const bus=window.ProjectCurseAudio;
+      return !(bus && typeof bus.isOn==='function') || bus.isOn();
+    }
+    function pauseAudio(a,reset){
+      try{ if(a){ a.pause(); if(reset) a.currentTime=0; } }catch(_e){}
+    }
+    function stopMenuAmbient(){
+      const bus=window.ProjectCurseAudio;
+      if(bus && bus.audio && bus.audio.ambient){
+        pauseAudio(bus.audio.ambient,false);
+      }
+    }
+    function startMenuAmbient(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || !bus.audio || !bus.audio.ambient || !audioOn() || !userAudioGesture) return;
+      if(isRecordAudioState()) return stopMenuAmbient();
+      try{
+        bus.audio.ambient.loop=true;
+        bus.audio.ambient.volume=(window.innerWidth||0)<=940 ? .060 : .076;
+        if(bus.audio.ambient.paused) bus.audio.ambient.play().catch(()=>{});
+      }catch(_e){}
+    }
+    function syncAudioState(){
+      const bus=window.ProjectCurseAudio;
+      if(bus && bus.audio){
+        ['menu','drawer','command','marker','page','radio'].forEach(k=>{ try{ if(bus.audio[k]) bus.audio[k].volume=0; }catch(_e){} });
+        try{
+          if(!bus.audio.ambient || !String(bus.audio.ambient.src||'').includes('pc5152am_menu_old_computer.mp3')){
+            pauseAudio(bus.audio.ambient,true);
+            bus.audio.ambient=new Audio(prefix()+'assets/audio/pc5152am_menu_old_computer.mp3');
+          }
+          bus.audio.ambient.loop=true;
+          bus.audio.ambient.volume=(window.innerWidth||0)<=940 ? .060 : .076;
+        }catch(_e){}
+      }
+      if(isRecordAudioState()) stopMenuAmbient();
+      else startMenuAmbient();
+    }
+
+    function hardenAudioBus(){
+      const bus=window.ProjectCurseAudio;
+      if(!bus || bus.__pc5152arHardened) return;
+      if(typeof bus.playCue==='function'){
+        const oldPlayCue=bus.playCue.bind(bus);
+        bus.playCue=function(name,cooldown){
+          const n=String(name||'menu');
+          if(['menu','drawer','command','marker','page','radio'].includes(n)) return;
+          return oldPlayCue(n,cooldown);
+        };
+      }
+      if(typeof bus.startAmbient==='function'){
+        bus.startAmbient=function(){ userAudioGesture=true; syncAudioState(); };
+      }
+      bus.stopMenuAmbient=stopMenuAmbient;
+      bus.syncAudioState=syncAudioState;
+      bus.__pc5152arHardened=true;
+    }
+
+    function routeTo(id){
+      if(!id) id='history';
+      if(id==='zone-map') id='history';
+      if(typeof window.showPage==='function'){
+        window.showPage(id);
+      }else{
+        const pages=qa('.content-page').filter(p=>p.id);
+        if(!pages.some(p=>p.id===id)) id='history';
+        pages.forEach(p=>p.classList.toggle('active',p.id===id));
+        qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',(a.dataset.target||'')===id));
+        const content=q('.legacy-content');
+        if(content) content.scrollTop=0;
+        try{ history.replaceState(null,'','#'+id); }catch(_e){}
+      }
+      if(!isDesktop()) setDrawer(false);
+      syncAudioState();
+      updateShell();
+    }
+
+    function toggleMenuGroup(btn){
+      const group=btn && btn.closest('.pc585-menu-group');
+      if(!group) return;
+      const open=!group.classList.contains('open');
+      group.classList.toggle('open',open);
+      btn.setAttribute('aria-expanded',open?'true':'false');
+      const icon=btn.querySelector('span');
+      if(icon) icon.textContent=open?'▾':'▸';
+    }
+
+    function normalizeArchiveGrid(){
+      qa('#archive-entry .archive-list').forEach(grid=>{
+        grid.style.minWidth='0';
+      });
+      qa('#archive-entry .doc-card').forEach(card=>{
+        card.style.minWidth='0';
+        card.style.maxWidth='100%';
+        card.style.overflow='hidden';
+        card.style.overflowWrap='anywhere';
+      });
+    }
+
+    function normalizeRecordLayout(){
+      // Keep 5.15.2ap document flow. Do not apply the rejected 2aq centered media template.
+      qa('.record-detail,.record-page,.record-content,.paged-record').forEach(el=>{
+        el.classList.remove('pc5152aq-record-media-top','pc5152aq-centered-record','pc5152aq-media-first');
+      });
+      qa('.record-page .record-figure, .record-page figure, .record-detail .record-figure').forEach(fig=>{
+        fig.style.position='';
+        fig.style.inset='';
+        fig.style.display='block';
+        fig.style.visibility='';
+        fig.style.opacity='';
+      });
+      qa('.record-page img, .record-detail img').forEach(img=>{
+        img.style.display='';
+        img.style.visibility='';
+        img.style.opacity='';
+      });
+    }
+
+    function updateShell(){
+      removeLegacyAudioPanel();
+      ensureSystemBar();
+      ensureBackdrop();
+      removeFloatingDrawerButtons();
+      normalizeArchiveGrid();
+      normalizeRecordLayout();
+      body.classList.toggle('pc5152ar-desktop',isDesktop());
+      body.classList.toggle('pc5152ar-mobile',!isDesktop());
+      const page=getPageId();
+      body.dataset.pc5152arPage=page;
+    }
+
+    function isShellTarget(target){
+      return !!(target && target.closest && target.closest('.pc5152an-menu,.pc584-main-drawer-toggle,.pc5152ar-drawer-backdrop,.legacy-sidebar,.side-menu,.pc585-menu-heading'));
+    }
+
+    document.addEventListener('pointerdown',function(e){
+      userAudioGesture=true;
+      if(isShellTarget(e.target)){
+        // Earlier legacy listeners may already have attempted to start ambient; correct it immediately.
+        setTimeout(syncAudioState,0);
+        e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      }
+    },true);
+
+    document.addEventListener('click',function(e){
+      const menu=e.target.closest && e.target.closest('.pc5152an-menu,.pc584-main-drawer-toggle');
+      if(menu){
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        setDrawer(!body.classList.contains('pc584-main-drawer-open'));
+        syncAudioState();
+        return false;
+      }
+      const backdrop=e.target.closest && e.target.closest('.pc5152ar-drawer-backdrop');
+      if(backdrop){
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        setDrawer(false);
+        syncAudioState();
+        return false;
+      }
+      const heading=e.target.closest && e.target.closest('.pc585-menu-heading');
+      if(heading){
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        toggleMenuGroup(heading);
+        syncAudioState();
+        return false;
+      }
+      const link=e.target.closest && e.target.closest('.side-menu a[data-target]');
+      if(link){
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        routeTo(link.dataset.target||'history');
+        return false;
+      }
+      if(isRecordAudioState() && isShellTarget(e.target)){
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        syncAudioState();
+        return false;
+      }
+      setTimeout(syncAudioState,80);
+    },true);
+
+    window.addEventListener('hashchange',()=>setTimeout(()=>{updateShell(); syncAudioState();},80),{passive:true});
+    window.addEventListener('resize',()=>setTimeout(()=>{updateShell(); syncAudioState();},80),{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(()=>{updateShell(); syncAudioState();},120),{passive:true});
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape') setDrawer(false);
+      userAudioGesture=true;
+      setTimeout(syncAudioState,0);
+    },true);
+    document.addEventListener('visibilitychange',syncAudioState,{passive:true});
+
+    hardenAudioBus();
+    updateShell();
+    syncAudioState();
+    [50,150,400,900,1800,3200].forEach(t=>setTimeout(()=>{hardenAudioBus(); updateShell(); syncAudioState();},t));
+    setInterval(()=>{ if(isRecordAudioState()) stopMenuAmbient(); removeFloatingDrawerButtons(); },1000);
+
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152ar:'FrameAudio RebaseSafe',
+      base:'5.15.2ap RuntimeFix MetadataClean',
+      retained:'original F.H.C/Immortality record layout; 2aq centered-media CSS not applied',
+      shell:'single topbar menu button; floating drawer button removed; CURRENT label removed; SOUND panel removed',
+      audio:'menu ambient only on general UI; record views stop menu ambient; side menu actions have no cue/ducking',
+      responsive:'desktop push sidebar, mobile overlay drawer, archive grid constrained to parent width'
+    });
+  });
+})();
+
+
+
+// MapPatch 5.15.2as — RecordSequence_StageViewerInspired
+// Adds sequence-only layout classes for F.H.C briefing / evidence-photo pages and Immortality terminal-log pages.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152as-stageviewer-marker');
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152as:'RecordSequence StageViewerInspired',
+      sequenceLayout:'F.H.C warning/title/two-column/evidence/end-card + Immortality terminal-log/field-photo classes',
+      scope:'sequence overlay only; native 5.15.2ap document flow remains untouched',
+      responsive:'desktop cinematic stage, mobile one-column evidence/log view'
+    });
+  });
+})();
+
+// MapPatch 5.15.2au — OrderRestore_ContentSafe
+// Content-safe rebase: keep 5.15.2as sequence viewer, but preserve 5.15.2ar native F.H.C/Immortality order and core descriptions.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152au-orderrestore-contentsafe');
+
+    function lockEraFrame(){
+      const bar=document.querySelector('.pc5152an-systembar');
+      if(!bar) return;
+      bar.querySelectorAll('.pc5152an-current').forEach(el=>el.remove());
+      const clock=bar.querySelector('.pc5152an-clock');
+      if(clock){
+        const small=clock.querySelector('small');
+        const b=clock.querySelector('b');
+        if(small) small.textContent='ERA';
+        if(b){
+          b.removeAttribute('data-pc5152an-clock');
+          b.textContent='1980-2010';
+        }
+      }
+      const server=bar.querySelector('.pc5152an-server span');
+      if(server) server.textContent='PC-03 / CLOSED ARCHIVE';
+    }
+
+    function guardContentOrder(){
+      // Do not rewrite sequence pages here. 5.15.2au intentionally keeps the 5.15.2as order:
+      // Cults: 타락교 -> 신원불명의 신자 -> 가면을 쓴 존재 -> 타락 과정 -> 혈교 -> 혈액 경로 -> 혈무 -> 피의 호수를 거니는 자들 -> 저장소 -> 제압 -> 비교 -> 경고.
+      // Immortality: 사건 개요 -> 기록 정보 -> 작전 투입 -> 16:10~19:00 작전 시간 기록.
+    }
+
+    lockEraFrame();
+    guardContentOrder();
+    [50,150,400,900,1800,3200].forEach(t=>setTimeout(lockEraFrame,t));
+    setInterval(lockEraFrame,1500);
+
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152au:'OrderRestore ContentSafe',
+      base:'5.15.2ar FrameAudio RebaseSafe + 5.15.2as RecordSequence StageViewer',
+      discarded:'5.15.2at concise sequence copy/order rewrite',
+      restored:'native F.H.C and Immortality document pages copied from 5.15.2ar; sequence copy/order retained from 5.15.2as',
+      era:'1980-2010 visible archive era; post-2010 timeline entries removed from main chronology',
+      rule:'do not compress or rearrange setting text without preserving original order and key explanations'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2av — EvidenceStageScale_TypographyPass
+// Visual-only pass: enlarge evidence imagery and rebalance sequence typography without rewriting record order/text.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152av-evidence-stage-scale');
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152av:'EvidenceStageScale TypographyPass',
+      scope:'visual-only CSS pass for F.H.C/Immortality sequence overlay',
+      contentRule:'does not rewrite record order, captions, or setting descriptions',
+      evidenceLayout:'large evidence image left / compact report text right on PC; stacked on mobile'
+    });
+  });
+})();
+
+// MapPatch 5.15.2aw — ReligionSequence_ContentLayoutPass
+// Rewrites the Cults_871104 religion sequence with translated religion/corruption notes and tighter stage layout.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152aw-religion-sequence-pass');
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152aw:'ReligionSequence ContentLayoutPass',
+      focus:'Cults_871104 renamed to 종교 and rebuilt around religion / corruption evidence flow',
+      layout:'타락교·혈교·혈액 경로·혈무는 오른쪽 보조 이미지형, 나머지 증거면은 대형 증거사진형',
+      content:'Signs of Corruption / Hina series notes translated and merged into the religion record',
+      motion:'sequence lines reveal with short pop / glitch instead of slow slide-in'
+    });
+  });
+})();
+
+// MapPatch 5.15.2ax — EvidenceCenter_BlockRevealPass
+// Centers evidence images, uses figure captions for image-bottom metadata, and hard-resets sequence runtime on re-entry.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152ax-evidence-center-blockreveal');
+    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {
+      patch5152ax:'EvidenceCenter BlockRevealPass',
+      focus:'religion sequence evidence pages use centered image + figcaption + report copy',
+      reveal:'religion pages reveal as one block, not line by line',
+      reset:'sequence runtime hard-reset added for return/re-open and end/re-open paths',
+      restored:'타락의 과정 및 형태 original image restored; reference caption assets removed; IMG code/title evidence caption restored'
+    });
+  });
+})();
+
+
+// MapPatch 5.15.2ay — ReferenceRollback_ReligionSequenceFix marker.
+(function(){
+  window.ProjectCursePatch5152ay={
+    patch5152ay:'ReferenceRollback ReligionSequenceFix',
+    base:'5.15.2ax',
+    cults:'reference caption screenshots removed; only two user-approved clean images are used for Silent/Hybridized Corruption',
+    layout:'evidence pages use centered image + IMG code/title + report; 타락교/혈교 remain two-column',
+    flow:'split reference-only pages folded into adjacent evidence pages'
+  };
+})();
+
+
+// MapPatch 5.15.2az — ImmortalityFieldBriefingPass marker.
+(function(){
+  window.ProjectCursePatch5152az={
+    patch5152az:'Immortality FieldBriefingPass',
+    base:'5.15.2ay',
+    scope:'Immortality_860201 sequence text/layout only',
+    referencePolicy:'uploaded reference videos/screenshots were not added as assets or audio',
+    briefing:'opening changed to left red operation briefing with existing right-side image',
+    ending:'18:56 final-image analysis paragraphs removed'
+  };
+})();
+
+
+// MapPatch 5.15.2ba — TitleImg_MobileSequenceFix marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152ba-titleimg-mobile-sequencefix');
+    document.body.classList.add('pc5152bb-stage-template-responsivefix');
+    window.ProjectCursePatch5152ba={
+      patch5152ba:'TitleImg MobileSequenceFix',
+      base:'5.15.2az',
+      religion:'evidence pages show visible IMG code + title under image; Hybridized Corruption mutates only on user click',
+      immortality:'field photo pages hide large time title and show IMG/time metadata under image; opening title/subtitle removed',
+      responsive:'sequence panel and media use contain/stack rules on mobile to avoid middle-crop'
+    };
+  });
+})();
+
+
+// MapPatch 5.15.2bb — StageTemplate_ResponsiveHubFix public marker.
+(function(){
+  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
+  ready(function(){
+    document.body.classList.add('pc5152bb-stage-template-responsivefix');
+    window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {
+      patch5152bb:'StageTemplate ResponsiveHubFix',
+      sequenceStage:'briefing/evidence/photo/log/personnel templates separated by parent stage',
+      responsiveMode:'PC uses full viewport stage; mobile stacks templates without center-crop',
+      sideMenuMode:'hub-sized responsive shell retained for archive/world/faction/map/category expansion'
     });
   });
 })();

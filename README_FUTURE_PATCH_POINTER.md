@@ -1,3 +1,3 @@
 # Future Patch Pointer
 
-Continue after MapPatch 5.15.2ah. Preserve PC + mobile responsiveness by default. Do not restore region/operation map modules unless explicitly requested. Avoid click-blocking overlays and keep archive open rules button-only.
+Continue after MapPatch 5.15.2av — EvidenceStageScale_TypographyPass. Preserve restored 5.15.2au content order. Future visual changes should remain layout-scoped unless explicitly approved.
