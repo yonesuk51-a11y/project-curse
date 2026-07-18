@@ -29,16 +29,64 @@
     try{return localStorage.getItem('pc_audio_legacy2003_fixed')!=='off';}catch(_e){return true;}
   }
   function activePage(){return q('.content-page.active[id]')?.id||'';}
-  function installInitialRoute(){
+  function setDrawerOpen(open){
+    open=!!open;
+    document.body.classList.toggle('pc584-main-drawer-open',open);
+    document.body.classList.toggle('pc5152be-drawer-open',open);
+    qa('.pc5152an-menu,.pc584-main-drawer-toggle').forEach(button=>{
+      button.textContent=open?'×':'☰';
+      button.setAttribute('aria-expanded',open?'true':'false');
+      button.setAttribute('aria-label',open?'사이드 메뉴 닫기':'사이드 메뉴 열기');
+    });
+    qa('.pc5152ar-drawer-backdrop,.pc584-drawer-backdrop').forEach(backdrop=>{
+      backdrop.setAttribute('aria-hidden',open?'false':'true');
+      backdrop.style.pointerEvents=open?'auto':'none';
+    });
+    try{localStorage.setItem('pc-main-drawer-open',open?'open':'closed');}catch(_e){}
+  }
+  function sealDrawerClosed(){
+    setDrawerOpen(false);
+  }
+  function commitScreen(target,{replace=true,closeDrawer=true}={}){
     const pages=qa('.content-page[id]');
-    if(!pages.length) return;
-    const requested=(location.hash||'').replace(/^#/,'');
-    const target=requested==='faction-relation'?'faction-info':(requested==='region-map'?'history':(screens.has(requested)?requested:'terminal-home'));
-    pages.forEach(page=>page.classList.toggle('active',page.id===target));
+    if(!pages.length) return false;
+    if(target==='faction-relation') target='faction-info';
+    if(target==='region-map'||target==='zone-map') target='history';
+    if(!screens.has(target)||!pages.some(page=>page.id===target)) target='terminal-home';
+    pages.forEach(page=>{
+      const active=page.id===target;
+      page.classList.toggle('active',active);
+      page.style.pointerEvents=active?'auto':'none';
+      if(active){
+        page.removeAttribute('inert');
+        page.removeAttribute('aria-hidden');
+      }else{
+        page.setAttribute('inert','');
+        page.setAttribute('aria-hidden','true');
+      }
+    });
     qa('.side-menu a[data-target]').forEach(link=>link.classList.toggle('active',link.dataset.target===target));
-    if(!requested || (!screens.has(requested) && requested!=='faction-relation' && requested!=='region-map')){
-      try{history.replaceState(null,'','#'+target);}catch(_e){}
+    const content=q('.legacy-content');
+    if(content) content.scrollTop=0;
+    if(closeDrawer){
+      sealDrawerClosed();
+      // Retired routers used to update the same classes later in the event.
+      // Reassert the canonical closed state after the current dispatch too.
+      queueMicrotask(sealDrawerClosed);
+      requestAnimationFrame(sealDrawerClosed);
     }
+    if(replace){try{history.replaceState(null,'','#'+target);}catch(_e){}}
+    document.body.dataset.pc5152cnRoute=target;
+    document.dispatchEvent(new CustomEvent('projectcurse:screen-committed',{detail:{target}}));
+    return true;
+  }
+  function installInitialRoute(){
+    const returningToArchive=new URLSearchParams(location.search).get('return')==='archive';
+    // A full terminal boot always begins at the idle terminal. Hash fragments
+    // left by an earlier local-file session must not reopen the last screen.
+    const target=returningToArchive?'archive-entry':'terminal-home';
+    commitScreen(target,{replace:true,closeDrawer:true});
+    document.body.dataset.pc5152cnInitialRoute=target;
   }
   function visibleRecord(){
     const viewer=q('#archiveRecordViewer');
@@ -160,18 +208,66 @@
     return {name:'menuAudio',patch:'5.15.2ce',mode:state.mode,page:activePage(),gesture:state.gesture,paused:ambient?.paused??true,volume:Number(ambient?.volume||0),source:ambient?.src||null};
   }
 
+  let lastMenuRouteAt=0;
+  let lastMenuRouteTarget='';
+  let lastDrawerPressAt=0;
+  function routeFromMenuPress(event){
+    const link=event.target?.closest?.('.side-menu a[data-target]');
+    if(!link) return false;
+    const target=link.dataset.target||'terminal-home';
+    const now=performance.now();
+    if(target!==lastMenuRouteTarget||now-lastMenuRouteAt>500){
+      lastMenuRouteTarget=target;
+      lastMenuRouteAt=now;
+      commitScreen(target,{replace:true,closeDrawer:true});
+      queue();
+    }
+    // Capture at Window, before the retired document-level routers can leave
+    // the new screen inert. Keep the later click available to page modules.
+    event.stopPropagation();
+    if(event.stopImmediatePropagation) event.stopImmediatePropagation();
+    return true;
+  }
+  function drawerFromMenuPress(event){
+    const toggle=event.target?.closest?.('.pc5152an-menu,.pc584-main-drawer-toggle');
+    const backdrop=event.target?.closest?.('.pc5152ar-drawer-backdrop,.pc584-drawer-backdrop');
+    if(!toggle&&!backdrop) return false;
+    const now=performance.now();
+    if(now-lastDrawerPressAt>500){
+      lastDrawerPressAt=now;
+      if(backdrop) sealDrawerClosed();
+      else setDrawerOpen(!document.body.classList.contains('pc584-main-drawer-open'));
+      queue();
+    }
+    if(event.cancelable) event.preventDefault();
+    event.stopPropagation();
+    if(event.stopImmediatePropagation) event.stopImmediatePropagation();
+    return true;
+  }
+
   ready(()=>{
     document.body.classList.add('pc5152ce-managed-audio');
     installInitialRoute();
     installBus();
+    window.addEventListener('touchstart',event=>{
+      state.gesture=true;
+      routeFromMenuPress(event);
+    },{capture:true,passive:true});
     window.addEventListener('pointerdown',event=>{
       state.gesture=true;
+      if(routeFromMenuPress(event)) return;
+      if(drawerFromMenuPress(event)) return;
       const target=event.target;
       if(!target?.closest){queue();return;}
       if(target.closest('#archiveListWrap .doc-card[data-access="sealed"],#archiveListWrap [aria-disabled="true"]')) play('denied','denied',420);
       else if(target.closest('.open-record,[data-open-record],[data-pc5152ca-open]')) play('mount','record-mount',720);
       else if(target.closest('.page-tab,.sub-tab,[data-seq-next]')) play('projector','record-page',180);
       queue();[80,380,900].forEach(queue);
+    },true);
+    window.addEventListener('click',event=>{
+      state.gesture=true;
+      if(routeFromMenuPress(event)) return;
+      drawerFromMenuPress(event);
     },true);
     window.addEventListener('keydown',()=>{state.gesture=true;queue();},true);
     ['hashchange','pageshow','resize','orientationchange'].forEach(name=>window.addEventListener(name,()=>queue(100),{passive:true}));
@@ -181,6 +277,8 @@
     if(viewer){try{new MutationObserver(()=>queue()).observe(viewer,{attributes:true,attributeFilter:['hidden','class'],childList:true,subtree:true});}catch(_e){}}
     sync();
     window.ProjectCurseRuntimeModules=window.ProjectCurseRuntimeModules||{};
+    window.showPage=target=>commitScreen(target,{replace:true,closeDrawer:true});
+    window.ProjectCurseShell=Object.freeze({navigate:window.showPage,setDrawerOpen,closeDrawer:sealDrawerClosed,activePage});
     window.ProjectCurseRuntimeModules.menuAudio={owner:'assets/js/core/menu-audio-runtime.js',sync,check:report};
   });
 })();

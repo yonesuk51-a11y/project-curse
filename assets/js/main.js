@@ -1109,7 +1109,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     renderRelation();
 
     // Initial state
-    const initialHash = (location.hash || '#history').slice(1);
+    const initialHash = (location.hash || '#terminal-home').slice(1);
     showPage(initialHash === 'zone-map' ? 'history' : initialHash);
   });
 })();
@@ -4945,7 +4945,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       try{ history.replaceState(null,'','#'+id); }catch(e){}
     }
     window.showPage=showPage;
-    const initial=(location.hash||'#history').slice(1)||'history';
+    const initial=(location.hash||'#terminal-home').slice(1)||'terminal-home';
     showPage(initial==='zone-map'?'history':initial);
 
     function syncGroupFor(link){
@@ -6506,18 +6506,33 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     function routeTo(id){
       if(!id) id='terminal-home';
       if(id==='zone-map') id='history';
+      const pages=qa('.content-page').filter(p=>p.id);
+      if(!pages.some(p=>p.id===id)) id='terminal-home';
       if(typeof window.showPage==='function'){
         window.showPage(id);
       }else{
-        const pages=qa('.content-page').filter(p=>p.id);
-        if(!pages.some(p=>p.id===id)) id='history';
-        pages.forEach(p=>p.classList.toggle('active',p.id===id));
-        qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',(a.dataset.target||'')===id));
-        const content=q('.legacy-content');
-        if(content) content.scrollTop=0;
         try{ history.replaceState(null,'','#'+id); }catch(_e){}
       }
-      if(!isDesktop()) setDrawer(false);
+      // Older responsive passes marked every inactive screen inert. A route
+      // change must clear that state immediately instead of waiting for the
+      // next unrelated document click.
+      pages.forEach(page=>{
+        const active=page.id===id;
+        page.classList.toggle('active',active);
+        page.style.pointerEvents=active?'auto':'none';
+        if(active){
+          page.removeAttribute('inert');
+          page.removeAttribute('aria-hidden');
+        }else{
+          page.setAttribute('inert','');
+          page.setAttribute('aria-hidden','true');
+        }
+      });
+      qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',(a.dataset.target||'')===id));
+      const content=q('.legacy-content');
+      if(content) content.scrollTop=0;
+      try{ history.replaceState(null,'','#'+id); }catch(_e){}
+      setDrawer(false);
       syncAudioState();
       updateShell();
     }
@@ -7246,7 +7261,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   function addQaNotes(){ return; }
   function verifyActiveRoute(){
     const active=q('.content-page.active');
-    if(!active){ routeTo((location.hash||'#history').slice(1)||'history'); return; }
+    if(!active){ routeTo((location.hash||'#terminal-home').slice(1)||'terminal-home'); return; }
     const activeLink=q('.side-menu a[data-target="'+active.id+'"]');
     if(activeLink) qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',a===activeLink));
   }
@@ -7360,7 +7375,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     });
   }
   function syncActive(){
-    const id=(location.hash||'#history').slice(1)||'history';
+    const id=(location.hash||'#terminal-home').slice(1)||'terminal-home';
     qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',(a.dataset.target||'')===id));
   }
   function run(){
@@ -7474,7 +7489,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     qa('.pc5152bg-tile-tag').forEach(tag=>tag.remove());
   }
   function stabilizeRoute(){
-    const id=(location.hash||'#history').slice(1)||'history';
+    const id=(location.hash||'#terminal-home').slice(1)||'terminal-home';
     if(!q('.content-page.active')) routeTo(id);
     const active=q('.content-page.active');
     if(active) qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',(a.dataset.target||'')===active.id));

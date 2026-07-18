@@ -1,6 +1,10 @@
 # Project Curse U.A.C Closed Server
 
-Current build: `5.15.2cm Mobile Navigation Fix Pass`
+Current build: `5.15.2co Runtime Ownership Pass`
+
+The current shell has one navigation owner. `runtime-ownership.js` removes
+direct legacy listeners from live menu controls, and `menu-audio-runtime.js`
+alone commits screens, drawer state, button state, and navigation audio.
 
 정적 PC·모바일 기록 단말 패키지다. 루트의 `index.html`을 열거나 폴더 전체를 GitHub Pages에 배포한다.
 
@@ -19,7 +23,7 @@ Current build: `5.15.2cm Mobile Navigation Fix Pass`
 
 영상 기록은 공통 재생 엔진 하나와 기록별 설정 모듈 네 개로 분리했다. 종교·불멸을 향해·괴이·사쿠마의 테이프는 각자 영상, 배경음, 전환음과 페이지 공급 정보를 소유하며 `main.js`는 등록된 설정을 조회해 재생만 담당한다. 현행 구조에서 사용하지 않는 과거 지도·관계도 확장 블록은 실행되지 않는다.
 
-모바일 사이드 메뉴는 항목을 누르는 즉시 화면 경로를 확정한 다음 서랍을 닫는다. 과거 터치 라우터는 현행 v3 구조에서 비활성화했으며, 첫 부팅은 별도 주소가 지정되지 않은 경우 `단말 상태`로 진입한다.
+PC·모바일 사이드 메뉴는 항목을 누르는 즉시 화면 경로와 입력 상태를 확정한 다음 서랍을 닫는다. 과거 터치 라우터는 현행 v3 구조에서 비활성화했으며, 첫 부팅은 이전 주소의 해시와 관계없이 `단말 상태`로 진입한다. 문서 페이지에서 돌아오는 `?return=archive`만 기록보관소를 복원한다.
 
 ## 검증
 

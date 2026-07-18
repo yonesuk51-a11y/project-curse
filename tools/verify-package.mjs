@@ -4,7 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.15.2cf';
+const VERSION='5.15.2co';
+const DATA_VERSION='5.15.2cf';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -23,7 +24,7 @@ const required=[
   'assets/js/data/site-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/main.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
-  'assets/js/core/menu-audio-runtime.js','assets/js/pages/shared-declutter.js',
+  'assets/js/core/runtime-ownership.js','assets/js/core/menu-audio-runtime.js','assets/js/pages/shared-declutter.js',
   'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/qa/structure-qa.js','assets/js/pages/faction-analysis.js',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
   'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
@@ -44,6 +45,7 @@ const factionAnalysisSource=read('assets/js/data/faction-analysis-data.js');
 const factionAnalysisRuntime=read('assets/js/pages/faction-analysis.js');
 const worldHistory=read('assets/js/pages/world-history.js');
 const menuAudioRuntime=read('assets/js/core/menu-audio-runtime.js');
+const runtimeOwnership=read('assets/js/core/runtime-ownership.js');
 const recordCinematicCss=read('assets/css/record-cinematic.css');
 const cinematicRegistrySource=read('assets/js/core/record-cinematic-registry.js');
 const cinematicCults=read('assets/js/pages/cinematic-cults.js');
@@ -72,7 +74,7 @@ const cinematicData=context.window.ProjectCurseCinematicRegistry;
 const ordered=[
   'assets/js/data/site-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/main.js',
-  'assets/js/core/menu-audio-runtime.js','assets/js/pages/shared-declutter.js',
+  'assets/js/core/runtime-ownership.js','assets/js/core/menu-audio-runtime.js','assets/js/pages/shared-declutter.js',
   'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/qa/structure-qa.js','assets/js/pages/faction-analysis.js'
 ];
 const positions=ordered.map(owner=>index.indexOf(`src="${owner}"`));
@@ -97,12 +99,18 @@ add('canon-direct-current-names',!canon.includes('Urban Anomaly Containment')&&!
 add('mobile-drawer-single-event-owner',main.includes('lastDrawerActivation')&&main.includes('lastSidebarRouteActivation')&&main.includes('activateSidebarRouteFromEvent')&&main.includes("document.addEventListener('pointerdown',function(e)")&&main.includes("e.target.closest('.side-menu a[data-target]')")&&main.includes('if(now-lastDrawerActivation<650) return true')&&main.includes('if(now-lastSidebarRouteActivation<650) return false')&&!main.includes("['touchend','pointerup'].forEach(type=>"));
 add('mobile-drawer-route-closes-cleanly',main.includes("body.classList.toggle('pc5152be-drawer-open',!!open)")&&main.includes("routeTo(link.dataset.target||'terminal-home')"));
 add('mobile-legacy-routers-disabled-for-v3',main.includes("const managedStructureV3=window.ProjectCurseStructure?.schema==='project-curse-structure-v3'")&&main.includes("if(window.ProjectCurseStructure?.schema!=='project-curse-structure-v3') sideLinks().forEach")&&main.includes("if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;"));
-add('initial-route-terminal-home',main.includes("show((location.hash||'#terminal-home').slice(1))")&&menuAudioRuntime.includes("screens.has(requested)?requested:'terminal-home'"));
+add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&index.includes('class="active" data-target="terminal-home"')&&main.includes("show((location.hash||'#terminal-home').slice(1))")&&menuAudioRuntime.includes("const target=returningToArchive?'archive-entry':'terminal-home'")&&menuAudioRuntime.includes('pc5152cnInitialRoute'));
+add('route-clears-inert-synchronously',main.includes("page.removeAttribute('inert')")&&main.includes("page.style.pointerEvents=active?'auto':'none'")&&menuAudioRuntime.includes("page.removeAttribute('inert')")&&menuAudioRuntime.includes("page.style.pointerEvents=active?'auto':'none'"));
+add('window-capture-menu-owner',menuAudioRuntime.includes('function routeFromMenuPress')&&menuAudioRuntime.includes("window.addEventListener('touchstart'")&&menuAudioRuntime.includes("window.addEventListener('pointerdown'")&&menuAudioRuntime.includes("window.addEventListener('click'")&&menuAudioRuntime.includes('event.stopImmediatePropagation'));
+add('menu-route-seals-drawer-closed',menuAudioRuntime.includes('function setDrawerOpen')&&menuAudioRuntime.includes('function sealDrawerClosed')&&menuAudioRuntime.includes("button.textContent=open?'×':'☰'")&&menuAudioRuntime.includes("localStorage.setItem('pc-main-drawer-open',open?'open':'closed')")&&menuAudioRuntime.includes('requestAnimationFrame(sealDrawerClosed)')&&main.includes('setDrawer(false);'));
+add('single-shell-runtime-owner',runtimeOwnership.includes('function claimShell')&&runtimeOwnership.includes(".side-menu a[data-target],.pc5152an-menu,.pc584-main-drawer-toggle")&&runtimeOwnership.includes('replaceListenerTarget')&&menuAudioRuntime.includes('function drawerFromMenuPress')&&menuAudioRuntime.includes('window.ProjectCurseShell=Object.freeze'));
+add('runtime-ownership-manifest',structureData?.owners?.runtimeOwnership==='assets/js/core/runtime-ownership.js'&&structureData?.owners?.menuAudio==='assets/js/core/menu-audio-runtime.js');
+add('runtime-ownership-qa',read('assets/js/qa/structure-qa.js').includes("['runtimeOwnership','menuAudio','sharedDeclutter','canonReconciliation','archiveIndex']")&&read('assets/js/qa/structure-qa.js').includes('modules.runtimeOwnership?.check?.()'));
 add('menu-navigation-cues-disabled',!menuAudioRuntime.includes("play('latch','drawer',180)")&&!menuAudioRuntime.includes("play('contact','route',260)"));
 add('retired-region-screen-removed',!index.includes('id="region-map"')&&!index.includes('data-target="region-map"')&&!index.includes('pc5152bd-region-situation-map')&&!index.includes('pc5152bf-regional-map-linked-usability'));
 add('retired-relation-screen-removed',!index.includes('id="faction-relation"')&&!index.includes('data-target="faction-relation"'));
 add('current-four-screen-manifest',structureData?.screens?.map(screen=>screen.id).join('|')==='terminal-home|history|faction-info|archive-entry');
-add('legacy-route-compatibility',menuAudioRuntime.includes("requested==='faction-relation'?'faction-info'")&&menuAudioRuntime.includes("requested==='region-map'?'history'"));
+add('legacy-route-compatibility',menuAudioRuntime.includes("target==='faction-relation'")&&menuAudioRuntime.includes("target==='region-map'||target==='zone-map'"));
 add('cinematic-registry-four-records',cinematicData?.ids?.().join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicData?.ids?.().join('|'));
 add('cinematic-record-config-owned-by-modules',![cinematicCults,cinematicImmortality,cinematicFerals,cinematicSakuma].some(source=>!source.includes('ProjectCurseCinematicRegistry?.register'))&&main.includes('cinematicRegistry?.get?.(state.activeRecord)')&&main.includes('cinematicRegistry?.pages?.(recordId)'));
 add('retired-expansion-blocks-quarantined',count(main,"if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;")>=5);
@@ -117,7 +125,7 @@ add('retired-expansion-blocks-quarantined',count(main,"if(window.ProjectCurseStr
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('archive-registry-version',archiveData?.version===VERSION);
+add('archive-registry-version',archiveData?.version===DATA_VERSION);
 const publicArchiveIds=archiveData?.publicRecords?.map(record=>record.id)||[];
 add('archive-nine-record-index',publicArchiveIds.length===9&&publicArchiveIds.slice(0,4).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Zone_870815',publicArchiveIds.length);
 add('archive-all-nine-open',archiveData?.publicRecords?.length===9&&archiveData.publicRecords.every(record=>record.access==='open'));

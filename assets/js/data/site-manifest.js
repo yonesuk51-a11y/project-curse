@@ -1,4 +1,4 @@
-// MapPatch 5.15.2cf — shared structure manifest
+// Project Curse 5.15.2co — shared structure manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:'5.15.2cf',
+    version:'5.15.2co',
     schema:'project-curse-structure-v3',
     screens:[
       {id:'terminal-home',label:'단말 상태',index:'00'},
@@ -41,7 +41,8 @@
       manifest:'assets/js/data/site-manifest.js',
       canon:'assets/js/data/canon-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
-      legacyRuntime:'assets/js/main.js',
+      compatibilityRuntime:'assets/js/main.js',
+      runtimeOwnership:'assets/js/core/runtime-ownership.js',
       cinematicRegistry:'assets/js/core/record-cinematic-registry.js',
       cinematicRecords:[
         'assets/js/pages/cinematic-cults.js',

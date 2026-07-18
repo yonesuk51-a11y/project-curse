@@ -1,4 +1,4 @@
-// MapPatch 5.15.2ce — structure, canon and protected-scope QA
+// Project Curse 5.15.2co — structure, ownership and protected-scope QA
 (function(){
   'use strict';
   const q=(s,r=document)=>r.querySelector(s);
@@ -14,10 +14,12 @@
     const issues=[];
     if(!structure) issues.push(issue('error','MANIFEST_MISSING','공통 구조 매니페스트 누락'));
     if(!window.ProjectCurseCanon) issues.push(issue('error','CANON_REGISTRY_MISSING','공식 설정 레지스트리 누락'));
-    ['menuAudio','sharedDeclutter','canonReconciliation','archiveConsolidation'].forEach(name=>{
+    ['runtimeOwnership','menuAudio','sharedDeclutter','canonReconciliation','archiveIndex'].forEach(name=>{
       if(!modules[name]) issues.push(issue('error','MODULE_MISSING',`${name} 소유 모듈 누락`));
     });
-    return {name:'structureOwnership',patch:'5.15.2cf',ok:issues.length===0,version:structure?.version||null,owners:structure?.owners||null,issues};
+    const ownership=modules.runtimeOwnership?.check?.();
+    if(ownership&&!ownership.ok) issues.push(...(ownership.issues||[]));
+    return {name:'structureOwnership',patch:'5.15.2co',ok:issues.length===0,version:structure?.version||null,owners:structure?.owners||null,issues};
   }
 
   function checkCanonReconciliation(){
@@ -39,7 +41,7 @@
     return {name:'menuStateAudio',patch:'5.15.2cf',ok:issues.length===0,current,issues};
   }
   function checkArchiveConsolidation(){
-    const runtime=window.ProjectCurseRuntimeModules?.archiveConsolidation;
+    const runtime=window.ProjectCurseRuntimeModules?.archiveIndex;
     if(runtime?.check) return runtime.check();
     return {name:'archiveConsolidation',patch:'5.15.2cf',ok:false,issues:[issue('error','ARCHIVE_CONSOLIDATION_MISSING','대표 기록철 통합 모듈 누락')]};
   }
@@ -70,7 +72,7 @@
   function organizationCanonSweep(){
     const checks=[checkStructureOwnership(),checkCanonReconciliation(),checkDeclutterUI(),checkArchiveConsolidation(),checkMenuStateAudio(),checkVisibleTerminology(),protectedRecordPresence()];
     const issues=checks.flatMap(check=>check.issues||[]);
-    return {patch:'5.15.2cf',time:new Date().toISOString(),ok:issues.every(row=>row.level!=='error'),errors:issues.filter(row=>row.level==='error').length,warnings:issues.filter(row=>row.level==='warn').length,checks,issues};
+    return {patch:'5.15.2co',time:new Date().toISOString(),ok:issues.every(row=>row.level!=='error'),errors:issues.filter(row=>row.level==='error').length,warnings:issues.filter(row=>row.level==='warn').length,checks,issues};
   }
   function reportText(result=organizationCanonSweep()){
     const lines=[`[ProjectCurseQA OrganizationCanonSweep] ${result.patch} / ${result.time}`,`ok=${result.ok} errors=${result.errors} warnings=${result.warnings}`];
