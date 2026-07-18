@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.15.2cl
+# Project Curse Structure — 5.15.2cm
 
 ## 활성 소유권
 
@@ -14,6 +14,7 @@
 | 괴이 영상 설정 | `assets/js/pages/cinematic-ferals.js` |
 | 사쿠마의 테이프 영상 설정 | `assets/js/pages/cinematic-sakuma.js` |
 | 메뉴·기록 오디오 상태 | `assets/js/core/menu-audio-runtime.js` |
+| 모바일 메뉴 단일 경로 처리·초기 단말 화면 | `assets/js/main.js` + `assets/js/core/menu-audio-runtime.js` |
 | 공통 중복 연결 정리 | `assets/js/pages/shared-declutter.js` |
 | 비보호 화면 명칭 정합화 | `assets/js/pages/canon-reconciliation.js` |
 | 영상/문서 기록 색인 | `assets/js/pages/archive-consolidation.js` |
@@ -29,6 +30,8 @@
 `site-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`가 먼저 로드된다. 영상 데이터 다음에 `record-cinematic-registry.js`와 기록별 설정 네 개가 등록되고, `main.js`의 공통 재생 엔진이 해당 등록 정보만 조회한다. 이후 오디오 관리자, 기록 색인, 세계 연표, 세력 분석실과 QA 모듈이 각 화면을 소유한다.
 
 활성 화면은 `terminal-home`, `history`, `faction-info`, `archive-entry` 네 개다. 폐기된 `region-map`과 `faction-relation`은 DOM을 만들지 않으며 옛 주소만 현행 화면으로 전환한다.
+
+모바일 메뉴 링크는 `pointerdown`에서 현재 화면과 주소를 먼저 갱신하고, 같은 터치에서 발생하는 후속 `pointerup`·`click`은 중복 경로 전환으로 처리하지 않는다. v3 이전 모바일 라우터는 레이아웃 클래스만 유지하고 입력 이벤트는 소유하지 않는다.
 
 ## 잠금 범위
 

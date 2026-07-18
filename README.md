@@ -1,6 +1,6 @@
 # Project Curse U.A.C Closed Server
 
-Current build: `5.15.2cl Runtime Modularization Pass`
+Current build: `5.15.2cm Mobile Navigation Fix Pass`
 
 정적 PC·모바일 기록 단말 패키지다. 루트의 `index.html`을 열거나 폴더 전체를 GitHub Pages에 배포한다.
 
@@ -18,6 +18,8 @@ Current build: `5.15.2cl Runtime Modularization Pass`
 이번 정리에서 참조되지 않는 원본 음원 2개와 이미지 5개, 폐기 화면 전용 안내 문서를 제거했다. 보호 기록인 `종교`와 `불멸을 향해`의 인라인·독립 페이지는 해시로 보존한다.
 
 영상 기록은 공통 재생 엔진 하나와 기록별 설정 모듈 네 개로 분리했다. 종교·불멸을 향해·괴이·사쿠마의 테이프는 각자 영상, 배경음, 전환음과 페이지 공급 정보를 소유하며 `main.js`는 등록된 설정을 조회해 재생만 담당한다. 현행 구조에서 사용하지 않는 과거 지도·관계도 확장 블록은 실행되지 않는다.
+
+모바일 사이드 메뉴는 항목을 누르는 즉시 화면 경로를 확정한 다음 서랍을 닫는다. 과거 터치 라우터는 현행 v3 구조에서 비활성화했으며, 첫 부팅은 별도 주소가 지정되지 않은 경우 `단말 상태`로 진입한다.
 
 ## 검증
 

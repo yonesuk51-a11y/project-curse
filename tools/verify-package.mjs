@@ -94,8 +94,10 @@ add('feral-custom-bgm',statSync(path('assets/audio/pc5152cf_feral_dying_memories
 add('canon-faction-owner',factionAnalysisSource.includes('ProjectCurseFactionAnalysis')&&factionAnalysisRuntime.includes('ProjectCurseFactionAnalysis'));
 add('canon-relation-owner',Array.isArray(canonData?.relations)&&canonData.relations.length===18&&factionAnalysisRuntime.includes('function relationButton')&&factionAnalysisRuntime.includes('faction.relations.map(relationButton)'));
 add('canon-direct-current-names',!canon.includes('Urban Anomaly Containment')&&!canon.includes('신디케이트')&&!canon.includes('하이문')&&!canon.includes('normalizeTerms')&&!factionAnalysisSource.includes('신디케이트')&&!factionAnalysisSource.includes('하이문')&&!factionAnalysisSource.includes('normalizeTerms'));
-add('mobile-drawer-single-event-owner',main.includes('lastDrawerActivation')&&main.includes('lastSidebarRouteActivation')&&main.includes('activateSidebarRouteFromEvent')&&main.includes("document.addEventListener('pointerup',function(e)")&&main.includes('if(now-lastDrawerActivation<650) return true')&&main.includes('if(now-lastSidebarRouteActivation<650) return true')&&!main.includes("['touchend','pointerup'].forEach(type=>"));
-add('mobile-drawer-route-closes-cleanly',main.includes("body.classList.toggle('pc5152be-drawer-open',!!open)")&&main.includes("routeTo(link.dataset.target||'history')"));
+add('mobile-drawer-single-event-owner',main.includes('lastDrawerActivation')&&main.includes('lastSidebarRouteActivation')&&main.includes('activateSidebarRouteFromEvent')&&main.includes("document.addEventListener('pointerdown',function(e)")&&main.includes("e.target.closest('.side-menu a[data-target]')")&&main.includes('if(now-lastDrawerActivation<650) return true')&&main.includes('if(now-lastSidebarRouteActivation<650) return false')&&!main.includes("['touchend','pointerup'].forEach(type=>"));
+add('mobile-drawer-route-closes-cleanly',main.includes("body.classList.toggle('pc5152be-drawer-open',!!open)")&&main.includes("routeTo(link.dataset.target||'terminal-home')"));
+add('mobile-legacy-routers-disabled-for-v3',main.includes("const managedStructureV3=window.ProjectCurseStructure?.schema==='project-curse-structure-v3'")&&main.includes("if(window.ProjectCurseStructure?.schema!=='project-curse-structure-v3') sideLinks().forEach")&&main.includes("if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;"));
+add('initial-route-terminal-home',main.includes("show((location.hash||'#terminal-home').slice(1))")&&menuAudioRuntime.includes("screens.has(requested)?requested:'terminal-home'"));
 add('menu-navigation-cues-disabled',!menuAudioRuntime.includes("play('latch','drawer',180)")&&!menuAudioRuntime.includes("play('contact','route',260)"));
 add('retired-region-screen-removed',!index.includes('id="region-map"')&&!index.includes('data-target="region-map"')&&!index.includes('pc5152bd-region-situation-map')&&!index.includes('pc5152bf-regional-map-linked-usability'));
 add('retired-relation-screen-removed',!index.includes('id="faction-relation"')&&!index.includes('data-target="faction-relation"'));
@@ -103,7 +105,7 @@ add('current-four-screen-manifest',structureData?.screens?.map(screen=>screen.id
 add('legacy-route-compatibility',menuAudioRuntime.includes("requested==='faction-relation'?'faction-info'")&&menuAudioRuntime.includes("requested==='region-map'?'history'"));
 add('cinematic-registry-four-records',cinematicData?.ids?.().join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicData?.ids?.().join('|'));
 add('cinematic-record-config-owned-by-modules',![cinematicCults,cinematicImmortality,cinematicFerals,cinematicSakuma].some(source=>!source.includes('ProjectCurseCinematicRegistry?.register'))&&main.includes('cinematicRegistry?.get?.(state.activeRecord)')&&main.includes('cinematicRegistry?.pages?.(recordId)'));
-add('retired-expansion-blocks-quarantined',count(main,"if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;")===5);
+add('retired-expansion-blocks-quarantined',count(main,"if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;")>=5);
 [
   'assets/resources/archive-enex/source-records/16b74a6d9fb1cab8522e4ed557cd0b84.mp3',
   'assets/resources/archive-enex/source-records/74b0e497277cdc48a4daf4df1b9241d4.mp3',
