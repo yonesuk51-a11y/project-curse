@@ -6657,16 +6657,30 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       }
     },true);
 
-    document.addEventListener('click',function(e){
+    let lastDrawerActivation=0;
+    function activateDrawerFromEvent(e){
       const menu=e.target.closest && e.target.closest('.pc5152an-menu,.pc584-main-drawer-toggle');
-      if(menu){
-        e.preventDefault();
-        e.stopPropagation();
-        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
-        setDrawer(!body.classList.contains('pc584-main-drawer-open'));
-        syncAudioState();
-        return false;
-      }
+      if(!menu) return false;
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      const now=Date.now();
+      if(now-lastDrawerActivation<650) return true;
+      lastDrawerActivation=now;
+      setDrawer(!body.classList.contains('pc584-main-drawer-open'));
+      syncAudioState();
+      return true;
+    }
+
+    // Some mobile WebViews do not dispatch the synthetic click reliably after
+    // a captured pointerdown. Open on pointerup there, then ignore its follow-up
+    // click so one tap always produces exactly one drawer state change.
+    document.addEventListener('pointerup',function(e){
+      if(!isDesktop()) activateDrawerFromEvent(e);
+    },true);
+
+    document.addEventListener('click',function(e){
+      if(activateDrawerFromEvent(e)) return false;
       const backdrop=e.target.closest && e.target.closest('.pc5152ar-drawer-backdrop');
       if(backdrop){
         e.preventDefault();
@@ -7200,12 +7214,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         }
       }
     }
-    ['touchend','pointerup'].forEach(type=>{
-      document.addEventListener(type,function(e){
-        // Only force touch routing for the mobile drawer. Desktop keeps normal click flow.
-        if(type==='touchend' || isMobile()) handleTap(e);
-      },true);
-    });
+    // A tap already produces a click on current mobile browsers. Listening to
+    // touchend, pointerup and click together toggled the drawer two or three
+    // times, so it could close again before it was ever painted.
     document.addEventListener('click',function(e){
       const t=e.target;
       if(t && t.closest && (t.closest('.pc5152an-menu,.pc584-main-drawer-toggle,.legacy-sidebar,.pc5152ar-drawer-backdrop'))){

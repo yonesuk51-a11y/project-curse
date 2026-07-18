@@ -2,7 +2,6 @@
   'use strict';
   const id=document.body?.dataset.archiveDocument;
   const doc=window.ProjectCurseArchiveDocuments?.documents?.[id];
-  const sourceHtml=window.ProjectCurseArchiveSourceContent?.[id]||'';
   const root=document.getElementById('archiveDocument');
   if(!root) return;
 
@@ -125,17 +124,14 @@
 
   const toc=el('nav','archive-doc-toc');
   toc.setAttribute('aria-label','문서 항목');
-  if(!sourceHtml) doc.sections.forEach((section,index)=>{
+  doc.sections.forEach((section,index)=>{
       const item=link(`${String(index+1).padStart(2,'0')} ${section.title}`,`#section-${index+1}`,'archive-doc-toc-link');
       item.dataset.sectionIndex=String(index+1);
       toc.append(item);
     });
 
   const body=el('div','archive-doc-body');
-  if(sourceHtml){
-    body.classList.add('is-source');
-    body.innerHTML=sourceHtml;
-  }else doc.sections.forEach((section,index)=>{
+  doc.sections.forEach((section,index)=>{
     const part=el('section','archive-doc-section');
     part.id=`section-${index+1}`;
     const heading=el('h2');
@@ -165,15 +161,12 @@
   const footer=el('footer','archive-doc-footer');
   footer.append(el('span','',`END OF RECORD / ${doc.code}`),link('기록 파일 색인으로 돌아가기','../../index.html?return=archive#archive-entry','archive-doc-back'));
   const readingGrid=el('div','archive-doc-reading-grid');
-  if(sourceHtml){
-    readingGrid.classList.add('is-source');
-    readingGrid.append(body);
-  }else readingGrid.append(toc,body);
+  readingGrid.append(toc,body);
   root.append(top,header,meta);
   appendFigure(root,doc.hero,'archive-doc-hero');
   root.append(readingGrid,footer);
 
-  if(!sourceHtml&&'IntersectionObserver' in window){
+  if('IntersectionObserver' in window){
     const links=Array.from(toc.querySelectorAll('.archive-doc-toc-link'));
     const observer=new IntersectionObserver(entries=>{
       const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];

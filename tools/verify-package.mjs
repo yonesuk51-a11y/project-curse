@@ -75,6 +75,8 @@ add('cult-full-length-looping-bgm',statSync(path('assets/audio/pc5152y_cults_ban
 add('feral-custom-bgm',statSync(path('assets/audio/pc5152cf_feral_dying_memories_bgm.mp3')).size>1_000_000,statSync(path('assets/audio/pc5152cf_feral_dying_memories_bgm.mp3')).size);
 add('canon-faction-owner',main.includes('ProjectCurseCanon?.factions'));
 add('canon-relation-owner',count(main,'ProjectCurseCanon?.relationNodes')>=2&&count(main,'ProjectCurseCanon?.relationEdges')>=2);
+add('canon-direct-current-names',!canon.includes('Urban Anomaly Containment')&&!canon.includes('신디케이트')&&!canon.includes('하이문')&&!canon.includes('normalizeTerms')&&!factionAnalysisSource.includes('신디케이트')&&!factionAnalysisSource.includes('하이문')&&!factionAnalysisSource.includes('normalizeTerms'));
+add('mobile-drawer-single-event-owner',main.includes('lastDrawerActivation')&&main.includes("document.addEventListener('pointerup',function(e)")&&main.includes('if(now-lastDrawerActivation<650) return true')&&!main.includes("['touchend','pointerup'].forEach(type=>"));
 add('manifest-runtime-version',structureData?.version===VERSION);
 add('archive-registry-version',archiveData?.version===VERSION);
 const publicArchiveIds=archiveData?.publicRecords?.map(record=>record.id)||[];
@@ -93,7 +95,7 @@ add('archive-five-readable-documents',publicStandaloneRecords.length===5&&public
   const page=read(record.href);
   return page.includes(`data-archive-document="${record.id}"`)&&page.includes('archive-document-data.js')&&page.includes('archive-document.js')&&!/접근 거부|READ PERMISSION: DENIED|ACCESS: SEALED/.test(page);
 }));
-add('archive-document-source-single-owner',['Unknown_Record1_860204','Unknown_Record2_860205','Unknown_Record3_920711','Unknown_Record4_930314'].every(id=>!read(`docs/${id}/index.html`).includes('archive-source-content.js')));
+add('archive-document-source-single-owner',!existsSync(path('assets/js/data/archive-source-content.js'))&&!read('assets/js/pages/archive-document.js').includes('ProjectCurseArchiveSourceContent'));
 add('archive-legacy-index-removed-at-runtime',archiveRuntime.includes("qa(':scope > .archive-groups',wrap).forEach(legacy=>legacy.remove())"));
 add('sakuma-inline-gesture-entry',archiveData?.publicRecords?.find(record=>record.id==='Sakuma_Tape_991028')?.presentation==='cinematic'&&!archiveData?.publicRecords?.find(record=>record.id==='Sakuma_Tape_991028')?.href&&read('docs/Sakuma_Tape_991028/index.html').includes('id="sakumaSequenceStart"')&&read('docs/Sakuma_Tape_991028/index.html').includes("start?.('Sakuma_Tape_991028')"));
 add('archive-feral-standalone-gesture-fallback',read('docs/Ferals_860722/index.html').includes('기록 열람 시작')&&!read('docs/Ferals_860722/index.html').includes("setTimeout(start,80)")&&read('docs/Ferals_860722/index.html').includes("start?.('Ferals_860722')"));
@@ -111,7 +113,7 @@ const restoredFerals=restoredDocuments.Ferals_860722;
 const feralCinematic=context.window.ProjectCurseFeralCinematic;
 add('archive-zone-term-colors',archiveDocumentRuntime.includes("'그린존':'green'")&&archiveDocumentRuntime.includes("'레드존':'red'")&&read('assets/css/archive-document.css').includes('.archive-term-black'));
 add('archive-rich-document-runtime',archiveDocumentRuntime.includes('appendFigure')&&archiveDocumentRuntime.includes('appendTable')&&archiveDocumentRuntime.includes('section.groups'));
-add('archive-zone-guide',restoredZone?.presentation==='guide'&&restoredZone?.sections?.length===7&&JSON.stringify(restoredZone).includes('화이트존은 그린존과 옐로우존 사이에 있는 안전 단계가 아니다')&&JSON.stringify(restoredZone).includes('United Nations Anomaly Containment')&&JSON.stringify(restoredZone).includes('국제연합 산하기관은 아닌 독립기관'),`${restoredZone?.sections?.length||0} sections / ${JSON.stringify(restoredZone||{}).length} chars`);
+add('archive-zone-guide',restoredZone?.presentation==='guide'&&restoredZone?.sections?.length===4&&JSON.stringify(restoredZone).includes('화이트존은 그린존과 옐로우존 사이에 있는 안전 단계가 아니다')&&JSON.stringify(restoredZone).includes('United Nations Anomaly Containment')&&JSON.stringify(restoredZone).includes('국제연합 산하기관은 아닌 독립기관')&&!JSON.stringify(restoredZone).includes('Level 7'),`${restoredZone?.sections?.length||0} sections / ${JSON.stringify(restoredZone||{}).length} chars`);
 add('archive-redzone-not-public',!archiveRegistry.includes("id:'Redzone_881120'"));
 add('archive-restored-canon-terms',![restoredZone,restoredRedzone].some(document=>/Urban Anomaly|도시 이상현상 격리국|신디케이트|하이먼/.test(JSON.stringify(document))));
 const restoredMedia=[restoredZone?.hero,...(restoredRedzone?.sections||[]).map(section=>section.image)].filter(Boolean);
