@@ -2500,7 +2500,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     const IMMORTALITY_RECORD='Immortality_860201';
     const FERALS_RECORD='Ferals_860722';
     const SAKUMA_RECORD='Sakuma_Tape_991028';
-    const SEQUENCE_RECORDS = new Set(['Cults_871104', IMMORTALITY_RECORD, FERALS_RECORD, SAKUMA_RECORD]);
+    const cinematicRegistry=window.ProjectCurseCinematicRegistry;
+    const SEQUENCE_RECORDS=new Set(cinematicRegistry?.ids?.()||[]);
     const state = {
       overlay:null,
       pageIndex:0,
@@ -3198,96 +3199,17 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       }
 ];
 
+    window.ProjectCurseLegacyCinematicSources=Object.freeze({
+      cults:pages,
+      immortality:immortalityPages
+    });
+
     function getActivePages(){
       return state.pages || pages;
     }
 
     function getSequenceConfig(){
-      if(state.activeRecord===IMMORTALITY_RECORD){
-        return {
-          key:'immortality',
-          sourceLabel:'U.A.C / ORIGINAL RECORD',
-          bodyClass:'pc5152q-immortality-sequence',
-          introVideo:'assets/video/pc5152r_immortality_recordopen_static_13_27.mp4',
-          transitionVideo:'assets/video/pc5152q_immortality_fhc_transition_204_209.mp4',
-          endingVideo:'',
-          bgm:'assets/audio/pc5152am_immortality_scp087_theme.mp3',
-          bgmVolume:.52,
-          introVolume:.09,
-          transitionVolume:.72,
-          introFallback:14650,
-          transitionFallback:5650,
-          mountTitle:'기록 불러오는 중',
-          mountLines:[
-            'F.H.C SOURCE ....... 감지',
-            'VIDEO MARK ......... CONFIRMED',
-            'TEXT BLOCK ......... 부분',
-            'LOCAL ACCESS ....... ACCEPTED'
-          ],
-          mountHint:'READ PERMISSION: ORIGINAL RECORD / IMMORTALITY ATTACHED'
-        };
-      }
-      if(state.activeRecord===FERALS_RECORD){
-        return {
-          key:'cult',
-          sourceLabel:'U.A.C / FERAL CLASSIFICATION',
-          bodyClass:'pc5152h-cult-source-sequence',
-          introVideo:'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4',
-          transitionVideo:'assets/video/pc5152m_vhs_transition_18_21_sound.mp4',
-          endingVideo:'',
-          bgm:window.ProjectCurseFeralCinematic?.bgm||'assets/audio/pc5152cf_feral_dying_memories_bgm.mp3',
-          bgmVolume:.34,
-          introVolume:.18,
-          transitionVolume:.24,
-          introFallback:10450,
-          transitionFallback:3750,
-          mountTitle:'개체 분류 기록 불러오는 중',
-          mountLines:[
-            'CLASSIFICATION MAP ....... RESTORED',
-            'ENTITY FRAME ............. 12 FILES',
-            'FIELD DOCTRINE ........... CURRENT',
-            'LOCAL ACCESS ............. ACCEPTED'
-          ],
-          mountHint:'읽기 권한: 복구본 / FERAL SEQUENCE ATTACHED'
-        };
-      }
-      if(state.activeRecord===SAKUMA_RECORD){
-        return {
-          key:'sakuma', sourceLabel:'S.I.D / TOKYO OCCULT ARCHIVE',
-          bodyClass:'pc5152h-cult-source-sequence',
-          introVideo:'assets/video/pc5152cf_sakuma_vhs_intro.mp4',
-          introDuration:5000,
-          transitionVideo:'assets/video/pc5152m_vhs_transition_18_21_sound.mp4', endingVideo:'',
-          bgm:'assets/audio/pc5152cf_sakuma_vcr_hiss_bgm.mp3', bgmVolume:.36,
-          birthdayAudio:'assets/audio/pc5152cf_sakuma_birthday_cue.mp3',
-          birthdayVideo:'assets/video/pc5152cf_sakuma_end_transition.mp4',
-          introVolume:.42, transitionVolume:.24, transitionFallback:3750,
-          mountTitle:'사쿠마의 테이프 불러오는 중',
-          mountLines:['S.I.D TOKYO ............ 연결','OCCULT CASE ............ 복구','VIDEO SIGNAL ........... 확인','LOCAL ACCESS ........... 허가'],
-          mountHint:'읽기 권한: S.I.D 오컬트 부서 / VIDEO RECORD ATTACHED'
-        };
-      }
-      return {
-        key:'cult',
-        sourceLabel:'F.H.C / LOCAL COPY',
-        bodyClass:'pc5152h-cult-source-sequence',
-        introVideo:'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4',
-        transitionVideo:'assets/video/pc5152m_vhs_transition_18_21_sound.mp4',
-        endingVideo:'',
-        bgm:'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
-        bgmVolume:.30,
-        introVolume:.18,
-        transitionVolume:.24,
-        introFallback:10450,
-        transitionFallback:3750,
-        mountTitle:'기록 불러오는 중',
-        mountLines:[
-          'VIDEO FRAME ....... DAMAGED',
-          '본문 블록 ........ 부분 복구',
-          '로컬 접근 ........ 허가'
-        ],
-        mountHint:'읽기 권한: 로컬 / SEQUENCE ATTACHED'
-      };
+      return cinematicRegistry?.get?.(state.activeRecord)||null;
     }
 
 
@@ -4115,9 +4037,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       silenceMenuAmbientDuringSequence();
       hardResetSequenceRuntime();
       state.activeRecord=recordId;
-      state.pages=(recordId===IMMORTALITY_RECORD)
-        ?immortalityPages
-        :(recordId===FERALS_RECORD?(window.ProjectCurseFeralCinematic?.pages||[]):(recordId===SAKUMA_RECORD?(window.ProjectCurseSakumaCinematic?.pages||[]):pages));
+      state.pages=cinematicRegistry?.pages?.(recordId)||[];
       if(!state.pages.length) return false;
       state.pageIndex=0;
       state.finishing=false;
@@ -4517,7 +4437,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       noiseMode:'global terminal noise reduced; VHS/video overlay isolated to sequence'
     });
     window.ProjectCurseRecordCinematic={
-      version:'5.15.2cf',
+      version:'5.15.2cl',
       start:startSequence,
       previous:previousSequence,
       next:advanceSequence,
@@ -8058,6 +7978,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 // MapPatch 5.15.2bw — NarrativeContinuity_ContentPolishPass
 // Content-only polish: continuity links, archive annotations, marker notes, effect-use audit. No layout renderer replacement.
 (function(){
+  if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;
   const q=(s,r=document)=>r.querySelector(s);
   const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -8220,6 +8141,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 // Fixes inactive faction filters, replaces relation selection with stable highlight-only graph,
 // expands regional situation markers, and adds archive/content gap QA. No new media files.
 (function(){
+  if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;
   const PATCH='5.15.2bx';
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true}); else fn(); };
   const q=(s,r=document)=>r.querySelector(s);
@@ -8522,6 +8444,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 // Fills the previously empty archive axes: phenomenon, infrastructure, equipment, faction.
 // Also softens relation selection dimming and strengthens regional situation intel panels.
 (function(){
+  if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;
   const PATCH='5.15.2by';
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true}); else fn(); };
   const q=(s,r=document)=>r.querySelector(s);
@@ -8654,6 +8577,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 // MapPatch 5.15.2bz2 — OriginalityAuditContext_WithdrawalCriteriaHotfix
 // Keeps the 2bz content pass and fixes taxonomy QA against the intentionally removed legacy codex.
 (function(){
+  if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;
   const PATCH='5.15.2bz2';
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true}); else fn(); };
   const q=(s,r=document)=>r.querySelector(s);
@@ -8784,6 +8708,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 // MapPatch 5.15.2ca — EquipmentArchive_EditorialInteractionPass
 // Final manual-review pass for the six merged equipment / containment records.
 (function(){
+  if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;
   const PATCH='5.15.2ca';
   const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true}); else fn(); };
   const q=(s,r=document)=>r.querySelector(s);

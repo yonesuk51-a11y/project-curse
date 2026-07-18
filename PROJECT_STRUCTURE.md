@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.15.2ck
+# Project Curse Structure — 5.15.2cl
 
 ## 활성 소유권
 
@@ -7,7 +7,12 @@
 | 화면·잠금 기록·오디오 자산 목록 | `assets/js/data/site-manifest.js` |
 | 조직 정사·관계·우시노다 계층 | `assets/js/data/canon-registry.js` |
 | 공개 기록 목록·영상/문서 분류 | `assets/js/data/archive-registry.js` |
-| 기존 영상 기록 렌더러와 보호 본문 | `assets/js/main.js` |
+| 영상 기록 공통 재생 엔진과 보호 본문 | `assets/js/main.js` |
+| 영상 기록 등록·조회 | `assets/js/core/record-cinematic-registry.js` |
+| 종교 영상 설정 | `assets/js/pages/cinematic-cults.js` |
+| 불멸을 향해 영상 설정 | `assets/js/pages/cinematic-immortality.js` |
+| 괴이 영상 설정 | `assets/js/pages/cinematic-ferals.js` |
+| 사쿠마의 테이프 영상 설정 | `assets/js/pages/cinematic-sakuma.js` |
 | 메뉴·기록 오디오 상태 | `assets/js/core/menu-audio-runtime.js` |
 | 공통 중복 연결 정리 | `assets/js/pages/shared-declutter.js` |
 | 비보호 화면 명칭 정합화 | `assets/js/pages/canon-reconciliation.js` |
@@ -21,7 +26,7 @@
 
 ## 데이터 흐름
 
-`site-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`가 먼저 로드된다. `main.js`가 보호된 영상 기록 런타임을 준비한 뒤 오디오 관리자, 기록 색인, 세계 연표, 세력 분석실과 QA 모듈이 각 화면을 소유한다.
+`site-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`가 먼저 로드된다. 영상 데이터 다음에 `record-cinematic-registry.js`와 기록별 설정 네 개가 등록되고, `main.js`의 공통 재생 엔진이 해당 등록 정보만 조회한다. 이후 오디오 관리자, 기록 색인, 세계 연표, 세력 분석실과 QA 모듈이 각 화면을 소유한다.
 
 활성 화면은 `terminal-home`, `history`, `faction-info`, `archive-entry` 네 개다. 폐기된 `region-map`과 `faction-relation`은 DOM을 만들지 않으며 옛 주소만 현행 화면으로 전환한다.
 
@@ -32,6 +37,8 @@
 - 정합화 모듈은 두 인라인 article의 DOM을 명시적으로 제외한다.
 - 패키지 검증기는 인라인·독립 네 범위의 SHA-256을 비교한다.
 
-## 남은 구조 부채
+## 격리한 구조 부채
 
-`assets/js/main.js`에는 보호 기록과 얽힌 과거 fallback 코드가 남아 있다. 화면에 다시 나타나는 경로는 차단했지만, 일괄 삭제는 영상 기록 회귀 가능성이 있어 후속 분리 작업으로 남긴다.
+`assets/js/main.js`에 남은 5.15.2bw~5.15.2ca 지도·관계도·장비 확장 블록은 현행 v3 구조에서 즉시 종료된다. 현재 화면이나 데이터에 개입하지 않으며, 보호 기록 회귀 없이 물리 삭제할 수 있도록 경계를 명시해 두었다.
+
+종교와 불멸을 향해의 페이지 원본은 보호 해시를 지키기 위해 공통 엔진 내부의 읽기 전용 소스로 유지한다. 기록별 영상·음향·마운트 설정과 페이지 공급 책임은 각각의 모듈이 소유한다.

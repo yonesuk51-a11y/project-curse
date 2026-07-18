@@ -42,6 +42,13 @@
       canon:'assets/js/data/canon-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
       legacyRuntime:'assets/js/main.js',
+      cinematicRegistry:'assets/js/core/record-cinematic-registry.js',
+      cinematicRecords:[
+        'assets/js/pages/cinematic-cults.js',
+        'assets/js/pages/cinematic-immortality.js',
+        'assets/js/pages/cinematic-ferals.js',
+        'assets/js/pages/cinematic-sakuma.js'
+      ],
       menuAudio:'assets/js/core/menu-audio-runtime.js',
       declutter:'assets/js/pages/shared-declutter.js',
       reconciliation:'assets/js/pages/canon-reconciliation.js',
