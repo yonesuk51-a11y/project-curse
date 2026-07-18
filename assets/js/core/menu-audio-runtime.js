@@ -42,6 +42,12 @@
       backdrop.setAttribute('aria-hidden',open?'false':'true');
       backdrop.style.pointerEvents=open?'auto':'none';
     });
+    const sidebar=q('.legacy-sidebar');
+    if(sidebar){
+      sidebar.setAttribute('aria-hidden',open?'false':'true');
+      if(open) sidebar.removeAttribute('inert');
+      else sidebar.setAttribute('inert','');
+    }
     try{localStorage.setItem('pc-main-drawer-open',open?'open':'closed');}catch(_e){}
   }
   function sealDrawerClosed(){
@@ -247,6 +253,7 @@
 
   ready(()=>{
     document.body.classList.add('pc5152ce-managed-audio');
+    document.body.classList.add('pc5152cp-site-shell');
     installInitialRoute();
     installBus();
     window.addEventListener('touchstart',event=>{

@@ -1,4 +1,4 @@
-// Project Curse 5.15.2co — shared structure manifest and runtime ownership map
+// Project Curse 5.15.2cp — shared structure manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:'5.15.2co',
+    version:'5.15.2cp',
     schema:'project-curse-structure-v3',
     screens:[
       {id:'terminal-home',label:'단말 상태',index:'00'},
@@ -56,7 +56,8 @@
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',
       qa:'assets/js/qa/structure-qa.js',
       stabilizationCSS:'assets/css/stabilization.css',
-      archiveCSS:'assets/css/archive-consolidation.css'
+      archiveCSS:'assets/css/archive-consolidation.css',
+      siteShellCSS:'assets/css/site-shell.css'
     }
   });
 })(window);

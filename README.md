@@ -1,10 +1,13 @@
 # Project Curse U.A.C Closed Server
 
-Current build: `5.15.2co Runtime Ownership Pass`
+Current build: `5.15.2cp Site Shell Pass`
 
 The current shell has one navigation owner. `runtime-ownership.js` removes
 direct legacy listeners from live menu controls, and `menu-audio-runtime.js`
 alone commits screens, drawer state, button state, and navigation audio.
+`site-shell.css` fixes the system bar, drawer and backdrop into one explicit
+layer order so the mobile drawer begins below the bar and keeps its own touch
+targets above the dimmed content.
 
 정적 PC·모바일 기록 단말 패키지다. 루트의 `index.html`을 열거나 폴더 전체를 GitHub Pages에 배포한다.
 

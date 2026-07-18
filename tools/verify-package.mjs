@@ -4,7 +4,7 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.15.2co';
+const VERSION='5.15.2cp';
 const DATA_VERSION='5.15.2cf';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
@@ -20,7 +20,7 @@ function article(source,id){
 }
 
 const required=[
-  'index.html','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css',
+  'index.html','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/site-shell.css',
   'assets/js/data/site-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/main.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
@@ -82,6 +82,8 @@ add('script-order',positions.every((position,i)=>position>=0&&(i===0||position>p
 add('stabilization-css-link',count(index,'href="assets/css/stabilization.css"')===1);
 add('archive-css-link',count(index,'href="assets/css/archive-consolidation.css"')===1);
 add('record-cinematic-css-link',count(index,'href="assets/css/record-cinematic.css"')===1);
+add('site-shell-css-link',count(index,'href="assets/css/site-shell.css"')===1&&index.indexOf('assets/css/site-shell.css')>index.indexOf('assets/css/faction-analysis.css'));
+add('site-shell-layer-ownership',read('assets/css/site-shell.css').includes('--pc-shell-bar-h')&&read('assets/css/site-shell.css').includes('z-index: 3002 !important')&&read('assets/css/site-shell.css').includes('top: var(--pc-shell-bar-h) !important')&&runtimeOwnership.includes('MENU_HIT_BLOCKED'));
 add('record-cinematic-controls',main.includes('pc-cinematic-controls')&&main.includes('scheduleAutomaticAdvance')&&main.includes('ProjectCurseRecordCinematic'));
 add('record-cinematic-navigation',main.includes('previousSequence')&&main.includes('toggleSequencePlayback')&&main.includes('restartSequence'));
 add('feral-cinematic-runtime',main.includes("const FERALS_RECORD='Ferals_860722'")&&cinematicFerals.includes("id:'Ferals_860722'")&&cinematicFerals.includes('ProjectCurseFeralCinematic?.pages')&&main.includes("recordId!==IMMORTALITY_RECORD && recordId!==SAKUMA_RECORD && cfg.bgm"));
