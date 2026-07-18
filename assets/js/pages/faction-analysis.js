@@ -125,13 +125,13 @@
     const archiveLink = q('a[data-target="archive-entry"]', nav);
     if(factionLink){
       const index = q('i', factionLink); const title = q('b', factionLink); const small = q('small', factionLink);
-      if(index && index.textContent !== '03') index.textContent = '03';
+      if(index && index.textContent !== '02') index.textContent = '02';
       if(title && title.textContent !== '세력 분석실') title.textContent = '세력 분석실';
       if(small && small.textContent !== '기관·관계 기록') small.textContent = '기관·관계 기록';
     }
     if(archiveLink){
       const index = q('i', archiveLink);
-      if(index && index.textContent !== '04') index.textContent = '04';
+      if(index && index.textContent !== '03') index.textContent = '03';
     }
     repairingMenu = false;
   }

@@ -13,8 +13,7 @@
     '#archive-entry .pc5152bx-archive-axis-panel',
     '#archive-entry [data-pc5152by-axis-filter]',
     '#faction-info .pc5152bc-faction-controls',
-    '#faction-info .pc5152bx-faction-filter-status',
-    '#faction-relation .pc5152bc-relation-controls'
+    '#faction-info .pc5152bx-faction-filter-status'
   ];
   const removeSelectors=[
     '.pc5152bg-link-row',
@@ -59,7 +58,7 @@
 
   ready(()=>{
     apply();
-    const roots=['archive-entry','faction-info','faction-relation']
+    const roots=['archive-entry','faction-info']
       .map(id=>document.getElementById(id)).filter(Boolean);
     let queued=false;
     const schedule=()=>{

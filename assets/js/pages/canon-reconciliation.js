@@ -67,14 +67,10 @@
   function reconcileHeaders(){
     const factionTitle=q('#faction-info>h2');
     if(factionTitle && factionTitle.textContent!=='세력 파일 / 조직 기록') factionTitle.textContent='세력 파일 / 조직 기록';
-    const relationTitle=q('#faction-relation>h2');
-    if(relationTitle && relationTitle.textContent!=='세력 관계망 / 정보 분석') relationTitle.textContent='세력 관계망 / 정보 분석';
     const archiveTitle=q('#archive-entry>h2');
     if(archiveTitle && archiveTitle.textContent!=='기록보관소 / 원본 기록 색인') archiveTitle.textContent='기록보관소 / 원본 기록 색인';
     const factionSmall=q('#faction-info .pc5152bc-hub-head small');
     if(factionSmall && factionSmall.textContent!=='권한 승인된 조직 기록.') factionSmall.textContent='권한 승인된 조직 기록.';
-    const relationSmall=q('#faction-relation .pc5152bc-hub-head small');
-    if(relationSmall && relationSmall.textContent!=='확정·비공식·임시 관계를 분리한 현재 기록.') relationSmall.textContent='확정·비공식·임시 관계를 분리한 현재 기록.';
     const archiveSmall=q('#archive-entry .pc5152bc-hub-head small');
     if(archiveSmall && archiveSmall.textContent!=='사건·세력·현상·작전 원본 색인.') archiveSmall.textContent='사건·세력·현상·작전 원본 색인.';
   }
@@ -83,7 +79,7 @@
     document.body?.classList.add('pc5152ce-canon-reconciled');
     reconcileTiles();
     reconcileHeaders();
-    ['history','faction-info','faction-relation','archiveListWrap']
+    ['history','faction-info','archiveListWrap']
       .map(id=>document.getElementById(id)).filter(Boolean).forEach(replaceText);
   }
 
@@ -115,7 +111,7 @@
       queued=true;
       requestAnimationFrame(()=>{queued=false;apply();});
     };
-    ['faction-info','faction-relation','archive-entry'].map(id=>document.getElementById(id)).filter(Boolean)
+    ['faction-info','archive-entry'].map(id=>document.getElementById(id)).filter(Boolean)
       .forEach(root=>{try{new MutationObserver(schedule).observe(root,{childList:true,subtree:true});}catch(_e){}});
     window.ProjectCurseRuntimeModules=window.ProjectCurseRuntimeModules||{};
     window.ProjectCurseRuntimeModules.canonReconciliation={owner:'assets/js/pages/canon-reconciliation.js',apply,check};

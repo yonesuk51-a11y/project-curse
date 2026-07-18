@@ -12,8 +12,6 @@
   const screens=new Set((structure.screens||[]).map(s=>s.id));
   const files=structure.audio?.effects||{};
   const defs={
-    contact:{file:files.contact||'pc5152f_analog_contact_soft.wav',volume:.24,cooldown:260},
-    latch:{file:files.latch||'pc5152h_frame_pop.wav',volume:.16,cooldown:180},
     mount:{file:files.mount||'pc5152h_record_mount_clear.wav',volume:.52,cooldown:720},
     projector:{file:files.projector||'pc5152p_internal_projector_vhs_step.wav',volume:.38,cooldown:180},
     denied:{file:files.denied||'pc5152f_low_denied_oldpc.wav',volume:.58,cooldown:420},
@@ -35,10 +33,10 @@
     const pages=qa('.content-page[id]');
     if(!pages.length) return;
     const requested=(location.hash||'').replace(/^#/,'');
-    const target=screens.has(requested)?requested:'terminal-home';
+    const target=requested==='faction-relation'?'faction-info':(requested==='region-map'?'history':(screens.has(requested)?requested:'terminal-home'));
     pages.forEach(page=>page.classList.toggle('active',page.id===target));
     qa('.side-menu a[data-target]').forEach(link=>link.classList.toggle('active',link.dataset.target===target));
-    if(!requested || !screens.has(requested)){
+    if(!requested || (!screens.has(requested) && requested!=='faction-relation' && requested!=='region-map')){
       try{history.replaceState(null,'','#'+target);}catch(_e){}
     }
   }
@@ -137,7 +135,6 @@
   }
   function syncDrawer(){
     const open=document.body?.classList.contains('pc584-main-drawer-open')||false;
-    if(state.drawer!==null && state.drawer!==open && state.gesture) play('latch','drawer',180);
     state.drawer=open;
   }
   function sync(){
@@ -145,7 +142,6 @@
     installBus();
     syncDrawer();
     const page=activePage();
-    if(state.page && page && page!==state.page && state.gesture) play('contact','route',260);
     state.page=page;
     const next=derive();
     state.mode=next;

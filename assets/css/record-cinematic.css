@@ -1,4 +1,11 @@
 /* MapPatch 5.15.2cf — cinematic playback controls for protected records */
+body.pc5152h-sequence-open .pc5152an-systembar,
+body.pc5152h-sequence-open .legacy-sidebar,
+body.pc5152h-sequence-open .pc5152ar-drawer-backdrop{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important
+}
 .pc5152h-cult-sequence .pc-cinematic-controls{position:fixed;z-index:2147483605;left:50%;bottom:18px;display:none;width:min(760px,calc(100vw - 42px));transform:translateX(-50%);border:1px solid rgba(158,169,174,.2);background:rgba(3,5,6,.88);box-shadow:0 10px 32px rgba(0,0,0,.48);backdrop-filter:blur(7px)}
 .pc5152h-cult-sequence.show.pages-mode .pc-cinematic-controls{display:block}
 .pc5152h-cult-sequence .pc-cinematic-progress{height:2px;overflow:hidden;background:rgba(255,255,255,.09)}

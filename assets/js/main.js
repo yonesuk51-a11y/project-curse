@@ -4105,6 +4105,13 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 
     function startSequence(recordId){
       if(!SEQUENCE_RECORDS.has(recordId)) return false;
+      document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open');
+      const shellMenu=document.querySelector('.pc5152an-menu');
+      if(shellMenu){
+        shellMenu.textContent='☰';
+        shellMenu.setAttribute('aria-expanded','false');
+        shellMenu.setAttribute('aria-label','사이드 메뉴 열기');
+      }
       silenceMenuAmbientDuringSequence();
       hardResetSequenceRuntime();
       state.activeRecord=recordId;
@@ -6482,6 +6489,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     function isDesktop(){ return (window.innerWidth||document.documentElement.clientWidth||0) >= 900; }
     function setDrawer(open){
       body.classList.toggle('pc584-main-drawer-open',!!open);
+      body.classList.toggle('pc5152be-drawer-open',!!open);
       const menu=q('.pc5152an-menu');
       if(menu){
         menu.textContent=open?'×':'☰';
@@ -6658,6 +6666,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     },true);
 
     let lastDrawerActivation=0;
+    let lastSidebarRouteActivation=0;
     function activateDrawerFromEvent(e){
       const menu=e.target.closest && e.target.closest('.pc5152an-menu,.pc584-main-drawer-toggle');
       if(!menu) return false;
@@ -6672,15 +6681,32 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
       return true;
     }
 
+    function activateSidebarRouteFromEvent(e){
+      const link=e.target.closest && e.target.closest('.side-menu a[data-target]');
+      if(!link) return false;
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      const now=Date.now();
+      if(now-lastSidebarRouteActivation<650) return true;
+      lastSidebarRouteActivation=now;
+      routeTo(link.dataset.target||'history');
+      return true;
+    }
+
     // Some mobile WebViews do not dispatch the synthetic click reliably after
     // a captured pointerdown. Open on pointerup there, then ignore its follow-up
     // click so one tap always produces exactly one drawer state change.
     document.addEventListener('pointerup',function(e){
-      if(!isDesktop()) activateDrawerFromEvent(e);
+      if(!isDesktop()){
+        if(activateDrawerFromEvent(e)) return;
+        activateSidebarRouteFromEvent(e);
+      }
     },true);
 
     document.addEventListener('click',function(e){
       if(activateDrawerFromEvent(e)) return false;
+      if(activateSidebarRouteFromEvent(e)) return false;
       const backdrop=e.target.closest && e.target.closest('.pc5152ar-drawer-backdrop');
       if(backdrop){
         e.preventDefault();
@@ -6697,14 +6723,6 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         if(e.stopImmediatePropagation) e.stopImmediatePropagation();
         toggleMenuGroup(heading);
         syncAudioState();
-        return false;
-      }
-      const link=e.target.closest && e.target.closest('.side-menu a[data-target]');
-      if(link){
-        e.preventDefault();
-        e.stopPropagation();
-        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
-        routeTo(link.dataset.target||'history');
         return false;
       }
       if(isRecordAudioState() && isShellTarget(e.target)){
@@ -7066,69 +7084,6 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   });
 })();
 
-// MapPatch 5.15.2bd — RegionalSituationMap_Prototype
-// Local fictional situation map. No external map tiles, no referenced media insertion.
-(function(){
-  function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function initRegionMap(){
-    const root=document.querySelector('[data-pc5152bd-region-root]');
-    if(!root || root.dataset.pc5152bdReady==='1') return;
-    root.dataset.pc5152bdReady='1';
-    const regionBtns=[...root.querySelectorAll('[data-region].pc5152bd-map-toolbar button, .pc5152bd-map-toolbar [data-region]')];
-    const layerBtns=[...root.querySelectorAll('.pc5152bd-map-filters [data-layer]')];
-    const markers=[...root.querySelectorAll('.pc5152bd-marker')];
-    const zones=[...root.querySelectorAll('.pc5152bd-zone,.pc5152bd-line')];
-    const title=root.querySelector('[data-map-title]');
-    const meta=root.querySelector('[data-map-meta]');
-    const note=root.querySelector('[data-map-note]');
-    const list=root.querySelector('.pc5152bd-map-list');
-    let region='world';
-    let layer='all';
-    function matches(el){
-      const r=el.dataset.region||'world';
-      const l=el.dataset.layer||'all';
-      return (region==='world'||r===region) && (layer==='all'||l===layer);
-    }
-    function selectMarker(btn){
-      if(!btn) return;
-      markers.forEach(m=>m.classList.toggle('active',m===btn));
-      if(title) title.textContent=btn.dataset.title||'미지정 좌표';
-      if(meta) meta.textContent=btn.dataset.meta||'SIGNAL 부분';
-      if(note) note.textContent=btn.dataset.note||'복구 가능한 설명이 없다.';
-    }
-    function renderList(){
-      if(!list) return;
-      const visible=markers.filter(matches);
-      list.innerHTML=visible.map(m=>`<button type="button" class="pc5152bd-map-card" data-card-for="${esc(m.textContent.trim())}"><b>${esc(m.dataset.title)}</b><small>${esc(m.dataset.meta)}</small><span>${esc(m.dataset.note)}</span></button>`).join('') || '<div class="pc5152bd-map-card"><b>NO SIGNAL</b><span>현재 필터에서 표시할 좌표가 없다.</span></div>';
-      list.querySelectorAll('[data-card-for]').forEach(card=>{
-        card.addEventListener('click',()=>{
-          const m=markers.find(x=>x.textContent.trim()===card.dataset.cardFor);
-          if(m) selectMarker(m);
-        });
-      });
-    }
-    function update(){
-      regionBtns.forEach(b=>b.classList.toggle('active',(b.dataset.region||'world')===region));
-      layerBtns.forEach(b=>b.classList.toggle('active',(b.dataset.layer||'all')===layer));
-      [...markers,...zones].forEach(el=>{
-        const on=matches(el);
-        el.classList.toggle('pc5152bd-hidden',!on);
-        el.classList.toggle('pc5152bd-dim',!on);
-      });
-      const active=markers.find(m=>m.classList.contains('active') && matches(m)) || markers.find(matches);
-      if(active) selectMarker(active);
-      renderList();
-    }
-    regionBtns.forEach(btn=>btn.addEventListener('click',()=>{region=btn.dataset.region||'world'; update();}));
-    layerBtns.forEach(btn=>btn.addEventListener('click',()=>{layer=btn.dataset.layer||'all'; update();}));
-    markers.forEach(btn=>btn.addEventListener('click',()=>selectMarker(btn)));
-    update();
-  }
-  document.addEventListener('DOMContentLoaded',initRegionMap);
-  setTimeout(initRegionMap,300);
-  setTimeout(initRegionMap,1000);
-  window.ProjectCursePatchState=Object.assign(window.ProjectCursePatchState||{}, {patch5152bd:'RegionalSituationMap Prototype', regionMap:'static local situation board; no external tiles'});
-})();
 
 
 // MapPatch 5.15.2be — MobileDrawer_TapFix
@@ -7231,400 +7186,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   });
 })();
 
-// MapPatch 5.15.2bf — RegionalMap_LinkedUsabilityPass
-// Enhances the static region situation board with status metrics, active mobile cards, and related-record jumps.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    document.body.classList.add('pc5152bf-regional-map-linked-usability');
-    const root=document.querySelector('[data-pc5152bd-region-root]');
-    if(!root || root.dataset.pc5152bfReady==='1') return;
-    root.dataset.pc5152bfReady='1';
-    const $=(s,r=root)=>r.querySelector(s);
-    const $$=(s,r=root)=>Array.from(r.querySelectorAll(s));
-    const markers=$$('.pc5152bd-marker');
-    const regionLabel=$('[data-map-region-label]');
-    const layerLabel=$('[data-map-layer-label]');
-    const countLabel=$('[data-map-count]');
-    const statusEl=$('[data-map-status]');
-    const jumpBtn=$('.pc5152bf-map-jump');
-    const regionNames={world:'세계',eastasia:'동아시아',europe:'유럽',northamerica:'북미',southbelt:'남방권',mideastafrica:'중동·아프리카'};
-    const layerNames={all:'전체',contam:'오염 구역',facility:'작전 시설',phenomenon:'현상 기록',incident:'사건 좌표',line:'봉쇄선'};
-    function activeRegion(){return ($('.pc5152bd-map-toolbar [data-region].active')||{}).dataset?.region || 'world';}
-    function activeLayer(){return ($('.pc5152bd-map-filters [data-layer].active')||{}).dataset?.layer || 'all';}
-    function markerVisible(m){return !m.classList.contains('pc5152bd-hidden') && !m.hidden;}
-    function updateStatusStrip(){
-      const r=activeRegion(), l=activeLayer();
-      if(regionLabel) regionLabel.textContent=regionNames[r]||r;
-      if(layerLabel) layerLabel.textContent=layerNames[l]||l;
-      if(countLabel) countLabel.textContent=String(markers.filter(markerVisible).length);
-    }
-    function syncSelectedExtras(marker){
-      if(!marker) marker=markers.find(m=>m.classList.contains('active')) || markers.find(markerVisible) || markers[0];
-      if(!marker) return;
-      if(statusEl) statusEl.textContent=marker.dataset.status || 'SIGNAL 부분';
-      if(jumpBtn){
-        const label=marker.dataset.linkLabel || '관련 기록 열람';
-        jumpBtn.textContent=label;
-        jumpBtn.dataset.mapJump=marker.dataset.linkTarget || 'archive-entry';
-        jumpBtn.dataset.mapJumpSearch=marker.dataset.linkSearch || '';
-      }
-      $$('.pc5152bd-map-card').forEach(card=>{
-        card.classList.toggle('active', (card.dataset.cardFor||'') === (marker.textContent||'').trim());
-      });
-      updateStatusStrip();
-    }
-    // Rebuild mobile card details after the 2bd renderer has updated them.
-    function enrichCards(){
-      const list=$('.pc5152bd-map-list');
-      if(!list) return;
-      $$('.pc5152bd-map-card',list).forEach(card=>{
-        const code=card.dataset.cardFor;
-        const marker=markers.find(m=>(m.textContent||'').trim()===code);
-        if(!marker || card.dataset.pc5152bfEnriched==='1') return;
-        card.dataset.pc5152bfEnriched='1';
-        const em=document.createElement('em');
-        em.textContent=(marker.dataset.status||'SIGNAL 부분');
-        card.insertBefore(em, card.querySelector('span') || null);
-        card.addEventListener('click',()=>setTimeout(()=>syncSelectedExtras(marker),0));
-      });
-      syncSelectedExtras();
-    }
-    markers.forEach(marker=>{
-      marker.addEventListener('click',()=>setTimeout(()=>syncSelectedExtras(marker),0));
-      marker.addEventListener('pointerup',()=>setTimeout(()=>syncSelectedExtras(marker),0),{passive:true});
-    });
-    $$('.pc5152bd-map-toolbar [data-region],.pc5152bd-map-filters [data-layer]').forEach(btn=>{
-      btn.addEventListener('click',()=>setTimeout(()=>{updateStatusStrip(); enrichCards(); syncSelectedExtras();},0));
-    });
-    if(jumpBtn){
-      jumpBtn.addEventListener('click',()=>{
-        const target=jumpBtn.dataset.mapJump || 'archive-entry';
-        const term=jumpBtn.dataset.mapJumpSearch || '';
-        try{ if(typeof window.showPage==='function') window.showPage(target); }catch(_e){}
-        setTimeout(()=>{
-          if(target==='archive-entry' && term){
-            const search=document.querySelector('#pc5152bcArchiveSearch');
-            if(search){ search.value=term; search.dispatchEvent(new Event('input',{bubbles:true})); }
-          }
-          if(target==='faction-info' && term){
-            const tiles=Array.from(document.querySelectorAll('.faction-tile'));
-            const hit=tiles.find(t=>(t.textContent||'').toLowerCase().includes(term.toLowerCase()));
-            if(hit){ hit.scrollIntoView({block:'center',behavior:'smooth'}); hit.classList.add('pc5152bf-focus-pulse'); setTimeout(()=>hit.classList.remove('pc5152bf-focus-pulse'),900); }
-          }
-        },120);
-      });
-    }
-    const observer=new MutationObserver(()=>{enrichCards(); updateStatusStrip();});
-    const list=$('.pc5152bd-map-list');
-    if(list) observer.observe(list,{childList:true,subtree:true});
-    [0,120,480,1100].forEach(t=>setTimeout(()=>{enrichCards(); syncSelectedExtras(); updateStatusStrip();},t));
-    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {patch5152bf:'RegionalMap LinkedUsabilityPass', regionalMap:'status strip, related record jump, active mobile cards'});
-  });
-})();
 
 
-// MapPatch 5.15.2bg — ArchiveWorldFaction_CrosslinkPass
-// Crosslinks world timeline, faction hub, relation network, region board, and archive metadata.
-// No external assets, no new media, and no audio/effect files are added.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); };
-  ready(function(){
-    const body=document.body;
-    body.classList.add('pc5152bg-crosslink-pass');
-    const q=(s,r=document)=>r.querySelector(s);
-    const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const norm=(v)=>String(v||'').toLowerCase().replace(/\s+/g,' ').trim();
-    const recordMeta={
-      'Cults_871104':{id:'CULTS-871104',category:'종교 / 오염 사례',clearance:'기밀',state:'열람 가능',factions:'F.H.C / 우시노다교 / 타락교 / 혈교',phenomena:'침묵성 타락 / 융합성 타락 / 혈무',region:'권역 미상 / 회수 기록',era:'1987-2000s',history:'우시노다교 대규모 의식 사건',search:'종교'},
-      'Immortality_860201':{id:'BLI-006',category:'작전 로그 / 현장 촬영 기록',clearance:'기밀',state:'부분 복구',factions:'U.A.C / N.H.C / F.H.C',phenomena:'피의 호수 / 이상 안개 / 혈액성 잔류물',region:'독일 본토 ██ 지역',era:'1986',history:'피의 호수 사건',search:'불멸'},
-      '타락 개체_860722':{id:'FCR-860722',category:'개체 분류',clearance:'봉인',state:'권한 없음',factions:'U.A.C / N.H.C / S.I.D',phenomena:'타락 개체 / 상위 개체',region:'복수 레드존',era:'1986-1989',history:'개체·귀환자 분류 갱신',search:'타락 개체'},
-      '불명_Record2_860205':{id:'BL-AUT-860205',category:'부검 / 샘플 분석',clearance:'봉인',state:'권한 없음',factions:'F.H.C / U.A.C',phenomena:'피의 호수 / BL-088 / 부패 정지',region:'북해-독일권',era:'1986',history:'불멸 작전 사후 조사',search:'피의 호수'},
-      'Redzone_881120':{id:'RZ-881120',category:'이상현상 기준',clearance:'봉인',state:'권한 없음',factions:'U.A.C / S.I.D / N.H.C',phenomena:'레드존 / 죽은 시간 / Blood Gate',region:'동아시아 / 국외권',era:'1988',history:'레드존 오염 기준 확장',search:'레드존'},
-      'FCR_Archive_890402':{id:'FCR-890402',category:'개체 추가 보고',clearance:'봉인',state:'권한 없음',factions:'F.H.C / S.I.D',phenomena:'괴이 / 귀환자 / 우시노다교',region:'복수 권역',era:'1989',history:'개체·귀환자 분류 갱신',search:'타락 개체'},
-      'NHC_Manual_891219':{id:'NHC-MAN-891219',category:'현장 규정',clearance:'봉인',state:'권한 없음',factions:'N.H.C / Ash Crew / A.R.F',phenomena:'봉쇄선 / 블랙 태그 / 장비 운용',region:'레드존 인접권',era:'1989',history:'N.H.C 독립 현장 사령부화',search:'N.H.C'},
-      'Sakuma_Tape_991028':{id:'SID-SAK-991028',category:'실종 사건 / 오컬트 수사',clearance:'봉인',state:'권한 없음',factions:'S.I.D / 우시노다교',phenomena:'문서 오염 / 실종 / 도심 침투',region:'일본 도쿄',era:'1999',history:'사쿠마 유타 실종 사건',search:'사쿠마'},
-      '불명_Record1_860204':{id:'AMR-REC-860204',category:'회수 영상',clearance:'봉인',state:'권한 없음',factions:'Amarion / F.H.C',phenomena:'저접근 자기 변형 / 자원 회수',region:'비인가 연구권',era:'2001',history:'아마리온 사전교육 영상 회수',search:'아마리온'},
-      '불명_Record3_920711':{id:'RW-920711',category:'이탈 기록',clearance:'봉인',state:'권한 없음',factions:'N.H.C / Syndicate / Red Wolf',phenomena:'지휘 체계 이탈',region:'현장 작전권',era:'1992',history:'레드울프 이탈 기록',search:'레드울프'},
-      '불명_Record4_930314':{id:'WPN-930314',category:'병기화 음성 기록',clearance:'봉인',state:'권한 없음',factions:'Syndicate / 우시노다교',phenomena:'감염 병기 / 억제 수단',region:'비인가 연구권',era:'1993',history:'병기화 음성 기록 회수',search:'병기'},
-    };
-    const factionMeta={
-      uac:{name:'U.A.C',role:'상위 통제 / 구역 분류 / 정보 검열',records:['불멸','레드존'],history:'U.A.C 임시 격리국 설치',relation:'institution'},
-      nhc:{name:'N.H.C',role:'레드존 현장 대응 / 봉쇄선 유지',records:['N.H.C','레드울프'],history:'N.H.C 독립 현장 사령부화',relation:'field'},
-      sid:{name:'S.I.D',role:'오컬트 수사 / 민간 구역 감시',records:['사쿠마','레드존'],history:'사쿠마 유타 실종 사건',relation:'institution'},
-      fhc:{name:'F.H.C',role:'회수 문서 분석 / 오염 기록 격납',records:['종교','피의 호수','아마리온'],history:'유럽 분석권 재편',relation:'institution'},
-      amarion:{name:'Amarion',role:'비인가 생명연장·자원 회수 연구',records:['아마리온'],history:'아마리온 사전교육 영상 회수',relation:'unstable'},
-      syndicate:{name:'Syndicate',role:'이탈 네트워크 / 비인가 무장권',records:['레드울프','병기'],history:'레드울프 이탈 기록',relation:'unstable'},
-      ushinoda:{name:'Ushnoda Cult',role:'우시노다교 / 의식성 오염 근원',records:['종교','사쿠마'],history:'우시노다교 대규모 의식 사건',relation:'cult'},
-      haimun:{name:'Haimun',role:'도심 침투 / 하위 의식 흐름',records:['종교'],history:'우시노다교 대규모 의식 사건',relation:'cult'},
-      ashcrew:{name:'Ash Crew',role:'오염 사체·장비 회수 및 소각',records:['N.H.C','타락 개체'],history:'N.H.C 독립 현장 사령부화',relation:'field'},
-      arf:{name:'A.R.F',role:'샘플·생존자·기록 매체 회수',records:['피의 호수','레드존'],history:'A.R.F 및 C.P.D 체계 확장',relation:'field'},
-      cpd:{name:'C.P.D',role:'민간 보호 / 대피 / 귀환자 분리',records:['레드존','사쿠마'],history:'귀환자 선별 실패 사건',relation:'field'}
-    };
-    const historyLinks=[
-      {test:/피의 호수 사건|불멸 작전 사후 조사/,record:'불멸',region:'BLI-006',faction:'uac'},
-      {test:/U\.A\.C 임시 격리국|구역 위험도/,record:'레드존',faction:'uac'},
-      {test:/레드존 오염 기준|란저우|홍콩/,record:'레드존',region:'란저우',faction:'sid'},
-      {test:/개체·귀환자|여왕형/,record:'타락 개체',faction:'nhc'},
-      {test:/N\.H\.C 독립|레드울프/,record:'N.H.C',faction:'nhc'},
-      {test:/A\.R\.F|C\.P\.D|귀환자 선별/,record:'레드존',faction:'cpd'},
-      {test:/병기화|축복으로 위장/,record:'병기',faction:'syndicate'},
-      {test:/유전자 기록|아마리온/,record:'유전자',faction:'amarion'},
-      {test:/사쿠마/,record:'사쿠마',region:'도쿄',faction:'sid'},
-      {test:/우시노다교|혈교|의식 사건/,record:'종교',faction:'ushinoda'},
-      {test:/오스트레일리아|Black Fringe|이란|인도/,record:'레드존',region:'호주',faction:'arf'}
-    ];
-    function routeTo(id){
-      id=id||'history';
-      try{ if(typeof window.showPage==='function') window.showPage(id); }
-      catch(_e){}
-      if(!document.getElementById(id)){ return; }
-      qa('.content-page').forEach(p=>p.classList.toggle('active',p.id===id));
-      qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',(a.dataset.target||'')===id));
-      try{ history.replaceState(null,'','#'+id); }catch(_e){}
-      const content=q('.legacy-content'); if(content) content.scrollTop=0;
-      if(window.innerWidth<900){ document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open'); }
-    }
-    function focusEl(el){
-      if(!el) return;
-      el.scrollIntoView({block:'center',behavior:'smooth'});
-      el.classList.add('pc5152bg-focus');
-      setTimeout(()=>el.classList.remove('pc5152bg-focus'),1200);
-    }
-    function setArchive(term){
-      routeTo('archive-entry');
-      setTimeout(()=>{
-        const allFilter=q('[data-pc5152bc-archive="all"]');
-        if(allFilter) allFilter.click();
-        const input=q('#pc5152bcArchiveSearch');
-        if(input){ input.value=term||''; input.dispatchEvent(new Event('input',{bubbles:true})); }
-        const hit=qa('#archiveListWrap .doc-card').find(c=>norm(c.textContent).includes(norm(term)) && !c.classList.contains('pc5152bc-filter-hidden'));
-        focusEl(hit);
-      },140);
-    }
-    function setHistory(term){
-      routeTo('history');
-      setTimeout(()=>{
-        const item=qa('#history .timeline-list > div').find(el=>norm(el.textContent).includes(norm(term)));
-        focusEl(item);
-      },140);
-    }
-    function setFaction(key){
-      routeTo('faction-info');
-      setTimeout(()=>{
-        const tile=q(`.faction-tile[data-key="${String(key||'').replace(/"/g,'\\"')}"]`);
-        if(tile){ tile.click(); focusEl(tile); updateFactionPanel(tile.dataset.key); }
-      },140);
-    }
-    function setRelation(kind,key){
-      routeTo('faction-relation');
-      setTimeout(()=>{
-        const btn=q(`[data-pc5152bc-relation="${kind||'all'}"]`);
-        if(btn) btn.click();
-        const node=key ? q(`[data-pc5134-node="${key}"]`) : null;
-        if(node){ node.click(); focusEl(node); }
-      },220);
-    }
-    function setRegion(term){
-      routeTo('region-map');
-      setTimeout(()=>{
-        const markers=qa('.pc5152bd-marker');
-        const hit=markers.find(m=>norm(m.dataset.title+' '+m.dataset.note+' '+m.textContent).includes(norm(term)));
-        if(hit){ hit.click(); focusEl(hit); }
-      },160);
-    }
-    function miniBtn(label,action,data){
-      const b=document.createElement('button'); b.type='button'; b.className='pc5152bg-mini-btn'; b.textContent=label; b.dataset.pc5152bgAction=action;
-      Object.entries(data||{}).forEach(([k,v])=>{ if(v!=null) b.dataset[k]=v; });
-      return b;
-    }
-    function linkRow(buttons){
-      const row=document.createElement('div'); row.className='pc5152bg-link-row';
-      buttons.filter(Boolean).forEach(b=>row.appendChild(b));
-      return row;
-    }
-    function replaceHubEnglish(){
-      const map=[['#history .pc5152bc-hub-head span','세계'],['#faction-info .pc5152bc-hub-head span','세력'],['#faction-relation .pc5152bc-hub-head span','관계도'],['#archive-entry .pc5152bc-hub-head span','기록보관실']];
-      map.forEach(([sel,text])=>{const el=q(sel); if(el) el.textContent=text;});
-    }
-    function enrichArchiveCards(){
-      qa('#archiveListWrap .doc-card').forEach(card=>{
-        if(card.dataset.pc5152bgMeta==='1') return;
-        const code=(q('.code',card)?.textContent||card.dataset.sealedRecord||'').trim();
-        const key=recordMeta[code] ? code : Object.keys(recordMeta).find(k=>norm(code).includes(norm(k)) || norm(card.textContent).includes(norm(recordMeta[k].id)) || norm(card.textContent).includes(norm(k)) );
-        const meta=recordMeta[key]; if(!meta) return;
-        card.dataset.pc5152bgMeta='1';
-        card.dataset.pc5152bgRecordId=meta.id;
-        const dl=document.createElement('dl'); dl.className='pc5152bg-record-meta';
-        [['ID',meta.id],['분류',meta.category],['등급',meta.clearance],['상태',meta.state],['세력',meta.factions],['현상',meta.phenomena],['지역',meta.region],['시대',meta.era]].forEach(([dt,dd])=>{
-          const dte=document.createElement('dt'); dte.textContent=dt;
-          const dde=document.createElement('dd'); dde.textContent=dd;
-          dl.append(dte,dde);
-        });
-        const p=q('p.muted',card) || q('p',card) || q('.status-row',card) || card;
-        p.insertAdjacentElement('afterend',dl);
-        const actions=linkRow([
-          miniBtn('연표', 'history', {term:meta.history}),
-          miniBtn('세력', 'factionSearch', {term:meta.factions.split('/')[0].trim()}),
-          miniBtn('상황도', 'region', {term:meta.region.includes('독일')?'BLI-006':meta.region.split('/')[0].trim()})
-        ]);
-        const open=q('.open-record,.pc5152aa-locked-record',card);
-        if(open) open.insertAdjacentElement('beforebegin',actions); else card.appendChild(actions);
-      });
-    }
-    function enrichHistory(){
-      const list=q('#history .timeline-list'); if(!list) return;
-      qa(':scope > div',list).forEach(item=>{
-        if(item.dataset.pc5152bgLinks==='1') return;
-        const text=item.textContent||'';
-        const found=historyLinks.find(h=>h.test.test(text)); if(!found) return;
-        item.dataset.pc5152bgLinks='1';
-        const row=linkRow([
-          found.record && miniBtn('관련 기록', 'archive', {term:found.record}),
-          found.faction && miniBtn('관련 세력', 'faction', {key:found.faction}),
-          found.region && miniBtn('상황도', 'region', {term:found.region})
-        ]);
-        item.appendChild(row);
-      });
-    }
-    let factionPanel=null;
-    function ensureFactionPanel(){
-      if(factionPanel && factionPanel.isConnected) return factionPanel;
-      const grid=q('#faction-info .faction-grid'); if(!grid) return null;
-      factionPanel=document.createElement('aside');
-      factionPanel.className='pc5152bg-faction-crosspanel';
-      factionPanel.setAttribute('aria-live','polite');
-      factionPanel.innerHTML='<b>세력 연결 대기</b><span>세력 카드를 선택하면 관련 기록과 사건 좌표가 표시된다.</span>';
-      grid.insertAdjacentElement('afterend',factionPanel);
-      return factionPanel;
-    }
-    function updateFactionPanel(key){
-      const meta=factionMeta[key] || factionMeta[norm(key)];
-      const panel=ensureFactionPanel(); if(!panel || !meta) return;
-      const activeKey=String(key||'');
-      if(panel.dataset.pc5152bgActiveKey===activeKey && panel.childElementCount>1) return;
-      panel.dataset.pc5152bgActiveKey=activeKey;
-      panel.innerHTML='';
-      const h=document.createElement('b'); h.textContent=meta.name;
-      const s=document.createElement('span'); s.textContent=meta.role;
-      const chips=document.createElement('div'); chips.className='pc5152bg-mini-meta';
-      ['관련 기록: '+meta.records.join(' / '),'관련 사건: '+meta.history].forEach(t=>{const i=document.createElement('i'); i.textContent=t; chips.appendChild(i);});
-      const row=linkRow([
-        miniBtn('기록 검색','archive',{term:meta.records[0]}),
-        miniBtn('세계사 위치','history',{term:meta.history}),
-        miniBtn('관계도','relation',{kind:meta.relation,key:key})
-      ]);
-      panel.append(h,s,chips,row);
-    }
-    function enrichFactions(){
-      ensureFactionPanel();
-      qa('#faction-info .faction-tile').forEach(tile=>{
-        if(tile.dataset.pc5152bgDone!=='1'){
-          tile.dataset.pc5152bgDone='1';
-          const meta=factionMeta[tile.dataset.key];
-          if(meta){
-            const tag=document.createElement('em'); tag.className='pc5152bg-tile-tag'; tag.textContent=meta.records[0]+' 연결';
-            tile.appendChild(tag);
-          }
-          tile.addEventListener('click',()=>setTimeout(()=>updateFactionPanel(tile.dataset.key),0));
-        }
-      });
-      const active=q('#faction-info .faction-tile.active') || q('#faction-info .faction-tile');
-      if(active) updateFactionPanel(active.dataset.key);
-    }
-    let relationPanel=null;
-    function ensureRelationPanel(){
-      if(relationPanel && relationPanel.isConnected) return relationPanel;
-      const hub=q('#faction-relation .pc5152bc-relation-hub'); if(!hub) return null;
-      relationPanel=document.createElement('aside');
-      relationPanel.className='pc5152bg-relation-detail';
-      relationPanel.setAttribute('aria-live','polite');
-      relationPanel.innerHTML='<b>관계 노드 대기</b><span>노드를 선택하면 관련 세력과 기록으로 이어진다.</span>';
-      hub.insertAdjacentElement('afterend',relationPanel);
-      return relationPanel;
-    }
-    function updateRelationPanel(key){
-      const meta=factionMeta[key] || factionMeta[norm(key)];
-      const panel=ensureRelationPanel(); if(!panel || !meta) return;
-      const activeKey=String(key||'');
-      if(panel.dataset.pc5152bgActiveKey===activeKey && panel.childElementCount>1) return;
-      panel.dataset.pc5152bgActiveKey=activeKey;
-      panel.innerHTML='';
-      const h=document.createElement('b'); h.textContent=meta.name;
-      const s=document.createElement('span'); s.textContent=meta.role;
-      const row=linkRow([
-        miniBtn('세력 상세','faction',{key:key}),
-        miniBtn('관련 기록','archive',{term:meta.records[0]}),
-        miniBtn('세계사','history',{term:meta.history})
-      ]);
-      panel.append(h,s,row);
-    }
-    function enrichRelation(){
-      ensureRelationPanel();
-      qa('[data-pc5134-node]').forEach(node=>{
-        if(node.dataset.pc5152bgNode==='1') return;
-        node.dataset.pc5152bgNode='1';
-        node.setAttribute('tabindex',node.getAttribute('tabindex')||'0');
-        node.addEventListener('click',()=>setTimeout(()=>updateRelationPanel(node.getAttribute('data-pc5134-node')),0));
-        node.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); updateRelationPanel(node.getAttribute('data-pc5134-node')); }});
-      });
-      qa('[data-pc5152bc-rel-card]').forEach(card=>{
-        if(card.dataset.pc5152bgRelCard==='1') return;
-        card.dataset.pc5152bgRelCard='1';
-        const kind=card.dataset.pc5152bcRelCard||'all';
-        const key=kind==='cult'?'ushinoda':kind==='field'?'nhc':kind==='unstable'?'syndicate':'uac';
-        card.appendChild(linkRow([miniBtn('세부 보기','relation',{kind:kind,key:key}), miniBtn('기록 검색','archive',{term:factionMeta[key]?.records?.[0]||''})]));
-      });
-    }
-    function enrichRegionBacklinks(){
-      const root=q('[data-pc5152bd-region-root]'); if(!root || root.dataset.pc5152bgRegion==='1') return;
-      root.dataset.pc5152bgRegion='1';
-      const note=document.createElement('div');
-      note.className='pc5152bg-map-hint';
-      note.innerHTML='<b>연결 규칙</b><span>마커는 기록보관실·세계사·세력 허브 중 하나로 이어진다. 지도 내부에는 긴 설명을 넣지 않는다.</span>';
-      const status=q('.pc5152bf-map-status',root);
-      if(status) status.insertAdjacentElement('afterend',note);
-    }
-    function handleAction(btn){
-      const action=btn.dataset.pc5152bgAction;
-      if(action==='archive') setArchive(btn.dataset.term||'');
-      else if(action==='history') setHistory(btn.dataset.term||'');
-      else if(action==='faction') setFaction(btn.dataset.key||'uac');
-      else if(action==='factionSearch'){
-        const term=norm(btn.dataset.term||'');
-        const found=Object.entries(factionMeta).find(([k,v])=>norm(v.name+' '+v.role).includes(term) || term.includes(norm(v.name)));
-        if(found) setFaction(found[0]); else routeTo('faction-info');
-      }
-      else if(action==='relation') setRelation(btn.dataset.kind||'all',btn.dataset.key||'uac');
-      else if(action==='region') setRegion(btn.dataset.term||'');
-    }
-    document.addEventListener('click',function(e){
-      const btn=e.target && e.target.closest && e.target.closest('[data-pc5152bg-action]');
-      if(!btn) return;
-      e.preventDefault(); e.stopPropagation();
-      handleAction(btn);
-    },true);
-    function boot(){ replaceHubEnglish(); enrichArchiveCards(); enrichHistory(); enrichFactions(); enrichRelation(); enrichRegionBacklinks(); }
-    let bootQueued=0;
-    function queueBoot(delay){
-      clearTimeout(bootQueued);
-      bootQueued=setTimeout(()=>{ try{ boot(); }catch(_e){} }, delay==null?80:delay);
-    }
-    boot();
-    [220,900,1800].forEach(t=>setTimeout(()=>queueBoot(0),t));
-    ['hashchange','pageshow','resize','orientationchange'].forEach(ev=>window.addEventListener(ev,()=>queueBoot(120),{passive:true}));
-    document.addEventListener('click',function(e){
-      if(e.target && e.target.closest && e.target.closest('.side-menu,[data-target],.sub-tab,.detail-tab,[data-pc5152bc-era],[data-pc5152bc-archive],[data-pc5152bc-faction],[data-pc5152bc-relation]')) queueBoot(140);
-    },true);
-    const limitedRoots=['#archiveListWrap','#history .timeline-list','#faction-info','#faction-relation','[data-pc5152bd-region-root]'];
-    limitedRoots.forEach(sel=>{
-      const el=q(sel);
-      if(!el) return;
-      try{ new MutationObserver(()=>queueBoot(160)).observe(el,{childList:true,subtree:false}); }catch(_e){}
-    });
-    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {patch5152bg:'ArchiveWorldFaction CrosslinkPass', crosslinks:'archive/world/faction/relation/region hubs connected with compact metadata and action chips', patch5152bhBootGuard:'whole-body observer removed; crosslink refresh is throttled and scoped'});
-  });
-})();
 
 
 // MapPatch 5.15.2bh — WorldbuildingCodex_BootFix
@@ -7824,10 +7387,10 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
         <small>폐쇄 기록 색인</small>
       </div>
       <div class="pc5152bj-nav-list">
+        <a data-target="terminal-home" href="#terminal-home"><i>00</i><b>단말 상태</b><small>폐쇄 서버</small></a>
         <a data-target="history" href="#history"><i>01</i><b>세계 사건 연표</b><small>세계 연표</small></a>
-        <a data-target="faction-relation" href="#faction-relation"><i>02</i><b>관계도</b><small>관계 흔적</small></a>
-        <a data-target="faction-info" href="#faction-info"><i>03</i><b>세력 파일</b><small>세력 파일</small></a>
-        <a data-target="archive-entry" href="#archive-entry"><i>04</i><b>기록보관실</b><small>회수 색인</small></a>
+        <a data-target="faction-info" href="#faction-info"><i>02</i><b>세력 분석실</b><small>기관·관계 기록</small></a>
+        <a data-target="archive-entry" href="#archive-entry"><i>03</i><b>기록보관실</b><small>회수 색인</small></a>
       </div>`;
     nav.addEventListener('click',function(e){
       const a=e.target.closest && e.target.closest('a[data-target]');
@@ -7840,12 +7403,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     qa('.pc5152bh-world-codex,.pc5152bh-writing-guide,.pc5152bi-qa-note,.pc5152bg-map-hint').forEach(el=>el.remove());
     qa('.pc5152bh-event-tag').forEach(el=>el.remove());
     // Do not expose implementation phrasing inside the archive.
-    const intro=q('.pc5152bd-map-intro');
-    if(intro) intro.textContent='폐쇄 단말에서 복구된 권역별 위험 신호다. 좌표 일부는 손상되어 실제 위치와 오차가 남아 있다.';
     const factionSmall=q('#faction-info .pc5152bc-hub-head small');
     if(factionSmall) factionSmall.textContent='감시 대상 기관과 비인가 세력의 요약 색인이다.';
-    const relationSmall=q('#faction-relation .pc5152bc-hub-head small');
-    if(relationSmall) relationSmall.textContent='U.A.C 기준으로 복구된 감청 관계망이다.';
     const archiveSmall=q('#archive-entry .pc5152bc-hub-head small');
     if(archiveSmall) archiveSmall.textContent='회수된 기록 일부만 열람 가능하다.';
     const historySmall=q('#history .pc5152bc-hub-head small');
@@ -7876,7 +7435,9 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   }
   function run(){
     document.body.classList.add('pc5152bj-immersive-nav-density-cleanup');
-    if((location.hash||'').slice(1)==='region-map') routeTo('history');
+    const legacy=(location.hash||'').slice(1);
+    if(legacy==='region-map') routeTo('history');
+    if(legacy==='faction-relation') routeTo('faction-info');
     flatSidebar(); removeMetaPanels(); trimVisibleLabels(); syncActive();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run,{once:true}); else run();
@@ -8012,202 +7573,6 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 
 // MapPatch 5.15.2bm/2bn retired in 5.15.2bo — previous faction/relation renderers removed to prevent overlap.
 
-// MapPatch 5.15.2bo — FactionRelation_RenderFixPass
-// Single-owner hotfix: removes legacy faction/relation render overlap and forces U.A.C-centered relation map.
-(function(){
-  const ready=(fn)=>{ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true}); else fn(); };
-  const q=(s,r=document)=>r.querySelector(s);
-  const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const esc=(v)=>String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const factionData=window.ProjectCurseCanon?.factions||{
-    uac:{name:'U.A.C',sub:'Urban Anomaly Control',cat:'기관',status:'가동 / 중앙 통제',zone:'전역 폐쇄권',risk:'기록 검열 / 구역 격상',summary:'U.A.C는 폐쇄 권역의 분류와 기록 검열을 총괄한다. 현장 진입은 직접 수행하지 않고 N.H.C와 S.I.D를 통해 집행한다.',roles:['구역 등급 판정','봉쇄 명령 승인','기록 회수 권한 관리','기관 간 작전 조율'],links:['N.H.C','S.I.D','F.H.C','C.P.D','A.R.F'],records:['REC-BLI-006','ZONE-CLASS','Redzone_881120'],event:'피의 호수 사건 이후 상위 통제 기관으로 고정되었다.'},
-    nhc:{name:'N.H.C',sub:'National Hazard Control',cat:'현장',status:'가동 / 현장 지휘',zone:'레드존 인접권',risk:'작전 손실 / 봉쇄선 붕괴',summary:'N.H.C는 레드존과 블랙존 인접 지역에 투입되는 현장 대응 조직이다. 괴이 제압, 방어선 유지, 생존자 제한 회수를 담당한다.',roles:['레드존 방어선 유지','타락 개체 제압','고위험 구역 봉쇄','회수 실패 지점 소각 판단'],links:['U.A.C','A.R.F','C.P.D','Ash Crew'],records:['NHC_Manual_891219','FCR_Archive_890402'],event:'U.A.C 산하 현장 부서에서 독립 작전 조직으로 재편되었다.'},
-    sid:{name:'S.I.D',sub:'Special Investigation Department',cat:'기관',status:'가동 / 감시',zone:'도심 감시권',risk:'신호 오염 / 진술 왜곡',summary:'S.I.D는 이상현상과 오컬트 사건을 조사하는 특수 조사 기관이다. 현장 진술, 감청 기록, 의식 흔적을 대조한다.',roles:['사건 현장 조사','감청 기록 분석','민간 구역 감시','우시노다교 흔적 판독'],links:['U.A.C','F.H.C','Haimun'],records:['Sakuma_Tape_991028','Redzone_881120'],event:'도심형 오컬트 사건 증가 이후 독립 조사권을 확보했다.'},
-    fhc:{name:'F.H.C',sub:'봉인 기록 관리부',cat:'기관',status:'봉인 / 제한',zone:'봉인 기록권',risk:'기록 역오염',summary:'F.H.C는 의식 기록과 비인가 연구 자료를 봉인한다. 일부 문서는 열람 흔적 자체가 감시 대상이다.',roles:['회수 문서 봉인','종교 기록 분석','오염 문장 검열','위험 연구 자료 격리'],links:['U.A.C','S.I.D','Amarion','Ushnoda Cult'],records:['Cults_871104','Unknown_Record1_860204'],event:'타락교와 혈교 기록 대부분이 F.H.C 경로로 봉인되었다.'},
-    amarion:{name:'Amarion',sub:'민간 연구망',cat:'기업',status:'감시 / CLEARANCE MISMATCH',zone:'Black Site 후보',risk:'비인가 연구 / 기업 은폐',summary:'Amarion은 공식 협력 범위를 벗어난 연구 흔적을 남긴 기업 세력이다. 회수 영상 일부는 교육 자료로 위장되어 있다.',roles:['생체 연구 자료 은닉','Black Site 후보 운용','홍보 자료 위장','F.H.C 감시 회피'],links:['F.H.C','U.A.C','Syndicate'],records:['Unknown_Record1_860204'],event:'비인가 생체 연구 자료가 F.H.C 봉인 기록과 연결되었다.'},
-    syndicate:{name:'Syndicate',sub:'이탈 보급망',cat:'이탈',status:'HOSTILE-감시',zone:'북미 외곽 감시권',risk:'오염 장비 유통',summary:'Syndicate는 이탈 전력과 오염 장비 유통망이 결합된 비인가 네트워크다. 공식 조직으로 분류하기 어렵다.',roles:['오염 장비 유통','이탈 인원 은닉','암시장 회수품 거래','N.H.C 통제선 회피'],links:['N.H.C','A.R.F','Amarion','Haimun'],records:['Unknown_Record3_920711','Unknown_Record4_930314'],event:'레드울프 이탈 기록 이후 감시 대상 네트워크로 재분류되었다.'},
-    ushinoda:{name:'Ushnoda Cult',sub:'우시노다교',cat:'교단',status:'적대 / 의식 근원',zone:'의식 확산권',risk:'Blood Gate / 인신공양',summary:'우시노다교는 의식성 오염의 근원으로 분류된다. 타락교와 혈교 기록의 상위 연결 지점으로 남아 있다.',roles:['의식 거점 유지','타락 개체 발생','혈교·타락교 연결','민간 침투'],links:['U.A.C','F.H.C','S.I.D','Haimun'],records:['Cults_871104','Sakuma_Tape_991028'],event:'초기 인신공양 차단 작전 이후에도 하위 분파를 통해 잔존했다.'},
-    haimun:{name:'Haimun',sub:'하이문',cat:'교단',status:'감시 / 불명',zone:'도심 침투권',risk:'은닉 루트 / 정보 중개',summary:'하이문은 구조가 명확하지 않은 정보 중개망이다. 도심 내부 의식 거점과 연결된 흔적이 반복적으로 남는다.',roles:['정보 중개','의식 거점 은닉','도심 침투','감시 회피'],links:['S.I.D','Ushnoda Cult','Syndicate'],records:['Cults_871104'],event:'S.I.D 감청 기록에서 도심 내부 연결 흔적이 확인되었다.'},
-    ashcrew:{name:'Ash Crew',sub:'Contaminant Disposal Unit',cat:'현장',status:'통제 / 사후 처리',zone:'회수·소각 구역',risk:'현장 누락 / 2차 오염',summary:'Ash Crew는 전투 이후 남은 오염 사체와 잔해를 봉인·소각하는 후속 처리반이다.',roles:['오염 사체 봉인','혈액성 잔류물 소각','블랙 태그 분류','회수 불가 지점 정리'],links:['N.H.C','A.R.F','U.A.C'],records:['NHC_Manual_891219'],event:'현장 정리 실패가 2차 오염으로 이어진 뒤 운용 기준이 강화되었다.'},
-    arf:{name:'A.R.F',sub:'이상현상 회수부대',cat:'현장',status:'가동 / 회수',zone:'회수 작전권',risk:'회수물 역오염',summary:'A.R.F는 사체, 장비, 기록 매체를 회수하고 분류한다. 회수 실패 자료는 별도 격리된다.',roles:['기록 매체 회수','오염 장비 분류','사체 회수 지원','격리 구역 반출 통제'],links:['U.A.C','N.H.C','C.P.D','Ash Crew'],records:['NHC_Manual_891219','FCR_Archive_890402'],event:'레드존 확산 이후 현장 회수 전담 조직으로 분리되었다.'},
-    cpd:{name:'C.P.D',sub:'민간 보호국',cat:'현장',status:'통제 / 민간선',zone:'대피 회랑',risk:'귀환자 선별 실패',summary:'C.P.D는 대피 회랑과 민간 검문 절차를 관리한다. 귀환자 선별 실패 시 보호선 전체가 오염될 수 있다.',roles:['대피 회랑 통제','귀환자 선별','항만 검문','민간 보호선 유지'],links:['U.A.C','N.H.C','A.R.F'],records:['FCR_Archive_890402'],event:'부산 선별 부두와 홍콩 항만 검문소 기록에 반복 등장한다.'}
-  };
-  const relationNodes=window.ProjectCurseCanon?.relationNodes||{
-    uac:{name:'U.A.C',sub:'중앙 통제국',type:'institution',x:50,y:50,status:'가동 / 중앙 통제',summary:factionData.uac.summary,records:factionData.uac.records},
-    nhc:{name:'N.H.C',sub:'현장 지휘',type:'field',x:27,y:50,status:'가동 / 현장 지휘',summary:factionData.nhc.summary,records:factionData.nhc.records},
-    sid:{name:'S.I.D',sub:'감시',type:'institution',x:73,y:50,status:'가동 / 감시',summary:factionData.sid.summary,records:factionData.sid.records},
-    fhc:{name:'F.H.C',sub:'봉인 기록',type:'institution',x:63,y:28,status:'봉인 / 제한',summary:factionData.fhc.summary,records:factionData.fhc.records},
-    arf:{name:'A.R.F',sub:'회수',type:'field',x:38,y:72,status:'가동 / 회수',summary:factionData.arf.summary,records:factionData.arf.records},
-    cpd:{name:'C.P.D',sub:'민간선',type:'field',x:50,y:86,status:'통제 / 민간선',summary:factionData.cpd.summary,records:factionData.cpd.records},
-    ashcrew:{name:'Ash Crew',sub:'사후 처리',type:'field',x:16,y:68,status:'통제 / 사후 처리',summary:factionData.ashcrew.summary,records:factionData.ashcrew.records},
-    ushinoda:{name:'Ushnoda Cult',sub:'의식 근원',type:'cult',x:86,y:34,status:'적대 / 의식 근원',summary:factionData.ushinoda.summary,records:factionData.ushinoda.records},
-    haimun:{name:'Haimun',sub:'도심 침투',type:'cult',x:88,y:66,status:'감시 / 불명',summary:factionData.haimun.summary,records:factionData.haimun.records},
-    amarion:{name:'Amarion',sub:'블랙 사이트 감시',type:'unstable',x:50,y:14,status:'감시 / CLEARANCE MISMATCH',summary:factionData.amarion.summary,records:factionData.amarion.records},
-    syndicate:{name:'Syndicate',sub:'이탈 보급',type:'unstable',x:18,y:25,status:'HOSTILE-감시',summary:factionData.syndicate.summary,records:factionData.syndicate.records}
-  };
-  const relationEdges=window.ProjectCurseCanon?.relationEdges||[
-    ['uac','nhc','지휘'],['uac','sid','감시'],['uac','fhc','봉인 자료'],['uac','arf','회수'],['uac','cpd','민간선'],['uac','ushinoda','적대 감시'],['uac','amarion','블랙 사이트 감시'],
-    ['nhc','ashcrew','사후 처리'],['nhc','arf','현장 인계'],['arf','cpd','피난 이관'],['sid','fhc','증거'],['sid','haimun','도심 흔적'],['fhc','ushinoda','봉인 교단'],['ushinoda','haimun','하위 경로'],['nhc','syndicate','적대'],['amarion','fhc','제한 샘플'],['amarion','syndicate','암시장 보급'],['haimun','syndicate','정보원 흔적']
-  ];
-  const mark=(key)=>`assets/faction_marks/${key}.webp`;
-  const chips=(list)=>(list||[]).map(x=>`<span>${esc(x)}</span>`).join('');
-  function route(id){
-    qa('.content-page').forEach(p=>p.classList.toggle('active',p.id===id));
-    qa('.side-menu a[data-target]').forEach(a=>a.classList.toggle('active',a.dataset.target===id));
-    try{history.replaceState(null,'','#'+id);}catch(_e){}
-    const c=q('.legacy-content'); if(c) c.scrollTop=0;
-    if(window.innerWidth<900) document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open');
-  }
-  function purgeFactionOverlap(){
-    qa('#faction-info .pc5152bg-faction-crosspanel,#faction-info .pc5134-faction-side,#faction-info .pc5152bg-link-row,#faction-info .pc5152bg-tile-tag').forEach(el=>el.remove());
-  }
-  function renderFaction(key){
-    const detail=q('#factionDetail'); if(!detail) return;
-    const k=factionData[key] ? key : 'uac'; const d=factionData[k];
-    qa('#faction-info .faction-tile').forEach(t=>t.classList.toggle('active',t.dataset.key===k));
-    purgeFactionOverlap();
-    detail.className='faction-detail pc5152bo-faction-dossier';
-    detail.dataset.pc5152boOwner='1';
-    detail.dataset.pc5152boKey=k;
-    detail.innerHTML=`
-      <header class="pc5152bo-dossier-head">
-        <img src="${mark(k)}" alt="${esc(d.name)}" loading="lazy">
-        <div><div class="pc5152bo-kicker">세력 파일 / ${esc(d.status)}</div><h3>${esc(d.name)}</h3><p>${esc(d.sub)} / ${esc(d.cat)}</p></div>
-      </header>
-      <div class="pc5152bo-status-strip"><span><i>상태</i>${esc(d.status)}</span><span><i>활동권</i>${esc(d.zone)}</span><span><i>위험</i>${esc(d.risk)}</span><span><i>분류</i>${esc(d.cat)}</span></div>
-      <div class="pc5152bo-dossier-body">
-        <div class="pc5152bo-dossier-copy">
-          <section><b>개요</b><p>${esc(d.summary)}</p></section>
-          <section><b>주요 역할</b><ul>${(d.roles||[]).map(r=>`<li>${esc(r)}</li>`).join('')}</ul></section>
-          <section><b>사건 연결</b><p>${esc(d.event)}</p></section>
-        </div>
-        <aside class="pc5152bo-dossier-side">
-          <section><b>관련 세력</b><div class="pc5152bo-chip-row">${chips(d.links)}</div></section>
-          <section><b>관련 기록</b><div class="pc5152bo-chip-row">${chips(d.records)}</div></section>
-          <section><b>접근</b><div class="pc5152bo-action-row"><button type="button" data-pc5152bo-open="archive" data-term="${esc(d.records?.[0]||d.name)}">기록보관소</button><button type="button" data-pc5152bo-open="relation" data-key="${esc(k)}">관계도</button></div></section>
-        </aside>
-      </div>`;
-  }
-  function resetFactionTiles(){
-    const grid=q('#faction-info .faction-grid'); if(!grid || grid.dataset.pc5152boOwner==='1') return;
-    const active=q('#faction-info .faction-tile.active')?.dataset.key || 'uac';
-    qa('#faction-info .faction-tile',grid).forEach(tile=>{
-      const clone=tile.cloneNode(true);
-      clone.dataset.pc5152boBound='1';
-      clone.dataset.pc5152bmBound='1';
-      clone.dataset.pc5152bgDone='1';
-      clone.dataset.pc5134Bound='1';
-      clone.dataset.trace54InfoBound='1';
-      tile.replaceWith(clone);
-    });
-    grid.dataset.pc5152boOwner='1';
-    renderFaction(active);
-  }
-  function edgeLine(a,b,label){
-    const A=relationNodes[a],B=relationNodes[b]; if(!A||!B) return '';
-    return `<line class="pc5152bo-edge" data-edge-a="${esc(a)}" data-edge-b="${esc(b)}" data-label="${esc(label)}" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}"></line>`;
-  }
-  function nodeButton(k,n){
-    return `<button type="button" class="pc5152bo-node" data-pc5152bo-node="${esc(k)}" data-type="${esc(n.type)}" style="--x:${n.x};--y:${n.y}"><b>${esc(n.name)}</b><small>${esc(n.sub)}</small></button>`;
-  }
-  function directEdges(k){return relationEdges.filter(e=>e[0]===k || e[1]===k);}
-  function typeName(t){return ({institution:'기관',field:'현장',cult:'교단',unstable:'비인가'}[t]||t||'기타');}
-  function renderRelationDetail(key){
-    const k=relationNodes[key] ? key : 'uac'; const d=relationNodes[k]; const panel=q('#pc5152boRelationDetail'); if(!panel) return;
-    const links=directEdges(k).map(e=>{const other=e[0]===k?e[1]:e[0]; return {key:other,edge:e[2],node:relationNodes[other]};}).filter(x=>x.node);
-    panel.innerHTML=`
-      <div class="pc5152bo-detail-kicker">관계 기록 / ${esc(typeName(d.type))}</div>
-      <h3>${esc(d.name)}</h3>
-      <p>${esc(d.summary)}</p>
-      <div class="pc5152bo-status"><span><i>상태</i>${esc(d.status)}</span><span><i>직접 연결</i>${links.length}</span></div>
-      <section><b>연결 세력</b><div class="pc5152bo-linked-list">${links.map(x=>`<button type="button" data-pc5152bo-select="${esc(x.key)}"><i>${esc(x.edge)}</i><span>${esc(x.node.name)}</span></button>`).join('')}</div></section>
-      <section><b>관련 기록</b><div class="pc5152bo-records">${(d.records||[]).map(r=>`<button type="button" data-pc5152bo-archive="${esc(r)}">${esc(r)}</button>`).join('')}</div></section>
-      <div class="pc5152bo-actions"><button type="button" data-pc5152bo-faction="${esc(k)}">세력 파일</button><button type="button" data-pc5152bo-archive="${esc((d.records||[])[0]||d.name)}">기록보관소</button></div>`;
-    qa('.pc5152bo-node').forEach(n=>n.classList.toggle('active',n.dataset.pc5152boNode===k));
-    qa('.pc5152bo-edge').forEach(e=>e.classList.toggle('active',e.dataset.edgeA===k || e.dataset.edgeB===k));
-    qa('.pc5152bo-mobile-card').forEach(c=>c.classList.toggle('active',c.dataset.pc5152boCard===k));
-  }
-  function applyRelationFilter(type){
-    const wanted=type||'all';
-    qa('[data-pc5152bc-relation]').forEach(b=>b.classList.toggle('active',(b.dataset.pc5152bcRelation||'all')===wanted));
-    qa('.pc5152bo-node').forEach(btn=>{
-      const key=btn.dataset.pc5152boNode, n=relationNodes[key];
-      const show=wanted==='all' || key==='uac' || (n&&n.type===wanted);
-      btn.classList.toggle('filtered-out',!show);
-    });
-    qa('.pc5152bo-edge').forEach(line=>{
-      const a=relationNodes[line.dataset.edgeA], b=relationNodes[line.dataset.edgeB];
-      const show=wanted==='all' || line.dataset.edgeA==='uac' || line.dataset.edgeB==='uac' || (a&&a.type===wanted) || (b&&b.type===wanted);
-      line.classList.toggle('filtered-out',!show);
-    });
-    qa('.pc5152bo-mobile-card').forEach(card=>{
-      const n=relationNodes[card.dataset.pc5152boCard];
-      card.hidden=!(wanted==='all'||card.dataset.pc5152boCard==='uac'||(n&&n.type===wanted));
-    });
-  }
-  function renderRelationGraph(key){
-    const root=q('#pc584-relation-root'); if(!root) return;
-    const selected=relationNodes[key] ? key : (q('.pc5152bo-node.active')?.dataset.pc5152boNode || 'uac');
-    root.className='pc5152bo-relation-root';
-    root.dataset.pc5152boOwner='1';
-    root.innerHTML=`
-      <div class="pc5152bo-shell">
-        <div class="pc5152bo-map" aria-label="U.A.C 중심 관계망">
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${relationEdges.map(e=>edgeLine(e[0],e[1],e[2])).join('')}</svg>
-          ${Object.entries(relationNodes).map(([k,n])=>nodeButton(k,n)).join('')}
-        </div>
-        <aside class="pc5152bo-detail" id="pc5152boRelationDetail" aria-live="polite"></aside>
-      </div>
-      <div class="pc5152bo-mobile-list" aria-label="관계 카드 목록">${Object.entries(relationNodes).map(([k,n])=>`<article class="pc5152bo-mobile-card" data-pc5152bo-card="${esc(k)}"><button type="button" data-pc5152bo-select="${esc(k)}"><b>${esc(n.name)}</b><span>${esc(n.status)}</span><small>${esc(n.summary)}</small></button></article>`).join('')}</div>`;
-    renderRelationDetail(selected);
-    applyRelationFilter(q('[data-pc5152bc-relation].active')?.dataset.pc5152bcRelation || 'all');
-  }
-  function ensureRelationOwned(){
-    const root=q('#pc584-relation-root'); if(!root) return;
-    if(!root.classList.contains('pc5152bo-relation-root') || !q('#pc5152boRelationDetail',root)) renderRelationGraph('uac');
-  }
-  function bindRelationObserver(){
-    const root=q('#pc584-relation-root'); if(!root || root.dataset.pc5152boObserved==='1') return;
-    root.dataset.pc5152boObserved='1';
-    try{ new MutationObserver(()=>{ if(root.dataset.pc5152boLock==='1') return; clearTimeout(root.__pc5152boFix); root.__pc5152boFix=setTimeout(()=>{ if(!root.classList.contains('pc5152bo-relation-root')) renderRelationGraph(q('.pc5152bo-node.active')?.dataset.pc5152boNode || 'uac'); },30); }).observe(root,{childList:true,subtree:false,attributes:true,attributeFilter:['class']}); }catch(_e){}
-  }
-  function boot(){
-    document.body.classList.add('pc5152bo-faction-relation-renderfix');
-    const ft=q('#faction-info > h2'); if(ft) ft.textContent='세력 파일 / 감시 대상 색인';
-    const rt=q('#faction-relation > h2'); if(rt) rt.textContent='관계도 / U.A.C 중심 감청망';
-    const rs=q('#faction-relation .pc5152bc-hub-head small'); if(rs) rs.textContent='U.A.C를 중심으로 복구된 직접 연결 기록.';
-    resetFactionTiles(); purgeFactionOverlap(); ensureRelationOwned(); bindRelationObserver();
-  }
-  ready(()=>{
-    boot(); [80,260,620,1100,1900,3200].forEach(t=>setTimeout(boot,t));
-    document.addEventListener('click',e=>{
-      const tile=e.target.closest && e.target.closest('#faction-info .faction-tile');
-      if(tile){ e.preventDefault(); e.stopImmediatePropagation(); renderFaction(tile.dataset.key||'uac'); return; }
-      const open=e.target.closest && e.target.closest('[data-pc5152bo-open]');
-      if(open){
-        e.preventDefault(); e.stopImmediatePropagation();
-        if(open.dataset.pc5152boOpen==='archive'){
-          route('archive-entry');
-          setTimeout(()=>{const input=q('#pc5152bcArchiveSearch'); if(input){input.value=open.dataset.term||''; input.dispatchEvent(new Event('input',{bubbles:true}));}},80);
-        }else if(open.dataset.pc5152boOpen==='relation'){
-          route('faction-relation'); setTimeout(()=>{renderRelationGraph(open.dataset.key||'uac');},80);
-        }
-        return;
-      }
-      const rel=e.target.closest && e.target.closest('[data-pc5152bo-node],[data-pc5152bo-select]');
-      if(rel){ e.preventDefault(); e.stopImmediatePropagation(); renderRelationDetail(rel.dataset.pc5152boNode || rel.dataset.pc5152boSelect || 'uac'); return; }
-      const filter=e.target.closest && e.target.closest('[data-pc5152bc-relation]');
-      if(filter){ setTimeout(()=>{ ensureRelationOwned(); applyRelationFilter(filter.dataset.pc5152bcRelation||'all'); },40); return; }
-      const arch=e.target.closest && e.target.closest('[data-pc5152bo-archive]');
-      if(arch){ e.preventDefault(); e.stopImmediatePropagation(); route('archive-entry'); setTimeout(()=>{const input=q('#pc5152bcArchiveSearch'); if(input){input.value=arch.dataset.pc5152boArchive||''; input.dispatchEvent(new Event('input',{bubbles:true}));}},80); return; }
-      const faction=e.target.closest && e.target.closest('[data-pc5152bo-faction]');
-      if(faction){ e.preventDefault(); e.stopImmediatePropagation(); route('faction-info'); setTimeout(()=>renderFaction(faction.dataset.pc5152boFaction||'uac'),80); return; }
-    },true);
-    ['resize','orientationchange','hashchange','pageshow'].forEach(ev=>window.addEventListener(ev,()=>setTimeout(()=>{boot(); ensureRelationOwned();},140),{passive:true}));
-    window.ProjectCurseFactionRelationFix=Object.assign(window.ProjectCurseFactionRelationFix||{}, {renderFaction, renderRelationGraph, renderRelationDetail, policy:'single runtime owner; legacy duplicate panels removed on boot'});
-    window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{}, {patch5152bo:'FactionRelation RenderFixPass', duplicatePolicy:'single-owner render, old faction crosspanel and relation summary overwrite blocked'});
-  });
-})();
 
 
 
@@ -8244,177 +7609,6 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   });
 })();
 
-// MapPatch 5.15.2bq — QAInspector DuplicateRenderScanPass
-// Console-only QA inspector. It does not render visible UI and does not attach new screen handlers.
-(function(){
-  const PATCH='5.15.2bv';
-  const ASSET_MANIFEST=new Set(["assets/audio/pc5152am_immortality_scp087_theme.mp3", "assets/audio/pc5152am_menu_old_computer.mp3", "assets/audio/pc5152an_cult_radio_static_layer.mp3", "assets/audio/pc5152f_analog_contact_soft.wav", "assets/audio/pc5152f_boot_access_oldpc.wav", "assets/audio/pc5152f_low_denied_oldpc.wav", "assets/audio/pc5152f_record_mount_soft.wav", "assets/audio/pc5152h_frame_pop.wav", "assets/audio/pc5152h_record_mount_clear.wav", "assets/audio/pc5152h_terminal_contact_clear.wav", "assets/audio/pc5152l_vcr_hiss_sequence_bgm_audible.mp3", "assets/audio/pc5152p_internal_projector_vhs_step.wav", "assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3", "assets/audio/pc5152v_comm_line_cue_73_74.mp3", "assets/audio/pc5152v_field_photo_click_42s.mp3", "assets/audio/pc5152x_late_log_beep_195s.mp3", "assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3", "assets/css/style.css", "assets/faction_marks/amarion.webp", "assets/faction_marks/arf.webp", "assets/faction_marks/ashcrew.webp", "assets/faction_marks/cpd.webp", "assets/faction_marks/fhc.webp", "assets/faction_marks/haimun.webp", "assets/faction_marks/nhc.webp", "assets/faction_marks/sid.webp", "assets/faction_marks/syndicate.webp", "assets/faction_marks/uac.webp", "assets/faction_marks/ushinoda.webp", "assets/js/main.js", "assets/resources/05cdc0276694d090f3829c4dc6e5a30b.webp", "assets/resources/0a8342297ac1a847461c57a2726d98b7.webp", "assets/resources/11f2f935e0339690ace785966d7e436f.webp", "assets/resources/1ab6ba9fba9b6b8b9493045c7bf4836d.webp", "assets/resources/1ff34fadd4be71392d17f458d5d43313.webp", "assets/resources/458cf4194ba894dce7e907244d2fd1f0.webp", "assets/resources/4af91e95281c83ead7c52b06dfbdca38.webp", "assets/resources/4cd826918a7fd80a89342fb22aad527f.webp", "assets/resources/548f1c4456dc240389f61115de660a7f.webp", "assets/resources/57674a652af43e6aec284bbc33018b06.webp", "assets/resources/5a2db6abec6308c441b2b430a3da59c2.webp", "assets/resources/646468c8e709d197314f9d40e286986b.webp", "assets/resources/734d86c7b7d166024a3be1993b9ed78a.webp", "assets/resources/7af3eeca599cebbf7235e0a1368f2517.webp", "assets/resources/83d311da1ab7310a567c6023f6151e6c.webp", "assets/resources/8668a15590e2ae00b18d68db57a85c95.webp", "assets/resources/86ed1a163d79930b0874dbd5eb93adf2.webp", "assets/resources/89eeb37859d35d979b1d217e11f5148f.webp", "assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp", "assets/resources/8da1d79fd90b59063f33aa00f1eb742a.webp", "assets/resources/9b4094a85c1863367b1b86cc915ec814.webp", "assets/resources/9eb253063ee6ca8cc712efd4f22b7498.webp", "assets/resources/b1f6105c9de718ff230e00b702ada13b.webp", "assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp", "assets/resources/b5f9b2c2ddea9084ff8f6e8dfdc6549b.webp", "assets/resources/c5b5c946c876fbf1bd5fc2f0f1616478.webp", "assets/resources/c85c636bb85c747508df07e1115a9b89.webp", "assets/resources/d537338b8d854ef34d0e3638d436cb01.webp", "assets/resources/dec4cbe943147076943a62681048ad35.webp", "assets/resources/e39a87391183a4f564af26c1dd3b7bbd.webp", "assets/resources/ea33a51515476e2946267ea56b453760.webp", "assets/resources/f59b02e8f859bfc95d683636bcf39500.webp", "assets/resources/fa10a34b64ccc7605b0966af4c017d99.webp", "assets/resources/fb5ead8ded766fd8d05938b1caf6a18e.webp", "assets/resources/pc5152ay_hybrid_corruption.png", "assets/resources/pc5152ay_silent_corruption.png", "assets/video/pc5152am_cult_trace_vhs_noise.mp4", "assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4", "assets/video/pc5152m_vhs_transition_18_21_sound.mp4", "assets/video/pc5152q_immortality_fhc_transition_204_209.mp4", "assets/video/pc5152r_immortality_recordopen_static_13_27.mp4"]);
-  const PACKAGE_MANIFEST=new Set([".nojekyll", "CHANGELOG_MapPatch5_15_2bv.md", "MANUAL_CHECK_MapPatch5_15_2bv.md", "PROJECT_CURSE_ART_DIRECTION_GUIDE.md", "README.md", "README_FUTURE_PATCH_POINTER.md", "README_MapPatch5_15_2bv.md", "archive/index.html", "assets/audio/pc5152am_immortality_scp087_theme.mp3", "assets/audio/pc5152am_menu_old_computer.mp3", "assets/audio/pc5152an_cult_radio_static_layer.mp3", "assets/audio/pc5152f_analog_contact_soft.wav", "assets/audio/pc5152f_boot_access_oldpc.wav", "assets/audio/pc5152f_low_denied_oldpc.wav", "assets/audio/pc5152f_record_mount_soft.wav", "assets/audio/pc5152h_frame_pop.wav", "assets/audio/pc5152h_record_mount_clear.wav", "assets/audio/pc5152h_terminal_contact_clear.wav", "assets/audio/pc5152l_vcr_hiss_sequence_bgm_audible.mp3", "assets/audio/pc5152p_internal_projector_vhs_step.wav", "assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3", "assets/audio/pc5152v_comm_line_cue_73_74.mp3", "assets/audio/pc5152v_field_photo_click_42s.mp3", "assets/audio/pc5152x_late_log_beep_195s.mp3", "assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3", "assets/css/style.css", "assets/faction_marks/amarion.webp", "assets/faction_marks/arf.webp", "assets/faction_marks/ashcrew.webp", "assets/faction_marks/cpd.webp", "assets/faction_marks/fhc.webp", "assets/faction_marks/haimun.webp", "assets/faction_marks/nhc.webp", "assets/faction_marks/sid.webp", "assets/faction_marks/syndicate.webp", "assets/faction_marks/uac.webp", "assets/faction_marks/ushinoda.webp", "assets/js/main.js", "assets/resources/05cdc0276694d090f3829c4dc6e5a30b.webp", "assets/resources/0a8342297ac1a847461c57a2726d98b7.webp", "assets/resources/11f2f935e0339690ace785966d7e436f.webp", "assets/resources/1ab6ba9fba9b6b8b9493045c7bf4836d.webp", "assets/resources/1ff34fadd4be71392d17f458d5d43313.webp", "assets/resources/458cf4194ba894dce7e907244d2fd1f0.webp", "assets/resources/4af91e95281c83ead7c52b06dfbdca38.webp", "assets/resources/4cd826918a7fd80a89342fb22aad527f.webp", "assets/resources/548f1c4456dc240389f61115de660a7f.webp", "assets/resources/57674a652af43e6aec284bbc33018b06.webp", "assets/resources/5a2db6abec6308c441b2b430a3da59c2.webp", "assets/resources/646468c8e709d197314f9d40e286986b.webp", "assets/resources/734d86c7b7d166024a3be1993b9ed78a.webp", "assets/resources/7af3eeca599cebbf7235e0a1368f2517.webp", "assets/resources/83d311da1ab7310a567c6023f6151e6c.webp", "assets/resources/8668a15590e2ae00b18d68db57a85c95.webp", "assets/resources/86ed1a163d79930b0874dbd5eb93adf2.webp", "assets/resources/89eeb37859d35d979b1d217e11f5148f.webp", "assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp", "assets/resources/8da1d79fd90b59063f33aa00f1eb742a.webp", "assets/resources/9b4094a85c1863367b1b86cc915ec814.webp", "assets/resources/9eb253063ee6ca8cc712efd4f22b7498.webp", "assets/resources/b1f6105c9de718ff230e00b702ada13b.webp", "assets/resources/b20abfee553be1cf8a7f818a2bd84f23.webp", "assets/resources/b5f9b2c2ddea9084ff8f6e8dfdc6549b.webp", "assets/resources/c5b5c946c876fbf1bd5fc2f0f1616478.webp", "assets/resources/c85c636bb85c747508df07e1115a9b89.webp", "assets/resources/d537338b8d854ef34d0e3638d436cb01.webp", "assets/resources/dec4cbe943147076943a62681048ad35.webp", "assets/resources/e39a87391183a4f564af26c1dd3b7bbd.webp", "assets/resources/ea33a51515476e2946267ea56b453760.webp", "assets/resources/f59b02e8f859bfc95d683636bcf39500.webp", "assets/resources/fa10a34b64ccc7605b0966af4c017d99.webp", "assets/resources/fb5ead8ded766fd8d05938b1caf6a18e.webp", "assets/resources/pc5152ay_hybrid_corruption.png", "assets/resources/pc5152ay_silent_corruption.png", "assets/video/pc5152am_cult_trace_vhs_noise.mp4", "assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4", "assets/video/pc5152m_vhs_transition_18_21_sound.mp4", "assets/video/pc5152q_immortality_fhc_transition_204_209.mp4", "assets/video/pc5152r_immortality_recordopen_static_13_27.mp4", "docs/Cults_871104/index.html", "docs/FCR_Archive_890402/index.html", "docs/Ferals_860722/index.html", "docs/Immortality_860201/index.html", "docs/NHC_Manual_891219/index.html", "docs/Redzone_881120/index.html", "docs/Sakuma_Tape_991028/index.html", "docs/Unknown_Record1_860204/index.html", "docs/Unknown_Record2_860205/index.html", "docs/Unknown_Record3_920711/index.html", "docs/Unknown_Record4_930314/index.html", "docs/Zone_870815/index.html", "index.html"]);
-  const q=(s,r=document)=>r.querySelector(s);
-  const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const text=(v)=>String(v ?? '').trim();
-  const now=()=>new Date().toISOString();
-  const normPath=(value)=>{
-    let v=String(value||'').trim();
-    if(!v || /^(data:|blob:|javascript:|mailto:|tel:)/i.test(v)) return '';
-    try{
-      const u=new URL(v, location.href);
-      v=decodeURIComponent(u.pathname.replace(/^\/+/,''));
-    }catch(_e){
-      v=decodeURIComponent(v.split('#')[0].split('?')[0]).replace(/^\.\//,'').replace(/^\/+/, '');
-    }
-    v=v.split('#')[0].split('?')[0].replace(/^\.\//,'').replace(/^\/+/, '');
-    const i=v.indexOf('assets/');
-    if(i>=0) v=v.slice(i);
-    return v;
-  };
-  const issue=(list,level,code,message,evidence)=>list.push({level,code,message,evidence:evidence??null});
-  const summarize=(issues)=>({
-    error:issues.filter(x=>x.level==='error').length,
-    warn:issues.filter(x=>x.level==='warn').length,
-    info:issues.filter(x=>x.level==='info').length
-  });
-  function checkDuplicateIds(){
-    const issues=[]; const seen=new Map();
-    qa('[id]').forEach(el=>{ const id=el.id; if(!seen.has(id)) seen.set(id,[]); seen.get(id).push(el); });
-    seen.forEach((nodes,id)=>{ if(nodes.length>1) issue(issues,'error','DUPLICATE_ID','같은 id가 여러 번 존재함',{id,count:nodes.length}); });
-    return {name:'duplicateIds',ok:!issues.length,issues};
-  }
-  function checkRoutes(){
-    const issues=[];
-    const pages=new Set(qa('.content-page[id]').map(p=>p.id));
-    const active=qa('.content-page.active');
-    if(active.length!==1) issue(issues,'error','ACTIVE_PAGE_COUNT','활성 content-page 수가 1개가 아님',{count:active.length,ids:active.map(x=>x.id)});
-    qa('.side-menu a[data-target]').forEach(a=>{
-      const target=a.dataset.target;
-      if(!pages.has(target)) issue(issues,'error','BROKEN_MENU_TARGET','사이드 메뉴 target에 대응하는 페이지가 없음',{label:text(a.textContent),target});
-    });
-    const targetCounts={};
-    qa('.side-menu a[data-target]').forEach(a=>{ const t=a.dataset.target; targetCounts[t]=(targetCounts[t]||0)+1; });
-    Object.entries(targetCounts).forEach(([target,count])=>{ if(count>1) issue(issues,'warn','DUPLICATE_MENU_TARGET','같은 target을 가진 사이드 메뉴 항목이 여러 개 있음',{target,count}); });
-    const hash=(location.hash||'').replace(/^#/,'');
-    if(hash && !pages.has(hash)) issue(issues,'warn','HASH_TARGET_MISSING','현재 hash가 존재하지 않는 페이지를 가리킴',{hash});
-    return {name:'routes',ok:!issues.some(x=>x.level==='error'),activePage:active[0]?.id||null,pages:pages.size,menuLinks:qa('.side-menu a[data-target]').length,issues};
-  }
-  function checkFaction(){
-    const issues=[]; const sec=q('#faction-info');
-    if(!sec){ issue(issues,'error','FACTION_SECTION_MISSING','세력 파일 섹션이 없음'); return {name:'faction',ok:false,issues}; }
-    const detail=q('#factionDetail',sec);
-    if(!detail) issue(issues,'error','FACTION_DETAIL_MISSING','#factionDetail이 없음');
-    const oldSelectors=['.pc5134-faction-side','.pc5152bg-faction-crosspanel','.relation-trace-panel','.pc5152bg-link-row'];
-    const oldFound=oldSelectors.flatMap(sel=>qa(sel,sec).map(el=>sel));
-    if(oldFound.length) issue(issues,'error','LEGACY_FACTION_PANEL','구형 세력 패널/링크가 DOM에 남아 있음',{selectors:[...new Set(oldFound)],count:oldFound.length});
-    const dossier=qa('.pc5152bo-faction-dossier',sec);
-    if(dossier.length>1) issue(issues,'error','DUPLICATE_FACTION_DOSSIER','세력 상세 패널이 중복 렌더링됨',{count:dossier.length});
-    if(detail && (!detail.classList.contains('pc5152bo-faction-dossier') || detail.classList.contains('pc5134-faction-dossier') || detail.dataset.pc5152boOwner!=='1')){
-      issue(issues,'warn','FACTION_OWNER_NOT_2BO','세력 상세 패널 소유자가 단일 렌더러 상태가 아님',{className:detail.className,owner:detail.dataset.pc5152boOwner||null,legacy:detail.classList.contains('pc5134-faction-dossier')});
-    }
-    const active=qa('.faction-tile.active',sec);
-    if(active.length>1) issue(issues,'warn','MULTIPLE_ACTIVE_FACTION_TILE','선택된 세력 카드가 여러 개임',{count:active.length,keys:active.map(x=>x.dataset.key)});
-    const keys={};
-    qa('.faction-tile[data-key]',sec).forEach(tile=>{ keys[tile.dataset.key]=(keys[tile.dataset.key]||0)+1; });
-    Object.entries(keys).forEach(([key,count])=>{ if(count>1) issue(issues,'warn','DUPLICATE_FACTION_KEY','같은 세력 key 카드가 여러 개 있음',{key,count}); });
-    return {name:'faction',ok:!issues.some(x=>x.level==='error'),owner:detail?.className||null,active:active.map(x=>x.dataset.key),tiles:Object.keys(keys).length,issues};
-  }
-  function checkRelationGraph(){
-    const issues=[]; const root=q('#pc584-relation-root');
-    if(!root){ issue(issues,'error','RELATION_ROOT_MISSING','#pc584-relation-root가 없음'); return {name:'relationGraph',ok:false,issues}; }
-    if(!root.classList.contains('pc5152bo-relation-root')) issue(issues,'error','RELATION_OWNER_NOT_2BO','관계도 루트가 2bo 중심형 관계망 소유 상태가 아님',{className:root.className});
-    const legacy=qa('.pc584-relation-stage,.pc5134-relation-log,.pc5152ag-relation-root,.relation-table',root);
-    if(legacy.length) issue(issues,'error','LEGACY_RELATION_RENDER','구형 관계도/요약표 렌더가 관계도 루트 안에 남아 있음',{count:legacy.length,classes:legacy.slice(0,8).map(x=>x.className)});
-    const uac=q('[data-pc5152bo-node="uac"]',root);
-    if(!uac) issue(issues,'error','UAC_CENTER_노드_MISSING','U.A.C 중앙 노드가 없음');
-    else{
-      const st=uac.getAttribute('style')||'';
-      const x=parseFloat((st.match(/--x\s*:\s*([0-9.]+)/)||[])[1]);
-      const y=parseFloat((st.match(/--y\s*:\s*([0-9.]+)/)||[])[1]);
-      if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x-50)>0.1||Math.abs(y-50)>0.1) issue(issues,'warn','UAC_NOT_CENTERED','U.A.C 노드 좌표가 중앙값으로 보이지 않음',{style:st,x,y});
-    }
-    const uacEdges=qa('.pc5152bo-edge[data-edge-a="uac"],.pc5152bo-edge[data-edge-b="uac"]',root);
-    if(uacEdges.length<5) issue(issues,'error','UAC_EDGE_COUNT_LOW','U.A.C 직접 연결선 수가 부족함',{count:uacEdges.length});
-    const detail=q('#pc5152boRelationDetail',root);
-    if(!detail) issue(issues,'error','RELATION_DETAIL_MISSING','관계도 상세 패널이 없음');
-    return {name:'relationGraph',ok:!issues.some(x=>x.level==='error'),owner:root.className,uacEdges:uacEdges.length,nodes:qa('.pc5152bo-node',root).length,issues};
-  }
-  function checkAssets(){
-    const issues=[]; const refs=[];
-    qa('img[src],audio[src],video[src],source[src],link[href],script[src]').forEach(el=>{
-      const raw=el.getAttribute('src')||el.getAttribute('href')||'';
-      const p=normPath(raw);
-      if(!p || !p.startsWith('assets/')) return;
-      refs.push({tag:el.tagName.toLowerCase(),path:p});
-      if(!ASSET_MANIFEST.has(p)) issue(issues,'error','ASSET_NOT_IN_PACKAGE_MANIFEST','DOM에서 참조하는 asset이 패키지 manifest에 없음',{tag:el.tagName.toLowerCase(),path:p});
-      if(el.tagName==='IMG' && el.complete && el.naturalWidth===0) issue(issues,'warn','IMAGE_LOAD_FAILED','이미지 로드 실패 가능성',{path:p,alt:el.getAttribute('alt')||''});
-      if((el.tagName==='AUDIO'||el.tagName==='VIDEO'||el.tagName==='SOURCE') && el.error) issue(issues,'warn','MEDIA_ERROR_STATE','오디오/영상 요소가 error 상태임',{path:p,code:el.error?.code||null});
-    });
-    const repeated={}; refs.forEach(r=>{repeated[r.path]=(repeated[r.path]||0)+1;});
-    Object.entries(repeated).forEach(([path,count])=>{ if(count>8) issue(issues,'info','ASSET_REPEATED_MANY_TIMES','같은 asset이 여러 DOM 노드에서 반복 참조됨',{path,count}); });
-    return {name:'assets',ok:!issues.some(x=>x.level==='error'),domRefs:refs.length,manifestAssets:ASSET_MANIFEST.size,issues};
-  }
-
-  function checkPackageData(){
-    const issues=[];
-    const files=[...PACKAGE_MANIFEST];
-    const stale=files.filter(p=>/(README|CHANGELOG|MANUAL_CHECK)_MapPatch5_15_2b[k-q]\.md$/.test(p));
-    if(stale.length) issue(issues,'warn','STALE_PATCH_DOCS','이전 패치 문서가 패키지에 남아 있음',{count:stale.length,files:stale});
-    const current=files.filter(p=>/(README|CHANGELOG|MANUAL_CHECK)_MapPatch5_15_2bv\.md$/.test(p));
-    if(current.length!==3) issue(issues,'warn','CURRENT_PATCH_DOCS_INCOMPLETE','현재 패치 문서 세트가 3개가 아님',{count:current.length,files:current});
-    const patchDocs=files.filter(p=>/(README|CHANGELOG|MANUAL_CHECK)_MapPatch5_15_/.test(p));
-    const unexpected=patchDocs.filter(p=>!/_2bv\.md$/.test(p));
-    if(unexpected.length) issue(issues,'warn','OLD_PATCH_DOC_SET','현재 패치 외 문서 세트가 남아 있음',{count:unexpected.length,files:unexpected});
-    return {name:'packageData',ok:!issues.some(x=>x.level==='error'),files:files.length,currentPatchDocs:current.length,issues};
-  }
-  function checkLanguagePressure(){
-    const issues=[];
-    const active=q('.content-page.active') || document.body;
-    const raw=(active.innerText||'').replace(/\s+/g,' ');
-    const upper=(raw.match(/\b[A-Z][A-Z0-9.\-_/]{2,}\b/g)||[]).filter(x=>!/^REC-|^IMG|^U\.A\.C$|^N\.H\.C$|^F\.H\.C$|^S\.I\.D$|^A\.R\.F$|^C\.P\.D$/.test(x));
-    const unique=[...new Set(upper)].slice(0,30);
-    if(unique.length>18) issue(issues,'info','ENGLISH_DENSITY_HIGH','현재 활성 화면에 대문자 영어 표기가 많은 편임',{count:unique.length,sample:unique});
-    return {name:'languagePressure',ok:true,activePage:active.id||null,uppercaseTerms:unique.length,sample:unique,issues};
-  }
-  function fullScan(options={}){
-    const scans=[checkDuplicateIds(),checkRoutes(),checkFaction(),checkRelationGraph(),checkAssets(),checkPackageData(),checkLanguagePressure()];
-    const issues=scans.flatMap(s=>s.issues.map(i=>Object.assign({scan:s.name},i)));
-    const result={patch:PATCH,time:now(),activePage:q('.content-page.active')?.id||null,summary:summarize(issues),ok:!issues.some(x=>x.level==='error'),scans,issues};
-    if(options.log!==false) print(result);
-    window.__ProjectCurseLastQA=result;
-    return result;
-  }
-  function reportText(result=window.__ProjectCurseLastQA||fullScan({log:false})){
-    const lines=[];
-    lines.push(`[ProjectCurseQA] ${result.patch} / ${result.time}`);
-    lines.push(`activePage=${result.activePage||'none'} ok=${result.ok} errors=${result.summary.error} warnings=${result.summary.warn} info=${result.summary.info}`);
-    result.issues.forEach((i,idx)=>{ lines.push(`${idx+1}. [${i.level}] ${i.scan}/${i.code} - ${i.message} ${i.evidence?JSON.stringify(i.evidence):''}`); });
-    if(!result.issues.length) lines.push('issues=none');
-    return lines.join('\n');
-  }
-  function print(result=window.__ProjectCurseLastQA||fullScan({log:false})){
-    const label=`ProjectCurseQA ${PATCH}: ${result.ok?'PASS':'CHECK'} / errors=${result.summary.error}, warnings=${result.summary.warn}, info=${result.summary.info}`;
-    try{ console.groupCollapsed(label); console.log(result); if(result.issues.length) console.table(result.issues.map(i=>({level:i.level,scan:i.scan,code:i.code,message:i.message,evidence:JSON.stringify(i.evidence)}))); console.log(reportText(result)); console.groupEnd(); }catch(_e){ console.log(label,result); }
-    return result;
-  }
-  function copyReport(){
-    const body=reportText();
-    if(navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(body).then(()=>body).catch(()=>body);
-    return body;
-  }
-  function help(){
-    return [
-      'ProjectCurseQA.fullScan()       전체 점검 후 콘솔 출력',
-      'ProjectCurseQA.checkFaction()   세력 파일 중복 렌더/구형 패널 점검',
-      'ProjectCurseQA.checkRelationGraph() 관계도 중심형/구형 렌더 점검',
-      'ProjectCurseQA.checkAssets()    현재 DOM asset 참조 점검',
-      'ProjectCurseQA.checkRoutes()    메뉴 target/활성 페이지 점검',
-      'ProjectCurseQA.checkPackageData() 패키지 이전 패치 문서 잔존 점검',
-      'ProjectCurseQA.reportText()     마지막 점검 결과를 텍스트로 변환',
-      'ProjectCurseQA.copyReport()     점검 결과 복사 시도'
-    ].join('\n');
-  }
-  const api={fullScan,scan:fullScan,print,reportText,copyReport,help,checkDuplicateIds,checkRoutes,checkFaction,checkRelationGraph,checkAssets,checkPackageData,checkLanguagePressure,manifestSize:ASSET_MANIFEST.size,packageSize:PACKAGE_MANIFEST.size,patch:PATCH};
-  window.ProjectCurseQA=Object.assign(window.ProjectCurseQA||{},api);
-  window.ProjectCursePatch=Object.assign(window.ProjectCursePatch||{},{patch5152bqQA:'QAInspector DuplicateRenderScanPass',patch5152brQA:'KoreanReadability TerminologyPass',patch5152bsQA:'GlobalScreenQA LayoutLanguagePass',patch5152btQA:'ScreenSweep HotfixPass',qa:'console-only duplicate render, route, relation graph, faction panel, asset manifest, and current-package scanner'});
-})();
 
 
 // MapPatch 5.15.2bt — KoreanReadability_TerminologyPass
@@ -8422,8 +7616,8 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
 (function(){
   const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   const textMap=new Map([
-    ['WORLD TIMELINE','세계 연표'],['REGION SIGNAL','권역 신호'],['RELATION TRACE','관계 흔적'],['FACTION DOSSIER','세력 파일'],['RECOVERED INDEX','회수 색인'],
-    ['WORLD ARCHIVE','세계 기록'],['REGION SITUATION BOARD','지역 상황판'],['AGENCY DOSSIER','세력 파일'],['ARCHIVE INDEX','기록 색인'],
+    ['WORLD TIMELINE','세계 연표'],['FACTION DOSSIER','세력 파일'],['RECOVERED INDEX','회수 색인'],
+    ['WORLD ARCHIVE','세계 기록'],['AGENCY DOSSIER','세력 파일'],['ARCHIVE INDEX','기록 색인'],
     ['Status','상태'],['Zone','활동권'],['Risk','위험'],['Class','분류'],['Direct Links','직접 연결'],['RELATION DOSSIER','관계 기록'],
     ['ACTIVE / CENTRAL CONTROL','가동 / 중앙 통제'],['ACTIVE / FIELD COMMAND','가동 / 현장 지휘'],['ACTIVE / SURVEILLANCE','가동 / 감시'],['ACTIVE / RECOVERY','가동 / 회수'],
     ['SEALED / RESTRICTED','봉인 / 제한'],['WATCH / CLEARANCE MISMATCH','감시 / 권한 불일치'],['HOSTILE-WATCH','적대 감시'],['HOSTILE / RITUAL SOURCE','적대 / 의식 근원'],
@@ -8472,14 +7666,10 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
   const PAGES=[
+    ['terminal-home','단말 상태'],
     ['history','세계 사건 연표'],
-    ['region-map','지역 상황도'],
-    ['faction-relation','관계도'],
-    ['faction-info','세력 파일'],
-    ['archive-entry','기록보관실'],
-    ['classification','분류 보고서'],
-    ['operation-records','작전 기록'],
-    ['faction','세력 파일']
+    ['faction-info','세력 분석실'],
+    ['archive-entry','기록보관소']
   ];
   function activeId(){
     const active=q('.content-page.active');
@@ -8584,7 +7774,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
   const PAGES=[
-    ['history','세계 사건 연표'],['region-map','지역 상황도'],['faction-relation','관계도'],['faction-info','세력 파일'],['archive-entry','기록보관실'],['classification','분류 보고서'],['operation-records','작전 기록'],['faction','세력 파일']
+    ['terminal-home','단말 상태'],['history','세계 사건 연표'],['faction-info','세력 분석실'],['archive-entry','기록보관소']
   ];
   const KEEP_EXACT=new Set(['U.A.C','N.H.C','F.H.C','S.I.D','A.R.F','C.P.D','I.P.D','VHS','MP3','IMG','CLASSIFIED','SIGNAL','LOST','ACCESS','DENIED','BLI-006']);
   const KEEP_PATTERNS=[/^REC-[A-Z0-9-]+$/,/^IMG\d{1,4}$/,/^[A-Z](?:\.[A-Z])+\.?$/,/^[A-Z]{2,}-[A-Z0-9-]+$/,/^[A-Z]{2,}\d{2,}$/];
@@ -8598,7 +7788,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     ['CENTRAL CONTROL','중앙 통제'],['FIELD COMMAND','현장 지휘'],['SURVEILLANCE','감시'],['RECOVERY','회수'],['SEALED RECORDS','봉인 기록'],
     ['REDZONE','레드존'],['BLACKZONE','블랙존'],['GREENZONE','그린존'],['WHITEZONE','화이트존'],['YELLOWZONE','옐로우존'],
     ['ZONE CLASS','구역 등급'],['ZONE-CLASS','구역 등급'],['BLACK SITE','블랙 사이트'],['FIELD','현장'],['COMMAND','지휘'],['CONTROL','통제'],['CLEARANCE','인가'],['RESTRICTED','제한'],['SEALED','봉인'],
-    ['ARCHIVE INDEX','기록 색인'],['RECOVERED INDEX','회수 색인'],['RELATION DOSSIER','관계 기록'],['AGENCY DOSSIER','세력 파일'],['FACTION DOSSIER','세력 파일'],['WORLD ARCHIVE','세계 기록'],['WORLD TIMELINE','세계 연표'],['REGION SITUATION BOARD','지역 상황판'],['REGION SIGNAL','권역 신호'],['RELATION TRACE','관계 흔적'],
+    ['ARCHIVE INDEX','기록 색인'],['RECOVERED INDEX','회수 색인'],['RELATION DOSSIER','관계 기록'],['AGENCY DOSSIER','세력 파일'],['FACTION DOSSIER','세력 파일'],['WORLD ARCHIVE','세계 기록'],['WORLD TIMELINE','세계 연표'],['RELATION TRACE','관계 흔적'],
     ['HOSTILE-WATCH','적대 감시'],['HOSTILE','적대'],['WATCH','감시'],['ROGUE SUPPLY','이탈 보급'],['BLACK SUPPLY','암시장 보급'],['INFORMANT TRACE','정보원 흔적'],['SUBROUTE','하위 경로'],['URBAN TRACE','도심 흔적'],['URBAN INFILTRATION','도심 침투'],['RITUAL SOURCE','의식 근원'],['DISPOSAL','사후 처리'],['POST-ACTION','사후 처리'],['FIELD HANDOFF','현장 인계'],['EVAC TRANSFER','피난 이관'],['EVIDENCE','증거'],['RESTRICTED SAMPLE','제한 샘플'],['SEALED CULT','봉인 교단']
   ]);
   function activeId(){ return q('.content-page.active')?.id || (location.hash||'').replace('#','') || 'history'; }
@@ -8742,7 +7932,7 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   const q=(s,r=document)=>r.querySelector(s);
   const qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
   const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
-  const PAGES=[['history','세계 사건 연표'],['region-map','지역 상황도'],['faction-relation','관계도'],['faction-info','세력 파일'],['archive-entry','기록보관실'],['classification','분류 보고서'],['operation-records','작전 기록'],['faction','세력 파일']];
+  const PAGES=[['terminal-home','단말 상태'],['history','세계 사건 연표'],['faction-info','세력 분석실'],['archive-entry','기록보관소']];
   const KEEP_EXACT=new Set(['U.A.C','N.H.C','F.H.C','S.I.D','A.R.F','C.P.D','I.P.D','VHS','MP3','IMG','CLASSIFIED','SIGNAL','LOST','ACCESS','DENIED','SIGNAL LOST','ACCESS DENIED','BLI-006']);
   const KEEP_PATTERNS=[/^REC-[A-Z0-9-]+$/,/^IMG\d{1,4}$/,/^[A-Z](?:\.[A-Z])+\.?$/,/^[A-Z]{2,}-[A-Z0-9-]+$/,/^[A-Z]{2,}\d{2,}$/];
   const REPLACE_PAIRS=[
@@ -8771,10 +7961,6 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
   }
   function applyKoreanLabels(root=document){
     document.body.classList.add('pc5152bv-korean-label-final-cleanup');
-    q('[data-map-region-label]')?.previousElementSibling && (q('[data-map-region-label]').previousElementSibling.textContent='지역');
-    q('[data-map-layer-label]')?.previousElementSibling && (q('[data-map-layer-label]').previousElementSibling.textContent='표시 항목');
-    q('[data-map-count]')?.previousElementSibling && (q('[data-map-count]').previousElementSibling.textContent='신호 기록');
-    const side=q('.pc5152bd-side-kicker'); if(side) side.textContent='선택 신호';
     qa('.pc5134-faction-intel-page .label,.pc5134-node-header span,.pc5134-node-header b,.pc5134-node-header small',root).forEach(el=>{ if(el?.textContent) el.textContent=replaceValue(el.textContent); });
     const attrs=['aria-label','title','placeholder','data-status','data-label','data-meta','data-title','data-link-search'];
     qa('*',root.body||root).forEach(el=>{

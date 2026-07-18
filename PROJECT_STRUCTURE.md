@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.15.2cf
+# Project Curse Structure — 5.15.2ck
 
 ## 활성 소유권
 
@@ -6,12 +6,14 @@
 |---|---|
 | 화면·잠금 기록·오디오 자산 목록 | `assets/js/data/site-manifest.js` |
 | 조직 정사·관계·우시노다 계층 | `assets/js/data/canon-registry.js` |
-| 대표 기록철·세부 문서 소속 | `assets/js/data/archive-registry.js` |
-| 기존 화면 렌더러와 기록 본문 | `assets/js/main.js` |
+| 공개 기록 목록·영상/문서 분류 | `assets/js/data/archive-registry.js` |
+| 기존 영상 기록 렌더러와 보호 본문 | `assets/js/main.js` |
 | 메뉴·기록 오디오 상태 | `assets/js/core/menu-audio-runtime.js` |
-| 공통 태그·중복 연결 정리 | `assets/js/pages/shared-declutter.js` |
-| 비잠금 화면 명칭·타일 정합화 | `assets/js/pages/canon-reconciliation.js` |
-| 기록보관소 대표 기록철 통합·전환 | `assets/js/pages/archive-consolidation.js` |
+| 공통 중복 연결 정리 | `assets/js/pages/shared-declutter.js` |
+| 비보호 화면 명칭 정합화 | `assets/js/pages/canon-reconciliation.js` |
+| 영상/문서 기록 색인 | `assets/js/pages/archive-consolidation.js` |
+| 세계 사건 연표 | `assets/js/pages/world-history.js` |
+| 세력 분석실 | `assets/js/pages/faction-analysis.js` |
 | 구조·정사·보호 범위 브라우저 검사 | `assets/js/qa/structure-qa.js` |
 | 5.15.2ce 범위 스타일 | `assets/css/stabilization.css` |
 | 5.15.2cf 기록철 목록·상세 스타일 | `assets/css/archive-consolidation.css` |
@@ -19,7 +21,9 @@
 
 ## 데이터 흐름
 
-`site-manifest.js`, `canon-registry.js`, `archive-registry.js`가 먼저 로드되고, 기존 `main.js`의 활성 세력·관계 렌더러가 해당 데이터를 읽는다. 이후 오디오, 공통 정리, 표기 정합화, 기록철 통합, QA 모듈이 순서대로 붙는다.
+`site-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`가 먼저 로드된다. `main.js`가 보호된 영상 기록 런타임을 준비한 뒤 오디오 관리자, 기록 색인, 세계 연표, 세력 분석실과 QA 모듈이 각 화면을 소유한다.
+
+활성 화면은 `terminal-home`, `history`, `faction-info`, `archive-entry` 네 개다. 폐기된 `region-map`과 `faction-relation`은 DOM을 만들지 않으며 옛 주소만 현행 화면으로 전환한다.
 
 ## 잠금 범위
 
@@ -30,4 +34,4 @@
 
 ## 남은 구조 부채
 
-`assets/js/main.js`에는 과거 패치의 fallback 데이터와 렌더러가 누적되어 있다. 5.15.2cf에서는 대표 기록철이 구형 카드 렌더러보다 우선하도록 정리했지만, 잠금 기록 보호와 회귀 위험 때문에 구형 코드를 일괄 삭제하지 않았다. 다음 패스에서 관계도·세계지도 렌더러를 단계적으로 분리한다.
+`assets/js/main.js`에는 보호 기록과 얽힌 과거 fallback 코드가 남아 있다. 화면에 다시 나타나는 경로는 차단했지만, 일괄 삭제는 영상 기록 회귀 가능성이 있어 후속 분리 작업으로 남긴다.

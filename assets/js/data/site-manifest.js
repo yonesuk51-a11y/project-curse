@@ -14,9 +14,8 @@
     screens:[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'history',label:'세계 사건 연표',index:'01'},
-      {id:'faction-relation',label:'조직 관계도',index:'02'},
-      {id:'faction-info',label:'세력 파일',index:'03'},
-      {id:'archive-entry',label:'기록보관소',index:'04'}
+      {id:'faction-info',label:'세력 분석실',index:'02'},
+      {id:'archive-entry',label:'기록보관소',index:'03'}
     ],
     lockedRecords:[
       {id:'Cults_871104',title:'종교'},
@@ -32,8 +31,6 @@
     audio:{
       ambient:'pc5152am_menu_old_computer.mp3',
       effects:{
-        contact:'pc5152f_analog_contact_soft.wav',
-        latch:'pc5152h_frame_pop.wav',
         mount:'pc5152h_record_mount_clear.wav',
         projector:'pc5152p_internal_projector_vhs_step.wav',
         denied:'pc5152f_low_denied_oldpc.wav',

@@ -1,16 +1,21 @@
 # Project Curse U.A.C Closed Server
 
-Current build: `5.15.2cf Archive Consolidation and Screen Presentation Pass`
+Current build: `5.15.2ck Dead Data Cleanup Pass`
 
 정적 PC·모바일 기록 단말 패키지다. 루트의 `index.html`을 열거나 폴더 전체를 GitHub Pages에 배포한다.
 
-## 이번 기준 빌드
+## 현재 화면
 
-- 기록보관소 목록을 사건·회수, 세력·인물, 이상현상·개체, 작전·장비·규정의 대표 기록철 4개로 통합했다.
-- 과거 패치에서 추가된 세부 문서는 삭제하지 않고 각 대표 기록철의 접히는 기록면으로 옮겼다.
-- 목록에는 대표 기록철만 보이며, 태그·기록 수·일반 연결 패널은 보이지 않는다.
-- `종교`, `불멸을 향해`는 통합 대상이 아니다. 각 기록철 안의 `원본 기록 열람`으로만 기존 원본을 연다.
-- 목록→기록철 진입에 짧은 `기록 호출 중` 전환을 추가했다.
+- 단말 상태
+- 세계 사건 연표
+- 세력 분석실
+- 기록보관소
+
+폐기된 지역 상황도와 독립 관계도 화면은 루트 구조에서 제거했다. 예전 주소 `#region-map`은 세계 사건 연표로, `#faction-relation`은 세력 분석실로 연결된다.
+
+기록보관소는 `종교`, `불멸을 향해`, `괴이`, `사쿠마의 테이프`를 영상 기록으로, 나머지 공개 기록을 문서 파일로 분리한다. 메뉴를 열고 닫거나 화면을 선택할 때의 효과음은 재생하지 않는다.
+
+이번 정리에서 참조되지 않는 원본 음원 2개와 이미지 5개, 폐기 화면 전용 안내 문서를 제거했다. 보호 기록인 `종교`와 `불멸을 향해`의 인라인·독립 페이지는 해시로 보존한다.
 
 ## 검증
 
@@ -25,9 +30,8 @@ const result = ProjectCurseQA.organizationCanonSweep();
 console.log(ProjectCurseQA.organizationCanonReportText(result));
 ```
 
-자동 검증 결과는 `QA_RESULTS_MapPatch5_15_2cf.md`, 직접 확인 항목은 `MANUAL_CHECK_MapPatch5_15_2cf.md`에 기록했다.
+현재 정적 검증 기준은 `tools/verify-package.mjs`다.
 
 ## 공개 배포 전 확인
 
 포함된 음원과 영상은 파일명만으로 공개 재배포 허가를 판단할 수 없다. GitHub Pages 공개 전 원본 출처, 라이선스, 출처 표기와 재배포 허용 범위를 확인한다.
-

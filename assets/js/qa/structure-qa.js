@@ -46,7 +46,7 @@
 
   function checkVisibleTerminology(){
     const issues=[];
-    const roots=['history','region-map','faction-info','faction-relation','archiveListWrap'].map(id=>document.getElementById(id)).filter(Boolean);
+    const roots=['history','faction-info','archiveListWrap'].map(id=>document.getElementById(id)).filter(Boolean);
     const text=roots.map(root=>root.innerText||'').join('\n');
     [
       ['OLD_UAC_CONTROL','Urban Anomaly Control'],
