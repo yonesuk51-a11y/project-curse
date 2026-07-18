@@ -1,21 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta name="robots" content="noindex,nofollow"/>
-<title>사쿠마 유타 실종 사건 보고서 / 접근 거부</title>
-<style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#030405;color:#d8dde0;font-family:'Malgun Gothic','Apple SD Gothic Neo',Arial,sans-serif}.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}.box{width:min(680px,94vw);border:1px solid #3a1f23;background:linear-gradient(180deg,#0b0d10,#050607);padding:22px;box-shadow:0 0 42px rgba(0,0,0,.75),inset 0 0 0 1px rgba(255,255,255,.03)}.k{font:12px/1.4 Consolas,monospace;color:#c55b62;letter-spacing:.12em}h1{margin:8px 0 10px;font-size:24px;letter-spacing:-.02em;color:#f1f3f4}p{margin:.45em 0;color:#b9c0c4;line-height:1.65}.code{margin:16px 0 0;border:1px solid #2c3036;background:#090b0d;padding:12px;font:13px/1.65 Consolas,'Malgun Gothic',monospace;color:#cdd3d7}a{display:inline-block;min-height:42px;margin-top:18px;border:1px solid #723136;background:#151014;color:#eee;text-decoration:none;padding:10px 13px}a:hover{border-color:#a94349;background:#201316}@media(max-width:520px){.wrap{padding:14px}.box{padding:18px}h1{font-size:22px}.code{font-size:12px;overflow-wrap:anywhere}a{width:100%;text-align:center}}</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="robots" content="noindex,nofollow"/>
+  <title>사쿠마의 테이프</title>
+  <link href="../../assets/css/style.css" rel="stylesheet"/>
+  <link href="../../assets/css/record-cinematic.css" rel="stylesheet"/>
+  <script>window.__pc5152BootStart=window.__pc5152BootStart||performance.now();document.documentElement.classList.add('pc5152bi-boot-seen');</script>
 </head>
-<body class="pc5152an-systemframe-kst-recordlayout-audiobusfix pc5152bb-stage-template-responsivefix">
-<div class="wrap"><main class="box" role="main">
-<div class="k">U.A.C ARCHIVE LOCKED / LOCAL TERMINAL</div>
-<h1>접근 거부</h1>
-<p><b>사쿠마 유타 실종 사건 보고서</b> 기록은 현재 빌드에서 봉인되어 있습니다.</p>
-<p>기록 색인에는 존재하지만, 열람 권한이 없는 항목입니다. 본문 데이터는 공개 단말기에서 제공되지 않습니다.</p>
-<div class="code">FILE: Sakuma_Tape_991028<br/>ACCESS: SEALED<br/>READ PERMISSION: DENIED<br/>ROUTE: CLOSED ARCHIVE ONLY</div>
-<a href="../../index.html#archive-entry">기록 파일 색인으로 돌아가기</a>
-</main></div>
+<body class="scan pc5152an-systemframe-kst-recordlayout-audiobusfix pc5152bb-stage-template-responsivefix" data-archive-document="Sakuma_Tape_991028">
+  <div class="legacy-layout">
+    <aside class="legacy-sidebar">
+      <div class="brand-side">U.A.C 기록 단말기<small>S.I.D TOKYO OCCULT ARCHIVE</small></div>
+      <nav class="side-menu">
+        <a href="../../index.html?return=archive#archive-entry">기록 보관소</a>
+        <button id="audioToggle" type="button">효과음: 켜짐</button>
+      </nav>
+      <div class="side-note">VIDEO RECORD / VCR HISS LOOP</div>
+    </aside>
+    <div class="legacy-content">
+      <main class="doc-shell">
+        <div class="backline"><a class="btn" href="../../index.html?return=archive#archive-entry">기록 목록으로 복귀</a></div>
+        <header class="doc-header">
+          <div class="label">S.I.D 도쿄 지부 회수 테이프</div>
+          <h1 class="doc-title">사쿠마의 테이프</h1>
+          <div class="code">SID-SAKUMA / VIDEO RECORD</div>
+          <p class="muted">사쿠마 유타의 마지막 조사와 실종 경위를 복구된 영상 기록면으로 열람한다.</p>
+          <button class="btn" id="sakumaSequenceStart" type="button">기록 열람 시작</button>
+        </header>
+      </main>
+    </div>
+  </div>
+  <script src="../../assets/js/data/sakuma-cinematic-data.js"></script>
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    (function(){
+      document.getElementById('sakumaSequenceStart')?.addEventListener('click',function(){
+        window.ProjectCurseRecordCinematic?.start?.('Sakuma_Tape_991028');
+      });
+    })();
+  </script>
 </body>
 </html>

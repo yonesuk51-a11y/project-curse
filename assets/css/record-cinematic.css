@@ -1,0 +1,150 @@
+/* MapPatch 5.15.2cf — cinematic playback controls for protected records */
+.pc5152h-cult-sequence .pc-cinematic-controls{position:fixed;z-index:2147483605;left:50%;bottom:18px;display:none;width:min(760px,calc(100vw - 42px));transform:translateX(-50%);border:1px solid rgba(158,169,174,.2);background:rgba(3,5,6,.88);box-shadow:0 10px 32px rgba(0,0,0,.48);backdrop-filter:blur(7px)}
+.pc5152h-cult-sequence.show.pages-mode .pc-cinematic-controls{display:block}
+.pc5152h-cult-sequence .pc-cinematic-progress{height:2px;overflow:hidden;background:rgba(255,255,255,.09)}
+.pc5152h-cult-sequence .pc-cinematic-progress i{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,#7d2027,#d36a72);box-shadow:0 0 10px rgba(210,76,85,.42)}
+.pc5152h-cult-sequence.pc-cinematic-counting .pc-cinematic-progress i{animation:pcCinematicProgress linear forwards}
+.pc5152h-cult-sequence.pc-cinematic-paused .pc-cinematic-progress i{animation-play-state:paused}
+.pc5152h-cult-sequence .pc-cinematic-actions{display:flex;align-items:center;justify-content:center;gap:7px;padding:8px 10px}
+.pc5152h-cult-sequence .pc-cinematic-actions button{min-width:92px;padding:7px 11px;border:1px solid rgba(157,169,174,.22);background:rgba(14,17,19,.9);color:rgba(231,233,233,.84);font:11px/1.25 Consolas,'Malgun Gothic',monospace;letter-spacing:.035em;cursor:pointer}
+.pc5152h-cult-sequence .pc-cinematic-actions button:hover{border-color:rgba(194,69,77,.72);background:rgba(70,15,19,.54);color:#fff}
+.pc5152h-cult-sequence .pc-cinematic-actions button:disabled{opacity:.28;cursor:default}
+.pc5152h-cult-sequence.pages-mode.page-reveal .pc5152h-seq-frame img,
+.pc5152h-cult-sequence.pages-mode.page-reveal .pc5152ax-evidence-card img,
+.pc5152h-cult-sequence.pages-mode.page-reveal .pc5152cf-victim-slide figure img,
+.pc5152h-cult-sequence.pages-mode.page-reveal .pc5152v-large-photo img{animation:pcCinematicDrift 7.4s ease-out both;transform-origin:50% 45%}
+.pc5152h-cult-sequence.pages-mode .pc5152k-seq-line.visible{animation:pcCinematicSubtitle .32s steps(3,end) both}
+@keyframes pcCinematicProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pcCinematicDrift{from{transform:scale(1.015) translate3d(-.3%,.15%,0)}to{transform:scale(1.065) translate3d(.45%,-.35%,0)}}
+@keyframes pcCinematicSubtitle{0%{opacity:0;filter:blur(1px);transform:translateY(4px)}45%{opacity:.72;filter:none}100%{opacity:1;filter:none;transform:none}}
+@media(max-width:760px){
+  .pc5152h-cult-sequence .pc-cinematic-controls{bottom:10px;width:calc(100vw - 20px)}
+  .pc5152h-cult-sequence .pc-cinematic-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+  .pc5152h-cult-sequence .pc-cinematic-actions button{min-width:0;padding:8px 5px;font-size:10px}
+}
+
+/* Feral classification terminology follows the recovered source diagram. */
+.pc5152h-cult-sequence .pc5152cf-feral-term{font-style:normal;font-weight:700;text-shadow:0 0 9px currentColor}
+.pc5152h-cult-sequence .pc5152cf-feral-term-ferals{color:#d85b61}
+.pc5152h-cult-sequence .pc5152cf-feral-term-pure{color:#e58a8e}
+.pc5152h-cult-sequence .pc5152cf-feral-term-unpure{color:#b84e57}
+.pc5152h-cult-sequence .pc5152cf-feral-term-superiors{color:#9d8be8}
+.pc5152h-cult-sequence .pc5152cf-feral-term-celestials{color:#c0b2ff}
+.pc5152h-cult-sequence .pc5152cf-feral-term-odious{color:#876bd1}
+.pc5152h-cult-sequence .pc5152cf-feral-term-unusuals{color:#65adb1}
+.pc5152h-cult-sequence .pc5152cf-feral-term-artificial{color:#7fb58a}
+.pc5152h-cult-sequence .pc5152cf-feral-term-hybrid{color:#d48dab}
+
+/* 5.15.2cf — source-faithful feral warning and classification frames. */
+.pc5152h-cult-sequence.pc5152as-layout-warning-notice .pc5152h-seq-body,
+.pc5152h-cult-sequence.pc5152as-layout-classification-chart .pc5152h-seq-body{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;min-height:calc(100dvh - 210px)!important;padding:0!important
+}
+.pc5152h-cult-sequence.pc5152as-layout-warning-notice .pc5152h-seq-text,
+.pc5152h-cult-sequence.pc5152as-layout-classification-chart .pc5152h-seq-text{
+  width:min(1180px,82vw)!important;margin:0 auto!important;text-align:center!important
+}
+.pc5152h-cult-sequence.pc5152as-layout-warning-notice [data-seq-title]{
+  margin:0 0 70px!important;text-align:center!important;color:#e2e4e1!important;
+  font:400 clamp(28px,3.2vw,52px)/1 Consolas,'Courier New',monospace!important;letter-spacing:.08em!important
+}
+.pc5152h-cult-sequence.pc5152as-layout-warning-notice .pc5152k-seq-subtitle{display:none!important}
+.pc5152h-cult-sequence.pc5152as-layout-warning-notice .pc5152k-seq-linebox{
+  width:min(1080px,78vw)!important;margin:0 auto!important;display:grid!important;gap:25px!important
+}
+.pc5152h-cult-sequence.pc5152as-layout-warning-notice .pc5152k-seq-line{
+  max-width:none!important;color:rgba(229,231,227,.82)!important;
+  font:700 clamp(13px,1.15vw,18px)/1.55 Consolas,'Courier New','Malgun Gothic',monospace!important;
+  letter-spacing:.02em!important;text-transform:none!important;text-align:center!important
+}
+.pc5152h-cult-sequence.pc5152as-layout-classification-chart .pc5152h-seq-text{
+  display:flex!important;align-items:center!important;justify-content:center!important
+}
+.pc5152h-cult-sequence.pc5152as-layout-classification-chart .pc5152k-seq-linebox{width:100%!important}
+.pc5152cf-classification-chart{
+  width:min(1040px,76vw)!important;max-width:none!important;margin:0 auto!important;display:flex!important;
+  flex-direction:column!important;align-items:center!important;gap:20px!important
+}
+.pc5152cf-classification-chart img{
+  display:block!important;width:100%!important;max-height:62dvh!important;object-fit:contain!important;
+  filter:saturate(.78) contrast(1.06) brightness(.9)!important
+}
+.pc5152cf-classification-chart figcaption{display:block!important;width:100%!important;margin:0!important;opacity:1!important;visibility:visible!important;text-align:center!important;font-family:Consolas,'Courier New',monospace!important}
+.pc5152cf-classification-chart figcaption b{display:block;color:rgba(232,234,230,.86)!important;font-size:clamp(12px,1.25vw,18px)!important;letter-spacing:.045em!important}
+.pc5152cf-classification-chart figcaption small{display:block;margin-top:5px;color:rgba(194,199,196,.5)!important;font-size:10px!important;letter-spacing:.12em!important}
+@media(max-width:760px){
+  .pc5152h-cult-sequence.pc5152as-layout-warning-notice [data-seq-title]{margin-bottom:34px!important}
+  .pc5152h-cult-sequence.pc5152as-layout-warning-notice .pc5152k-seq-linebox{width:88vw!important;gap:16px!important}
+  .pc5152cf-classification-chart{width:90vw!important}
+}
+
+/* Final stage alignment shared by Religion and Feral warning frames. */
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode.pc5152as-layout-warning-notice .pc5152h-seq-body,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode.pc5152as-layout-classification-chart .pc5152h-seq-body{
+  display:flex!important;grid-template-columns:none!important;align-items:center!important;justify-content:center!important;padding-inline:0!important
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode.pc5152as-layout-warning-notice .pc5152h-seq-text,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode.pc5152as-layout-classification-chart .pc5152h-seq-text{
+  width:100%!important;max-width:none!important;margin:0 auto!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode.pc5152as-layout-warning-notice .pc5152k-seq-linebox{
+  width:min(1080px,78vw)!important;margin-inline:auto!important
+}
+
+/* Sakuma's Tapes — centered victim photographs with the field note below. */
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-victim-slide .pc5152h-seq-body{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;min-height:calc(100dvh - 210px)!important;height:auto!important;padding:0!important;margin:0 auto!important
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-victim-slide .pc5152h-seq-text{
+  width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-victim-slide .pc5152h-seq-text > h2,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pc5152as-layout-victim-slide .pc5152k-seq-subtitle{display:none!important}
+.pc5152cf-victim-slide{
+  width:min(900px,82vw)!important;margin:0 auto!important;display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;gap:10px!important;text-align:center!important
+}
+.pc5152cf-victim-slide header{display:flex;flex-direction:column;align-items:center;gap:5px;margin-bottom:2px}
+.pc5152cf-victim-slide header b{
+  color:rgba(238,238,234,.94);font:700 clamp(20px,2vw,32px)/1.1 'Malgun Gothic',sans-serif;letter-spacing:.045em
+}
+.pc5152cf-victim-slide header span{
+  color:rgba(196,200,198,.62);font:500 clamp(11px,.9vw,14px)/1.35 Consolas,'Malgun Gothic',monospace;letter-spacing:.05em
+}
+.pc5152cf-victim-slide figure{
+  width:min(820px,78vw)!important;margin:0 auto!important;overflow:hidden!important;border:1px solid rgba(167,174,174,.16)!important;
+  background:#020303!important;box-shadow:0 16px 50px rgba(0,0,0,.48)!important
+}
+.pc5152cf-victim-slide figure img{
+  display:block!important;width:100%!important;height:min(48dvh,520px)!important;object-fit:contain!important;
+  filter:saturate(.76) contrast(1.08) brightness(.88)!important
+}
+.pc5152cf-victim-report{
+  width:min(820px,78vw)!important;margin:2px auto 0!important;display:grid!important;gap:5px!important;text-align:left!important
+}
+.pc5152cf-victim-report p{
+  margin:0!important;color:rgba(225,227,224,.82)!important;font:500 clamp(12px,1vw,15px)/1.58 'Malgun Gothic',sans-serif!important;letter-spacing:.015em!important
+}
+.pc5152cf-victim-slide > small{
+  width:min(820px,78vw)!important;color:rgba(181,67,72,.58)!important;text-align:right!important;
+  font:9px/1.2 Consolas,'Courier New',monospace!important;letter-spacing:.12em!important
+}
+@media(max-width:760px){
+  .pc5152cf-victim-slide{width:92vw!important}
+  .pc5152cf-victim-slide figure,.pc5152cf-victim-report,.pc5152cf-victim-slide > small{width:88vw!important}
+  .pc5152cf-victim-slide figure img{height:min(42dvh,390px)!important}
+}
+
+/* Short recovered-video bridge between Sakuma's final two still frames. */
+.pc5152h-cult-sequence.sakuma-bridge-mode{background:#000!important}
+.pc5152h-cult-sequence.sakuma-bridge-mode .pc5152q-ending-video{
+  position:fixed!important;inset:0!important;display:block!important;width:100vw!important;height:100dvh!important;
+  object-fit:cover!important;opacity:1!important;z-index:8!important;pointer-events:none!important;background:#000!important;
+  filter:contrast(1.08) brightness(.88) saturate(.72)!important
+}
+.pc5152h-cult-sequence.sakuma-bridge-mode .pc5152h-seq-panel,
+.pc5152h-cult-sequence.sakuma-bridge-mode .pc-cinematic-controls{display:none!important}
+.pc5152h-cult-sequence.sakuma-bridge-mode .pc5152h-seq-black{z-index:9!important;background:rgba(0,0,0,.08)!important}
+.pc5152h-cult-sequence.sakuma-bridge-mode .pc5152h-seq-scan{z-index:10!important;opacity:.14!important}

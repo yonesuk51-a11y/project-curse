@@ -1,0 +1,53 @@
+/* MapPatch 5.15.2ce — scoped structure and declutter stabilization */
+
+body.pc5152ce-shared-declutter #archive-entry .pc5152bc-archive-controls,
+body.pc5152ce-shared-declutter #archive-entry .pc5152bc-archive-counter,
+body.pc5152ce-shared-declutter #archive-entry .pc5152bx-archive-axis-panel,
+body.pc5152ce-shared-declutter #faction-info .pc5152bc-faction-controls,
+body.pc5152ce-shared-declutter #faction-info .pc5152bx-faction-filter-status,
+body.pc5152ce-shared-declutter #faction-relation .pc5152bc-relation-controls{
+  display:none!important;
+}
+
+body.pc5152ce-shared-declutter #archive-entry .pc5152bc-archive-hub{
+  padding-bottom:12px;
+}
+body.pc5152ce-shared-declutter #archive-entry .pc5152bc-archive-tools{
+  display:block;
+}
+body.pc5152ce-shared-declutter #archive-entry .pc5152bc-search{
+  width:100%;
+  max-width:none;
+}
+body.pc5152ce-shared-declutter #archive-entry .pc5152bc-search input{
+  width:100%;
+  min-height:42px;
+}
+
+body.pc5152ce-canon-reconciled #faction-info .faction-tile[data-key="fhc"],
+body.pc5152ce-canon-reconciled #faction-info .faction-tile[data-key="amarion"]{
+  border-color:rgba(164,136,72,.34);
+}
+body.pc5152ce-canon-reconciled #faction-info .faction-tile[data-key="haimun"],
+body.pc5152ce-canon-reconciled #faction-info .faction-tile[data-key="syndicate"]{
+  border-color:rgba(117,98,84,.36);
+}
+body.pc5152ce-canon-reconciled #faction-info .faction-tile .pc5152bx-tagline{
+  display:none!important;
+}
+
+body.pc5152ce-canon-reconciled #faction-info .pc5152bo-dossier-copy p,
+body.pc5152ce-canon-reconciled #faction-relation .pc5152bx-detail p,
+body.pc5152ce-canon-reconciled #faction-relation .pc5152bx-mobile-card small{
+  word-break:keep-all;
+  overflow-wrap:break-word;
+  line-height:1.72;
+}
+
+@media (max-width:760px){
+  body.pc5152ce-shared-declutter #archive-entry .pc5152bc-archive-hub,
+  body.pc5152ce-shared-declutter #faction-info .pc5152bc-faction-hub,
+  body.pc5152ce-shared-declutter #faction-relation .pc5152bc-relation-hub{
+    padding:12px;
+  }
+}

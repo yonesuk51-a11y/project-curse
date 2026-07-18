@@ -1,0 +1,381 @@
+/* Project Curse 5.15.2cf — unified faction analysis room */
+#faction-relation {
+  display: none !important;
+}
+
+.side-menu a[data-target="faction-relation"] {
+  display: none !important;
+}
+
+body.pc-faction-analysis-ready #faction-info {
+  padding: 0;
+  background:
+    linear-gradient(90deg, rgba(120, 13, 19, .08), transparent 21%),
+    linear-gradient(180deg, rgba(255,255,255,.012), transparent 240px),
+    #050707;
+}
+
+.pc-faction-analysis {
+  width: min(1180px, calc(100% - 42px));
+  margin: 0 auto;
+  padding: 34px 0 70px;
+  color: #c9cecf;
+}
+
+.pc-faction-analysis-intro {
+  padding: 0 0 25px;
+  border-bottom: 1px solid #24292a;
+}
+
+.pc-faction-analysis-intro small {
+  display: block;
+  margin-bottom: 10px;
+  color: #b4373d;
+  font: 700 10px/1.4 var(--mono, monospace);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.pc-faction-analysis-intro h2 {
+  margin: 0 0 9px;
+  color: #e0e4e4;
+  font-size: clamp(25px, 2vw, 34px);
+  line-height: 1.16;
+  letter-spacing: -.03em;
+}
+
+.pc-faction-analysis-intro p {
+  max-width: 760px;
+  margin: 0;
+  color: #8f9798;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.pc-faction-index {
+  display: grid;
+  gap: 42px;
+  padding-top: 34px;
+}
+
+.pc-faction-index-group h3 {
+  margin: 0 0 14px;
+  color: #747b7c;
+  font: 700 9px/1.4 var(--mono, monospace);
+  letter-spacing: .24em;
+}
+
+.pc-faction-index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.pc-faction-card {
+  position: relative;
+  display: flex;
+  min-height: 190px;
+  padding: 24px 18px 21px;
+  border: 1px solid #24292a;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 19px;
+  color: #c8cdce;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.025), transparent 42%),
+    #080a0a;
+  cursor: pointer;
+}
+
+.pc-faction-card::after {
+  content: '';
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: -1px;
+  height: 1px;
+  background: transparent;
+}
+
+.pc-faction-card:hover,
+.pc-faction-card:focus-visible {
+  border-color: #6c292d;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(133, 19, 26, .13), transparent 58%),
+    #0b0d0d;
+  outline: 0;
+}
+
+.pc-faction-card:hover::after,
+.pc-faction-card:focus-visible::after {
+  background: #b63138;
+}
+
+.pc-faction-card img {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  opacity: .78;
+  filter: grayscale(.7) contrast(1.08);
+  transition: opacity .18s ease, filter .18s ease, transform .18s ease;
+}
+
+.pc-faction-card:hover img,
+.pc-faction-card:focus-visible img {
+  opacity: 1;
+  filter: none;
+  transform: translateY(-2px);
+}
+
+.pc-faction-card b {
+  color: #e0e4e4;
+  font: 700 18px/1.15 var(--mono, monospace);
+  letter-spacing: .12em;
+}
+
+.pc-faction-analysis-detail {
+  width: min(1000px, calc(100% - 52px));
+  padding-top: 27px;
+}
+
+.pc-faction-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 26px;
+  padding: 9px 0;
+  border: 0;
+  color: #8b9293;
+  background: transparent;
+  font: 700 10px/1.3 var(--mono, monospace);
+  letter-spacing: .07em;
+  cursor: pointer;
+}
+
+.pc-faction-back:hover,
+.pc-faction-back:focus-visible {
+  color: #d6dada;
+  outline: 0;
+}
+
+.pc-faction-back i {
+  color: #ad3036;
+  font-style: normal;
+}
+
+.pc-faction-dossier {
+  min-width: 0;
+}
+
+.pc-faction-dossier-head {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 27px;
+  align-items: center;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #333839;
+}
+
+.pc-faction-dossier-head img {
+  width: 98px;
+  height: 98px;
+  object-fit: contain;
+}
+
+.pc-faction-dossier-head span {
+  display: block;
+  margin-bottom: 6px;
+  color: #a83138;
+  font: 700 9px/1.4 var(--mono, monospace);
+  letter-spacing: .2em;
+}
+
+.pc-faction-dossier-head h3 {
+  margin: 0;
+  color: #f0f2f2;
+  font: 700 clamp(28px, 3vw, 44px)/1 var(--mono, monospace);
+  letter-spacing: -.045em;
+}
+
+.pc-faction-dossier-head p {
+  margin: 0;
+  color: #8f9697;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.pc-faction-lead {
+  margin: 0;
+  padding: 23px 0 25px;
+  border-bottom: 1px solid #202526;
+  color: #d3d7d7;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.75;
+}
+
+.pc-faction-copy {
+  padding: 24px 0 27px;
+  border-bottom: 1px solid #202526;
+}
+
+.pc-faction-copy p {
+  margin: 0 0 13px;
+  color: #aeb4b5;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.pc-faction-copy p:last-child {
+  margin-bottom: 0;
+}
+
+.pc-faction-section-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0 0 16px;
+  color: #d8dcdc;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.pc-faction-section-title::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: #9f292f;
+}
+
+.pc-faction-brief-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, .82fr);
+  gap: 34px;
+  padding: 28px 0;
+  border-bottom: 1px solid #202526;
+}
+
+.pc-faction-operations ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pc-faction-operations li {
+  position: relative;
+  padding: 8px 0 8px 18px;
+  border-top: 1px solid #181c1d;
+  color: #a8aeaf;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.pc-faction-operations li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 16px;
+  width: 5px;
+  height: 5px;
+  border: 1px solid #8f2a30;
+  transform: rotate(45deg);
+}
+
+.pc-faction-fault {
+  padding-left: 24px;
+  border-left: 1px solid #542126;
+}
+
+.pc-faction-fault p {
+  margin: 0;
+  color: #a5acad;
+  font-size: 12px;
+  line-height: 1.85;
+}
+
+.pc-faction-chronology,
+.pc-faction-relations {
+  padding: 28px 0;
+  border-bottom: 1px solid #202526;
+}
+
+.pc-faction-chronology ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pc-faction-chronology li {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 18px;
+  padding: 10px 0;
+  border-top: 1px solid #181c1d;
+}
+
+.pc-faction-chronology time {
+  color: #b3343b;
+  font: 700 10px/1.6 var(--mono, monospace);
+  letter-spacing: .04em;
+}
+
+.pc-faction-chronology span {
+  color: #aeb4b5;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.pc-faction-relation-list {
+  display: grid;
+  gap: 1px;
+  background: #202526;
+  border: 1px solid #202526;
+}
+
+.pc-faction-relation {
+  display: grid;
+  grid-template-columns: 152px 1fr 20px;
+  gap: 18px;
+  align-items: start;
+  width: 100%;
+  padding: 17px 18px;
+  border: 0;
+  color: #afb5b6;
+  background: #090c0c;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pc-faction-relation:hover {
+  background: #0e1010;
+}
+
+.pc-faction-relation strong {
+  color: #d9dddd;
+  font: 700 11px/1.5 var(--mono, monospace);
+}
+
+.pc-faction-relation strong small {
+  display: block;
+  margin-top: 4px;
+  color: #9e3036;
+  font-size: 9px;
+  letter-spacing: .06em;
+}
+
+.pc-faction-relation > span {
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.pc-faction-relation > i {
+  color: #6e7576;
+  font: normal 14px/1.4 var(--mono, monospace);
+}
+
+@media (max-width: 1100px) {
+  .pc-faction-index-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .pc-faction-brief-grid { grid-template-columns: 1fr; }
+  .pc-faction-fault { padding-left: 0; padding-top: 22px; border-left: 0; border-top: 1px solid #542126; }
+}

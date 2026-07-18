@@ -1,0 +1,34 @@
+/* MapPatch 5.15.2cf — public original-record index */
+body.pc-archive-index-active #archive-entry>.label,
+body.pc-archive-index-active #archive-entry>h2,
+body.pc-archive-index-active #archive-entry>.pc5152bc-archive-hub{display:none!important}
+body.pc-archive-index-active #archive-entry>.pc5152bx-archive-axis-panel,
+body.pc-archive-index-active #archive-entry #archiveListWrap>.archive-groups{display:none!important}
+body.pc-archive-index-active #archive-entry #archiveListWrap{margin-top:0}
+body.pc-archive-index-active #archive-entry .pc-archive-index-host{display:block!important;position:relative;z-index:4}
+body.pc-archive-index-active #archive-entry .pc-archive-index{max-width:980px;margin:0 auto;padding:5px 0 12px}
+body.pc-archive-index-active #archive-entry .pc-archive-index-head{margin:0 0 17px;padding:12px 15px 14px;border-left:3px solid rgba(165,43,50,.82);background:linear-gradient(90deg,rgba(72,13,18,.2),transparent 68%)}
+body.pc-archive-index-active #archive-entry .pc-archive-index-head span{color:#c85b63;font-size:.64rem;letter-spacing:.18em}
+body.pc-archive-index-active #archive-entry .pc-archive-index-head h3{margin:7px 0 0;color:#e6e8e8;font-size:1.35rem;font-weight:600;letter-spacing:.02em}
+body.pc-archive-index-active #archive-entry .pc-archive-format-group{margin:0 0 24px}
+body.pc-archive-index-active #archive-entry .pc-archive-format-head{display:flex;align-items:baseline;gap:13px;padding:0 2px 9px}
+body.pc-archive-index-active #archive-entry .pc-archive-format-head span{color:rgba(200,91,99,.78);font-size:.58rem;letter-spacing:.2em}
+body.pc-archive-index-active #archive-entry .pc-archive-format-head h4{margin:0;color:#dfe2e2;font-size:.92rem;font-weight:600;letter-spacing:.08em}
+body.pc-archive-index-active #archive-entry .pc-archive-format-video .pc-archive-row{background:linear-gradient(90deg,rgba(42,12,16,.3),rgba(10,13,15,.55) 66%)}
+body.pc-archive-index-active #archive-entry .pc-archive-row-list{border-top:1px solid rgba(170,181,185,.2)}
+body.pc-archive-index-active #archive-entry .pc-archive-row{display:grid;width:100%;min-height:0;grid-template-columns:175px minmax(0,1fr) auto;align-items:center;gap:18px;margin:0;padding:16px 15px;border:0;border-bottom:1px solid rgba(170,181,185,.16);border-left:2px solid transparent;border-radius:0;background:rgba(10,13,15,.52);color:#e5e7e7;text-align:left;cursor:pointer;transition:border-color .14s ease,background .14s ease}
+body.pc-archive-index-active #archive-entry .pc-archive-row:hover{border-left-color:#bc4851;background:linear-gradient(90deg,rgba(86,17,22,.28),rgba(13,16,18,.55) 72%)}
+body.pc-archive-index-active #archive-entry .pc-archive-row.is-restricted{background:rgba(8,11,13,.4)}
+body.pc-archive-index-active #archive-entry .pc-archive-row.is-restricted:hover{background:linear-gradient(90deg,rgba(68,15,19,.2),rgba(10,13,15,.48) 72%)}
+body.pc-archive-index-active #archive-entry .pc-archive-row.is-restricted i{color:rgba(188,125,130,.65)}
+body.pc-archive-index-active #archive-entry .pc-archive-row code{color:rgba(213,103,111,.9);font-size:.68rem;letter-spacing:.08em}
+body.pc-archive-index-active #archive-entry .pc-archive-row span{display:grid;gap:5px;min-width:0}
+body.pc-archive-index-active #archive-entry .pc-archive-row b{color:#e7e9e9;font-size:1rem;font-weight:600}
+body.pc-archive-index-active #archive-entry .pc-archive-row small{overflow:hidden;color:rgba(213,217,218,.62);font-size:.82rem;line-height:1.5;text-overflow:ellipsis;white-space:nowrap}
+body.pc-archive-index-active #archive-entry .pc-archive-row i{color:rgba(220,133,139,.82);font-size:.76rem;font-style:normal;letter-spacing:.04em;white-space:nowrap}
+body.pc-archive-index-active #archive-entry .pc-archive-row:focus-visible{outline:1px solid #d56b72;outline-offset:-3px}
+@media (max-width:760px){
+  body.pc-archive-index-active #archive-entry .pc-archive-row{grid-template-columns:1fr auto;gap:6px 12px;padding:14px 12px}
+  body.pc-archive-index-active #archive-entry .pc-archive-row code{grid-column:1/-1}
+  body.pc-archive-index-active #archive-entry .pc-archive-row small{white-space:normal}
+}
