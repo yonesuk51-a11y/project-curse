@@ -90,12 +90,14 @@ check('cinematic:no-photo-drift',!cinematicCss.includes('pcCinematicDrift'));
 check('cinematic:natural-ratio-photo-fit',cinematicRuntime.includes('image.naturalWidth/image.naturalHeight')&&cinematicRuntime.includes('--pc-media-width')&&cinematicCss.includes('.pc-cinematic-frame-fitted'));
 check('cinematic:portrait-height-contained',cinematicRuntime.includes("(window.innerHeight||720)*.56")&&cinematicCss.includes('max-height:56dvh!important'));
 check('mobile:viewport-safe-area',index.includes('viewport-fit=cover')&&cinematicMobileCss.includes('env(safe-area-inset-bottom)'));
-check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.15.2dg')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
+check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.15.2dh')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
 check('mobile:phone-stage-scroll-safe',cinematicMobileCss.includes('@media (max-width:600px)')&&cinematicMobileCss.includes('overflow-y:auto!important')&&cinematicMobileCss.includes('overscroll-behavior:contain!important'));
 check('mobile:portrait-video-contained',cinematicMobileCss.includes('.pc5152h-cult-sequence.intro-mode .pc5152h-seq-video')&&cinematicMobileCss.includes('object-fit:contain!important'));
 check('mobile:touch-controls',cinematicMobileCss.includes('grid-template-columns:repeat(4,minmax(0,1fr))')&&cinematicMobileCss.includes('min-height:44px!important'));
 check('mobile:s24-personnel-pair',cinematicMobileCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))')&&cinematicMobileCss.includes('max-width:430px!important'));
 check('mobile:landscape-stage',cinematicMobileCss.includes('@media (orientation:landscape) and (max-height:560px)')&&cinematicMobileCss.includes('grid-template-columns:minmax(0,1fr) minmax(220px,.75fr)'));
+check('mobile:intrinsic-photo-frame',cinematicMobileCss.includes('width:min(var(--pc-media-width),88vw)!important')&&cinematicMobileCss.includes('.pc5152h-seq-frame.pc-cinematic-frame-fitted'));
+check('mobile:landscape-copy-and-controls-fit',cinematicMobileCss.includes('font-size:6px!important')&&cinematicMobileCss.includes('width:min(680px,calc(100vw - 48px))!important')&&cinematicMobileCss.includes('min-height:36px!important'));
 check('cinematic:two-column-raised',cinematicCss.includes('pc5152as-layout-two-column .pc5152h-seq-body')&&cinematicCss.includes('translateY(clamp(-96px,-7vh,-54px))'));
 check('cinematic:fullscreen-chapter-transition',cinematicCss.includes('.pc5152h-cult-sequence.video-transition .pc5152m-transition-video')&&cinematicCss.includes('position:fixed!important')&&cinematicCss.includes('height:100dvh!important'));
 check('cinematic:transition-plays-full-fallback',cinematicRuntime.includes("Number(cfg.transitionFallback||3750)")&&!cinematicRuntime.includes("Math.min(Number(cfg.transitionFallback||3100),1800)"));
@@ -159,7 +161,7 @@ check('cache:core-busters',[
   'assets/js/pages/archive-document.js','assets/js/pages/archive-consolidation.js','assets/js/pages/faction-analysis.js'
 ].every(file=>index.includes(`${file}?v=5.15.2cv`)));
 check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.15.2df')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.15.2df'));
-check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.15.2dg'));
+check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.15.2dh'));
 check('manifest:viewer-owner',manifest.includes("archiveDocumentViewer:'assets/js/pages/archive-document.js'"));
 check('registry:no-href-field',!registry.includes("href:'docs/"));
 
