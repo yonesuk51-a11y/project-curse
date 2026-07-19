@@ -4,7 +4,7 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.15.2cp';
+const VERSION='5.15.2cr';
 const DATA_VERSION='5.15.2cf';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
@@ -20,12 +20,12 @@ function article(source,id){
 }
 
 const required=[
-  'index.html','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/site-shell.css',
-  'assets/js/data/site-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/main.js',
+  'index.html','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/app-shell.css',
+  'assets/js/data/site-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/main.js','assets/js/core/base-runtime.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
-  'assets/js/core/runtime-ownership.js','assets/js/core/menu-audio-runtime.js','assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/qa/structure-qa.js','assets/js/pages/faction-analysis.js',
+  'assets/js/pages/shared-declutter.js',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
   'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
   'assets/audio/pc5152cf_feral_dying_memories_bgm.mp3',
@@ -35,7 +35,8 @@ const required=[
 required.forEach(relative=>add(`required:${relative}`,existsSync(path(relative))));
 
 const index=read('index.html');
-const main=read('assets/js/main.js');
+const main=read('assets/js/core/record-cinematic-runtime.js');
+const standaloneRuntime=read('assets/js/main.js');
 const canon=read('assets/js/data/canon-registry.js');
 const reconcile=read('assets/js/pages/canon-reconciliation.js');
 const manifest=read('assets/js/data/site-manifest.js');
@@ -44,8 +45,8 @@ const archiveRuntime=read('assets/js/pages/archive-consolidation.js');
 const factionAnalysisSource=read('assets/js/data/faction-analysis-data.js');
 const factionAnalysisRuntime=read('assets/js/pages/faction-analysis.js');
 const worldHistory=read('assets/js/pages/world-history.js');
-const menuAudioRuntime=read('assets/js/core/menu-audio-runtime.js');
-const runtimeOwnership=read('assets/js/core/runtime-ownership.js');
+const appShell=read('assets/js/core/app-shell.js');
+const appShellCss=read('assets/css/app-shell.css');
 const recordCinematicCss=read('assets/css/record-cinematic.css');
 const cinematicRegistrySource=read('assets/js/core/record-cinematic-registry.js');
 const cinematicCults=read('assets/js/pages/cinematic-cults.js');
@@ -73,24 +74,22 @@ const archiveData=context.window.ProjectCurseArchive;
 const cinematicData=context.window.ProjectCurseCinematicRegistry;
 const ordered=[
   'assets/js/data/site-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
-  'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/main.js',
-  'assets/js/core/runtime-ownership.js','assets/js/core/menu-audio-runtime.js','assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/qa/structure-qa.js','assets/js/pages/faction-analysis.js'
+  'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/base-runtime.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js'
 ];
 const positions=ordered.map(owner=>index.indexOf(`src="${owner}"`));
 add('script-order',positions.every((position,i)=>position>=0&&(i===0||position>positions[i-1])),positions.join(','));
 add('stabilization-css-link',count(index,'href="assets/css/stabilization.css"')===1);
 add('archive-css-link',count(index,'href="assets/css/archive-consolidation.css"')===1);
 add('record-cinematic-css-link',count(index,'href="assets/css/record-cinematic.css"')===1);
-add('site-shell-css-link',count(index,'href="assets/css/site-shell.css"')===1&&index.indexOf('assets/css/site-shell.css')>index.indexOf('assets/css/faction-analysis.css'));
-add('site-shell-layer-ownership',read('assets/css/site-shell.css').includes('--pc-shell-bar-h')&&read('assets/css/site-shell.css').includes('z-index: 3002 !important')&&read('assets/css/site-shell.css').includes('top: var(--pc-shell-bar-h) !important')&&runtimeOwnership.includes('MENU_HIT_BLOCKED'));
+add('app-shell-css-link',count(index,'href="assets/css/app-shell.css"')===1);
 add('record-cinematic-controls',main.includes('pc-cinematic-controls')&&main.includes('scheduleAutomaticAdvance')&&main.includes('ProjectCurseRecordCinematic'));
 add('record-cinematic-navigation',main.includes('previousSequence')&&main.includes('toggleSequencePlayback')&&main.includes('restartSequence'));
 add('feral-cinematic-runtime',main.includes("const FERALS_RECORD='Ferals_860722'")&&cinematicFerals.includes("id:'Ferals_860722'")&&cinematicFerals.includes('ProjectCurseFeralCinematic?.pages')&&main.includes("recordId!==IMMORTALITY_RECORD && recordId!==SAKUMA_RECORD && cfg.bgm"));
 add('sequence-menu-ambient-isolated',main.includes('function silenceMenuAmbientDuringSequence')&&main.includes('ambient.volume=0; ambient.pause()')&&count(main,'silenceMenuAmbientDuringSequence();')>=2);
 add('cult-feral-shared-intro-video',cinematicCults.includes("introVideo:'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4'")&&cinematicFerals.includes("introVideo:'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4'")&&existsSync(path('assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4')));
 add('cult-feral-radio-static-layer',hash(readFileSync(path('assets/audio/pc5152an_cult_radio_static_layer.mp3')))==='3ad8d1b5cb05a8599c4b6058d3c79574b5e6df7c8683631d53a5be7227c4f164'&&main.includes("assets/audio/pc5152an_cult_radio_static_layer.mp3"));
-add('archive-return-boot-bypass',index.includes('__pc5152SkipBoot=returning')&&index.includes("get('return')==='archive'")&&main.includes('standalone records return to the archive')&&main.includes('index.html?return=archive#archive-entry')&&read('assets/css/style.css').includes('html.pc5152cf-archive-return #loader'));
+add('archive-return-boot-bypass',index.includes('__pc5152SkipBoot=returning')&&index.includes("get('return')==='archive'")&&standaloneRuntime.includes('standalone records return to the archive')&&standaloneRuntime.includes('index.html?return=archive#archive-entry')&&read('assets/css/style.css').includes('html.pc5152cf-archive-return #loader'));
 add('record-cinematic-short-transitions',main.includes('Math.min(Number(cfg.transitionFallback||3100),1800)')&&main.includes('Math.min(Number(cfg.introFallback||10450),4800)'));
 add('immortality-full-length-bgm',statSync(path('assets/audio/pc5152am_immortality_scp087_theme.mp3')).size>9_000_000,statSync(path('assets/audio/pc5152am_immortality_scp087_theme.mp3')).size);
 add('cult-full-length-looping-bgm',statSync(path('assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3')).size>8_000_000&&cinematicCults.includes("assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3")&&main.includes('state.bgm.loop = true'),statSync(path('assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3')).size);
@@ -98,24 +97,22 @@ add('feral-custom-bgm',statSync(path('assets/audio/pc5152cf_feral_dying_memories
 add('canon-faction-owner',factionAnalysisSource.includes('ProjectCurseFactionAnalysis')&&factionAnalysisRuntime.includes('ProjectCurseFactionAnalysis'));
 add('canon-relation-owner',Array.isArray(canonData?.relations)&&canonData.relations.length===18&&factionAnalysisRuntime.includes('function relationButton')&&factionAnalysisRuntime.includes('faction.relations.map(relationButton)'));
 add('canon-direct-current-names',!canon.includes('Urban Anomaly Containment')&&!canon.includes('신디케이트')&&!canon.includes('하이문')&&!canon.includes('normalizeTerms')&&!factionAnalysisSource.includes('신디케이트')&&!factionAnalysisSource.includes('하이문')&&!factionAnalysisSource.includes('normalizeTerms'));
-add('mobile-drawer-single-event-owner',main.includes('lastDrawerActivation')&&main.includes('lastSidebarRouteActivation')&&main.includes('activateSidebarRouteFromEvent')&&main.includes("document.addEventListener('pointerdown',function(e)")&&main.includes("e.target.closest('.side-menu a[data-target]')")&&main.includes('if(now-lastDrawerActivation<650) return true')&&main.includes('if(now-lastSidebarRouteActivation<650) return false')&&!main.includes("['touchend','pointerup'].forEach(type=>"));
-add('mobile-drawer-route-closes-cleanly',main.includes("body.classList.toggle('pc5152be-drawer-open',!!open)")&&main.includes("routeTo(link.dataset.target||'terminal-home')"));
-add('mobile-legacy-routers-disabled-for-v3',main.includes("const managedStructureV3=window.ProjectCurseStructure?.schema==='project-curse-structure-v3'")&&main.includes("if(window.ProjectCurseStructure?.schema!=='project-curse-structure-v3') sideLinks().forEach")&&main.includes("if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;"));
-add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&index.includes('class="active" data-target="terminal-home"')&&main.includes("show((location.hash||'#terminal-home').slice(1))")&&menuAudioRuntime.includes("const target=returningToArchive?'archive-entry':'terminal-home'")&&menuAudioRuntime.includes('pc5152cnInitialRoute'));
-add('route-clears-inert-synchronously',main.includes("page.removeAttribute('inert')")&&main.includes("page.style.pointerEvents=active?'auto':'none'")&&menuAudioRuntime.includes("page.removeAttribute('inert')")&&menuAudioRuntime.includes("page.style.pointerEvents=active?'auto':'none'"));
-add('window-capture-menu-owner',menuAudioRuntime.includes('function routeFromMenuPress')&&menuAudioRuntime.includes("window.addEventListener('touchstart'")&&menuAudioRuntime.includes("window.addEventListener('pointerdown'")&&menuAudioRuntime.includes("window.addEventListener('click'")&&menuAudioRuntime.includes('event.stopImmediatePropagation'));
-add('menu-route-seals-drawer-closed',menuAudioRuntime.includes('function setDrawerOpen')&&menuAudioRuntime.includes('function sealDrawerClosed')&&menuAudioRuntime.includes("button.textContent=open?'×':'☰'")&&menuAudioRuntime.includes("localStorage.setItem('pc-main-drawer-open',open?'open':'closed')")&&menuAudioRuntime.includes('requestAnimationFrame(sealDrawerClosed)')&&main.includes('setDrawer(false);'));
-add('single-shell-runtime-owner',runtimeOwnership.includes('function claimShell')&&runtimeOwnership.includes(".side-menu a[data-target],.pc5152an-menu,.pc584-main-drawer-toggle")&&runtimeOwnership.includes('replaceListenerTarget')&&menuAudioRuntime.includes('function drawerFromMenuPress')&&menuAudioRuntime.includes('window.ProjectCurseShell=Object.freeze'));
-add('runtime-ownership-manifest',structureData?.owners?.runtimeOwnership==='assets/js/core/runtime-ownership.js'&&structureData?.owners?.menuAudio==='assets/js/core/menu-audio-runtime.js');
-add('runtime-ownership-qa',read('assets/js/qa/structure-qa.js').includes("['runtimeOwnership','menuAudio','sharedDeclutter','canonReconciliation','archiveIndex']")&&read('assets/js/qa/structure-qa.js').includes('modules.runtimeOwnership?.check?.()'));
-add('menu-navigation-cues-disabled',!menuAudioRuntime.includes("play('latch','drawer',180)")&&!menuAudioRuntime.includes("play('contact','route',260)"));
+add('pc-sidebar-static',appShellCss.includes('grid-template-columns: var(--uac-sidebar-width) minmax(0, 1fr)')&&appShellCss.includes('.uac-shell-menu-button {\n  display: none;')&&!appShell.includes('translateX'));
+add('shell-nav-four-links',index.includes('class="uac-shell-nav side-menu')&&(index.match(/<a[^>]+data-target="(?:terminal-home|history|faction-info|archive-entry)"/g)||[]).length===4&&appShell.includes("document.querySelectorAll('.uac-shell-nav a[data-target]')"));
+add('mobile-drawer-overlays-content',appShellCss.includes('position: absolute;\n    inset: 0 auto 0 0;')&&appShellCss.includes('transform: translate3d(-102%, 0, 0)')&&appShellCss.includes('.uac-shell-workspace {\n    display: block;'));
+add('mobile-drawer-single-event-owner',count(appShell,"toggle.addEventListener('click'")===1&&count(appShell,"link.addEventListener('click'")===1&&!appShell.includes("addEventListener('touch"));
+add('mobile-drawer-route-closes-cleanly',appShell.includes("navigate(link.dataset.target,{replace:true,close:true})")&&appShell.includes('if(close) setDrawer(false)'));
+add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&index.includes('class="active" data-target="terminal-home"')&&appShell.includes("navigate(returning?'archive-entry':'terminal-home'"));
+add('route-clears-inert-synchronously',appShell.includes("page.removeAttribute('inert')")&&appShell.includes("page.setAttribute('inert','')"));
+add('single-shell-runtime-owner',structureData?.owners?.shellRuntime==='assets/js/core/app-shell.js'&&count(index,'assets/js/core/app-shell.js')===1&&!index.includes('assets/js/core/runtime-ownership.js')&&!index.includes('assets/js/core/menu-audio-runtime.js')&&!index.includes('assets/js/main.js'));
+add('menu-navigation-cues-disabled',!appShell.includes('playCue')&&!appShell.includes('ProjectCurseAudio'));
 add('retired-region-screen-removed',!index.includes('id="region-map"')&&!index.includes('data-target="region-map"')&&!index.includes('pc5152bd-region-situation-map')&&!index.includes('pc5152bf-regional-map-linked-usability'));
 add('retired-relation-screen-removed',!index.includes('id="faction-relation"')&&!index.includes('data-target="faction-relation"'));
 add('current-four-screen-manifest',structureData?.screens?.map(screen=>screen.id).join('|')==='terminal-home|history|faction-info|archive-entry');
-add('legacy-route-compatibility',menuAudioRuntime.includes("target==='faction-relation'")&&menuAudioRuntime.includes("target==='region-map'||target==='zone-map'"));
+add('legacy-route-compatibility',appShell.includes("target==='faction-relation'")&&appShell.includes("target==='region-map'||target==='zone-map'"));
 add('cinematic-registry-four-records',cinematicData?.ids?.().join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicData?.ids?.().join('|'));
 add('cinematic-record-config-owned-by-modules',![cinematicCults,cinematicImmortality,cinematicFerals,cinematicSakuma].some(source=>!source.includes('ProjectCurseCinematicRegistry?.register'))&&main.includes('cinematicRegistry?.get?.(state.activeRecord)')&&main.includes('cinematicRegistry?.pages?.(recordId)'));
-add('retired-expansion-blocks-quarantined',count(main,"if(window.ProjectCurseStructure?.schema==='project-curse-structure-v3') return;")>=5);
+add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!index.includes('assets/js/core/runtime-ownership.js')&&!index.includes('assets/js/core/menu-audio-runtime.js'));
 [
   'assets/resources/archive-enex/source-records/16b74a6d9fb1cab8522e4ed557cd0b84.mp3',
   'assets/resources/archive-enex/source-records/74b0e497277cdc48a4daf4df1b9241d4.mp3',
@@ -137,7 +134,7 @@ const documentRecords=archiveData?.publicRecords?.filter(record=>record.format==
 add('archive-video-document-groups',videoRecords.map(record=>record.id).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028'&&documentRecords.length===5&&archiveRuntime.includes("group('video','VIDEO RECORDS','영상 기록')")&&archiveRuntime.includes("group('document','DOCUMENT FILES','문서 기록')"),`${videoRecords.length} video / ${documentRecords.length} document`);
 add('archive-display-codes',videoRecords.find(record=>record.id==='Cults_871104')?.code==='CULT-ARCHIVE'&&videoRecords.find(record=>record.id==='Immortality_860201')?.code==='OP-IMMORTALITY');
 add('archive-five-standalone-links',archiveData?.publicRecords?.filter(record=>record.href).length===5&&archiveData.publicRecords.filter(record=>record.href).every(record=>existsSync(path(record.href))));
-add('archive-cinematic-inline-sequence',archiveData?.publicRecords?.filter(record=>record.presentation==='cinematic').every(record=>!record.href)&&index.indexOf('assets/js/data/archive-document-data.js')<index.indexOf('assets/js/data/feral-cinematic-data.js')&&index.indexOf('assets/js/data/feral-cinematic-data.js')<index.indexOf('assets/js/core/record-cinematic-registry.js')&&index.indexOf('assets/js/pages/cinematic-sakuma.js')<index.indexOf('assets/js/main.js')&&main.includes('const SEQUENCE_RECORDS=new Set(cinematicRegistry?.ids?.()||[])')&&archiveRuntime.includes("record?.presentation==='cinematic'")&&archiveRuntime.includes('window.ProjectCurseRecordCinematic.start(id)'));
+add('archive-cinematic-inline-sequence',archiveData?.publicRecords?.filter(record=>record.presentation==='cinematic').every(record=>!record.href)&&index.indexOf('assets/js/data/archive-document-data.js')<index.indexOf('assets/js/data/feral-cinematic-data.js')&&index.indexOf('assets/js/data/feral-cinematic-data.js')<index.indexOf('assets/js/core/record-cinematic-registry.js')&&index.indexOf('assets/js/pages/cinematic-sakuma.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js')&&main.includes('const SEQUENCE_RECORDS=new Set(cinematicRegistry?.ids?.()||[])')&&archiveRuntime.includes("record?.presentation==='cinematic'")&&archiveRuntime.includes('window.ProjectCurseRecordCinematic.start(id)'));
 add('archive-no-access-limit-label',!archiveRuntime.includes('접근 제한')&&!archiveRuntime.includes('is-restricted')&&archiveRuntime.includes("format==='video'?'영상 재생':'문서 열람'"));
 const publicStandaloneRecords=archiveData?.publicRecords?.filter(record=>record.href)||[];
 add('archive-five-readable-documents',publicStandaloneRecords.length===5&&publicStandaloneRecords.every(record=>{

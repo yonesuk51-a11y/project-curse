@@ -1,4 +1,4 @@
-// Project Curse 5.15.2cp — shared structure manifest and runtime ownership map
+// Project Curse 5.15.2cv — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:'5.15.2cp',
-    schema:'project-curse-structure-v3',
+    version:'5.15.2cv',
+    schema:'project-curse-structure-v5',
     screens:[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'history',label:'세계 사건 연표',index:'01'},
@@ -27,7 +27,7 @@
       {id:'anomaly-entity',label:'이상현상·개체 기록'},
       {id:'operation-equipment',label:'작전·장비·규정 기록'}
     ],
-    archivePresentation:{mode:'representative-dossiers',dossierCount:4,transition:'record-mount-short',lockedRecords:'outside-consolidation'},
+    archivePresentation:{mode:'single-shell-viewer',documentNavigation:'internal',transition:'record-mount-short',lockedRecords:'outside-consolidation'},
     audio:{
       ambient:'pc5152am_menu_old_computer.mp3',
       effects:{
@@ -41,8 +41,9 @@
       manifest:'assets/js/data/site-manifest.js',
       canon:'assets/js/data/canon-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
-      compatibilityRuntime:'assets/js/main.js',
-      runtimeOwnership:'assets/js/core/runtime-ownership.js',
+      baseRuntime:'assets/js/core/base-runtime.js',
+      shellRuntime:'assets/js/core/app-shell.js',
+      cinematicRuntime:'assets/js/core/record-cinematic-runtime.js',
       cinematicRegistry:'assets/js/core/record-cinematic-registry.js',
       cinematicRecords:[
         'assets/js/pages/cinematic-cults.js',
@@ -50,14 +51,13 @@
         'assets/js/pages/cinematic-ferals.js',
         'assets/js/pages/cinematic-sakuma.js'
       ],
-      menuAudio:'assets/js/core/menu-audio-runtime.js',
+      shellCSS:'assets/css/app-shell.css',
       declutter:'assets/js/pages/shared-declutter.js',
       reconciliation:'assets/js/pages/canon-reconciliation.js',
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',
-      qa:'assets/js/qa/structure-qa.js',
+      archiveDocumentViewer:'assets/js/pages/archive-document.js',
       stabilizationCSS:'assets/css/stabilization.css',
-      archiveCSS:'assets/css/archive-consolidation.css',
-      siteShellCSS:'assets/css/site-shell.css'
+      archiveCSS:'assets/css/archive-consolidation.css'
     }
   });
 })(window);

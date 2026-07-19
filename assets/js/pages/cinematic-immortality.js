@@ -15,9 +15,6 @@
     transitionVolume:.72,
     introFallback:14650,
     transitionFallback:5650,
-    mountTitle:'기록 불러오는 중',
-    mountLines:['F.H.C SOURCE ....... 감지','VIDEO MARK ......... CONFIRMED','TEXT BLOCK ......... 부분','LOCAL ACCESS ....... ACCEPTED'],
-    mountHint:'READ PERMISSION: ORIGINAL RECORD / IMMORTALITY ATTACHED',
     pages:()=>root.ProjectCurseLegacyCinematicSources?.immortality||[]
   });
 })(window);

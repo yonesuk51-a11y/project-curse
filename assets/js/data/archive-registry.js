@@ -1,4 +1,4 @@
-// MapPatch 5.15.2cf — public original-record index
+// Project Curse 5.15.2cv — public single-shell record index
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseArchive=freeze({
-    version:'5.15.2cf',
+    version:'5.15.2cv',
     publicRecords:[
       {
         id:'Cults_871104', code:'CULT-ARCHIVE', access:'open', format:'video',
@@ -30,8 +30,7 @@
       {
         id:'Zone_870815', code:'ZONE-CLASSIFICATION', access:'open', format:'document',
         title:'구역 위험도 분류 문서',
-        summary:'그린·옐로우·레드·화이트·블랙존의 의미와 전환 조건을 정리한 기본 판정 문서.',
-        href:'docs/Zone_870815/index.html'
+        summary:'그린·옐로우·레드·화이트·블랙존의 의미와 전환 조건을 정리한 기본 판정 문서.'
       },
       {
         id:'Sakuma_Tape_991028', code:'SID-SAKUMA', access:'open', format:'video', presentation:'cinematic',
@@ -41,26 +40,22 @@
       {
         id:'Unknown_Record1_860204', code:'AMARION-FOOTAGE', access:'open', format:'document',
         title:'아마리온 회수 영상 기록',
-        summary:'저근접 자기 왜곡 시스템과 공간 개척 사업을 소개하는 기업 교육 영상의 회수본.',
-        href:'docs/Unknown_Record1_860204/index.html'
+        summary:'저근접 자기 왜곡 시스템과 공간 개척 사업을 소개하는 기업 교육 영상의 회수본.'
       },
       {
         id:'Unknown_Record2_860205', code:'BLOOD-LAKE-AUTOPSY', access:'open', format:'document',
         title:'피의 호수 부검 기록',
-        summary:'피의 호수 회수 사체를 부검하는 동안 기록된 영상·음성 로그.',
-        href:'docs/Unknown_Record2_860205/index.html'
+        summary:'피의 호수 회수 사체를 부검하는 동안 기록된 영상·음성 로그.'
       },
       {
         id:'Unknown_Record3_920711', code:'REDWOLF-DEFECTION', access:'open', format:'document',
         title:'레드울프 이탈 기록',
-        summary:'웨이드 밀렌과 제임스 애셔가 이탈 직전 나눈 대화가 담긴 암호화 CCTV 기록.',
-        href:'docs/Unknown_Record3_920711/index.html'
+        summary:'웨이드 밀렌과 제임스 애셔가 이탈 직전 나눈 대화가 담긴 암호화 CCTV 기록.'
       },
       {
         id:'Unknown_Record4_930314', code:'SON-ILLEGAL-ARMS', access:'open', format:'document',
         title:'S.O.N 비인가 장비 유통 기록',
-        summary:'축복으로 위장한 병기 계획을 논의한 웨이드 밀렌·윌리엄 카터의 감청 음성.',
-        href:'docs/Unknown_Record4_930314/index.html'
+        summary:'축복으로 위장한 병기 계획을 논의한 웨이드 밀렌·윌리엄 카터의 감청 음성.'
       }
     ]
   });

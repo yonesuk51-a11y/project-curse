@@ -1,4 +1,39 @@
 /* MapPatch 5.15.2cf — cinematic playback controls for protected records */
+#recordLoading,
+.record-loading.pc5152h-record-mount-loader{display:none!important}
+
+/* 5.15.2cv — the shared intro owns the full viewport; document chrome is unavailable until playback ends. */
+.pc5152h-cult-sequence.intro-mode{
+  background:#000!important
+}
+.pc5152h-cult-sequence.intro-mode .pc5152h-seq-panel,
+.pc5152h-cult-sequence.intro-mode .pc-cinematic-controls,
+.pc5152h-cult-sequence.intro-mode .pc5152x-seq-return,
+.pc5152h-cult-sequence .pc5152h-seq-panel[hidden]{
+  display:none!important
+}
+.pc5152h-cult-sequence.intro-mode .pc5152h-seq-video{
+  position:fixed!important;
+  inset:0!important;
+  z-index:5!important;
+  display:block!important;
+  width:100vw!important;
+  height:100dvh!important;
+  object-fit:cover!important;
+  opacity:1!important;
+  filter:contrast(1.08) brightness(.76) saturate(.7)!important;
+  mix-blend-mode:normal!important;
+  background:#000!important
+}
+.pc5152h-cult-sequence.intro-mode .pc5152h-seq-black{
+  z-index:6!important;
+  background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.12))!important
+}
+.pc5152h-cult-sequence.intro-mode .pc5152h-seq-scan{
+  z-index:7!important;
+  opacity:.12!important
+}
+
 body.pc5152h-sequence-open .pc5152an-systembar,
 body.pc5152h-sequence-open .legacy-sidebar,
 body.pc5152h-sequence-open .pc5152ar-drawer-backdrop{
@@ -16,14 +51,229 @@ body.pc5152h-sequence-open .pc5152ar-drawer-backdrop{
 .pc5152h-cult-sequence .pc-cinematic-actions button{min-width:92px;padding:7px 11px;border:1px solid rgba(157,169,174,.22);background:rgba(14,17,19,.9);color:rgba(231,233,233,.84);font:11px/1.25 Consolas,'Malgun Gothic',monospace;letter-spacing:.035em;cursor:pointer}
 .pc5152h-cult-sequence .pc-cinematic-actions button:hover{border-color:rgba(194,69,77,.72);background:rgba(70,15,19,.54);color:#fff}
 .pc5152h-cult-sequence .pc-cinematic-actions button:disabled{opacity:.28;cursor:default}
-.pc5152h-cult-sequence.pages-mode.page-reveal .pc5152h-seq-frame img,
-.pc5152h-cult-sequence.pages-mode.page-reveal .pc5152ax-evidence-card img,
-.pc5152h-cult-sequence.pages-mode.page-reveal .pc5152cf-victim-slide figure img,
-.pc5152h-cult-sequence.pages-mode.page-reveal .pc5152v-large-photo img{animation:pcCinematicDrift 7.4s ease-out both;transform-origin:50% 45%}
 .pc5152h-cult-sequence.pages-mode .pc5152k-seq-line.visible{animation:pcCinematicSubtitle .32s steps(3,end) both}
 @keyframes pcCinematicProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes pcCinematicDrift{from{transform:scale(1.015) translate3d(-.3%,.15%,0)}to{transform:scale(1.065) translate3d(.45%,-.35%,0)}}
 @keyframes pcCinematicSubtitle{0%{opacity:0;filter:blur(1px);transform:translateY(4px)}45%{opacity:.72;filter:none}100%{opacity:1;filter:none;transform:none}}
+
+/* 5.15.2cw — photo-only correction: static media and natural-ratio frames. */
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152h-seq-frame img,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152ax-evidence-card img,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152cf-victim-slide figure img,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152v-large-photo img,
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc5152cf-classification-chart img{
+  transform:none!important;
+  animation:none!important;
+  transition:none!important
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc-cinematic-frame-fitted{
+  box-sizing:content-box!important;
+  width:var(--pc-media-width)!important;
+  height:auto!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:90vw!important;
+  max-height:none!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  padding:0!important;
+  overflow:visible!important;
+  background:transparent!important;
+  justify-self:center!important
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode .pc-cinematic-frame-fitted > img.pc-cinematic-media-fitted{
+  box-sizing:border-box!important;
+  display:block!important;
+  width:var(--pc-media-width)!important;
+  height:var(--pc-media-height)!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:90vw!important;
+  max-height:56dvh!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:fill!important;
+  object-position:center!important;
+  background:transparent!important;
+  transform:none!important;
+  animation:none!important;
+  transition:none!important
+}
+body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode.pc5152as-layout-two-column .pc5152h-seq-body{
+  transform:translateY(clamp(-96px,-7vh,-54px))!important
+}
+@media(max-width:760px){
+  body.pc5152bb-stage-template-responsivefix .pc5152h-cult-sequence.pages-mode.pc5152as-layout-two-column .pc5152h-seq-body{
+    transform:none!important
+  }
+}
+
+/* 5.15.2cy — one full-screen rule owns every configured chapter transition. */
+.pc5152h-cult-sequence.video-transition{
+  background:#000!important
+}
+.pc5152h-cult-sequence.video-transition .pc5152m-transition-video{
+  position:fixed!important;
+  inset:0!important;
+  z-index:20!important;
+  display:block!important;
+  width:100vw!important;
+  height:100dvh!important;
+  object-fit:cover!important;
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:none!important;
+  background:#000!important
+}
+.pc5152h-cult-sequence.video-transition .pc5152h-seq-panel,
+.pc5152h-cult-sequence.video-transition .pc-cinematic-controls,
+.pc5152h-cult-sequence.video-transition .pc5152x-seq-return{
+  display:none!important
+}
+
+/* 5.15.2cz — Immortality starts from a genuinely blank record face.
+   The runtime then reveals its photo/log/dialogue lines automatically. */
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152q-immortality-mode.pages-mode
+  .pc5152k-seq-line{
+  opacity:0!important;
+  visibility:hidden!important;
+  transform:translateY(6px)!important;
+  filter:blur(1.2px)!important;
+  animation:none!important;
+  transition:opacity .45s steps(6,end),transform .45s steps(6,end),filter .45s steps(4,end)!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152q-immortality-mode.pages-mode
+  .pc5152k-seq-lines{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:10px!important;
+  width:100%!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152q-immortality-mode.pages-mode
+  span.pc5152k-seq-line{
+  display:block!important;
+  min-height:1.45em!important;
+  font:800 clamp(14px,1.25vw,18px)/1.66 "Noto Sans KR",Consolas,monospace!important;
+  letter-spacing:.02em!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152q-immortality-mode.pages-mode
+  .pc5152k-seq-line.visible{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none!important;
+  filter:none!important;
+  animation:pcCinematicSubtitle .45s steps(6,end) both!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152q-immortality-mode.pages-mode
+  .pc5152h-seq-frame{
+  opacity:0!important;
+  transform:translateY(6px)!important;
+  animation:none!important;
+  transition:opacity .45s steps(6,end),transform .45s steps(6,end)!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152q-immortality-mode.pages-mode.frame-ready
+  .pc5152h-seq-frame{
+  opacity:.82!important;
+  transform:none!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152q-immortality-mode.intro-mode
+  .pc5152h-seq-video{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  z-index:5!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152q-immortality-mode.pages-mode
+  .pc5152cz-line-mutated{
+  text-shadow:0 0 12px rgba(210,40,36,.34)!important
+}
+body.pc5152q-immortality-sequence .pc5152cz-post-flash{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  margin-top:0;
+  color:rgba(224,34,30,.92);
+  font:900 clamp(10px,.85vw,13px)/1.28 Consolas,"Noto Sans KR",monospace;
+  letter-spacing:.035em;
+  opacity:0;
+  visibility:hidden;
+  filter:blur(1px)
+}
+body.pc5152q-immortality-sequence
+  .pc5152k-seq-lines.pc5152da-postflash-replacement > .pc5152k-seq-line{
+  display:none!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152k-seq-lines.pc5152da-postflash-replacement > .pc5152k-seq-line[hidden]{
+  display:none!important;
+  visibility:hidden!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152db-postflash-page .pc5152cz-post-flash{
+  font-size:clamp(8px,.64vw,10px);
+  line-height:1.05
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152u-people-page .pc5152u-people-pair{
+  display:grid!important;
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152u-people-page .pc5152u-person-card{
+  display:block!important;
+  opacity:1!important;
+  visibility:visible!important;
+  height:auto!important;
+  overflow:visible!important;
+  transform:none!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152u-people-page .pc5152u-person-card img{
+  height:min(34dvh,320px)!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152u-people-page .pc5152u-person-card figcaption,
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152u-people-page .pc5152w-person-caption{
+  display:block!important;
+  position:static!important;
+  min-height:58px!important;
+  height:auto!important;
+  padding:12px 6px 4px!important;
+  overflow:visible!important;
+  opacity:1!important;
+  visibility:visible!important;
+  text-align:center!important
+}
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152u-people-page .pc5152w-person-caption b,
+body.pc5152q-immortality-sequence
+  .pc5152h-cult-sequence.pc5152u-people-page .pc5152w-person-caption span{
+  display:block!important;
+  position:static!important;
+  opacity:1!important;
+  visibility:visible!important
+}
+body.pc5152q-immortality-sequence .pc5152cz-post-flash.visible{
+  opacity:1;
+  visibility:visible;
+  filter:none;
+  animation:pc5152czIntrusionText .18s steps(3,end) both
+}
+@keyframes pc5152czIntrusionText{
+  0%{opacity:0;filter:blur(2px) brightness(2)}
+  45%{opacity:1;filter:brightness(1.8)}
+  100%{opacity:1;filter:none}
+}
 @media(max-width:760px){
   .pc5152h-cult-sequence .pc-cinematic-controls{bottom:10px;width:calc(100vw - 20px)}
   .pc5152h-cult-sequence .pc-cinematic-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}

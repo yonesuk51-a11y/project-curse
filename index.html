@@ -5,16 +5,17 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>U.A.C 기록 단말기</title>
-<link href="assets/css/style.css" rel="stylesheet"/>
-<link href="assets/css/stabilization.css" rel="stylesheet"/>
-<link href="assets/css/archive-consolidation.css" rel="stylesheet"/>
-<link href="assets/css/record-cinematic.css" rel="stylesheet"/>
-<link href="assets/css/world-history.css" rel="stylesheet"/>
-<link href="assets/css/faction-analysis.css" rel="stylesheet"/>
-<link href="assets/css/site-shell.css" rel="stylesheet"/>
-<script>/* pc5152cf archive-return boot bypass */(function(){var returning=new URLSearchParams(location.search).get('return')==='archive';window.__pc5152SkipBoot=returning;window.__pc5152BootStart=window.__pc5152BootStart||(returning?performance.now()-10000:performance.now());document.documentElement.classList.add('pc5152bi-boot-seen');if(returning)document.documentElement.classList.add('pc5152cf-archive-return');})();</script>
+<link href="assets/css/style.css?v=5.15.2cv" rel="stylesheet"/>
+<link href="assets/css/stabilization.css?v=5.15.2cv" rel="stylesheet"/>
+<link href="assets/css/archive-consolidation.css?v=5.15.2cv" rel="stylesheet"/>
+<link href="assets/css/archive-document.css?v=5.15.2cv" rel="stylesheet"/>
+<link href="assets/css/record-cinematic.css?v=5.15.2df" rel="stylesheet"/>
+<link href="assets/css/world-history.css?v=5.15.2cv" rel="stylesheet"/>
+<link href="assets/css/faction-analysis.css?v=5.15.2cv" rel="stylesheet"/>
+<link href="assets/css/app-shell.css?v=5.15.2cv" rel="stylesheet"/>
+<script>/* Project Curse 5.15.2cv — direct cinematic entry */(function(){window.__pc5152BootStart=window.__pc5152BootStart||performance.now();document.documentElement.classList.add('pc5152bi-boot-seen');})();</script>
 </head>
-<body class="pc5152ad-pc-ui pc5152ar-frameaudio-rebasesafe pc5152ae-source-diet pc5152ae-s24-ready pc5152af-fluid-resolution pc5152ag-click-density pc5152ai-global-responsive-silent-menu pc5152aj-mobile-sidebar-router-width-hotfix pc5152al-mobile-readable-system-pass pc5152am-audio-cult-vhs-layout-balance pc5152an-systemframe-kst-recordlayout-audiobusfix pc5152bb-stage-template-responsivefix pc5152bc-side-menu-hub-archive-ia pc5152bg-crosslink-pass pc5152bi-global-qa-codex-tone pc5152bl-global-regression-data-consistency pc5152ca1-terminal-home-audio-scope pc5152ce-organization-canon pc5152cf-archive-consolidation pc5152cp-site-shell">
+<body class="pc5152ad-pc-ui pc5152ae-source-diet pc5152ae-s24-ready pc5152af-fluid-resolution pc5152ag-click-density pc5152ai-global-responsive-silent-menu pc5152am-audio-cult-vhs-layout-balance pc5152bb-stage-template-responsivefix pc5152bg-crosslink-pass pc5152bi-global-qa-codex-tone pc5152bl-global-regression-data-consistency pc5152ca1-terminal-home-audio-scope pc5152ce-organization-canon pc5152cf-archive-consolidation">
 <div class="loader pc5152g-redblack-loader" id="loader">
 <div class="loader-box">
 <div class="sys-kicker">U.A.C 폐쇄 기록 / PC-03</div>
@@ -31,23 +32,14 @@
 </div>
 </div>
 <div class="app" id="app">
-<div class="legacy-layout">
-<aside class="legacy-sidebar">
-<div class="brand-side">U.A.C 복구 단말기<small>PC-03 / 폐쇄 기록</small></div>
-<nav aria-label="U.A.C 기록 색인" class="side-menu pc585-accordion-menu pc5131-command-menu pc5151-root-archive-menu pc5152c-clean-root-menu pc5152bj-flat-nav">
-<div class="pc5151-terminal-status">
-<span>U.A.C 복구 신호</span>
-<b>PC-03 / 폐쇄 기록</b>
-<small>폐쇄 기록 색인</small>
-</div>
-<div class="pc5152bj-nav-list"><a class="active" data-target="terminal-home" href="#terminal-home"><i>00</i><b>단말 상태</b><small>폐쇄 서버</small></a>
-<a data-target="history" href="#history"><i>01</i><b>세계 사건 연표</b><small>세계 연표</small></a>
-<a data-target="faction-info" href="#faction-info"><i>02</i><b>세력 분석실</b><small>기관·관계 기록</small></a>
-<a data-target="archive-entry" href="#archive-entry"><i>03</i><b>기록보관실</b><small>회수 색인</small></a>
-</div>
-</nav>
-</aside>
-<main class="legacy-content">
+<div class="uac-shell">
+<header class="uac-shell-bar">
+<button aria-label="단말 메뉴로 돌아가기" class="uac-shell-home" data-uac-route="terminal-home" hidden="" type="button"><i aria-hidden="true">←</i><span>단말 메뉴</span></button>
+<div class="uac-shell-brand"><b>U.A.C CLOSED SERVER</b><small>PC-03 / 폐쇄 기록</small></div>
+<div class="uac-shell-status"><span>ERA. 1980–2030</span><span>AUDIO LOCAL</span><span>ACCESS LIMITED</span></div>
+</header>
+<div class="uac-shell-workspace">
+<main class="uac-shell-content" data-scroll-root="true">
 <section class="content-page panel pc5152ca1-terminal-home active" id="terminal-home">
 <div class="pc5152ca1-home-shell">
 <div class="pc5152ca1-home-kicker">U.A.C 폐쇄 단말 / PC-03</div>
@@ -62,6 +54,11 @@
 <article><small>AUTHORITY</small><b>LIMITED</b><span>현장 열람 권한</span></article>
 <article><small>AUDIO</small><b>LOCAL</b><span>대기 채널만 활성</span></article>
 </div>
+<nav aria-label="폐쇄 기록 메뉴" class="uac-terminal-menu">
+<a data-uac-route="history" href="#history"><i>01</i><span><b>세계 사건 연표</b><small>1975년 이후의 사건 기록 열람</small></span><em>기록 접속&nbsp;›</em></a>
+<a data-uac-route="faction-info" href="#faction-info"><i>02</i><span><b>세력 분석실</b><small>기관·교단·외부 세력 분석</small></span><em>분석 접속&nbsp;›</em></a>
+<a data-uac-route="archive-entry" href="#archive-entry"><i>03</i><span><b>기록보관소</b><small>영상 기록과 복구 문서 색인</small></span><em>색인 접속&nbsp;›</em></a>
+</nav>
 <div class="pc5152ca1-home-trace">
 <span>PC-03</span>
 <i></i>
@@ -184,6 +181,9 @@
 <details open=""><summary>기술·작전 기록</summary><div class="archive-list"><article class="doc-card pc5152aa-sealed-record" data-access="sealed" data-pc5152bc-search="redzone_881120 레드존 이상현상 및 오염 기준 문서 redzone_881120 레드존 이상현상 및 오염 기준 문서 봉인됨 기밀 처리됨 — 열람 권한 없음. 기밀 처리됨" data-pc5152bc-status="sealed" data-pc5152bc-type="anomaly" data-sealed-record="Redzone_881120"><div class="code">Redzone_881120</div><h3>레드존 이상현상 및 오염 기준 문서</h3><div class="status-row"><span class="chip red pc5152aa-sealed-chip">봉인됨</span></div><p class="muted">기밀 처리됨 — 열람 권한 없음.</p><button aria-disabled="true" class="btn pc5152aa-locked-record" disabled="" type="button">기밀 처리됨</button></article><article class="doc-card pc5152aa-sealed-record" data-access="sealed" data-pc5152bc-search="fcr_archive_890402 타락 개체 분류 추가 보고서 fcr_archive_890402 타락 개체 분류 추가 보고서 봉인됨 기밀 처리됨 — 열람 권한 없음. 기밀 처리됨" data-pc5152bc-status="sealed" data-pc5152bc-type="entity" data-sealed-record="FCR_Archive_890402"><div class="code">FCR_Archive_890402</div><h3>타락 개체 분류 추가 보고서</h3><div class="status-row"><span class="chip red pc5152aa-sealed-chip">봉인됨</span></div><p class="muted">기밀 처리됨 — 열람 권한 없음.</p><button aria-disabled="true" class="btn pc5152aa-locked-record" disabled="" type="button">기밀 처리됨</button></article><article class="doc-card pc5152aa-sealed-record" data-access="sealed" data-pc5152bc-search="nhc_manual_891219 n.h.c 현장 작전·장비·봉쇄 규정 문서 nhc_manual_891219 n.h.c 현장 작전·장비·봉쇄 규정 문서 봉인됨 기밀 처리됨 — 열람 권한 없음. 기밀 처리됨" data-pc5152bc-status="sealed" data-pc5152bc-type="manual" data-sealed-record="NHC_Manual_891219"><div class="code">NHC_Manual_891219</div><h3>N.H.C 현장 작전 교범</h3><div class="status-row"><span class="chip red pc5152aa-sealed-chip">봉인됨</span></div><p class="muted">기밀 처리됨 — 열람 권한 없음.</p><button aria-disabled="true" class="btn pc5152aa-locked-record" disabled="" type="button">기밀 처리됨</button></article></div></details>
 <details open=""><summary>사건·회수 기록</summary><div class="archive-list"><article class="doc-card pc5152aa-public-record" data-access="open" data-pc5152bc-search="immortality_860201 불멸을 향해 immortality_860201 불멸을 향해 열람 가능 피의 호수와 불멸 실험, 현장 촬영 및 통신 임무의 기원 사건 파일이다. 기록 열람" data-pc5152bc-status="open" data-pc5152bc-type="operation"><div class="code">Immortality_860201</div><h3>불멸을 향해</h3><div class="status-row"><span class="chip red">열람 가능</span></div><p class="muted">피의 호수와 불멸 실험, 현장 촬영 및 통신 임무의 기원 사건 파일이다.</p><button class="btn open-record pc5152aa-public-open" data-record="Immortality_860201" type="button">기록 열람</button></article><article class="doc-card pc5152aa-sealed-record" data-access="sealed" data-pc5152bc-search="sakuma_tape_991028 사쿠마 유타 실종 사건 보고서 sakuma_tape_991028 사쿠마 유타 실종 사건 보고서 봉인됨 기밀 처리됨 — 열람 권한 없음. 기밀 처리됨" data-pc5152bc-status="sealed" data-pc5152bc-type="incident" data-sealed-record="Sakuma_Tape_991028"><div class="code">Sakuma_Tape_991028</div><h3>사쿠마 유타 실종 사건 보고서</h3><div class="status-row"><span class="chip red pc5152aa-sealed-chip">봉인됨</span></div><p class="muted">기밀 처리됨 — 열람 권한 없음.</p><button aria-disabled="true" class="btn pc5152aa-locked-record" disabled="" type="button">기밀 처리됨</button></article><article class="doc-card pc5152aa-sealed-record" data-access="sealed" data-pc5152bc-search="불명_record1_860204 아마리온 회수 영상 기록 불명_record1_860204 아마리온 회수 영상 기록 봉인됨 기밀 처리됨 — 열람 권한 없음. 기밀 처리됨" data-pc5152bc-status="sealed" data-pc5152bc-type="recovered" data-sealed-record="불명_Record1_860204"><div class="code">불명_Record1_860204</div><h3>아마리온 회수 영상 기록</h3><div class="status-row"><span class="chip red pc5152aa-sealed-chip">봉인됨</span></div><p class="muted">기밀 처리됨 — 열람 권한 없음.</p><button aria-disabled="true" class="btn pc5152aa-locked-record" disabled="" type="button">기밀 처리됨</button></article><article class="doc-card pc5152aa-sealed-record" data-access="sealed" data-pc5152bc-search="불명_record3_920711 레드울프 이탈 기록 불명_record3_920711 레드울프 이탈 기록 봉인됨 기밀 처리됨 — 열람 권한 없음. 기밀 처리됨" data-pc5152bc-status="sealed" data-pc5152bc-type="recovered" data-sealed-record="불명_Record3_920711"><div class="code">불명_Record3_920711</div><h3>레드울프 이탈 기록</h3><div class="status-row"><span class="chip red pc5152aa-sealed-chip">봉인됨</span></div><p class="muted">기밀 처리됨 — 열람 권한 없음.</p><button aria-disabled="true" class="btn pc5152aa-locked-record" disabled="" type="button">기밀 처리됨</button></article><article class="doc-card pc5152aa-sealed-record" data-access="sealed" data-pc5152bc-search="불명_record4_930314 신디케이트 비인가 장비 유통 기록 불명_record4_930314 신디케이트 비인가 장비 유통 기록 봉인됨 기밀 처리됨 — 열람 권한 없음. 기밀 처리됨" data-pc5152bc-status="sealed" data-pc5152bc-type="recovered" data-sealed-record="불명_Record4_930314"><div class="code">불명_Record4_930314</div><h3>신디케이트 비인가 장비 유통 기록</h3><div class="status-row"><span class="chip red pc5152aa-sealed-chip">봉인됨</span></div><p class="muted">기밀 처리됨 — 열람 권한 없음.</p><button aria-disabled="true" class="btn pc5152aa-locked-record" disabled="" type="button">기밀 처리됨</button></article></div></details>
 </div></div>
+<section class="pc-internal-document-shell" data-presentation="document" hidden="" id="archiveInternalDocument">
+<main class="archive-document" id="archiveInternalDocumentBody"></main>
+</section>
 <div class="archive-record-viewer" hidden="" id="archiveRecordViewer">
 <div class="record-viewer-top">
 <button class="btn record-back" type="button">CASE LIST로 복귀</button>
@@ -198,26 +198,28 @@
 </main>
 </div>
 </div>
-<script src="assets/js/data/site-manifest.js"></script>
-<script src="assets/js/data/canon-registry.js"></script>
-<script src="assets/js/data/faction-analysis-data.js"></script>
-<script src="assets/js/data/archive-registry.js"></script>
-<script src="assets/js/data/archive-document-data.js"></script>
-<script src="assets/js/data/feral-cinematic-data.js"></script>
-<script src="assets/js/data/sakuma-cinematic-data.js"></script>
-<script src="assets/js/core/record-cinematic-registry.js"></script>
-<script src="assets/js/pages/cinematic-cults.js"></script>
-<script src="assets/js/pages/cinematic-immortality.js"></script>
-<script src="assets/js/pages/cinematic-ferals.js"></script>
-<script src="assets/js/pages/cinematic-sakuma.js"></script>
-<script src="assets/js/main.js"></script>
-<script src="assets/js/core/runtime-ownership.js"></script>
-<script src="assets/js/core/menu-audio-runtime.js"></script>
-<script src="assets/js/pages/shared-declutter.js"></script>
-<script src="assets/js/pages/canon-reconciliation.js"></script>
-<script src="assets/js/pages/archive-consolidation.js"></script>
-<script src="assets/js/pages/world-history.js"></script>
-<script src="assets/js/qa/structure-qa.js"></script>
-<script src="assets/js/pages/faction-analysis.js"></script>
+</div>
+<script src="assets/js/data/site-manifest.js?v=5.15.2cv"></script>
+<script src="assets/js/data/canon-registry.js?v=5.15.2cv"></script>
+<script src="assets/js/data/faction-analysis-data.js?v=5.15.2cv"></script>
+<script src="assets/js/data/archive-registry.js?v=5.15.2cv"></script>
+<script src="assets/js/data/archive-document-data.js?v=5.15.2cv"></script>
+<script src="assets/js/data/feral-cinematic-data.js?v=5.15.2cv"></script>
+<script src="assets/js/data/sakuma-cinematic-data.js?v=5.15.2cv"></script>
+<script src="assets/js/data/immortality-storyboard.js?v=5.15.2df"></script>
+<script src="assets/js/core/record-cinematic-registry.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/cinematic-cults.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/cinematic-immortality.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/cinematic-ferals.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/cinematic-sakuma.js?v=5.15.2cv"></script>
+<script src="assets/js/core/base-runtime.js?v=5.15.2cv"></script>
+<script src="assets/js/core/record-cinematic-runtime.js?v=5.15.2df"></script>
+<script src="assets/js/core/app-shell.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/shared-declutter.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/canon-reconciliation.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/archive-document.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/archive-consolidation.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/world-history.js?v=5.15.2cv"></script>
+<script src="assets/js/pages/faction-analysis.js?v=5.15.2cv"></script>
 </body>
 </html>

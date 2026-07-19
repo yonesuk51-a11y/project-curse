@@ -1,9 +1,9 @@
-// Project Curse 5.15.2cf — public archive document content
+// Project Curse 5.15.2cv — public archive document content
 (function(root){
   'use strict';
 
   root.ProjectCurseArchiveDocuments={
-    version:'5.15.2cf',
+    version:'5.15.2cv',
     documents:{
       Ferals_860722:{
         code:'FERAL-CLASSIFICATION',

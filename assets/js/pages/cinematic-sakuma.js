@@ -17,9 +17,6 @@
     introVolume:.42,
     transitionVolume:.24,
     transitionFallback:3750,
-    mountTitle:'사쿠마의 테이프 불러오는 중',
-    mountLines:['S.I.D TOKYO ............ 연결','OCCULT CASE ............ 복구','VIDEO SIGNAL ........... 확인','LOCAL ACCESS ........... 허가'],
-    mountHint:'읽기 권한: S.I.D 오컬트 부서 / VIDEO RECORD ATTACHED',
     pages:()=>root.ProjectCurseSakumaCinematic?.pages||[]
   });
 })(window);

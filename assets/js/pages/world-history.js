@@ -241,7 +241,7 @@
   let activeIndex = -1;
 
   function resetScroll() {
-    const content = document.querySelector('.legacy-content');
+    const content = document.querySelector('.uac-shell-content');
     if (content) content.scrollTop = 0;
     try { window.scrollTo(0, 0); } catch (_error) {}
   }

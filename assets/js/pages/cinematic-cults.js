@@ -15,9 +15,6 @@
     transitionVolume:.24,
     introFallback:10450,
     transitionFallback:3750,
-    mountTitle:'기록 불러오는 중',
-    mountLines:['VIDEO FRAME ....... DAMAGED','본문 블록 ........ 부분 복구','로컬 접근 ........ 허가'],
-    mountHint:'읽기 권한: 로컬 / SEQUENCE ATTACHED',
     pages:()=>root.ProjectCurseLegacyCinematicSources?.cults||[]
   });
 })(window);

@@ -1,4 +1,4 @@
-// MapPatch 5.15.2cf — original-record archive index
+// Project Curse 5.15.2cv — single-shell archive index owner
 (function(){
   'use strict';
   const archive=window.ProjectCurseArchive;
@@ -59,11 +59,12 @@
     detail.classList.add('active');
     const status=q('.viewer-status',viewer);
     if(status) status.textContent='U.A.C 원본 기록';
-    q('.legacy-content')?.scrollTo({top:0,behavior:'auto'});
+    q('.uac-shell-content')?.scrollTo({top:0,behavior:'auto'});
     return true;
   }
 
   function returnToIndex(){
+    window.ProjectCurseInternalDocumentViewer?.close?.();
     const viewer=q('#archiveRecordViewer');
     const wrap=q('#archiveListWrap');
     if(viewer) viewer.hidden=true;
@@ -102,7 +103,7 @@
     const ids=rows.map(row=>row.dataset.pcArchiveOpen).join('|');
     return {
       name:'archiveIndex',
-      patch:'5.15.2cf',
+      patch:'5.15.2cv',
       ok:ids===archive.publicRecords.map(record=>record.id).join('|'),
       records:rows.length,
       issues:ids===archive.publicRecords.map(record=>record.id).join('|')?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]
@@ -123,12 +124,13 @@
         event.stopImmediatePropagation();
         const id=open.dataset.pcArchiveOpen;
         const record=archive.publicRecords.find(item=>item.id===id);
-        if(record?.presentation==='cinematic'&&typeof window.ProjectCurseRecordCinematic?.start==='function'){
+        if(record?.format==='video'&&window.ProjectCurseCinematicRegistry?.get?.(id)&&typeof window.ProjectCurseRecordCinematic?.start==='function'){
           const started=window.ProjectCurseRecordCinematic.start(id);
           if(started!==false) return;
         }
-        if(record?.href){
-          window.location.href=record.href;
+        if(record?.format==='document'){
+          const opened=window.ProjectCurseInternalDocumentViewer?.open?.(id,open);
+          if(opened===false) window.ProjectCurseAudio?.playCue?.('denied',300);
           return;
         }
         const opened=typeof window.ProjectCurseShowInternalRecord==='function'?window.ProjectCurseShowInternalRecord(id):false;

@@ -16,7 +16,7 @@ body.pc-faction-analysis-ready #faction-info {
 }
 
 .pc-faction-analysis {
-  width: min(1180px, calc(100% - 42px));
+  width: min(1640px, calc(100% - 42px));
   margin: 0 auto;
   padding: 34px 0 70px;
   color: #c9cecf;
@@ -135,7 +135,7 @@ body.pc-faction-analysis-ready #faction-info {
 }
 
 .pc-faction-analysis-detail {
-  width: min(1000px, calc(100% - 52px));
+  width: min(1260px, calc(100% - 52px));
   padding-top: 27px;
 }
 

@@ -15,9 +15,6 @@
     transitionVolume:.24,
     introFallback:10450,
     transitionFallback:3750,
-    mountTitle:'개체 분류 기록 불러오는 중',
-    mountLines:['CLASSIFICATION MAP ....... RESTORED','ENTITY FRAME ............. 12 FILES','FIELD DOCTRINE ........... CURRENT','LOCAL ACCESS ............. ACCEPTED'],
-    mountHint:'읽기 권한: 복구본 / FERAL SEQUENCE ATTACHED',
     pages:()=>root.ProjectCurseFeralCinematic?.pages||[]
   });
 })(window);
