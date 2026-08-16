@@ -1,9 +1,9 @@
-// Project Curse 5.26.0 — semantic sound-event registry and acoustic profiles.
+// Project Curse 5.27.0 — semantic sound-event registry, recovery cues, and acoustic profiles.
 (function(root){
   'use strict';
 
   root.ProjectCurseAudioManifest=Object.freeze({
-    version:'2.0.0',
+    version:'2.1.0',
     storageKey:'pc_audio_settings_v1',
     buses:Object.freeze({master:1,ambient:1,interface:1,record:1,alert:1}),
     profiles:Object.freeze({
@@ -16,7 +16,8 @@
       'great-black-forest':Object.freeze({ambient:.3,interface:.58,record:1.08,alert:.9}),
       'dead-zone':Object.freeze({ambient:.2,interface:.62,record:1.12,alert:.96}),
       guide:Object.freeze({ambient:.36,interface:.64,record:1.06,alert:.92}),
-      scenario:Object.freeze({ambient:.16,interface:.7,record:1.08,alert:1.12})
+      scenario:Object.freeze({ambient:.16,interface:.7,record:1.08,alert:1.12}),
+      'recovery-scenario':Object.freeze({ambient:.1,interface:.62,record:1.14,alert:1.2})
     }),
     events:Object.freeze({
       'boot.start':Object.freeze({cue:'boot',bus:'interface',cooldown:1600,gain:1,duck:.38,duckMs:900,exclusive:true}),
@@ -53,6 +54,12 @@
       'screening.mismatch':Object.freeze({cue:'restricted',bus:'alert',cooldown:480,gain:.8,duck:.22,duckMs:920,exclusive:true,priority:2}),
       'screening.complete':Object.freeze({cue:'alert',bus:'alert',cooldown:1000,gain:.92,duck:.16,duckMs:1450,exclusive:true,priority:2}),
       'screening.exit':Object.freeze({cue:'analog',bus:'interface',cooldown:320,gain:.48,exclusive:true}),
+      'recovery.enter':Object.freeze({cue:'scan',bus:'record',cooldown:900,gain:.62,duck:.24,duckMs:1050,exclusive:true}),
+      'recovery.tether':Object.freeze({cue:'confirm',bus:'interface',cooldown:240,gain:.68,duck:.68,duckMs:420,exclusive:true}),
+      'recovery.contain':Object.freeze({cue:'analog',bus:'record',cooldown:320,gain:.58,duck:.56,duckMs:560,exclusive:true}),
+      'recovery.echo':Object.freeze({cue:'restricted',bus:'alert',cooldown:480,gain:.86,duck:.14,duckMs:1080,exclusive:true,priority:2}),
+      'recovery.complete':Object.freeze({cue:'alert',bus:'alert',cooldown:1000,gain:.96,duck:.12,duckMs:1550,exclusive:true,priority:2}),
+      'recovery.exit':Object.freeze({cue:'contact',bus:'interface',cooldown:320,gain:.5,exclusive:true}),
       'system.denied':Object.freeze({cue:'denied',bus:'alert',cooldown:420,gain:.88,duck:.3,duckMs:760,exclusive:true,priority:2}),
       'system.alert':Object.freeze({cue:'alert',bus:'alert',cooldown:420,gain:.84,duck:.34,duckMs:820,exclusive:true,priority:2})
     })

@@ -1,4 +1,4 @@
-// Project Curse 5.26.0 — route focus, verdict-gated recovery, regional drilldown, and operation trace room.
+// Project Curse 5.27.0 — reactive field consequences, route focus, and operation trace room.
 (function(root){
   'use strict';
 
@@ -51,6 +51,14 @@
     const polyline=points=>(points||[]).map(point=>point.join(',')).join(' ');
     const riskLabels={critical:'치명',high:'높음',medium:'주의',low:'낮음'};
     const pilgrimageOutcome=id=>pilgrimageStore?.getSummary?.(id)||null;
+    const scenarioStageByItem={
+      'gbf-west-observation':['unlit-fortress',0],'monsur-church':['unlit-fortress',1],'gbf-monsur-chapel':['unlit-fortress',1],'gbf-duel-ground':['unlit-fortress',2],'black-river':['unlit-fortress',3],'gbf-black-river':['unlit-fortress',3],'gbf-blood-lake':['unlit-fortress',4],'unlit-fortress':['unlit-fortress',5],'gbf-unlit-fortress':['unlit-fortress',5],
+      'returned-coast':['deadzone-return',0],'dead-return-shore':['deadzone-return',0],'dead-checkpoint-07':['deadzone-return',1],'dead-quarantine-ring':['deadzone-return',4],
+      'dead-interior':['deadzone-recovery',0],'dead-sublevel-08':['deadzone-recovery',0],'dead-checkpoint-06':['deadzone-recovery',1],'dead-reverse-highway':['deadzone-recovery',3],'dead-origin-beacon':['deadzone-recovery',4]
+    };
+    const traceTone=outcome=>['broken','compromised'].includes(outcome)?'hostile':outcome==='contained'?'contained':['kept','verified','secured'].includes(outcome)?'secured':'unknown';
+    const operationScenarioId=operation=>operation?.scenario||({'op-unlit-fortress':'unlit-fortress','op-deadzone-return':'deadzone-return','op-deadzone-recovery':'deadzone-recovery'}[operation?.id]||null);
+    const operationStep=operation=>{const id=operationScenarioId(operation);if(!id) return operation?.id===operationStore?.operationId?operationStore.get().mapStep:0;const summary=pilgrimageOutcome(id);return summary?.status==='complete'?(operation.steps.length-1):summary?.status==='active'?summary.step:0;};
     const recoveryUnlocked=()=>Boolean(verdictStore?.isUnlocked?.('DZ-VR-04'));
     const scenarioButton=(scenarioId,labels)=>{
       const summary=pilgrimageOutcome(scenarioId);
@@ -60,10 +68,14 @@
     };
     const resolvePilgrimageTarget=item=>{
       if(!item) return item;
-      const scenarioId=['unlit-fortress','gbf-unlit-fortress'].includes(item.id)?'unlit-fortress':['returned-coast','dead-checkpoint-07','dead-quarantine-ring'].includes(item.id)?'deadzone-return':['dead-interior','dead-sublevel-08','dead-checkpoint-06','dead-reverse-highway','dead-origin-beacon'].includes(item.id)?'deadzone-recovery':null;
+      const link=scenarioStageByItem[item.id];const scenarioId=link?.[0];const stageIndex=link?.[1];
       if(!scenarioId) return item;
+      const scenario=root.ProjectCursePilgrimageData?.scenarios?.[scenarioId];
       const ending=pilgrimageOutcome(scenarioId)?.endingData;
-      return ending?{...item,status:ending.status,tone:ending.tone}:item;
+      if(ending&&stageIndex===scenario?.stages?.length-1) return {...item,status:ending.status,tone:ending.tone};
+      const saved=pilgrimageStore?.get?.(scenarioId)?.choices?.find(entry=>entry.stage===scenario?.stages?.[stageIndex]?.id);
+      if(saved) return {...item,status:scenario?.outcomeLabels?.[saved.ruleOutcome]||saved.ruleOutcome.toUpperCase(),tone:traceTone(saved.ruleOutcome)};
+      return item;
     };
     const detailForMarker=marker=>{
       const map={
@@ -443,7 +455,10 @@
       const persistent=operation.id===operationStore?.operationId?operationStore.get():null;
       const decision=persistent?operationStore.getDecision(persistent.verdict):null;
       const recovered=persistent?.visited?.length||0;
-      const stepStates=decision?.stepStates||operation.steps.map((_item,index)=>index<state.step?'complete':index===state.step?'active':'available');
+      const scenarioId=operationScenarioId(operation);const scenarioState=scenarioId?pilgrimageStore?.get?.(scenarioId):null;
+      const scenarioEnding=scenarioId?pilgrimageOutcome(scenarioId)?.endingData:null;
+      const stepStates=decision?.stepStates||(scenarioState?operation.steps.map((_item,index)=>scenarioState.choices[index]?.ruleOutcome||(index===state.step&&scenarioState.status==='active'?'active':'locked')):operation.steps.map((_item,index)=>index<state.step?'complete':index===state.step?'active':'available'));
+      const siteStates=decision?.siteStates||(scenarioState?operation.steps.map((_item,index)=>traceTone(scenarioState.choices[index]?.ruleOutcome)):[]);
       const operationIncident=incidentById(operation.incident);
       const targetRegion=operationIncident?.region||(operation.id==='op-unlit-fortress'?'southamerica':operation.id==='op-deadzone-recovery'?'northamerica':'europe');
       const objectives=(operation.objectives||[]).map(item=>`<li>${escapeHTML(item)}</li>`).join('');
@@ -452,7 +467,7 @@
         <div class="pc-map-operation-tabs" role="tablist" aria-label="작전 기록">
           ${data.operations.map(item=>`<button type="button" role="tab" aria-selected="${item.id===operation.id}" class="${item.id===operation.id?'is-active':''}" data-map-operation="${escapeHTML(item.id)}"><small>${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
         </div>
-        <div class="pc-map-operation-grid${decision?` has-verdict is-${escapeHTML(decision.tone)}`:''}${operation.id==='op-deadzone-recovery'&&!recoveryUnlocked()?' is-scenario-locked':''}"${persistent?` data-operation-persistence="active" data-operation-verdict="${escapeHTML(persistent.verdict||'pending')}"`:''}>
+        <div class="pc-map-operation-grid${decision?` has-verdict is-${escapeHTML(decision.tone)}`:scenarioEnding?` has-verdict is-${escapeHTML(scenarioEnding.tone)}`:''}${operation.id==='op-deadzone-recovery'&&!recoveryUnlocked()?' is-scenario-locked':''}"${persistent?` data-operation-persistence="active" data-operation-verdict="${escapeHTML(persistent.verdict||'pending')}"`:''}>
           <section class="pc-map-stage pc-map-operation-stage" aria-label="${escapeHTML(operation.label)} 작전 경로">
             <div class="pc-map-stage-head"><span>${escapeHTML(operation.code)}</span><b>${persistent?`SAVED · INTEL ${recovered}/3 · `:''}TRACE ${state.step+1}/${operation.steps.length}</b></div>
             <svg class="pc-map-svg" viewBox="0 0 1000 540" role="img" aria-labelledby="pcOpTitle pcOpDesc" preserveAspectRatio="xMidYMid meet">
@@ -464,7 +479,7 @@
               </defs>
               <rect class="pc-map-grid" width="1000" height="540"></rect>
               ${operationTerrain(operation)}
-              <g>${operation.sites.map((site,index)=>siteSymbol(site,index,decision?.siteStates||[])).join('')}</g>
+              <g>${operation.sites.map((site,index)=>siteSymbol(site,index,siteStates)).join('')}</g>
               ${step.alternate?`<polyline class="pc-op-route pc-op-route--alternate" points="${polyline(step.alternate)}"></polyline>`:''}
               <polyline class="pc-op-route" points="${polyline(step.route)}"></polyline>
               ${decision?.route?`<polyline class="pc-op-route pc-op-route--verdict pc-op-route--verdict-${escapeHTML(decision.id)}" points="${polyline(decision.route)}"></polyline>`:''}
@@ -472,7 +487,7 @@
               <g>${step.units.map(unitSymbol).join('')}</g>
             </svg>
             <div class="pc-map-scan" aria-hidden="true"></div>
-            <div class="pc-map-coordinates">ROUTE RECONSTRUCTION · ${escapeHTML(step.time)} · ${decision?escapeHTML(decision.status):'SIGNAL NOT VERIFIED'}</div>
+            <div class="pc-map-coordinates">ROUTE RECONSTRUCTION · ${escapeHTML(step.time)} · ${escapeHTML(decision?.status||scenarioEnding?.status||'SIGNAL NOT VERIFIED')}</div>
           </section>
           <aside class="pc-map-sidebar pc-map-operation-intel">
             <div class="pc-map-intel-kicker">${escapeHTML(operation.region)} / ${escapeHTML(operation.code)}</div>
@@ -480,8 +495,9 @@
             <p>${escapeHTML(step.note)}</p>
             <div class="pc-op-status"><span>${persistent?'정보 복구':'경로 복구'}</span><b>${persistent?`${recovered}/3 · ${Math.round(((state.step+1)/operation.steps.length)*100)}%`:Math.round(((state.step+1)/operation.steps.length)*100)+'%'}</b></div>
             ${decision?`<div class="pc-op-verdict"><small>${escapeHTML(decision.code)}</small><b>${escapeHTML(decision.title)}</b><p>${escapeHTML(decision.summary)}</p></div>`:''}
-            <div class="pc-map-warning">${escapeHTML(decision?.consequence||operation.summary)}</div>
-            ${operation.classification?`<dl class="pc-map-facts pc-op-classification"><div><dt>분류</dt><dd>${escapeHTML(operation.classification)}</dd></div><div><dt>작전 상태</dt><dd>${escapeHTML(decision?.status||operation.status)}</dd></div></dl>`:''}
+            ${!decision&&scenarioEnding?`<div class="pc-op-verdict"><small>${escapeHTML(scenarioEnding.code)}</small><b>${escapeHTML(scenarioEnding.title)}</b><p>${escapeHTML(scenarioEnding.summary)}</p></div>`:''}
+            <div class="pc-map-warning">${escapeHTML(decision?.consequence||scenarioEnding?.consequence||operation.summary)}</div>
+            ${operation.classification?`<dl class="pc-map-facts pc-op-classification"><div><dt>분류</dt><dd>${escapeHTML(operation.classification)}</dd></div><div><dt>작전 상태</dt><dd>${escapeHTML(decision?.status||scenarioEnding?.status||operation.status)}</dd></div></dl>`:''}
             ${(decision?.directive||operation.directive)?`<div class="pc-op-directive"><b>COMMAND DIRECTIVE</b><p>${escapeHTML(decision?.directive||operation.directive)}</p></div>`:''}
             ${objectives?`<div class="pc-op-objectives"><b>OPERATION OBJECTIVES</b><ol>${objectives}</ol></div>`:''}
             ${operation.id==='op-unlit-fortress'?`<button class="pc-map-region-return pc-map-pilgrimage-entry" type="button" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome('unlit-fortress')?.status==='idle'?'현장 순례 시나리오 개시':pilgrimageOutcome('unlit-fortress')?.status==='complete'?'순례 결과 열기':'저장된 순례 재개'}</button>`:''}
@@ -555,8 +571,8 @@
       if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapDetailClear){state.detailSite=null;render();return;}
       if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;render();return;}
-      if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=state.operation===operationStore?.operationId?operationStore.get().mapStep:0;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
-      if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=state.operation===operationStore?.operationId?operationStore.get().mapStep:0;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
+      if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=operationStep(operationById(state.operation));root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapStep!==undefined){
         state.step=Number(control.dataset.mapStep)||0;
         root.ProjectCurseAudioControl?.play?.('operation.step');
@@ -579,14 +595,14 @@
       else if(state.mode!=='detail') return;
       render();
     });
-    document.addEventListener('projectcurse:pilgrimage-state-change',()=>render());
+    document.addEventListener('projectcurse:pilgrimage-state-change',event=>{if(state.mode==='operation'&&operationScenarioId(operationById(state.operation))===event.detail?.scenarioId) state.step=operationStep(operationById(state.operation));render();});
     document.addEventListener('projectcurse:verdict-archive-change',()=>render());
 
     render();
     root.ProjectCurseMapRoomRuntime=Object.freeze({
       showRegion(id){if(regionById(id).id!==id) return false;state.mode='region';state.region=id;state.marker=null;render();return true;},
       showDetail(id,siteId){const detail=detailById(id);if(!detail||detail.id!==id) return false;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;render();return true;},
-      showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.mode='operation';state.operation=id;state.step=id===operationStore?.operationId?operationStore.get().mapStep:0;render();return true;},
+      showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));render();return true;},
       showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.mode='region';state.region=marker.region;state.marker=marker.id;render();return true;},
       getState:()=>({...state})
     });

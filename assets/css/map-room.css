@@ -1,4 +1,4 @@
-/* Project Curse 5.26.0 — route focus, threat overlays, regional drilldown, and operation trace room */
+/* Project Curse 5.27.0 — route focus, threat overlays, regional drilldown, and operation trace room */
 #map-room {
   padding: 0;
   border: 0;
@@ -587,6 +587,7 @@
 .pc-map-timeline button.is-complete::before{background:#5d9079}.pc-map-timeline button.is-complete em{color:#6f9f89}
 .pc-map-timeline button.is-altered::before{background:#b68d4d}.pc-map-timeline button.is-altered em{color:#b8955c}
 .pc-map-timeline button.is-failed::before{background:#bd3f49}.pc-map-timeline button.is-failed em{color:#c95961}
+.pc-map-timeline button:is(.is-kept,.is-verified,.is-secured)::before{background:#5d9c82;box-shadow:0 0 8px rgba(86,157,128,.34)}.pc-map-timeline button:is(.is-kept,.is-verified,.is-secured) em{color:#72aa91}.pc-map-timeline button.is-contained::before{background:#b48b4d}.pc-map-timeline button.is-contained em{color:#c19d62}.pc-map-timeline button:is(.is-broken,.is-compromised)::before{background:#c4424d;box-shadow:0 0 8px rgba(193,57,69,.35)}.pc-map-timeline button:is(.is-broken,.is-compromised) em{color:#cf626a}.pc-map-timeline button:is(.is-broken,.is-compromised){border-color:rgba(158,55,63,.32);background:rgba(76,17,23,.16)}
 .pc-map-timeline button.is-locked{opacity:.34;cursor:not-allowed}.pc-map-timeline button.is-locked::before{background:#353a3c}
 
 @keyframes pc-map-live { 50% { opacity: .35; } }

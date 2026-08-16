@@ -1,4 +1,4 @@
-// Project Curse 5.26.0 — public single-shell record index
+// Project Curse 5.27.0 — public single-shell record index
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseArchive=freeze({
-    version:'5.26.0',
+    version:'5.27.0',
     publicRecords:[
       {
         id:'Cults_871104', code:'CULT-ARCHIVE', access:'open', format:'video',

@@ -1,4 +1,4 @@
-// Project Curse 5.26.0 — persistent conditional verdict archive and scenario-unlock owner.
+// Project Curse 5.27.0 — persistent conditional verdict archive, reactive snapshots, and scenario-unlock owner.
 (function(root){
   'use strict';
 
@@ -94,11 +94,12 @@
     const entry=getEntry(id);
     if(!entry?.unlocked) return null;
     const scenario=scenarios[entry.scenarioId];
-    const ending=scenario?.endings?.[entry.endingId];
     const snapshot=entry.snapshot;
+    const ending=pilgrimage.resolveEnding?.(entry.scenarioId,entry.endingId,snapshot)||scenario?.endings?.[entry.endingId];
     if(!scenario||!ending||!snapshot) return null;
     const choiceRows=snapshot.choices.map((saved,index)=>{
-      const stage=scenario.stages.find(item=>item.id===saved.stage);
+      const stageIndex=scenario.stages.findIndex(item=>item.id===saved.stage);
+      const stage=pilgrimage.getStage?.(entry.scenarioId,stageIndex,snapshot)||scenario.stages[stageIndex];
       const choice=stage?.choices.find(item=>item.id===saved.choice);
       return [String(index+1).padStart(2,'0'),stage?.title||saved.stage,choice?.label||saved.choice,scenario.outcomeLabels?.[saved.ruleOutcome]||saved.ruleOutcome];
     });

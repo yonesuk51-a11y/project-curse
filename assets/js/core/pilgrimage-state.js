@@ -1,4 +1,4 @@
-// Project Curse 5.26.0 — persistent multi-scenario pilgrimage and screening state owner.
+// Project Curse 5.27.0 — persistent reactive-scenario state, content variants, and consequence owner.
 (function(root){
   'use strict';
 
@@ -54,6 +54,30 @@
   }
 
   let states=loadAll();
+  const chosenIds=state=>new Set((state?.choices||[]).map(entry=>entry.choice));
+  function matchesCondition(condition,state){
+    if(!condition) return true;
+    const chosen=chosenIds(state);
+    if(condition.choice&&!chosen.has(condition.choice)) return false;
+    if(condition.all&&!condition.all.every(id=>chosen.has(id))) return false;
+    if(condition.any&&!condition.any.some(id=>chosen.has(id))) return false;
+    if(condition.not&&condition.not.some(id=>chosen.has(id))) return false;
+    if(condition.metrics&&Object.entries(condition.metrics).some(([key,range])=>{
+      const value=Number(state?.metrics?.[key]??state?.[key]??0);
+      return (range.min!==undefined&&value<range.min)||(range.max!==undefined&&value>range.max);
+    })) return false;
+    return true;
+  }
+  function resolveContent(base,state){
+    if(!base) return null;
+    const variant=(base.variants||[]).find(item=>matchesCondition(item.when,state));
+    if(!variant) return base;
+    const patches=variant.choicePatches||{};
+    const choices=(variant.choices||base.choices)?.map(choice=>patches[choice.id]?{...choice,...patches[choice.id]}:choice);
+    const resolved={...base,...variant,...(choices?{choices}:{})};
+    delete resolved.when;delete resolved.variants;delete resolved.choicePatches;
+    return resolved;
+  }
   const ensure=id=>{
     const resolved=scenarioFor(id)?id:defaultScenarioId;
     if(!states[resolved]) states[resolved]=fresh(resolved);
@@ -90,7 +114,7 @@
     const state=states[resolved];
     const scenario=scenarioFor(resolved);
     if(state.status!=='active'||!scenario) return false;
-    const stage=scenario.stages[state.step];
+    const stage=resolveContent(scenario.stages[state.step],state);
     if(!stage||state.choices.some(entry=>entry.stage===stage.id)) return false;
     const choice=stage.choices.find(entry=>entry.id===choiceId);
     if(!choice) return false;
@@ -112,7 +136,19 @@
 
   function getEnding(id=activeScenarioId){
     const resolved=ensure(id);
-    return scenarioFor(resolved)?.endings?.[states[resolved].ending]||null;
+    return resolveEnding(resolved,states[resolved].ending,states[resolved]);
+  }
+
+  function getStage(id=activeScenarioId,index=null,stateLike=null){
+    const resolved=ensure(id);
+    const state=stateLike||states[resolved];
+    const step=index===null?state.step:Number(index);
+    return resolveContent(scenarioFor(resolved)?.stages?.[step],state);
+  }
+
+  function resolveEnding(id,endingId,stateLike=null){
+    const resolved=ensure(id);
+    return resolveContent(scenarioFor(resolved)?.endings?.[endingId],stateLike||states[resolved]);
   }
 
   function getSummary(id=activeScenarioId){
@@ -129,8 +165,8 @@
   }
 
   root.ProjectCursePilgrimageState=Object.freeze({
-    version:'2.0.0',scenarioId:defaultScenarioId,storageKey,legacyKey,
+    version:'2.1.0',scenarioId:defaultScenarioId,storageKey,legacyKey,
     getActiveScenarioId:()=>activeScenarioId,getScenario:id=>scenarioFor(id||activeScenarioId),select,
-    get:id=>snapshot(id),getSummary,getAllSummaries,getEnding,start,choose,reset
+    get:id=>snapshot(id),getSummary,getAllSummaries,getStage,getEnding,resolveEnding,matchesCondition,start,choose,reset
   });
 })(window);

@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.26.0
+# Project Curse Structure — 5.27.0
 
 ## 활성 소유권
 
@@ -16,9 +16,9 @@
 | 의미 기반 재생·프로필·덕킹·중첩 제한 | `assets/js/core/audio-controller.js` |
 | 화면별 음향 프로필·효과음 사건 목록 | `assets/js/data/audio-manifest.js` |
 | 부서진 왕관 정보 회수·판단·지도 단계 저장 | `assets/js/core/operation-state.js` |
-| 대흑림 순례·데드존 검문 시나리오와 결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
-| 다중 시나리오 진행·계기·판정 독립 저장 | `assets/js/core/pilgrimage-state.js` |
-| 순례·귀환 검문 진입·현장 판단·결과 화면 | `assets/js/pages/pilgrimage-scenario.js` + `assets/css/pilgrimage-scenario.css` |
+| 세 현장 시나리오·반응형 후속 장면·결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
+| 다중 시나리오 진행·계기·판정 저장과 선택 조건 해석 | `assets/js/core/pilgrimage-state.js` |
+| 순례·귀환 검문·회수 진입, 판단 봉인 연출과 결과 화면 | `assets/js/pages/pilgrimage-scenario.js` + `assets/css/pilgrimage-scenario.css` |
 | 결말별 판정 기록 정의·윤문된 후속 분석 | `assets/js/data/verdict-archive-data.js` |
 | 판정 해금·선택 스냅샷·읽음 상태 저장 | `assets/js/core/verdict-archive-state.js` |
 | 조건부 판정 색인·잠금·문서 시각 체계 | `assets/js/pages/archive-consolidation.js` + `assets/css/verdict-archive.css` |
@@ -48,7 +48,7 @@
 
 ## 데이터 흐름
 
-`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 판정 보관소는 결말이 확정된 순간의 선택과 측정값을 별도 스냅샷으로 저장한다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 지도와 홈 경보를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
+`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말, 그리고 앞선 선택에 반응하는 후속 변형을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 순례 저장소는 선택 조건을 해석해 후속 현장과 결말을 결정하고, 판정 보관소는 결말이 확정된 순간의 선택과 측정값을 별도 스냅샷으로 저장해 같은 해석을 재현한다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 단계별 작전지도와 홈 수신 신호를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
 
 활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 
@@ -73,7 +73,7 @@
 - `assets/js/core/loading-sequence.js`: 빌드별 첫 기동, 세션 복원, 기록 복귀와 모션 감소용 최소 노출 시간을 관리한다.
 - `assets/js/core/audio-controller.js`: 화면·문서 음향 프로필, 의미 이벤트, 덕킹, 음소거 저장과 동시재생 제한을 담당한다.
 - `assets/js/core/operation-state.js`: 부서진 왕관의 회수 정보, 지휘 판단, 현재 작전 단계와 초기화를 단독 소유한다.
-- `assets/js/core/pilgrimage-state.js`: 불빛 없는 성채와 데드존 귀환 검문의 진행, 현장 판단, 계기 수치와 결말을 시나리오별로 저장한다.
+- `assets/js/core/pilgrimage-state.js`: 세 시나리오의 진행, 현장 판단, 계기 수치와 결말을 저장하고 앞선 선택 조건으로 후속 장면과 결말을 해석한다.
 - `assets/js/core/verdict-archive-state.js`: 확인한 결말의 선택·측정값 사본과 판정 문서 읽음 상태를 별도로 저장한다.
 - `assets/js/core/record-cinematic-runtime.js`: 루트 영상 기록 재생만 담당한다.
 - `assets/js/main.js`: 보호된 독립 문서의 기존 동작을 위해 파일로만 유지하며 루트에서는 로드하지 않는다.

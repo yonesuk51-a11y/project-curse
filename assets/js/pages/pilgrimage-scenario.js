@@ -1,4 +1,4 @@
-// Project Curse 5.26.0 — immersive scenarios with conditional recovery access.
+// Project Curse 5.27.0 — reactive scenarios, consequence feedback, and conditional recovery access.
 (function(root){
   'use strict';
 
@@ -15,7 +15,7 @@
     overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-labelledby','pcPilgrimageTitle');
     document.body.append(overlay);
     let activeScenarioId=store.getActiveScenarioId?.()||store.scenarioId;
-    let openState=false;let resetArmed=false;let previousFocus=null;
+    let openState=false;let resetArmed=false;let previousFocus=null;let pendingFeedback=null;let feedbackTimer=0;
 
     const scenario=()=>data.scenarios?.[activeScenarioId]||null;
     const accessFor=id=>{
@@ -69,12 +69,28 @@
     }
 
     function renderStage(state){
-      const current=scenario();const stage=current.stages[state.step];
-      return `<article class="pc-pilgrimage-stage" data-stage="${escapeHTML(stage.id)}">
+      const current=scenario();const base=current.stages[state.step];const stage=store.getStage?.(activeScenarioId,state.step,state)||base;const reactive=stage!==base;
+      return `<article class="pc-pilgrimage-stage${reactive?' is-reactive':''}" data-stage="${escapeHTML(stage.id)}">
         <header><div><small>${escapeHTML(stage.code)} / ${escapeHTML(stage.time)}</small><h1 id="pcPilgrimageTitle">${escapeHTML(stage.title)}</h1><p>${escapeHTML(stage.location)}</p></div><span>${state.step+1} / ${current.stages.length}</span></header>
+        ${reactive?'<div class="pc-pilgrimage-reactive-flag"><i></i><span>EARLIER DECISION DETECTED</span><b>이전 현장 판단이 현재 신호를 변경했습니다.</b></div>':''}
         <div class="pc-pilgrimage-transmission"><i></i><span>${escapeHTML(stage.signal)}</span></div><p class="pc-pilgrimage-narrative">${escapeHTML(stage.narrative)}</p>
         <aside class="pc-pilgrimage-rule"><small>${escapeHTML(stage.rule.code)}</small><b>${escapeHTML(stage.rule.text)}</b></aside>
         <div class="pc-pilgrimage-choices" aria-label="현장에서 할 행동 선택">${stage.choices.map((choice,index)=>`<button type="button" class="is-${escapeHTML(choice.tone)}" data-pilgrimage-choice="${escapeHTML(choice.id)}"><i>${String(index+1).padStart(2,'0')}</i><span><b>${escapeHTML(choice.label)}</b><small>${escapeHTML(choice.description)}</small></span><em>이 행동 선택&nbsp;›</em></button>`).join('')}</div>
+      </article>`;
+    }
+
+    function renderFeedback(){
+      const current=scenario();const feedback=pendingFeedback;if(!feedback) return '';
+      const outcome=current.outcomeLabels?.[feedback.choice.ruleOutcome]||feedback.choice.ruleOutcome.toUpperCase();
+      const deltas=current.metrics.map(metric=>{
+        const delta=Number(feedback.choice.deltas?.[metric.key]||0);if(!delta) return '';
+        return `<span class="is-${delta>0?'up':'down'}"><small>${escapeHTML(metric.label)}</small><b>${delta>0?'+':''}${delta}</b><em>${feedback.after.metrics[metric.key]}%</em></span>`;
+      }).join('');
+      return `<article class="pc-pilgrimage-feedback is-${escapeHTML(feedback.choice.ruleOutcome)}" role="status" aria-live="assertive">
+        <div class="pc-pilgrimage-feedback-scan" aria-hidden="true"></div><small>FIELD DECISION SEALED / ${escapeHTML(feedback.stage.code)}</small>
+        <h1 id="pcPilgrimageTitle">${escapeHTML(feedback.choice.label)}</h1><b>${escapeHTML(outcome)}</b><p>${escapeHTML(feedback.choice.description)}</p>
+        <div class="pc-pilgrimage-feedback-metrics">${deltas||'<span><small>TRACE</small><b>±0</b><em>기록 유지</em></span>'}</div>
+        <footer><i></i><span>선택 결과를 지도와 후속 현장 신호에 기록하는 중</span><em>${feedback.after.status==='complete'?'FINAL VERDICT':'NEXT TRACE'}</em></footer>
       </article>`;
     }
 
@@ -95,8 +111,8 @@
       overlay.dataset.scenario=activeScenarioId;overlay.dataset.theme=current.theme;overlay.dataset.status=summary.status;overlay.dataset.severity=severity(summary);
       overlay.innerHTML=`<div class="pc-pilgrimage-noise" aria-hidden="true"></div>
         <header class="pc-pilgrimage-shell-head"><div><small>${escapeHTML(current.channel)}</small><b>${escapeHTML(current.code)}</b></div><span>${escapeHTML(summary.status.toUpperCase())} · ${summary.progress}%</span><button type="button" aria-label="현장 화면 닫기" data-pilgrimage-close>×</button></header>
-        <div class="pc-pilgrimage-shell"><aside class="pc-pilgrimage-telemetry">${renderMap(summary)}<div class="pc-pilgrimage-meters" style="--metric-count:${current.metrics.length}">${current.metrics.map(metric=>meter(metric,summary.metrics[metric.key])).join('')}</div><div class="pc-pilgrimage-log"><small>FIELD DECISION LOG</small>${state.choices.length?state.choices.map((entry,index)=>{const stage=current.stages.find(item=>item.id===entry.stage);const choice=stage?.choices.find(item=>item.id===entry.choice);const outcome=current.outcomeLabels?.[entry.ruleOutcome]||entry.ruleOutcome.toUpperCase();return `<span class="is-${escapeHTML(entry.ruleOutcome)}"><i>${String(index+1).padStart(2,'0')}</i><b>${escapeHTML(stage?.title||entry.stage)}</b><em>${escapeHTML(outcome)}</em><small>${escapeHTML(choice?.label||entry.choice)}</small></span>`;}).join(''):'<p>아직 현장 판단이 기록되지 않았다.</p>'}</div></aside>
-        <main class="pc-pilgrimage-content">${summary.status==='idle'?renderIntro(summary):summary.status==='complete'?renderEnding(summary):renderStage(state)}</main></div>`;
+        <div class="pc-pilgrimage-shell"><aside class="pc-pilgrimage-telemetry">${renderMap(summary)}<div class="pc-pilgrimage-meters" style="--metric-count:${current.metrics.length}">${current.metrics.map(metric=>meter(metric,summary.metrics[metric.key])).join('')}</div><div class="pc-pilgrimage-log"><small>FIELD DECISION LOG</small>${state.choices.length?state.choices.map((entry,index)=>{const stageIndex=current.stages.findIndex(item=>item.id===entry.stage);const stage=store.getStage?.(activeScenarioId,stageIndex,state)||current.stages[stageIndex];const choice=stage?.choices.find(item=>item.id===entry.choice);const outcome=current.outcomeLabels?.[entry.ruleOutcome]||entry.ruleOutcome.toUpperCase();return `<span class="is-${escapeHTML(entry.ruleOutcome)}"><i>${String(index+1).padStart(2,'0')}</i><b>${escapeHTML(stage?.title||entry.stage)}</b><em>${escapeHTML(outcome)}</em><small>${escapeHTML(choice?.label||entry.choice)}</small></span>`;}).join(''):'<p>아직 현장 판단이 기록되지 않았다.</p>'}</div></aside>
+        <main class="pc-pilgrimage-content">${pendingFeedback?renderFeedback():summary.status==='idle'?renderIntro(summary):summary.status==='complete'?renderEnding(summary):renderStage(state)}</main></div>`;
       resetArmed=false;
     }
 
@@ -109,13 +125,15 @@
         return false;
       }
       activeScenarioId=id;store.select(id);
-      if(!openState){previousFocus=document.activeElement;openState=true;overlay.hidden=false;document.body.classList.add('pc-pilgrimage-open');document.getElementById('app')?.setAttribute('inert','');root.ProjectCurseAudioControl?.play?.(id==='deadzone-return'||id==='deadzone-recovery'?'screening.enter':'pilgrimage.enter');}
+      root.ProjectCurseAudioControl?.setProfile?.(id==='deadzone-recovery'?'recovery-scenario':'scenario');
+      if(!openState){previousFocus=document.activeElement;openState=true;overlay.hidden=false;document.body.classList.add('pc-pilgrimage-open');document.getElementById('app')?.setAttribute('inert','');root.ProjectCurseAudioControl?.play?.(id==='deadzone-recovery'?'recovery.enter':id==='deadzone-return'?'screening.enter':'pilgrimage.enter');}
       render();root.setTimeout(()=>overlay.querySelector('button,[tabindex]')?.focus({preventScroll:true}),40);return true;
     }
     function close(){
       if(!openState) return;
-      openState=false;overlay.hidden=true;document.body.classList.remove('pc-pilgrimage-open');document.getElementById('app')?.removeAttribute('inert');
-      root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-return'||activeScenarioId==='deadzone-recovery'?'screening.exit':'pilgrimage.exit');
+      openState=false;pendingFeedback=null;root.clearTimeout(feedbackTimer);overlay.hidden=true;document.body.classList.remove('pc-pilgrimage-open');document.getElementById('app')?.removeAttribute('inert');
+      root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-recovery'?'recovery.exit':activeScenarioId==='deadzone-return'?'screening.exit':'pilgrimage.exit');
+      root.ProjectCurseAudioControl?.setProfile?.(document.body?.dataset?.route||'map-room');
       try{previousFocus?.focus({preventScroll:true});}catch(_error){}
     }
     async function openRecord(recordId){close();await root.ProjectCurseShell?.navigate?.('archive-entry',{replace:false,historyMode:'push'});root.ProjectCurseRuntimeModules?.archiveIndex?.open?.(recordId);}
@@ -127,14 +145,16 @@
     overlay.addEventListener('click',event=>{
       const control=event.target.closest('button');if(!control) return;
       if(control.dataset.pilgrimageClose!==undefined){close();return;}
-      if(control.dataset.pilgrimageStart!==undefined){store.start(activeScenarioId);root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-return'?'screening.step':'pilgrimage.step');render();return;}
+      if(control.dataset.pilgrimageStart!==undefined){store.start(activeScenarioId);root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-recovery'?'recovery.tether':activeScenarioId==='deadzone-return'?'screening.step':'pilgrimage.step');render();return;}
       if(control.dataset.pilgrimageChoice){
-        const current=scenario();const choice=current.stages[store.get(activeScenarioId).step]?.choices.find(item=>item.id===control.dataset.pilgrimageChoice);
-        if(!store.choose(control.dataset.pilgrimageChoice,activeScenarioId)) return;
+        const current=scenario();const before=store.get(activeScenarioId);const stage=store.getStage?.(activeScenarioId,before.step,before)||current.stages[before.step];const choice=stage?.choices.find(item=>item.id===control.dataset.pilgrimageChoice);
+        if(!choice||!store.choose(control.dataset.pilgrimageChoice,activeScenarioId)) return;
+        const after=store.getSummary(activeScenarioId);
         const danger=choice?.tone==='danger'||choice?.tone==='risk';
-        root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-return'?(danger?'screening.mismatch':'screening.step'):(danger?'pilgrimage.danger':'pilgrimage.step'));
-        if(store.getSummary(activeScenarioId).status==='complete') root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-return'?'screening.complete':'pilgrimage.complete');
-        render();return;
+        const cue=activeScenarioId==='deadzone-recovery'?(danger?'recovery.echo':choice.ruleOutcome==='contained'?'recovery.contain':'recovery.tether'):activeScenarioId==='deadzone-return'?(danger?'screening.mismatch':'screening.step'):(danger?'pilgrimage.danger':'pilgrimage.step');
+        root.ProjectCurseAudioControl?.play?.(cue);
+        pendingFeedback={stage,choice,before,after};render();
+        root.clearTimeout(feedbackTimer);feedbackTimer=root.setTimeout(()=>{pendingFeedback=null;if(openState){if(after.status==='complete') root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-recovery'?'recovery.complete':activeScenarioId==='deadzone-return'?'screening.complete':'pilgrimage.complete');render();}},after.status==='complete'?1350:1050);return;
       }
       if(control.dataset.pilgrimageOpenRecord){openRecord(control.dataset.pilgrimageOpenRecord);return;}
       if(control.dataset.pilgrimageOpenVerdict){openRecord(control.dataset.pilgrimageOpenVerdict);return;}
@@ -142,7 +162,7 @@
       if(control.dataset.pilgrimageReset!==undefined){
         const resetLabel=scenario().theme==='deadzone'?'현재 검문 진행 초기화':scenario().theme==='recovery'?'현재 회수 작전 초기화':'현재 순례 진행 초기화';
         if(!resetArmed){resetArmed=true;control.dataset.confirmReset='1';control.textContent='한 번 더 누르면 현재 진행이 초기화됩니다';root.setTimeout(()=>{resetArmed=false;if(control.isConnected){delete control.dataset.confirmReset;control.textContent=resetLabel;}},3200);return;}
-        store.reset(activeScenarioId);root.ProjectCurseAudioControl?.play?.('pilgrimage.exit');render();
+        pendingFeedback=null;root.clearTimeout(feedbackTimer);store.reset(activeScenarioId);root.ProjectCurseAudioControl?.play?.('pilgrimage.exit');render();
       }
     });
     document.addEventListener('keydown',event=>{if(openState&&event.key==='Escape'){event.preventDefault();close();}});

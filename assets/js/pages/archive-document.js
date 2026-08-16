@@ -1,4 +1,4 @@
-// Project Curse 5.26.0 — shared archive document, verdict renderer, and recovery handoff.
+// Project Curse 5.27.0 — shared archive document, verdict renderer, and recovery handoff.
 (function(){
   'use strict';
 

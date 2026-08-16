@@ -1,4 +1,4 @@
-// Project Curse 5.26.0 — live intelligence, verdict notification and recovery resume owner.
+// Project Curse 5.27.0 — live intelligence, reactive field consequences, and recovery resume owner.
 (function(root){
   'use strict';
 
@@ -33,6 +33,9 @@
       const recovery=pilgrimageState?.getSummary?.('deadzone-recovery')||{status:'idle',completed:0,total:6,progress:0,endingData:null};
       const recoveryUnlocked=Boolean(verdictState?.isUnlocked?.('DZ-VR-04'));
       const verdictSummary=verdictState?.getSummary?.()||{total:10,unlocked:0,unread:0,latest:null};
+      const traceLabels={kept:'규칙 준수',broken:'규칙 위반',verified:'검증 완료',contained:'위험 봉쇄',compromised:'신호 오염',secured:'경로 확보'};
+      const latestTrace=id=>{const choice=pilgrimageState?.get?.(id)?.choices?.at?.(-1);return choice?{...choice,label:traceLabels[choice.ruleOutcome]||choice.ruleOutcome.toUpperCase(),tone:['broken','compromised'].includes(choice.ruleOutcome)?'critical':choice.ruleOutcome==='contained'?'unstable':'returned'}:null;};
+      const forestTrace=latestTrace('unlit-fortress');const screeningTrace=latestTrace('deadzone-return');const recoveryTrace=latestTrace('deadzone-recovery');
       const unreadVerdict=verdictState?.list?.().filter(entry=>entry.unread).sort((a,b)=>String(b.snapshot?.unlockedAt||'').localeCompare(String(a.snapshot?.unlockedAt||'')))[0]||null;
       const decision=operation.decision;
       const strip=home.querySelector('.pc-terminal-system-strip');
@@ -74,21 +77,21 @@
         };
         if(index===1) return {
           ...signal,route:'map-room',pilgrimage:'unlit-fortress',record:null,
-          label:pilgrimage.status==='complete'?`불빛 없는 성채 · ${pilgrimage.endingData?.title||'순례 종료'}`:pilgrimage.status==='active'?`불빛 없는 성채 순례 ${pilgrimage.completed}/${pilgrimage.total} 진행`:'불빛 없는 성채 순례 채널 대기',
-          status:pilgrimage.status==='complete'?'RESULT SAVED':pilgrimage.status==='active'?`${pilgrimage.progress}% TRACE`:'PILGRIMAGE READY',
-          tone:pilgrimage.status==='complete'?(pilgrimage.endingData?.tone==='hostile'?'critical':'recovered'):pilgrimage.status==='active'?'unstable':signal.tone
+          label:pilgrimage.status==='complete'?`불빛 없는 성채 · ${pilgrimage.endingData?.title||'순례 종료'}`:pilgrimage.status==='active'?`불빛 없는 성채 ${pilgrimage.completed}/${pilgrimage.total} · ${forestTrace?.label||'진입 중'}`:'불빛 없는 성채 순례 채널 대기',
+          status:pilgrimage.status==='complete'?'RESULT SAVED':pilgrimage.status==='active'?`${pilgrimage.progress}% · ${forestTrace?.ruleOutcome?.toUpperCase()||'TRACE'}`:'PILGRIMAGE READY',
+          tone:pilgrimage.status==='complete'?(pilgrimage.endingData?.tone==='hostile'?'critical':'recovered'):pilgrimage.status==='active'?(forestTrace?.tone||'unstable'):signal.tone
         };
         if(index===2) return {
           ...signal,route:'map-room',pilgrimage:'deadzone-return',record:null,
-          label:screening.status==='complete'?`데드존 귀환 판정 · ${screening.endingData?.title||'검문 종료'}`:screening.status==='active'?`검문소 07 신원 심사 ${screening.completed}/${screening.total} 진행`:'데드존 귀환자 검문 채널 대기',
-          status:screening.status==='complete'?'VERDICT SAVED':screening.status==='active'?`${screening.progress}% SCREENED`:'SCREENING READY',
-          tone:screening.status==='complete'?(screening.endingData?.tone==='hostile'?'critical':screening.endingData?.tone==='unstable'?'unstable':'recovered'):screening.status==='active'?'unstable':signal.tone
+          label:screening.status==='complete'?`데드존 귀환 판정 · ${screening.endingData?.title||'검문 종료'}`:screening.status==='active'?`검문소 07 ${screening.completed}/${screening.total} · ${screeningTrace?.label||'심사 중'}`:'데드존 귀환자 검문 채널 대기',
+          status:screening.status==='complete'?'VERDICT SAVED':screening.status==='active'?`${screening.progress}% · ${screeningTrace?.ruleOutcome?.toUpperCase()||'SCREENED'}`:'SCREENING READY',
+          tone:screening.status==='complete'?(screening.endingData?.tone==='hostile'?'critical':screening.endingData?.tone==='unstable'?'unstable':'recovered'):screening.status==='active'?(screeningTrace?.tone||'unstable'):signal.tone
         };
         if(index===3) return {
           ...signal,route:'map-room',pilgrimage:recoveryUnlocked?'deadzone-recovery':null,operation:recoveryUnlocked?null:'op-deadzone-recovery',record:null,
-          label:recovery.status==='complete'?`전진 회수 판정 · ${recovery.endingData?.title||'작전 종료'}`:recovery.status==='active'?`데드존 전진 회수 ${recovery.completed}/${recovery.total} 진행`:recoveryUnlocked?'검문소 지하 전진 회수선 개방':'검문소 지하 구조 신호 봉인',
-          status:recovery.status==='complete'?'VERDICT SAVED':recovery.status==='active'?`${recovery.progress}% RECOVERED`:recoveryUnlocked?'DZ-R05 READY':'DZ-VR-04 REQUIRED',
-          tone:recovery.status==='complete'?(recovery.endingData?.tone==='hostile'?'critical':'recovered'):recovery.status==='active'?'unstable':recoveryUnlocked?'returned':'critical'
+          label:recovery.status==='complete'?`전진 회수 판정 · ${recovery.endingData?.title||'작전 종료'}`:recovery.status==='active'?`데드존 전진 회수 ${recovery.completed}/${recovery.total} · ${recoveryTrace?.label||'하강 중'}`:recoveryUnlocked?'검문소 지하 전진 회수선 개방':'검문소 지하 구조 신호 봉인',
+          status:recovery.status==='complete'?'VERDICT SAVED':recovery.status==='active'?`${recovery.progress}% · ${recoveryTrace?.ruleOutcome?.toUpperCase()||'RECOVERED'}`:recoveryUnlocked?'DZ-R05 READY':'DZ-VR-04 REQUIRED',
+          tone:recovery.status==='complete'?(recovery.endingData?.tone==='hostile'?'critical':'recovered'):recovery.status==='active'?(recoveryTrace?.tone||'unstable'):recoveryUnlocked?'returned':'critical'
         };
         return signal;
       });
