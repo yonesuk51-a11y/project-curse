@@ -1,4 +1,4 @@
-// Project Curse 5.24.0 — public single-shell record index
+// Project Curse 5.25.0 — public single-shell record index
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseArchive=freeze({
-    version:'5.24.0',
+    version:'5.25.0',
     publicRecords:[
       {
         id:'Cults_871104', code:'CULT-ARCHIVE', access:'open', format:'video',
@@ -60,12 +60,12 @@
       {
         id:'Great_Black_Forest_Region', code:'REGION-GBF-SOUTH', access:'open', format:'document',
         title:'대흑림 권역 보고서',
-        summary:'남부 데드존의 정착지, 성채, 교단 공존권과 타락 야생체 생태를 정리한 불완전 지역 기록.'
+        summary:'대흑림의 정착지와 성채, 교단 사이의 관계, 타락 야생체의 생태를 정리한 불완전한 지역 기록.'
       },
       {
         id:'Dead_Zone_Pilgrimage', code:'REGION-DEADZONE-NORTH', access:'open', format:'document',
         title:'데드존 순례 및 귀환자 기록',
-        summary:'국가와 귀환 보장이 사라진 북아메리카의 통제 상태, 순례 경로와 귀환자 판정 기록.'
+        summary:'국가도 귀환 보장도 사라진 북아메리카의 현황과 순례 경로, 귀환자 검문 기록.'
       },
       {
         id:'Pilgrim_Rules_GBF', code:'FIELD-RULES-PILGRIM-I', access:'open', format:'document',

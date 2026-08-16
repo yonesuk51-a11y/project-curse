@@ -1,4 +1,4 @@
-// Project Curse 5.24.0 — single source of truth for the terminal build.
+// Project Curse 5.25.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,10 +9,10 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.24.0',
-    codename:'Dead Zone Return Protocol',
-    schema:'project-curse-v15',
-    released:'2026-08-16',
+    version:'5.25.0',
+    codename:'Conditional Verdict Archive',
+    schema:'project-curse-v16',
+    released:'2026-08-17',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},
       {id:'map-room',index:'01',label:'상황 관제',shortLabel:'관제'},

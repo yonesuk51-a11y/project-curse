@@ -1,0 +1,48 @@
+/* Project Curse 5.25.0 — conditional verdict archive and decrypted-report identity. */
+body.pc-archive-index-active #archive-entry .pc-verdict-archive{position:relative;margin:38px 0 12px;padding:1px 0 0;border-top:1px solid rgba(184,151,82,.28);background:linear-gradient(180deg,rgba(107,82,28,.07),transparent 180px)}
+body.pc-archive-index-active #archive-entry .pc-verdict-archive:before{content:'LOCAL VERDICT STORAGE / OUTCOME-BOUND';position:absolute;right:2px;top:-16px;color:rgba(202,174,103,.38);font:8px/1 Consolas,monospace;letter-spacing:.14em}
+body.pc-archive-index-active #archive-entry .pc-verdict-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;padding:24px 17px 20px;border-bottom:1px solid rgba(184,151,82,.2)}
+body.pc-archive-index-active #archive-entry .pc-verdict-head span{color:#c6a964;font:9px/1.4 Consolas,monospace;letter-spacing:.2em}
+body.pc-archive-index-active #archive-entry .pc-verdict-head h4{margin:8px 0 7px;color:#eee8d9;font-size:1.12rem;font-weight:650;letter-spacing:.04em}
+body.pc-archive-index-active #archive-entry .pc-verdict-head p{max-width:720px;margin:0;color:rgba(222,215,196,.62);font-size:.8rem;line-height:1.7;word-break:keep-all}
+body.pc-archive-index-active #archive-entry .pc-verdict-head dl{display:grid;grid-template-columns:repeat(2,92px);margin:0;border:1px solid rgba(184,151,82,.22)}
+body.pc-archive-index-active #archive-entry .pc-verdict-head dl div{padding:10px 12px;border-right:1px solid rgba(184,151,82,.18)}
+body.pc-archive-index-active #archive-entry .pc-verdict-head dl div:last-child{border-right:0}
+body.pc-archive-index-active #archive-entry .pc-verdict-head dt{color:rgba(190,178,145,.54);font-size:.62rem}
+body.pc-archive-index-active #archive-entry .pc-verdict-head dd{margin:5px 0 0;color:#e2d3aa;font:700 .78rem/1.2 Consolas,monospace}
+body.pc-archive-index-active #archive-entry .pc-verdict-subgroup{margin:22px 0 28px}
+body.pc-archive-index-active #archive-entry .pc-verdict-subgroup>header{display:flex;align-items:baseline;gap:13px;padding:0 17px 10px}
+body.pc-archive-index-active #archive-entry .pc-verdict-subgroup>header span{color:rgba(197,168,97,.58);font:8px/1 Consolas,monospace;letter-spacing:.15em}
+body.pc-archive-index-active #archive-entry .pc-verdict-subgroup>header h5{margin:0;color:#cfc9b9;font-size:.82rem;font-weight:600;letter-spacing:.04em}
+body.pc-archive-index-active #archive-entry .pc-verdict-row{position:relative;grid-template-columns:210px minmax(0,1fr) 112px;border-bottom-color:rgba(184,151,82,.14);background:linear-gradient(90deg,rgba(47,38,19,.22),rgba(9,11,12,.58) 64%)}
+body.pc-archive-index-active #archive-entry .pc-verdict-row code{color:#bda25f}
+body.pc-archive-index-active #archive-entry .pc-verdict-row i{color:rgba(203,181,126,.7);text-align:right}
+body.pc-archive-index-active #archive-entry .pc-verdict-row.is-unlocked:hover{border-left-color:#c4a45b;background:linear-gradient(90deg,rgba(91,70,25,.3),rgba(12,14,15,.6) 72%)}
+body.pc-archive-index-active #archive-entry .pc-verdict-row.is-unread:after{content:'NEW';position:absolute;right:18px;top:8px;color:#f1c86f;font:8px/1 Consolas,monospace;letter-spacing:.14em;animation:pc-verdict-pulse 1.8s ease-in-out infinite}
+body.pc-archive-index-active #archive-entry .pc-verdict-row.is-locked{cursor:not-allowed;filter:saturate(.35);opacity:.58}
+body.pc-archive-index-active #archive-entry .pc-verdict-row.is-locked b{color:#a7a9a5}
+body.pc-archive-index-active #archive-entry .pc-verdict-row.is-locked:hover{border-left-color:#635d4b;background:linear-gradient(90deg,rgba(48,42,29,.2),rgba(9,11,12,.54) 72%)}
+body.pc-archive-index-active #archive-entry .pc-verdict-row.is-denied{animation:pc-verdict-denied .32s ease both}
+body.pc-archive-index-active #archive-entry .pc-verdict-manage{margin:28px 17px 6px;border:1px solid rgba(130,119,91,.2);background:rgba(8,10,11,.58)}
+body.pc-archive-index-active #archive-entry .pc-verdict-manage summary{padding:13px 15px;color:#96907f;font-size:.74rem;cursor:pointer;letter-spacing:.05em}
+body.pc-archive-index-active #archive-entry .pc-verdict-manage>div{display:flex;align-items:center;gap:9px;padding:15px;border-top:1px solid rgba(130,119,91,.16);flex-wrap:wrap}
+body.pc-archive-index-active #archive-entry .pc-verdict-manage p{width:100%;margin:0 0 7px;color:#777b77;font-size:.72rem;line-height:1.65}
+body.pc-archive-index-active #archive-entry .pc-verdict-manage button{min-height:36px;padding:8px 11px;border:1px solid #373832;background:#111311;color:#aaa99e;font-size:.68rem;cursor:pointer}
+body.pc-archive-index-active #archive-entry .pc-verdict-manage button:hover{border-color:#8b7a51;color:#ddd4bb}
+body.pc-archive-index-active #archive-entry .pc-verdict-manage button.is-danger{margin-left:auto;border-color:rgba(150,61,65,.42);color:#bd7779;background:rgba(73,21,24,.18)}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-document{position:relative}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-region-telemetry{grid-template-columns:repeat(4,1fr)}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-header{padding-top:58px}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-header:before{content:'LOCAL VERDICT HASH / SNAPSHOT SEALED';position:absolute;left:0;top:31px;color:rgba(198,170,100,.42);font:8px/1 Consolas,monospace;letter-spacing:.15em}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-access,.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-kicker,.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-code{color:#c4a75f}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-section{box-shadow:inset 3px 0 rgba(184,151,82,.08)}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-section:last-child blockquote{border-color:#9e7f3c;background:linear-gradient(90deg,rgba(94,70,20,.22),rgba(8,10,11,.2));color:#dfd3b3}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-field-action{justify-content:flex-start}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-field-action span{margin-right:auto}
+.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-field-action button.is-secondary{border-color:rgba(126,137,139,.35);background:rgba(45,51,53,.25);color:#bbc2c1}
+.pc-internal-document-shell[data-presentation="verdict"][data-document-theme="great-black-forest"]{--red:#baa363;background:radial-gradient(circle at 18% 0,rgba(93,105,55,.2),transparent 32rem),repeating-linear-gradient(88deg,rgba(121,137,84,.016) 0 1px,transparent 1px 13px),linear-gradient(180deg,#060806,#020403 72%)}
+.pc-internal-document-shell[data-presentation="verdict"][data-document-theme="dead-zone"]{--red:#c6a353;background:radial-gradient(circle at 70% 0,rgba(150,126,62,.14),transparent 34rem),repeating-linear-gradient(0deg,rgba(222,210,168,.014) 0 1px,transparent 1px 5px),linear-gradient(180deg,#0a0a08,#030404 68%)}
+@keyframes pc-verdict-pulse{0%,100%{opacity:.45}50%{opacity:1}}
+@keyframes pc-verdict-denied{0%,100%{transform:translateX(0)}30%{transform:translateX(-5px)}65%{transform:translateX(4px)}}
+@media(max-width:760px){body.pc-archive-index-active #archive-entry .pc-verdict-head{grid-template-columns:1fr;align-items:start}body.pc-archive-index-active #archive-entry .pc-verdict-head dl{width:100%;grid-template-columns:repeat(2,1fr)}body.pc-archive-index-active #archive-entry .pc-verdict-row{grid-template-columns:1fr auto}body.pc-archive-index-active #archive-entry .pc-verdict-row code{grid-column:1/-1}body.pc-archive-index-active #archive-entry .pc-verdict-row.is-unread:after{right:12px;top:15px}body.pc-archive-index-active #archive-entry .pc-verdict-manage>div{align-items:stretch;flex-direction:column}body.pc-archive-index-active #archive-entry .pc-verdict-manage button.is-danger{margin-left:0}.pc-internal-document-shell[data-presentation="verdict"] .archive-doc-field-action span{margin-right:0}.pc-internal-document-shell[data-presentation="verdict"] .archive-region-telemetry{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){body.pc-archive-index-active #archive-entry .pc-verdict-row.is-unread:after,body.pc-archive-index-active #archive-entry .pc-verdict-row.is-denied{animation:none}}

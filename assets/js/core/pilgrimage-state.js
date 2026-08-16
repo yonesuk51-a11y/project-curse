@@ -1,4 +1,4 @@
-// Project Curse 5.24.0 — persistent multi-scenario pilgrimage and screening state owner.
+// Project Curse 5.25.0 — persistent multi-scenario pilgrimage and screening state owner.
 (function(root){
   'use strict';
 

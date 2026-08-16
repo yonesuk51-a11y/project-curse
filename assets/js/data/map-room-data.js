@@ -1,4 +1,4 @@
-// Project Curse 5.24.0 — geographic control map, routes, drilldowns, and shared incident traces.
+// Project Curse 5.25.0 — geographic control map, routes, drilldowns, and shared incident traces.
 (function(root){
   'use strict';
 
@@ -11,7 +11,7 @@
   const network=root.ProjectCurseIncidentNetwork;
 
   root.ProjectCurseMapRoom=freeze({
-    version:'map-room-v7',
+    version:'map-room-v8',
     viewBox:'0 0 1200 620',
     geography:[
       {id:'greenland',d:'M319 53 L360 39 394 70 378 121 341 132 311 95 Z'},

@@ -1,9 +1,9 @@
 # Future Patch Pointer
 
-Current baseline: `5.24.0 Dead Zone Return Protocol`
+Current baseline: `5.25.0 Conditional Verdict Archive`
 
 Completed in this baseline:
-`Readable Boot / Two Persistent Field Scenarios / Dead Zone Return Screening`
+`Readable Boot / Two Persistent Field Scenarios / Conditional Verdict Archive / Korean Copy Revision`
 
 Primary scope:
 
@@ -19,12 +19,15 @@ Primary scope:
 - 공포·오염·통신·규칙 위반 상태의 로컬 저장과 지도·홈 결과 동기화
 - 데드존 귀환자 6단계 신원 검문, 네 가지 판정과 독립적인 다중 시나리오 저장
 - 신원·노출·기억 정합성·판단 신뢰도의 검문 계기와 지도·홈·작전 결과 동기화
+- 일곱 결말에 대응하는 조건부 판정 기록과 선택·측정값 스냅샷 저장
+- 메인 단말 새 기록 알림, 읽음 상태와 범위별 판정 기록 초기화
+- 대흑림·데드존 설정글, 순례 규칙과 두 시나리오의 한국어 윤문
 - 기존 세부 지도 6개·사건 지점 38개·작전 판단 연동·보호 해시 유지
 
 Next planned pass:
 
 - 역방향 순례 결말에서 이어지는 데드존 전진 회수 작전 제작
-- 시나리오 결말별 잠금 해제 조사 보고서와 누적 현장 판단 목록 추가
+- 역방향 순례 판정 기록과 연결되는 조건부 시나리오 진입 규칙 추가
 - 신규 PNG의 WebP 파생본과 모바일 해상도 최적화
 - 실제 원본 이미지가 추가로 제공되면 RECONSTRUCTED 자산과 나란히 비교하고 교체 여부 결정
 - 공개 배포 전 음원·영상 라이선스 최종 확인

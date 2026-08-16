@@ -1,4 +1,4 @@
-// Project Curse 5.24.0 — immersive multi-scenario pilgrimage and return-screening presentation.
+// Project Curse 5.25.0 — immersive scenarios with revised Korean interface copy.
 (function(root){
   'use strict';
 
@@ -54,7 +54,7 @@
         <h1 id="pcPilgrimageTitle">${escapeHTML(current.title)}</h1><p>${escapeHTML(current.summary)}</p>
         <dl><div><dt>권역</dt><dd>${escapeHTML(current.region)}</dd></div><div><dt>연결 사건</dt><dd>${escapeHTML(current.incident.toUpperCase())}</dd></div><div><dt>현재 상태</dt><dd>${resume?escapeHTML(summary.status.toUpperCase()):'NOT STARTED'}</dd></div><div><dt>진행도</dt><dd>${summary.progress}%</dd></div></dl>
         <div class="pc-pilgrimage-directive"><b>${escapeHTML(current.directiveLabel)}</b><p>${escapeHTML(current.directive)}</p></div>
-        <div class="pc-pilgrimage-intro-actions"><button type="button" data-pilgrimage-start>${resume?'현장 기록 재개':current.theme==='deadzone'?'귀환 검문 개시':'순례 개시'}</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.guideRecord)}">연결 기록 확인</button></div>
+        <div class="pc-pilgrimage-intro-actions"><button type="button" data-pilgrimage-start>${resume?'현장 기록 이어 보기':current.theme==='deadzone'?'귀환자 검문 시작':'순례 시작'}</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.guideRecord)}">관련 기록 먼저 확인</button></div>
       </article>`;
     }
 
@@ -64,17 +64,18 @@
         <header><div><small>${escapeHTML(stage.code)} / ${escapeHTML(stage.time)}</small><h1 id="pcPilgrimageTitle">${escapeHTML(stage.title)}</h1><p>${escapeHTML(stage.location)}</p></div><span>${state.step+1} / ${current.stages.length}</span></header>
         <div class="pc-pilgrimage-transmission"><i></i><span>${escapeHTML(stage.signal)}</span></div><p class="pc-pilgrimage-narrative">${escapeHTML(stage.narrative)}</p>
         <aside class="pc-pilgrimage-rule"><small>${escapeHTML(stage.rule.code)}</small><b>${escapeHTML(stage.rule.text)}</b></aside>
-        <div class="pc-pilgrimage-choices" aria-label="현장 판단 선택">${stage.choices.map((choice,index)=>`<button type="button" class="is-${escapeHTML(choice.tone)}" data-pilgrimage-choice="${escapeHTML(choice.id)}"><i>${String(index+1).padStart(2,'0')}</i><span><b>${escapeHTML(choice.label)}</b><small>${escapeHTML(choice.description)}</small></span><em>판정 ›</em></button>`).join('')}</div>
+        <div class="pc-pilgrimage-choices" aria-label="현장에서 할 행동 선택">${stage.choices.map((choice,index)=>`<button type="button" class="is-${escapeHTML(choice.tone)}" data-pilgrimage-choice="${escapeHTML(choice.id)}"><i>${String(index+1).padStart(2,'0')}</i><span><b>${escapeHTML(choice.label)}</b><small>${escapeHTML(choice.description)}</small></span><em>이 행동 선택&nbsp;›</em></button>`).join('')}</div>
       </article>`;
     }
 
     function renderEnding(summary){
       const current=scenario();const ending=store.getEnding(activeScenarioId);
+      const verdict=window.ProjectCurseVerdictArchiveState?.list?.().find(entry=>entry.scenarioId===activeScenarioId&&entry.endingId===ending?.id&&entry.unlocked);
       const metricStats=current.metrics.map(metric=>`<div><dt>${escapeHTML(metric.label)}</dt><dd>${summary.metrics[metric.key]}%</dd></div>`).join('');
       return `<article class="pc-pilgrimage-ending is-${escapeHTML(ending.tone)}">
         <small>${escapeHTML(ending.code)}</small><h1 id="pcPilgrimageTitle">${escapeHTML(ending.title)}</h1><b>${escapeHTML(ending.status)}</b><p>${escapeHTML(ending.summary)}</p>
         <div class="pc-pilgrimage-ending-consequence"><span>관제 결과</span><p>${escapeHTML(ending.consequence)}</p></div><dl>${metricStats}</dl>
-        <div class="pc-pilgrimage-ending-actions"><button type="button" data-pilgrimage-open-map>결과가 반영된 관제도 보기</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.primaryRecord)}">연결 기록 열기</button><button type="button" class="is-reset" data-pilgrimage-reset>${current.theme==='deadzone'?'검문 기록 초기화':'순례 기록 초기화'}</button></div>
+        <div class="pc-pilgrimage-ending-actions">${verdict?`<button type="button" data-pilgrimage-open-verdict="${escapeHTML(verdict.id)}">복호화된 판정 기록 열기</button>`:''}<button type="button" data-pilgrimage-open-map>관제도에서 결과 확인</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.primaryRecord)}">관련 지역 기록 열기</button><button type="button" class="is-reset" data-pilgrimage-reset>${current.theme==='deadzone'?'현재 검문 진행 초기화':'현재 순례 진행 초기화'}</button></div>
       </article>`;
     }
 
@@ -120,10 +121,11 @@
         render();return;
       }
       if(control.dataset.pilgrimageOpenRecord){openRecord(control.dataset.pilgrimageOpenRecord);return;}
+      if(control.dataset.pilgrimageOpenVerdict){openRecord(control.dataset.pilgrimageOpenVerdict);return;}
       if(control.dataset.pilgrimageOpenMap!==undefined){openMap();return;}
       if(control.dataset.pilgrimageReset!==undefined){
-        const resetLabel=scenario().theme==='deadzone'?'검문 기록 초기화':'순례 기록 초기화';
-        if(!resetArmed){resetArmed=true;control.dataset.confirmReset='1';control.textContent='한 번 더 눌러 초기화 확인';root.setTimeout(()=>{resetArmed=false;if(control.isConnected){delete control.dataset.confirmReset;control.textContent=resetLabel;}},2600);return;}
+        const resetLabel=scenario().theme==='deadzone'?'현재 검문 진행 초기화':'현재 순례 진행 초기화';
+        if(!resetArmed){resetArmed=true;control.dataset.confirmReset='1';control.textContent='한 번 더 누르면 현재 진행이 초기화됩니다';root.setTimeout(()=>{resetArmed=false;if(control.isConnected){delete control.dataset.confirmReset;control.textContent=resetLabel;}},3200);return;}
         store.reset(activeScenarioId);root.ProjectCurseAudioControl?.play?.('pilgrimage.exit');render();
       }
     });

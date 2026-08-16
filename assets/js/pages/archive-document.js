@@ -1,8 +1,9 @@
-// Project Curse 5.24.0 — shared archive document renderer and internal scenario viewer.
+// Project Curse 5.25.0 — shared archive document and conditional verdict renderer.
 (function(){
   'use strict';
 
   const documents=window.ProjectCurseArchiveDocuments?.documents||{};
+  const documentFor=id=>documents[id]||window.ProjectCurseVerdictArchiveState?.getDocument?.(id)||null;
   const originalTitle=document.title;
   let currentId=null;
   let currentTrigger=null;
@@ -314,16 +315,17 @@
     }
 
     const top=el('div','archive-doc-top');
-    top.append(closeControl(embedded,'← 기록보관소'),el('span','archive-doc-access','PUBLIC RECOVERY / READABLE'));
+    const verdictDocument=doc.presentation==='verdict';
+    top.append(closeControl(embedded,'← 기록보관소'),el('span','archive-doc-access',verdictDocument?'FIELD VERDICT / DECRYPTED':'PUBLIC RECOVERY / READABLE'));
 
     const header=el('header','archive-doc-header');
-    header.append(el('div','archive-doc-kicker','U.A.C RECOVERED ARCHIVE'),el('code','archive-doc-code',doc.code),el('h1','',doc.title),rich('p','archive-doc-summary',doc.summary));
+    header.append(el('div','archive-doc-kicker',verdictDocument?'GENERATED FROM LOCAL VERDICT':'U.A.C RECOVERED ARCHIVE'),el('code','archive-doc-code',doc.code),el('h1','',doc.title),rich('p','archive-doc-summary',doc.summary));
 
-    const scenarioId=doc.sourceId==='Dead_Zone_Pilgrimage'?'deadzone-return':doc.sourceId==='Great_Black_Forest_Region'?'unlit-fortress':null;
+    const scenarioId=doc.scenarioId||(doc.sourceId==='Dead_Zone_Pilgrimage'?'deadzone-return':doc.sourceId==='Great_Black_Forest_Region'?'unlit-fortress':null);
     const fieldAction=scenarioId?el('div','archive-doc-field-action'):null;
     if(fieldAction){
       const summary=window.ProjectCursePilgrimageState?.getSummary?.(scenarioId);
-      const button=el('button','',summary?.status==='complete'?'저장된 현장 결과 열기':summary?.status==='active'?'저장된 현장 기록 재개':scenarioId==='deadzone-return'?'검문소 07 귀환 심사 개시':'불빛 없는 성채 순례 개시');
+      const button=el('button','',verdictDocument?'해당 현장 결과 다시 열기':summary?.status==='complete'?'저장된 현장 결과 열기':summary?.status==='active'?'저장된 현장 기록 재개':scenarioId==='deadzone-return'?'검문소 07 귀환 심사 시작':'불빛 없는 성채 순례 시작');
       button.type='button';button.dataset.archiveOpenPilgrimage=scenarioId;
       const copy=el('span','',scenarioId==='deadzone-return'?'RETURN SCREENING / CHECKPOINT 07':'FIELD PILGRIMAGE / GBF WESTERN ROUTE');
       button.addEventListener('click',()=>{
@@ -331,6 +333,16 @@
         window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'}).then(()=>window.ProjectCursePilgrimageRuntime?.open?.(scenarioId));
       });
       fieldAction.append(copy,button);
+      if(verdictDocument){
+        const mapButton=el('button','is-secondary','판정 좌표를 관제도에서 확인');
+        mapButton.type='button';
+        mapButton.addEventListener('click',()=>{
+          const target=window.ProjectCursePilgrimageData?.scenarios?.[scenarioId]?.mapTarget;
+          close({restoreFocus:false});
+          window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'}).then(()=>window.ProjectCurseMapRoomRuntime?.showDetail?.(target?.detail,target?.site));
+        });
+        fieldAction.append(mapButton);
+      }
     }
 
     const telemetry=doc.telemetry?.length?el('div','archive-region-telemetry'):null;
@@ -401,7 +413,7 @@
   }
 
   function open(id,trigger=null){
-    const doc=documents[id];
+    const doc=documentFor(id);
     const host=document.getElementById('archiveInternalDocument');
     const root=document.getElementById('archiveInternalDocumentBody');
     if(!doc||!host||!root) return false;
@@ -425,6 +437,7 @@
     window.ProjectCurseAudio?.setContext?.('document');
     window.ProjectCurseAudioControl?.setProfile?.(doc.theme||doc.presentation||'document');
     window.ProjectCurseAudioControl?.play?.('record.mount');
+    if(doc.presentation==='verdict') window.ProjectCurseVerdictArchiveState?.markRead?.(id);
     const regionalCue={
       'great-black-forest':'region.forest',
       'dead-zone':'region.deadzone',
@@ -492,7 +505,7 @@
   window.ProjectCurseInternalDocumentViewer=Object.freeze({
     open,
     close,
-    render:(id,root,options)=>render(root,documents[id],options),
+    render:(id,root,options)=>render(root,documentFor(id),options),
     isOpen:()=>Boolean(currentId),
     getCurrentId:()=>currentId
   });
@@ -500,7 +513,7 @@
   const standaloneId=document.body?.dataset.archiveDocument;
   const standaloneRoot=document.getElementById('archiveDocument');
   if(standaloneId&&standaloneRoot){
-    const doc=documents[standaloneId];
+    const doc=documentFor(standaloneId);
     if(doc){
       document.title=`${doc.title} | U.A.C 기록보관소`;
       document.body.dataset.presentation=doc.presentation||'document';

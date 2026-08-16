@@ -1,4 +1,4 @@
-// Project Curse 5.24.0 — permanent terminal shell, route and channel handoff owner.
+// Project Curse 5.25.0 — permanent terminal shell, route and channel handoff owner.
 (function(){
   'use strict';
 
