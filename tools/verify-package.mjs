@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.23.2';
-const DATA_VERSION='5.23.2';
+const VERSION='5.24.0';
+const DATA_VERSION='5.24.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -152,10 +152,14 @@ add('operation-scenario-report',read('assets/js/pages/archive-document.js').incl
 add('operation-map-outcome-sync',mapRoomRuntime.includes('operationStore.getDecision')&&mapRoomRuntime.includes('pc-op-route--verdict')&&mapRoomRuntime.includes('decision?.siteStates')&&mapRoomRuntime.includes('stepStates'));
 add('operation-home-resume',terminalHomeRuntime.includes('operationState?.getSummary')&&terminalHomeRuntime.includes('작전 분석 재개')&&terminalHomeRuntime.includes('VERDICT SAVED')&&terminalHomeRuntime.includes('projectcurse:operation-state-change'));
 const unlitPilgrimage=pilgrimageData?.scenarios?.['unlit-fortress'];
+const deadzoneReturn=pilgrimageData?.scenarios?.['deadzone-return'];
 add('pilgrimage-six-stage-scenario',unlitPilgrimage?.stages?.length===6&&Object.keys(unlitPilgrimage?.endings||{}).sort().join('|')==='breach|retreat|sanctuary'&&unlitPilgrimage.stages.every(stage=>stage.rule&&stage.choices?.length>=2));
-add('pilgrimage-persistent-state',structureData?.owners?.pilgrimageState==='assets/js/core/pilgrimage-state.js'&&pilgrimageState.includes("storageKey='pc_pilgrimage_state_v1'")&&pilgrimageState.includes('localStorage.setItem')&&pilgrimageState.includes('projectcurse:pilgrimage-state-change')&&pilgrimageState.includes('function choose(choiceId)'));
-add('pilgrimage-immersive-runtime',pilgrimageRuntime.includes('ProjectCursePilgrimageRuntime')&&pilgrimageRuntime.includes('pc-pilgrimage-map')&&pilgrimageRuntime.includes('data-pilgrimage-choice')&&pilgrimageRuntime.includes('한 번 더 눌러 초기화 확인'));
-add('pilgrimage-map-home-sync',mapRoomRuntime.includes('data-map-open-pilgrimage')&&mapRoomRuntime.includes('resolvePilgrimageTarget')&&terminalHomeRuntime.includes('data-uac-pilgrimage')&&appShell.includes('dataset.uacPilgrimage'));
+add('deadzone-six-stage-return-screening',deadzoneReturn?.stages?.length===6&&Object.keys(deadzoneReturn?.endings||{}).sort().join('|')==='approved|fifth|reverse|sealed'&&deadzoneReturn.stages.every(stage=>stage.rule&&stage.choices?.length>=2));
+add('deadzone-four-screening-metrics',deadzoneReturn?.metrics?.map(metric=>metric.key).join('|')==='identity|exposure|coherence|trust'&&deadzoneReturn.stages.every(stage=>stage.choices.every(choice=>deadzoneReturn.metrics.some(metric=>Object.hasOwn(choice.deltas||{},metric.key)))));
+add('pilgrimage-persistent-state',structureData?.owners?.pilgrimageState==='assets/js/core/pilgrimage-state.js'&&pilgrimageState.includes("storageKey='pc_pilgrimage_states_v2'")&&pilgrimageState.includes("legacyKey='pc_pilgrimage_state_v1'")&&pilgrimageState.includes('localStorage.setItem')&&pilgrimageState.includes('projectcurse:pilgrimage-state-change')&&pilgrimageState.includes('function getAllSummaries()')&&pilgrimageState.includes('function choose(choiceId,id=activeScenarioId)'));
+add('pilgrimage-immersive-runtime',pilgrimageRuntime.includes('ProjectCursePilgrimageRuntime')&&pilgrimageRuntime.includes('pc-pilgrimage-map')&&pilgrimageRuntime.includes('data-pilgrimage-choice')&&pilgrimageRuntime.includes('overlay.dataset.theme')&&pilgrimageRuntime.includes('한 번 더 눌러 초기화 확인'));
+add('pilgrimage-map-home-sync',mapRoomRuntime.includes('data-map-open-pilgrimage')&&mapRoomRuntime.includes('resolvePilgrimageTarget')&&mapRoomRuntime.includes("'deadzone-return'")&&terminalHomeRuntime.includes("pilgrimage:'deadzone-return'")&&terminalHomeRuntime.includes('data-uac-pilgrimage')&&appShell.includes('dataset.uacPilgrimage'));
+add('pilgrimage-archive-direct-entry',read('assets/js/pages/archive-document.js').includes("doc.sourceId==='Dead_Zone_Pilgrimage'?'deadzone-return'")&&read('assets/js/pages/archive-document.js').includes("doc.sourceId==='Great_Black_Forest_Region'?'unlit-fortress'")&&read('assets/js/pages/archive-document.js').includes('button.dataset.archiveOpenPilgrimage=scenarioId'));
 add('pilgrimage-responsive-presentation',pilgrimageCss.includes('@media(max-width:900px)')&&pilgrimageCss.includes('@media(max-width:520px)')&&pilgrimageCss.includes('@media(prefers-reduced-motion:reduce)'));
 add('mobile-quick-menu',foundationCss.includes('.uac-shell-bar.is-quick-open .uac-shell-quick')&&appShell.includes("switchControl?.addEventListener('click'"));
 add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&appShell.includes("commitRoute(initialRoute,initialRoute,'replace')"));
@@ -169,7 +173,7 @@ add('legacy-route-compatibility',appShell.includes("target==='faction-relation'"
 add('loading-sequence-owned',loadingRuntime.includes('ProjectCurseLoading')&&loadingRuntime.includes('prefers-reduced-motion')&&loadingRuntime.includes("return hasSeen()?'restore':'cold'")&&index.includes('data-boot-skip'));
 add('loading-modes-and-readable-timing',loadingRuntime.includes('duration:7800')&&loadingRuntime.includes('duration:4800')&&loadingRuntime.includes('duration:1050')&&loadingRuntime.includes('duration:3000')&&loadingRuntime.includes('FINAL ACCESS HOLD')&&loadingRuntime.includes('SESSION_KEY=()=>')&&loadingRuntime.includes("get('boot')"));
 add('audio-controller-owned',audioManifest.includes('ProjectCurseAudioManifest')&&audioController.includes('ProjectCurseAudioControl')&&index.includes('data-uac-audio-toggle'));
-add('semantic-field-audio',context.window.ProjectCurseAudioManifest?.version==='2.0.0'&&['map.layer','map.signal','operation.step','history.open','faction.open','incident.link','scenario.reveal','scenario.complete','pilgrimage.enter','pilgrimage.step','pilgrimage.danger','pilgrimage.complete','pilgrimage.exit'].every(event=>context.window.ProjectCurseAudioManifest.events[event]));
+add('semantic-field-audio',context.window.ProjectCurseAudioManifest?.version==='2.0.0'&&['map.layer','map.signal','operation.step','history.open','faction.open','incident.link','scenario.reveal','scenario.complete','pilgrimage.enter','pilgrimage.step','pilgrimage.danger','pilgrimage.complete','pilgrimage.exit','screening.enter','screening.step','screening.mismatch','screening.complete','screening.exit'].every(event=>context.window.ProjectCurseAudioManifest.events[event]));
 add('acoustic-screen-profiles',['terminal-home','map-room','history','faction-info','archive-entry','document','great-black-forest','dead-zone','guide','scenario'].every(profile=>context.window.ProjectCurseAudioManifest?.profiles?.[profile]));
 add('distinct-interface-cues',['pc5152h_terminal_contact_clear.wav','pc5152f_analog_contact_soft.wav','pc5152h_record_mount_clear.wav','pc5152p_internal_projector_vhs_step.wav','pc5152x_late_log_beep_195s.mp3','pc5152v_field_photo_click_42s.mp3','pc5152v_comm_line_cue_73_74.mp3'].every(asset=>baseRuntime.includes(asset)));
 add('audio-ducking-and-polyphony',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes("if(event.priority>1){stopBus('interface');stopBus('record');}")&&audioController.includes('event.exclusive!==false'));
@@ -182,7 +186,8 @@ add('transition-controller-owned',context.window.ProjectCurseTransitions?.screen
 add('transition-state-machine',appShell.includes('transitioning=true')&&appShell.includes('queuedRequest')&&appShell.includes('ProjectCurseTransition.run')&&appShell.includes("history.pushState({route:target}"));
 add('screen-identity-presets',transitionCss.includes('coordinate-acquire')&&transitionCss.includes('chronology-rewind')&&transitionCss.includes('dossier-assemble')&&transitionCss.includes('vault-unseal'));
 add('archive-return-transition-visible',transitionCss.includes('html.pc5152cf-archive-return #loader')&&transitionCss.includes('#loader.hide'));
-add('map-room-owned',context.window.ProjectCurseMapRoom?.regions?.length>=5&&context.window.ProjectCurseMapRoom?.operations?.length>=2&&mapRoomRuntime.includes('ProjectCurseMapRoomRuntime'));
+add('map-room-owned',context.window.ProjectCurseMapRoom?.regions?.length>=5&&context.window.ProjectCurseMapRoom?.operations?.length>=3&&mapRoomRuntime.includes('ProjectCurseMapRoomRuntime'));
+add('deadzone-return-operation-map',context.window.ProjectCurseMapRoom?.operations?.some(operation=>operation.id==='op-deadzone-return'&&operation.steps?.length===6)&&mapRoomRuntime.includes("operation.id==='op-deadzone-return'"));
 const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
 add('regional-drilldown-owned',structureData?.owners?.regionalDrilldownData==='assets/js/data/regional-drilldown-data.js'&&drilldowns.length===6&&context.window.ProjectCurseMapRoom?.drilldowns===drilldowns,drilldowns.length);
 add('regional-drilldown-balanced',drilldowns.filter(detail=>detail.region==='southamerica').length===3&&drilldowns.filter(detail=>detail.region==='northamerica').length===3&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38);

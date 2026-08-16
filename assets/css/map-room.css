@@ -1,4 +1,4 @@
-/* Project Curse 5.23.2 — route focus, threat overlays, regional drilldown, and operation trace room */
+/* Project Curse 5.24.0 — route focus, threat overlays, regional drilldown, and operation trace room */
 #map-room {
   padding: 0;
   border: 0;
@@ -414,6 +414,7 @@
 .pc-op-terrain { fill: rgba(46, 54, 51, .22); stroke: rgba(160, 173, 168, .2); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .pc-op-terrain--forest { fill: rgba(43, 62, 46, .3); }
 .pc-op-terrain--coast { fill: rgba(47, 54, 56, .28); }
+.pc-op-terrain--dead { fill: rgba(67, 62, 49, .26); stroke: rgba(181, 164, 116, .22); }
 .pc-op-contested-line { fill: none; stroke: rgba(186, 151, 83, .66); stroke-width: 2; stroke-dasharray: 10 7; vector-effect: non-scaling-stroke; }
 .pc-op-river { fill: none; stroke: rgba(73, 85, 89, .85); stroke-width: 14; vector-effect: non-scaling-stroke; }
 .pc-op-blood { fill: rgba(121, 27, 35, .42); stroke: rgba(197, 56, 67, .64); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
@@ -541,7 +542,7 @@
 .pc-detail-site.is-muted{opacity:.18}.pc-detail-site.is-related{opacity:.86}.pc-detail-site.is-selected{opacity:1}
 .pc-map-detail-intel h3{margin:8px 0 10px;color:#eef0ef;font-size:21px;line-height:1.25;letter-spacing:-.025em}
 .pc-map-detail-intel>p{margin:0;color:rgba(211,217,215,.62);font-size:11px;line-height:1.72}
-.pc-detail-state{color:#d4d7d6!important}.pc-detail-state.is-secured,.pc-detail-state.is-allied{color:#79ae94!important}.pc-detail-state.is-contained{color:#c7a35f!important}.pc-detail-state.is-hostile,.pc-detail-state.is-failed{color:#d76068!important}.pc-detail-state.is-unknown{color:#aaa38e!important}
+.pc-detail-state{color:#d4d7d6!important}.pc-detail-state.is-secured,.pc-detail-state.is-allied{color:#79ae94!important}.pc-detail-state.is-contained{color:#c7a35f!important}.pc-detail-state.is-unstable{color:#bf9560!important}.pc-detail-state.is-hostile,.pc-detail-state.is-failed{color:#d76068!important}.pc-detail-state.is-unknown{color:#aaa38e!important}
 .pc-detail-risk.is-critical{color:#e05661!important}.pc-detail-risk.is-high{color:#d17a66!important}.pc-detail-risk.is-medium{color:#c1a064!important}.pc-detail-risk.is-low{color:#75a78f!important}
 .pc-detail-verdict-note{display:grid;gap:6px;margin-top:14px;padding:11px 12px;border:1px solid rgba(182,144,72,.25);background:rgba(92,69,25,.1)}
 .pc-detail-verdict-note b{color:#b79353;font:700 8px/1.2 ui-monospace,monospace;letter-spacing:.08em}.pc-detail-verdict-note span{color:rgba(212,216,214,.52);font-size:9px;line-height:1.55}

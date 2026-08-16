@@ -1,4 +1,4 @@
-// Project Curse 5.23.2 — geographic control map, routes, drilldowns, and shared incident traces.
+// Project Curse 5.24.0 — geographic control map, routes, drilldowns, and shared incident traces.
 (function(root){
   'use strict';
 
@@ -11,7 +11,7 @@
   const network=root.ProjectCurseIncidentNetwork;
 
   root.ProjectCurseMapRoom=freeze({
-    version:'map-room-v6',
+    version:'map-room-v7',
     viewBox:'0 0 1200 620',
     geography:[
       {id:'greenland',d:'M319 53 L360 39 394 70 378 121 341 132 311 95 Z'},
@@ -79,7 +79,7 @@
       {id:'fhc-europe',region:'europe',x:611,y:181,type:'facility',title:'F.H.C 유럽 분석권',meta:'회수 샘플·기술 분석',status:'부분 가동',confidence:'observed'},
 
       {id:'dead-interior',region:'northamerica',x:236,y:164,type:'unknown',title:'내륙 무응답권',meta:'국가·도시 신호 소실',status:'NO CARTOGRAPHIC RESPONSE',confidence:'disputed'},
-      {id:'returned-coast',region:'northamerica',x:151,y:226,type:'returned',title:'서부 귀환 지점',meta:'순례자 귀환 기록 7건',status:'격리선 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
+      {id:'returned-coast',region:'northamerica',x:151,y:226,type:'returned',title:'서부 귀환 지점',meta:'순례자 귀환 기록 7건',status:'격리선 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return',incident:'evt-deadzone-return'},
       {id:'former-us-branch',region:'northamerica',x:304,y:223,type:'facility',title:'위버멘시 미국 지부',meta:'2006년 습격 이후 폐쇄',status:'좌표 재확인 불가',confidence:'historical',incident:'evt-deadzone-raid'},
 
       {id:'gbf-core',region:'southamerica',x:368,y:405,labelX:-13,labelAnchor:'end',type:'anomaly',title:'대흑림 내부권',meta:'외부 면적과 내부 거리 불일치',status:'측량 불가',confidence:'estimated',records:['Great_Black_Forest_Region']},
@@ -91,6 +91,26 @@
     drilldowns:root.ProjectCurseRegionalDrilldown?.districts||[],
     operations:[
       ...(network?.operations||[]),
+      {
+        id:'op-deadzone-return',label:'돌아온 자의 이름',code:'DZ-RETURN-SCREEN-07',region:'북미 데드존',
+        summary:'서부 귀환 신호에서 검문소 07 내측문까지 네 귀환자와 다섯 번째 생체 반응을 분리한 검문 경로.',
+        sites:[
+          {x:92,y:112,label:'서부 귀환 신호',kind:'unknown'},
+          {x:244,y:168,label:'백색 재 검문소',kind:'facility'},
+          {x:397,y:231,label:'진술 분리실',kind:'facility'},
+          {x:548,y:282,label:'기억 체크섬',kind:'anomaly'},
+          {x:704,y:348,label:'격리 회랑',kind:'incident'},
+          {x:874,y:402,label:'최종 귀환 판정',kind:'facility'}
+        ],
+        steps:[
+          {time:'04:12',title:'서부 귀환 신호',note:'육안 인원은 4명, 열원과 출입 요청은 5개로 확인됐다.',route:[[92,112]],units:[{id:'R-01',x:92,y:112,status:'normal'},{id:'X-05',x:112,y:126,status:'unknown'}]},
+          {time:'04:26',title:'백색 재 분리',note:'귀환 물질이 출발 기록 사진의 얼굴을 순차적으로 지웠다.',route:[[92,112],[244,168]],units:[{id:'R-01',x:244,y:168,status:'normal'},{id:'X-05',x:226,y:184,status:'unknown'}]},
+          {time:'04:51',title:'진술 대조',note:'격리된 네 사람이 같은 왕국의 기억을 한 문장으로 진술했다.',route:[[92,112],[244,168],[397,231]],units:[{id:'R-01',x:397,y:231,status:'unstable'},{id:'R-02',x:418,y:246,status:'unstable'}]},
+          {time:'05:17',title:'기억 체크섬',note:'네 번째 귀환자가 개봉하지 않은 다섯 번째 봉인의 문장을 읽었다.',route:[[92,112],[244,168],[397,231],[548,282]],alternate:[[397,231],[548,240]],units:[{id:'R-04',x:548,y:282,status:'split'},{id:'X-05',x:548,y:240,status:'unknown'}]},
+          {time:'05:44',title:'격리 회랑 봉쇄',note:'검문소 밖에서 내부 인원과 동일한 네 호출 부호가 구조 신호를 보냈다.',route:[[92,112],[244,168],[397,231],[548,282],[704,348]],alternate:[[92,112],[704,310]],units:[{id:'R-01/04',x:704,y:348,status:'unstable'},{id:'EXT-05',x:704,y:310,status:'unknown'}]},
+          {time:'06:03',title:'최종 귀환 판정',note:'네 명을 통과시키기 위해 시스템이 다섯 번째 운영자 승인을 요구했다.',route:[[92,112],[244,168],[397,231],[548,282],[704,348],[874,402]],units:[{id:'R-01/04',x:874,y:402,status:'split'},{id:'OP-05',x:850,y:379,status:'unknown'}]}
+        ]
+      },
       {
         id:'op-unlit-fortress',label:'불빛 없는 성채',code:'GBF-WESTERN-ROUTE',region:'남미 대흑림',
         summary:'S.I.D 기록 담당자와 귀환 순례자가 몬수르 교회의 부탁을 받아 불빛 없는 성채로 향한 경로.',

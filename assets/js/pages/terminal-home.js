@@ -1,4 +1,4 @@
-// Project Curse 5.23.2 — live terminal-home intelligence and operation resume owner.
+// Project Curse 5.24.0 — live terminal-home intelligence and operation resume owner.
 (function(root){
   'use strict';
 
@@ -27,7 +27,8 @@
 
     function render(){
       const operation=operationState?.getSummary?.()||{recovered:0,total:3,mapStep:0,status:'analysis',decision:null};
-      const pilgrimage=pilgrimageState?.getSummary?.()||{status:'idle',completed:0,total:6,progress:0,endingData:null};
+      const pilgrimage=pilgrimageState?.getSummary?.('unlit-fortress')||{status:'idle',completed:0,total:6,progress:0,endingData:null};
+      const screening=pilgrimageState?.getSummary?.('deadzone-return')||{status:'idle',completed:0,total:6,progress:0,endingData:null};
       const decision=operation.decision;
       const strip=home.querySelector('.pc-terminal-system-strip');
       if(strip) strip.innerHTML=`
@@ -72,6 +73,12 @@
           status:pilgrimage.status==='complete'?'RESULT SAVED':pilgrimage.status==='active'?`${pilgrimage.progress}% TRACE`:'PILGRIMAGE READY',
           tone:pilgrimage.status==='complete'?(pilgrimage.endingData?.tone==='hostile'?'critical':'recovered'):pilgrimage.status==='active'?'unstable':signal.tone
         };
+        if(index===2) return {
+          ...signal,route:'map-room',pilgrimage:'deadzone-return',record:null,
+          label:screening.status==='complete'?`데드존 귀환 판정 · ${screening.endingData?.title||'검문 종료'}`:screening.status==='active'?`검문소 07 신원 심사 ${screening.completed}/${screening.total} 진행`:'데드존 귀환자 검문 채널 대기',
+          status:screening.status==='complete'?'VERDICT SAVED':screening.status==='active'?`${screening.progress}% SCREENED`:'SCREENING READY',
+          tone:screening.status==='complete'?(screening.endingData?.tone==='hostile'?'critical':screening.endingData?.tone==='unstable'?'unstable':'recovered'):screening.status==='active'?'unstable':signal.tone
+        };
         return signal;
       });
       const recent=home.querySelector('.pc-terminal-recent');
@@ -86,6 +93,7 @@
       }
       home.dataset.operationProgress=`${operation.recovered}-${operation.verdict||'pending'}`;
       home.dataset.pilgrimageProgress=`${pilgrimage.status}-${pilgrimage.completed}`;
+      home.dataset.screeningProgress=`${screening.status}-${screening.completed}`;
     }
 
     render();
@@ -94,7 +102,7 @@
     home.dataset.intelligenceReady='true';
     root.ProjectCurseHomeRuntime=Object.freeze({
       refresh:render,
-      getSnapshot:()=>({records,operations,regions,unresolved,signals:feed.signals.length,operation:operationState?.getSummary?.()||null,pilgrimage:pilgrimageState?.getSummary?.()||null})
+      getSnapshot:()=>({records,operations,regions,unresolved,signals:feed.signals.length,operation:operationState?.getSummary?.()||null,pilgrimages:pilgrimageState?.getAllSummaries?.()||null})
     });
   });
 })(window);

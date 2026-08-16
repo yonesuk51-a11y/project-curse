@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.23.2
+# Project Curse Structure — 5.24.0
 
 ## 활성 소유권
 
@@ -16,9 +16,9 @@
 | 의미 기반 재생·프로필·덕킹·중첩 제한 | `assets/js/core/audio-controller.js` |
 | 화면별 음향 프로필·효과음 사건 목록 | `assets/js/data/audio-manifest.js` |
 | 부서진 왕관 정보 회수·판단·지도 단계 저장 | `assets/js/core/operation-state.js` |
-| 순례 시나리오·선택지·결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
-| 순례 진행·공포·오염·신호·결말 저장 | `assets/js/core/pilgrimage-state.js` |
-| 순례 진입·현장 판단·결과 화면 | `assets/js/pages/pilgrimage-scenario.js` + `assets/css/pilgrimage-scenario.css` |
+| 대흑림 순례·데드존 검문 시나리오와 결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
+| 다중 시나리오 진행·계기·판정 독립 저장 | `assets/js/core/pilgrimage-state.js` |
+| 순례·귀환 검문 진입·현장 판단·결과 화면 | `assets/js/pages/pilgrimage-scenario.js` + `assets/css/pilgrimage-scenario.css` |
 | 채널별 전환 설정 | `assets/js/data/transition-manifest.js` |
 | 공통 사건·권역·작전 연결 | `assets/js/data/incident-registry.js` |
 | 화면 퇴장·채널 교체·진입 상태 머신 | `assets/js/core/transition-controller.js` |

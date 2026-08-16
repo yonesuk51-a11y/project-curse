@@ -1,4 +1,4 @@
-// Project Curse 5.23.2 — regional drilldown districts, route focus, and threat intelligence.
+// Project Curse 5.24.0 — regional drilldown districts, route focus, and threat intelligence.
 (function(root){
   'use strict';
 
@@ -82,7 +82,7 @@
         ],
         sites:[
           {id:'dead-return-shore',x:92,y:430,type:'returned',label:'서부 귀환 지점',meta:'귀환 기록 7건 / 출발 기록 불명',status:'격리선 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
-          {id:'dead-checkpoint-07',x:245,y:366,type:'facility',label:'검문소 07',meta:'장비 봉인·귀환자 신원 분리',status:'부분 가동',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
+          {id:'dead-checkpoint-07',x:245,y:366,type:'facility',label:'검문소 07',meta:'장비 봉인·귀환자 신원 분리',status:'부분 가동',confidence:'observed',records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return',incident:'evt-deadzone-return'},
           {id:'dead-neutral-camp',x:344,y:435,type:'settlement',label:'중립 순례자 지원소',meta:'데드존 혈교 분파가 운영',status:'피난 지원',confidence:'testimony',records:['Dead_Zone_Pilgrimage','Operation_Broken_Crown']},
           {id:'dead-exchange',x:475,y:421,type:'signal',label:'남북 교신 교환점',meta:'평화 공존 분파와 남방 채널 연결',status:'암호화 대기',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',verdictStates:{execute:{status:'교신 채널 소실',tone:'failed'},detain:{status:'증언 검증 채널',tone:'contained'},cooperate:{status:'교환 채널 개방',tone:'allied'},defer:{status:'암호화 대기',tone:'unknown'}}},
           {id:'dead-quarantine-ring',x:382,y:292,type:'zone',label:'귀환자 격리환',meta:'비인간 반응 3건 기록',status:'봉쇄 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},

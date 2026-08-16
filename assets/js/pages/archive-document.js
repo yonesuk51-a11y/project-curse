@@ -1,4 +1,4 @@
-// Project Curse 5.23.2 — shared archive document renderer and internal scenario viewer.
+// Project Curse 5.24.0 — shared archive document renderer and internal scenario viewer.
 (function(){
   'use strict';
 
@@ -319,6 +319,20 @@
     const header=el('header','archive-doc-header');
     header.append(el('div','archive-doc-kicker','U.A.C RECOVERED ARCHIVE'),el('code','archive-doc-code',doc.code),el('h1','',doc.title),rich('p','archive-doc-summary',doc.summary));
 
+    const scenarioId=doc.sourceId==='Dead_Zone_Pilgrimage'?'deadzone-return':doc.sourceId==='Great_Black_Forest_Region'?'unlit-fortress':null;
+    const fieldAction=scenarioId?el('div','archive-doc-field-action'):null;
+    if(fieldAction){
+      const summary=window.ProjectCursePilgrimageState?.getSummary?.(scenarioId);
+      const button=el('button','',summary?.status==='complete'?'저장된 현장 결과 열기':summary?.status==='active'?'저장된 현장 기록 재개':scenarioId==='deadzone-return'?'검문소 07 귀환 심사 개시':'불빛 없는 성채 순례 개시');
+      button.type='button';button.dataset.archiveOpenPilgrimage=scenarioId;
+      const copy=el('span','',scenarioId==='deadzone-return'?'RETURN SCREENING / CHECKPOINT 07':'FIELD PILGRIMAGE / GBF WESTERN ROUTE');
+      button.addEventListener('click',()=>{
+        close({restoreFocus:false});
+        window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'}).then(()=>window.ProjectCursePilgrimageRuntime?.open?.(scenarioId));
+      });
+      fieldAction.append(copy,button);
+    }
+
     const telemetry=doc.telemetry?.length?el('div','archive-region-telemetry'):null;
     doc.telemetry?.forEach(([label,value])=>{
       const item=el('span');
@@ -377,6 +391,7 @@
     const readingGrid=el('div','archive-doc-reading-grid');
     readingGrid.append(toc,body);
     root.append(top,header);
+    if(fieldAction) root.append(fieldAction);
     if(telemetry) root.append(telemetry);
     root.append(meta);
     appendFigure(root,doc.hero,embedded,'archive-doc-hero');

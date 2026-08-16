@@ -1,4 +1,4 @@
-// Project Curse 5.23.2 — semantic sound-event registry and acoustic profiles.
+// Project Curse 5.24.0 — semantic sound-event registry and acoustic profiles.
 (function(root){
   'use strict';
 
@@ -48,6 +48,11 @@
       'pilgrimage.danger':Object.freeze({cue:'denied',bus:'alert',cooldown:420,gain:.72,duck:.28,duckMs:760,exclusive:true,priority:2}),
       'pilgrimage.complete':Object.freeze({cue:'alert',bus:'alert',cooldown:900,gain:.86,duck:.2,duckMs:1250,exclusive:true,priority:2}),
       'pilgrimage.exit':Object.freeze({cue:'contact',bus:'interface',cooldown:300,gain:.5,exclusive:true}),
+      'screening.enter':Object.freeze({cue:'scan',bus:'record',cooldown:900,gain:.58,duck:.34,duckMs:920,exclusive:true}),
+      'screening.step':Object.freeze({cue:'radio',bus:'record',cooldown:260,gain:.66,duck:.62,duckMs:440,exclusive:true}),
+      'screening.mismatch':Object.freeze({cue:'restricted',bus:'alert',cooldown:480,gain:.8,duck:.22,duckMs:920,exclusive:true,priority:2}),
+      'screening.complete':Object.freeze({cue:'alert',bus:'alert',cooldown:1000,gain:.92,duck:.16,duckMs:1450,exclusive:true,priority:2}),
+      'screening.exit':Object.freeze({cue:'analog',bus:'interface',cooldown:320,gain:.48,exclusive:true}),
       'system.denied':Object.freeze({cue:'denied',bus:'alert',cooldown:420,gain:.88,duck:.3,duckMs:760,exclusive:true,priority:2}),
       'system.alert':Object.freeze({cue:'alert',bus:'alert',cooldown:420,gain:.84,duck:.34,duckMs:820,exclusive:true,priority:2})
     })

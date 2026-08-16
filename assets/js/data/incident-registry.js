@@ -1,4 +1,4 @@
-// Project Curse 5.23.2 — shared incident, region and operation network.
+// Project Curse 5.24.0 — shared incident, region and operation network.
 (function(root){
   'use strict';
 
@@ -39,6 +39,11 @@
       id:'evt-gbf-unlit',code:'EVT-GBF-UNLIT',date:'DATE LOST',status:'ROUTE UNSTABLE',confidence:'testimony',
       title:'불빛 없는 성채 접근',summary:'몬수르 교회의 요청을 받은 순례자 경로가 검은 강과 무광 성채에서 중첩된 사건.',
       region:'southamerica',coordinates:[-66,-18],factions:['sid'],records:[],operation:'op-unlit-fortress'
+    },
+    'evt-deadzone-return':{
+      id:'evt-deadzone-return',code:'EVT-DZ-RETURN-07',date:'DATE UNVERIFIED',status:'QUARANTINE ACTIVE',confidence:'observed',
+      title:'검문소 07 귀환자 신원 상충',summary:'네 명의 귀환자와 다섯 번째 생체 신호가 서부 귀환 회랑의 동일 출입 요청으로 감지된 사건.',
+      region:'northamerica',coordinates:[-124,44],factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return'
     },
     'evt-southern-mobilization':{
       id:'evt-southern-mobilization',code:'EVT-SOUTH-COUP',date:'ONGOING',status:'CRITICAL / PARTIAL',confidence:'estimated',
@@ -81,7 +86,7 @@
   };
 
   root.ProjectCurseIncidentNetwork=freeze({
-    version:'5.23.2',
+    version:'5.24.0',
     incidents,
     incidentList:Object.values(incidents),
     operations:[operation],
