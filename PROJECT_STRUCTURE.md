@@ -64,6 +64,7 @@
 
 - `assets/js/core/app-shell.js`: 단말 허브와 화면 이동의 유일한 소유자다.
 - `assets/js/core/base-runtime.js`: 부팅과 메뉴 환경음·효과음 자산을 소유한다.
+- `assets/js/core/loading-sequence.js`: 빌드별 첫 기동, 세션 복원, 기록 복귀와 모션 감소용 최소 노출 시간을 관리한다.
 - `assets/js/core/audio-controller.js`: 화면·문서 음향 프로필, 의미 이벤트, 덕킹, 음소거 저장과 동시재생 제한을 담당한다.
 - `assets/js/core/operation-state.js`: 부서진 왕관의 회수 정보, 지휘 판단, 현재 작전 단계와 초기화를 단독 소유한다.
 - `assets/js/core/record-cinematic-runtime.js`: 루트 영상 기록 재생만 담당한다.

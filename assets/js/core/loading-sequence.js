@@ -2,11 +2,11 @@
 (function(root){
   'use strict';
 
-  const SESSION_KEY='pc_terminal_boot_5_16_1';
   const BUILD=()=>root.ProjectCurseBuild?.version||'5.23.0';
+  const SESSION_KEY=()=>`pc_terminal_boot_${BUILD().replace(/[^a-z0-9]+/gi,'_')}`;
   const MODES={
     cold:{
-      title:'로컬 단말기 기동',kicker:'U.A.C 폐쇄 기록 / PC-03',duration:2600,finishDelay:140,skippable:true,
+      title:'로컬 단말기 기동',kicker:'U.A.C 폐쇄 기록 / PC-03',duration:4200,finishDelay:220,skippable:true,
       lines:[
         ['PC-03','로컬 커널 및 권한 검사','OK'],
         ['AUDIO','로컬 중계 채널 연결','LINKED'],
@@ -14,28 +14,28 @@
         ['CARTO','관제 좌표 계층 동기화','PARTIAL'],
         ['RZ/881120','레드라인 흔적 검사','DETECTED']
       ],
-      starts:[240,650,1080,1510,1980],ends:[510,920,1360,1790,2270]
+      starts:[380,1050,1730,2410,3090],ends:[800,1470,2150,2830,3510]
     },
     restore:{
-      title:'세션 복원',kicker:'LOCAL SESSION / PC-03',duration:650,finishDelay:100,skippable:false,
+      title:'세션 복원',kicker:'LOCAL SESSION / PC-03',duration:2100,finishDelay:160,skippable:false,
       lines:[
         ['SESSION','이전 로컬 세션 확인','FOUND'],
         ['CHANNEL','마지막 채널 상태 복구','RESTORED'],
         ['OPERATOR','현장 열람 권한 확인','LIMITED']
       ],
-      starts:[70,210,360],ends:[170,330,500]
+      starts:[260,760,1260],ends:[620,1120,1620]
     },
     returning:{
-      title:'기록 언마운트',kicker:'ARCHIVE RETURN / PC-03',duration:210,finishDelay:40,skippable:false,
+      title:'기록 언마운트',kicker:'ARCHIVE RETURN / PC-03',duration:1050,finishDelay:120,skippable:false,
       lines:[
         ['RECORD','활성 기록 채널 분리','UNMOUNTED'],
         ['ARCHIVE','공개 색인으로 복귀','READY']
       ],
-      starts:[15,80],ends:[65,155]
+      starts:[180,520],ends:[430,790]
     },
     reduced:{
-      title:'세션 연결',kicker:'LOCAL ACCESS / PC-03',duration:40,finishDelay:0,skippable:false,
-      lines:[['ACCESS','로컬 단말 연결','READY']],starts:[0],ends:[15]
+      title:'세션 연결',kicker:'LOCAL ACCESS / PC-03',duration:240,finishDelay:40,skippable:false,
+      lines:[['ACCESS','로컬 단말 연결','READY']],starts:[20],ends:[120]
     },
     skip:{title:'접근 승인',kicker:'LOCAL ACCESS / PC-03',duration:0,finishDelay:0,skippable:false,lines:[['ACCESS','로컬 단말 연결','READY']],starts:[0],ends:[0]}
   };
@@ -48,11 +48,11 @@
   }
 
   function hasSeen(){
-    try{return sessionStorage.getItem(SESSION_KEY)==='seen';}catch(_error){return false;}
+    try{return sessionStorage.getItem(SESSION_KEY())==='seen';}catch(_error){return false;}
   }
 
   function remember(){
-    try{sessionStorage.setItem(SESSION_KEY,'seen');}catch(_error){}
+    try{sessionStorage.setItem(SESSION_KEY(),'seen');}catch(_error){}
   }
 
   function resolveMode(){
@@ -156,7 +156,7 @@
     timers.push(root.setTimeout(()=>complete(),config.duration));
 
     if(config.skippable&&skip){
-      timers.push(root.setTimeout(()=>{skip.disabled=false;},800));
+      timers.push(root.setTimeout(()=>{skip.disabled=false;},1200));
       skip.addEventListener('click',()=>complete({skipped:true}),{once:true});
     }
 
