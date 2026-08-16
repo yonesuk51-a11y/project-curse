@@ -1,4 +1,4 @@
-// Project Curse — regional control map and operation trace data.
+// Project Curse 5.22.0 — geographic control map, routes, drilldowns, and shared incident traces.
 (function(root){
   'use strict';
 
@@ -8,8 +8,10 @@
     return Object.freeze(value);
   }
 
+  const network=root.ProjectCurseIncidentNetwork;
+
   root.ProjectCurseMapRoom=freeze({
-    version:'map-room-v1',
+    version:'map-room-v4',
     viewBox:'0 0 1200 620',
     geography:[
       {id:'greenland',d:'M319 53 L360 39 394 70 378 121 341 132 311 95 Z'},
@@ -57,30 +59,38 @@
       {id:'blood-lake',region:'europe',className:'red',d:'M555 141 C571 129 594 132 607 146 C598 163 576 171 558 161 Z'},
       {id:'lanzhou-zone',region:'eastasia',className:'red',d:'M805 180 C836 157 872 168 884 193 C870 220 833 229 807 211 Z'}
     ],
+    routes:[
+      {id:'deadzone-pilgrimage',region:'northamerica',className:'pilgrimage',points:[[151,226],[177,202],[203,181],[236,164],[273,151]],label:'RETURN PATH / TESTIMONY ONLY'},
+      {id:'gbf-western',region:'southamerica',className:'pilgrimage',points:[[425,397],[391,414],[351,442],[371,477],[408,489]],label:'WESTERN PILGRIM TRACE'},
+      {id:'southern-mobilization',region:'southamerica',className:'hostile',points:[[427,398],[406,372],[379,354],[350,340]],label:'COASTAL MOBILIZATION'},
+      {id:'northern-pressure',region:'eastasia',className:'front',points:[[841,197],[887,166],[934,120],[980,148]],label:'NORTHERN FRONT'}
+    ],
     markers:[
       {id:'east-overview',region:'eastasia',overview:true,x:913,y:170,type:'signal',title:'동아시아 감시권',meta:'도쿄·란저우·북부 전선',status:'감시 강화',confidence:'confirmed'},
       {id:'europe-overview',region:'europe',overview:true,x:579,y:139,type:'incident',title:'북해 봉쇄축',meta:'피의 호수 잔류 반응',status:'봉쇄 유지',confidence:'confirmed'},
       {id:'north-overview',region:'northamerica',overview:true,x:220,y:157,type:'unknown',title:'북미 데드존',meta:'내륙 관측 신호 소실',status:'응답 없음',confidence:'disputed'},
       {id:'south-overview',region:'southamerica',overview:true,x:374,y:408,type:'anomaly',title:'대흑림',meta:'내부 거리 불일치',status:'통제권 없음',confidence:'estimated'},
 
-      {id:'tokyo',region:'eastasia',x:1019,y:223,type:'facility',title:'S.I.D 도쿄 지부',meta:'도시 감시·오컬트 수사',status:'가동',confidence:'confirmed',records:['Sakuma_Tape_991028']},
+      {id:'tokyo',region:'eastasia',x:1019,y:223,type:'facility',title:'S.I.D 도쿄 지부',meta:'도시 감시·오컬트 수사',status:'가동',confidence:'confirmed',records:['Sakuma_Tape_991028'],incident:'evt-tokyo-record'},
       {id:'lanzhou',region:'eastasia',x:841,y:197,type:'zone',title:'란저우 레드존',meta:'내륙 광역 오염권',status:'외곽 봉쇄',confidence:'observed',records:['Zone_870815']},
-      {id:'northern-front',region:'eastasia',x:934,y:120,type:'line',title:'북부 전쟁 관측선',meta:'일본 동맹권 / 짐승의 길',status:'전선 신호 증가',confidence:'estimated'},
+      {id:'northern-front',region:'eastasia',x:934,y:120,type:'line',title:'북부 전쟁 관측선',meta:'일본 동맹권 / 짐승의 길',status:'전선 신호 증가',confidence:'estimated',incident:'evt-northern-front'},
 
-      {id:'blood-lake-site',region:'europe',x:579,y:151,type:'incident',title:'피의 호수 사건권',meta:'독일·덴마크 사이 북해권',status:'잔류 반응',confidence:'confirmed',records:['Immortality_860201','Unknown_Record2_860205'],operation:'op-immortality'},
+      {id:'blood-lake-site',region:'europe',x:579,y:151,type:'incident',title:'피의 호수 사건권',meta:'독일·덴마크 사이 북해권',status:'잔류 반응',confidence:'confirmed',records:['Immortality_860201','Unknown_Record2_860205'],operation:'op-immortality',incident:'evt-blood-lake'},
       {id:'fhc-europe',region:'europe',x:611,y:181,type:'facility',title:'F.H.C 유럽 분석권',meta:'회수 샘플·기술 분석',status:'부분 가동',confidence:'observed'},
 
       {id:'dead-interior',region:'northamerica',x:236,y:164,type:'unknown',title:'내륙 무응답권',meta:'국가·도시 신호 소실',status:'NO CARTOGRAPHIC RESPONSE',confidence:'disputed'},
-      {id:'returned-coast',region:'northamerica',x:151,y:226,type:'returned',title:'서부 귀환 지점',meta:'순례자 귀환 기록 7건',status:'격리선 유지',confidence:'observed'},
-      {id:'former-us-branch',region:'northamerica',x:304,y:223,type:'facility',title:'위버멘시 미국 지부',meta:'2006년 습격 이후 폐쇄',status:'좌표 재확인 불가',confidence:'historical'},
+      {id:'returned-coast',region:'northamerica',x:151,y:226,type:'returned',title:'서부 귀환 지점',meta:'순례자 귀환 기록 7건',status:'격리선 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
+      {id:'former-us-branch',region:'northamerica',x:304,y:223,type:'facility',title:'위버멘시 미국 지부',meta:'2006년 습격 이후 폐쇄',status:'좌표 재확인 불가',confidence:'historical',incident:'evt-deadzone-raid'},
 
-      {id:'gbf-core',region:'southamerica',x:368,y:405,labelX:-13,labelAnchor:'end',type:'anomaly',title:'대흑림 내부권',meta:'외부 면적과 내부 거리 불일치',status:'측량 불가',confidence:'estimated'},
+      {id:'gbf-core',region:'southamerica',x:368,y:405,labelX:-13,labelAnchor:'end',type:'anomaly',title:'대흑림 내부권',meta:'외부 면적과 내부 거리 불일치',status:'측량 불가',confidence:'estimated',records:['Great_Black_Forest_Region']},
       {id:'monsur-church',region:'southamerica',x:351,y:442,labelX:-13,labelAnchor:'end',type:'cult',title:'몬수르 서부 교회',meta:'순례자 보호·종 운반 요청',status:'불완전 교신',confidence:'testimony',operation:'op-unlit-fortress'},
-      {id:'unlit-fortress',region:'southamerica',x:408,y:489,type:'fortress',title:'불빛 없는 성채',meta:'외부 폐허 / 내부 거주 진술',status:'좌표 중첩',confidence:'disputed',operation:'op-unlit-fortress'},
-      {id:'black-river',region:'southamerica',x:371,y:517,labelX:-13,labelAnchor:'end',type:'anomaly',title:'검은 강 제4관측점',meta:'관측 시각마다 위치 변경',status:'접근 금지',confidence:'observed',operation:'op-unlit-fortress'},
-      {id:'southern-coast',region:'southamerica',x:425,y:397,type:'line',title:'남방 해안 동원 신호',meta:'교단 특수부대 집결 의심',status:'전시 신호',confidence:'estimated'}
+      {id:'unlit-fortress',region:'southamerica',x:408,y:489,type:'fortress',title:'불빛 없는 성채',meta:'외부 폐허 / 내부 거주 진술',status:'좌표 중첩',confidence:'disputed',operation:'op-unlit-fortress',incident:'evt-gbf-unlit'},
+      {id:'black-river',region:'southamerica',x:371,y:517,labelX:-13,labelAnchor:'end',type:'anomaly',title:'검은 강 제4관측점',meta:'관측 시각마다 위치 변경',status:'접근 금지',confidence:'observed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
+      {id:'southern-coast',region:'southamerica',x:425,y:397,type:'line',title:'남방 해안 동원 신호',meta:'집단 소환·성위대 침투 징후',status:'CRITICAL / PARTIAL',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',incident:'evt-southern-mobilization'}
     ],
+    drilldowns:root.ProjectCurseRegionalDrilldown?.districts||[],
     operations:[
+      ...(network?.operations||[]),
       {
         id:'op-unlit-fortress',label:'불빛 없는 성채',code:'GBF-WESTERN-ROUTE',region:'남미 대흑림',
         summary:'S.I.D 기록 담당자와 귀환 순례자가 몬수르 교회의 부탁을 받아 불빛 없는 성채로 향한 경로.',

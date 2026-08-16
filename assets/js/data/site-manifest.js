@@ -1,4 +1,4 @@
-// Project Curse 5.16.1 — terminal hub manifest and runtime ownership map
+// Project Curse 5.22.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.16.1',
-    schema:root.ProjectCurseBuild?.schema||'project-curse-v6',
+    version:root.ProjectCurseBuild?.version||'5.22.0',
+    schema:root.ProjectCurseBuild?.schema||'project-curse-v12',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'map-room',label:'상황 관제',index:'01'},
@@ -32,8 +32,13 @@
     audio:{
       ambient:'pc5152am_menu_old_computer.mp3',
       effects:{
+        contact:'pc5152h_terminal_contact_clear.wav',
+        analog:'pc5152f_analog_contact_soft.wav',
         mount:'pc5152h_record_mount_clear.wav',
         projector:'pc5152p_internal_projector_vhs_step.wav',
+        scan:'pc5152x_late_log_beep_195s.mp3',
+        marker:'pc5152v_field_photo_click_42s.mp3',
+        radio:'pc5152v_comm_line_cue_73_74.mp3',
         denied:'pc5152f_low_denied_oldpc.wav',
         boot:'pc5152f_boot_access_oldpc.wav'
       }
@@ -44,10 +49,14 @@
       audioManifest:'assets/js/data/audio-manifest.js',
       transitionManifest:'assets/js/data/transition-manifest.js',
       canon:'assets/js/data/canon-registry.js',
+      incidentRegistry:'assets/js/data/incident-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
+      fieldDossiers:'assets/js/data/field-dossier-data.js',
+      homeIntelligence:'assets/js/data/home-intelligence-data.js',
       baseRuntime:'assets/js/core/base-runtime.js',
       loadingRuntime:'assets/js/core/loading-sequence.js',
       audioController:'assets/js/core/audio-controller.js',
+      operationState:'assets/js/core/operation-state.js',
       transitionController:'assets/js/core/transition-controller.js',
       shellRuntime:'assets/js/core/app-shell.js',
       cinematicRuntime:'assets/js/core/record-cinematic-runtime.js',
@@ -66,7 +75,9 @@
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',
       archiveDocumentViewer:'assets/js/pages/archive-document.js',
       mapRoomData:'assets/js/data/map-room-data.js',
+      regionalDrilldownData:'assets/js/data/regional-drilldown-data.js',
       mapRoomRuntime:'assets/js/pages/map-room.js',
+      terminalHomeRuntime:'assets/js/pages/terminal-home.js',
       mapRoomCSS:'assets/css/map-room.css',
       stabilizationCSS:'assets/css/stabilization.css',
       archiveCSS:'assets/css/archive-consolidation.css'

@@ -1,4 +1,4 @@
-// Project Curse 5.16.1 — single source of truth for the terminal build.
+// Project Curse 5.22.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.16.1',
-    codename:'Channel Transition',
-    schema:'project-curse-v6',
+    version:'5.22.0',
+    codename:'Regional Drilldown',
+    schema:'project-curse-v12',
     released:'2026-08-16',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

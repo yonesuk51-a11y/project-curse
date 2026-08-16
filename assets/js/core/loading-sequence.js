@@ -1,9 +1,9 @@
-// Project Curse 5.16.1 — cold boot, session restore and archive return sequence.
+// Project Curse 5.22.0 — cold boot, session restore and archive return sequence.
 (function(root){
   'use strict';
 
   const SESSION_KEY='pc_terminal_boot_5_16_1';
-  const BUILD=()=>root.ProjectCurseBuild?.version||'5.16.1';
+  const BUILD=()=>root.ProjectCurseBuild?.version||'5.22.0';
   const MODES={
     cold:{
       title:'로컬 단말기 기동',kicker:'U.A.C 폐쇄 기록 / PC-03',duration:2600,finishDelay:140,skippable:true,

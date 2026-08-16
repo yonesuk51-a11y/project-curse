@@ -1,4 +1,4 @@
-// Project Curse 5.16.1 — public single-shell record index
+// Project Curse 5.22.0 — public single-shell record index
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseArchive=freeze({
-    version:'5.16.1',
+    version:'5.22.0',
     publicRecords:[
       {
         id:'Cults_871104', code:'CULT-ARCHIVE', access:'open', format:'video',
@@ -56,6 +56,26 @@
         id:'Unknown_Record4_930314', code:'SON-ILLEGAL-ARMS', access:'open', format:'document',
         title:'S.O.N 비인가 장비 유통 기록',
         summary:'축복으로 위장한 병기 계획을 논의한 웨이드 밀렌·윌리엄 카터의 감청 음성.'
+      },
+      {
+        id:'Great_Black_Forest_Region', code:'REGION-GBF-SOUTH', access:'open', format:'document',
+        title:'대흑림 권역 보고서',
+        summary:'남부 데드존의 정착지, 성채, 교단 공존권과 타락 야생체 생태를 정리한 불완전 지역 기록.'
+      },
+      {
+        id:'Dead_Zone_Pilgrimage', code:'REGION-DEADZONE-NORTH', access:'open', format:'document',
+        title:'데드존 순례 및 귀환자 기록',
+        summary:'국가와 귀환 보장이 사라진 북아메리카의 통제 상태, 순례 경로와 귀환자 판정 기록.'
+      },
+      {
+        id:'Pilgrim_Rules_GBF', code:'FIELD-RULES-PILGRIM-I', access:'open', format:'document',
+        title:'순례자의 규칙 — 제1부',
+        summary:'대흑림 순례로에서 전승되는 열한 가지 불완전 생존 규칙과 현장 해석.'
+      },
+      {
+        id:'Operation_Broken_Crown', code:'OP-BROKEN-CROWN', access:'open', format:'document',
+        title:'부서진 왕관 작전 시나리오',
+        summary:'남방 집단 소환을 차단하며 처형 명령의 진위를 판별하는 상호작용형 정보 기록.'
       }
     ]
   });

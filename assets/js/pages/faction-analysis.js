@@ -1,8 +1,9 @@
-// Project Curse 5.16.1 — route-free intelligence dossier owner.
+// Project Curse 5.22.0 — intelligence dossier and shared incident owner.
 (function(){
   'use strict';
 
   const source=window.ProjectCurseFactionAnalysis;
+  const incidentNetwork=window.ProjectCurseIncidentNetwork;
   if(!source?.factions) return;
 
   const q=(selector,root=document)=>root.querySelector(selector);
@@ -39,6 +40,7 @@
 
   function dossier(key){
     const faction=source.factions[key]||source.factions.uac;
+    const incidents=(incidentNetwork?.incidentList||[]).filter(item=>item.factions.includes(key));
     return `<article class="pc-faction-dossier" data-pc-faction-dossier="${esc(key)}" aria-live="polite">
       <header class="pc-faction-dossier-head">
         <img src="${mark(key)}" alt="${esc(faction.name)} 표식" loading="lazy">
@@ -60,6 +62,7 @@
       <section class="pc-faction-relations"><h4 class="pc-faction-section-title">직접 관계</h4>
         <div class="pc-faction-relation-list">${faction.relations.map(relationButton).join('')}</div>
       </section>
+      ${incidents.length?`<section class="pc-faction-incidents"><h4 class="pc-faction-section-title">연결 사건</h4><div>${incidents.map(incident=>`<button type="button" data-pc-faction-incident="${esc(incident.id)}"><time>${esc(incident.date)}</time><strong>${esc(incident.title)}</strong><small>${esc(incident.status)}</small></button>`).join('')}</div></section>`:''}
     </article>`;
   }
 
@@ -126,10 +129,21 @@
     });
 
     document.addEventListener('click',(event)=>{
+      const incident=event.target.closest?.('[data-pc-faction-incident]');
+      if(incident){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        window.ProjectCurseAudioControl?.play?.('incident.link');
+        window.ProjectCurseShell?.navigate('map-room',{replace:false,historyMode:'push'}).then(()=>{
+          window.ProjectCurseMapRoomRuntime?.showIncident?.(incident.dataset.pcFactionIncident);
+        });
+        return;
+      }
       const back=event.target.closest?.('[data-pc-faction-back]');
       if(back){
         event.preventDefault();
         event.stopImmediatePropagation();
+        window.ProjectCurseAudioControl?.play?.('faction.back');
         renderIndex();
         return;
       }
@@ -137,6 +151,7 @@
       if(open){
         event.preventDefault();
         event.stopImmediatePropagation();
+        window.ProjectCurseAudioControl?.play?.('faction.open');
         openDossier(open.dataset.pcFactionOpen);
       }
     },true);

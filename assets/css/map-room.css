@@ -1,4 +1,4 @@
-/* Project Curse — regional control map and operation trace room */
+/* Project Curse 5.22.0 — geographic, regional drilldown, and operation trace room */
 #map-room {
   padding: 0;
   border: 0;
@@ -90,7 +90,7 @@
 
 .pc-map-mode-switch {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 220px));
+  grid-template-columns: repeat(3, minmax(0, 220px));
   padding: 0 26px;
   border-bottom: 1px solid var(--map-line);
   background: rgba(2, 3, 4, .58);
@@ -99,6 +99,7 @@
 .pc-map-mode-switch button,
 .pc-map-region-tabs button,
 .pc-map-operation-tabs button,
+.pc-map-detail-tabs button,
 .pc-map-timeline button,
 .pc-map-intel-actions button,
 .pc-map-region-return {
@@ -129,7 +130,8 @@
 }
 
 .pc-map-region-tabs,
-.pc-map-operation-tabs {
+.pc-map-operation-tabs,
+.pc-map-detail-tabs {
   display: flex;
   gap: 7px;
   padding: 13px 18px;
@@ -139,7 +141,8 @@
 }
 
 .pc-map-region-tabs button,
-.pc-map-operation-tabs button {
+.pc-map-operation-tabs button,
+.pc-map-detail-tabs button {
   flex: 1 0 145px;
   min-height: 48px;
   padding: 8px 12px;
@@ -152,7 +155,8 @@
 }
 
 .pc-map-region-tabs small,
-.pc-map-operation-tabs small {
+.pc-map-operation-tabs small,
+.pc-map-detail-tabs small {
   display: block;
   margin-bottom: 4px;
   color: rgba(192, 197, 196, .28);
@@ -165,6 +169,8 @@
 .pc-map-region-tabs button:focus-visible,
 .pc-map-operation-tabs button:hover,
 .pc-map-operation-tabs button:focus-visible,
+.pc-map-detail-tabs button:hover,
+.pc-map-detail-tabs button:focus-visible,
 .pc-map-timeline button:hover,
 .pc-map-timeline button:focus-visible {
   border-color: rgba(191, 62, 72, .62);
@@ -173,14 +179,16 @@
 }
 
 .pc-map-region-tabs button.is-active,
-.pc-map-operation-tabs button.is-active {
+.pc-map-operation-tabs button.is-active,
+.pc-map-detail-tabs button.is-active {
   border-color: rgba(193, 63, 73, .6);
   color: #f0f2f1;
   background: linear-gradient(135deg, rgba(111, 25, 31, .48), rgba(12, 14, 15, .92));
 }
 
 .pc-map-region-tabs button.is-active small,
-.pc-map-operation-tabs button.is-active small { color: #c8666d; }
+.pc-map-operation-tabs button.is-active small,
+.pc-map-detail-tabs button.is-active small { color: #c8666d; }
 
 .pc-map-layout {
   display: grid;
@@ -207,6 +215,13 @@
   border-bottom: 1px solid rgba(192, 197, 196, .08);
   color: rgba(209, 214, 213, .55);
   font-size: 10px;
+  width: 100%;
+  padding: 0;
+  border-width: 0 0 1px;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
 }
 
 .pc-map-layer-row > i {
@@ -219,7 +234,11 @@
 
 .pc-map-layer-row > i.is-estimated { background: var(--map-amber); }
 .pc-map-layer-row > i.is-hostile { background: var(--map-red); }
+.pc-map-layer-row > i.is-route { border-radius: 0; background: #759c90; transform: rotate(45deg); }
 .pc-map-layer-row b { color: rgba(207, 212, 211, .25); font: 700 8px/1 monospace; }
+.pc-map-layer-row:not(.is-active) { opacity: .42; }
+.pc-map-layer-row:hover,.pc-map-layer-row:focus-visible { color: #e3e7e5; outline: 0; }
+.pc-map-layer-row.is-active b { color: #b96b70; }
 
 .pc-map-meter { margin-top: 20px; }
 .pc-map-meter > span { display: block; color: rgba(206, 211, 210, .31); font: 700 8px/1.3 monospace; letter-spacing: .1em; }
@@ -267,6 +286,9 @@
 .pc-map-grid { fill: url(#pc-map-grid); }
 .pc-map-operation-stage .pc-map-grid { fill: url(#pc-op-grid); }
 .pc-map-grid-line { fill: none; stroke: rgba(187, 196, 193, .055); stroke-width: 1; }
+.pc-map-graticule path { fill: none; stroke: rgba(175, 189, 185, .11); stroke-width: .7; stroke-dasharray: 2 8; vector-effect: non-scaling-stroke; }
+.pc-map-graticule text { fill: rgba(185, 196, 192, .22); font: 700 7px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .08em; }
+.pc-map-graticule:not(.is-world) text { opacity: .55; }
 
 .pc-map-land path {
   fill: rgba(73, 82, 79, .25);
@@ -282,9 +304,16 @@
 .pc-map-zone--dead { fill: rgba(83, 29, 34, .33); stroke: rgba(185, 55, 66, .62); stroke-dasharray: 7 5; }
 .pc-map-zone--forest { fill: rgba(49, 67, 52, .42); stroke: rgba(145, 162, 124, .52); stroke-dasharray: 4 4; }
 .pc-map-zone--red { fill: rgba(118, 29, 36, .38); stroke: rgba(203, 61, 71, .7); }
+.pc-map-route{fill:none;stroke:#76998f;stroke-width:1.35;stroke-dasharray:4 4;vector-effect:non-scaling-stroke;filter:url(#pc-map-glow)}
+.pc-map-route--pilgrimage{stroke:#b19a6b;stroke-dasharray:2 5}
+.pc-map-route--hostile{stroke:#bd4751;stroke-dasharray:7 3}
+.pc-map-route--front{stroke:#8394aa;stroke-dasharray:9 3 2 3}
+.pc-map-route-label{fill:rgba(208,216,213,.52);paint-order:stroke;stroke:#050708;stroke-width:3px;font:700 7px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;vector-effect:non-scaling-stroke}
 
 .pc-map-marker { cursor: pointer; outline: none; }
 .pc-map-marker-symbol { transform-box: view-box; transform-origin: 0 0; }
+.pc-map-marker-hit { fill: transparent; pointer-events: all; }
+.pc-map-marker-hit-line { fill: none; stroke: transparent; stroke-width: 34; pointer-events: stroke; }
 .pc-map-marker-ring {
   fill: rgba(5, 8, 8, .48);
   stroke: rgba(201, 207, 205, .35);
@@ -299,7 +328,7 @@
   stroke-width: 3px;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
-  pointer-events: none;
+  pointer-events: visiblePainted;
   font-family: Pretendard, "Noto Sans KR", sans-serif;
 }
 .pc-map-marker-label { fill: #d6dcda; font-size: 10px; font-weight: 700; }
@@ -357,6 +386,13 @@
 .pc-map-records > b { color: rgba(205, 211, 209, .34); font: 700 8px/1.3 monospace; letter-spacing: .08em; }
 .pc-map-records ul { display: grid; gap: 5px; margin: 8px 0 0; padding: 0; list-style: none; }
 .pc-map-records li { color: #bf777c; font: 700 9px/1.4 ui-monospace, monospace; overflow-wrap: anywhere; }
+.pc-map-incident-summary { margin-top: 16px; padding: 11px 12px; border: 1px solid rgba(185, 61, 70, .18); background: rgba(74, 19, 24, .1); }
+.pc-map-incident-summary b,.pc-map-crosslinks > b { display: block; color: rgba(209, 99, 106, .7); font: 700 8px/1.3 ui-monospace, monospace; letter-spacing: .09em; }
+.pc-map-incident-summary p { margin: 7px 0 0; color: rgba(213, 218, 216, .58); font-size: 9px; line-height: 1.65; }
+.pc-map-crosslinks { display: grid; gap: 5px; margin-top: 14px; }
+.pc-map-crosslinks button { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; width: 100%; padding: 8px 0; border: 0; border-bottom: 1px solid rgba(193, 200, 197, .08); color: #c6cbca; background: transparent; font: 700 9px/1.35 ui-monospace, monospace; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.pc-map-crosslinks button i { color: rgba(193, 83, 90, .58); font-size: 7px; font-style: normal; white-space: nowrap; }
+.pc-map-crosslinks button:hover,.pc-map-crosslinks button:focus-visible { color: #fff; border-color: rgba(202, 74, 83, .45); outline: 0; }
 .pc-map-intel-actions { display: grid; gap: 7px; margin-top: 17px; }
 .pc-map-intel-actions button,
 .pc-map-region-return { min-height: 38px; padding: 9px 12px; border: 1px solid rgba(190, 61, 70, .47); color: #dcdddc; background: rgba(105, 24, 30, .25); font-size: 10px; font-weight: 700; text-align: left; }
@@ -378,6 +414,7 @@
 .pc-op-terrain { fill: rgba(46, 54, 51, .22); stroke: rgba(160, 173, 168, .2); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .pc-op-terrain--forest { fill: rgba(43, 62, 46, .3); }
 .pc-op-terrain--coast { fill: rgba(47, 54, 56, .28); }
+.pc-op-contested-line { fill: none; stroke: rgba(186, 151, 83, .66); stroke-width: 2; stroke-dasharray: 10 7; vector-effect: non-scaling-stroke; }
 .pc-op-river { fill: none; stroke: rgba(73, 85, 89, .85); stroke-width: 14; vector-effect: non-scaling-stroke; }
 .pc-op-blood { fill: rgba(121, 27, 35, .42); stroke: rgba(197, 56, 67, .64); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
 .pc-op-site circle { fill: #0a0c0d; stroke: rgba(201, 207, 205, .45); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
@@ -389,6 +426,11 @@
 .pc-op-site--cult circle { stroke: rgba(181, 150, 84, .78); }
 .pc-op-route { fill: none; stroke: #c44a53; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; filter: url(#pc-op-glow); }
 .pc-op-route--alternate { stroke: rgba(188, 151, 83, .74); stroke-width: 1.5; stroke-dasharray: 8 6; filter: none; }
+.pc-op-route--verdict{stroke-width:5;stroke-dasharray:none;opacity:.92}
+.pc-op-route--verdict-execute{stroke:#cf404c}
+.pc-op-route--verdict-detain{stroke:#c49a58}
+.pc-op-route--verdict-cooperate{stroke:#69a286}
+.pc-op-route--verdict-defer{stroke:#929b9d;stroke-width:2;stroke-dasharray:5 7;filter:none}
 .pc-op-waypoint { fill: #d5626a; stroke: #13070a; stroke-width: 2; vector-effect: non-scaling-stroke; }
 .pc-op-waypoint.is-current { filter: url(#pc-op-glow); }
 .pc-op-unit circle:first-child { fill: rgba(6, 8, 9, .88); stroke: #bfc8c5; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
@@ -403,10 +445,91 @@
 .pc-op-unit--lost circle:nth-child(2),
 .pc-op-unit--unknown circle:nth-child(2) { fill: #cc4c56; }
 .pc-op-unit--split { opacity: .78; }
+.pc-op-site.is-secured circle{fill:rgba(32,77,61,.82);stroke:#73ad91}
+.pc-op-site.is-contained circle{fill:rgba(91,72,35,.76);stroke:#c6a35e}
+.pc-op-site.is-allied circle{fill:rgba(33,69,75,.84);stroke:#6fa8ad}
+.pc-op-site.is-hostile circle,.pc-op-site.is-active circle{fill:rgba(101,24,31,.82);stroke:#d45a64}
+.pc-op-site.is-lost{opacity:.32}.pc-op-site.is-lost circle{stroke-dasharray:2 3}
+.pc-op-site.is-contested circle,.pc-op-site.is-unknown circle{fill:#0b0d0e;stroke:#9d8a62;stroke-dasharray:3 2}
 .pc-map-operation-intel h3 time { display: block; margin-bottom: 5px; color: #cf5861; font: 700 13px/1.3 ui-monospace, monospace; letter-spacing: .06em; }
 .pc-op-status { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; padding: 10px 0; border-top: 1px solid var(--map-line); border-bottom: 1px solid var(--map-line); color: rgba(210, 216, 214, .39); font-size: 9px; }
 .pc-op-status b { color: #c45a62; font: 700 10px/1.2 monospace; }
 .pc-map-region-return { width: 100%; margin-top: 14px; }
+.pc-op-classification { margin-top: 14px; }
+.pc-op-classification dd { color: #c15b63; overflow-wrap: anywhere; }
+.pc-op-directive,.pc-op-objectives { margin-top: 14px; padding: 12px; border: 1px solid rgba(192, 65, 74, .24); background: rgba(105, 24, 30, .11); }
+.pc-op-directive > b,.pc-op-objectives > b { color: #c6636a; font: 700 8px/1.3 ui-monospace, monospace; letter-spacing: .09em; }
+.pc-op-directive p { margin: 7px 0 0; color: rgba(218, 222, 221, .62); font-size: 9px; line-height: 1.65; }
+.pc-op-objectives ol { display: grid; gap: 5px; margin: 8px 0 0; padding-left: 18px; color: rgba(207, 213, 211, .52); font-size: 8px; line-height: 1.55; }
+.pc-op-verdict{margin-top:14px;padding:13px;border:1px solid rgba(194,74,83,.42);background:linear-gradient(135deg,rgba(112,28,35,.22),rgba(7,9,10,.76))}
+.pc-op-verdict small{display:block;color:#a85a61;font:8px/1.3 ui-monospace,monospace;letter-spacing:.1em}
+.pc-op-verdict b{display:block;margin-top:6px;color:#e3e6e5;font-size:12px;line-height:1.4}
+.pc-op-verdict p{margin:7px 0 0;color:rgba(217,222,220,.58);font-size:9px;line-height:1.65}
+.pc-map-operation-grid.is-allied .pc-op-verdict{border-color:rgba(91,153,124,.5);background:linear-gradient(135deg,rgba(31,77,58,.25),rgba(7,9,10,.76))}
+.pc-map-operation-grid.is-contained .pc-op-verdict{border-color:rgba(184,148,80,.5);background:linear-gradient(135deg,rgba(82,64,28,.25),rgba(7,9,10,.76))}
+.pc-map-operation-grid.is-pending .pc-op-verdict{border-style:dashed;border-color:rgba(156,164,165,.35);background:#090b0c}
+
+/* Regional drilldown */
+.pc-map-detail-tabs{
+  display:flex;
+  gap:7px;
+  padding:13px 18px 10px;
+  overflow-x:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(188,61,70,.45) transparent;
+}
+.pc-map-detail-tabs button{flex:0 0 190px;min-height:52px;padding:8px 12px;border:1px solid rgba(192,197,196,.12);color:rgba(215,220,219,.58);background:rgba(10,13,14,.78);font-size:11px;font-weight:700;text-align:left}
+.pc-map-detail-tabs small{display:block;margin-bottom:4px;color:rgba(192,197,196,.28);font:700 7px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.06em;white-space:nowrap}
+.pc-map-detail-tabs button:nth-child(4){margin-left:18px;position:relative}
+.pc-map-detail-tabs button:nth-child(4)::before{content:'DEAD ZONE';position:absolute;left:-20px;top:5px;bottom:5px;width:1px;background:rgba(188,61,70,.34);writing-mode:vertical-rl;color:rgba(194,88,95,.48);font:6px/1 monospace;letter-spacing:.08em}
+.pc-map-breadcrumb{display:flex;align-items:center;gap:9px;padding:0 18px 10px;color:rgba(206,212,210,.38);font:700 8px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em}
+.pc-map-breadcrumb button{padding:0;border:0;color:rgba(204,210,208,.44);background:none;cursor:pointer}
+.pc-map-breadcrumb button:hover,.pc-map-breadcrumb button:focus-visible{color:#fff;outline:0}
+.pc-map-breadcrumb i{color:#8e3a41;font-style:normal}.pc-map-breadcrumb b{color:#c86a71;font-weight:700}
+.pc-map-detail-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:10px;padding:0 18px 18px}
+.pc-map-detail-stage,.pc-map-detail-stage .pc-map-svg{min-height:500px}
+.pc-detail-grid{fill:url(#pc-detail-grid);pointer-events:none}
+.pc-detail-terrain{stroke:rgba(161,173,169,.18);stroke-width:1;vector-effect:non-scaling-stroke}
+.pc-detail-terrain,.pc-detail-river,.pc-detail-canopy,.pc-detail-ruins,.pc-detail-silence,.pc-detail-routes{pointer-events:none}
+.pc-detail-terrain--forest{fill:rgba(39,59,43,.42)}
+.pc-detail-terrain--water{fill:rgba(30,42,48,.62);stroke:rgba(93,121,126,.28)}
+.pc-detail-terrain--dead{fill:rgba(50,49,48,.34)}
+.pc-detail-river{fill:none;stroke:rgba(42,55,60,.92);stroke-width:18;vector-effect:non-scaling-stroke}
+.pc-detail-canopy{fill:none;stroke:rgba(95,121,88,.25);stroke-width:48;stroke-dasharray:2 13;vector-effect:non-scaling-stroke}
+.pc-detail-ruins path{fill:rgba(67,65,61,.23);stroke:rgba(152,150,142,.2);stroke-width:2;stroke-dasharray:8 5;vector-effect:non-scaling-stroke}
+.pc-detail-silence{fill:rgba(3,4,5,.7);stroke:rgba(171,52,61,.3);stroke-width:1.5;stroke-dasharray:3 7;vector-effect:non-scaling-stroke}
+.pc-detail-route{fill:none;stroke:#7b9b92;stroke-width:2;stroke-dasharray:6 5;filter:url(#pc-detail-glow);vector-effect:non-scaling-stroke}
+.pc-detail-route--pilgrimage{stroke:#b09a69;stroke-dasharray:3 6}
+.pc-detail-route--hostile{stroke:#c14550;stroke-width:2.5;stroke-dasharray:9 4}
+.pc-detail-route--hazard{stroke:#8d3d43;stroke-width:3;stroke-dasharray:2 5}
+.pc-detail-route--front{stroke:#7f94aa;stroke-dasharray:10 4 2 4}
+.pc-detail-route--broken{stroke:#9b8152;stroke-dasharray:12 7;opacity:.68}
+.pc-detail-route--historical{stroke:#8d8b83;stroke-dasharray:1 6}
+.pc-detail-route-label{fill:rgba(210,216,214,.43);paint-order:stroke;stroke:#050708;stroke-width:3px;font:700 7px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.06em;vector-effect:non-scaling-stroke}
+.pc-detail-site{cursor:pointer;outline:none}
+.pc-detail-site-hit{fill:transparent;pointer-events:all}
+.pc-detail-site-ring{fill:rgba(6,8,9,.82);stroke:rgba(200,207,204,.52);stroke-width:1.3;vector-effect:non-scaling-stroke}
+.pc-detail-site-core{fill:#b9c1be;filter:url(#pc-detail-glow)}
+.pc-detail-site-index,.pc-detail-site-label{paint-order:stroke;stroke:#050708;stroke-width:3px;stroke-linejoin:round;pointer-events:visiblePainted;font-family:Pretendard,"Noto Sans KR",sans-serif}
+.pc-detail-site-index{fill:#a94e55;font:700 7px/1 ui-monospace,monospace}
+.pc-detail-site-label{fill:#d7dcda;font-size:10px;font-weight:700}
+.pc-detail-site--incident .pc-detail-site-core,.pc-detail-site--zone .pc-detail-site-core,.pc-detail-site--unknown .pc-detail-site-core{fill:#bd3d47}
+.pc-detail-site--anomaly .pc-detail-site-core,.pc-detail-site--cult .pc-detail-site-core{fill:#b79959}
+.pc-detail-site--returned .pc-detail-site-core,.pc-detail-site--signal .pc-detail-site-core,.pc-detail-site--settlement .pc-detail-site-core{fill:#7d9e92}
+.pc-detail-site--fortress .pc-detail-site-core,.pc-detail-site--ruin .pc-detail-site-core{fill:#d2d5d3}
+.pc-detail-site:hover .pc-detail-site-ring,.pc-detail-site:focus .pc-detail-site-ring,.pc-detail-site.is-selected .pc-detail-site-ring{stroke:#e25a64;stroke-width:2}
+.pc-detail-site.is-selected .pc-detail-site-ring{fill:rgba(166,39,48,.22);animation:pc-map-ring 1.5s ease-out infinite}
+.pc-detail-site.is-secured .pc-detail-site-ring{fill:rgba(31,78,59,.82);stroke:#6faa8c}.pc-detail-site.is-secured .pc-detail-site-core{fill:#78b294}
+.pc-detail-site.is-contained .pc-detail-site-ring{fill:rgba(88,69,31,.82);stroke:#c49d58}.pc-detail-site.is-contained .pc-detail-site-core{fill:#c6a15e}
+.pc-detail-site.is-allied .pc-detail-site-ring{fill:rgba(30,67,72,.84);stroke:#70a8ac}.pc-detail-site.is-allied .pc-detail-site-core{fill:#78b1b4}
+.pc-detail-site.is-hostile .pc-detail-site-ring,.pc-detail-site.is-failed .pc-detail-site-ring{fill:rgba(102,23,30,.86);stroke:#d9555f}.pc-detail-site.is-hostile .pc-detail-site-core,.pc-detail-site.is-failed .pc-detail-site-core{fill:#db5a65}
+.pc-detail-site.is-unknown .pc-detail-site-ring{stroke:#9c8b64;stroke-dasharray:3 2}
+.pc-map-detail-intel h3{margin:8px 0 10px;color:#eef0ef;font-size:21px;line-height:1.25;letter-spacing:-.025em}
+.pc-map-detail-intel>p{margin:0;color:rgba(211,217,215,.62);font-size:11px;line-height:1.72}
+.pc-detail-state{color:#d4d7d6!important}.pc-detail-state.is-secured,.pc-detail-state.is-allied{color:#79ae94!important}.pc-detail-state.is-contained{color:#c7a35f!important}.pc-detail-state.is-hostile,.pc-detail-state.is-failed{color:#d76068!important}.pc-detail-state.is-unknown{color:#aaa38e!important}
+.pc-detail-verdict-note{display:grid;gap:6px;margin-top:14px;padding:11px 12px;border:1px solid rgba(182,144,72,.25);background:rgba(92,69,25,.1)}
+.pc-detail-verdict-note b{color:#b79353;font:700 8px/1.2 ui-monospace,monospace;letter-spacing:.08em}.pc-detail-verdict-note span{color:rgba(212,216,214,.52);font-size:9px;line-height:1.55}
+.pc-map-detail-entry{margin-top:18px}
 
 .pc-map-timeline {
   display: flex;
@@ -429,8 +552,13 @@
 .pc-map-timeline button::before { content: ''; position: absolute; top: -1px; right: -1px; left: -1px; height: 2px; background: rgba(190, 196, 194, .1); }
 .pc-map-timeline small { display: block; margin-bottom: 6px; color: #a54d54; font: 700 9px/1.2 monospace; }
 .pc-map-timeline span { display: block; font-size: 9px; line-height: 1.4; }
+.pc-map-timeline em{display:block;margin-top:7px;color:#5d6668;font:normal 7px/1.2 ui-monospace,monospace;letter-spacing:.08em}
 .pc-map-timeline button.is-active { border-color: rgba(196, 66, 76, .58); color: #eceeed; background: rgba(107, 25, 32, .28); }
 .pc-map-timeline button.is-active::before { background: #c34650; box-shadow: 0 0 10px rgba(195, 70, 79, .7); }
+.pc-map-timeline button.is-complete::before{background:#5d9079}.pc-map-timeline button.is-complete em{color:#6f9f89}
+.pc-map-timeline button.is-altered::before{background:#b68d4d}.pc-map-timeline button.is-altered em{color:#b8955c}
+.pc-map-timeline button.is-failed::before{background:#bd3f49}.pc-map-timeline button.is-failed em{color:#c95961}
+.pc-map-timeline button.is-locked{opacity:.34;cursor:not-allowed}.pc-map-timeline button.is-locked::before{background:#353a3c}
 
 @keyframes pc-map-live { 50% { opacity: .35; } }
 @keyframes pc-map-ring { from { r: 17; opacity: 1; } to { r: 26; opacity: 0; } }
@@ -454,18 +582,23 @@
   .pc-map-room { min-height: auto; }
   .pc-map-room-head { align-items: flex-start; padding: 19px; }
   .pc-map-live { min-width: 0; }
-  .pc-map-mode-switch { grid-template-columns: repeat(2, 1fr); padding: 0 18px; }
+  .pc-map-mode-switch { grid-template-columns: repeat(3, 1fr); padding: 0 18px; }
   .pc-map-layout,
-  .pc-map-operation-grid { grid-template-columns: 1fr; padding-right: 12px; padding-left: 12px; }
+  .pc-map-operation-grid,
+  .pc-map-detail-grid { grid-template-columns: 1fr; padding-right: 12px; padding-left: 12px; }
   .pc-map-stage { order: -1; min-height: 360px; }
   .pc-map-svg { min-height: 360px; }
   .pc-map-layers { display: none; }
   .pc-map-intel { display: block; }
   .pc-map-operation-stage,
-  .pc-map-operation-stage .pc-map-svg { min-height: 390px; }
+  .pc-map-operation-stage .pc-map-svg,
+  .pc-map-detail-stage,
+  .pc-map-detail-stage .pc-map-svg { min-height: 390px; }
   .pc-map-region-tabs,
   .pc-map-operation-tabs,
+  .pc-map-detail-tabs,
   .pc-map-timeline { padding-right: 12px; padding-left: 12px; }
+  .pc-map-breadcrumb { padding-right: 12px; padding-left: 12px; }
 }
 
 @media (max-width: 560px) {
@@ -475,12 +608,15 @@
   .pc-map-mode-switch { padding: 0; }
   .pc-map-mode-switch button { justify-content: center; min-height: 45px; padding: 0 8px; }
   .pc-map-region-tabs,
-  .pc-map-operation-tabs { padding-top: 10px; }
+  .pc-map-operation-tabs,
+  .pc-map-detail-tabs { padding-top: 10px; }
   .pc-map-region-tabs button { flex-basis: 126px; }
   .pc-map-stage { min-height: 315px; }
   .pc-map-svg { min-height: 315px; }
   .pc-map-operation-stage,
-  .pc-map-operation-stage .pc-map-svg { min-height: 330px; }
+  .pc-map-operation-stage .pc-map-svg,
+  .pc-map-detail-stage,
+  .pc-map-detail-stage .pc-map-svg { min-height: 330px; }
   .pc-map-marker-meta { display: none; }
   .pc-map-marker-label { font-size: 9px; }
   .pc-map-stage--eastasia .pc-map-marker-symbol,
@@ -488,7 +624,9 @@
   .pc-map-stage--europe .pc-map-marker-symbol,
   .pc-map-stage--southamerica .pc-map-marker-symbol { transform: scale(1.5); }
   .pc-op-site text,
-  .pc-op-unit text { font-size: 24px; stroke-width: 6px; }
+  .pc-op-unit text,
+  .pc-detail-site-label { font-size: 22px; stroke-width: 6px; }
+  .pc-detail-site-index { font-size: 15px; stroke-width: 5px; }
   .pc-op-site circle { r: 16px; }
   .pc-op-unit circle:first-child { r: 18px; }
   .pc-op-unit circle:nth-child(2) { r: 6px; }
@@ -496,12 +634,16 @@
   .pc-map-coordinates { display: none; }
   .pc-map-sidebar { padding: 15px; }
   .pc-map-operation-intel h3,
-  .pc-map-intel h3 { font-size: 19px; }
+  .pc-map-intel h3,
+  .pc-map-detail-intel h3 { font-size: 19px; }
   .pc-map-timeline button { flex-basis: 104px; }
+  .pc-map-detail-tabs button { flex-basis: 166px; }
+  .pc-map-detail-tabs button:nth-child(4) { margin-left: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pc-map-live i,
   .pc-map-marker.is-selected .pc-map-marker-ring,
+  .pc-detail-site.is-selected .pc-detail-site-ring,
   .pc-map-scan { animation: none; }
 }

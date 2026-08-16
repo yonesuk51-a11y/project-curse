@@ -1,4 +1,4 @@
-// Project Curse 5.16.1 — exit, channel handoff and staged screen entry owner.
+// Project Curse 5.22.0 — exit, channel handoff and staged screen entry owner.
 (function(root){
   'use strict';
 

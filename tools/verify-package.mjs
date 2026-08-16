@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.16.1';
-const DATA_VERSION='5.16.1';
+const VERSION='5.22.0';
+const DATA_VERSION='5.22.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -21,15 +21,23 @@ function article(source,id){
 
 const required=[
   'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/app-shell.css','assets/css/terminal-foundation.css','assets/css/transition-system.css',
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/map-room-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/operation-state.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
   'assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','ASSET_POLICY.md',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/terminal-home.js','ASSET_POLICY.md','assets/resources/ASSET_REGISTRY.md',
+  'assets/resources/derived/great-black-forest_reconstructed-v1.png','assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
   'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
   'assets/audio/pc5152cf_feral_dying_memories_bgm.mp3',
   'assets/audio/pc5152an_cult_radio_static_layer.mp3',
+  'assets/audio/pc5152h_terminal_contact_clear.wav',
+  'assets/audio/pc5152f_analog_contact_soft.wav',
+  'assets/audio/pc5152h_record_mount_clear.wav',
+  'assets/audio/pc5152p_internal_projector_vhs_step.wav',
+  'assets/audio/pc5152x_late_log_beep_195s.mp3',
+  'assets/audio/pc5152v_field_photo_click_42s.mp3',
+  'assets/audio/pc5152v_comm_line_cue_73_74.mp3',
   'docs/Cults_871104/index.html','docs/Immortality_860201/index.html'
 ];
 required.forEach(relative=>add(`required:${relative}`,existsSync(path(relative))));
@@ -41,6 +49,9 @@ const canon=read('assets/js/data/canon-registry.js');
 const reconcile=read('assets/js/pages/canon-reconciliation.js');
 const manifest=read('assets/js/data/site-manifest.js');
 const archiveRegistry=read('assets/js/data/archive-registry.js');
+const fieldDossierData=read('assets/js/data/field-dossier-data.js');
+const homeIntelligenceData=read('assets/js/data/home-intelligence-data.js');
+const terminalHomeRuntime=read('assets/js/pages/terminal-home.js');
 const archiveRuntime=read('assets/js/pages/archive-consolidation.js');
 const factionAnalysisSource=read('assets/js/data/faction-analysis-data.js');
 const factionAnalysisRuntime=read('assets/js/pages/faction-analysis.js');
@@ -49,9 +60,13 @@ const appShell=read('assets/js/core/app-shell.js');
 const appShellCss=read('assets/css/app-shell.css');
 const foundationCss=read('assets/css/terminal-foundation.css');
 const loadingRuntime=read('assets/js/core/loading-sequence.js');
+const baseRuntime=read('assets/js/core/base-runtime.js');
 const audioManifest=read('assets/js/data/audio-manifest.js');
 const audioController=read('assets/js/core/audio-controller.js');
+const operationState=read('assets/js/core/operation-state.js');
 const transitionManifest=read('assets/js/data/transition-manifest.js');
+const incidentRegistrySource=read('assets/js/data/incident-registry.js');
+const regionalDrilldownSource=read('assets/js/data/regional-drilldown-data.js');
 const transitionController=read('assets/js/core/transition-controller.js');
 const transitionCss=read('assets/css/transition-system.css');
 const mapRoomDataSource=read('assets/js/data/map-room-data.js');
@@ -69,10 +84,14 @@ vm.runInContext(manifest,context,{filename:'site-manifest.js'});
 vm.runInContext(audioManifest,context,{filename:'audio-manifest.js'});
 vm.runInContext(transitionManifest,context,{filename:'transition-manifest.js'});
 vm.runInContext(canon,context,{filename:'canon-registry.js'});
+vm.runInContext(incidentRegistrySource,context,{filename:'incident-registry.js'});
 vm.runInContext(factionAnalysisSource,context,{filename:'faction-analysis-data.js'});
 vm.runInContext(archiveRegistry,context,{filename:'archive-registry.js'});
 vm.runInContext(read('assets/js/data/archive-document-data.js'),context,{filename:'archive-document-data.js'});
+vm.runInContext(fieldDossierData,context,{filename:'field-dossier-data.js'});
+vm.runInContext(regionalDrilldownSource,context,{filename:'regional-drilldown-data.js'});
 vm.runInContext(mapRoomDataSource,context,{filename:'map-room-data.js'});
+vm.runInContext(homeIntelligenceData,context,{filename:'home-intelligence-data.js'});
 vm.runInContext(read('assets/js/data/feral-cinematic-data.js'),context,{filename:'feral-cinematic-data.js'});
 vm.runInContext(read('assets/js/data/sakuma-cinematic-data.js'),context,{filename:'sakuma-cinematic-data.js'});
 vm.runInContext(cinematicRegistrySource,context,{filename:'record-cinematic-registry.js'});
@@ -81,14 +100,15 @@ vm.runInContext(cinematicImmortality,context,{filename:'cinematic-immortality.js
 vm.runInContext(cinematicFerals,context,{filename:'cinematic-ferals.js'});
 vm.runInContext(cinematicSakuma,context,{filename:'cinematic-sakuma.js'});
 const canonData=context.window.ProjectCurseCanon;
+const incidentData=context.window.ProjectCurseIncidentNetwork;
 const factionAnalysis=context.window.ProjectCurseFactionAnalysis;
 const structureData=context.window.ProjectCurseStructure;
 const archiveData=context.window.ProjectCurseArchive;
 const cinematicData=context.window.ProjectCurseCinematicRegistry;
 const ordered=[
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/map-room-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
-  'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/transition-controller.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js'
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
+  'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/operation-state.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/transition-controller.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/terminal-home.js'
 ];
 const positions=ordered.map(owner=>index.indexOf(`src="${owner}?`));
 add('script-order',positions.every((position,i)=>position>=0&&(i===0||position>positions[i-1])),positions.join(','));
@@ -115,6 +135,16 @@ add('canon-direct-current-names',!canon.includes('Urban Anomaly Containment')&&!
 add('single-shell-no-sidebar',!index.includes('side-menu')&&!index.includes('uac-shell-drawer')&&!appShell.includes('translateX'));
 add('shell-quick-nav-four-links',(index.match(/<a[^>]+data-uac-route="(?:map-room|history|faction-info|archive-entry)"[^>]*>/g)||[]).length>=4&&appShell.includes('closeQuickNav'));
 add('home-dashboard-primary-control',index.includes('class="pc-terminal-primary"')&&index.includes('class="pc-terminal-alert"')&&index.includes('class="pc-terminal-recent"'));
+add('home-live-intelligence-feed',context.window.ProjectCurseHomeIntelligence?.version===VERSION&&context.window.ProjectCurseHomeIntelligence?.signals?.length===4&&terminalHomeRuntime.includes('ProjectCurseHomeRuntime')&&terminalHomeRuntime.includes('archive?.publicRecords?.length'));
+add('home-data-driven-metrics',terminalHomeRuntime.includes('${records} OPEN')&&terminalHomeRuntime.includes('${operations} ACTIVE')&&terminalHomeRuntime.includes('${unresolved} SIGNALS'));
+add('home-deep-links',appShell.includes('dataset.uacArchiveRecord')&&appShell.includes('ProjectCurseRuntimeModules?.archiveIndex?.open')&&appShell.includes('dataset.uacMapIncident')&&terminalHomeRuntime.includes('data-uac-map-operation')&&terminalHomeRuntime.includes('data-uac-archive-record'));
+add('operation-state-owned',structureData?.owners?.operationState==='assets/js/core/operation-state.js'&&operationState.includes('ProjectCurseOperationState=Object.freeze')&&count(index,'assets/js/core/operation-state.js')===1);
+add('operation-state-persistence',operationState.includes("storageKey='pc_operation_broken_crown_v1'")&&operationState.includes('localStorage.setItem')&&operationState.includes('localStorage.removeItem')&&operationState.includes('projectcurse:operation-state-change'));
+add('operation-four-verdicts',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`))&&operationState.includes("branchIds=['signal','witness','deadzone']"));
+add('operation-safe-reset',operationState.includes('function reset()')&&read('assets/js/pages/archive-document.js').includes('confirmReset')&&read('assets/js/pages/archive-document.js').includes('한 번 더 눌러 초기화 확인'));
+add('operation-scenario-report',read('assets/js/pages/archive-document.js').includes('archive-scenario-verdicts')&&read('assets/js/pages/archive-document.js').includes('archive-scenario-report')&&read('assets/js/pages/archive-document.js').includes('operation.chooseVerdict'));
+add('operation-map-outcome-sync',mapRoomRuntime.includes('operationStore.getDecision')&&mapRoomRuntime.includes('pc-op-route--verdict')&&mapRoomRuntime.includes('decision?.siteStates')&&mapRoomRuntime.includes('stepStates'));
+add('operation-home-resume',terminalHomeRuntime.includes('operationState?.getSummary')&&terminalHomeRuntime.includes('작전 분석 재개')&&terminalHomeRuntime.includes('VERDICT SAVED')&&terminalHomeRuntime.includes('projectcurse:operation-state-change'));
 add('mobile-quick-menu',foundationCss.includes('.uac-shell-bar.is-quick-open .uac-shell-quick')&&appShell.includes("switchControl?.addEventListener('click'"));
 add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&appShell.includes("commitRoute(initialRoute,initialRoute,'replace')"));
 add('route-clears-inert-synchronously',appShell.includes("page.removeAttribute('inert')")&&appShell.includes("page.setAttribute('inert','')"));
@@ -127,11 +157,29 @@ add('legacy-route-compatibility',appShell.includes("target==='faction-relation'"
 add('loading-sequence-owned',loadingRuntime.includes('ProjectCurseLoading')&&loadingRuntime.includes('prefers-reduced-motion')&&loadingRuntime.includes("return hasSeen()?'restore':'cold'")&&index.includes('data-boot-skip'));
 add('loading-modes-and-readable-timing',loadingRuntime.includes('duration:2600')&&loadingRuntime.includes('duration:650')&&loadingRuntime.includes('duration:210')&&loadingRuntime.includes("get('boot')"));
 add('audio-controller-owned',audioManifest.includes('ProjectCurseAudioManifest')&&audioController.includes('ProjectCurseAudioControl')&&index.includes('data-uac-audio-toggle'));
+add('semantic-field-audio',context.window.ProjectCurseAudioManifest?.version==='2.0.0'&&['map.layer','map.signal','operation.step','history.open','faction.open','incident.link','scenario.reveal','scenario.complete'].every(event=>context.window.ProjectCurseAudioManifest.events[event]));
+add('acoustic-screen-profiles',['terminal-home','map-room','history','faction-info','archive-entry','document','great-black-forest','dead-zone','guide','scenario'].every(profile=>context.window.ProjectCurseAudioManifest?.profiles?.[profile]));
+add('distinct-interface-cues',['pc5152h_terminal_contact_clear.wav','pc5152f_analog_contact_soft.wav','pc5152h_record_mount_clear.wav','pc5152p_internal_projector_vhs_step.wav','pc5152x_late_log_beep_195s.mp3','pc5152v_field_photo_click_42s.mp3','pc5152v_comm_line_cue_73_74.mp3'].every(asset=>baseRuntime.includes(asset)));
+add('audio-ducking-and-polyphony',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes("if(event.priority>1){stopBus('interface');stopBus('record');}")&&audioController.includes('event.exclusive!==false'));
+add('audio-profile-route-sync',audioController.includes("projectcurse:screen-committed")&&audioController.includes('setProfile(event.detail?.target')&&audioController.includes('data-audio-blocked'));
+add('screen-action-audio',mapRoomRuntime.includes("'operation.step'")&&worldHistory.includes("'history.open'")&&worldHistory.includes("'history.step'")&&factionAnalysisRuntime.includes("'faction.open'")&&factionAnalysisRuntime.includes("'faction.back'"));
+add('regional-document-audio',read('assets/js/pages/archive-document.js').includes("'great-black-forest':'region.forest'")&&read('assets/js/pages/archive-document.js').includes("'dead-zone':'region.deadzone'")&&read('assets/js/pages/archive-document.js').includes("scenario:'scenario.arm'"));
 add('transition-controller-owned',context.window.ProjectCurseTransitions?.screens&&Object.keys(context.window.ProjectCurseTransitions.screens).length===5&&transitionController.includes('ProjectCurseTransition')&&transitionController.includes("dataset.transitionState='switching'"));
 add('transition-state-machine',appShell.includes('transitioning=true')&&appShell.includes('queuedRequest')&&appShell.includes('ProjectCurseTransition.run')&&appShell.includes("history.pushState({route:target}"));
 add('screen-identity-presets',transitionCss.includes('coordinate-acquire')&&transitionCss.includes('chronology-rewind')&&transitionCss.includes('dossier-assemble')&&transitionCss.includes('vault-unseal'));
 add('archive-return-transition-visible',transitionCss.includes('html.pc5152cf-archive-return #loader')&&transitionCss.includes('#loader.hide'));
 add('map-room-owned',context.window.ProjectCurseMapRoom?.regions?.length>=5&&context.window.ProjectCurseMapRoom?.operations?.length>=2&&mapRoomRuntime.includes('ProjectCurseMapRoomRuntime'));
+const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
+add('regional-drilldown-owned',structureData?.owners?.regionalDrilldownData==='assets/js/data/regional-drilldown-data.js'&&drilldowns.length===6&&context.window.ProjectCurseMapRoom?.drilldowns===drilldowns,drilldowns.length);
+add('regional-drilldown-balanced',drilldowns.filter(detail=>detail.region==='southamerica').length===3&&drilldowns.filter(detail=>detail.region==='northamerica').length===3&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38);
+add('regional-drilldown-navigation',mapRoomRuntime.includes("mode:'region'")&&mapRoomRuntime.includes("state.mode==='detail'")&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('showDetail(id,siteId)'));
+add('regional-drilldown-crosslinks',mapRoomRuntime.includes('renderDetailIntel')&&mapRoomRuntime.includes('data-map-open-record')&&mapRoomRuntime.includes('data-map-open-operation')&&mapRoomRuntime.includes('data-map-open-history'));
+add('regional-verdict-sync',drilldowns.some(detail=>detail.id==='gbf-coastal-belt'&&detail.sites.filter(site=>site.verdictStates).length>=4)&&drilldowns.some(detail=>detail.id==='deadzone-return-corridor'&&detail.sites.some(site=>site.verdictStates))&&mapRoomRuntime.includes('resolveDetailSite'));
+add('shared-incident-network',incidentData?.version===VERSION&&incidentData.incidentList.length>=7&&incidentData.incidents['evt-southern-mobilization']?.operation==='op-southern-coup');
+add('southern-coup-operation',context.window.ProjectCurseMapRoom?.operations?.some(operation=>operation.id==='op-southern-coup'&&operation.steps.length>=6&&operation.directive));
+add('geographic-layer-controls',mapRoomRuntime.includes('renderGraticule')&&mapRoomRuntime.includes('data-map-layer')&&mapRoomRuntime.includes('state.layers'));
+add('geographic-route-layer',context.window.ProjectCurseMapRoom?.routes?.length>=4&&mapRoomRuntime.includes('pc-map-routes')&&mapRoomRuntime.includes("layers:{confirmed:true,estimated:true,zones:true,routes:true}"));
+add('incident-screen-crosslinks',mapRoomRuntime.includes('data-map-open-history')&&mapRoomRuntime.includes('data-map-open-faction')&&mapRoomRuntime.includes('data-map-open-record')&&worldHistory.includes('ProjectCurseWorldHistoryRuntime')&&factionAnalysisRuntime.includes('data-pc-faction-incident')&&archiveRuntime.includes('open:openRecord'));
 add('cinematic-registry-four-records',cinematicData?.ids?.().join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicData?.ids?.().join('|'));
 add('cinematic-record-config-owned-by-modules',![cinematicCults,cinematicImmortality,cinematicFerals,cinematicSakuma].some(source=>!source.includes('ProjectCurseCinematicRegistry?.register'))&&main.includes('cinematicRegistry?.get?.(state.activeRecord)')&&main.includes('cinematicRegistry?.pages?.(recordId)'));
 add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!index.includes('assets/js/core/runtime-ownership.js')&&!index.includes('assets/js/core/menu-audio-runtime.js'));
@@ -148,17 +196,17 @@ add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-
 add('manifest-runtime-version',structureData?.version===VERSION);
 add('archive-registry-version',archiveData?.version===DATA_VERSION);
 const publicArchiveIds=archiveData?.publicRecords?.map(record=>record.id)||[];
-add('archive-nine-record-index',publicArchiveIds.length===9&&publicArchiveIds.slice(0,4).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Zone_870815',publicArchiveIds.length);
-add('archive-all-nine-open',archiveData?.publicRecords?.length===9&&archiveData.publicRecords.every(record=>record.access==='open'));
+add('archive-thirteen-record-index',publicArchiveIds.length===13&&publicArchiveIds.slice(0,4).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Zone_870815',publicArchiveIds.length);
+add('archive-all-thirteen-open',archiveData?.publicRecords?.length===13&&archiveData.publicRecords.every(record=>record.access==='open'));
 add('archive-record-ids-unique',new Set(publicArchiveIds).size===publicArchiveIds.length,publicArchiveIds.join('|'));
 const videoRecords=archiveData?.publicRecords?.filter(record=>record.format==='video')||[];
 const documentRecords=archiveData?.publicRecords?.filter(record=>record.format==='document')||[];
-add('archive-video-document-groups',videoRecords.map(record=>record.id).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028'&&documentRecords.length===5&&archiveRuntime.includes("group('video','VIDEO RECORDS','영상 기록')")&&archiveRuntime.includes("group('document','DOCUMENT FILES','문서 기록')"),`${videoRecords.length} video / ${documentRecords.length} document`);
+add('archive-video-document-groups',videoRecords.map(record=>record.id).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028'&&documentRecords.length===9&&archiveRuntime.includes("group('video','VIDEO RECORDS','영상 기록')")&&archiveRuntime.includes("group('document','DOCUMENT FILES','문서 기록')"),`${videoRecords.length} video / ${documentRecords.length} document`);
 add('archive-display-codes',videoRecords.find(record=>record.id==='Cults_871104')?.code==='CULT-ARCHIVE'&&videoRecords.find(record=>record.id==='Immortality_860201')?.code==='OP-IMMORTALITY');
-add('archive-five-internal-documents',documentRecords.length===5&&documentRecords.every(record=>!record.href)&&documentRecords.every(record=>context.window.ProjectCurseArchiveDocuments?.documents?.[record.id]));
+add('archive-nine-internal-documents',documentRecords.length===9&&documentRecords.every(record=>!record.href)&&documentRecords.every(record=>context.window.ProjectCurseArchiveDocuments?.documents?.[record.id]));
 add('archive-cinematic-inline-sequence',videoRecords.every(record=>!record.href)&&videoRecords.every(record=>cinematicData?.get?.(record.id))&&index.indexOf('assets/js/data/archive-document-data.js')<index.indexOf('assets/js/data/feral-cinematic-data.js')&&index.indexOf('assets/js/data/feral-cinematic-data.js')<index.indexOf('assets/js/core/record-cinematic-registry.js')&&index.indexOf('assets/js/pages/cinematic-sakuma.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js')&&main.includes('const SEQUENCE_RECORDS=new Set(cinematicRegistry?.ids?.()||[])')&&archiveRuntime.includes('window.ProjectCurseRecordCinematic.start(id)'));
 add('archive-no-access-limit-label',!archiveRuntime.includes('접근 제한')&&!archiveRuntime.includes('is-restricted')&&archiveRuntime.includes("format==='video'?'영상 재생':'문서 열람'"));
-add('archive-five-readable-documents',documentRecords.length===5&&documentRecords.every(record=>context.window.ProjectCurseArchiveDocuments?.documents?.[record.id])&&read('assets/js/pages/archive-document.js').includes('ProjectCurseArchiveDocument'));
+add('archive-nine-readable-documents',documentRecords.length===9&&documentRecords.every(record=>context.window.ProjectCurseArchiveDocuments?.documents?.[record.id])&&read('assets/js/pages/archive-document.js').includes('ProjectCurseArchiveDocument'));
 add('archive-document-source-single-owner',!existsSync(path('assets/js/data/archive-source-content.js'))&&!read('assets/js/pages/archive-document.js').includes('ProjectCurseArchiveSourceContent'));
 add('archive-legacy-index-removed-at-runtime',archiveRuntime.includes("qa(':scope > .archive-groups',wrap).forEach(legacy=>legacy.remove())"));
 add('sakuma-inline-gesture-entry',archiveData?.publicRecords?.find(record=>record.id==='Sakuma_Tape_991028')?.presentation==='cinematic'&&!archiveData?.publicRecords?.find(record=>record.id==='Sakuma_Tape_991028')?.href&&read('docs/Sakuma_Tape_991028/index.html').includes('id="sakumaSequenceStart"')&&read('docs/Sakuma_Tape_991028/index.html').includes("start?.('Sakuma_Tape_991028')")&&read('docs/Sakuma_Tape_991028/index.html').indexOf('record-cinematic-registry.js')<read('docs/Sakuma_Tape_991028/index.html').indexOf('cinematic-sakuma.js'));
@@ -168,6 +216,10 @@ const archiveDocumentData=read('assets/js/data/archive-document-data.js');
 add('archive-feral-supplement-discarded',!archiveRegistry.includes('FCR_Archive_890402')&&!archiveDocumentData.includes('FCR_Archive_890402')&&!existsSync(path('docs/FCR_Archive_890402')));
 add('archive-genesis-record-discarded',!archiveRegistry.includes('Unknown_Record5_940626')&&!archiveDocumentData.includes('Unknown_Record5_940626')&&!existsSync(path('docs/Unknown_Record5_940626/index.html'))&&!index.includes('새로운 세계를 위한 유전자 기록'));
 const restoredDocuments=context.window.ProjectCurseArchiveDocuments?.documents||{};
+const greatBlackForest=restoredDocuments.Great_Black_Forest_Region;
+const deadZonePilgrimage=restoredDocuments.Dead_Zone_Pilgrimage;
+const pilgrimRules=restoredDocuments.Pilgrim_Rules_GBF;
+const brokenCrown=restoredDocuments.Operation_Broken_Crown;
 const restoredZone=restoredDocuments.Zone_870815;
 const restoredRedzone=restoredDocuments.Redzone_881120;
 const restoredNhcManual=restoredDocuments.NHC_Manual_891219;
@@ -175,6 +227,13 @@ const restoredFerals=restoredDocuments.Ferals_860722;
 const feralCinematic=context.window.ProjectCurseFeralCinematic;
 add('archive-zone-term-colors',archiveDocumentRuntime.includes("'그린존':'green'")&&archiveDocumentRuntime.includes("'레드존':'red'")&&read('assets/css/archive-document.css').includes('.archive-term-black'));
 add('archive-rich-document-runtime',archiveDocumentRuntime.includes('appendFigure')&&archiveDocumentRuntime.includes('appendTable')&&archiveDocumentRuntime.includes('section.groups'));
+add('field-dossier-four-records',greatBlackForest?.presentation==='region-dossier'&&deadZonePilgrimage?.presentation==='region-dossier'&&pilgrimRules?.presentation==='guide'&&brokenCrown?.presentation==='scenario');
+add('regional-document-identities',greatBlackForest?.theme==='great-black-forest'&&greatBlackForest?.telemetry?.length===3&&deadZonePilgrimage?.theme==='dead-zone'&&deadZonePilgrimage?.telemetry?.length===3&&archiveDocumentRuntime.includes('dataset.documentTheme')&&read('assets/css/archive-document.css').includes('data-document-theme="great-black-forest"')&&read('assets/css/archive-document.css').includes('data-document-theme="dead-zone"'));
+add('great-black-forest-dossier',greatBlackForest?.sections?.length===5&&JSON.stringify(greatBlackForest).includes('자유의 땅')&&JSON.stringify(greatBlackForest).includes('타락 야생체')&&greatBlackForest?.hero?.caption?.includes('복원 추정본'));
+add('dead-zone-dossier',deadZonePilgrimage?.sections?.length===5&&JSON.stringify(deadZonePilgrimage).includes('순례의 의미')&&JSON.stringify(deadZonePilgrimage).includes('혈교 지부의 분열')&&deadZonePilgrimage?.hero?.caption?.includes('복원 추정본'));
+add('pilgrim-rules-eleven',pilgrimRules?.sections?.length===5&&pilgrimRules.sections.filter(section=>section.table).flatMap(section=>section.table.rows).length===11);
+add('broken-crown-branching-scenario',brokenCrown?.sections?.find(section=>section.branches)?.branches?.entries?.length===3&&brokenCrown?.sections?.find(section=>section.title==='6단계 작전 전개')?.table?.rows?.length===6&&archiveDocumentRuntime.includes('appendBranches')&&archiveDocumentRuntime.includes('scenario.complete'));
+add('reconstructed-image-provenance',read('assets/resources/ASSET_REGISTRY.md').includes('RECONSTRUCTED')&&read('assets/resources/ASSET_REGISTRY.md').includes('복원 추정본')&&statSync(path('assets/resources/derived/great-black-forest_reconstructed-v1.png')).size>1_000_000&&statSync(path('assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png')).size>1_000_000);
 add('archive-zone-guide',restoredZone?.presentation==='guide'&&restoredZone?.sections?.length===4&&JSON.stringify(restoredZone).includes('화이트존은 그린존과 옐로우존 사이에 있는 안전 단계가 아니다')&&JSON.stringify(restoredZone).includes('United Nations Anomaly Containment')&&JSON.stringify(restoredZone).includes('국제연합 산하기관은 아닌 독립기관')&&!JSON.stringify(restoredZone).includes('Level 7'),`${restoredZone?.sections?.length||0} sections / ${JSON.stringify(restoredZone||{}).length} chars`);
 add('archive-redzone-not-public',!archiveRegistry.includes("id:'Redzone_881120'"));
 add('archive-restored-canon-terms',![restoredZone,restoredRedzone].some(document=>/Urban Anomaly|도시 이상현상 격리국|신디케이트|하이먼/.test(JSON.stringify(document))));

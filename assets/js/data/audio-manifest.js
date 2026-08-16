@@ -1,23 +1,50 @@
-// Project Curse 5.16.1 — semantic sound-event registry.
+// Project Curse 5.22.0 — semantic sound-event registry and acoustic profiles.
 (function(root){
   'use strict';
 
   root.ProjectCurseAudioManifest=Object.freeze({
-    version:'1.1.0',
+    version:'2.0.0',
     storageKey:'pc_audio_settings_v1',
     buses:Object.freeze({master:1,ambient:1,interface:1,record:1,alert:1}),
+    profiles:Object.freeze({
+      'terminal-home':Object.freeze({ambient:1,interface:.92,record:.86,alert:1}),
+      'map-room':Object.freeze({ambient:.62,interface:1.08,record:.72,alert:1}),
+      history:Object.freeze({ambient:.74,interface:.8,record:1.04,alert:.96}),
+      'faction-info':Object.freeze({ambient:.7,interface:.96,record:.9,alert:1}),
+      'archive-entry':Object.freeze({ambient:.55,interface:.76,record:1.1,alert:1}),
+      document:Object.freeze({ambient:.4,interface:.64,record:1.12,alert:.94}),
+      'great-black-forest':Object.freeze({ambient:.3,interface:.58,record:1.08,alert:.9}),
+      'dead-zone':Object.freeze({ambient:.2,interface:.62,record:1.12,alert:.96}),
+      guide:Object.freeze({ambient:.36,interface:.64,record:1.06,alert:.92}),
+      scenario:Object.freeze({ambient:.16,interface:.7,record:1.08,alert:1.12})
+    }),
     events:Object.freeze({
-      'boot.start':Object.freeze({cue:'boot',bus:'interface',cooldown:1600}),
-      'channel.request':Object.freeze({cue:'page',bus:'interface',cooldown:260}),
-      'channel.command':Object.freeze({cue:'page',bus:'interface',cooldown:360}),
-      'channel.cartography':Object.freeze({cue:'radio',bus:'interface',cooldown:360}),
-      'channel.chronology':Object.freeze({cue:'page',bus:'interface',cooldown:360}),
-      'channel.intelligence':Object.freeze({cue:'load',bus:'interface',cooldown:360}),
-      'channel.archive':Object.freeze({cue:'open',bus:'record',cooldown:420}),
-      'record.mount':Object.freeze({cue:'open',bus:'record',cooldown:260}),
-      'record.page':Object.freeze({cue:'page',bus:'record',cooldown:180}),
-      'system.denied':Object.freeze({cue:'denied',bus:'alert',cooldown:420}),
-      'system.alert':Object.freeze({cue:'alert',bus:'alert',cooldown:420})
+      'boot.start':Object.freeze({cue:'boot',bus:'interface',cooldown:1600,gain:1,duck:.38,duckMs:900,exclusive:true}),
+      'channel.request':Object.freeze({cue:'contact',bus:'interface',cooldown:260,gain:.72,duck:.78,duckMs:260,exclusive:true}),
+      'channel.command':Object.freeze({cue:'confirm',bus:'interface',cooldown:360,gain:.72,exclusive:true}),
+      'channel.cartography':Object.freeze({cue:'scan',bus:'interface',cooldown:360,gain:.82,duck:.72,duckMs:360,exclusive:true}),
+      'channel.chronology':Object.freeze({cue:'page',bus:'record',cooldown:360,gain:.78,duck:.76,duckMs:320,exclusive:true}),
+      'channel.intelligence':Object.freeze({cue:'radio',bus:'interface',cooldown:360,gain:.78,duck:.7,duckMs:420,exclusive:true}),
+      'channel.archive':Object.freeze({cue:'open',bus:'record',cooldown:420,gain:.92,duck:.56,duckMs:520,exclusive:true}),
+      'record.mount':Object.freeze({cue:'open',bus:'record',cooldown:260,gain:1,duck:.48,duckMs:620,exclusive:true}),
+      'record.page':Object.freeze({cue:'page',bus:'record',cooldown:180,gain:.72,duck:.82,duckMs:180,exclusive:true}),
+      'map.layer':Object.freeze({cue:'analog',bus:'interface',cooldown:160,gain:.58,exclusive:true}),
+      'map.signal':Object.freeze({cue:'marker',bus:'interface',cooldown:220,gain:.7,duck:.8,duckMs:200,exclusive:true}),
+      'operation.step':Object.freeze({cue:'confirm',bus:'interface',cooldown:160,gain:.62,duck:.84,duckMs:160,exclusive:true}),
+      'history.open':Object.freeze({cue:'page',bus:'record',cooldown:260,gain:.68,duck:.76,duckMs:300,exclusive:true}),
+      'history.step':Object.freeze({cue:'confirm',bus:'interface',cooldown:180,gain:.56,exclusive:true}),
+      'history.back':Object.freeze({cue:'contact',bus:'interface',cooldown:260,gain:.52,exclusive:true}),
+      'faction.open':Object.freeze({cue:'radio',bus:'interface',cooldown:320,gain:.68,duck:.72,duckMs:360,exclusive:true}),
+      'faction.back':Object.freeze({cue:'contact',bus:'interface',cooldown:260,gain:.52,exclusive:true}),
+      'incident.link':Object.freeze({cue:'load',bus:'interface',cooldown:260,gain:.72,duck:.7,duckMs:340,exclusive:true}),
+      'region.forest':Object.freeze({cue:'analog',bus:'record',cooldown:1200,gain:.38,duck:.7,duckMs:680,exclusive:false}),
+      'region.deadzone':Object.freeze({cue:'scan',bus:'record',cooldown:1200,gain:.42,duck:.6,duckMs:820,exclusive:false}),
+      'document.guide':Object.freeze({cue:'confirm',bus:'record',cooldown:900,gain:.44,duck:.74,duckMs:420,exclusive:false}),
+      'scenario.arm':Object.freeze({cue:'radio',bus:'record',cooldown:900,gain:.48,duck:.54,duckMs:720,exclusive:false}),
+      'scenario.reveal':Object.freeze({cue:'page',bus:'record',cooldown:240,gain:.82,duck:.7,duckMs:300,exclusive:true}),
+      'scenario.complete':Object.freeze({cue:'alert',bus:'alert',cooldown:900,gain:.9,duck:.22,duckMs:1100,exclusive:true,priority:2}),
+      'system.denied':Object.freeze({cue:'denied',bus:'alert',cooldown:420,gain:.88,duck:.3,duckMs:760,exclusive:true,priority:2}),
+      'system.alert':Object.freeze({cue:'alert',bus:'alert',cooldown:420,gain:.84,duck:.34,duckMs:820,exclusive:true,priority:2})
     })
   });
 })(window);

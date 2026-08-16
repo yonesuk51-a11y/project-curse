@@ -1,4 +1,4 @@
-// Project Curse 5.16.1 — boot and persistent shell audio owner.
+// Project Curse 5.22.0 — boot and persistent shell audio asset owner.
 (function(){
   'use strict';
 
@@ -11,11 +11,16 @@
   const asset=(name)=>prefix()+'assets/audio/'+name;
   const audio={
     ambient:new Audio(asset('pc5152am_menu_old_computer.mp3')),
+    contact:new Audio(asset('pc5152h_terminal_contact_clear.wav')),
+    analog:new Audio(asset('pc5152f_analog_contact_soft.wav')),
     open:new Audio(asset('pc5152h_record_mount_clear.wav')),
-    load:new Audio(asset('pc5152h_record_mount_clear.wav')),
-    video:new Audio(asset('pc5152h_record_mount_clear.wav')),
-    radio:new Audio(asset('pc5152h_record_mount_clear.wav')),
+    load:new Audio(asset('pc5152h_frame_pop.wav')),
+    video:new Audio(asset('pc5152cf_sakuma_projector_advance.mp3')),
+    radio:new Audio(asset('pc5152v_comm_line_cue_73_74.mp3')),
     page:new Audio(asset('pc5152p_internal_projector_vhs_step.wav')),
+    scan:new Audio(asset('pc5152x_late_log_beep_195s.mp3')),
+    marker:new Audio(asset('pc5152v_field_photo_click_42s.mp3')),
+    confirm:new Audio(asset('pc5152h_frame_pop.wav')),
     boot:new Audio(asset('pc5152f_boot_access_oldpc.wav')),
     alert:new Audio(asset('pc5152f_low_denied_oldpc.wav')),
     restricted:new Audio(asset('pc5152f_low_denied_oldpc.wav')),
@@ -23,7 +28,7 @@
   };
   audio.ambient.loop=true;
   audio.ambient.volume=.088;
-  const volumes={open:.078,load:.08,video:.07,radio:.064,page:.058,boot:.06,alert:.058,restricted:.064,denied:.06};
+  const volumes={contact:.055,analog:.048,open:.078,load:.055,video:.058,radio:.052,page:.058,scan:.05,marker:.054,confirm:.05,boot:.06,alert:.058,restricted:.064,denied:.06};
   Object.entries(volumes).forEach(([name,volume])=>{audio[name].volume=volume;});
 
   let ambientStarted=false;
@@ -38,7 +43,7 @@
   function playCue(name,cooldown=160){
     if(!isOn()) return;
     const key=String(name||'');
-    if(['menu','drawer','command','marker'].includes(key)) return;
+    if(['menu','drawer','command'].includes(key)) return;
     const target=audio[key];
     if(!target) return;
     const now=performance.now();

@@ -1,4 +1,4 @@
-// Project Curse 5.15.2cv — shared archive document renderer and internal viewer.
+// Project Curse 5.22.0 — shared archive document renderer and internal scenario viewer.
 (function(){
   'use strict';
 
@@ -23,6 +23,7 @@
     '그린존':'green','화이트존':'white','옐로우존':'yellow','레드존':'red','블랙존':'black',
     'U.A.C':'uac','N.H.C':'nhc','S.I.D':'sid','F.H.C':'fhc','A.R.F':'arf','C.P.D':'cpd','S.O.N':'son','P.O.H':'poh','Ash Crew':'ashcrew',
     '우시노다교':'cult','타락교':'cult','혈교':'blood','피의 호수':'blood','리버스':'rebirth','괴이':'feral',
+    '대흑림':'feral','데드존':'black','몬수르 교회':'cult','짐승의 길':'odious','순례자':'wanderer','성위대':'cap',
     '아마리온':'amarion','레드울프':'redwolf','웨이드 밀렌':'redwolf','방랑자':'wanderer',
     'Mimic':'mimic','미믹':'mimic','Automaton':'automaton','오토마톤':'automaton','Cursed Gear':'cursed',
     'Ferals':'feral','Superiors':'superior','Unusuals':'unusual',
@@ -58,7 +59,9 @@
     const image=el('img');
     image.src=imagePath(figureData.src,embedded);
     image.alt=figureData.alt||'';
-    image.loading='lazy';
+    const isHero=className.split(/\s+/).includes('archive-doc-hero');
+    image.loading=isHero?'eager':'lazy';
+    if(isHero) image.fetchPriority='high';
     image.decoding='async';
     figure.append(image);
     if(figureData.caption) figure.append(rich('figcaption','',figureData.caption));
@@ -102,6 +105,175 @@
     target.append(transcript);
   }
 
+  function appendBranches(target,branchData,operationScenario=false){
+    const entries=branchData?.entries||[];
+    if(!entries.length) return;
+    const operation=operationScenario?window.ProjectCurseOperationState:null;
+    const visited=new Set(operation?.get?.().visited||[]);
+    const shell=el('div','archive-scenario');
+    if(operation) shell.dataset.operationPersistence='active';
+    const header=el('div','archive-scenario-head');
+    const label=el('span','',branchData.label||'INTELLIGENCE RECOVERY');
+    const progress=el('b','','0 / '+entries.length+' RECOVERED');
+    header.append(label,progress);
+    const controls=el('div','archive-scenario-branches');
+    const panels=el('div','archive-scenario-panels');
+    const complete=rich('aside','archive-scenario-complete',branchData.complete||'정보 경로 회수 완료.');
+    complete.hidden=true;
+
+    entries.forEach((entry,index)=>{
+      const id=`archive-scenario-${entry.id||index}`;
+      const button=el('button','archive-scenario-branch');
+      button.type='button';
+      button.dataset.scenarioBranch=entry.id||String(index);
+      button.dataset.scenarioIndex=String(index);
+      button.setAttribute('aria-controls',id);
+      button.setAttribute('aria-expanded','false');
+      button.append(el('small','',entry.status||`PATH ${index+1}`),rich('strong','',entry.label),rich('span','',entry.summary));
+      const panel=el('article','archive-scenario-panel');
+      panel.id=id;
+      panel.hidden=true;
+      panel.append(el('small','','RECOVERED FRAGMENT'),rich('h3','',entry.label),rich('p','',entry.reveal));
+      controls.append(button);
+      panels.append(panel);
+    });
+
+    const decisionShell=operation?el('section','archive-scenario-decision'):null;
+    const decisionGrid=operation?el('div','archive-scenario-verdicts'):null;
+    const report=operation?el('article','archive-scenario-report'):null;
+    const decisionStatus=operation?el('p','archive-scenario-decision-status','세 정보 경로를 모두 회수해야 지휘 판단을 기록할 수 있다.'):null;
+    if(operation){
+      const decisionHead=el('header','archive-scenario-decision-head');
+      decisionHead.append(el('small','','COMMAND VERDICT'),el('h3','','임시 지휘 판단'),decisionStatus);
+      Object.values(operation.decisions).forEach(decision=>{
+        const button=el('button','archive-scenario-verdict');
+        button.type='button';
+        button.dataset.scenarioVerdict=decision.id;
+        button.append(el('small','',decision.code),rich('strong','',decision.title),rich('span','',decision.consequence));
+        decisionGrid.append(button);
+      });
+      report.hidden=true;
+      const actions=el('div','archive-scenario-actions');
+      const mapButton=el('button','','작전지도에서 현재 결과 보기');
+      mapButton.type='button';
+      mapButton.dataset.scenarioOpenMap='1';
+      const resetButton=el('button','is-reset','작전 진행 초기화');
+      resetButton.type='button';
+      resetButton.dataset.scenarioReset='1';
+      actions.append(mapButton,resetButton);
+      decisionShell.append(decisionHead,decisionGrid,report,actions);
+    }
+
+    function renderReport(state){
+      if(!report) return;
+      const decision=operation.getDecision(state.verdict);
+      report.replaceChildren();
+      report.hidden=!decision;
+      if(!decision) return;
+      const header=el('header');
+      header.append(el('small','',`${decision.code} / ${decision.status}`),rich('h3','',decision.title));
+      const facts=el('dl','archive-scenario-report-facts');
+      [
+        ['회수 정보',`${state.visited.length} / ${entries.length}`],
+        ['현재 작전 단계',`${state.mapStep+1} / 6`],
+        ['판단 상태',decision.status],
+        ['최종 갱신',state.updatedAt?new Date(state.updatedAt).toLocaleString('ko-KR'):'기록 없음']
+      ].forEach(([term,value])=>{
+        const row=el('div');row.append(el('dt','',term),el('dd','',value));facts.append(row);
+      });
+      const summary=rich('p','archive-scenario-report-summary',decision.summary);
+      const consequence=el('div','archive-scenario-report-consequence');
+      consequence.append(el('b','','예상 영향'),rich('p','',decision.consequence));
+      const directive=el('div','archive-scenario-report-directive');
+      directive.append(el('b','','후속 지침'),rich('p','',decision.directive));
+      report.append(header,facts,summary,consequence,directive);
+    }
+
+    function sync(){
+      const state=operation?.get?.();
+      if(state){visited.clear();state.visited.forEach(id=>visited.add(id));}
+      Array.from(controls.children).forEach((control,index)=>{
+        const id=entries[index].id||String(index);
+        control.classList.toggle('is-recovered',visited.has(id)||visited.has(index));
+      });
+      progress.textContent=`${visited.size} / ${entries.length} RECOVERED`;
+      const ready=visited.size===entries.length;
+      complete.hidden=!ready;
+      complete.classList.toggle('is-visible',ready);
+      if(operation){
+        decisionStatus.textContent=state.verdict
+          ? `${operation.getDecision(state.verdict).status} / 저장된 판단을 다시 선택해 변경할 수 있다.`
+          : ready?'모든 정보가 복구됐다. 임시 지휘 판단을 선택하라.':'세 정보 경로를 모두 회수해야 지휘 판단을 기록할 수 있다.';
+        Array.from(decisionGrid.children).forEach(button=>{
+          button.disabled=!ready;
+          button.classList.toggle('is-selected',button.dataset.scenarioVerdict===state.verdict);
+          button.setAttribute('aria-pressed',button.dataset.scenarioVerdict===state.verdict?'true':'false');
+        });
+        renderReport(state);
+      }
+    }
+
+    controls.addEventListener('click',event=>{
+      const button=event.target.closest?.('[data-scenario-branch]');
+      if(!button) return;
+      const index=Number(button.dataset.scenarioIndex);
+      const panel=panels.children[index];
+      const willOpen=panel.hidden;
+      Array.from(controls.children).forEach(control=>{control.classList.remove('is-active');control.setAttribute('aria-expanded','false');});
+      Array.from(panels.children).forEach(item=>{item.hidden=true;});
+      if(willOpen){
+        button.classList.add('is-active','is-recovered');
+        button.setAttribute('aria-expanded','true');
+        panel.hidden=false;
+        const id=entries[index].id||String(index);
+        const wasComplete=visited.size===entries.length;
+        visited.add(id);
+        operation?.visitBranch?.(id);
+        window.ProjectCurseAudioControl?.play?.('scenario.reveal');
+        sync();
+        if(!wasComplete&&visited.size===entries.length) window.ProjectCurseAudioControl?.play?.('scenario.complete');
+      }
+    });
+
+    decisionShell?.addEventListener('click',event=>{
+      const verdict=event.target.closest?.('[data-scenario-verdict]');
+      if(verdict&&!verdict.disabled){
+        operation.chooseVerdict(verdict.dataset.scenarioVerdict);
+        window.ProjectCurseAudioControl?.play?.('scenario.complete');
+        sync();
+        report?.scrollIntoView({block:'nearest',behavior:'smooth'});
+        return;
+      }
+      const map=event.target.closest?.('[data-scenario-open-map]');
+      if(map){
+        close({restoreFocus:false});
+        window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'}).then(()=>window.ProjectCurseMapRoomRuntime?.showOperation?.('op-southern-coup'));
+        return;
+      }
+      const reset=event.target.closest?.('[data-scenario-reset]');
+      if(!reset) return;
+      if(reset.dataset.confirmReset!=='1'){
+        reset.dataset.confirmReset='1';
+        reset.textContent='한 번 더 눌러 초기화 확인';
+        window.ProjectCurseAudioControl?.play?.('system.denied');
+        window.setTimeout(()=>{if(reset.isConnected){delete reset.dataset.confirmReset;reset.textContent='작전 진행 초기화';}},4200);
+        return;
+      }
+      operation.reset();
+      Array.from(panels.children).forEach(panel=>{panel.hidden=true;});
+      Array.from(controls.children).forEach(control=>{control.classList.remove('is-active','is-recovered');control.setAttribute('aria-expanded','false');});
+      delete reset.dataset.confirmReset;
+      reset.textContent='작전 진행 초기화';
+      window.ProjectCurseAudioControl?.play?.('system.alert');
+      sync();
+    });
+
+    shell.append(header,controls,panels,complete);
+    if(decisionShell) shell.append(decisionShell);
+    target.append(shell);
+    sync();
+  }
+
   function closeControl(embedded,label){
     if(embedded){
       const button=el('button','archive-doc-back',label);
@@ -123,6 +295,7 @@
       event.preventDefault();
       const section=body.querySelector(`[data-document-section="${control.dataset.sectionIndex}"]`);
       section?.scrollIntoView({block:'start',behavior:'smooth'});
+      window.ProjectCurseAudioControl?.play?.('record.page');
     });
     if(!('IntersectionObserver' in window)) return;
     sectionObserver=new IntersectionObserver(entries=>{
@@ -145,6 +318,13 @@
 
     const header=el('header','archive-doc-header');
     header.append(el('div','archive-doc-kicker','U.A.C RECOVERED ARCHIVE'),el('code','archive-doc-code',doc.code),el('h1','',doc.title),rich('p','archive-doc-summary',doc.summary));
+
+    const telemetry=doc.telemetry?.length?el('div','archive-region-telemetry'):null;
+    doc.telemetry?.forEach(([label,value])=>{
+      const item=el('span');
+      item.append(el('small','',label),rich('b','',value));
+      telemetry.append(item);
+    });
 
     const meta=el('dl','archive-doc-meta');
     [['문서 일자',doc.date],['기록 주체',doc.owner],['열람 상태',doc.classification]].forEach(([term,value])=>{
@@ -175,6 +355,7 @@
       appendTranscript(part,section.transcript);
       appendTable(part,section.table);
       appendItems(part,section.items);
+      appendBranches(part,section.branches,doc.sourceId==='Operation_Broken_Crown');
       (section.groups||[]).forEach(group=>{
         const block=el('div','archive-doc-group');
         block.append(rich('h3','',group.title));
@@ -195,7 +376,9 @@
     footer.append(el('span','',`END OF RECORD / ${doc.code}`),closeControl(embedded,'기록 파일 색인으로 돌아가기'));
     const readingGrid=el('div','archive-doc-reading-grid');
     readingGrid.append(toc,body);
-    root.append(top,header,meta);
+    root.append(top,header);
+    if(telemetry) root.append(telemetry);
+    root.append(meta);
     appendFigure(root,doc.hero,embedded,'archive-doc-hero');
     root.append(readingGrid,footer);
     bindToc(toc,body,embedded);
@@ -215,6 +398,7 @@
     const legacyViewer=document.getElementById('archiveRecordViewer');
     if(legacyViewer) legacyViewer.hidden=true;
     host.dataset.presentation=doc.presentation||'document';
+    host.dataset.documentTheme=doc.theme||'default';
     host.hidden=false;
     host.classList.remove('is-entering');
     render(root,doc,{embedded:true});
@@ -224,7 +408,15 @@
     document.body.dataset.internalDocument=id;
     document.title=`${doc.title} | U.A.C 기록보관소`;
     window.ProjectCurseAudio?.setContext?.('document');
-    window.ProjectCurseAudio?.playCue?.('open',220);
+    window.ProjectCurseAudioControl?.setProfile?.(doc.theme||doc.presentation||'document');
+    window.ProjectCurseAudioControl?.play?.('record.mount');
+    const regionalCue={
+      'great-black-forest':'region.forest',
+      'dead-zone':'region.deadzone',
+      guide:'document.guide',
+      scenario:'scenario.arm'
+    }[doc.theme]||({guide:'document.guide',scenario:'scenario.arm'}[doc.presentation]);
+    if(regionalCue) window.setTimeout(()=>{if(currentId===id) window.ProjectCurseAudioControl?.play?.(regionalCue);},280);
     const scrollRoot=document.querySelector('.uac-shell-content');
     if(scrollRoot){scrollRoot.scrollTop=0;scrollRoot.scrollLeft=0;}
     root.querySelector('[data-internal-document-close]')?.focus({preventScroll:true});
@@ -239,15 +431,28 @@
     sectionObserver=null;
     host.hidden=true;
     host.classList.remove('is-entering');
+    delete host.dataset.documentTheme;
     root?.replaceChildren();
     document.getElementById('archiveListWrap')?.classList.remove('is-hidden');
     document.body.classList.remove('pc-internal-document-open');
     delete document.body.dataset.internalDocument;
     document.title=originalTitle;
     window.ProjectCurseAudio?.setContext?.('shell');
+    window.ProjectCurseAudioControl?.setProfile?.(window.ProjectCurseShell?.getRoute?.()||'archive-entry');
     const scrollRoot=document.querySelector('.uac-shell-content');
     if(scrollRoot) scrollRoot.scrollTop=0;
-    if(restoreFocus&&currentTrigger instanceof HTMLElement&&document.contains(currentTrigger)) currentTrigger.focus({preventScroll:true});
+    if(restoreFocus){
+      const triggerVisible=currentTrigger instanceof HTMLElement
+        &&document.contains(currentTrigger)
+        &&currentTrigger.getClientRects().length>0;
+      if(triggerVisible) currentTrigger.focus({preventScroll:true});
+      else{
+        const matchingIndexControl=Array.from(document.querySelectorAll('#archiveListWrap [data-pc-archive-open]'))
+          .find(control=>control.dataset.pcArchiveOpen===currentId);
+        const fallback=matchingIndexControl||document.querySelector('#archiveListWrap [data-pc-archive-open]');
+        if(fallback instanceof HTMLElement) fallback.focus({preventScroll:true});
+      }
+    }
     currentId=null;
     currentTrigger=null;
     return true;
@@ -284,6 +489,7 @@
     if(doc){
       document.title=`${doc.title} | U.A.C 기록보관소`;
       document.body.dataset.presentation=doc.presentation||'document';
+      document.body.dataset.documentTheme=doc.theme||'default';
     }
     render(standaloneRoot,doc,{embedded:false});
   }

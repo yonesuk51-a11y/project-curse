@@ -1,15 +1,23 @@
 # Future Patch Pointer
 
-Current baseline: `5.15.2cf Archive Consolidation and Screen Presentation Pass`
+Current baseline: `5.22.0 Regional Drilldown`
 
-Next planned pass:
-`5.15.2cg Relation Graph and Geographic World Map Pass`
+Completed in this baseline:
+`Regional Drilldown / Dynamic Site Outcomes`
 
 Primary scope:
 
-- U.A.C 중심 관계도는 유지하되 확정·비공식·임시·적대 관계를 선의 형태와 밀도로 구분
-- 노드 겹침·과도한 흐림·정보 패널 중복을 정리
-- 실제 지리 기반의 세계지도 위에 권역, 사건, 봉쇄선, 신호 상태를 분리해 표시
-- 지역 선택 시 대표 기록철로만 이동하도록 연결
-- `종교`와 `불멸을 향해` 잠금 범위 유지
+- 세계 → 권역 → 세부 구역 → 사건 지점의 4단계 관제 탐색 추가
+- 대흑림 3개, 데드존 3개 세부 지도와 38개 사건·시설·이상 지점 추가
+- 세부 지점에서 관련 기록·사건 연표·작전지도로 교차 이동
+- `OP-BROKEN-CROWN` 네 가지 판단을 남방 해안과 데드존 교환점 상태에 동기화
+- 키보드 선택, 모바일 단일 열, 지도별 독립 지형·경로·경고 설계
+- 기존 작전 저장·음향 프로필·공개 기록 13개·보호 해시 유지
 
+Next planned pass:
+
+- 선택 지점의 인접 경로와 위험 반경을 단계적으로 강조하는 지도 필터
+- 대흑림·데드존 신규 사건 기록과 순례 시나리오 확장
+- 신규 PNG의 WebP 파생본과 모바일 해상도 최적화
+- 실제 원본 이미지가 추가로 제공되면 RECONSTRUCTED 자산과 나란히 비교하고 교체 여부 결정
+- 공개 배포 전 음원·영상 라이선스 최종 확인

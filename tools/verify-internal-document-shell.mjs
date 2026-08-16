@@ -20,6 +20,9 @@ const index=read('index.html');
 const shell=read('assets/js/core/app-shell.js');
 const shellCss=read('assets/css/app-shell.css');
 const audio=read('assets/js/core/base-runtime.js');
+const audioManifest=read('assets/js/data/audio-manifest.js');
+const audioController=read('assets/js/core/audio-controller.js');
+const operationState=read('assets/js/core/operation-state.js');
 const faction=read('assets/js/pages/faction-analysis.js');
 const archive=read('assets/js/pages/archive-consolidation.js');
 const documentViewer=read('assets/js/pages/archive-document.js');
@@ -27,25 +30,27 @@ const documentCss=read('assets/css/archive-document.css');
 const manifest=read('assets/js/data/site-manifest.js');
 const registry=read('assets/js/data/archive-registry.js');
 const documentData=read('assets/js/data/archive-document-data.js');
+const fieldDossierData=read('assets/js/data/field-dossier-data.js');
 const immortalityStoryboard=read('assets/js/data/immortality-storyboard.js');
+const mapRoomRuntime=read('assets/js/pages/map-room.js');
 
 const context={window:{}};
 vm.createContext(context);
 for(const file of [
-  'assets/js/data/site-manifest.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
   'assets/js/data/immortality-storyboard.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js',
   'assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js'
 ]) vm.runInContext(read(file),context,{filename:file});
 
-check('version:manifest',context.window.ProjectCurseStructure?.version==='5.15.2cv',context.window.ProjectCurseStructure?.version);
-check('version:archive',context.window.ProjectCurseArchive?.version==='5.15.2cv',context.window.ProjectCurseArchive?.version);
-check('version:documents',context.window.ProjectCurseArchiveDocuments?.version==='5.15.2cv',context.window.ProjectCurseArchiveDocuments?.version);
+check('version:manifest',context.window.ProjectCurseStructure?.version==='5.22.0',context.window.ProjectCurseStructure?.version);
+check('version:archive',context.window.ProjectCurseArchive?.version==='5.22.0',context.window.ProjectCurseArchive?.version);
+check('version:documents',context.window.ProjectCurseArchiveDocuments?.version==='5.22.0',context.window.ProjectCurseArchiveDocuments?.version);
 check('shell:single-static-home',count(index,'class="uac-shell-home"')===1&&index.includes('data-uac-route="terminal-home"'));
 check('shell:no-page-injection',!shell.includes('ensureReturnControl')&&!shell.includes('uac-return-terminal'));
 check('shell:home-owned-outside-pages',index.indexOf('class="uac-shell-home"')<index.indexOf('<main class="uac-shell-content"'));
 check('shell:route-events',shell.includes('projectcurse:route-will-change')&&shell.includes('projectcurse:screen-committed'));
-check('shell:decrypt-effect',shell.includes('uac-screen-entering')&&shellCss.includes('@keyframes uac-screen-decrypt'));
+check('shell:decrypt-effect',read('assets/js/core/transition-controller.js').includes('pc-screen-entering')&&read('assets/css/transition-system.css').includes('@keyframes pc-screen-enter'));
 check('shell:button-feedback',shellCss.includes('@keyframes uac-control-scan')&&shellCss.includes('@keyframes uac-control-pulse'));
 
 check('faction:no-detail-route',!faction.includes('#faction-info/')&&!faction.includes('pushState')&&!faction.includes('replaceState'));
@@ -53,7 +58,7 @@ check('faction:no-history-listeners',!faction.includes('hashchange')&&!faction.i
 check('faction:internal-state',faction.includes('let selected=null')&&faction.includes('renderIndex()')&&faction.includes('renderDossier'));
 
 const documents=context.window.ProjectCurseArchive?.publicRecords?.filter(record=>record.format==='document')||[];
-check('archive:five-documents',documents.length===5,documents.length);
+check('archive:nine-documents',documents.length===9,documents.length);
 check('archive:no-document-hrefs',documents.every(record=>!record.href));
 check('archive:no-page-navigation',!archive.includes('location.href')&&!archive.includes('window.location'));
 check('archive:internal-open',archive.includes('ProjectCurseInternalDocumentViewer?.open'));
@@ -64,16 +69,29 @@ check('document:viewer-api',documentViewer.includes('ProjectCurseInternalDocumen
 check('document:route-free-toc',documentViewer.includes("el('button','archive-doc-toc-link'")&&!documentViewer.includes('href="#section-')&&!documentViewer.includes("`#section-${"));
 check('document:embedded-assets',documentViewer.includes("replace(/^(?:\\.\\.\\/)+/,'')"));
 check('document:css-scoped',documentCss.includes('body[data-archive-document]')&&!documentCss.includes('\nbody{'));
-check('document:root-loaded',index.includes('assets/css/archive-document.css?v=5.15.2cv')&&index.includes('assets/js/pages/archive-document.js?v=5.15.2cv'));
+check('document:root-loaded',index.includes('assets/css/archive-document.css?v=5.22.0')&&index.includes('assets/js/pages/archive-document.js?v=5.22.0')&&index.includes('assets/js/data/field-dossier-data.js?v=5.22.0'));
 
 check('audio:persistent-context',audio.includes("setContext('document')")||documentViewer.includes("setContext?.('document')"));
 check('audio:no-ambient-rewind',!audio.includes('audio.ambient.currentTime=0'));
 check('audio:visibility-resume',audio.includes("else if(ambientAllowed&&audioContext!=='cinematic') startAmbient()"));
 check('audio:cinematic-compatibility',audio.includes('stopMenuAmbient')&&audio.includes('resumeMenuAmbient')&&audio.includes('syncAudioState'));
+check('audio:semantic-profile-manifest',audioManifest.includes("version:'2.0.0'")&&audioManifest.includes("'great-black-forest'")&&audioManifest.includes("'dead-zone'")&&audioManifest.includes("'scenario.arm'"));
+check('audio:ducking-and-bus-limit',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes('activeByBus'));
+check('audio:route-profile-sync',audioController.includes('projectcurse:screen-committed')&&audioController.includes('setProfile'));
+check('audio:regional-document-profile',documentViewer.includes('setProfile?.(doc.theme')&&documentViewer.includes("'great-black-forest':'region.forest'")&&documentViewer.includes("'dead-zone':'region.deadzone'"));
+check('operation:persistent-owner',operationState.includes('ProjectCurseOperationState')&&operationState.includes('localStorage.setItem')&&operationState.includes('visitBranch')&&operationState.includes('chooseVerdict'));
+check('operation:four-outcomes',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`)));
+check('operation:document-report',documentViewer.includes('archive-scenario-report')&&documentViewer.includes('data-scenario-verdict')&&documentViewer.includes('data-scenario-reset'));
+check('operation:root-loaded',index.includes('assets/js/core/operation-state.js?v=5.22.0')&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
+const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
+check('map:drilldown-root-loaded',index.includes('assets/js/data/regional-drilldown-data.js?v=5.22.0')&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
+check('map:six-drilldowns',drilldowns.length===6&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38,`${drilldowns.length} districts`);
+check('map:four-level-navigation',mapRoomRuntime.includes('data-map-open-detail')&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('pc-map-breadcrumb'));
+check('map:verdict-site-sync',mapRoomRuntime.includes('resolveDetailSite')&&drilldowns.filter(detail=>detail.sites.some(site=>site.verdictStates)).length>=2);
 
 const cinematicIds=context.window.ProjectCurseCinematicRegistry?.ids?.()||[];
 check('cinematic:four-records',cinematicIds.join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicIds.join('|'));
-check('cinematic:archive-starts-registry',archive.includes("record?.format==='video'")&&archive.includes('ProjectCurseCinematicRegistry?.get?.(id)'));
+check('cinematic:archive-starts-registry',archive.includes("record.format==='video'")&&archive.includes('ProjectCurseCinematicRegistry?.get?.(id)'));
 const cinematicRuntime=read('assets/js/core/record-cinematic-runtime.js');
 const cinematicCss=read('assets/css/record-cinematic.css');
 const cinematicMobileCss=read('assets/css/record-cinematic-mobile.css');
@@ -90,7 +108,7 @@ check('cinematic:no-photo-drift',!cinematicCss.includes('pcCinematicDrift'));
 check('cinematic:natural-ratio-photo-fit',cinematicRuntime.includes('image.naturalWidth/image.naturalHeight')&&cinematicRuntime.includes('--pc-media-width')&&cinematicCss.includes('.pc-cinematic-frame-fitted'));
 check('cinematic:portrait-height-contained',cinematicRuntime.includes("(window.innerHeight||720)*.56")&&cinematicCss.includes('max-height:56dvh!important'));
 check('mobile:viewport-safe-area',index.includes('viewport-fit=cover')&&cinematicMobileCss.includes('env(safe-area-inset-bottom)'));
-check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.15.2dh')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
+check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.22.0')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
 check('mobile:phone-stage-scroll-safe',cinematicMobileCss.includes('@media (max-width:600px)')&&cinematicMobileCss.includes('overflow-y:auto!important')&&cinematicMobileCss.includes('overscroll-behavior:contain!important'));
 check('mobile:portrait-video-contained',cinematicMobileCss.includes('.pc5152h-cult-sequence.intro-mode .pc5152h-seq-video')&&cinematicMobileCss.includes('object-fit:contain!important'));
 check('mobile:touch-controls',cinematicMobileCss.includes('grid-template-columns:repeat(4,minmax(0,1fr))')&&cinematicMobileCss.includes('min-height:44px!important'));
@@ -108,7 +126,7 @@ check('audio:no-cinematic-bus-installer',!cinematicRuntime.includes('installClea
 check('audio:sequence-silence-at-entry',count(cinematicRuntime,'silenceMenuAmbientDuringSequence();')>=2);
 check('cinematic:single-chapter-boundary-rule',cinematicRuntime.includes("current.group!==next.group&&getSequenceConfig()?.transitionVideo")&&!cinematicRuntime.includes("current.group==='system' && next.group==='cult'"));
 const immortalityPages=context.window.ProjectCurseImmortalityStoryboard||[];
-check('immortality:canonical-storyboard-loaded',index.includes('assets/js/data/immortality-storyboard.js?v=5.15.2df')&&immortalityPages.length===24,immortalityPages.length);
+check('immortality:canonical-storyboard-loaded',index.includes('assets/js/data/immortality-storyboard.js?v=5.22.0')&&immortalityPages.length===24,immortalityPages.length);
 check('immortality:automatic-sequential-reveal',cinematicRuntime.includes('scheduleNextSequenceLine(Number(page.firstLineDelay')&&cinematicRuntime.includes('scheduleNextSequenceLine(nextDelay)'));
 check('immortality:initial-content-hidden',cinematicCss.includes('Immortality starts from a genuinely blank record face')&&cinematicCss.includes('visibility:hidden!important')&&cinematicCss.includes('.pc5152k-seq-line.visible'));
 check('immortality:intro-not-skipped',cinematicRuntime.includes('video.muted=true')&&cinematicRuntime.includes('video.load()')&&!cinematicRuntime.includes('Math.min(Number(cfg.introFallback||10450),4800)'));
@@ -144,6 +162,10 @@ for(const ref of documentData.matchAll(/src:'(\.\.\/\.\.\/assets\/[^']+)'/g)){
   const relative=ref[1].replace(/^(?:\.\.\/)+/,'');
   check(`asset:${relative}`,existsSync(ROOT+relative));
 }
+for(const ref of fieldDossierData.matchAll(/src:'(\.\.\/\.\.\/assets\/[^']+)'/g)){
+  const relative=ref[1].replace(/^(?:\.\.\/)+/,'');
+  check(`asset:${relative}`,existsSync(ROOT+relative));
+}
 
 const locked={
   Cults_871104:{inline:'aefa15d45fd74b868223144455da4dae59b5545f61fd5687a3132d8cf27c3429',standalone:'71b052533c33f3c4d9838a55633be82bb64030d4028be2304a48154fa049a740'},
@@ -159,9 +181,9 @@ for(const [id,expected] of Object.entries(locked)){
 check('cache:core-busters',[
   'assets/css/app-shell.css','assets/css/archive-document.css','assets/js/core/app-shell.js','assets/js/core/base-runtime.js',
   'assets/js/pages/archive-document.js','assets/js/pages/archive-consolidation.js','assets/js/pages/faction-analysis.js'
-].every(file=>index.includes(`${file}?v=5.15.2cv`)));
-check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.15.2df')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.15.2df'));
-check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.15.2dh'));
+].every(file=>index.includes(`${file}?v=5.22.0`)));
+check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.22.0')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.22.0'));
+check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.22.0'));
 check('manifest:viewer-owner',manifest.includes("archiveDocumentViewer:'assets/js/pages/archive-document.js'"));
 check('registry:no-href-field',!registry.includes("href:'docs/"));
 

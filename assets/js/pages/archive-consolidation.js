@@ -1,4 +1,4 @@
-// Project Curse 5.16.1 — single-shell archive index owner
+// Project Curse 5.22.0 — single-shell archive index owner
 (function(){
   'use strict';
   const archive=window.ProjectCurseArchive;
@@ -103,11 +103,24 @@
     const ids=rows.map(row=>row.dataset.pcArchiveOpen).join('|');
     return {
       name:'archiveIndex',
-      patch:'5.16.1',
+      patch:'5.22.0',
       ok:ids===archive.publicRecords.map(record=>record.id).join('|'),
       records:rows.length,
       issues:ids===archive.publicRecords.map(record=>record.id).join('|')?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]
     };
+  }
+
+  function openRecord(id,trigger){
+    const record=archive.publicRecords.find(item=>item.id===id);
+    if(!record) return false;
+    normalize();
+    if(record.format==='video'&&window.ProjectCurseCinematicRegistry?.get?.(id)&&typeof window.ProjectCurseRecordCinematic?.start==='function'){
+      return window.ProjectCurseRecordCinematic.start(id)!==false;
+    }
+    if(record.format==='document') return window.ProjectCurseInternalDocumentViewer?.open?.(id,trigger||null)!==false;
+    const opened=typeof window.ProjectCurseShowInternalRecord==='function'?window.ProjectCurseShowInternalRecord(id):false;
+    if(opened===false) return openOriginal(id)!==false;
+    return true;
   }
 
   ready(()=>{
@@ -122,19 +135,7 @@
       if(open){
         event.preventDefault();
         event.stopImmediatePropagation();
-        const id=open.dataset.pcArchiveOpen;
-        const record=archive.publicRecords.find(item=>item.id===id);
-        if(record?.format==='video'&&window.ProjectCurseCinematicRegistry?.get?.(id)&&typeof window.ProjectCurseRecordCinematic?.start==='function'){
-          const started=window.ProjectCurseRecordCinematic.start(id);
-          if(started!==false) return;
-        }
-        if(record?.format==='document'){
-          const opened=window.ProjectCurseInternalDocumentViewer?.open?.(id,open);
-          if(opened===false) window.ProjectCurseAudio?.playCue?.('denied',300);
-          return;
-        }
-        const opened=typeof window.ProjectCurseShowInternalRecord==='function'?window.ProjectCurseShowInternalRecord(id):false;
-        if(opened===false) openOriginal(id);
+        if(openRecord(open.dataset.pcArchiveOpen,open)===false) window.ProjectCurseAudio?.playCue?.('denied',300);
         return;
       }
       const back=event.target.closest?.('#archiveRecordViewer .record-back');
@@ -146,6 +147,6 @@
       }
     },true);
     window.ProjectCurseRuntimeModules=window.ProjectCurseRuntimeModules||{};
-    window.ProjectCurseRuntimeModules.archiveIndex={owner:'assets/js/pages/archive-consolidation.js',normalize,openOriginal,check};
+    window.ProjectCurseRuntimeModules.archiveIndex={owner:'assets/js/pages/archive-consolidation.js',normalize,open:openRecord,openOriginal,check};
   });
 })();

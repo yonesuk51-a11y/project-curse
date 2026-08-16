@@ -1,4 +1,4 @@
-// Project Curse 5.16.1 — channel identity and transition presets.
+// Project Curse 5.22.0 — channel identity and transition presets.
 (function(root){
   'use strict';
 

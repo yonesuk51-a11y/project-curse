@@ -1,3 +1,4 @@
+// Project Curse 5.22.0 — chronology view with shared incident crosslinks.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
@@ -189,6 +190,7 @@
       .map((p) => p.textContent.trim())
       .filter(Boolean)
   }));
+  const incidentNetwork = window.ProjectCurseIncidentNetwork;
 
   const head = root.querySelector('.pc-world-history-head');
   const range = root.querySelector('.pc-world-history-range');
@@ -214,7 +216,10 @@
     arrow.setAttribute('aria-hidden', 'true');
 
     button.append(time, title, summary, arrow);
-    button.addEventListener('click', () => openRecord(index, 'push'));
+    button.addEventListener('click', () => {
+      window.ProjectCurseAudioControl?.play?.('history.open');
+      openRecord(index, 'push');
+    });
     indexView.appendChild(button);
   });
 
@@ -230,6 +235,9 @@
       <p data-history-record-summary></p>
     </header>
     <div class="pc-world-history-detail-body" data-history-record-body></div>
+    <section class="pc-world-history-links" data-history-record-links hidden>
+      <b>CONNECTED INTELLIGENCE</b><div></div>
+    </section>
     <nav class="pc-world-history-detail-nav" aria-label="사건 기록 이동">
       <button type="button" data-history-prev>← 이전 사건</button>
       <button type="button" data-history-index>연표로 돌아가기</button>
@@ -281,6 +289,32 @@
       body.appendChild(p);
     });
 
+    const linkedIncidents=incidentNetwork?.incidentList?.filter(item=>item.history===record.id)||[];
+    const linkPanel=detailView.querySelector('[data-history-record-links]');
+    const linkHost=linkPanel?.querySelector('div');
+    linkHost?.replaceChildren();
+    if(linkedIncidents.length&&linkPanel&&linkHost){
+      const addLink=(label,dataName,value)=>{
+        const button=document.createElement('button');
+        button.type='button';
+        button.textContent=label;
+        button.dataset[dataName]=value;
+        linkHost.appendChild(button);
+      };
+      linkedIncidents.forEach(incident=>{
+        addLink(`${incident.title} 위치`,'historyMapIncident',incident.id);
+        if(incident.operation) addLink(`${incident.title} 작전`,'historyMapOperation',incident.operation);
+      });
+      [...new Set(linkedIncidents.flatMap(incident=>incident.factions))]
+        .filter(key=>window.ProjectCurseCanon?.factions?.[key]).slice(0,4)
+        .forEach(key=>addLink(`${window.ProjectCurseCanon.factions[key].name} 분석`,'historyFaction',key));
+      [...new Set(linkedIncidents.flatMap(incident=>incident.records))].slice(0,4)
+        .forEach(id=>addLink(`${id} 기록`,'historyArchive',id));
+      linkPanel.hidden=false;
+    }else if(linkPanel){
+      linkPanel.hidden=true;
+    }
+
     const previous = detailView.querySelector('[data-history-prev]');
     const next = detailView.querySelector('[data-history-next]');
     previous.disabled = index === 0;
@@ -304,14 +338,33 @@
   }
 
   detailView.querySelector('.pc-world-history-back')
-    .addEventListener('click', () => returnToIndex(true));
+    .addEventListener('click', () => {window.ProjectCurseAudioControl?.play?.('history.back');returnToIndex(true);});
   detailView.querySelector('[data-history-index]')
-    .addEventListener('click', () => returnToIndex(true));
+    .addEventListener('click', () => {window.ProjectCurseAudioControl?.play?.('history.back');returnToIndex(true);});
   detailView.querySelector('[data-history-prev]').addEventListener('click', () => {
-    if (activeIndex > 0) openRecord(activeIndex - 1, 'replace');
+    if (activeIndex > 0){window.ProjectCurseAudioControl?.play?.('history.step');openRecord(activeIndex - 1, 'replace');}
   });
   detailView.querySelector('[data-history-next]').addEventListener('click', () => {
-    if (activeIndex < records.length - 1) openRecord(activeIndex + 1, 'replace');
+    if (activeIndex < records.length - 1){window.ProjectCurseAudioControl?.play?.('history.step');openRecord(activeIndex + 1, 'replace');}
+  });
+
+  detailView.querySelector('[data-history-record-links]').addEventListener('click',async(event)=>{
+    const button=event.target.closest('button');
+    if(!button) return;
+    window.ProjectCurseAudioControl?.play?.('incident.link');
+    if(button.dataset.historyMapIncident){
+      await window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'});
+      window.ProjectCurseMapRoomRuntime?.showIncident?.(button.dataset.historyMapIncident);
+    }else if(button.dataset.historyMapOperation){
+      await window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'});
+      window.ProjectCurseMapRoomRuntime?.showOperation?.(button.dataset.historyMapOperation);
+    }else if(button.dataset.historyFaction){
+      await window.ProjectCurseShell?.navigate?.('faction-info',{replace:false,historyMode:'push'});
+      window.ProjectCurseFactionAnalysisRuntime?.open?.(button.dataset.historyFaction);
+    }else if(button.dataset.historyArchive){
+      await window.ProjectCurseShell?.navigate?.('archive-entry',{replace:false,historyMode:'push'});
+      window.ProjectCurseRuntimeModules?.archiveIndex?.open?.(button.dataset.historyArchive);
+    }
   });
 
   window.addEventListener('popstate', (event) => {
@@ -331,4 +384,11 @@
   );
   if (restoredIndex >= 0) openRecord(restoredIndex, false);
   else showIndex();
+
+  window.ProjectCurseWorldHistoryRuntime=Object.freeze({
+    open(id){const index=records.findIndex(record=>record.id===id);if(index<0) return false;openRecord(index,'replace');return true;},
+    index:showIndex,
+    getActive:()=>records[activeIndex]?.id||null,
+    owner:'assets/js/pages/world-history.js'
+  });
 })();
