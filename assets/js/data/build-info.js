@@ -1,4 +1,4 @@
-// Project Curse 5.23.0 — single source of truth for the terminal build.
+// Project Curse 5.23.1 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.23.0',
-    codename:'Route Focus & Threat Overlay',
-    schema:'project-curse-v13',
+    version:'5.23.1',
+    codename:'Unlit Fortress Pilgrimage',
+    schema:'project-curse-v14',
     released:'2026-08-16',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

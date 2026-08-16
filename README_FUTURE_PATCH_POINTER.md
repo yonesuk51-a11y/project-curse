@@ -1,9 +1,9 @@
 # Future Patch Pointer
 
-Current baseline: `5.23.0 Route Focus & Threat Overlay`
+Current baseline: `5.23.1 Unlit Fortress Pilgrimage`
 
 Completed in this baseline:
-`Route Focus / Threat Layers / Record Audio Isolation`
+`Readable Boot / Unlit Fortress Pilgrimage / Persistent Field Outcome`
 
 Primary scope:
 
@@ -15,12 +15,14 @@ Primary scope:
 - 영상 기록 전용 BGM·라디오 레이어의 화면 이탈 후 잔류 차단
 - 첫 기동 4.4초·세션 복원 2.3초·기록 복귀 1.2초의 가독성 있는 로딩 타이밍
 - 빌드별 세션 키로 업데이트 뒤 전체 기동을 한 번 다시 표시
+- 불빛 없는 성채 6단계 직접 진행형 순례와 세 가지 결말
+- 공포·오염·통신·규칙 위반 상태의 로컬 저장과 지도·홈 결과 동기화
 - 기존 세부 지도 6개·사건 지점 38개·작전 판단 연동·보호 해시 유지
 
 Next planned pass:
 
 - 대흑림·데드존 신규 사건 기록과 순례 시나리오 확장
-- `불빛 없는 성채` 지도 기반 첫 순례 시나리오 제작
+- 데드존 서부 귀환 회랑을 사용하는 두 번째 순례 시나리오 제작
 - 신규 PNG의 WebP 파생본과 모바일 해상도 최적화
 - 실제 원본 이미지가 추가로 제공되면 RECONSTRUCTED 자산과 나란히 비교하고 교체 여부 결정
 - 공개 배포 전 음원·영상 라이선스 최종 확인

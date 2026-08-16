@@ -1,4 +1,4 @@
-// Project Curse 5.23.0 — route focus, threat overlays, regional drilldown, and operation trace room.
+// Project Curse 5.23.1 — route focus, threat overlays, regional drilldown, and operation trace room.
 (function(root){
   'use strict';
 
@@ -27,6 +27,7 @@
     const data=root.ProjectCurseMapRoom;
     const network=root.ProjectCurseIncidentNetwork;
     const operationStore=root.ProjectCurseOperationState;
+    const pilgrimageStore=root.ProjectCursePilgrimageState;
     if(!mount||!data) return;
 
     const state={
@@ -48,6 +49,12 @@
     const incidentById=id=>network?.getIncident?.(id)||null;
     const polyline=points=>(points||[]).map(point=>point.join(',')).join(' ');
     const riskLabels={critical:'치명',high:'높음',medium:'주의',low:'낮음'};
+    const pilgrimageOutcome=()=>pilgrimageStore?.getSummary?.()||null;
+    const resolvePilgrimageTarget=item=>{
+      if(!item||!['unlit-fortress','gbf-unlit-fortress'].includes(item.id)) return item;
+      const ending=pilgrimageOutcome()?.endingData;
+      return ending?{...item,status:ending.status,tone:ending.tone}:item;
+    };
     const detailForMarker=marker=>{
       const map={
         'gbf-core':'gbf-inner-refuges','monsur-church':'gbf-western-marches','unlit-fortress':'gbf-western-marches','black-river':'gbf-western-marches','southern-coast':'gbf-coastal-belt',
@@ -92,13 +99,15 @@
     }
 
     function markerSymbol(marker){
+      marker=resolvePilgrimageTarget(marker);
       const selected=state.marker===marker.id?' is-selected':'';
+      const outcome=marker.tone?` is-${escapeHTML(marker.tone)}`:'';
       const title=escapeHTML(marker.title);
       const meta=escapeHTML(marker.meta);
       const labelX=Number.isFinite(marker.labelX)?marker.labelX:13;
       const labelAnchor=marker.labelAnchor==='end'?'end':'start';
       return `
-        <g class="pc-map-marker pc-map-marker--${escapeHTML(marker.type)}${selected}" data-map-marker="${escapeHTML(marker.id)}" role="button" tabindex="0" aria-label="${title}: ${meta}" transform="translate(${marker.x} ${marker.y})">
+        <g class="pc-map-marker pc-map-marker--${escapeHTML(marker.type)}${outcome}${selected}" data-map-marker="${escapeHTML(marker.id)}" role="button" tabindex="0" aria-label="${title}: ${meta}" transform="translate(${marker.x} ${marker.y})">
           <g class="pc-map-marker-symbol">
             <circle class="pc-map-marker-hit" r="28"></circle>
             <path class="pc-map-marker-hit-line" d="M0 0 H ${labelAnchor==='end'?-180:180}"></path>
@@ -125,6 +134,7 @@
           ${regionalDetails.length?`<div class="pc-map-crosslinks pc-map-detail-entry"><b>세부 권역</b>${regionalDetails.map(detail=>`<button type="button" data-map-open-detail="${escapeHTML(detail.id)}">${escapeHTML(detail.label)}<i>${escapeHTML(detail.confidence)} →</i></button>`).join('')}</div>`:''}`;
       }
 
+      marker=resolvePilgrimageTarget(marker);
       const incident=incidentById(marker.incident);
       const records=[...new Set([...(marker.records||[]),...(incident?.records||[])])]
         .map(record=>`<button type="button" data-map-open-record="${escapeHTML(record)}">${escapeHTML(record)}<i>ARCHIVE →</i></button>`).join('');
@@ -150,6 +160,7 @@
           ${nearestDetail&&!marker.overview?`<button type="button" data-map-open-detail="${escapeHTML(nearestDetail.id)}">${escapeHTML(nearestDetail.label)} 세부 지도 열기</button>`:''}
           ${incident?.history?`<button type="button" data-map-open-history="${escapeHTML(incident.history)}">세계 기록에서 사건 열기</button>`:''}
           ${operation?`<button type="button" data-map-open-operation="${escapeHTML(operation.id)}">${escapeHTML(operation.label)} 작전 열기</button>`:''}
+          ${marker.id==='unlit-fortress'?`<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome()?.status==='idle'?'순례 시나리오 개시':'순례 기록 재개'}</button>`:''}
         </div>`;
     }
 
@@ -170,6 +181,7 @@
     }
 
     function resolveDetailSite(site){
+      site=resolvePilgrimageTarget(site);
       const verdict=operationStore?.get?.().verdict;
       const outcome=verdict&&site.verdictStates?.[verdict];
       return {...site,status:outcome?.status||site.status,tone:outcome?.tone||''};
@@ -269,6 +281,7 @@
         <div class="pc-map-intel-actions">
           ${incident?.history?`<button type="button" data-map-open-history="${escapeHTML(incident.history)}">세계 기록에서 사건 열기</button>`:''}
           ${site.operation?`<button type="button" data-map-open-operation="${escapeHTML(site.operation)}">연결 작전지도 열기</button>`:''}
+          ${site.id==='gbf-unlit-fortress'?`<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome()?.status==='idle'?'이 지점에서 순례 개시':'순례 기록 재개'}</button>`:''}
           <button type="button" data-map-detail-clear="1">구역 개요로 돌아가기</button>
         </div>
         ${renderRouteSequence(detail,site)}`;
@@ -443,6 +456,7 @@
             ${operation.classification?`<dl class="pc-map-facts pc-op-classification"><div><dt>분류</dt><dd>${escapeHTML(operation.classification)}</dd></div><div><dt>작전 상태</dt><dd>${escapeHTML(decision?.status||operation.status)}</dd></div></dl>`:''}
             ${(decision?.directive||operation.directive)?`<div class="pc-op-directive"><b>COMMAND DIRECTIVE</b><p>${escapeHTML(decision?.directive||operation.directive)}</p></div>`:''}
             ${objectives?`<div class="pc-op-objectives"><b>OPERATION OBJECTIVES</b><ol>${objectives}</ol></div>`:''}
+            ${operation.id==='op-unlit-fortress'?`<button class="pc-map-region-return pc-map-pilgrimage-entry" type="button" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome()?.status==='idle'?'현장 순례 시나리오 개시':pilgrimageOutcome()?.status==='complete'?'순례 결과 열기':'저장된 순례 재개'}</button>`:''}
             ${persistent?`<button class="pc-map-region-return" type="button" data-map-open-record="Operation_Broken_Crown">작전 판단 기록 열기</button>`:''}
             ${operationIncident?.history?`<button class="pc-map-region-return" type="button" data-map-open-history="${escapeHTML(operationIncident.history)}">세계 기록에서 연결 사건 보기</button>`:''}
             <button class="pc-map-region-return" type="button" data-map-return-region="${targetRegion}">해당 권역에서 보기</button>
@@ -496,6 +510,7 @@
       if(control.dataset.mapOpenHistory){root.ProjectCurseAudioControl?.play?.('incident.link');openHistory(control.dataset.mapOpenHistory);return;}
       if(control.dataset.mapOpenFaction){root.ProjectCurseAudioControl?.play?.('incident.link');openFaction(control.dataset.mapOpenFaction);return;}
       if(control.dataset.mapOpenRecord){root.ProjectCurseAudioControl?.play?.('incident.link');openArchive(control.dataset.mapOpenRecord);return;}
+      if(control.dataset.mapOpenPilgrimage){root.ProjectCurseAudioControl?.play?.('incident.link');root.ProjectCursePilgrimageRuntime?.open?.(control.dataset.mapOpenPilgrimage);return;}
       if(control.dataset.mapMarker){
         const marker=markerById(control.dataset.mapMarker);
         state.marker=state.marker===control.dataset.mapMarker?null:control.dataset.mapMarker;
@@ -534,6 +549,7 @@
       else if(state.mode!=='detail') return;
       render();
     });
+    document.addEventListener('projectcurse:pilgrimage-state-change',()=>render());
 
     render();
     root.ProjectCurseMapRoomRuntime=Object.freeze({

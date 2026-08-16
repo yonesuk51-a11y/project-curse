@@ -1,4 +1,4 @@
-// Project Curse 5.23.0 — live terminal-home intelligence and operation resume owner.
+// Project Curse 5.23.1 — live terminal-home intelligence and operation resume owner.
 (function(root){
   'use strict';
 
@@ -16,6 +16,7 @@
     const archive=root.ProjectCurseArchive;
     const map=root.ProjectCurseMapRoom;
     const operationState=root.ProjectCurseOperationState;
+    const pilgrimageState=root.ProjectCursePilgrimageState;
     if(!home||!feed) return;
 
     const incident=incidents?.getIncident?.(feed.alert.incident);
@@ -26,6 +27,7 @@
 
     function render(){
       const operation=operationState?.getSummary?.()||{recovered:0,total:3,mapStep:0,status:'analysis',decision:null};
+      const pilgrimage=pilgrimageState?.getSummary?.()||{status:'idle',completed:0,total:6,progress:0,endingData:null};
       const decision=operation.decision;
       const strip=home.querySelector('.pc-terminal-system-strip');
       if(strip) strip.innerHTML=`
@@ -57,30 +59,42 @@
           <a data-uac-route="map-room" data-uac-map-operation="${escapeHTML(feed.alert.operation)}" href="#map-room">${escapeHTML(alertAction)}&nbsp;›</a>`;
       }
 
-      const signals=feed.signals.map((signal,index)=>index!==0?signal:{
-        ...signal,
-        label:decision?`부서진 왕관 · ${decision.title}`:operation.recovered?`부서진 왕관 정보 ${operation.recovered}/${operation.total} 복구`:signal.label,
-        status:decision?(operation.status==='deferred'?'DEFERRED':'VERDICT SAVED'):operation.recovered?'ANALYSIS':signal.status,
-        tone:decision?(operation.status==='deferred'?'unstable':'recovered'):signal.tone
+      const signals=feed.signals.map((signal,index)=>{
+        if(index===0) return {
+          ...signal,
+          label:decision?`부서진 왕관 · ${decision.title}`:operation.recovered?`부서진 왕관 정보 ${operation.recovered}/${operation.total} 복구`:signal.label,
+          status:decision?(operation.status==='deferred'?'DEFERRED':'VERDICT SAVED'):operation.recovered?'ANALYSIS':signal.status,
+          tone:decision?(operation.status==='deferred'?'unstable':'recovered'):signal.tone
+        };
+        if(index===1) return {
+          ...signal,route:'map-room',pilgrimage:'unlit-fortress',record:null,
+          label:pilgrimage.status==='complete'?`불빛 없는 성채 · ${pilgrimage.endingData?.title||'순례 종료'}`:pilgrimage.status==='active'?`불빛 없는 성채 순례 ${pilgrimage.completed}/${pilgrimage.total} 진행`:'불빛 없는 성채 순례 채널 대기',
+          status:pilgrimage.status==='complete'?'RESULT SAVED':pilgrimage.status==='active'?`${pilgrimage.progress}% TRACE`:'PILGRIMAGE READY',
+          tone:pilgrimage.status==='complete'?(pilgrimage.endingData?.tone==='hostile'?'critical':'recovered'):pilgrimage.status==='active'?'unstable':signal.tone
+        };
+        return signal;
       });
       const recent=home.querySelector('.pc-terminal-recent');
       if(recent){
         recent.innerHTML=`<header><small>LIVE INTELLIGENCE FEED</small><b>최근 수신</b><span>${signals.length} CHANNELS</span></header>${signals.map(signal=>{
         const attributes=[`data-uac-route="${escapeHTML(signal.route)}"`];
         if(signal.operation) attributes.push(`data-uac-map-operation="${escapeHTML(signal.operation)}"`);
+        if(signal.pilgrimage) attributes.push(`data-uac-pilgrimage="${escapeHTML(signal.pilgrimage)}"`);
         if(signal.record) attributes.push(`data-uac-archive-record="${escapeHTML(signal.record)}"`);
         return `<a ${attributes.join(' ')} data-signal-tone="${escapeHTML(signal.tone)}" href="#${escapeHTML(signal.route)}"><time>${escapeHTML(signal.time)}</time><span>${escapeHTML(signal.label)}</span><em>${escapeHTML(signal.status)}</em><i aria-hidden="true"></i></a>`;
       }).join('')}`;
       }
       home.dataset.operationProgress=`${operation.recovered}-${operation.verdict||'pending'}`;
+      home.dataset.pilgrimageProgress=`${pilgrimage.status}-${pilgrimage.completed}`;
     }
 
     render();
     document.addEventListener('projectcurse:operation-state-change',render);
+    document.addEventListener('projectcurse:pilgrimage-state-change',render);
     home.dataset.intelligenceReady='true';
     root.ProjectCurseHomeRuntime=Object.freeze({
       refresh:render,
-      getSnapshot:()=>({records,operations,regions,unresolved,signals:feed.signals.length,operation:operationState?.getSummary?.()||null})
+      getSnapshot:()=>({records,operations,regions,unresolved,signals:feed.signals.length,operation:operationState?.getSummary?.()||null,pilgrimage:pilgrimageState?.getSummary?.()||null})
     });
   });
 })(window);

@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.23.0
+# Project Curse Structure — 5.23.1
 
 ## 활성 소유권
 
@@ -16,6 +16,9 @@
 | 의미 기반 재생·프로필·덕킹·중첩 제한 | `assets/js/core/audio-controller.js` |
 | 화면별 음향 프로필·효과음 사건 목록 | `assets/js/data/audio-manifest.js` |
 | 부서진 왕관 정보 회수·판단·지도 단계 저장 | `assets/js/core/operation-state.js` |
+| 순례 시나리오·선택지·결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
+| 순례 진행·공포·오염·신호·결말 저장 | `assets/js/core/pilgrimage-state.js` |
+| 순례 진입·현장 판단·결과 화면 | `assets/js/pages/pilgrimage-scenario.js` + `assets/css/pilgrimage-scenario.css` |
 | 채널별 전환 설정 | `assets/js/data/transition-manifest.js` |
 | 공통 사건·권역·작전 연결 | `assets/js/data/incident-registry.js` |
 | 화면 퇴장·채널 교체·진입 상태 머신 | `assets/js/core/transition-controller.js` |
@@ -42,7 +45,7 @@
 
 ## 데이터 흐름
 
-`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `field-dossier-data.js`가 네 개의 신규 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 38개 지점과 18개 경로의 위험·신호·순례 규칙을 선언한 뒤 `map-room-data.js`가 이를 세계 지도에 결합한다. `map-room.js`는 선택 지점의 연결 경로를 계산하고 경로·위험 반경·통신권·공간 왜곡 레이어와 단계 패널을 렌더링한다. `home-intelligence-data.js`는 홈 수신 목록을 선언한다. 공통 사건 ID는 연표 기록, 지도 표식, 세부 지점, 작전, 세력 파일과 보관소 기록을 연결한다. 영상 설정 다음에 부팅·오디오·작전 저장소·공통 재생 엔진이 초기화되고, 오디오 컨트롤러가 현재 화면 또는 문서 테마에 맞춰 환경·인터페이스·기록·경보 버스의 비율을 적용한다. 영상 기록 전용 음원은 기록 종료와 화면 이동 이벤트 양쪽에서 정리하며 프로필 전환은 직전 화면의 효과음 버스를 종료한다. 작전 저장소의 변경 이벤트는 문서 시나리오, 작전 지도, 세부 권역의 판단 연동 지점과 홈 경보를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제와 홈 정보 피드가 각 화면을 소유한다.
+`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `field-dossier-data.js`가 네 개의 신규 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 38개 지점과 18개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채의 여섯 현장과 선택·결말을 선언하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. `map-room.js`는 선택 지점의 연결 경로와 전술 레이어를 렌더링하고, 순례 저장소의 결말을 성채 상태에 반영한다. 영상 설정 다음에 부팅·오디오·작전·순례 저장소와 공통 재생 엔진이 초기화된다. 오디오 컨트롤러는 화면 또는 문서 테마에 맞춰 환경·인터페이스·기록·경보 버스를 적용하고 영상 기록 종료와 화면 이동에서 전용 음원을 정리한다. 작전 및 순례 저장소 변경 이벤트는 문서, 지도, 홈 경보를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
 
 활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 
@@ -67,6 +70,7 @@
 - `assets/js/core/loading-sequence.js`: 빌드별 첫 기동, 세션 복원, 기록 복귀와 모션 감소용 최소 노출 시간을 관리한다.
 - `assets/js/core/audio-controller.js`: 화면·문서 음향 프로필, 의미 이벤트, 덕킹, 음소거 저장과 동시재생 제한을 담당한다.
 - `assets/js/core/operation-state.js`: 부서진 왕관의 회수 정보, 지휘 판단, 현재 작전 단계와 초기화를 단독 소유한다.
+- `assets/js/core/pilgrimage-state.js`: 불빛 없는 성채의 진행, 현장 판단, 계기 수치와 결말을 단독 소유한다.
 - `assets/js/core/record-cinematic-runtime.js`: 루트 영상 기록 재생만 담당한다.
 - `assets/js/main.js`: 보호된 독립 문서의 기존 동작을 위해 파일로만 유지하며 루트에서는 로드하지 않는다.
 

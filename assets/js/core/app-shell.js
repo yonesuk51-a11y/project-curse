@@ -1,4 +1,4 @@
-// Project Curse 5.23.0 — permanent terminal shell, route and channel handoff owner.
+// Project Curse 5.23.1 — permanent terminal shell, route and channel handoff owner.
 (function(){
   'use strict';
 
@@ -148,12 +148,15 @@
       pulse(routeControl);
       const operation=routeControl.dataset.uacMapOperation;
       const incident=routeControl.dataset.uacMapIncident;
+      const pilgrimage=routeControl.dataset.uacPilgrimage;
       const archiveRecord=routeControl.dataset.uacArchiveRecord;
       const historyRecord=routeControl.dataset.uacHistoryRecord;
       navigate(routeControl.dataset.uacRoute,{replace:false,historyMode:'push'}).then(target=>{
-        if(target==='map-room'&&operation) window.ProjectCurseMapRoomRuntime?.showOperation?.(operation);
-        else if(target==='map-room'&&incident) window.ProjectCurseMapRoomRuntime?.showIncident?.(incident);
-        else if(target==='archive-entry'&&archiveRecord) window.ProjectCurseRuntimeModules?.archiveIndex?.open?.(archiveRecord,routeControl);
+        if(target==='map-room'){
+          if(operation) window.ProjectCurseMapRoomRuntime?.showOperation?.(operation);
+          else if(incident) window.ProjectCurseMapRoomRuntime?.showIncident?.(incident);
+          if(pilgrimage) window.ProjectCursePilgrimageRuntime?.open?.(pilgrimage);
+        }else if(target==='archive-entry'&&archiveRecord) window.ProjectCurseRuntimeModules?.archiveIndex?.open?.(archiveRecord,routeControl);
         else if(target==='history'&&historyRecord) window.ProjectCurseWorldHistoryRuntime?.open?.(historyRecord);
       });
     },true);

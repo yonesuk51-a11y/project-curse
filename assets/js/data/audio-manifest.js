@@ -1,4 +1,4 @@
-// Project Curse 5.23.0 — semantic sound-event registry and acoustic profiles.
+// Project Curse 5.23.1 — semantic sound-event registry and acoustic profiles.
 (function(root){
   'use strict';
 
@@ -43,6 +43,11 @@
       'scenario.arm':Object.freeze({cue:'radio',bus:'record',cooldown:900,gain:.48,duck:.54,duckMs:720,exclusive:false}),
       'scenario.reveal':Object.freeze({cue:'page',bus:'record',cooldown:240,gain:.82,duck:.7,duckMs:300,exclusive:true}),
       'scenario.complete':Object.freeze({cue:'alert',bus:'alert',cooldown:900,gain:.9,duck:.22,duckMs:1100,exclusive:true,priority:2}),
+      'pilgrimage.enter':Object.freeze({cue:'radio',bus:'record',cooldown:900,gain:.52,duck:.38,duckMs:850,exclusive:true}),
+      'pilgrimage.step':Object.freeze({cue:'page',bus:'record',cooldown:220,gain:.74,duck:.7,duckMs:330,exclusive:true}),
+      'pilgrimage.danger':Object.freeze({cue:'denied',bus:'alert',cooldown:420,gain:.72,duck:.28,duckMs:760,exclusive:true,priority:2}),
+      'pilgrimage.complete':Object.freeze({cue:'alert',bus:'alert',cooldown:900,gain:.86,duck:.2,duckMs:1250,exclusive:true,priority:2}),
+      'pilgrimage.exit':Object.freeze({cue:'contact',bus:'interface',cooldown:300,gain:.5,exclusive:true}),
       'system.denied':Object.freeze({cue:'denied',bus:'alert',cooldown:420,gain:.88,duck:.3,duckMs:760,exclusive:true,priority:2}),
       'system.alert':Object.freeze({cue:'alert',bus:'alert',cooldown:420,gain:.84,duck:.34,duckMs:820,exclusive:true,priority:2})
     })
