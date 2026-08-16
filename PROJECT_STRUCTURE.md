@@ -20,16 +20,18 @@
 | 영상/문서 기록 색인 | `assets/js/pages/archive-consolidation.js` |
 | 세계 사건 연표 | `assets/js/pages/world-history.js` |
 | 세력 분석실 | `assets/js/pages/faction-analysis.js` |
+| 관제지도 설정 자료 | `assets/js/data/map-room-data.js` |
+| 지역 상황도·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
 | 5.15.2ce 범위 스타일 | `assets/css/stabilization.css` |
 | 5.15.2cf 기록철 목록·상세 스타일 | `assets/css/archive-consolidation.css` |
 
 ## 데이터 흐름
 
-`site-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`가 먼저 로드된다. 영상 데이터 다음에 `record-cinematic-registry.js`와 기록별 설정 네 개가 등록되고, 공통 재생 엔진과 단일 앱 셸이 차례로 초기화된다. 이후 기록 색인, 세계 연표와 세력 분석실이 각 화면을 소유한다.
+`site-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`, `map-room-data.js`가 먼저 로드된다. 영상 데이터 다음에 `record-cinematic-registry.js`와 기록별 설정 네 개가 등록되고, 공통 재생 엔진과 단일 앱 셸이 차례로 초기화된다. 이후 기록 색인, 세계 연표, 세력 분석실과 권역 관제도가 각 화면을 소유한다.
 
-활성 화면은 `terminal-home`, `history`, `faction-info`, `archive-entry` 네 개다. 폐기된 `region-map`과 `faction-relation`은 DOM을 만들지 않으며 옛 주소만 현행 화면으로 전환한다.
+활성 화면은 `terminal-home`, `history`, `faction-info`, `archive-entry`, `map-room` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 세력 분석실로 전환한다.
 
-단말 상태의 허브 버튼 세 개가 화면 이동을 소유한다. PC와 모바일은 같은 DOM과 같은
+단말 상태의 허브 버튼 네 개가 화면 이동을 소유한다. PC와 모바일은 같은 DOM과 같은
 `click` 경로를 사용하며 모바일에서는 버튼만 한 열로 배치한다. 사이드 메뉴, 서랍,
 배경막과 본문 이동용 `margin`·`transform`은 존재하지 않는다.
 

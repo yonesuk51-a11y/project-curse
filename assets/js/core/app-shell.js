@@ -17,7 +17,7 @@
 
     function normalize(target){
       if(target==='faction-relation') return 'faction-info';
-      if(target==='region-map'||target==='zone-map') return 'history';
+      if(target==='region-map'||target==='zone-map'||target==='operation-map') return 'map-room';
       return screenIds.has(target)?target:'terminal-home';
     }
 
@@ -85,7 +85,7 @@
     },{capture:true,passive:true});
 
     const initialHash=decodeURIComponent(location.hash.replace(/^#/,''));
-    navigate(screenIds.has(initialHash)?initialHash:'terminal-home',{replace:true});
+    navigate(initialHash||'terminal-home',{replace:true});
 
     window.showPage=(target)=>navigate(target,{replace:true});
     window.ProjectCurseShell=Object.freeze({

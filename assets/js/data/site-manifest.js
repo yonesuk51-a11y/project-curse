@@ -15,7 +15,8 @@
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'history',label:'세계 사건 연표',index:'01'},
       {id:'faction-info',label:'세력 분석실',index:'02'},
-      {id:'archive-entry',label:'기록보관소',index:'03'}
+      {id:'archive-entry',label:'기록보관소',index:'03'},
+      {id:'map-room',label:'권역 관제도',index:'04'}
     ],
     lockedRecords:[
       {id:'Cults_871104',title:'종교'},
@@ -56,6 +57,9 @@
       reconciliation:'assets/js/pages/canon-reconciliation.js',
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',
       archiveDocumentViewer:'assets/js/pages/archive-document.js',
+      mapRoomData:'assets/js/data/map-room-data.js',
+      mapRoomRuntime:'assets/js/pages/map-room.js',
+      mapRoomCSS:'assets/css/map-room.css',
       stabilizationCSS:'assets/css/stabilization.css',
       archiveCSS:'assets/css/archive-consolidation.css'
     }
