@@ -1,4 +1,4 @@
-// Project Curse 5.23.1 — persistent pilgrimage progress owner.
+// Project Curse 5.23.2 — persistent pilgrimage progress owner.
 (function(root){
   'use strict';
 

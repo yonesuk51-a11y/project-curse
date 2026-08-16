@@ -1,4 +1,4 @@
-// Project Curse 5.23.1 — reusable pilgrimage scenario data, starting with the unlit fortress.
+// Project Curse 5.23.2 — reusable pilgrimage scenario data, starting with the unlit fortress.
 (function(root){
   'use strict';
 

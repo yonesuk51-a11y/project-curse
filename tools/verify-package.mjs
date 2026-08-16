@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.23.1';
-const DATA_VERSION='5.23.1';
+const VERSION='5.23.2';
+const DATA_VERSION='5.23.2';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -167,7 +167,7 @@ add('retired-relation-screen-removed',!index.includes('id="faction-relation"')&&
 add('current-five-screen-manifest',structureData?.screens?.map(screen=>screen.id).join('|')==='terminal-home|map-room|history|faction-info|archive-entry');
 add('legacy-route-compatibility',appShell.includes("target==='faction-relation'")&&appShell.includes("target==='region-map'||target==='zone-map'"));
 add('loading-sequence-owned',loadingRuntime.includes('ProjectCurseLoading')&&loadingRuntime.includes('prefers-reduced-motion')&&loadingRuntime.includes("return hasSeen()?'restore':'cold'")&&index.includes('data-boot-skip'));
-add('loading-modes-and-readable-timing',loadingRuntime.includes('duration:4200')&&loadingRuntime.includes('duration:2100')&&loadingRuntime.includes('duration:1050')&&loadingRuntime.includes('SESSION_KEY=()=>')&&loadingRuntime.includes("get('boot')"));
+add('loading-modes-and-readable-timing',loadingRuntime.includes('duration:7800')&&loadingRuntime.includes('duration:4800')&&loadingRuntime.includes('duration:1050')&&loadingRuntime.includes('duration:3000')&&loadingRuntime.includes('FINAL ACCESS HOLD')&&loadingRuntime.includes('SESSION_KEY=()=>')&&loadingRuntime.includes("get('boot')"));
 add('audio-controller-owned',audioManifest.includes('ProjectCurseAudioManifest')&&audioController.includes('ProjectCurseAudioControl')&&index.includes('data-uac-audio-toggle'));
 add('semantic-field-audio',context.window.ProjectCurseAudioManifest?.version==='2.0.0'&&['map.layer','map.signal','operation.step','history.open','faction.open','incident.link','scenario.reveal','scenario.complete','pilgrimage.enter','pilgrimage.step','pilgrimage.danger','pilgrimage.complete','pilgrimage.exit'].every(event=>context.window.ProjectCurseAudioManifest.events[event]));
 add('acoustic-screen-profiles',['terminal-home','map-room','history','faction-info','archive-entry','document','great-black-forest','dead-zone','guide','scenario'].every(profile=>context.window.ProjectCurseAudioManifest?.profiles?.[profile]));

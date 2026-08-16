@@ -1,6 +1,6 @@
 # Future Patch Pointer
 
-Current baseline: `5.23.1 Unlit Fortress Pilgrimage`
+Current baseline: `5.23.2 Unlit Fortress Pilgrimage`
 
 Completed in this baseline:
 `Readable Boot / Unlit Fortress Pilgrimage / Persistent Field Outcome`

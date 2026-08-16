@@ -1,4 +1,4 @@
-// Project Curse 5.23.1 — immersive pilgrimage scenario presentation and interaction.
+// Project Curse 5.23.2 — immersive pilgrimage scenario presentation and interaction.
 (function(root){
   'use strict';
 

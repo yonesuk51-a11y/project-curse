@@ -1,4 +1,4 @@
-// Project Curse 5.23.1 — intelligence dossier and shared incident owner.
+// Project Curse 5.23.2 — intelligence dossier and shared incident owner.
 (function(){
   'use strict';
 

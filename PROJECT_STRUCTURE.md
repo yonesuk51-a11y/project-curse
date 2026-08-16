@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.23.1
+# Project Curse Structure — 5.23.2
 
 ## 활성 소유권
 

@@ -1,4 +1,4 @@
-// Project Curse 5.23.1 — single source of truth for the terminal build.
+// Project Curse 5.23.2 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.23.1',
+    version:'5.23.2',
     codename:'Unlit Fortress Pilgrimage',
     schema:'project-curse-v14',
     released:'2026-08-16',

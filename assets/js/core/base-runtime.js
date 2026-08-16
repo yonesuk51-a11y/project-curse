@@ -1,4 +1,4 @@
-// Project Curse 5.23.1 — boot and persistent shell audio asset owner.
+// Project Curse 5.23.2 — boot and persistent shell audio asset owner.
 (function(){
   'use strict';
 
