@@ -43,9 +43,9 @@ for(const file of [
   'assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js'
 ]) vm.runInContext(read(file),context,{filename:file});
 
-check('version:manifest',context.window.ProjectCurseStructure?.version==='5.25.0',context.window.ProjectCurseStructure?.version);
-check('version:archive',context.window.ProjectCurseArchive?.version==='5.25.0',context.window.ProjectCurseArchive?.version);
-check('version:documents',context.window.ProjectCurseArchiveDocuments?.version==='5.25.0',context.window.ProjectCurseArchiveDocuments?.version);
+check('version:manifest',context.window.ProjectCurseStructure?.version==='5.26.0',context.window.ProjectCurseStructure?.version);
+check('version:archive',context.window.ProjectCurseArchive?.version==='5.26.0',context.window.ProjectCurseArchive?.version);
+check('version:documents',context.window.ProjectCurseArchiveDocuments?.version==='5.26.0',context.window.ProjectCurseArchiveDocuments?.version);
 check('shell:single-static-home',count(index,'class="uac-shell-home"')===1&&index.includes('data-uac-route="terminal-home"'));
 check('shell:no-page-injection',!shell.includes('ensureReturnControl')&&!shell.includes('uac-return-terminal'));
 check('shell:home-owned-outside-pages',index.indexOf('class="uac-shell-home"')<index.indexOf('<main class="uac-shell-content"'));
@@ -69,7 +69,7 @@ check('document:viewer-api',documentViewer.includes('ProjectCurseInternalDocumen
 check('document:route-free-toc',documentViewer.includes("el('button','archive-doc-toc-link'")&&!documentViewer.includes('href="#section-')&&!documentViewer.includes("`#section-${"));
 check('document:embedded-assets',documentViewer.includes("replace(/^(?:\\.\\.\\/)+/,'')"));
 check('document:css-scoped',documentCss.includes('body[data-archive-document]')&&!documentCss.includes('\nbody{'));
-check('document:root-loaded',index.includes('assets/css/archive-document.css?v=5.25.0')&&index.includes('assets/js/pages/archive-document.js?v=5.25.0')&&index.includes('assets/js/data/field-dossier-data.js?v=5.25.0'));
+check('document:root-loaded',index.includes('assets/css/archive-document.css?v=5.26.0')&&index.includes('assets/js/pages/archive-document.js?v=5.26.0')&&index.includes('assets/js/data/field-dossier-data.js?v=5.26.0'));
 
 check('audio:persistent-context',audio.includes("setContext('document')")||documentViewer.includes("setContext?.('document')"));
 check('audio:no-ambient-rewind',!audio.includes('audio.ambient.currentTime=0'));
@@ -82,14 +82,14 @@ check('audio:regional-document-profile',documentViewer.includes('setProfile?.(do
 check('operation:persistent-owner',operationState.includes('ProjectCurseOperationState')&&operationState.includes('localStorage.setItem')&&operationState.includes('visitBranch')&&operationState.includes('chooseVerdict'));
 check('operation:four-outcomes',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`)));
 check('operation:document-report',documentViewer.includes('archive-scenario-report')&&documentViewer.includes('data-scenario-verdict')&&documentViewer.includes('data-scenario-reset'));
-check('operation:root-loaded',index.includes('assets/js/core/operation-state.js?v=5.25.0')&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
+check('operation:root-loaded',index.includes('assets/js/core/operation-state.js?v=5.26.0')&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
 const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
-check('map:drilldown-root-loaded',index.includes('assets/js/data/regional-drilldown-data.js?v=5.25.0')&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
+check('map:drilldown-root-loaded',index.includes('assets/js/data/regional-drilldown-data.js?v=5.26.0')&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
 check('map:six-drilldowns',drilldowns.length===6&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38,`${drilldowns.length} districts`);
 check('map:four-level-navigation',mapRoomRuntime.includes('data-map-open-detail')&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('pc-map-breadcrumb'));
 check('map:verdict-site-sync',mapRoomRuntime.includes('resolveDetailSite')&&drilldowns.filter(detail=>detail.sites.some(site=>site.verdictStates)).length>=2);
 const detailRoutes=drilldowns.flatMap(detail=>detail.routes.map(route=>({detail,route})));
-check('map:eighteen-route-traces',detailRoutes.length===18&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
+check('map:nineteen-route-traces',detailRoutes.length===19&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
 check('map:route-focus-and-layers',mapRoomRuntime.includes('routesForSite')&&mapRoomRuntime.includes('renderDetailOverlays')&&mapRoomRuntime.includes('data-map-detail-layer')&&mapRoomRuntime.includes('data-map-route-step'));
 
 const cinematicIds=context.window.ProjectCurseCinematicRegistry?.ids?.()||[];
@@ -111,7 +111,7 @@ check('cinematic:no-photo-drift',!cinematicCss.includes('pcCinematicDrift'));
 check('cinematic:natural-ratio-photo-fit',cinematicRuntime.includes('image.naturalWidth/image.naturalHeight')&&cinematicRuntime.includes('--pc-media-width')&&cinematicCss.includes('.pc-cinematic-frame-fitted'));
 check('cinematic:portrait-height-contained',cinematicRuntime.includes("(window.innerHeight||720)*.56")&&cinematicCss.includes('max-height:56dvh!important'));
 check('mobile:viewport-safe-area',index.includes('viewport-fit=cover')&&cinematicMobileCss.includes('env(safe-area-inset-bottom)'));
-check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.25.0')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
+check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.26.0')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
 check('mobile:phone-stage-scroll-safe',cinematicMobileCss.includes('@media (max-width:600px)')&&cinematicMobileCss.includes('overflow-y:auto!important')&&cinematicMobileCss.includes('overscroll-behavior:contain!important'));
 check('mobile:portrait-video-contained',cinematicMobileCss.includes('.pc5152h-cult-sequence.intro-mode .pc5152h-seq-video')&&cinematicMobileCss.includes('object-fit:contain!important'));
 check('mobile:touch-controls',cinematicMobileCss.includes('grid-template-columns:repeat(4,minmax(0,1fr))')&&cinematicMobileCss.includes('min-height:44px!important'));
@@ -131,7 +131,7 @@ check('audio:no-cinematic-bus-installer',!cinematicRuntime.includes('installClea
 check('audio:sequence-silence-at-entry',count(cinematicRuntime,'silenceMenuAmbientDuringSequence();')>=2);
 check('cinematic:single-chapter-boundary-rule',cinematicRuntime.includes("current.group!==next.group&&getSequenceConfig()?.transitionVideo")&&!cinematicRuntime.includes("current.group==='system' && next.group==='cult'"));
 const immortalityPages=context.window.ProjectCurseImmortalityStoryboard||[];
-check('immortality:canonical-storyboard-loaded',index.includes('assets/js/data/immortality-storyboard.js?v=5.25.0')&&immortalityPages.length===24,immortalityPages.length);
+check('immortality:canonical-storyboard-loaded',index.includes('assets/js/data/immortality-storyboard.js?v=5.26.0')&&immortalityPages.length===24,immortalityPages.length);
 check('immortality:automatic-sequential-reveal',cinematicRuntime.includes('scheduleNextSequenceLine(Number(page.firstLineDelay')&&cinematicRuntime.includes('scheduleNextSequenceLine(nextDelay)'));
 check('immortality:initial-content-hidden',cinematicCss.includes('Immortality starts from a genuinely blank record face')&&cinematicCss.includes('visibility:hidden!important')&&cinematicCss.includes('.pc5152k-seq-line.visible'));
 check('immortality:intro-not-skipped',cinematicRuntime.includes('video.muted=true')&&cinematicRuntime.includes('video.load()')&&!cinematicRuntime.includes('Math.min(Number(cfg.introFallback||10450),4800)'));
@@ -186,9 +186,9 @@ for(const [id,expected] of Object.entries(locked)){
 check('cache:core-busters',[
   'assets/css/app-shell.css','assets/css/archive-document.css','assets/js/core/app-shell.js','assets/js/core/base-runtime.js',
   'assets/js/pages/archive-document.js','assets/js/pages/archive-consolidation.js','assets/js/pages/faction-analysis.js'
-].every(file=>index.includes(`${file}?v=5.25.0`)));
-check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.25.0')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.25.0'));
-check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.25.0'));
+].every(file=>index.includes(`${file}?v=5.26.0`)));
+check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.26.0')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.26.0'));
+check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.26.0'));
 check('manifest:viewer-owner',manifest.includes("archiveDocumentViewer:'assets/js/pages/archive-document.js'"));
 check('registry:no-href-field',!registry.includes("href:'docs/"));
 

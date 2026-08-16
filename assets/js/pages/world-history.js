@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — chronology view with shared incident crosslinks.
+// Project Curse 5.26.0 — chronology view with shared incident crosslinks.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;

@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — route focus, threat overlays, regional drilldown, and operation trace room.
+// Project Curse 5.26.0 — route focus, verdict-gated recovery, regional drilldown, and operation trace room.
 (function(root){
   'use strict';
 
@@ -28,6 +28,7 @@
     const network=root.ProjectCurseIncidentNetwork;
     const operationStore=root.ProjectCurseOperationState;
     const pilgrimageStore=root.ProjectCursePilgrimageState;
+    const verdictStore=root.ProjectCurseVerdictArchiveState;
     if(!mount||!data) return;
 
     const state={
@@ -50,9 +51,16 @@
     const polyline=points=>(points||[]).map(point=>point.join(',')).join(' ');
     const riskLabels={critical:'치명',high:'높음',medium:'주의',low:'낮음'};
     const pilgrimageOutcome=id=>pilgrimageStore?.getSummary?.(id)||null;
+    const recoveryUnlocked=()=>Boolean(verdictStore?.isUnlocked?.('DZ-VR-04'));
+    const scenarioButton=(scenarioId,labels)=>{
+      const summary=pilgrimageOutcome(scenarioId);
+      if(scenarioId==='deadzone-recovery'&&!recoveryUnlocked()) return `<button type="button" class="pc-map-pilgrimage-entry is-locked" data-map-open-pilgrimage="deadzone-return">DZ-VR-04 역방향 순례 판정으로 해금</button>`;
+      const label=summary?.status==='complete'?labels.complete:summary?.status==='active'?labels.active:labels.idle;
+      return `<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="${escapeHTML(scenarioId)}">${escapeHTML(label)}</button>`;
+    };
     const resolvePilgrimageTarget=item=>{
       if(!item) return item;
-      const scenarioId=['unlit-fortress','gbf-unlit-fortress'].includes(item.id)?'unlit-fortress':['returned-coast','dead-checkpoint-07','dead-quarantine-ring'].includes(item.id)?'deadzone-return':null;
+      const scenarioId=['unlit-fortress','gbf-unlit-fortress'].includes(item.id)?'unlit-fortress':['returned-coast','dead-checkpoint-07','dead-quarantine-ring'].includes(item.id)?'deadzone-return':['dead-interior','dead-sublevel-08','dead-checkpoint-06','dead-reverse-highway','dead-origin-beacon'].includes(item.id)?'deadzone-recovery':null;
       if(!scenarioId) return item;
       const ending=pilgrimageOutcome(scenarioId)?.endingData;
       return ending?{...item,status:ending.status,tone:ending.tone}:item;
@@ -60,7 +68,7 @@
     const detailForMarker=marker=>{
       const map={
         'gbf-core':'gbf-inner-refuges','monsur-church':'gbf-western-marches','unlit-fortress':'gbf-western-marches','black-river':'gbf-western-marches','southern-coast':'gbf-coastal-belt',
-        'dead-interior':'deadzone-silent-interior','returned-coast':'deadzone-return-corridor','former-us-branch':'deadzone-kingdom-graves'
+        'dead-interior':'deadzone-return-corridor','returned-coast':'deadzone-return-corridor','former-us-branch':'deadzone-kingdom-graves'
       };
       return detailById(map[marker?.id]||(marker?.region==='southamerica'?'gbf-western-marches':marker?.region==='northamerica'?'deadzone-return-corridor':''));
     };
@@ -164,6 +172,7 @@
           ${operation?`<button type="button" data-map-open-operation="${escapeHTML(operation.id)}">${escapeHTML(operation.label)} 작전 열기</button>`:''}
           ${marker.id==='unlit-fortress'?`<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome('unlit-fortress')?.status==='idle'?'순례 시나리오 개시':'순례 기록 재개'}</button>`:''}
           ${marker.id==='returned-coast'?`<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="deadzone-return">${pilgrimageOutcome('deadzone-return')?.status==='idle'?'귀환자 검문 개시':pilgrimageOutcome('deadzone-return')?.status==='complete'?'귀환 판정 결과 열기':'저장된 검문 재개'}</button>`:''}
+          ${marker.id==='dead-interior'?scenarioButton('deadzone-recovery',{idle:'전진 회수 작전 개시',active:'저장된 회수 작전 재개',complete:'전진 회수 결과 열기'}):''}
         </div>`;
     }
 
@@ -286,6 +295,7 @@
           ${site.operation?`<button type="button" data-map-open-operation="${escapeHTML(site.operation)}">연결 작전지도 열기</button>`:''}
           ${site.id==='gbf-unlit-fortress'?`<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome('unlit-fortress')?.status==='idle'?'이 지점에서 순례 개시':'순례 기록 재개'}</button>`:''}
           ${site.id==='dead-checkpoint-07'?`<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="deadzone-return">${pilgrimageOutcome('deadzone-return')?.status==='idle'?'검문소 07 귀환 심사 개시':pilgrimageOutcome('deadzone-return')?.status==='complete'?'저장된 귀환 판정 열기':'귀환자 검문 재개'}</button>`:''}
+          ${['dead-sublevel-08','dead-checkpoint-06','dead-reverse-highway','dead-origin-beacon'].includes(site.id)?scenarioButton('deadzone-recovery',{idle:'이 좌표에서 전진 회수 작전 개시',active:'저장된 전진 회수 작전 재개',complete:'전진 회수 판정 결과 열기'}):''}
           <button type="button" data-map-detail-clear="1">구역 개요로 돌아가기</button>
         </div>
         ${renderRouteSequence(detail,site)}`;
@@ -375,6 +385,13 @@
     }
 
     function operationTerrain(operation){
+      if(operation.id==='op-deadzone-recovery'){
+        return `
+          <path class="pc-op-terrain pc-op-terrain--dead" d="M0 28 C153 72 286 17 426 73 S704 28 1000 86 L1000 540 0 540 Z"></path>
+          <path class="pc-op-contested-line" d="M0 108H1000 M0 216H1000 M0 324H1000 M0 432H1000"></path>
+          <path class="pc-op-river" d="M12 74 C174 139 281 169 421 238 S718 328 1000 405"></path>
+          <circle class="pc-op-blood" cx="668" cy="326" r="48"></circle>`;
+      }
       if(operation.id==='op-deadzone-return'){
         return `
           <path class="pc-op-terrain pc-op-terrain--dead" d="M0 72 C174 117 294 35 447 111 S745 56 1000 119 L1000 540 0 540 Z"></path>
@@ -428,14 +445,14 @@
       const recovered=persistent?.visited?.length||0;
       const stepStates=decision?.stepStates||operation.steps.map((_item,index)=>index<state.step?'complete':index===state.step?'active':'available');
       const operationIncident=incidentById(operation.incident);
-      const targetRegion=operationIncident?.region||(operation.id==='op-unlit-fortress'?'southamerica':'europe');
+      const targetRegion=operationIncident?.region||(operation.id==='op-unlit-fortress'?'southamerica':operation.id==='op-deadzone-recovery'?'northamerica':'europe');
       const objectives=(operation.objectives||[]).map(item=>`<li>${escapeHTML(item)}</li>`).join('');
 
       return `
         <div class="pc-map-operation-tabs" role="tablist" aria-label="작전 기록">
           ${data.operations.map(item=>`<button type="button" role="tab" aria-selected="${item.id===operation.id}" class="${item.id===operation.id?'is-active':''}" data-map-operation="${escapeHTML(item.id)}"><small>${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
         </div>
-        <div class="pc-map-operation-grid${decision?` has-verdict is-${escapeHTML(decision.tone)}`:''}"${persistent?` data-operation-persistence="active" data-operation-verdict="${escapeHTML(persistent.verdict||'pending')}"`:''}>
+        <div class="pc-map-operation-grid${decision?` has-verdict is-${escapeHTML(decision.tone)}`:''}${operation.id==='op-deadzone-recovery'&&!recoveryUnlocked()?' is-scenario-locked':''}"${persistent?` data-operation-persistence="active" data-operation-verdict="${escapeHTML(persistent.verdict||'pending')}"`:''}>
           <section class="pc-map-stage pc-map-operation-stage" aria-label="${escapeHTML(operation.label)} 작전 경로">
             <div class="pc-map-stage-head"><span>${escapeHTML(operation.code)}</span><b>${persistent?`SAVED · INTEL ${recovered}/3 · `:''}TRACE ${state.step+1}/${operation.steps.length}</b></div>
             <svg class="pc-map-svg" viewBox="0 0 1000 540" role="img" aria-labelledby="pcOpTitle pcOpDesc" preserveAspectRatio="xMidYMid meet">
@@ -469,6 +486,7 @@
             ${objectives?`<div class="pc-op-objectives"><b>OPERATION OBJECTIVES</b><ol>${objectives}</ol></div>`:''}
             ${operation.id==='op-unlit-fortress'?`<button class="pc-map-region-return pc-map-pilgrimage-entry" type="button" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome('unlit-fortress')?.status==='idle'?'현장 순례 시나리오 개시':pilgrimageOutcome('unlit-fortress')?.status==='complete'?'순례 결과 열기':'저장된 순례 재개'}</button>`:''}
             ${operation.id==='op-deadzone-return'?`<button class="pc-map-region-return pc-map-pilgrimage-entry" type="button" data-map-open-pilgrimage="deadzone-return">${pilgrimageOutcome('deadzone-return')?.status==='idle'?'귀환 심사 프로토콜 개시':pilgrimageOutcome('deadzone-return')?.status==='complete'?'귀환 판정 결과 열기':'저장된 검문 재개'}</button>`:''}
+            ${operation.id==='op-deadzone-recovery'?scenarioButton('deadzone-recovery',{idle:'전진 회수 작전 개시',active:'저장된 전진 회수 작전 재개',complete:'전진 회수 판정 결과 열기'}):''}
             ${persistent?`<button class="pc-map-region-return" type="button" data-map-open-record="Operation_Broken_Crown">작전 판단 기록 열기</button>`:''}
             ${operationIncident?.history?`<button class="pc-map-region-return" type="button" data-map-open-history="${escapeHTML(operationIncident.history)}">세계 기록에서 연결 사건 보기</button>`:''}
             <button class="pc-map-region-return" type="button" data-map-return-region="${targetRegion}">해당 권역에서 보기</button>
@@ -562,6 +580,7 @@
       render();
     });
     document.addEventListener('projectcurse:pilgrimage-state-change',()=>render());
+    document.addEventListener('projectcurse:verdict-archive-change',()=>render());
 
     render();
     root.ProjectCurseMapRoomRuntime=Object.freeze({

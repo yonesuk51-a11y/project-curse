@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — persistent conditional verdict archive owner.
+// Project Curse 5.26.0 — persistent conditional verdict archive and scenario-unlock owner.
 (function(root){
   'use strict';
 
@@ -104,7 +104,7 @@
     });
     const metricRows=scenario.metrics.map(metric=>[metric.label,`${snapshot.metrics?.[metric.key]??0}%`]);
     return {
-      sourceId:id,scenarioId:entry.scenarioId,presentation:'verdict',theme:entry.theme,code:entry.code,title:entry.title,
+      sourceId:id,scenarioId:entry.scenarioId,unlockScenario:entry.unlockScenario||null,presentation:'verdict',theme:entry.theme,code:entry.code,title:entry.title,
       summary:entry.summary,date:new Date(snapshot.unlockedAt).toLocaleString('ko-KR'),owner:'U.A.C 현장 판정 보관소',classification:'현장 결말 확인·복호화 완료',
       telemetry:[['판정 상태',ending.status],['선택 기록',`${choiceRows.length} / ${scenario.stages.length}`],['규칙 위반',`${snapshot.violations}회`],['열람 상태',entry.unread?'새 기록':'확인함']],
       sections:[

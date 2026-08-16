@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — shared incident, region and operation network.
+// Project Curse 5.26.0 — shared incident, region and operation network.
 (function(root){
   'use strict';
 
@@ -45,6 +45,11 @@
       title:'검문소 07 귀환자 신원 상충',summary:'네 명의 귀환자와 다섯 번째 생체 신호가 서부 귀환 회랑의 동일 출입 요청으로 감지된 사건.',
       region:'northamerica',coordinates:[-124,44],factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return'
     },
+    'evt-deadzone-recovery':{
+      id:'evt-deadzone-recovery',code:'EVT-DZ-OUTBOUND-R05',date:'AFTER 06:03',status:'SEALED / VERDICT REQUIRED',confidence:'disputed',
+      title:'검문소 07 지하 구조 신호',summary:'역방향 순례 판정에서 복원된 좌표가 데드존 내륙이 아니라 검문소 07 아래의 존재하지 않는 층을 가리킨 사건.',
+      region:'northamerica',coordinates:[-124,44],factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-recovery'
+    },
     'evt-southern-mobilization':{
       id:'evt-southern-mobilization',code:'EVT-SOUTH-COUP',date:'ONGOING',status:'CRITICAL / PARTIAL',confidence:'estimated',
       title:'남부 집단 소환·쿠데타 전조',
@@ -86,7 +91,7 @@
   };
 
   root.ProjectCurseIncidentNetwork=freeze({
-    version:'5.25.0',
+    version:'5.26.0',
     incidents,
     incidentList:Object.values(incidents),
     operations:[operation],

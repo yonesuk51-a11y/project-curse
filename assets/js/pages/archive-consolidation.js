@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — public archive and conditional field-verdict index owner.
+// Project Curse 5.26.0 — public archive and conditional field-verdict index owner.
 (function(){
   'use strict';
   const archive=window.ProjectCurseArchive;
@@ -53,7 +53,8 @@
       <header class="pc-verdict-head"><div><span>FIELD VERDICT ARCHIVE</span><h4>현장 판정 기록</h4><p>직접 확인한 결말의 기록만 열린다. 결말이 확정된 순간의 선택과 측정값은 별도 사본으로 보존된다.</p></div><dl><div><dt>열린 기록</dt><dd>${summary.unlocked} / ${summary.total}</dd></div><div><dt>읽지 않음</dt><dd>${summary.unread}</dd></div></dl></header>
       ${group('unlit-fortress','GBF / WESTERN PILGRIMAGE','대흑림 서부 순례 판정')}
       ${group('deadzone-return','DZ / RETURN SCREENING','데드존 귀환 검문 판정')}
-      <details class="pc-verdict-manage"><summary>판정 기록 관리</summary><div><p>시나리오의 현재 진행을 초기화해도 여기 보존된 판정 기록은 남는다. 아래 작업은 판정 보관소에만 적용된다.</p><button type="button" data-verdict-reset="read">모든 기록을 읽지 않음으로 표시</button><button type="button" data-verdict-reset="unlit-fortress">대흑림 판정 기록 삭제</button><button type="button" data-verdict-reset="deadzone-return">데드존 판정 기록 삭제</button><button type="button" class="is-danger" data-verdict-reset="all">모든 판정 기록 삭제</button></div></details>
+      ${group('deadzone-recovery','DZ / OUTBOUND RECOVERY','데드존 전진 회수 판정')}
+      <details class="pc-verdict-manage"><summary>판정 기록 관리</summary><div><p>시나리오의 현재 진행을 초기화해도 여기 보존된 판정 기록은 남는다. 아래 작업은 판정 보관소에만 적용된다.</p><button type="button" data-verdict-reset="read">모든 기록을 읽지 않음으로 표시</button><button type="button" data-verdict-reset="unlit-fortress">대흑림 판정 기록 삭제</button><button type="button" data-verdict-reset="deadzone-return">데드존 귀환 판정 삭제</button><button type="button" data-verdict-reset="deadzone-recovery">전진 회수 판정 삭제</button><button type="button" class="is-danger" data-verdict-reset="all">모든 판정 기록 삭제</button></div></details>
     </section>`;
   }
 
@@ -130,7 +131,7 @@
     const verdictRows=qa('.pc-verdict-row');
     return {
       name:'archiveIndex',
-      patch:'5.25.0',
+      patch:'5.26.0',
       ok:ids===expectedIds&&(!verdicts||verdictRows.length===verdicts.getSummary().total),
       records:rows.length,
       verdicts:verdictRows.length,

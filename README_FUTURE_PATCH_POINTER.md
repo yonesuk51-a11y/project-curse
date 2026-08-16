@@ -1,6 +1,6 @@
 # Future Patch Pointer
 
-Current baseline: `5.25.0 Conditional Verdict Archive`
+Current baseline: `5.26.0 Conditional Verdict Archive`
 
 Completed in this baseline:
 `Readable Boot / Two Persistent Field Scenarios / Conditional Verdict Archive / Korean Copy Revision`

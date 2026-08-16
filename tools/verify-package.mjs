@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.25.0';
-const DATA_VERSION='5.25.0';
+const VERSION='5.26.0';
+const DATA_VERSION='5.26.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -159,15 +159,19 @@ add('operation-map-outcome-sync',mapRoomRuntime.includes('operationStore.getDeci
 add('operation-home-resume',terminalHomeRuntime.includes('operationState?.getSummary')&&terminalHomeRuntime.includes('작전 분석 재개')&&terminalHomeRuntime.includes('VERDICT SAVED')&&terminalHomeRuntime.includes('projectcurse:operation-state-change'));
 const unlitPilgrimage=pilgrimageData?.scenarios?.['unlit-fortress'];
 const deadzoneReturn=pilgrimageData?.scenarios?.['deadzone-return'];
+const deadzoneRecovery=pilgrimageData?.scenarios?.['deadzone-recovery'];
 add('pilgrimage-six-stage-scenario',unlitPilgrimage?.stages?.length===6&&Object.keys(unlitPilgrimage?.endings||{}).sort().join('|')==='breach|retreat|sanctuary'&&unlitPilgrimage.stages.every(stage=>stage.rule&&stage.choices?.length>=2));
 add('deadzone-six-stage-return-screening',deadzoneReturn?.stages?.length===6&&Object.keys(deadzoneReturn?.endings||{}).sort().join('|')==='approved|fifth|reverse|sealed'&&deadzoneReturn.stages.every(stage=>stage.rule&&stage.choices?.length>=2));
 add('deadzone-four-screening-metrics',deadzoneReturn?.metrics?.map(metric=>metric.key).join('|')==='identity|exposure|coherence|trust'&&deadzoneReturn.stages.every(stage=>stage.choices.every(choice=>deadzoneReturn.metrics.some(metric=>Object.hasOwn(choice.deltas||{},metric.key)))));
+add('deadzone-six-stage-outbound-recovery',deadzoneRecovery?.stages?.length===6&&Object.keys(deadzoneRecovery?.endings||{}).sort().join('|')==='buried|recovered|relay'&&deadzoneRecovery?.unlock?.id==='DZ-VR-04'&&deadzoneRecovery.stages.every(stage=>stage.rule&&stage.choices?.length>=2));
+add('deadzone-recovery-four-metrics',deadzoneRecovery?.metrics?.map(metric=>metric.key).join('|')==='team|tether|depth|echo'&&deadzoneRecovery.stages.every(stage=>stage.choices.every(choice=>deadzoneRecovery.metrics.some(metric=>Object.hasOwn(choice.deltas||{},metric.key)))));
 add('pilgrimage-persistent-state',structureData?.owners?.pilgrimageState==='assets/js/core/pilgrimage-state.js'&&pilgrimageState.includes("storageKey='pc_pilgrimage_states_v2'")&&pilgrimageState.includes("legacyKey='pc_pilgrimage_state_v1'")&&pilgrimageState.includes('localStorage.setItem')&&pilgrimageState.includes('projectcurse:pilgrimage-state-change')&&pilgrimageState.includes('function getAllSummaries()')&&pilgrimageState.includes('function choose(choiceId,id=activeScenarioId)'));
 add('pilgrimage-immersive-runtime',pilgrimageRuntime.includes('ProjectCursePilgrimageRuntime')&&pilgrimageRuntime.includes('pc-pilgrimage-map')&&pilgrimageRuntime.includes('data-pilgrimage-choice')&&pilgrimageRuntime.includes('overlay.dataset.theme')&&pilgrimageRuntime.includes('한 번 더 누르면 현재 진행이 초기화됩니다'));
 add('pilgrimage-map-home-sync',mapRoomRuntime.includes('data-map-open-pilgrimage')&&mapRoomRuntime.includes('resolvePilgrimageTarget')&&mapRoomRuntime.includes("'deadzone-return'")&&terminalHomeRuntime.includes("pilgrimage:'deadzone-return'")&&terminalHomeRuntime.includes('data-uac-pilgrimage')&&appShell.includes('dataset.uacPilgrimage'));
 add('pilgrimage-archive-direct-entry',read('assets/js/pages/archive-document.js').includes("doc.sourceId==='Dead_Zone_Pilgrimage'?'deadzone-return'")&&read('assets/js/pages/archive-document.js').includes("doc.sourceId==='Great_Black_Forest_Region'?'unlit-fortress'")&&read('assets/js/pages/archive-document.js').includes('button.dataset.archiveOpenPilgrimage=scenarioId'));
 add('pilgrimage-responsive-presentation',pilgrimageCss.includes('@media(max-width:900px)')&&pilgrimageCss.includes('@media(max-width:520px)')&&pilgrimageCss.includes('@media(prefers-reduced-motion:reduce)'));
-add('verdict-seven-outcome-records',verdictData?.records?.length===7&&new Set(verdictData.records.map(record=>`${record.scenarioId}:${record.endingId}`)).size===7&&verdictData.records.filter(record=>record.scenarioId==='unlit-fortress').length===3&&verdictData.records.filter(record=>record.scenarioId==='deadzone-return').length===4);
+add('verdict-ten-outcome-records',verdictData?.records?.length===10&&new Set(verdictData.records.map(record=>`${record.scenarioId}:${record.endingId}`)).size===10&&verdictData.records.filter(record=>record.scenarioId==='unlit-fortress').length===3&&verdictData.records.filter(record=>record.scenarioId==='deadzone-return').length===4&&verdictData.records.filter(record=>record.scenarioId==='deadzone-recovery').length===3);
+add('verdict-gated-recovery-chain',verdictData?.records?.find(record=>record.id==='DZ-VR-04')?.unlockScenario==='deadzone-recovery'&&pilgrimageRuntime.includes('accessFor(id)')&&read('assets/js/pages/archive-document.js').includes('doc.unlockScenario')&&archiveRuntime.includes("group('deadzone-recovery'"));
 add('verdict-persistent-snapshots',structureData?.owners?.verdictArchiveState==='assets/js/core/verdict-archive-state.js'&&verdictState.includes("storageKey='pc_verdict_archive_state_v1'")&&verdictState.includes('choices:(current?.choices||[])')&&verdictState.includes('metrics:{...summary.metrics}')&&verdictState.includes('function getDocument(id)'));
 add('verdict-read-and-reset-state',verdictState.includes('function markRead(id)')&&verdictState.includes('function resetRead()')&&verdictState.includes('function clearScenario(scenarioId)')&&verdictState.includes('function clearAll()')&&archiveRuntime.includes('data-verdict-reset'));
 add('verdict-archive-presentation',archiveRuntime.includes('FIELD VERDICT ARCHIVE')&&archiveRuntime.includes('pc-verdict-row')&&read('assets/js/pages/archive-document.js').includes("doc.presentation==='verdict'")&&verdictCss.includes('[data-presentation="verdict"]'));
@@ -199,6 +203,7 @@ add('screen-identity-presets',transitionCss.includes('coordinate-acquire')&&tran
 add('archive-return-transition-visible',transitionCss.includes('html.pc5152cf-archive-return #loader')&&transitionCss.includes('#loader.hide'));
 add('map-room-owned',context.window.ProjectCurseMapRoom?.regions?.length>=5&&context.window.ProjectCurseMapRoom?.operations?.length>=3&&mapRoomRuntime.includes('ProjectCurseMapRoomRuntime'));
 add('deadzone-return-operation-map',context.window.ProjectCurseMapRoom?.operations?.some(operation=>operation.id==='op-deadzone-return'&&operation.steps?.length===6)&&mapRoomRuntime.includes("operation.id==='op-deadzone-return'"));
+add('deadzone-recovery-operation-map',context.window.ProjectCurseMapRoom?.operations?.some(operation=>operation.id==='op-deadzone-recovery'&&operation.steps?.length===6&&operation.unlockVerdict==='DZ-VR-04')&&mapRoomRuntime.includes("operation.id==='op-deadzone-recovery'")&&mapRoomRuntime.includes('recoveryUnlocked'));
 const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
 add('regional-drilldown-owned',structureData?.owners?.regionalDrilldownData==='assets/js/data/regional-drilldown-data.js'&&drilldowns.length===6&&context.window.ProjectCurseMapRoom?.drilldowns===drilldowns,drilldowns.length);
 add('regional-drilldown-balanced',drilldowns.filter(detail=>detail.region==='southamerica').length===3&&drilldowns.filter(detail=>detail.region==='northamerica').length===3&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38);
@@ -206,7 +211,7 @@ add('regional-drilldown-navigation',mapRoomRuntime.includes("mode:'region'")&&ma
 add('regional-drilldown-crosslinks',mapRoomRuntime.includes('renderDetailIntel')&&mapRoomRuntime.includes('data-map-open-record')&&mapRoomRuntime.includes('data-map-open-operation')&&mapRoomRuntime.includes('data-map-open-history'));
 add('regional-verdict-sync',drilldowns.some(detail=>detail.id==='gbf-coastal-belt'&&detail.sites.filter(site=>site.verdictStates).length>=4)&&drilldowns.some(detail=>detail.id==='deadzone-return-corridor'&&detail.sites.some(site=>site.verdictStates))&&mapRoomRuntime.includes('resolveDetailSite'));
 const detailRoutes=drilldowns.flatMap(detail=>detail.routes.map(route=>({detail,route})));
-add('regional-eighteen-owned-routes',detailRoutes.length===18&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
+add('regional-nineteen-owned-routes',detailRoutes.length===19&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
 add('regional-route-site-integrity',detailRoutes.every(({detail,route})=>route.siteIds.every(id=>detail.sites.some(site=>site.id===id))));
 add('regional-route-focus',mapRoomRuntime.includes('routesForSite')&&mapRoomRuntime.includes('focusedRouteIds')&&mapRoomRuntime.includes('is-focused')&&mapRoomRuntime.includes('is-muted'));
 add('regional-tactical-layers',mapRoomRuntime.includes('detailLayers:{routes:true,threats:true,comms:false,distortion:true}')&&['routes','threats','comms','distortion'].every(layer=>mapRoomRuntime.includes(`data-map-detail-layer="${layer}"`))&&mapRoomRuntime.includes('renderDetailOverlays'));

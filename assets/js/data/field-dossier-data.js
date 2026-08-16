@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — revised Korean field dossiers for the South and Dead Zone.
+// Project Curse 5.26.0 — revised Korean field dossiers for the South and Dead Zone.
 (function(root){
   'use strict';
 
@@ -196,5 +196,5 @@
     }
   });
 
-  archive.version='5.25.0';
+  archive.version='5.26.0';
 })(window);

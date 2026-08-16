@@ -1,4 +1,4 @@
-/* Project Curse 5.25.0 — route focus, threat overlays, regional drilldown, and operation trace room */
+/* Project Curse 5.26.0 — route focus, threat overlays, regional drilldown, and operation trace room */
 #map-room {
   padding: 0;
   border: 0;
@@ -548,6 +548,8 @@
 .pc-detail-verdict-note b{color:#b79353;font:700 8px/1.2 ui-monospace,monospace;letter-spacing:.08em}.pc-detail-verdict-note span{color:rgba(212,216,214,.52);font-size:9px;line-height:1.55}
 .pc-map-detail-entry{margin-top:18px}
 .pc-map-pilgrimage-entry{position:relative;border-color:rgba(102,151,112,.52)!important;color:#d8e7dc!important;background:linear-gradient(90deg,rgba(31,78,44,.38),rgba(8,17,11,.9))!important;box-shadow:inset 3px 0 #6b9a75}.pc-map-pilgrimage-entry:before{content:'PILGRIMAGE';display:block;margin-bottom:5px;color:#6e9b77;font:700 6px/1 ui-monospace,monospace;letter-spacing:.14em}.pc-map-pilgrimage-entry:hover,.pc-map-pilgrimage-entry:focus-visible{border-color:#83ad8c!important;box-shadow:inset 3px 0 #86b390,0 0 18px rgba(54,119,70,.13)}
+.pc-map-pilgrimage-entry.is-locked{border-color:rgba(159,76,74,.5)!important;color:#d8b8b3!important;background:linear-gradient(90deg,rgba(85,31,31,.34),rgba(15,9,10,.93))!important;box-shadow:inset 3px 0 #a14e4d}.pc-map-pilgrimage-entry.is-locked:before{content:'VERDICT LOCK';color:#ad5d5a}
+.pc-map-operation-grid.is-scenario-locked .pc-map-operation-stage{filter:saturate(.45) brightness(.68)}.pc-map-operation-grid.is-scenario-locked .pc-map-operation-stage:after{content:'DZ-VR-04 VERDICT REQUIRED';position:absolute;inset:50% auto auto 50%;z-index:4;transform:translate(-50%,-50%);padding:13px 18px;border:1px solid rgba(175,76,71,.55);color:#d4aaa4;background:rgba(19,5,7,.86);box-shadow:0 0 35px rgba(113,27,27,.32);font:700 9px/1 ui-monospace,monospace;letter-spacing:.14em;white-space:nowrap}
 .pc-detail-route-empty{margin-top:16px;padding:11px;border:1px dashed rgba(179,184,182,.16);color:rgba(207,212,210,.38);font-size:9px}
 .pc-detail-route-sequences{display:grid;gap:10px;margin-top:20px;padding-top:15px;border-top:1px solid rgba(194,200,198,.1)}
 .pc-detail-sequence-title{display:flex;justify-content:space-between;gap:10px}.pc-detail-sequence-title b{color:#c65a62;font:700 8px/1.2 ui-monospace,monospace;letter-spacing:.1em}.pc-detail-sequence-title span{color:rgba(207,212,210,.35);font:700 7px/1.2 ui-monospace,monospace}

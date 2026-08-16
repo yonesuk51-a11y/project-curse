@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.25.0
+# Project Curse Structure — 5.26.0
 
 ## 활성 소유권
 
@@ -48,7 +48,7 @@
 
 ## 데이터 흐름
 
-`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 38개 지점과 18개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채와 돌아온 자의 이름에 쓰이는 열두 현장과 일곱 결말을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구를 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 판정 보관소는 결말이 확정된 순간의 선택과 측정값을 별도 스냅샷으로 저장한다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 지도와 홈 경보를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
+`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 판정 보관소는 결말이 확정된 순간의 선택과 측정값을 별도 스냅샷으로 저장한다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 지도와 홈 경보를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
 
 활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 

@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — naturally written field scenarios for the forest pilgrimage and Dead Zone return protocol.
+// Project Curse 5.26.0 — naturally written field scenarios and the conditional Dead Zone recovery operation.
 (function(root){
   'use strict';
 
@@ -156,6 +156,79 @@
           sealed:{id:'sealed',code:'ENDING / TOTAL QUARANTINE',title:'검문소 봉쇄',tone:'contained',status:'WESTERN CORRIDOR SEALED',summary:'검문소 07의 내외측문이 모두 용접됐다. 마지막 카메라 영상에서 네 귀환자는 봉쇄 명령 직전까지 다섯 번째 사람과 대화하고 있었지만, 그 자리는 영상 압축 오류로만 남았다.',consequence:'침투 가능성은 억제됐으나 생존자 신원도 확정되지 않았다. 서부 회랑의 모든 귀환 접수가 중단됐다.'},
           fifth:{id:'fifth',code:'ENDING / OPERATOR ADDED',title:'다섯 번째 귀환자',tone:'hostile',status:'OPERATOR 05 / SESSION ACTIVE',summary:'문이 열린 뒤 통과 기록에는 다섯 명이 표시됐다. 네 귀환자는 모두 존재하지만 다섯 번째 인물의 영상은 없다. 대신 현재 단말의 로그인 기록이 데드존 출발 명단에서 발견됐다.',consequence:'검문소 내부망의 사용자 수가 하나 증가했다. 서부 귀환 회랑 좌표는 외부에서 정상으로 보이지만 내부 신원 체계는 신뢰할 수 없다.'},
           reverse:{id:'reverse',code:'ENDING / OUTBOUND REOPENED',title:'역방향 순례',tone:'unstable',status:'RECOVERY TEAM OUTBOUND',summary:'귀환 판정은 보류됐고 조사팀이 원래 구조 신호를 따라 폐쇄선 밖으로 출발했다. 네 귀환자는 그들이 향한 방향을 보자 처음으로 서로 다른 표정을 지었다.',consequence:'세 번째 현장 작전의 전진 경로가 열렸다. 귀환자들은 아직 격리 중이며 조사팀의 호출 부호가 하나씩 다섯 번째 신호로 바뀌고 있다.'}
+        }
+      },
+      'deadzone-recovery':{
+        id:'deadzone-recovery',code:'OUTBOUND RECOVERY / DZ-R05',title:'검문소 아래의 구조 신호',region:'북미 데드존 · 지하 전진 회수선',
+        summary:'DZ-VR-04에 남은 좌표를 따라 검문소 07 아래의 존재하지 않는 층으로 내려가, 최초 구조 신호의 발생원과 먼저 도착해 있는 회수팀의 흔적을 확인한다.',
+        directive:'호출 부호는 본인이 먼저 말하기 전까지 대신 부르지 않는다. 귀환자의 공통 기억과 앞으로 남겨질 자신의 흔적을 항법 자료로 사용하지 않는다.',
+        theme:'recovery',channel:'U.A.C OUTBOUND RECOVERY CHANNEL',entryLabel:'DZ-VR-04 VERIFIED / OUTBOUND AUTHORIZED',directiveLabel:'RECOVERY DIRECTIVE',
+        unlock:{type:'verdict',id:'DZ-VR-04',label:'역방향 순례 판정 필요'},
+        metrics:[{key:'team',label:'TEAM',tone:'team',initial:100},{key:'tether',label:'TETHER',tone:'tether',initial:88},{key:'depth',label:'DEPTH',tone:'depth',initial:6},{key:'echo',label:'ECHO',tone:'echo',initial:4}],
+        outcomeLabels:{secured:'ROUTE SECURED',contained:'RISK CONTAINED',compromised:'SIGNAL COMPROMISED'},negativeOutcomes:['compromised'],
+        records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-recovery',incident:'evt-deadzone-recovery',primaryRecord:'Dead_Zone_Pilgrimage',guideRecord:'DZ-VR-04',mapTarget:{detail:'deadzone-return-corridor',site:'dead-origin-beacon'},
+        map:{viewBox:'0 0 900 420',points:[[82,92],[225,150],[370,218],[517,270],[668,326],[818,362]],labels:['지하 출발 좌표','매몰 검문소 06','이름 없는 주거지','역행 고속도로','원신호 발생점','회수·봉쇄선']},
+        stages:[
+          {
+            id:'sublevel',code:'RECOVERY 01',time:'06:21',title:'검문소 아래의 좌표',location:'검문소 07 지하 / 도면상 빈 공간',
+            narrative:'DZ-VR-04의 첫 좌표는 내륙이 아니라 검문소 화물 승강기 아래를 가리킨다. 승강기에는 없는 지하 8층 버튼이 켜져 있고, 닫힌 문 너머에서는 회수팀 네 명의 목소리가 출발 보고를 반복한다.',
+            signal:'OUTBOUND TEAM 04 / VOICE COUNT 04 / DEPARTURE TIME -17 MIN',rule:{code:'RECOVERY 01',text:'출발 전에 귀환할 물리 경로를 남겨라. 먼저 들린 자신의 보고에는 대답하지 마라.'},
+            choices:[
+              {id:'anchor-tether',label:'수동 사다리를 열고 물리 견인선을 고정한다',description:'하강은 느리지만 검문소와 이어진 실제 장력을 계속 확인할 수 있다.',tone:'safe',deltas:{team:0,tether:9,depth:8,echo:2},ruleOutcome:'secured'},
+              {id:'answer-elevator',label:'목소리에 응답하고 지하 8층 버튼을 누른다',description:'곧바로 아래층에 도착하지만 승강기 안의 인원 표시는 다섯 명으로 바뀐다.',tone:'risk',deltas:{team:-6,tether:-14,depth:15,echo:13},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'checkpoint-06',code:'RECOVERY 02',time:'06:38',title:'매몰된 검문소 06',location:'지하 8층 / 운영 기록 19년 선행',
+            narrative:'벽 뒤에서 검문소 06의 간판과 출입 기록이 드러난다. 기록에는 지금 막 출발한 회수팀이 열아홉 해 전에 이곳으로 귀환했고, 네 사람 모두 “구조 신호를 찾지 못했다”고 진술한 것으로 적혀 있다.',
+            signal:'CHECKPOINT 06 / RETURN LOG PRECEDES DEPARTURE / PERSONNEL 04',rule:{code:'RECOVERY 02',text:'도착 기록이 출발보다 빠르면 이름을 대조하지 말고 시계부터 분리하라.'},
+            choices:[
+              {id:'seal-roster',label:'귀환 명단을 덮고 각자의 시계를 따로 봉인한다',description:'누가 돌아온 것으로 적혔는지 확인하지 않은 채 물리 시간만 비교한다.',tone:'safe',deltas:{team:3,tether:5,depth:9,echo:-2},ruleOutcome:'contained'},
+              {id:'read-roster',label:'열아홉 해 전 귀환 명단을 전부 읽는다',description:'네 이름은 일치하지만 다섯 번째 줄에는 현재 단말 운영자가 적혀 있다.',tone:'danger',deltas:{team:-8,tether:-8,depth:12,echo:16},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'nameless-homes',code:'RECOVERY 03',time:'07:04',title:'이름이 사라진 주거지',location:'지하 주거 구획 / 외부 하늘 신호 감지',
+            narrative:'검문소 뒤편에는 햇빛과 바람까지 재현된 주택가가 있다. 문패에는 팀원의 호출 부호가 하나씩 적혀 있고, 각 집 안에서는 그 사람이 가장 오래 듣지 못한 가족의 목소리가 현관문을 열어 달라고 말한다.',
+            signal:'RESIDENTIAL SKY FALSE / FOUR HOMES / FAMILY VOICE MATCH',rule:{code:'RECOVERY 03',text:'자기 이름이 적힌 집에는 들어가지 마라. 기억이 아니라 대형을 따라 이동하라.'},
+            choices:[
+              {id:'mark-exteriors',label:'문을 열지 않고 네 집의 외벽에 같은 표식을 남긴다',description:'가족의 목소리를 기록하되 팀 대형과 견인선을 유지한다.',tone:'safe',deltas:{team:7,tether:4,depth:10,echo:3},ruleOutcome:'secured'},
+              {id:'split-homes',label:'각자 자신의 집에 들어가 목소리를 확인한다',description:'안에서는 몇 분이지만 바깥에서는 한 사람씩 몇 시간씩 사라진다.',tone:'danger',deltas:{team:-22,tether:-13,depth:15,echo:18},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'reverse-highway',code:'RECOVERY 04',time:'07:37',title:'역행 고속도로',location:'표지판 거리 -12km / 발자국 선행',
+            narrative:'차량과 빗물은 모두 출발지 쪽으로 거꾸로 흐른다. 도로 위에는 회수팀 장비와 같은 밑창 자국이 원신호 방향으로 이어지며, 아직 하지 않은 무전이 뒤쪽에서 차례로 재생된다.',
+            signal:'DISTANCE DECREASING / FOOTPRINTS LEAD TEAM / RADIO FUTURE ECHO',rule:{code:'RECOVERY 04',text:'앞서 있는 자신의 흔적을 따라가지 마라. 장력이 유지되는 방향만 믿어라.'},
+            choices:[
+              {id:'walk-against-echo',label:'무전을 끄고 견인선 장력에 맞춰 역행한다',description:'화면과 소리를 버리고 실제로 당겨지는 방향만 따라간다.',tone:'safe',deltas:{team:4,tether:8,depth:11,echo:-5},ruleOutcome:'secured'},
+              {id:'follow-footprints',label:'미래의 발자국을 지름길로 사용한다',description:'빠르게 전진하지만 발자국 하나가 대열 뒤에서 새로 생기기 시작한다.',tone:'risk',deltas:{team:-9,tether:-15,depth:17,echo:17},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'origin-beacon',code:'RECOVERY 05',time:'08:05',title:'원신호 발생점',location:'지하 관제탑 / 구조 신호 04:12 반복',
+            narrative:'관제탑의 송신기는 회수팀 장비를 분해해 만든 부품으로 작동한다. 네 개의 배낭과 카메라가 이미 연결돼 있고, 그중 하나에는 아직 마르지 않은 피가 묻어 있다. 신호는 구조 요청이 아니라 검문소의 문을 여는 승인문을 반복한다.',
+            signal:'BEACON BUILT FROM CURRENT EQUIPMENT / APPROVAL LOOP ACTIVE',rule:{code:'RECOVERY 05',text:'자신의 장비로 만들어진 신호에는 신원을 보내지 마라. 전원과 기록을 따로 분리하라.'},
+            choices:[
+              {id:'split-power',label:'송신 전원을 끊고 원신호만 수동 매체에 복사한다',description:'신호를 회수하되 검문소로 향하는 자동 승인은 차단한다.',tone:'safe',deltas:{team:3,tether:4,depth:8,echo:-7},ruleOutcome:'contained'},
+              {id:'full-identification',label:'네 호출 부호로 구조 신호에 정식 응답한다',description:'송신기는 곧바로 다섯 번째 호출 부호를 발급하고 철수 경로를 승인한다.',tone:'danger',deltas:{team:-13,tether:-16,depth:12,echo:24},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'final-relay',code:'RECOVERY 06',time:'08:22',title:'다섯 번째 신호의 주인',location:'원신호 하부 회랑 / 검문소 07 수직선',
+            narrative:'송신기 아래에는 먼저 도착한 회수팀 네 명이 앉아 있다. 얼굴과 장비는 현재 팀과 같지만 열아홉 해 늙어 있다. 그들은 “우리가 돌아가면 너희가 여기에 남는다”고 말하며, 한 사람만 중계기에 연결하면 나머지는 모두 철수할 수 있다고 주장한다.',
+            signal:'DUPLICATE TEAM 04 / RELAY REQUIRES 01 / TETHER TERMINUS',rule:{code:'FINAL RECOVERY',text:'무엇을 사람으로 회수했고 무엇을 신호로 남겼는지 분리해 기록하라.'},
+            choices:[
+              {id:'recover-beacon',label:'중계기를 분리하고 두 팀을 같은 견인선에 묶는다',description:'원신호와 생존 가능 인원을 함께 지상으로 데려간다.',tone:'safe',deltas:{team:8,tether:9,depth:-18,echo:7},ruleOutcome:'secured',ending:'recovered'},
+              {id:'seal-origin',label:'회랑을 붕괴시키고 현재 팀만 견인선으로 철수한다',description:'중계와 복제팀을 지하에 봉쇄해 검문소로 이어지는 신호를 끊는다.',tone:'neutral',deltas:{team:4,tether:6,depth:-12,echo:-14},ruleOutcome:'contained',ending:'buried'},
+              {id:'accept-relay',label:'운영자 호출 부호를 중계기에 등록한다',description:'현장 인원은 모두 풀려나지만 단말 접속이 원신호의 다섯 번째 중계점이 된다.',tone:'danger',deltas:{team:-10,tether:-24,depth:4,echo:30},ruleOutcome:'compromised',ending:'relay'}
+            ]
+          }
+        ],
+        endings:{
+          recovered:{id:'recovered',code:'ENDING / BEACON RECOVERED',title:'두 번 돌아온 사람들',tone:'allied',status:'BEACON RECOVERED / PERSONNEL 08',summary:'견인선 끝에서 여덟 명이 지상으로 올라왔다. 먼저 도착했던 네 사람은 검문소 햇빛을 보자 빠르게 젊어졌고, 두 팀의 얼굴은 끝내 구분할 수 없게 됐다.',consequence:'최초 구조 신호의 송신기가 격리 보관소로 회수됐다. 검문소는 생존자 여덟 명을 네 쌍으로 분리해 서로 다른 기억이 생기는지 관찰한다.'},
+          buried:{id:'buried',code:'ENDING / ORIGIN SEALED',title:'닫힌 출발선',tone:'contained',status:'OUTBOUND SHAFT SEALED',summary:'원신호 회랑과 먼저 도착한 팀은 붕괴 구역 아래에 남았다. 현재 팀 네 명은 견인선을 따라 귀환했지만, 누구도 지하에서 본 자신의 얼굴을 설명하지 못한다.',consequence:'다섯 번째 신호는 멎었고 전진 회수선은 영구 봉쇄됐다. 검문소 07 지하에서는 매일 08시 22분에 네 번의 구조 타격음이 들린다.'},
+          relay:{id:'relay',code:'ENDING / OPERATOR RELAY',title:'다섯 번째 중계자',tone:'hostile',status:'OPERATOR RELAY / SIGNAL CONTINUES',summary:'현장에 있던 여덟 명은 모두 지상으로 돌아왔다. 대신 단말 운영자 계정이 원신호 중계기에 등록됐고, 데드존 전역의 구조 신호가 같은 목소리로 바뀌었다.',consequence:'검문소의 문은 닫혀 있지만 승인 요청은 계속 들어온다. 현재 단말을 끄면 가장 가까운 다른 단말에서 같은 세션이 이어진다.'}
         }
       }
     }

@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — regional drilldown districts, route focus, and threat intelligence.
+// Project Curse 5.26.0 — regional drilldown districts, route focus, and recovery intelligence.
 (function(root){
   'use strict';
 
@@ -78,7 +78,8 @@
         routes:[
           {id:'return-only',className:'pilgrimage',label:'RETURN TESTIMONY ONLY',risk:'high',signal:'testimony',rule:'귀환 증언을 전진 항법에 사용하지 말 것',siteIds:['dead-return-shore','dead-checkpoint-07','dead-quarantine-ring','dead-last-overlap','dead-inland-silence'],points:[[92,430],[245,366],[382,292],[520,232],[682,171],[893,112]]},
           {id:'lost-outbound',className:'broken',label:'OUTBOUND DATA LOST',risk:'critical',signal:'lost',rule:'소실된 출발 경로를 역산하지 말 것',siteIds:['dead-quarantine-ring','dead-last-overlap','dead-inland-silence'],points:[[382,292],[486,351],[622,326]]},
-          {id:'exchange-channel',className:'front',label:'NEUTRAL EXCHANGE CHANNEL',risk:'medium',signal:'encrypted',rule:'중립 분파의 호출부호가 일치할 때만 응답',siteIds:['dead-checkpoint-07','dead-neutral-camp','dead-exchange'],points:[[245,366],[344,435],[475,421]]}
+          {id:'exchange-channel',className:'front',label:'NEUTRAL EXCHANGE CHANNEL',risk:'medium',signal:'encrypted',rule:'중립 분파의 호출부호가 일치할 때만 응답',siteIds:['dead-checkpoint-07','dead-neutral-camp','dead-exchange'],points:[[245,366],[344,435],[475,421]]},
+          {id:'recovery-outbound',className:'hazard',label:'DZ-R05 OUTBOUND RECOVERY',risk:'critical',signal:'sealed',rule:'DZ-VR-04 판정 이후에만 전진 회수선을 개방할 것',siteIds:['dead-checkpoint-07','dead-sublevel-08','dead-checkpoint-06','dead-reverse-highway','dead-origin-beacon'],points:[[245,366],[305,320],[430,274],[602,221],[786,157]]}
         ],
         sites:[
           {id:'dead-return-shore',x:92,y:430,type:'returned',label:'서부 귀환 지점',meta:'귀환 기록 7건 / 출발 기록 불명',status:'격리선 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
@@ -87,7 +88,11 @@
           {id:'dead-exchange',x:475,y:421,type:'signal',label:'남북 교신 교환점',meta:'평화 공존 분파와 남방 채널 연결',status:'암호화 대기',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',verdictStates:{execute:{status:'교신 채널 소실',tone:'failed'},detain:{status:'증언 검증 채널',tone:'contained'},cooperate:{status:'교환 채널 개방',tone:'allied'},defer:{status:'암호화 대기',tone:'unknown'}}},
           {id:'dead-quarantine-ring',x:382,y:292,type:'zone',label:'귀환자 격리환',meta:'비인간 반응 3건 기록',status:'봉쇄 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
           {id:'dead-last-overlap',x:520,y:232,type:'anomaly',label:'마지막 좌표 중첩점',meta:'7개 진술이 이 지점 이후 분기',status:'전진 금지',confidence:'disputed',records:['Dead_Zone_Pilgrimage']},
-          {id:'dead-inland-silence',x:893,y:112,type:'unknown',label:'내륙 무응답 경계',meta:'도시·국가·위성 신호 동시 소실',status:'NO RESPONSE',confidence:'disputed',records:['Dead_Zone_Pilgrimage']}
+          {id:'dead-inland-silence',x:893,y:112,type:'unknown',label:'내륙 무응답 경계',meta:'도시·국가·위성 신호 동시 소실',status:'NO RESPONSE',confidence:'disputed',records:['Dead_Zone_Pilgrimage']},
+          {id:'dead-sublevel-08',x:305,y:320,type:'anomaly',label:'도면에 없는 지하 8층',meta:'검문소 07 수직 하부 / 승강기 응답',status:'DZ-VR-04 필요',confidence:'disputed',operation:'op-deadzone-recovery',incident:'evt-deadzone-recovery'},
+          {id:'dead-checkpoint-06',x:430,y:274,type:'facility',label:'매몰 검문소 06',meta:'귀환 기록이 출발보다 19년 빠름',status:'시간 기록 상충',confidence:'disputed',operation:'op-deadzone-recovery'},
+          {id:'dead-reverse-highway',x:602,y:221,type:'anomaly',label:'역행 고속도로',meta:'미래 무전·선행 발자국 감지',status:'항법 금지',confidence:'testimony',operation:'op-deadzone-recovery'},
+          {id:'dead-origin-beacon',x:786,y:157,type:'signal',label:'원신호 발생점',meta:'현재 회수팀 장비로 구성된 송신기',status:'판정 기록 필요',confidence:'disputed',operation:'op-deadzone-recovery',incident:'evt-deadzone-recovery'}
         ]
       },
       {

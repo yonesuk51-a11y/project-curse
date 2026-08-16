@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — geographic control map, routes, drilldowns, and shared incident traces.
+// Project Curse 5.26.0 — geographic control map, recovery routes, drilldowns, and shared incident traces.
 (function(root){
   'use strict';
 
@@ -11,7 +11,7 @@
   const network=root.ProjectCurseIncidentNetwork;
 
   root.ProjectCurseMapRoom=freeze({
-    version:'map-room-v8',
+    version:'map-room-v9',
     viewBox:'0 0 1200 620',
     geography:[
       {id:'greenland',d:'M319 53 L360 39 394 70 378 121 341 132 311 95 Z'},
@@ -61,6 +61,7 @@
     ],
     routes:[
       {id:'deadzone-pilgrimage',region:'northamerica',className:'pilgrimage',points:[[151,226],[177,202],[203,181],[236,164],[273,151]],label:'RETURN PATH / TESTIMONY ONLY'},
+      {id:'deadzone-recovery-outbound',region:'northamerica',className:'hostile',points:[[151,226],[170,214],[189,201],[211,184],[236,164]],label:'DZ-R05 / VERDICT LOCKED'},
       {id:'gbf-western',region:'southamerica',className:'pilgrimage',points:[[425,397],[391,414],[351,442],[371,477],[408,489]],label:'WESTERN PILGRIM TRACE'},
       {id:'southern-mobilization',region:'southamerica',className:'hostile',points:[[427,398],[406,372],[379,354],[350,340]],label:'COASTAL MOBILIZATION'},
       {id:'northern-pressure',region:'eastasia',className:'front',points:[[841,197],[887,166],[934,120],[980,148]],label:'NORTHERN FRONT'}
@@ -78,7 +79,7 @@
       {id:'blood-lake-site',region:'europe',x:579,y:151,type:'incident',title:'피의 호수 사건권',meta:'독일·덴마크 사이 북해권',status:'잔류 반응',confidence:'confirmed',records:['Immortality_860201','Unknown_Record2_860205'],operation:'op-immortality',incident:'evt-blood-lake'},
       {id:'fhc-europe',region:'europe',x:611,y:181,type:'facility',title:'F.H.C 유럽 분석권',meta:'회수 샘플·기술 분석',status:'부분 가동',confidence:'observed'},
 
-      {id:'dead-interior',region:'northamerica',x:236,y:164,type:'unknown',title:'내륙 무응답권',meta:'국가·도시 신호 소실',status:'NO CARTOGRAPHIC RESPONSE',confidence:'disputed'},
+      {id:'dead-interior',region:'northamerica',x:236,y:164,type:'unknown',title:'지하 원신호 좌표',meta:'검문소 07 수직 하부 / DZ-R05',status:'DZ-VR-04 VERDICT REQUIRED',confidence:'disputed',operation:'op-deadzone-recovery',incident:'evt-deadzone-recovery'},
       {id:'returned-coast',region:'northamerica',x:151,y:226,type:'returned',title:'서부 귀환 지점',meta:'순례자 귀환 기록 7건',status:'격리선 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return',incident:'evt-deadzone-return'},
       {id:'former-us-branch',region:'northamerica',x:304,y:223,type:'facility',title:'위버멘시 미국 지부',meta:'2006년 습격 이후 폐쇄',status:'좌표 재확인 불가',confidence:'historical',incident:'evt-deadzone-raid'},
 
@@ -109,6 +110,29 @@
           {time:'05:17',title:'기억 체크섬',note:'네 번째 귀환자가 개봉하지 않은 다섯 번째 봉인의 문장을 읽었다.',route:[[92,112],[244,168],[397,231],[548,282]],alternate:[[397,231],[548,240]],units:[{id:'R-04',x:548,y:282,status:'split'},{id:'X-05',x:548,y:240,status:'unknown'}]},
           {time:'05:44',title:'격리 회랑 봉쇄',note:'검문소 밖에서 내부 인원과 동일한 네 호출 부호가 구조 신호를 보냈다.',route:[[92,112],[244,168],[397,231],[548,282],[704,348]],alternate:[[92,112],[704,310]],units:[{id:'R-01/04',x:704,y:348,status:'unstable'},{id:'EXT-05',x:704,y:310,status:'unknown'}]},
           {time:'06:03',title:'최종 귀환 판정',note:'네 명을 통과시키기 위해 시스템이 다섯 번째 운영자 승인을 요구했다.',route:[[92,112],[244,168],[397,231],[548,282],[704,348],[874,402]],units:[{id:'R-01/04',x:874,y:402,status:'split'},{id:'OP-05',x:850,y:379,status:'unknown'}]}
+        ]
+      },
+      {
+        id:'op-deadzone-recovery',label:'검문소 아래의 구조 신호',code:'DZ-OUTBOUND-R05',region:'북미 데드존 · 검문소 지하',
+        incident:'evt-deadzone-recovery',scenario:'deadzone-recovery',unlockVerdict:'DZ-VR-04',classification:'BLACK / VERDICT GATED',status:'SEALED UNTIL DZ-VR-04',
+        summary:'검문소 07 지하의 존재하지 않는 층에서 최초 구조 신호와 먼저 도착한 회수팀을 추적하는 전진 회수 작전.',
+        directive:'DZ-VR-04 판정 기록을 복호화하기 전에는 출발 좌표를 개방하지 않는다. 물리 견인선이 끊기면 미래 흔적을 따라가지 말고 현 위치를 봉쇄한다.',
+        objectives:['검문소 07 지하 출발 좌표 확인','매몰 검문소 06 시간 기록 격리','팀 호출 부호와 가족 음성 분리','역행 고속도로 물리 장력 유지','원신호 송신기 회수 또는 봉쇄'],
+        sites:[
+          {x:82,y:92,label:'지하 출발 좌표',kind:'facility'},
+          {x:225,y:150,label:'매몰 검문소 06',kind:'facility'},
+          {x:370,y:218,label:'이름 없는 주거지',kind:'unknown'},
+          {x:517,y:270,label:'역행 고속도로',kind:'anomaly'},
+          {x:668,y:326,label:'원신호 발생점',kind:'signal'},
+          {x:818,y:362,label:'회수·봉쇄선',kind:'incident'}
+        ],
+        steps:[
+          {time:'06:21',title:'지하 출발 좌표',note:'화물 승강기 아래의 도면상 빈 공간에서 회수팀의 출발 보고가 17분 먼저 수신됐다.',route:[[82,92]],units:[{id:'R05-A',x:82,y:92,status:'normal'},{id:'OP-05',x:104,y:108,status:'unknown'}]},
+          {time:'06:38',title:'매몰 검문소 06',note:'현재 회수팀의 귀환 기록이 출발보다 열아홉 해 빠른 시각으로 남아 있다.',route:[[82,92],[225,150]],units:[{id:'R05-A/D',x:225,y:150,status:'unstable'},{id:'X-05',x:206,y:169,status:'unknown'}]},
+          {time:'07:04',title:'이름 없는 주거지',note:'네 채의 집에서 각 팀원이 가장 오래 듣지 못한 가족의 목소리가 확인됐다.',route:[[82,92],[225,150],[370,218]],alternate:[[225,150],[370,180]],units:[{id:'R05-A/D',x:370,y:218,status:'unstable'}]},
+          {time:'07:37',title:'역행 고속도로',note:'이동 방향과 반대로 흐르는 차량 사이에서 아직 남기지 않은 팀 발자국이 발견됐다.',route:[[82,92],[225,150],[370,218],[517,270]],alternate:[[370,218],[517,231]],units:[{id:'R05-A/D',x:517,y:270,status:'split'},{id:'ECHO-04',x:517,y:231,status:'unknown'}]},
+          {time:'08:05',title:'원신호 발생점',note:'구조 송신기는 현재 회수팀과 동일한 일련번호의 장비로 조립돼 있었다.',route:[[82,92],[225,150],[370,218],[517,270],[668,326]],units:[{id:'R05-A/D',x:668,y:326,status:'unstable'},{id:'BEACON-05',x:643,y:301,status:'unknown'}]},
+          {time:'08:22',title:'다섯 번째 중계',note:'열아홉 해 늙은 동일 회수팀 네 명과 운영자용 중계 슬롯 하나가 확인됐다.',route:[[82,92],[225,150],[370,218],[517,270],[668,326],[818,362]],alternate:[[818,362],[668,326],[82,92]],units:[{id:'R05-A/H',x:818,y:362,status:'split'},{id:'OP-05',x:792,y:339,status:'unknown'}]}
         ]
       },
       {

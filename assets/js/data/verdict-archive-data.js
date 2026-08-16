@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — conditional field-verdict archive definitions.
+// Project Curse 5.26.0 — conditional field-verdict archive definitions and recovery unlock chain.
 (function(root){
   'use strict';
 
@@ -66,13 +66,40 @@
         hidden:'이 문서를 열람하는 동안 검문소 사용자 수가 하나 늘었다. 접속 위치는 현재 화면으로 표시된다.'
       },
       {
-        id:'DZ-VR-04',scenarioId:'deadzone-return',endingId:'reverse',theme:'dead-zone',
+        id:'DZ-VR-04',scenarioId:'deadzone-return',endingId:'reverse',theme:'dead-zone',unlockScenario:'deadzone-recovery',
         code:'DZ-VR-04 / OUTBOUND REOPENED',title:'역방향 순례',
         lockedTitle:'데드존 귀환 판정 04',requirement:'「역방향 순례」 결말을 확인하면 열린다.',
         summary:'귀환 판정을 보류하고 별도 조사팀을 구조 신호가 시작된 방향으로 보냈다. 네 귀환자는 여전히 검문소에 격리돼 있다.',
         finding:'조사팀이 폐쇄선을 넘자 귀환자들의 기억과 표정이 처음으로 서로 달라졌다. 공통 기억을 유지하던 외부 압력이 약해진 것으로 보인다.',
         directive:'전진 회수 작전의 통신망을 검문소와 분리한다. 조사팀 호출 부호가 다섯 번째 신호로 바뀌면 즉시 송신을 끊는다.',
         hidden:'조사팀의 첫 좌표는 데드존 안쪽이 아니라 검문소 지하를 가리켰다. 해당 층은 건축 도면에 없다.'
+      },
+      {
+        id:'DZ-RV-01',scenarioId:'deadzone-recovery',endingId:'recovered',theme:'dead-zone-recovery',
+        code:'DZ-RV-01 / BEACON RECOVERED',title:'두 번 돌아온 사람들',
+        lockedTitle:'데드존 전진 회수 판정 01',requirement:'「두 번 돌아온 사람들」 결말을 확인하면 열린다.',
+        summary:'원신호 송신기와 동일한 회수팀 두 조가 지상으로 돌아왔다. 여덟 명은 서로를 원본이나 복제라고 지목하지 않았다.',
+        finding:'신호는 사람을 복제한 것이 아니라 동일 인원의 서로 다른 귀환 시점을 한 장소에 겹친 것으로 보인다. 지상에 오른 뒤 외형 연령이 같아져 물리적 구분은 불가능하다.',
+        directive:'여덟 명을 네 쌍으로 분리 격리하고 서로 다른 경험이 생기는지 관찰한다. 원신호 송신기는 검문소 시간망과 연결하지 않는다.',
+        hidden:'두 팀의 기억이 처음으로 달라진 순간은 송신기 회수가 아니라 이 판정 기록의 제목을 읽었을 때였다.'
+      },
+      {
+        id:'DZ-RV-02',scenarioId:'deadzone-recovery',endingId:'buried',theme:'dead-zone-recovery',
+        code:'DZ-RV-02 / ORIGIN SEALED',title:'닫힌 출발선',
+        lockedTitle:'데드존 전진 회수 판정 02',requirement:'「닫힌 출발선」 결말을 확인하면 열린다.',
+        summary:'원신호 회랑과 먼저 도착한 회수팀을 붕괴 구역 아래에 봉쇄했다. 현재 팀 네 명은 물리 견인선을 따라 귀환했다.',
+        finding:'구조 신호는 중단됐지만 지하 타격음은 검문소의 하루보다 17분 빠르게 반복된다. 봉쇄는 공간을 닫았을 뿐 두 시간대의 접촉까지 끊지는 못했다.',
+        directive:'화물 승강기와 지하 사다리를 콘크리트로 매립한다. 매일 08시 05분부터 08시 22분까지 검문소 통신을 수동 차단한다.',
+        hidden:'봉쇄 후 회수된 견인선의 끝에는 잘린 흔적이 없다. 선 전체가 처음부터 검문소 안에 놓여 있었던 것으로 분석됐다.'
+      },
+      {
+        id:'DZ-RV-03',scenarioId:'deadzone-recovery',endingId:'relay',theme:'dead-zone-recovery',
+        code:'DZ-RV-03 / OPERATOR RELAY',title:'다섯 번째 중계자',
+        lockedTitle:'데드존 전진 회수 판정 03',requirement:'「다섯 번째 중계자」 결말을 확인하면 열린다.',
+        summary:'현장 인원은 모두 귀환했으나 현재 단말 운영자 계정이 원신호 중계망에 등록됐다. 구조 신호의 목소리도 운영자와 일치한다.',
+        finding:'다섯 번째 신호는 사람이 아니라 승인 권한이 이동하는 자리였다. 계정을 폐기할 때마다 다음 관제 단말이 그 자리를 자동으로 이어받는다.',
+        directive:'단말을 종료하지 말고 외부망과 분리한 채 무인 전원을 유지한다. 새 구조 요청은 사람의 증언이 아니라 중계망의 복제 신호로 분류한다.',
+        hidden:'이 문서에 표시되는 현재 열람자 수는 한 명이다. 검문소 기록에는 같은 세션을 열람 중인 사용자가 다섯 명으로 나온다.'
       }
     ]
   });

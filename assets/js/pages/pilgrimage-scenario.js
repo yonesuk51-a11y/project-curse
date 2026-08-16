@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — immersive scenarios with revised Korean interface copy.
+// Project Curse 5.26.0 — immersive scenarios with conditional recovery access.
 (function(root){
   'use strict';
 
@@ -18,15 +18,25 @@
     let openState=false;let resetArmed=false;let previousFocus=null;
 
     const scenario=()=>data.scenarios?.[activeScenarioId]||null;
+    const accessFor=id=>{
+      const target=data.scenarios?.[id];
+      if(!target) return {allowed:false,requirement:null};
+      const requirement=target.unlock;
+      if(!requirement) return {allowed:true,requirement:null};
+      const allowed=requirement.type==='verdict'&&root.ProjectCurseVerdictArchiveState?.isUnlocked?.(requirement.id);
+      return {allowed:Boolean(allowed),requirement};
+    };
     const polyline=points=>(points||[]).map(point=>point.join(',')).join(' ');
     const severity=summary=>{
       if(activeScenarioId==='deadzone-return') return summary.exposure>=60||summary.identity<=35?'critical':summary.exposure>=34||summary.coherence<=50?'unstable':'nominal';
+      if(activeScenarioId==='deadzone-recovery') return summary.echo>=58||summary.team<=45||summary.tether<=30?'critical':summary.echo>=30||summary.team<=70||summary.tether<=55?'unstable':'nominal';
       return summary.corruption>=55||summary.signal<=35?'critical':summary.corruption>=28||summary.fear>=58?'unstable':'nominal';
     };
     const meter=(metric,value)=>`<div class="pc-pilgrimage-meter is-${escapeHTML(metric.tone||metric.key)}"><span>${escapeHTML(metric.label)}</span><b>${String(value).padStart(2,'0')}%</b><i><em style="--pilgrimage-meter:${value}%"></em></i></div>`;
 
     function renderTerrain(current){
       if(current.theme==='deadzone') return `<path class="pc-pilgrimage-wasteland" d="M0 62 C131 105 228 31 347 91 S566 43 695 103 817 58 900 97 L900 420 0 420Z"></path><path class="pc-pilgrimage-quarantine" d="M126 0V420M278 0V420M432 0V420M590 0V420M746 0V420"></path><path class="pc-pilgrimage-dead-road" d="M0 48 C173 126 257 191 398 231 S651 310 900 392"></path>`;
+      if(current.theme==='recovery') return `<path class="pc-pilgrimage-wasteland" d="M0 34 C155 76 241 11 391 69 S659 20 900 82 L900 420 0 420Z"></path><path class="pc-pilgrimage-quarantine" d="M0 101H900M0 196H900M0 291H900M0 386H900"></path><path class="pc-pilgrimage-dead-road" d="M12 74 C167 137 278 174 405 232 S650 306 900 388"></path><path class="pc-pilgrimage-recovery-shaft" d="M82 0V92M818 362V420"></path>`;
       return `<path class="pc-pilgrimage-canopy" d="M0 71 C133 11 231 92 354 48 S583 88 699 37 828 62 900 30 L900 420 0 420Z"></path><path class="pc-pilgrimage-river" d="M428 0 C392 98 507 145 459 222 S446 334 514 420"></path>`;
     }
 
@@ -34,8 +44,8 @@
       const current=scenario();const points=current.map.points;
       const activeCount=summary.status==='idle'?1:Math.max(1,Math.min(points.length,summary.completed+1));
       const travelled=points.slice(0,activeCount);
-      const integrity=current.theme==='deadzone'?summary.coherence:summary.signal;
-      const integrityLabel=current.theme==='deadzone'?'IDENTITY TRACE':'ROUTE INTEGRITY';
+      const integrity=current.theme==='deadzone'?summary.coherence:current.theme==='recovery'?summary.tether:summary.signal;
+      const integrityLabel=current.theme==='deadzone'?'IDENTITY TRACE':current.theme==='recovery'?'PHYSICAL TETHER':'ROUTE INTEGRITY';
       return `<div class="pc-pilgrimage-map" aria-label="${escapeHTML(current.title)} 진행도">
         <svg viewBox="${escapeHTML(current.map.viewBox)}" role="img" aria-label="${escapeHTML(current.map.labels.join('에서 '))}까지 이어지는 현장 경로">
           <defs><pattern id="pc-pilgrim-grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30"></path></pattern><filter id="pc-pilgrim-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4" result="blur"></feGaussianBlur><feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs>
@@ -54,7 +64,7 @@
         <h1 id="pcPilgrimageTitle">${escapeHTML(current.title)}</h1><p>${escapeHTML(current.summary)}</p>
         <dl><div><dt>권역</dt><dd>${escapeHTML(current.region)}</dd></div><div><dt>연결 사건</dt><dd>${escapeHTML(current.incident.toUpperCase())}</dd></div><div><dt>현재 상태</dt><dd>${resume?escapeHTML(summary.status.toUpperCase()):'NOT STARTED'}</dd></div><div><dt>진행도</dt><dd>${summary.progress}%</dd></div></dl>
         <div class="pc-pilgrimage-directive"><b>${escapeHTML(current.directiveLabel)}</b><p>${escapeHTML(current.directive)}</p></div>
-        <div class="pc-pilgrimage-intro-actions"><button type="button" data-pilgrimage-start>${resume?'현장 기록 이어 보기':current.theme==='deadzone'?'귀환자 검문 시작':'순례 시작'}</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.guideRecord)}">관련 기록 먼저 확인</button></div>
+        <div class="pc-pilgrimage-intro-actions"><button type="button" data-pilgrimage-start>${resume?'현장 기록 이어 보기':current.theme==='deadzone'?'귀환자 검문 시작':current.theme==='recovery'?'전진 회수 작전 시작':'순례 시작'}</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.guideRecord)}">관련 기록 먼저 확인</button></div>
       </article>`;
     }
 
@@ -75,7 +85,7 @@
       return `<article class="pc-pilgrimage-ending is-${escapeHTML(ending.tone)}">
         <small>${escapeHTML(ending.code)}</small><h1 id="pcPilgrimageTitle">${escapeHTML(ending.title)}</h1><b>${escapeHTML(ending.status)}</b><p>${escapeHTML(ending.summary)}</p>
         <div class="pc-pilgrimage-ending-consequence"><span>관제 결과</span><p>${escapeHTML(ending.consequence)}</p></div><dl>${metricStats}</dl>
-        <div class="pc-pilgrimage-ending-actions">${verdict?`<button type="button" data-pilgrimage-open-verdict="${escapeHTML(verdict.id)}">복호화된 판정 기록 열기</button>`:''}<button type="button" data-pilgrimage-open-map>관제도에서 결과 확인</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.primaryRecord)}">관련 지역 기록 열기</button><button type="button" class="is-reset" data-pilgrimage-reset>${current.theme==='deadzone'?'현재 검문 진행 초기화':'현재 순례 진행 초기화'}</button></div>
+        <div class="pc-pilgrimage-ending-actions">${verdict?`<button type="button" data-pilgrimage-open-verdict="${escapeHTML(verdict.id)}">복호화된 판정 기록 열기</button>`:''}<button type="button" data-pilgrimage-open-map>관제도에서 결과 확인</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.primaryRecord)}">관련 지역 기록 열기</button><button type="button" class="is-reset" data-pilgrimage-reset>${current.theme==='deadzone'?'현재 검문 진행 초기화':current.theme==='recovery'?'현재 회수 작전 초기화':'현재 순례 진행 초기화'}</button></div>
       </article>`;
     }
 
@@ -92,14 +102,20 @@
 
     function open(id=activeScenarioId){
       if(!data.scenarios?.[id]) return false;
+      const access=accessFor(id);
+      if(!access.allowed){
+        root.ProjectCurseAudioControl?.play?.('screening.mismatch');
+        document.dispatchEvent(new CustomEvent('projectcurse:pilgrimage-access-denied',{detail:{scenarioId:id,requirement:access.requirement}}));
+        return false;
+      }
       activeScenarioId=id;store.select(id);
-      if(!openState){previousFocus=document.activeElement;openState=true;overlay.hidden=false;document.body.classList.add('pc-pilgrimage-open');document.getElementById('app')?.setAttribute('inert','');root.ProjectCurseAudioControl?.play?.(id==='deadzone-return'?'screening.enter':'pilgrimage.enter');}
+      if(!openState){previousFocus=document.activeElement;openState=true;overlay.hidden=false;document.body.classList.add('pc-pilgrimage-open');document.getElementById('app')?.setAttribute('inert','');root.ProjectCurseAudioControl?.play?.(id==='deadzone-return'||id==='deadzone-recovery'?'screening.enter':'pilgrimage.enter');}
       render();root.setTimeout(()=>overlay.querySelector('button,[tabindex]')?.focus({preventScroll:true}),40);return true;
     }
     function close(){
       if(!openState) return;
       openState=false;overlay.hidden=true;document.body.classList.remove('pc-pilgrimage-open');document.getElementById('app')?.removeAttribute('inert');
-      root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-return'?'screening.exit':'pilgrimage.exit');
+      root.ProjectCurseAudioControl?.play?.(activeScenarioId==='deadzone-return'||activeScenarioId==='deadzone-recovery'?'screening.exit':'pilgrimage.exit');
       try{previousFocus?.focus({preventScroll:true});}catch(_error){}
     }
     async function openRecord(recordId){close();await root.ProjectCurseShell?.navigate?.('archive-entry',{replace:false,historyMode:'push'});root.ProjectCurseRuntimeModules?.archiveIndex?.open?.(recordId);}
@@ -124,7 +140,7 @@
       if(control.dataset.pilgrimageOpenVerdict){openRecord(control.dataset.pilgrimageOpenVerdict);return;}
       if(control.dataset.pilgrimageOpenMap!==undefined){openMap();return;}
       if(control.dataset.pilgrimageReset!==undefined){
-        const resetLabel=scenario().theme==='deadzone'?'현재 검문 진행 초기화':'현재 순례 진행 초기화';
+        const resetLabel=scenario().theme==='deadzone'?'현재 검문 진행 초기화':scenario().theme==='recovery'?'현재 회수 작전 초기화':'현재 순례 진행 초기화';
         if(!resetArmed){resetArmed=true;control.dataset.confirmReset='1';control.textContent='한 번 더 누르면 현재 진행이 초기화됩니다';root.setTimeout(()=>{resetArmed=false;if(control.isConnected){delete control.dataset.confirmReset;control.textContent=resetLabel;}},3200);return;}
         store.reset(activeScenarioId);root.ProjectCurseAudioControl?.play?.('pilgrimage.exit');render();
       }
@@ -132,6 +148,6 @@
     document.addEventListener('keydown',event=>{if(openState&&event.key==='Escape'){event.preventDefault();close();}});
     document.addEventListener('projectcurse:pilgrimage-state-change',event=>{if(openState&&event.detail?.scenarioId===activeScenarioId) render();});
 
-    root.ProjectCursePilgrimageRuntime=Object.freeze({open,close,isOpen:()=>openState,render,getScenario:()=>scenario(),getActiveScenarioId:()=>activeScenarioId});
+    root.ProjectCursePilgrimageRuntime=Object.freeze({open,close,isOpen:()=>openState,render,accessFor,getScenario:()=>scenario(),getActiveScenarioId:()=>activeScenarioId});
   });
 })(window);

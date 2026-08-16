@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — live intelligence, verdict notification and operation resume owner.
+// Project Curse 5.26.0 — live intelligence, verdict notification and recovery resume owner.
 (function(root){
   'use strict';
 
@@ -30,7 +30,9 @@
       const operation=operationState?.getSummary?.()||{recovered:0,total:3,mapStep:0,status:'analysis',decision:null};
       const pilgrimage=pilgrimageState?.getSummary?.('unlit-fortress')||{status:'idle',completed:0,total:6,progress:0,endingData:null};
       const screening=pilgrimageState?.getSummary?.('deadzone-return')||{status:'idle',completed:0,total:6,progress:0,endingData:null};
-      const verdictSummary=verdictState?.getSummary?.()||{total:7,unlocked:0,unread:0,latest:null};
+      const recovery=pilgrimageState?.getSummary?.('deadzone-recovery')||{status:'idle',completed:0,total:6,progress:0,endingData:null};
+      const recoveryUnlocked=Boolean(verdictState?.isUnlocked?.('DZ-VR-04'));
+      const verdictSummary=verdictState?.getSummary?.()||{total:10,unlocked:0,unread:0,latest:null};
       const unreadVerdict=verdictState?.list?.().filter(entry=>entry.unread).sort((a,b)=>String(b.snapshot?.unlockedAt||'').localeCompare(String(a.snapshot?.unlockedAt||'')))[0]||null;
       const decision=operation.decision;
       const strip=home.querySelector('.pc-terminal-system-strip');
@@ -82,6 +84,12 @@
           status:screening.status==='complete'?'VERDICT SAVED':screening.status==='active'?`${screening.progress}% SCREENED`:'SCREENING READY',
           tone:screening.status==='complete'?(screening.endingData?.tone==='hostile'?'critical':screening.endingData?.tone==='unstable'?'unstable':'recovered'):screening.status==='active'?'unstable':signal.tone
         };
+        if(index===3) return {
+          ...signal,route:'map-room',pilgrimage:recoveryUnlocked?'deadzone-recovery':null,operation:recoveryUnlocked?null:'op-deadzone-recovery',record:null,
+          label:recovery.status==='complete'?`전진 회수 판정 · ${recovery.endingData?.title||'작전 종료'}`:recovery.status==='active'?`데드존 전진 회수 ${recovery.completed}/${recovery.total} 진행`:recoveryUnlocked?'검문소 지하 전진 회수선 개방':'검문소 지하 구조 신호 봉인',
+          status:recovery.status==='complete'?'VERDICT SAVED':recovery.status==='active'?`${recovery.progress}% RECOVERED`:recoveryUnlocked?'DZ-R05 READY':'DZ-VR-04 REQUIRED',
+          tone:recovery.status==='complete'?(recovery.endingData?.tone==='hostile'?'critical':'recovered'):recovery.status==='active'?'unstable':recoveryUnlocked?'returned':'critical'
+        };
         return signal;
       });
       if(unreadVerdict) signals=[{time:'NOW',status:'DECRYPTED',tone:'recovered',label:`${unreadVerdict.id} · ${unreadVerdict.title}`,route:'archive-entry',record:unreadVerdict.id},...signals];
@@ -98,6 +106,7 @@
       home.dataset.operationProgress=`${operation.recovered}-${operation.verdict||'pending'}`;
       home.dataset.pilgrimageProgress=`${pilgrimage.status}-${pilgrimage.completed}`;
       home.dataset.screeningProgress=`${screening.status}-${screening.completed}`;
+      home.dataset.recoveryProgress=`${recoveryUnlocked?'open':'sealed'}-${recovery.status}-${recovery.completed}`;
       home.dataset.verdictArchive=`${verdictSummary.unlocked}-${verdictSummary.unread}`;
     }
 

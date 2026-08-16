@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.26.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.25.0',
+    version:root.ProjectCurseBuild?.version||'5.26.0',
     schema:root.ProjectCurseBuild?.schema||'project-curse-v16',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},

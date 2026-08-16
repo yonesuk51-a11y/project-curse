@@ -1,4 +1,4 @@
-// Project Curse 5.25.0 — shared archive document and conditional verdict renderer.
+// Project Curse 5.26.0 — shared archive document, verdict renderer, and recovery handoff.
 (function(){
   'use strict';
 
@@ -325,15 +325,25 @@
     const fieldAction=scenarioId?el('div','archive-doc-field-action'):null;
     if(fieldAction){
       const summary=window.ProjectCursePilgrimageState?.getSummary?.(scenarioId);
-      const button=el('button','',verdictDocument?'해당 현장 결과 다시 열기':summary?.status==='complete'?'저장된 현장 결과 열기':summary?.status==='active'?'저장된 현장 기록 재개':scenarioId==='deadzone-return'?'검문소 07 귀환 심사 시작':'불빛 없는 성채 순례 시작');
+      const button=el('button','',verdictDocument?'해당 현장 결과 다시 열기':summary?.status==='complete'?'저장된 현장 결과 열기':summary?.status==='active'?'저장된 현장 기록 재개':scenarioId==='deadzone-return'?'검문소 07 귀환 심사 시작':scenarioId==='deadzone-recovery'?'데드존 전진 회수 작전 시작':'불빛 없는 성채 순례 시작');
       button.type='button';button.dataset.archiveOpenPilgrimage=scenarioId;
-      const copy=el('span','',scenarioId==='deadzone-return'?'RETURN SCREENING / CHECKPOINT 07':'FIELD PILGRIMAGE / GBF WESTERN ROUTE');
+      const copy=el('span','',scenarioId==='deadzone-return'?'RETURN SCREENING / CHECKPOINT 07':scenarioId==='deadzone-recovery'?'OUTBOUND RECOVERY / DZ-R05':'FIELD PILGRIMAGE / GBF WESTERN ROUTE');
       button.addEventListener('click',()=>{
         close({restoreFocus:false});
         window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'}).then(()=>window.ProjectCursePilgrimageRuntime?.open?.(scenarioId));
       });
       fieldAction.append(copy,button);
       if(verdictDocument){
+        if(doc.unlockScenario){
+          const unlockScenario=doc.unlockScenario;
+          const unlockButton=el('button','is-recovery-unlock','해금된 전진 회수 작전 시작');
+          unlockButton.type='button';
+          unlockButton.addEventListener('click',()=>{
+            close({restoreFocus:false});
+            window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'}).then(()=>window.ProjectCursePilgrimageRuntime?.open?.(unlockScenario));
+          });
+          fieldAction.append(unlockButton);
+        }
         const mapButton=el('button','is-secondary','판정 좌표를 관제도에서 확인');
         mapButton.type='button';
         mapButton.addEventListener('click',()=>{
