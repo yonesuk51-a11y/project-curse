@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.16.0
+# Project Curse Structure — 5.16.1
 
 ## 활성 소유권
 
@@ -12,6 +12,9 @@
 | 부팅 시퀀스 | `assets/js/core/loading-sequence.js` |
 | 공통 오디오 재생·설정 | `assets/js/core/base-runtime.js` + `assets/js/core/audio-controller.js` |
 | 의미 기반 효과음 사건 목록 | `assets/js/data/audio-manifest.js` |
+| 채널별 전환 설정 | `assets/js/data/transition-manifest.js` |
+| 화면 퇴장·채널 교체·진입 상태 머신 | `assets/js/core/transition-controller.js` |
+| 공통 전환·화면별 정체성 스타일 | `assets/css/transition-system.css` |
 | 영상 기록 공통 재생 엔진과 보호 본문 | `assets/js/core/record-cinematic-runtime.js` |
 | 영상 기록 등록·조회 | `assets/js/core/record-cinematic-registry.js` |
 | 종교 영상 설정 | `assets/js/pages/cinematic-cults.js` |
@@ -31,7 +34,7 @@
 
 ## 데이터 흐름
 
-`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`, `map-room-data.js`가 로드된다. 영상 데이터 다음에 `record-cinematic-registry.js`와 기록별 설정 네 개가 등록되고, 부팅·오디오·공통 재생 엔진과 단일 앱 셸이 차례로 초기화된다. 이후 기록 색인, 세계 기록, 정보 분석과 상황 관제가 각 화면을 소유한다.
+`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, 정사·화면 데이터가 로드된다. 영상 설정 다음에 부팅·오디오·공통 재생 엔진이 초기화되고, `transition-controller.js`와 `app-shell.js`가 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석과 상황 관제가 각 화면을 소유한다.
 
 활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 

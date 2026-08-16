@@ -1,4 +1,4 @@
-// Project Curse 5.16.0 — permanent terminal shell and route owner.
+// Project Curse 5.16.1 — permanent terminal shell, route and channel handoff owner.
 (function(){
   'use strict';
 
@@ -17,6 +17,14 @@
     if(!content||!homeControl||!pages.length) return;
 
     let currentRoute='terminal-home';
+    let transitioning=false;
+    let queuedRequest=null;
+
+    function normalize(target){
+      if(target==='faction-relation') return 'faction-info';
+      if(target==='region-map'||target==='zone-map'||target==='operation-map') return 'map-room';
+      return screenIds.has(target)?target:'terminal-home';
+    }
 
     function screenLabel(target){
       const buildScreen=window.ProjectCurseBuild?.screens?.find(screen=>screen.id===target);
@@ -28,25 +36,28 @@
       switchControl?.setAttribute('aria-expanded','false');
     }
 
-    function normalize(target){
-      if(target==='faction-relation') return 'faction-info';
-      if(target==='region-map'||target==='zone-map'||target==='operation-map') return 'map-room';
-      return screenIds.has(target)?target:'terminal-home';
+    function updateChrome(target){
+      document.body.dataset.route=target;
+      if(currentLabel) currentLabel.textContent=screenLabel(target);
+      document.querySelectorAll('[data-uac-route]').forEach(control=>{
+        if(normalize(control.dataset.uacRoute)===target) control.setAttribute('aria-current','page');
+        else control.removeAttribute('aria-current');
+      });
+      homeControl.hidden=target==='terminal-home';
+      homeControl.setAttribute('aria-hidden',target==='terminal-home'?'true':'false');
+      closeQuickNav();
     }
 
-    function replayScreenEntrance(page){
-      page.classList.remove('uac-screen-entering');
-      void page.offsetWidth;
-      page.classList.add('uac-screen-entering');
-      window.setTimeout(()=>page.classList.remove('uac-screen-entering'),620);
+    function writeHistory(target,mode){
+      if(mode==='none') return;
+      try{
+        if(mode==='push') history.pushState({route:target},'','#'+target);
+        else history.replaceState({route:target},'','#'+target);
+      }catch(_error){}
     }
 
-    function navigate(rawTarget,{replace=true}={}){
-      const target=normalize(rawTarget);
-      const activePage=pages.find(page=>page.id===target);
-      const previous=currentRoute;
-
-      document.dispatchEvent(new CustomEvent('projectcurse:route-will-change',{detail:{target,previous}}));
+    function commitRoute(target,previous,historyMode){
+      const activePage=pages.find(page=>page.id===target)||pages[0];
       pages.forEach(page=>{
         const active=page===activePage;
         page.classList.toggle('active',active);
@@ -58,26 +69,66 @@
           page.setAttribute('aria-hidden','true');
         }
       });
-
       currentRoute=target;
-      document.body.dataset.route=target;
-      if(currentLabel) currentLabel.textContent=screenLabel(target);
-      document.querySelectorAll('[data-uac-route]').forEach(control=>{
-        if(normalize(control.dataset.uacRoute)===target) control.setAttribute('aria-current','page');
-        else control.removeAttribute('aria-current');
-      });
-      homeControl.hidden=target==='terminal-home';
-      homeControl.setAttribute('aria-hidden',target==='terminal-home'?'true':'false');
+      updateChrome(target);
       content.scrollTop=0;
       content.scrollLeft=0;
-      closeQuickNav();
-      replayScreenEntrance(activePage);
-
-      if(replace){
-        try{history.replaceState(null,'','#'+target);}catch(_error){}
-      }
+      writeHistory(target,historyMode);
       document.dispatchEvent(new CustomEvent('projectcurse:screen-committed',{detail:{target,previous}}));
-      return target;
+      return activePage;
+    }
+
+    function focusScreen(target){
+      const page=document.getElementById(target);
+      const heading=page?.querySelector('h1,h2,[data-screen-heading]');
+      if(!heading) return;
+      if(!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex','-1');
+      try{heading.focus({preventScroll:true});}catch(_error){}
+    }
+
+    function queue(target,options){
+      return new Promise(resolve=>{
+        if(queuedRequest) queuedRequest.resolvers.forEach(done=>done(currentRoute));
+        queuedRequest={target,options,resolvers:[resolve]};
+      });
+    }
+
+    async function navigate(rawTarget,{replace=true,historyMode,instant=false,focus=true}={}){
+      const target=normalize(rawTarget);
+      const resolvedHistoryMode=historyMode||(replace?'replace':'push');
+      if(transitioning) return queue(target,{replace,historyMode:resolvedHistoryMode,instant,focus});
+      if(target===currentRoute&&!instant){
+        closeQuickNav();
+        return target;
+      }
+
+      const previous=currentRoute;
+      let committed=false;
+      const commit=()=>{
+        if(committed) return document.getElementById(target);
+        committed=true;
+        return commitRoute(target,previous,resolvedHistoryMode);
+      };
+
+      transitioning=true;
+      document.dispatchEvent(new CustomEvent('projectcurse:route-will-change',{detail:{target,previous}}));
+      try{
+        if(window.ProjectCurseTransition?.run){
+          await window.ProjectCurseTransition.run({from:previous,to:target,commit,instant});
+        }else{
+          commit();
+        }
+        if(!committed) commit();
+        if(focus&&!instant) focusScreen(target);
+        return target;
+      }finally{
+        transitioning=false;
+        if(queuedRequest){
+          const next=queuedRequest;
+          queuedRequest=null;
+          navigate(next.target,next.options).then(result=>next.resolvers.forEach(done=>done(result)));
+        }
+      }
     }
 
     function pulse(control){
@@ -95,11 +146,10 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
       pulse(routeControl);
-      const target=navigate(routeControl.dataset.uacRoute,{replace:true});
-      if(target==='map-room'&&routeControl.dataset.uacMapOperation){
-        const operation=routeControl.dataset.uacMapOperation;
-        window.setTimeout(()=>window.ProjectCurseMapRoomRuntime?.showOperation?.(operation),0);
-      }
+      const operation=routeControl.dataset.uacMapOperation;
+      navigate(routeControl.dataset.uacRoute,{replace:false,historyMode:'push'}).then(target=>{
+        if(target==='map-room'&&operation) window.ProjectCurseMapRoomRuntime?.showOperation?.(operation);
+      });
     },true);
 
     switchControl?.addEventListener('click',event=>{
@@ -118,14 +168,28 @@
       if(control) pulse(control);
     },{capture:true,passive:true});
 
-    const initialHash=decodeURIComponent(location.hash.replace(/^#/,''));
-    navigate(initialHash||'terminal-home',{replace:true});
+    const followLocation=()=>{
+      const hash=decodeURIComponent(location.hash.replace(/^#/,''));
+      navigate(hash||'terminal-home',{historyMode:'none',replace:false,focus:true});
+    };
+    window.addEventListener('popstate',followLocation);
+    window.addEventListener('hashchange',()=>{
+      const hash=normalize(decodeURIComponent(location.hash.replace(/^#/,''))||'terminal-home');
+      if(hash!==currentRoute&&!transitioning) followLocation();
+    });
 
-    window.showPage=(target)=>navigate(target,{replace:true});
+    const initialHash=decodeURIComponent(location.hash.replace(/^#/,''));
+    const initialRoute=normalize(initialHash||'terminal-home');
+    currentRoute=initialRoute;
+    commitRoute(initialRoute,initialRoute,'replace');
+    document.documentElement.dataset.channelTheme=window.ProjectCurseTransition?.getPreset?.(initialRoute)?.theme||'command';
+
+    window.showPage=(target)=>navigate(target,{replace:false,historyMode:'push'});
     window.ProjectCurseShell=Object.freeze({
       navigate,
       getRoute:()=>currentRoute,
-      getScrollRoot:()=>content
+      getScrollRoot:()=>content,
+      isTransitioning:()=>transitioning
     });
   });
 })();

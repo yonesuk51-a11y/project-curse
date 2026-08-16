@@ -1,4 +1,4 @@
-// Project Curse 5.16.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.16.1 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.16.0',
+    version:root.ProjectCurseBuild?.version||'5.16.1',
     schema:root.ProjectCurseBuild?.schema||'project-curse-v6',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
@@ -42,11 +42,13 @@
       buildInfo:'assets/js/data/build-info.js',
       manifest:'assets/js/data/site-manifest.js',
       audioManifest:'assets/js/data/audio-manifest.js',
+      transitionManifest:'assets/js/data/transition-manifest.js',
       canon:'assets/js/data/canon-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
       baseRuntime:'assets/js/core/base-runtime.js',
       loadingRuntime:'assets/js/core/loading-sequence.js',
       audioController:'assets/js/core/audio-controller.js',
+      transitionController:'assets/js/core/transition-controller.js',
       shellRuntime:'assets/js/core/app-shell.js',
       cinematicRuntime:'assets/js/core/record-cinematic-runtime.js',
       cinematicRegistry:'assets/js/core/record-cinematic-registry.js',
@@ -58,6 +60,7 @@
       ],
       shellCSS:'assets/css/app-shell.css',
       foundationCSS:'assets/css/terminal-foundation.css',
+      transitionCSS:'assets/css/transition-system.css',
       declutter:'assets/js/pages/shared-declutter.js',
       reconciliation:'assets/js/pages/canon-reconciliation.js',
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',

@@ -1,4 +1,4 @@
-/* Project Curse 5.16.0 — terminal foundation, dashboard, navigation and boot. */
+/* Project Curse 5.16.1 — terminal foundation, dashboard, navigation and boot. */
 :root {
   --pc-bg-0: #030405;
   --pc-bg-1: #07090a;
@@ -63,6 +63,8 @@ button:focus-visible, a:focus-visible { outline: 1px solid var(--pc-red-bright);
 .pc5152g-redblack-loader .loader-lines p.is-complete [data-boot-state] { color: var(--pc-green); }
 .pc5152g-redblack-loader .loader-lines p.redline.is-complete [data-boot-state],
 .pc5152g-redblack-loader .loader-lines p.redline b { color: var(--pc-red-bright); }
+.pc5152g-redblack-loader .loader-lines p.is-unused { display: none !important; }
+.pc5152g-redblack-loader.has-redline .loader-box { animation: pc-boot-redline .32s ease-out both; }
 .pc-boot-meter {
   --boot-progress: 0%;
   display: grid;
@@ -79,6 +81,13 @@ button:focus-visible, a:focus-visible { outline: 1px solid var(--pc-red-bright);
 .pc-boot-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; color: #4f5655; font: 8px/1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .1em; }
 .pc-boot-footer button { padding: 7px 9px; border: 1px solid #282e2d; color: #8e9694; background: transparent; font: inherit; cursor: pointer; }
 .pc-boot-footer button:hover { border-color: var(--pc-red); color: var(--pc-text); }
+.pc-boot-footer button:disabled { opacity: .28; cursor: wait; }
+.pc5152g-redblack-loader.pc-boot-mode-restore .loader-box { width: min(500px, calc(100vw - 32px)); }
+.pc5152g-redblack-loader.pc-boot-mode-restore .loader-lines { min-height: 102px; }
+.pc5152g-redblack-loader.pc-boot-mode-returning { transition-duration: .16s; }
+.pc5152g-redblack-loader.pc-boot-mode-returning .loader-box { width: min(460px, calc(100vw - 32px)); padding-block: 28px; }
+.pc5152g-redblack-loader.pc-boot-mode-returning .loader-lines { min-height: 68px; }
+.pc5152g-redblack-loader.pc-boot-mode-reduced { transition-duration: .05s; }
 
 /* Permanent shell */
 .uac-shell { background: radial-gradient(circle at 55% 20%, rgba(79,22,27,.065), transparent 38%), var(--pc-bg-0); }
@@ -184,6 +193,7 @@ html[data-audio="muted"] .uac-shell-status button { color: var(--pc-red-bright);
 .pc5152ca1-home-trace { margin-top: 18px; }
 
 @keyframes pc-terminal-sweep { to { transform: rotate(360deg); } }
+@keyframes pc-boot-redline { 0%,100% { border-color:rgba(188,58,66,.42); filter:none; } 32% { border-color:rgba(225,73,82,.88); filter:brightness(1.24); } 48% { filter:brightness(.75); } }
 
 @media (max-width: 1180px) {
   .uac-shell-quick a { padding-inline: 9px; }

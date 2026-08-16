@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.16.0';
-const DATA_VERSION='5.16.0';
+const VERSION='5.16.1';
+const DATA_VERSION='5.16.1';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -20,8 +20,8 @@ function article(source,id){
 }
 
 const required=[
-  'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/app-shell.css','assets/css/terminal-foundation.css',
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/map-room-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
+  'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/app-shell.css','assets/css/terminal-foundation.css','assets/css/transition-system.css',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/map-room-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
   'assets/js/pages/shared-declutter.js',
@@ -51,6 +51,9 @@ const foundationCss=read('assets/css/terminal-foundation.css');
 const loadingRuntime=read('assets/js/core/loading-sequence.js');
 const audioManifest=read('assets/js/data/audio-manifest.js');
 const audioController=read('assets/js/core/audio-controller.js');
+const transitionManifest=read('assets/js/data/transition-manifest.js');
+const transitionController=read('assets/js/core/transition-controller.js');
+const transitionCss=read('assets/css/transition-system.css');
 const mapRoomDataSource=read('assets/js/data/map-room-data.js');
 const mapRoomRuntime=read('assets/js/pages/map-room.js');
 const recordCinematicCss=read('assets/css/record-cinematic.css');
@@ -64,6 +67,7 @@ vm.createContext(context);
 vm.runInContext(read('assets/js/data/build-info.js'),context,{filename:'build-info.js'});
 vm.runInContext(manifest,context,{filename:'site-manifest.js'});
 vm.runInContext(audioManifest,context,{filename:'audio-manifest.js'});
+vm.runInContext(transitionManifest,context,{filename:'transition-manifest.js'});
 vm.runInContext(canon,context,{filename:'canon-registry.js'});
 vm.runInContext(factionAnalysisSource,context,{filename:'faction-analysis-data.js'});
 vm.runInContext(archiveRegistry,context,{filename:'archive-registry.js'});
@@ -82,8 +86,8 @@ const structureData=context.window.ProjectCurseStructure;
 const archiveData=context.window.ProjectCurseArchive;
 const cinematicData=context.window.ProjectCurseCinematicRegistry;
 const ordered=[
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/map-room-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
-  'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/map-room-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
+  'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/transition-controller.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
   'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js'
 ];
 const positions=ordered.map(owner=>index.indexOf(`src="${owner}?`));
@@ -93,6 +97,7 @@ add('archive-css-link',count(index,'href="assets/css/archive-consolidation.css?'
 add('record-cinematic-css-link',count(index,'href="assets/css/record-cinematic.css?')===1);
 add('app-shell-css-link',count(index,'href="assets/css/app-shell.css?')===1);
 add('foundation-css-link',count(index,'href="assets/css/terminal-foundation.css?')===1);
+add('transition-css-link',count(index,'href="assets/css/transition-system.css?')===1);
 add('record-cinematic-controls',main.includes('pc-cinematic-controls')&&main.includes('scheduleAutomaticAdvance')&&main.includes('ProjectCurseRecordCinematic'));
 add('record-cinematic-navigation',main.includes('previousSequence')&&main.includes('toggleSequencePlayback')&&main.includes('restartSequence'));
 add('feral-cinematic-runtime',main.includes("const FERALS_RECORD='Ferals_860722'")&&cinematicFerals.includes("id:'Ferals_860722'")&&cinematicFerals.includes('ProjectCurseFeralCinematic?.pages')&&main.includes('state.activeRecord===FERALS_RECORD')&&main.includes('highlightFeralTerms'));
@@ -111,7 +116,7 @@ add('single-shell-no-sidebar',!index.includes('side-menu')&&!index.includes('uac
 add('shell-quick-nav-four-links',(index.match(/<a[^>]+data-uac-route="(?:map-room|history|faction-info|archive-entry)"[^>]*>/g)||[]).length>=4&&appShell.includes('closeQuickNav'));
 add('home-dashboard-primary-control',index.includes('class="pc-terminal-primary"')&&index.includes('class="pc-terminal-alert"')&&index.includes('class="pc-terminal-recent"'));
 add('mobile-quick-menu',foundationCss.includes('.uac-shell-bar.is-quick-open .uac-shell-quick')&&appShell.includes("switchControl?.addEventListener('click'"));
-add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&appShell.includes("navigate(initialHash||'terminal-home'"));
+add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&appShell.includes("commitRoute(initialRoute,initialRoute,'replace')"));
 add('route-clears-inert-synchronously',appShell.includes("page.removeAttribute('inert')")&&appShell.includes("page.setAttribute('inert','')"));
 add('single-shell-runtime-owner',structureData?.owners?.shellRuntime==='assets/js/core/app-shell.js'&&count(index,'assets/js/core/app-shell.js')===1&&!index.includes('assets/js/core/runtime-ownership.js')&&!index.includes('assets/js/core/menu-audio-runtime.js')&&!index.includes('assets/js/main.js'));
 add('menu-navigation-cues-disabled',!appShell.includes('playCue')&&!appShell.includes('ProjectCurseAudio'));
@@ -119,8 +124,13 @@ add('retired-region-screen-removed',!index.includes('id="region-map"')&&!index.i
 add('retired-relation-screen-removed',!index.includes('id="faction-relation"')&&!index.includes('data-target="faction-relation"'));
 add('current-five-screen-manifest',structureData?.screens?.map(screen=>screen.id).join('|')==='terminal-home|map-room|history|faction-info|archive-entry');
 add('legacy-route-compatibility',appShell.includes("target==='faction-relation'")&&appShell.includes("target==='region-map'||target==='zone-map'"));
-add('loading-sequence-owned',loadingRuntime.includes('ProjectCurseLoading')&&loadingRuntime.includes('prefers-reduced-motion')&&index.includes('data-boot-skip'));
+add('loading-sequence-owned',loadingRuntime.includes('ProjectCurseLoading')&&loadingRuntime.includes('prefers-reduced-motion')&&loadingRuntime.includes("return hasSeen()?'restore':'cold'")&&index.includes('data-boot-skip'));
+add('loading-modes-and-readable-timing',loadingRuntime.includes('duration:2600')&&loadingRuntime.includes('duration:650')&&loadingRuntime.includes('duration:210')&&loadingRuntime.includes("get('boot')"));
 add('audio-controller-owned',audioManifest.includes('ProjectCurseAudioManifest')&&audioController.includes('ProjectCurseAudioControl')&&index.includes('data-uac-audio-toggle'));
+add('transition-controller-owned',context.window.ProjectCurseTransitions?.screens&&Object.keys(context.window.ProjectCurseTransitions.screens).length===5&&transitionController.includes('ProjectCurseTransition')&&transitionController.includes("dataset.transitionState='switching'"));
+add('transition-state-machine',appShell.includes('transitioning=true')&&appShell.includes('queuedRequest')&&appShell.includes('ProjectCurseTransition.run')&&appShell.includes("history.pushState({route:target}"));
+add('screen-identity-presets',transitionCss.includes('coordinate-acquire')&&transitionCss.includes('chronology-rewind')&&transitionCss.includes('dossier-assemble')&&transitionCss.includes('vault-unseal'));
+add('archive-return-transition-visible',transitionCss.includes('html.pc5152cf-archive-return #loader')&&transitionCss.includes('#loader.hide'));
 add('map-room-owned',context.window.ProjectCurseMapRoom?.regions?.length>=5&&context.window.ProjectCurseMapRoom?.operations?.length>=2&&mapRoomRuntime.includes('ProjectCurseMapRoomRuntime'));
 add('cinematic-registry-four-records',cinematicData?.ids?.().join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicData?.ids?.().join('|'));
 add('cinematic-record-config-owned-by-modules',![cinematicCults,cinematicImmortality,cinematicFerals,cinematicSakuma].some(source=>!source.includes('ProjectCurseCinematicRegistry?.register'))&&main.includes('cinematicRegistry?.get?.(state.activeRecord)')&&main.includes('cinematicRegistry?.pages?.(recordId)'));

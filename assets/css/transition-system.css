@@ -1,0 +1,138 @@
+/* Project Curse 5.16.1 — channel transition and screen identity system. */
+:root {
+  --pc-route-accent: #c84951;
+  --pc-route-accent-rgb: 200, 73, 81;
+}
+
+html[data-channel-theme="command"] { --pc-route-accent:#c84951; --pc-route-accent-rgb:200,73,81; }
+html[data-channel-theme="cartography"] { --pc-route-accent:#6e9b91; --pc-route-accent-rgb:110,155,145; }
+html[data-channel-theme="chronology"] { --pc-route-accent:#b29a68; --pc-route-accent-rgb:178,154,104; }
+html[data-channel-theme="intelligence"] { --pc-route-accent:#7393a0; --pc-route-accent-rgb:115,147,160; }
+html[data-channel-theme="archive"] { --pc-route-accent:#a85a52; --pc-route-accent-rgb:168,90,82; }
+
+.uac-shell-bar { box-shadow: inset 0 -1px rgba(var(--pc-route-accent-rgb),.28); transition: box-shadow .32s ease; }
+.uac-shell-quick a[aria-current="page"] { box-shadow: inset 0 -2px var(--pc-route-accent); }
+.uac-shell-quick a[aria-current="page"] i { color: var(--pc-route-accent); }
+.uac-shell-home i,.uac-shell-switch i { color: var(--pc-route-accent); transition: color .25s ease; }
+
+.pc-channel-transition {
+  --pc-transition-accent: #c84951;
+  position: fixed;
+  z-index: 95;
+  inset: var(--uac-bar-height) 0 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  color: #d9dddb;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.pc-channel-transition::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #030506;
+  transform: scaleY(.015);
+  transform-origin: 50% 0;
+  transition: transform .18s cubic-bezier(.76,0,.24,1);
+}
+.pc-channel-transition::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    linear-gradient(90deg, transparent 0 49.9%, rgba(255,255,255,.035) 50%, transparent 50.1%),
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.026) 3px 4px),
+    radial-gradient(circle at 50% 50%, rgba(var(--pc-route-accent-rgb),.11), transparent 44%);
+  transition: opacity .15s ease;
+}
+.pc-channel-transition.is-visible { visibility: visible; }
+.pc-channel-transition.is-covering::before { transform: scaleY(1); }
+.pc-channel-transition.is-covering::after { opacity: 1; }
+.pc-channel-transition.is-revealing::before { transform: scaleY(0); transform-origin: 50% 100%; transition-duration: .3s; }
+.pc-channel-transition.is-revealing::after { opacity: 0; }
+.pc-channel-transition-panel {
+  position: relative;
+  z-index: 2;
+  width: min(560px, calc(100vw - 44px));
+  padding: 26px 28px;
+  border: 1px solid color-mix(in srgb, var(--pc-transition-accent) 56%, #252b2b);
+  background: rgba(5,8,9,.9);
+  box-shadow: 0 24px 80px rgba(0,0,0,.72), inset 0 0 38px rgba(var(--pc-route-accent-rgb),.04);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .12s ease, transform .16s ease;
+}
+.pc-channel-transition.is-covering .pc-channel-transition-panel { opacity: 1; transform: none; }
+.pc-channel-transition.is-revealing .pc-channel-transition-panel { opacity: 0; transform: translateY(-6px); }
+.pc-channel-route { display:flex; align-items:center; gap:12px; color:#69716f; font-size:8px; letter-spacing:.14em; }
+.pc-channel-route b { color:var(--pc-transition-accent); font-size:9px; }
+.pc-channel-route i { flex:1; height:1px; background:linear-gradient(90deg,rgba(255,255,255,.08),var(--pc-transition-accent),rgba(255,255,255,.08)); }
+.pc-channel-transition-copy { margin-top:22px; }
+.pc-channel-transition-copy small { color:var(--pc-transition-accent); font-size:8px; letter-spacing:.13em; }
+.pc-channel-transition-copy strong { display:block; margin-top:8px; color:#e5e8e6; font:700 clamp(23px,4vw,34px)/1.1 'Malgun Gothic','Apple SD Gothic Neo',sans-serif; letter-spacing:-.04em; }
+.pc-channel-transition-copy span { display:block; margin-top:13px; color:#747d7a; font-size:8px; letter-spacing:.11em; }
+.pc-channel-transition-meter { --pc-transition-progress:12%; position:relative; height:2px; margin-top:22px; background:#1a1f20; }
+.pc-channel-transition-meter i { display:block; width:var(--pc-transition-progress); height:100%; background:var(--pc-transition-accent); box-shadow:0 0 12px color-mix(in srgb,var(--pc-transition-accent) 72%,transparent); transition:width .18s ease; }
+.pc-channel-transition-grid { position:absolute; z-index:1; inset:0; opacity:.16; background:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px); background-size:48px 48px; }
+html.pc-channel-transition-active body { cursor: progress; }
+html.pc-channel-transition-active .uac-shell-bar,html.pc-channel-transition-active .uac-shell-content { pointer-events:none; }
+html.pc5152cf-archive-return #loader { display:flex !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important; }
+html.pc5152cf-archive-return #loader.hide { opacity:0 !important; visibility:hidden !important; pointer-events:none !important; }
+
+.content-page.pc-screen-exiting { animation:pc-screen-exit .2s cubic-bezier(.4,0,1,1) both !important; }
+.content-page.pc-screen-entering { animation:pc-screen-enter .38s cubic-bezier(.16,.84,.24,1) both !important; }
+.content-page[data-pc-exit="signal-collapse"] { animation-name:pc-map-exit !important; }
+.content-page[data-pc-exit="timeline-park"] { animation-name:pc-history-exit !important; }
+.content-page[data-pc-exit="file-seal"] { animation-name:pc-intel-exit !important; }
+.content-page[data-pc-exit="vault-lock"] { animation-name:pc-archive-exit !important; }
+.content-page[data-pc-enter="coordinate-acquire"] { animation-name:pc-map-enter !important; }
+.content-page[data-pc-enter="chronology-rewind"] { animation-name:pc-history-enter !important; }
+.content-page[data-pc-enter="dossier-assemble"] { animation-name:pc-intel-enter !important; }
+.content-page[data-pc-enter="vault-unseal"] { animation-name:pc-archive-enter !important; }
+
+/* Staged assembly inside each channel. */
+.pc-screen-entering :is(.pc5152ca1-home-kicker,.pc-map-room-head,.pc5130-legacy-history>.label,.pc-faction-analysis-intro,.pc-archive-index-head) { animation:pc-component-rise .38s .04s both; }
+.pc-screen-entering :is(.pc5152ca1-home-title,.pc-map-mode-switch,.pc5152bc-world-hub,.pc-faction-index-group:first-child,.pc-archive-format-group:first-of-type) { animation:pc-component-rise .4s .1s both; }
+.pc-screen-entering :is(.pc-terminal-system-strip,.pc-map-view,.overview-stats,.pc-faction-index-group:nth-child(2),.pc-archive-format-group:nth-of-type(2)) { animation:pc-component-rise .42s .17s both; }
+.pc-screen-entering :is(.pc-terminal-dashboard-grid,.timeline-list,.pc-faction-relation-list,.pc-archive-row-list) { animation:pc-component-rise .44s .23s both; }
+.pc-screen-entering :is(.uac-terminal-menu,.pc-terminal-recent) { animation:pc-component-rise .45s .28s both; }
+
+/* Channel-specific identity without breaking legacy document ownership. */
+#map-room { --pc-local-accent:#6e9b91; background:radial-gradient(circle at 70% 10%,rgba(72,119,109,.09),transparent 32%),#070a0a; }
+#history { --pc-local-accent:#b29a68; background:linear-gradient(90deg,rgba(138,111,59,.055),transparent 24%),#0a0a09; }
+#faction-info { --pc-local-accent:#7393a0; background:radial-gradient(circle at 18% 8%,rgba(82,120,137,.09),transparent 30%),#080a0b; }
+#archive-entry { --pc-local-accent:#a85a52; background:linear-gradient(180deg,rgba(112,46,43,.065),transparent 24%),#090808; }
+#map-room.pc-screen-entering .pc-map-room-head { box-shadow:inset 3px 0 var(--pc-local-accent); }
+#history.pc-screen-entering .pc5130-legacy-history>.label { border-left-color:var(--pc-local-accent); }
+#faction-info .pc-faction-analysis-intro small,#archive-entry .pc-archive-index-head>span { color:var(--pc-local-accent); }
+#history .timeline-list>div { border-left-color:color-mix(in srgb,var(--pc-local-accent) 56%,#34282a); }
+#archive-entry .pc-archive-row:focus-visible,#faction-info .pc-faction-card:focus-visible { outline-color:var(--pc-local-accent); }
+
+@keyframes pc-screen-exit { to { opacity:0; filter:brightness(.45) contrast(1.16); transform:scale(.992) translateY(-3px); } }
+@keyframes pc-screen-enter { from { opacity:0; filter:brightness(.5) contrast(1.22); transform:scale(.994) translateY(7px); } to { opacity:1; filter:none; transform:none; } }
+@keyframes pc-map-exit { to { opacity:0; filter:saturate(.35) brightness(.35); transform:scaleX(.985); } }
+@keyframes pc-map-enter { from { opacity:0; filter:brightness(.35) saturate(.2); clip-path:inset(0 0 94% 0); } to { opacity:1; filter:none; clip-path:inset(0); } }
+@keyframes pc-history-exit { to { opacity:0; filter:sepia(.35) brightness(.4); transform:translateY(-8px); } }
+@keyframes pc-history-enter { from { opacity:0; filter:sepia(.6) brightness(.45); transform:translateY(10px); } to { opacity:1; filter:none; transform:none; } }
+@keyframes pc-intel-exit { to { opacity:0; filter:grayscale(.8) brightness(.42); transform:scale(.99) translateX(8px); } }
+@keyframes pc-intel-enter { from { opacity:0; filter:grayscale(.7) brightness(.45); transform:translateX(-10px); } to { opacity:1; filter:none; transform:none; } }
+@keyframes pc-archive-exit { to { opacity:0; filter:brightness(.32); clip-path:inset(48% 0); } }
+@keyframes pc-archive-enter { from { opacity:0; filter:brightness(.3); clip-path:inset(49% 0); } to { opacity:1; filter:none; clip-path:inset(0); } }
+@keyframes pc-component-rise { from { opacity:0; transform:translateY(10px); filter:brightness(.55); } to { opacity:1; transform:none; filter:none; } }
+
+@media (max-width:760px) {
+  .pc-channel-transition { inset:var(--uac-bar-height) 0 0; }
+  .pc-channel-transition-panel { width:calc(100vw - 28px); padding:21px 20px; }
+  .pc-channel-transition-copy strong { font-size:24px; }
+  .pc-channel-transition-grid { background-size:32px 32px; }
+  .content-page.pc-screen-exiting { animation-duration:.15s !important; }
+  .content-page.pc-screen-entering { animation-duration:.3s !important; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .pc-channel-transition::before,.pc-channel-transition::after,.pc-channel-transition-panel,.pc-channel-transition-meter i { transition-duration:.05s !important; }
+  .content-page.pc-screen-exiting,.content-page.pc-screen-entering,.pc-screen-entering * { animation-duration:.08s !important; animation-delay:0s !important; }
+}

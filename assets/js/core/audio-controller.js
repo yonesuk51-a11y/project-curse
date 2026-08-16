@@ -1,4 +1,4 @@
-// Project Curse 5.16.0 — persistent audio preference and semantic event bridge.
+// Project Curse 5.16.1 — persistent audio preference and semantic event bridge.
 (function(root){
   'use strict';
 

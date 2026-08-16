@@ -1,4 +1,4 @@
-// Project Curse 5.16.0 — route-free intelligence dossier owner.
+// Project Curse 5.16.1 — route-free intelligence dossier owner.
 (function(){
   'use strict';
 
