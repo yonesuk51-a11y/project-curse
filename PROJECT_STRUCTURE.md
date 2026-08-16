@@ -1,14 +1,17 @@
-# Project Curse Structure — 5.15.2cs
+# Project Curse Structure — 5.16.0
 
 ## 활성 소유권
 
 | 책임 | 단일 기준 파일 |
 |---|---|
-| 화면·잠금 기록·오디오 자산 목록 | `assets/js/data/site-manifest.js` |
+| 빌드 버전·화면 명칭과 순서 | `assets/js/data/build-info.js` |
+| 잠금 기록·런타임 소유권 목록 | `assets/js/data/site-manifest.js` |
 | 조직 정사·관계·우시노다 계층 | `assets/js/data/canon-registry.js` |
 | 공개 기록 목록·영상/문서 분류 | `assets/js/data/archive-registry.js` |
-| 루트 상단바·단말 허브·화면 이동 | `assets/css/app-shell.css` + `assets/js/core/app-shell.js` |
-| 부팅·공통 오디오 버스 | `assets/js/core/base-runtime.js` |
+| 루트 상단바·단말 허브·화면 이동 | `assets/css/app-shell.css` + `assets/css/terminal-foundation.css` + `assets/js/core/app-shell.js` |
+| 부팅 시퀀스 | `assets/js/core/loading-sequence.js` |
+| 공통 오디오 재생·설정 | `assets/js/core/base-runtime.js` + `assets/js/core/audio-controller.js` |
+| 의미 기반 효과음 사건 목록 | `assets/js/data/audio-manifest.js` |
 | 영상 기록 공통 재생 엔진과 보호 본문 | `assets/js/core/record-cinematic-runtime.js` |
 | 영상 기록 등록·조회 | `assets/js/core/record-cinematic-registry.js` |
 | 종교 영상 설정 | `assets/js/pages/cinematic-cults.js` |
@@ -22,17 +25,18 @@
 | 세력 분석실 | `assets/js/pages/faction-analysis.js` |
 | 관제지도 설정 자료 | `assets/js/data/map-room-data.js` |
 | 지역 상황도·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
+| 원본·보정·복원 이미지 정책 | `ASSET_POLICY.md` |
 | 5.15.2ce 범위 스타일 | `assets/css/stabilization.css` |
 | 5.15.2cf 기록철 목록·상세 스타일 | `assets/css/archive-consolidation.css` |
 
 ## 데이터 흐름
 
-`site-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`, `map-room-data.js`가 먼저 로드된다. 영상 데이터 다음에 `record-cinematic-registry.js`와 기록별 설정 네 개가 등록되고, 공통 재생 엔진과 단일 앱 셸이 차례로 초기화된다. 이후 기록 색인, 세계 연표, 세력 분석실과 권역 관제도가 각 화면을 소유한다.
+`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `canon-registry.js`, `faction-analysis-data.js`, `archive-registry.js`, `map-room-data.js`가 로드된다. 영상 데이터 다음에 `record-cinematic-registry.js`와 기록별 설정 네 개가 등록되고, 부팅·오디오·공통 재생 엔진과 단일 앱 셸이 차례로 초기화된다. 이후 기록 색인, 세계 기록, 정보 분석과 상황 관제가 각 화면을 소유한다.
 
-활성 화면은 `terminal-home`, `history`, `faction-info`, `archive-entry`, `map-room` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 세력 분석실로 전환한다.
+활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 
-단말 상태의 허브 버튼 네 개가 화면 이동을 소유한다. PC와 모바일은 같은 DOM과 같은
-`click` 경로를 사용하며 모바일에서는 버튼만 한 열로 배치한다. 사이드 메뉴, 서랍,
+단말 상태의 대시보드와 상단 빠른 이동 메뉴가 화면 이동을 공유한다. PC와 모바일은 같은 DOM과 같은
+`click` 경로를 사용하며 모바일에서는 상단 메뉴를 드롭다운으로 배치한다. 사이드 메뉴, 서랍,
 배경막과 본문 이동용 `margin`·`transform`은 존재하지 않는다.
 
 화면 전환 시 선택 화면의 `inert`와 `aria-hidden`을 같은 이벤트 안에서 해제한다.

@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.15.2cr';
-const DATA_VERSION='5.15.2cf';
+const VERSION='5.16.0';
+const DATA_VERSION='5.16.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -20,12 +20,12 @@ function article(source,id){
 }
 
 const required=[
-  'index.html','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/app-shell.css',
-  'assets/js/data/site-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/main.js','assets/js/core/base-runtime.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
+  'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/app-shell.css','assets/css/terminal-foundation.css',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/map-room-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
   'assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','ASSET_POLICY.md',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
   'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
   'assets/audio/pc5152cf_feral_dying_memories_bgm.mp3',
@@ -47,6 +47,12 @@ const factionAnalysisRuntime=read('assets/js/pages/faction-analysis.js');
 const worldHistory=read('assets/js/pages/world-history.js');
 const appShell=read('assets/js/core/app-shell.js');
 const appShellCss=read('assets/css/app-shell.css');
+const foundationCss=read('assets/css/terminal-foundation.css');
+const loadingRuntime=read('assets/js/core/loading-sequence.js');
+const audioManifest=read('assets/js/data/audio-manifest.js');
+const audioController=read('assets/js/core/audio-controller.js');
+const mapRoomDataSource=read('assets/js/data/map-room-data.js');
+const mapRoomRuntime=read('assets/js/pages/map-room.js');
 const recordCinematicCss=read('assets/css/record-cinematic.css');
 const cinematicRegistrySource=read('assets/js/core/record-cinematic-registry.js');
 const cinematicCults=read('assets/js/pages/cinematic-cults.js');
@@ -55,11 +61,14 @@ const cinematicFerals=read('assets/js/pages/cinematic-ferals.js');
 const cinematicSakuma=read('assets/js/pages/cinematic-sakuma.js');
 const context={window:{}};
 vm.createContext(context);
+vm.runInContext(read('assets/js/data/build-info.js'),context,{filename:'build-info.js'});
 vm.runInContext(manifest,context,{filename:'site-manifest.js'});
+vm.runInContext(audioManifest,context,{filename:'audio-manifest.js'});
 vm.runInContext(canon,context,{filename:'canon-registry.js'});
 vm.runInContext(factionAnalysisSource,context,{filename:'faction-analysis-data.js'});
 vm.runInContext(archiveRegistry,context,{filename:'archive-registry.js'});
 vm.runInContext(read('assets/js/data/archive-document-data.js'),context,{filename:'archive-document-data.js'});
+vm.runInContext(mapRoomDataSource,context,{filename:'map-room-data.js'});
 vm.runInContext(read('assets/js/data/feral-cinematic-data.js'),context,{filename:'feral-cinematic-data.js'});
 vm.runInContext(read('assets/js/data/sakuma-cinematic-data.js'),context,{filename:'sakuma-cinematic-data.js'});
 vm.runInContext(cinematicRegistrySource,context,{filename:'record-cinematic-registry.js'});
@@ -73,43 +82,46 @@ const structureData=context.window.ProjectCurseStructure;
 const archiveData=context.window.ProjectCurseArchive;
 const cinematicData=context.window.ProjectCurseCinematicRegistry;
 const ordered=[
-  'assets/js/data/site-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
-  'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/base-runtime.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js'
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/canon-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/map-room-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
+  'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js'
 ];
-const positions=ordered.map(owner=>index.indexOf(`src="${owner}"`));
+const positions=ordered.map(owner=>index.indexOf(`src="${owner}?`));
 add('script-order',positions.every((position,i)=>position>=0&&(i===0||position>positions[i-1])),positions.join(','));
-add('stabilization-css-link',count(index,'href="assets/css/stabilization.css"')===1);
-add('archive-css-link',count(index,'href="assets/css/archive-consolidation.css"')===1);
-add('record-cinematic-css-link',count(index,'href="assets/css/record-cinematic.css"')===1);
-add('app-shell-css-link',count(index,'href="assets/css/app-shell.css"')===1);
+add('stabilization-css-link',count(index,'href="assets/css/stabilization.css?')===1);
+add('archive-css-link',count(index,'href="assets/css/archive-consolidation.css?')===1);
+add('record-cinematic-css-link',count(index,'href="assets/css/record-cinematic.css?')===1);
+add('app-shell-css-link',count(index,'href="assets/css/app-shell.css?')===1);
+add('foundation-css-link',count(index,'href="assets/css/terminal-foundation.css?')===1);
 add('record-cinematic-controls',main.includes('pc-cinematic-controls')&&main.includes('scheduleAutomaticAdvance')&&main.includes('ProjectCurseRecordCinematic'));
 add('record-cinematic-navigation',main.includes('previousSequence')&&main.includes('toggleSequencePlayback')&&main.includes('restartSequence'));
-add('feral-cinematic-runtime',main.includes("const FERALS_RECORD='Ferals_860722'")&&cinematicFerals.includes("id:'Ferals_860722'")&&cinematicFerals.includes('ProjectCurseFeralCinematic?.pages')&&main.includes("recordId!==IMMORTALITY_RECORD && recordId!==SAKUMA_RECORD && cfg.bgm"));
-add('sequence-menu-ambient-isolated',main.includes('function silenceMenuAmbientDuringSequence')&&main.includes('ambient.volume=0; ambient.pause()')&&count(main,'silenceMenuAmbientDuringSequence();')>=2);
+add('feral-cinematic-runtime',main.includes("const FERALS_RECORD='Ferals_860722'")&&cinematicFerals.includes("id:'Ferals_860722'")&&cinematicFerals.includes('ProjectCurseFeralCinematic?.pages')&&main.includes('state.activeRecord===FERALS_RECORD')&&main.includes('highlightFeralTerms'));
+add('sequence-menu-ambient-isolated',main.includes('function silenceMenuAmbientDuringSequence')&&main.includes("bus.setContext==='function'")&&main.includes("bus.setContext('cinematic')")&&main.includes('ambient.pause()')&&count(main,'silenceMenuAmbientDuringSequence();')>=2);
 add('cult-feral-shared-intro-video',cinematicCults.includes("introVideo:'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4'")&&cinematicFerals.includes("introVideo:'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4'")&&existsSync(path('assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4')));
 add('cult-feral-radio-static-layer',hash(readFileSync(path('assets/audio/pc5152an_cult_radio_static_layer.mp3')))==='3ad8d1b5cb05a8599c4b6058d3c79574b5e6df7c8683631d53a5be7227c4f164'&&main.includes("assets/audio/pc5152an_cult_radio_static_layer.mp3"));
-add('archive-return-boot-bypass',index.includes('__pc5152SkipBoot=returning')&&index.includes("get('return')==='archive'")&&standaloneRuntime.includes('standalone records return to the archive')&&standaloneRuntime.includes('index.html?return=archive#archive-entry')&&read('assets/css/style.css').includes('html.pc5152cf-archive-return #loader'));
-add('record-cinematic-short-transitions',main.includes('Math.min(Number(cfg.transitionFallback||3100),1800)')&&main.includes('Math.min(Number(cfg.introFallback||10450),4800)'));
+add('archive-return-boot-bypass',index.includes('__pc5152SkipBoot=true')&&index.includes("get('return')==='archive'")&&standaloneRuntime.includes('standalone records return to the archive')&&standaloneRuntime.includes('index.html?return=archive#archive-entry')&&read('assets/css/style.css').includes('html.pc5152cf-archive-return #loader'));
+add('record-cinematic-configurable-transitions',main.includes('Number(cfg.transitionFallback||3750)')&&main.includes('Number(cfg.introFallback||10450)'));
 add('immortality-full-length-bgm',statSync(path('assets/audio/pc5152am_immortality_scp087_theme.mp3')).size>9_000_000,statSync(path('assets/audio/pc5152am_immortality_scp087_theme.mp3')).size);
 add('cult-full-length-looping-bgm',statSync(path('assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3')).size>8_000_000&&cinematicCults.includes("assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3")&&main.includes('state.bgm.loop = true'),statSync(path('assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3')).size);
 add('feral-custom-bgm',statSync(path('assets/audio/pc5152cf_feral_dying_memories_bgm.mp3')).size>1_000_000,statSync(path('assets/audio/pc5152cf_feral_dying_memories_bgm.mp3')).size);
 add('canon-faction-owner',factionAnalysisSource.includes('ProjectCurseFactionAnalysis')&&factionAnalysisRuntime.includes('ProjectCurseFactionAnalysis'));
 add('canon-relation-owner',Array.isArray(canonData?.relations)&&canonData.relations.length===18&&factionAnalysisRuntime.includes('function relationButton')&&factionAnalysisRuntime.includes('faction.relations.map(relationButton)'));
 add('canon-direct-current-names',!canon.includes('Urban Anomaly Containment')&&!canon.includes('신디케이트')&&!canon.includes('하이문')&&!canon.includes('normalizeTerms')&&!factionAnalysisSource.includes('신디케이트')&&!factionAnalysisSource.includes('하이문')&&!factionAnalysisSource.includes('normalizeTerms'));
-add('pc-sidebar-static',appShellCss.includes('grid-template-columns: var(--uac-sidebar-width) minmax(0, 1fr)')&&appShellCss.includes('.uac-shell-menu-button {\n  display: none;')&&!appShell.includes('translateX'));
-add('shell-nav-four-links',index.includes('class="uac-shell-nav side-menu')&&(index.match(/<a[^>]+data-target="(?:terminal-home|history|faction-info|archive-entry)"/g)||[]).length===4&&appShell.includes("document.querySelectorAll('.uac-shell-nav a[data-target]')"));
-add('mobile-drawer-overlays-content',appShellCss.includes('position: absolute;\n    inset: 0 auto 0 0;')&&appShellCss.includes('transform: translate3d(-102%, 0, 0)')&&appShellCss.includes('.uac-shell-workspace {\n    display: block;'));
-add('mobile-drawer-single-event-owner',count(appShell,"toggle.addEventListener('click'")===1&&count(appShell,"link.addEventListener('click'")===1&&!appShell.includes("addEventListener('touch"));
-add('mobile-drawer-route-closes-cleanly',appShell.includes("navigate(link.dataset.target,{replace:true,close:true})")&&appShell.includes('if(close) setDrawer(false)'));
-add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&index.includes('class="active" data-target="terminal-home"')&&appShell.includes("navigate(returning?'archive-entry':'terminal-home'"));
+add('single-shell-no-sidebar',!index.includes('side-menu')&&!index.includes('uac-shell-drawer')&&!appShell.includes('translateX'));
+add('shell-quick-nav-four-links',(index.match(/<a[^>]+data-uac-route="(?:map-room|history|faction-info|archive-entry)"[^>]*>/g)||[]).length>=4&&appShell.includes('closeQuickNav'));
+add('home-dashboard-primary-control',index.includes('class="pc-terminal-primary"')&&index.includes('class="pc-terminal-alert"')&&index.includes('class="pc-terminal-recent"'));
+add('mobile-quick-menu',foundationCss.includes('.uac-shell-bar.is-quick-open .uac-shell-quick')&&appShell.includes("switchControl?.addEventListener('click'"));
+add('initial-route-terminal-home',index.includes('pc5152ca1-terminal-home active')&&appShell.includes("navigate(initialHash||'terminal-home'"));
 add('route-clears-inert-synchronously',appShell.includes("page.removeAttribute('inert')")&&appShell.includes("page.setAttribute('inert','')"));
 add('single-shell-runtime-owner',structureData?.owners?.shellRuntime==='assets/js/core/app-shell.js'&&count(index,'assets/js/core/app-shell.js')===1&&!index.includes('assets/js/core/runtime-ownership.js')&&!index.includes('assets/js/core/menu-audio-runtime.js')&&!index.includes('assets/js/main.js'));
 add('menu-navigation-cues-disabled',!appShell.includes('playCue')&&!appShell.includes('ProjectCurseAudio'));
 add('retired-region-screen-removed',!index.includes('id="region-map"')&&!index.includes('data-target="region-map"')&&!index.includes('pc5152bd-region-situation-map')&&!index.includes('pc5152bf-regional-map-linked-usability'));
 add('retired-relation-screen-removed',!index.includes('id="faction-relation"')&&!index.includes('data-target="faction-relation"'));
-add('current-four-screen-manifest',structureData?.screens?.map(screen=>screen.id).join('|')==='terminal-home|history|faction-info|archive-entry');
+add('current-five-screen-manifest',structureData?.screens?.map(screen=>screen.id).join('|')==='terminal-home|map-room|history|faction-info|archive-entry');
 add('legacy-route-compatibility',appShell.includes("target==='faction-relation'")&&appShell.includes("target==='region-map'||target==='zone-map'"));
+add('loading-sequence-owned',loadingRuntime.includes('ProjectCurseLoading')&&loadingRuntime.includes('prefers-reduced-motion')&&index.includes('data-boot-skip'));
+add('audio-controller-owned',audioManifest.includes('ProjectCurseAudioManifest')&&audioController.includes('ProjectCurseAudioControl')&&index.includes('data-uac-audio-toggle'));
+add('map-room-owned',context.window.ProjectCurseMapRoom?.regions?.length>=5&&context.window.ProjectCurseMapRoom?.operations?.length>=2&&mapRoomRuntime.includes('ProjectCurseMapRoomRuntime'));
 add('cinematic-registry-four-records',cinematicData?.ids?.().join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicData?.ids?.().join('|'));
 add('cinematic-record-config-owned-by-modules',![cinematicCults,cinematicImmortality,cinematicFerals,cinematicSakuma].some(source=>!source.includes('ProjectCurseCinematicRegistry?.register'))&&main.includes('cinematicRegistry?.get?.(state.activeRecord)')&&main.includes('cinematicRegistry?.pages?.(recordId)'));
 add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!index.includes('assets/js/core/runtime-ownership.js')&&!index.includes('assets/js/core/menu-audio-runtime.js'));
@@ -133,14 +145,10 @@ const videoRecords=archiveData?.publicRecords?.filter(record=>record.format==='v
 const documentRecords=archiveData?.publicRecords?.filter(record=>record.format==='document')||[];
 add('archive-video-document-groups',videoRecords.map(record=>record.id).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028'&&documentRecords.length===5&&archiveRuntime.includes("group('video','VIDEO RECORDS','영상 기록')")&&archiveRuntime.includes("group('document','DOCUMENT FILES','문서 기록')"),`${videoRecords.length} video / ${documentRecords.length} document`);
 add('archive-display-codes',videoRecords.find(record=>record.id==='Cults_871104')?.code==='CULT-ARCHIVE'&&videoRecords.find(record=>record.id==='Immortality_860201')?.code==='OP-IMMORTALITY');
-add('archive-five-standalone-links',archiveData?.publicRecords?.filter(record=>record.href).length===5&&archiveData.publicRecords.filter(record=>record.href).every(record=>existsSync(path(record.href))));
-add('archive-cinematic-inline-sequence',archiveData?.publicRecords?.filter(record=>record.presentation==='cinematic').every(record=>!record.href)&&index.indexOf('assets/js/data/archive-document-data.js')<index.indexOf('assets/js/data/feral-cinematic-data.js')&&index.indexOf('assets/js/data/feral-cinematic-data.js')<index.indexOf('assets/js/core/record-cinematic-registry.js')&&index.indexOf('assets/js/pages/cinematic-sakuma.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js')&&main.includes('const SEQUENCE_RECORDS=new Set(cinematicRegistry?.ids?.()||[])')&&archiveRuntime.includes("record?.presentation==='cinematic'")&&archiveRuntime.includes('window.ProjectCurseRecordCinematic.start(id)'));
+add('archive-five-internal-documents',documentRecords.length===5&&documentRecords.every(record=>!record.href)&&documentRecords.every(record=>context.window.ProjectCurseArchiveDocuments?.documents?.[record.id]));
+add('archive-cinematic-inline-sequence',videoRecords.every(record=>!record.href)&&videoRecords.every(record=>cinematicData?.get?.(record.id))&&index.indexOf('assets/js/data/archive-document-data.js')<index.indexOf('assets/js/data/feral-cinematic-data.js')&&index.indexOf('assets/js/data/feral-cinematic-data.js')<index.indexOf('assets/js/core/record-cinematic-registry.js')&&index.indexOf('assets/js/pages/cinematic-sakuma.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js')&&main.includes('const SEQUENCE_RECORDS=new Set(cinematicRegistry?.ids?.()||[])')&&archiveRuntime.includes('window.ProjectCurseRecordCinematic.start(id)'));
 add('archive-no-access-limit-label',!archiveRuntime.includes('접근 제한')&&!archiveRuntime.includes('is-restricted')&&archiveRuntime.includes("format==='video'?'영상 재생':'문서 열람'"));
-const publicStandaloneRecords=archiveData?.publicRecords?.filter(record=>record.href)||[];
-add('archive-five-readable-documents',publicStandaloneRecords.length===5&&publicStandaloneRecords.every(record=>{
-  const page=read(record.href);
-  return page.includes(`data-archive-document="${record.id}"`)&&page.includes('archive-document-data.js')&&page.includes('archive-document.js')&&!/접근 거부|READ PERMISSION: DENIED|ACCESS: SEALED/.test(page);
-}));
+add('archive-five-readable-documents',documentRecords.length===5&&documentRecords.every(record=>context.window.ProjectCurseArchiveDocuments?.documents?.[record.id])&&read('assets/js/pages/archive-document.js').includes('ProjectCurseArchiveDocument'));
 add('archive-document-source-single-owner',!existsSync(path('assets/js/data/archive-source-content.js'))&&!read('assets/js/pages/archive-document.js').includes('ProjectCurseArchiveSourceContent'));
 add('archive-legacy-index-removed-at-runtime',archiveRuntime.includes("qa(':scope > .archive-groups',wrap).forEach(legacy=>legacy.remove())"));
 add('sakuma-inline-gesture-entry',archiveData?.publicRecords?.find(record=>record.id==='Sakuma_Tape_991028')?.presentation==='cinematic'&&!archiveData?.publicRecords?.find(record=>record.id==='Sakuma_Tape_991028')?.href&&read('docs/Sakuma_Tape_991028/index.html').includes('id="sakumaSequenceStart"')&&read('docs/Sakuma_Tape_991028/index.html').includes("start?.('Sakuma_Tape_991028')")&&read('docs/Sakuma_Tape_991028/index.html').indexOf('record-cinematic-registry.js')<read('docs/Sakuma_Tape_991028/index.html').indexOf('cinematic-sakuma.js'));
@@ -211,7 +219,7 @@ add('archive-feral-automaton-testing-source-faithful',automatonTestingSlide?.gro
 add('archive-feral-mechanical-modification-term',automatonTestingSlide?.report?.some(line=>line.includes('기계화 개조'))&&!automatonTestingSlide?.report?.some(line=>line.includes('사이버네틱')));
 add('archive-feral-final-source-sequence',flamethrowerSlide?.subtitle==='IMAGE-501HS'&&flamethrowerSlide?.report?.some(line=>line.includes('허베이 전쟁'))&&sealsSlide?.subtitle==='IMAGE-24400'&&sealsSlide?.report?.some(line=>line.includes('오토마톤을 작동시키고'))&&angelSlide?.subtitle==='IMAGE-241HS'&&angelSlide?.image?.endsWith('image-241hs-angel-presence.png')&&angelSlide?.report?.some(line=>line.includes('날개 달린 천사 수천'))&&ghost751Slide?.subtitle==='IMAGE-751CF'&&ghost751Slide?.report?.some(line=>line.includes('반사면이나 특정 장비'))&&feralCinematic.pages.indexOf(flamethrowerSlide)===feralCinematic.pages.indexOf(automatonTestingSlide)+1&&feralCinematic.pages.indexOf(sealsSlide)===feralCinematic.pages.indexOf(flamethrowerSlide)+1&&feralCinematic.pages.indexOf(angelSlide)===feralCinematic.pages.indexOf(sealsSlide)+1&&feralCinematic.pages.indexOf(ghost751Slide)===feralCinematic.pages.indexOf(angelSlide)+1);
 add('archive-feral-short-title',archiveData?.publicRecords?.find(record=>record.id==='Ferals_860722')?.title==='괴이'&&restoredFerals?.title==='괴이'&&read('docs/Ferals_860722/index.html').includes('<title>괴이</title>'));
-add('archive-general-reading-layout',archiveDocumentRuntime.includes('archive-doc-reading-grid')&&archiveDocumentRuntime.includes('archive-doc-paragraph')&&archiveDocumentRuntime.includes('IntersectionObserver')&&count(archiveDocumentRuntime,'index.html?return=archive#archive-entry')===3&&read('assets/css/archive-document.css').includes('grid-template-columns:230px minmax(0,1fr)'));
+add('archive-general-reading-layout',archiveDocumentRuntime.includes('archive-doc-reading-grid')&&archiveDocumentRuntime.includes('archive-doc-paragraph')&&archiveDocumentRuntime.includes('IntersectionObserver')&&read('assets/css/archive-document.css').includes('grid-template-columns:230px minmax(0,1fr)'));
 [
   'assets/resources/548f1c4456dc240389f61115de660a7f.webp',
   'assets/resources/0a8342297ac1a847461c57a2726d98b7.webp',
@@ -269,10 +277,10 @@ add('relation-registry-count',canonData?.relations?.length===18,String(canonData
 add('faction-analysis-seven',factionAnalysis?.order?.join('|')==='uac|nhc|sid|fhc|syndicate|ushinoda|haimun');
 add('faction-analysis-groups',factionAnalysis?.groups?.map(group=>group.keys.join(',')).join('|')==='uac,nhc,sid,fhc|syndicate,ushinoda,haimun');
 add('faction-analysis-depth',factionAnalysis?.order?.every(key=>factionAnalysis.factions[key]?.overview?.length>=3&&factionAnalysis.factions[key]?.chronology?.length>=5&&factionAnalysis.factions[key]?.relations?.length>=3));
-add('faction-single-menu',count(index,'data-target="faction-info"')===1&&count(index,'data-target="faction-relation"')===0&&index.includes('<b>세력 분석실</b>'));
+add('faction-single-menu',count(index,'data-uac-route="faction-info"')>=2&&count(index,'data-uac-route="faction-relation"')===0&&index.includes('<b>정보 분석</b>'));
 add('faction-unified-runtime',factionAnalysisRuntime.includes('data-pc-faction-owner')&&factionAnalysisRuntime.includes('pc-faction-relation-list'));
 add('faction-mark-name-index',factionAnalysisRuntime.includes('pc-faction-card')&&factionAnalysis?.order?.every(key=>!('subtitle' in factionAnalysis.factions[key])));
-add('faction-auxiliary-page',factionAnalysisRuntime.includes('pc-faction-back')&&factionAnalysisRuntime.includes('#faction-info/${key}')&&factionAnalysisRuntime.includes('renderDossier'));
+add('faction-auxiliary-page',factionAnalysisRuntime.includes('pc-faction-back')&&factionAnalysisRuntime.includes('openDossier')&&factionAnalysisRuntime.includes('renderDossier')&&factionAnalysisRuntime.includes("navigate('faction-info')"));
 add('history-faction-renames',worldHistory.includes('S.O.N')&&worldHistory.includes('P.O.H')&&!/신디케이트|하이문/.test(worldHistory));
 add('uac-independent-in-history',worldHistory.includes('UN 산하기관은 아니며')&&factionAnalysisSource.includes('UN 산하기관은 아니며'));
 for(const file of [structureData?.audio?.ambient,...Object.values(structureData?.audio?.effects||{})]){

@@ -1,4 +1,4 @@
-// Project Curse 5.15.2cv — permanent terminal shell and route owner.
+// Project Curse 5.16.0 — permanent terminal shell and route owner.
 (function(){
   'use strict';
 
@@ -9,11 +9,24 @@
   ready(function(){
     const content=document.querySelector('.uac-shell-content');
     const homeControl=document.querySelector('.uac-shell-home[data-uac-route="terminal-home"]');
+    const shellBar=document.querySelector('.uac-shell-bar');
+    const switchControl=document.querySelector('.uac-shell-switch');
+    const currentLabel=document.querySelector('[data-uac-current-label]');
     const pages=Array.from(document.querySelectorAll('.content-page[id]'));
     const screenIds=new Set(pages.map(page=>page.id));
     if(!content||!homeControl||!pages.length) return;
 
     let currentRoute='terminal-home';
+
+    function screenLabel(target){
+      const buildScreen=window.ProjectCurseBuild?.screens?.find(screen=>screen.id===target);
+      return buildScreen?.label||target;
+    }
+
+    function closeQuickNav(){
+      shellBar?.classList.remove('is-quick-open');
+      switchControl?.setAttribute('aria-expanded','false');
+    }
 
     function normalize(target){
       if(target==='faction-relation') return 'faction-info';
@@ -48,10 +61,16 @@
 
       currentRoute=target;
       document.body.dataset.route=target;
+      if(currentLabel) currentLabel.textContent=screenLabel(target);
+      document.querySelectorAll('[data-uac-route]').forEach(control=>{
+        if(normalize(control.dataset.uacRoute)===target) control.setAttribute('aria-current','page');
+        else control.removeAttribute('aria-current');
+      });
       homeControl.hidden=target==='terminal-home';
       homeControl.setAttribute('aria-hidden',target==='terminal-home'?'true':'false');
       content.scrollTop=0;
       content.scrollLeft=0;
+      closeQuickNav();
       replayScreenEntrance(activePage);
 
       if(replace){
@@ -76,8 +95,23 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
       pulse(routeControl);
-      navigate(routeControl.dataset.uacRoute,{replace:true});
+      const target=navigate(routeControl.dataset.uacRoute,{replace:true});
+      if(target==='map-room'&&routeControl.dataset.uacMapOperation){
+        const operation=routeControl.dataset.uacMapOperation;
+        window.setTimeout(()=>window.ProjectCurseMapRoomRuntime?.showOperation?.(operation),0);
+      }
     },true);
+
+    switchControl?.addEventListener('click',event=>{
+      event.preventDefault();
+      const open=!shellBar?.classList.contains('is-quick-open');
+      shellBar?.classList.toggle('is-quick-open',open);
+      switchControl.setAttribute('aria-expanded',open?'true':'false');
+    });
+
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape') closeQuickNav();
+    });
 
     document.addEventListener('pointerdown',event=>{
       const control=event.target.closest?.('button, a, [role="button"]');

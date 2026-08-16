@@ -5,32 +5,35 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
 <title>U.A.C 기록 단말기</title>
-<link href="assets/css/style.css?v=5.15.2cv" rel="stylesheet"/>
-<link href="assets/css/stabilization.css?v=5.15.2cv" rel="stylesheet"/>
-<link href="assets/css/archive-consolidation.css?v=5.15.2cv" rel="stylesheet"/>
-<link href="assets/css/archive-document.css?v=5.15.2cv" rel="stylesheet"/>
-<link href="assets/css/record-cinematic.css?v=5.15.2df" rel="stylesheet"/>
-<link href="assets/css/world-history.css?v=5.15.2cv" rel="stylesheet"/>
-<link href="assets/css/faction-analysis.css?v=5.15.2cv" rel="stylesheet"/>
-<link href="assets/css/map-room.css?v=5.15.2cv" rel="stylesheet"/>
-<link href="assets/css/app-shell.css?v=5.15.2cv" rel="stylesheet"/>
-<link href="assets/css/record-cinematic-mobile.css?v=5.15.2dh" rel="stylesheet"/>
-<script>/* Project Curse 5.15.2cv — direct cinematic entry */(function(){window.__pc5152BootStart=window.__pc5152BootStart||performance.now();document.documentElement.classList.add('pc5152bi-boot-seen');})();</script>
+<meta content="#050607" name="theme-color"/>
+<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="assets/css/style.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/stabilization.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/archive-consolidation.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/archive-document.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/record-cinematic.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/world-history.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/faction-analysis.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/map-room.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/app-shell.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/record-cinematic-mobile.css?v=5.16.0" rel="stylesheet"/>
+<link href="assets/css/terminal-foundation.css?v=5.16.0" rel="stylesheet"/>
+<script>/* Project Curse 5.16.0 — direct cinematic and return entry */(function(){window.__pc5152BootStart=window.__pc5152BootStart||performance.now();document.documentElement.classList.add('pc5152bi-boot-seen');try{var p=new URLSearchParams(location.search);if(p.get('return')==='archive'){window.__pc5152SkipBoot=true;document.documentElement.classList.add('pc5152cf-archive-return');}}catch(_error){}})();</script>
 </head>
 <body class="pc5152ad-pc-ui pc5152ae-source-diet pc5152ae-s24-ready pc5152af-fluid-resolution pc5152ag-click-density pc5152ai-global-responsive-silent-menu pc5152am-audio-cult-vhs-layout-balance pc5152bb-stage-template-responsivefix pc5152bg-crosslink-pass pc5152bi-global-qa-codex-tone pc5152bl-global-regression-data-consistency pc5152ca1-terminal-home-audio-scope pc5152ce-organization-canon pc5152cf-archive-consolidation">
-<div class="loader pc5152g-redblack-loader" id="loader">
+<div aria-label="폐쇄 기록 단말기 기동" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="loader pc5152g-redblack-loader" id="loader" role="progressbar">
 <div class="loader-box">
 <div class="sys-kicker">U.A.C 폐쇄 기록 / PC-03</div>
 <div class="loader-title">로컬 단말기 기동</div>
 <div class="loader-lines" id="bootLines">
-<p><b>[PC-03]</b> 로컬 단말기 기동</p>
-<p><b>[AUDIO]</b> 로컬 중계 ............ 준비</p>
-<p><b>[ARCHIVE]</b> 로컬 색인 ............ 준비</p>
-<p><b>[FILES]</b> 봉인 파일 ............ 확인</p>
-<p><b>[NET]</b> 외부망 ............... 차단</p>
-<p class="redline"><b>ERR-RZ/881120</b> 레드라인 흔적 감지</p>
-<p class="redline"><b>ACCESS</b> 로컬 전용 / 동기화 금지</p>
+<p data-boot-stage="kernel"><span class="pc-boot-line-copy"><b>[PC-03]</b> 로컬 단말기 기동</span><span data-boot-state>WAIT</span></p>
+<p data-boot-stage="audio"><span class="pc-boot-line-copy"><b>[AUDIO]</b> 로컬 중계 연결</span><span data-boot-state>WAIT</span></p>
+<p data-boot-stage="archive"><span class="pc-boot-line-copy"><b>[ARCHIVE]</b> 폐쇄 색인 검사</span><span data-boot-state>WAIT</span></p>
+<p data-boot-final="SEALED" data-boot-stage="network"><span class="pc-boot-line-copy"><b>[NET]</b> 외부망 격리 확인</span><span data-boot-state>WAIT</span></p>
+<p class="redline" data-boot-final="DETECTED" data-boot-stage="redline"><span class="pc-boot-line-copy"><b>[RZ/881120]</b> 레드라인 흔적</span><span data-boot-state>WAIT</span></p>
 </div>
+<div class="pc-boot-meter" data-boot-progress><i></i><span data-boot-percent>000%</span></div>
+<div class="pc-boot-footer"><span>BUILD 5.16.0 / LOCAL ONLY</span><button data-boot-skip type="button">기동 건너뛰기</button></div>
 </div>
 </div>
 <div class="app" id="app">
@@ -38,7 +41,14 @@
 <header class="uac-shell-bar">
 <button aria-label="단말 메뉴로 돌아가기" class="uac-shell-home" data-uac-route="terminal-home" hidden="" type="button"><i aria-hidden="true">←</i><span>단말 메뉴</span></button>
 <div class="uac-shell-brand"><b>U.A.C CLOSED SERVER</b><small>PC-03 / 폐쇄 기록</small></div>
-<div class="uac-shell-status"><span>ERA. 1980–2030</span><span>AUDIO LOCAL</span><span>ACCESS LIMITED</span></div>
+<button aria-controls="uacQuickNav" aria-expanded="false" class="uac-shell-switch" type="button"><small>현재 화면</small><b data-uac-current-label>단말 상태</b><i aria-hidden="true">⌄</i></button>
+<nav aria-label="빠른 화면 이동" class="uac-shell-quick" id="uacQuickNav">
+<a data-uac-route="map-room" href="#map-room"><i>01</i><span>상황 관제</span></a>
+<a data-uac-route="history" href="#history"><i>02</i><span>세계 기록</span></a>
+<a data-uac-route="faction-info" href="#faction-info"><i>03</i><span>정보 분석</span></a>
+<a data-uac-route="archive-entry" href="#archive-entry"><i>04</i><span>기록보관소</span></a>
+</nav>
+<div class="uac-shell-status"><span>ERA. 1980–2030</span><button aria-label="로컬 오디오 끄기" aria-pressed="false" data-uac-audio-toggle type="button"><span data-audio-label>AUDIO LOCAL</span></button><span>ACCESS LIMITED</span></div>
 </header>
 <div class="uac-shell-workspace">
 <main class="uac-shell-content" data-scroll-root="true">
@@ -46,22 +56,41 @@
 <div class="pc5152ca1-home-shell">
 <div class="pc5152ca1-home-kicker">U.A.C 폐쇄 단말 / PC-03</div>
 <div class="pc5152ca1-home-title">
-<span>LOCAL ARCHIVE NODE</span>
-<h1>접근 대기</h1>
-<p>외부망 차단 상태. 기록 색인은 로컬 장치에 한정된다.</p>
+<span>LOCAL COMMAND NODE / BUILD 5.16.0</span>
+<h1>폐쇄 기록 관제 단말</h1>
+<p>권역 신호와 작전 기록을 한곳에서 확인한다. 외부망은 차단되어 있다.</p>
 </div>
-<div aria-label="단말 상태" class="pc5152ca1-home-status">
-<article><small>NETWORK</small><b>ISOLATED</b><span>외부 동기화 차단</span></article>
-<article><small>ARCHIVE</small><b>PARTIAL</b><span>손상 기록 부분 복구</span></article>
-<article><small>AUTHORITY</small><b>LIMITED</b><span>현장 열람 권한</span></article>
-<article><small>AUDIO</small><b>LOCAL</b><span>대기 채널만 활성</span></article>
+<div aria-label="단말 상태" class="pc-terminal-system-strip">
+<span><small>NETWORK</small><b>ISOLATED</b></span>
+<span><small>ARCHIVE</small><b>PARTIAL</b></span>
+<span><small>AUTHORITY</small><b>LIMITED</b></span>
+<span><small>THREAT</small><b>ESCALATED</b></span>
+</div>
+<div class="pc-terminal-dashboard-grid">
+<a class="pc-terminal-primary" data-uac-route="map-room" href="#map-room">
+<span class="pc-terminal-card-index">01 / LIVE CONTROL</span>
+<div><small>PRIMARY CHANNEL</small><b>상황 관제</b><p>대륙별 위험 신호, 정착지 상태와 특수 작전 진행 단계를 통합 열람한다.</p></div>
+<div aria-hidden="true" class="pc-terminal-radar"><i></i><i></i><i></i><span></span></div>
+<em>관제실 진입&nbsp;›</em>
+</a>
+<aside class="pc-terminal-alert" aria-label="현재 경보">
+<header><small>CURRENT ALERT</small><b>남방권 개입 징후</b><span>PRIORITY 01</span></header>
+<p>해안 교단의 도시권 대량 소환과 북방 교전 분산 계획이 교차 확인되었다.</p>
+<dl><div><dt>신뢰도</dt><dd>불완전</dd></div><div><dt>위험도</dt><dd>CRITICAL</dd></div></dl>
+<a data-uac-map-operation="op-unlit-fortress" data-uac-route="map-room" href="#map-room">무광 요새 작전 열기&nbsp;›</a>
+</aside>
 </div>
 <nav aria-label="폐쇄 기록 메뉴" class="uac-terminal-menu">
-<a data-uac-route="history" href="#history"><i>01</i><span><b>세계 사건 연표</b><small>1975년 이후의 사건 기록 열람</small></span><em>기록 접속&nbsp;›</em></a>
-<a data-uac-route="faction-info" href="#faction-info"><i>02</i><span><b>세력 분석실</b><small>기관·교단·외부 세력 분석</small></span><em>분석 접속&nbsp;›</em></a>
-<a data-uac-route="archive-entry" href="#archive-entry"><i>03</i><span><b>기록보관소</b><small>영상 기록과 복구 문서 색인</small></span><em>색인 접속&nbsp;›</em></a>
-<a data-uac-route="map-room" href="#map-room"><i>04</i><span><b>권역 관제도</b><small>지역 상황과 작전 경로 분석</small></span><em>관제 접속&nbsp;›</em></a>
+<a data-uac-route="history" href="#history"><i>02</i><span><b>세계 기록</b><small>1980–2030 사건 흐름과 전환점</small></span><em>연표 열기&nbsp;›</em></a>
+<a data-uac-route="faction-info" href="#faction-info"><i>03</i><span><b>정보 분석</b><small>기관·교단·외부 세력 관계 분석</small></span><em>분석실 열기&nbsp;›</em></a>
+<a data-uac-route="archive-entry" href="#archive-entry"><i>04</i><span><b>기록보관소</b><small>영상 기록과 복구 문서 통합 색인</small></span><em>색인 열기&nbsp;›</em></a>
 </nav>
+<section class="pc-terminal-recent" aria-label="최근 수신 신호">
+<header><small>RECENT SIGNALS</small><b>최근 수신</b></header>
+<a data-uac-route="map-room" href="#map-room"><time>03:17</time><span>남방권 / 검은 숲 외곽 신호 증가</span><em>UNVERIFIED</em></a>
+<a data-uac-route="history" href="#history"><time>02:41</time><span>북방 교전 기록 재분류 완료</span><em>INDEXED</em></a>
+<a data-uac-route="archive-entry" href="#archive-entry"><time>01:09</time><span>봉인 기록 영상 채널 응답</span><em>RECOVERED</em></a>
+</section>
 <div class="pc5152ca1-home-trace">
 <span>PC-03</span>
 <i></i>
@@ -204,29 +233,33 @@
 </div>
 </div>
 </div>
-<script src="assets/js/data/site-manifest.js?v=5.15.2cv"></script>
-<script src="assets/js/data/canon-registry.js?v=5.15.2cv"></script>
-<script src="assets/js/data/faction-analysis-data.js?v=5.15.2cv"></script>
-<script src="assets/js/data/archive-registry.js?v=5.15.2cv"></script>
-<script src="assets/js/data/archive-document-data.js?v=5.15.2cv"></script>
-<script src="assets/js/data/map-room-data.js?v=5.15.2cv"></script>
-<script src="assets/js/data/feral-cinematic-data.js?v=5.15.2cv"></script>
-<script src="assets/js/data/sakuma-cinematic-data.js?v=5.15.2cv"></script>
-<script src="assets/js/data/immortality-storyboard.js?v=5.15.2df"></script>
-<script src="assets/js/core/record-cinematic-registry.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/cinematic-cults.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/cinematic-immortality.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/cinematic-ferals.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/cinematic-sakuma.js?v=5.15.2cv"></script>
-<script src="assets/js/core/base-runtime.js?v=5.15.2cv"></script>
-<script src="assets/js/core/record-cinematic-runtime.js?v=5.15.2df"></script>
-<script src="assets/js/core/app-shell.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/shared-declutter.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/canon-reconciliation.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/archive-document.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/archive-consolidation.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/world-history.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/faction-analysis.js?v=5.15.2cv"></script>
-<script src="assets/js/pages/map-room.js?v=5.15.2cv"></script>
+<script src="assets/js/data/build-info.js?v=5.16.0"></script>
+<script src="assets/js/data/site-manifest.js?v=5.16.0"></script>
+<script src="assets/js/data/audio-manifest.js?v=5.16.0"></script>
+<script src="assets/js/data/canon-registry.js?v=5.16.0"></script>
+<script src="assets/js/data/faction-analysis-data.js?v=5.16.0"></script>
+<script src="assets/js/data/archive-registry.js?v=5.16.0"></script>
+<script src="assets/js/data/archive-document-data.js?v=5.16.0"></script>
+<script src="assets/js/data/map-room-data.js?v=5.16.0"></script>
+<script src="assets/js/data/feral-cinematic-data.js?v=5.16.0"></script>
+<script src="assets/js/data/sakuma-cinematic-data.js?v=5.16.0"></script>
+<script src="assets/js/data/immortality-storyboard.js?v=5.16.0"></script>
+<script src="assets/js/core/record-cinematic-registry.js?v=5.16.0"></script>
+<script src="assets/js/pages/cinematic-cults.js?v=5.16.0"></script>
+<script src="assets/js/pages/cinematic-immortality.js?v=5.16.0"></script>
+<script src="assets/js/pages/cinematic-ferals.js?v=5.16.0"></script>
+<script src="assets/js/pages/cinematic-sakuma.js?v=5.16.0"></script>
+<script src="assets/js/core/loading-sequence.js?v=5.16.0"></script>
+<script src="assets/js/core/base-runtime.js?v=5.16.0"></script>
+<script src="assets/js/core/audio-controller.js?v=5.16.0"></script>
+<script src="assets/js/core/record-cinematic-runtime.js?v=5.16.0"></script>
+<script src="assets/js/core/app-shell.js?v=5.16.0"></script>
+<script src="assets/js/pages/shared-declutter.js?v=5.16.0"></script>
+<script src="assets/js/pages/canon-reconciliation.js?v=5.16.0"></script>
+<script src="assets/js/pages/archive-document.js?v=5.16.0"></script>
+<script src="assets/js/pages/archive-consolidation.js?v=5.16.0"></script>
+<script src="assets/js/pages/world-history.js?v=5.16.0"></script>
+<script src="assets/js/pages/faction-analysis.js?v=5.16.0"></script>
+<script src="assets/js/pages/map-room.js?v=5.16.0"></script>
 </body>
 </html>

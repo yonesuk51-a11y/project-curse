@@ -1,4 +1,4 @@
-// Project Curse 5.15.2cv — route-free faction dossier owner.
+// Project Curse 5.16.0 — route-free intelligence dossier owner.
 (function(){
   'use strict';
 
@@ -81,8 +81,8 @@
     if(!section) return false;
     selected=null;
     section.innerHTML=`<div class="pc-faction-analysis" data-pc-faction-owner="1">
-      <header class="pc-faction-analysis-intro"><small>U.A.C CLOSED ARCHIVE / FACTION ANALYSIS</small>
-        <h2>세력 분석실</h2><p>열람할 세력 마크를 선택하십시오.</p>
+      <header class="pc-faction-analysis-intro"><small>U.A.C CLOSED ARCHIVE / INTELLIGENCE ANALYSIS</small>
+        <h2>정보 분석</h2><p>열람할 세력 마크를 선택하십시오.</p>
       </header>
       <div class="pc-faction-index" aria-label="분석 대상 세력">${factionGroups()}</div>
     </div>`;

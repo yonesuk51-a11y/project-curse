@@ -1,4 +1,4 @@
-// Project Curse 5.15.2cv — terminal hub manifest and runtime ownership map
+// Project Curse 5.16.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,14 +9,14 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:'5.15.2cv',
-    schema:'project-curse-structure-v5',
-    screens:[
+    version:root.ProjectCurseBuild?.version||'5.16.0',
+    schema:root.ProjectCurseBuild?.schema||'project-curse-v6',
+    screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
-      {id:'history',label:'세계 사건 연표',index:'01'},
-      {id:'faction-info',label:'세력 분석실',index:'02'},
-      {id:'archive-entry',label:'기록보관소',index:'03'},
-      {id:'map-room',label:'권역 관제도',index:'04'}
+      {id:'map-room',label:'상황 관제',index:'01'},
+      {id:'history',label:'세계 기록',index:'02'},
+      {id:'faction-info',label:'정보 분석',index:'03'},
+      {id:'archive-entry',label:'기록보관소',index:'04'}
     ],
     lockedRecords:[
       {id:'Cults_871104',title:'종교'},
@@ -39,10 +39,14 @@
       }
     },
     owners:{
+      buildInfo:'assets/js/data/build-info.js',
       manifest:'assets/js/data/site-manifest.js',
+      audioManifest:'assets/js/data/audio-manifest.js',
       canon:'assets/js/data/canon-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
       baseRuntime:'assets/js/core/base-runtime.js',
+      loadingRuntime:'assets/js/core/loading-sequence.js',
+      audioController:'assets/js/core/audio-controller.js',
       shellRuntime:'assets/js/core/app-shell.js',
       cinematicRuntime:'assets/js/core/record-cinematic-runtime.js',
       cinematicRegistry:'assets/js/core/record-cinematic-registry.js',
@@ -53,6 +57,7 @@
         'assets/js/pages/cinematic-sakuma.js'
       ],
       shellCSS:'assets/css/app-shell.css',
+      foundationCSS:'assets/css/terminal-foundation.css',
       declutter:'assets/js/pages/shared-declutter.js',
       reconciliation:'assets/js/pages/canon-reconciliation.js',
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',

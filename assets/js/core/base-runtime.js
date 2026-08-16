@@ -1,4 +1,4 @@
-// Project Curse 5.15.2cv — boot and persistent shell audio owner.
+// Project Curse 5.16.0 — boot and persistent shell audio owner.
 (function(){
   'use strict';
 
@@ -97,6 +97,10 @@
 
   function boot(){
     const lines=Array.from(document.querySelectorAll('#bootLines p'));
+    if(window.ProjectCurseLoading?.start){
+      window.ProjectCurseLoading.start({playCue,finish:finishBoot});
+      return;
+    }
     if(window.__pc5152SkipBoot){
       lines.forEach(line=>line.classList.add('show'));
       finishBoot();
