@@ -1,4 +1,4 @@
-// Project Curse 5.22.0 — single-shell archive index owner
+// Project Curse 5.23.0 — single-shell archive index owner
 (function(){
   'use strict';
   const archive=window.ProjectCurseArchive;
@@ -103,7 +103,7 @@
     const ids=rows.map(row=>row.dataset.pcArchiveOpen).join('|');
     return {
       name:'archiveIndex',
-      patch:'5.22.0',
+      patch:'5.23.0',
       ok:ids===archive.publicRecords.map(record=>record.id).join('|'),
       records:rows.length,
       issues:ids===archive.publicRecords.map(record=>record.id).join('|')?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]

@@ -1,4 +1,4 @@
-// Project Curse 5.22.0 — regional drilldown districts, routes, and site intelligence.
+// Project Curse 5.23.0 — regional drilldown districts, route focus, and threat intelligence.
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseRegionalDrilldown=freeze({
-    version:'regional-drilldown-v1',
+    version:'regional-drilldown-v2',
     districts:[
       {
         id:'gbf-western-marches',region:'southamerica',terrain:'forest',
@@ -17,9 +17,9 @@
         description:'순례자 증언과 몬수르 교회의 종 운반 기록을 겹쳐 복원한 서부 진입로. 같은 길이 서로 다른 목적지로 이어진다.',
         warning:'비현실감이 발생하면 기존 경로를 역행하지 말 것. 검은 강의 강둑은 지도상 안전지대가 아니다.',
         routes:[
-          {id:'western-pilgrim',className:'pilgrimage',label:'WESTERN PILGRIM TRACE',points:[[70,438],[235,350],[400,289],[520,329],[610,353],[744,250],[908,124]]},
-          {id:'derealized-return',className:'broken',label:'DEREALIZED RETURN',points:[[520,329],[402,289],[239,352]]},
-          {id:'black-river-line',className:'hazard',label:'BLACK RIVER / NO BANK',points:[[470,38],[514,137],[489,228],[610,353],[582,448],[650,540]]}
+          {id:'western-pilgrim',className:'pilgrimage',label:'WESTERN PILGRIM TRACE',risk:'high',signal:'intermittent',rule:'공포를 느낀 상태에서 교전하지 말 것',siteIds:['gbf-west-observation','gbf-monsur-chapel','gbf-duel-ground','gbf-derealization','gbf-black-river','gbf-blood-lake','gbf-unlit-fortress'],points:[[70,438],[235,350],[400,289],[520,329],[610,353],[744,250],[908,124]]},
+          {id:'derealized-return',className:'broken',label:'DEREALIZED RETURN',risk:'critical',signal:'duplicated',rule:'자신의 것이 아닌 생각이 들면 즉시 경로 변경',siteIds:['gbf-derealization','gbf-duel-ground','gbf-monsur-chapel'],points:[[520,329],[402,289],[239,352]]},
+          {id:'black-river-line',className:'hazard',label:'BLACK RIVER / NO BANK',risk:'critical',signal:'lost',rule:'검은 강의 강둑에 접근하지 말 것',siteIds:['gbf-derealization','gbf-black-river'],points:[[470,38],[514,137],[489,228],[610,353],[582,448],[650,540]]}
         ],
         sites:[
           {id:'gbf-west-observation',x:70,y:438,type:'facility',label:'서부 외곽 관측소',meta:'순례자 계수·장비 봉인',status:'교신 가능',confidence:'observed',records:['Great_Black_Forest_Region']},
@@ -38,9 +38,9 @@
         warning:'표시 상태는 OP-BROKEN-CROWN 최종 판단에 따라 갱신된다. 판단 전 좌표는 적대·우호가 확정되지 않는다.',
         operation:'op-southern-coup',
         routes:[
-          {id:'coastal-infiltration',className:'hostile',label:'COASTAL INFILTRATION',points:[[86,430],[250,365],[418,294],[590,250],[750,179],[920,104]]},
-          {id:'northern-diversion',className:'front',label:'NORTHERN DIVERSION',points:[[590,250],[686,169],[796,207],[920,104]]},
-          {id:'civilian-evacuation',className:'pilgrimage',label:'UNVERIFIED EVACUATION',points:[[418,294],[335,394],[202,456]]}
+          {id:'coastal-infiltration',className:'hostile',label:'COASTAL INFILTRATION',risk:'critical',signal:'tracked',rule:'특수부대 지휘권을 확인하기 전 교신 금지',siteIds:['coast-listening-post','coast-muster','coast-summon-a','coast-guard-command','coast-summon-b','coast-northern-line'],points:[[86,430],[250,365],[418,294],[590,250],[750,179],[920,104]]},
+          {id:'northern-diversion',className:'front',label:'NORTHERN DIVERSION',risk:'high',signal:'spoofed',rule:'북부 전선 발신자 식별값을 신뢰하지 말 것',siteIds:['coast-guard-command','coast-summon-b','coast-northern-line'],points:[[590,250],[686,169],[796,207],[920,104]]},
+          {id:'civilian-evacuation',className:'pilgrimage',label:'UNVERIFIED EVACUATION',risk:'medium',signal:'intermittent',rule:'대피 경로와 순례 경로를 혼동하지 말 것',siteIds:['coast-summon-a','coast-muster','coast-listening-post'],points:[[418,294],[335,394],[202,456]]}
         ],
         sites:[
           {id:'coast-listening-post',x:86,y:430,type:'facility',label:'해안 감청소',meta:'남방 주파수 최초 포착',status:'감청 유지',confidence:'observed',records:['Operation_Broken_Crown'],operation:'op-southern-coup',incident:'evt-southern-mobilization'},
@@ -57,9 +57,9 @@
         description:'국가 대신 성채, 촌락, 교회가 서로의 피난처 역할을 하는 내부 정착권. 지도상의 거리는 도보 기록과 일치하지 않는다.',
         warning:'성채 자체가 하나의 교단일 수 있다. 불빛이 없는 성채와 오래된 전장은 우회할 것.',
         routes:[
-          {id:'refuge-chain',className:'pilgrimage',label:'SANCTUARY CHAIN',points:[[87,421],[245,344],[423,381],[568,276],[746,318],[907,201]]},
-          {id:'feral-front',className:'hazard',label:'FERAL HUNTING FRONT',points:[[150,125],[298,195],[455,151],[620,208],[808,126],[960,163]]},
-          {id:'impossible-fork',className:'broken',label:'IMPOSSIBLE DISTANCE',points:[[423,381],[568,276],[423,381],[746,318]]}
+          {id:'refuge-chain',className:'pilgrimage',label:'SANCTUARY CHAIN',risk:'medium',signal:'testimony',rule:'불빛이 확인된 피난 성채만 이용할 것',siteIds:['inner-village-seven','inner-sanctuary-castle','inner-forest-circle','inner-distance-fork','inner-feral-front','inner-old-citadel'],points:[[87,421],[245,344],[423,381],[568,276],[746,318],[907,201]]},
+          {id:'feral-front',className:'hazard',label:'FERAL HUNTING FRONT',risk:'critical',signal:'biological',rule:'같은 종끼리의 교전도 안전 신호로 판단하지 말 것',siteIds:['inner-feral-front','inner-old-citadel'],points:[[150,125],[298,195],[455,151],[620,208],[808,126],[960,163]]},
+          {id:'impossible-fork',className:'broken',label:'IMPOSSIBLE DISTANCE',risk:'high',signal:'duplicated',rule:'동일 표지석을 두 번 발견하면 직전 분기점으로 돌아가지 말 것',siteIds:['inner-forest-circle','inner-distance-fork','inner-feral-front'],points:[[423,381],[568,276],[423,381],[746,318]]}
         ],
         sites:[
           {id:'inner-village-seven',x:87,y:421,type:'settlement',label:'제7 산촌',meta:'최근 확보된 인간 정착지',status:'야간 봉쇄',confidence:'testimony',records:['Great_Black_Forest_Region']},
@@ -76,9 +76,9 @@
         description:'귀환한 순례자 일곱 명의 진술이 유일하게 겹치는 서부 경로. 왕복 경로 중 귀환 구간만 지도에 남아 있다.',
         warning:'전진 경로를 역산하지 말 것. 무전에서 자신의 목소리를 들으면 현재 진행 방향을 즉시 변경할 것.',
         routes:[
-          {id:'return-only',className:'pilgrimage',label:'RETURN TESTIMONY ONLY',points:[[92,430],[245,366],[382,292],[520,232],[682,171],[893,112]]},
-          {id:'lost-outbound',className:'broken',label:'OUTBOUND DATA LOST',points:[[382,292],[486,351],[622,326]]},
-          {id:'exchange-channel',className:'front',label:'NEUTRAL EXCHANGE CHANNEL',points:[[245,366],[344,435],[475,421]]}
+          {id:'return-only',className:'pilgrimage',label:'RETURN TESTIMONY ONLY',risk:'high',signal:'testimony',rule:'귀환 증언을 전진 항법에 사용하지 말 것',siteIds:['dead-return-shore','dead-checkpoint-07','dead-quarantine-ring','dead-last-overlap','dead-inland-silence'],points:[[92,430],[245,366],[382,292],[520,232],[682,171],[893,112]]},
+          {id:'lost-outbound',className:'broken',label:'OUTBOUND DATA LOST',risk:'critical',signal:'lost',rule:'소실된 출발 경로를 역산하지 말 것',siteIds:['dead-quarantine-ring','dead-last-overlap','dead-inland-silence'],points:[[382,292],[486,351],[622,326]]},
+          {id:'exchange-channel',className:'front',label:'NEUTRAL EXCHANGE CHANNEL',risk:'medium',signal:'encrypted',rule:'중립 분파의 호출부호가 일치할 때만 응답',siteIds:['dead-checkpoint-07','dead-neutral-camp','dead-exchange'],points:[[245,366],[344,435],[475,421]]}
         ],
         sites:[
           {id:'dead-return-shore',x:92,y:430,type:'returned',label:'서부 귀환 지점',meta:'귀환 기록 7건 / 출발 기록 불명',status:'격리선 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
@@ -96,9 +96,9 @@
         description:'멸망한 왕국과 버려진 요새가 겹쳐 있는 묘역. 일부 성채는 이름과 주인이 사라진 뒤에도 순례자를 받아들인다.',
         warning:'불빛 없는 요새에 응답하지 말 것. 고유 무기는 봉인 주체가 확인되기 전까지 회수 금지다.',
         routes:[
-          {id:'grave-road',className:'historical',label:'KINGDOM GRAVE ROAD',points:[[90,438],[250,367],[421,309],[575,232],[742,279],[915,161]]},
-          {id:'refuge-route',className:'pilgrimage',label:'REFUGE CASTLE TRACE',points:[[250,367],[366,437],[524,398]]},
-          {id:'collapsed-wall',className:'hazard',label:'COLLAPSED FORTIFICATION',points:[[151,163],[318,204],[489,147],[651,196],[844,112]]}
+          {id:'grave-road',className:'historical',label:'KINGDOM GRAVE ROAD',risk:'high',signal:'historical',rule:'왕국 표식과 현재 성채의 소속을 동일시하지 말 것',siteIds:['grave-throne','grave-refuge','grave-weapon-field','grave-unlit','grave-memorial','grave-last-kingdom'],points:[[90,438],[250,367],[421,309],[575,232],[742,279],[915,161]]},
+          {id:'refuge-route',className:'pilgrimage',label:'REFUGE CASTLE TRACE',risk:'medium',signal:'testimony',rule:'불빛과 내부 열원이 함께 확인된 성채만 피난처로 판정',siteIds:['grave-throne','grave-refuge','grave-weapon-field'],points:[[250,367],[366,437],[524,398]]},
+          {id:'collapsed-wall',className:'hazard',label:'COLLAPSED FORTIFICATION',risk:'critical',signal:'lost',rule:'무등화 요새와 붕괴 방벽 사이에서 야영하지 말 것',siteIds:['grave-unlit','grave-last-kingdom'],points:[[151,163],[318,204],[489,147],[651,196],[844,112]]}
         ],
         sites:[
           {id:'grave-throne',x:90,y:438,type:'ruin',label:'이름 없는 왕좌터',meta:'왕조 표식 11종 중첩',status:'발굴 중지',confidence:'historical',records:['Dead_Zone_Pilgrimage']},
@@ -115,9 +115,9 @@
         description:'지도, 위성, 순례자 진술이 모두 끊기는 내륙. 표식 대부분은 위치가 아니라 마지막 통신 시각을 지리 좌표처럼 환산한 것이다.',
         warning:'이 지도는 경로 안내가 아니다. 자신이 보내지 않은 구조 신호와 개인 식별 신호에 응답하지 말 것.',
         routes:[
-          {id:'last-map-line',className:'broken',label:'LAST CARTOGRAPHIC LINE',points:[[84,431],[245,366],[397,303],[548,248]]},
-          {id:'black-highway',className:'hazard',label:'BLACK HIGHWAY',points:[[160,133],[330,182],[504,119],[688,169],[908,96]]},
-          {id:'false-rescue',className:'hostile',label:'FALSE RESCUE SIGNAL',points:[[548,248],[682,342],[824,309]]}
+          {id:'last-map-line',className:'broken',label:'LAST CARTOGRAPHIC LINE',risk:'critical',signal:'terminating',rule:'지도 종결선 이후의 좌표값을 위치로 해석하지 말 것',siteIds:['silent-last-station','silent-personal-echo','silent-black-highway','silent-force-boundary'],points:[[84,431],[245,366],[397,303],[548,248]]},
+          {id:'black-highway',className:'hazard',label:'BLACK HIGHWAY',risk:'critical',signal:'looping',rule:'과거 지명이 반복되면 즉시 도로에서 이탈할 것',siteIds:['silent-black-highway','silent-force-boundary','silent-no-return'],points:[[160,133],[330,182],[504,119],[688,169],[908,96]]},
+          {id:'false-rescue',className:'hostile',label:'FALSE RESCUE SIGNAL',risk:'critical',signal:'spoofed',rule:'자신 또는 귀환자의 목소리로 온 구조 신호에 응답 금지',siteIds:['silent-force-boundary','silent-false-rescue','silent-no-return'],points:[[548,248],[682,342],[824,309]]}
         ],
         sites:[
           {id:'silent-last-station',x:84,y:431,type:'facility',label:'최후 지도국',meta:'종이 지도 3장만 회수',status:'폐쇄',confidence:'historical',records:['Dead_Zone_Pilgrimage']},

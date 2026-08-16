@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.22.0';
-const DATA_VERSION='5.22.0';
+const VERSION='5.23.0';
+const DATA_VERSION='5.23.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -162,6 +162,8 @@ add('acoustic-screen-profiles',['terminal-home','map-room','history','faction-in
 add('distinct-interface-cues',['pc5152h_terminal_contact_clear.wav','pc5152f_analog_contact_soft.wav','pc5152h_record_mount_clear.wav','pc5152p_internal_projector_vhs_step.wav','pc5152x_late_log_beep_195s.mp3','pc5152v_field_photo_click_42s.mp3','pc5152v_comm_line_cue_73_74.mp3'].every(asset=>baseRuntime.includes(asset)));
 add('audio-ducking-and-polyphony',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes("if(event.priority>1){stopBus('interface');stopBus('record');}")&&audioController.includes('event.exclusive!==false'));
 add('audio-profile-route-sync',audioController.includes("projectcurse:screen-committed")&&audioController.includes('setProfile(event.detail?.target')&&audioController.includes('data-audio-blocked'));
+add('record-audio-route-isolation',main.includes("projectcurse:route-will-change")&&main.includes("document.body.classList.contains('pc5152h-sequence-open')")&&main.includes("pc5152h-cult-source-sequence"));
+add('audio-profile-clears-previous-buses',audioController.includes("if(resolved!==profileId)")&&audioController.includes("stopBus('record')")&&audioController.includes("stopBus('interface')"));
 add('screen-action-audio',mapRoomRuntime.includes("'operation.step'")&&worldHistory.includes("'history.open'")&&worldHistory.includes("'history.step'")&&factionAnalysisRuntime.includes("'faction.open'")&&factionAnalysisRuntime.includes("'faction.back'"));
 add('regional-document-audio',read('assets/js/pages/archive-document.js').includes("'great-black-forest':'region.forest'")&&read('assets/js/pages/archive-document.js').includes("'dead-zone':'region.deadzone'")&&read('assets/js/pages/archive-document.js').includes("scenario:'scenario.arm'"));
 add('transition-controller-owned',context.window.ProjectCurseTransitions?.screens&&Object.keys(context.window.ProjectCurseTransitions.screens).length===5&&transitionController.includes('ProjectCurseTransition')&&transitionController.includes("dataset.transitionState='switching'"));
@@ -175,6 +177,12 @@ add('regional-drilldown-balanced',drilldowns.filter(detail=>detail.region==='sou
 add('regional-drilldown-navigation',mapRoomRuntime.includes("mode:'region'")&&mapRoomRuntime.includes("state.mode==='detail'")&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('showDetail(id,siteId)'));
 add('regional-drilldown-crosslinks',mapRoomRuntime.includes('renderDetailIntel')&&mapRoomRuntime.includes('data-map-open-record')&&mapRoomRuntime.includes('data-map-open-operation')&&mapRoomRuntime.includes('data-map-open-history'));
 add('regional-verdict-sync',drilldowns.some(detail=>detail.id==='gbf-coastal-belt'&&detail.sites.filter(site=>site.verdictStates).length>=4)&&drilldowns.some(detail=>detail.id==='deadzone-return-corridor'&&detail.sites.some(site=>site.verdictStates))&&mapRoomRuntime.includes('resolveDetailSite'));
+const detailRoutes=drilldowns.flatMap(detail=>detail.routes.map(route=>({detail,route})));
+add('regional-eighteen-owned-routes',detailRoutes.length===18&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
+add('regional-route-site-integrity',detailRoutes.every(({detail,route})=>route.siteIds.every(id=>detail.sites.some(site=>site.id===id))));
+add('regional-route-focus',mapRoomRuntime.includes('routesForSite')&&mapRoomRuntime.includes('focusedRouteIds')&&mapRoomRuntime.includes('is-focused')&&mapRoomRuntime.includes('is-muted'));
+add('regional-tactical-layers',mapRoomRuntime.includes('detailLayers:{routes:true,threats:true,comms:false,distortion:true}')&&['routes','threats','comms','distortion'].every(layer=>mapRoomRuntime.includes(`data-map-detail-layer="${layer}"`))&&mapRoomRuntime.includes('renderDetailOverlays'));
+add('regional-route-sequence',mapRoomRuntime.includes('renderRouteSequence')&&mapRoomRuntime.includes('data-map-route-step')&&mapRoomRuntime.includes('CONNECTED ROUTE')&&mapRoomRuntime.includes('route.rule'));
 add('shared-incident-network',incidentData?.version===VERSION&&incidentData.incidentList.length>=7&&incidentData.incidents['evt-southern-mobilization']?.operation==='op-southern-coup');
 add('southern-coup-operation',context.window.ProjectCurseMapRoom?.operations?.some(operation=>operation.id==='op-southern-coup'&&operation.steps.length>=6&&operation.directive));
 add('geographic-layer-controls',mapRoomRuntime.includes('renderGraticule')&&mapRoomRuntime.includes('data-map-layer')&&mapRoomRuntime.includes('state.layers'));

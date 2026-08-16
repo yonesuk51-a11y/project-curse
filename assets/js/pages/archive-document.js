@@ -1,4 +1,4 @@
-// Project Curse 5.22.0 — shared archive document renderer and internal scenario viewer.
+// Project Curse 5.23.0 — shared archive document renderer and internal scenario viewer.
 (function(){
   'use strict';
 

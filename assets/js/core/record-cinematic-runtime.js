@@ -1622,9 +1622,26 @@
     document.addEventListener('click', function(e){
       if(e.target.closest && e.target.closest('.record-back')){
         stopSequenceAudio();
-        document.body.classList.remove('pc5152h-sequence-open','pc5152i-sequence-intro-playing');
+        document.body.classList.remove('pc5152h-sequence-open','pc5152i-sequence-intro-playing','pc5152q-immortality-sequence','pc5152h-cult-source-sequence');
+        try{window.ProjectCurseAudio?.syncAudioState?.();}catch(_error){}
       }
     }, true);
+
+    document.addEventListener('projectcurse:route-will-change',()=>{
+      const active=state.activeRecord||document.body.classList.contains('pc5152h-sequence-open')||document.body.classList.contains('pc5152h-cult-source-sequence')||document.body.classList.contains('pc5152q-immortality-sequence');
+      if(!active) return;
+      stopSequenceAudio();
+      state.bgm=null;
+      state.bgmSrc='';
+      clearSequenceTimers();
+      state.runId=(state.runId||0)+1;
+      state.activeRecord=null;
+      state.pages=null;
+      state.overlay?.classList.remove('show','intro-mode','pages-mode','ending-mode','input-ready');
+      state.overlay?.setAttribute('aria-hidden','true');
+      document.body.classList.remove('pc5152h-sequence-open','pc5152i-sequence-intro-playing','pc5152q-immortality-sequence','pc5152h-cult-source-sequence');
+      try{window.ProjectCurseAudio?.syncAudioState?.();}catch(_error){}
+    });
 
     if(state.nativeShow){
       window.ProjectCurseShowInternalRecord=function(id){
@@ -1667,7 +1684,13 @@
       previous:previousSequence,
       next:advanceSequence,
       toggle:toggleSequencePlayback,
-      restart:restartSequence
+      restart:restartSequence,
+      getAudioDiagnostics:()=>({
+        activeRecord:state.activeRecord,
+        sequenceOpen:document.body.classList.contains('pc5152h-sequence-open'),
+        bgmPlaying:Boolean(state.bgm&&!state.bgm.paused),
+        bgmSource:state.bgmSrc||''
+      })
     };
   });
 })();
@@ -1686,13 +1709,15 @@
     layer.loop=true;
     layer.preload='metadata';
     const sync=()=>{
-      const active=document.body.classList.contains('pc5152h-cult-source-sequence')
+      const active=document.body.classList.contains('pc5152h-sequence-open')
+        && document.body.classList.contains('pc5152h-cult-source-sequence')
         && !document.body.classList.contains('pc5152q-immortality-sequence');
       layer.volume=window.innerWidth<=899?.10:.17;
       if(active&&window.ProjectCurseAudio?.isOn?.()!==false){
-        if(layer.paused) layer.play().catch(()=>{});
+        if(layer.paused) layer.play().then(()=>{document.documentElement.dataset.cinematicRadio='playing';}).catch(()=>{document.documentElement.dataset.cinematicRadio='blocked';});
       }else{
         try{layer.pause();layer.currentTime=0;}catch(_e){}
+        document.documentElement.dataset.cinematicRadio='stopped';
       }
     };
     new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});

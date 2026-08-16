@@ -1,4 +1,4 @@
-// Project Curse 5.22.0 — southern and dead-zone field dossiers.
+// Project Curse 5.23.0 — southern and dead-zone field dossiers.
 (function(root){
   'use strict';
 
@@ -196,5 +196,5 @@
     }
   });
 
-  archive.version='5.22.0';
+  archive.version='5.23.0';
 })(window);

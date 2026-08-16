@@ -1,4 +1,4 @@
-/* Project Curse 5.22.0 — geographic, regional drilldown, and operation trace room */
+/* Project Curse 5.23.0 — route focus, threat overlays, regional drilldown, and operation trace room */
 #map-room {
   padding: 0;
   border: 0;
@@ -486,11 +486,20 @@
 .pc-map-breadcrumb button{padding:0;border:0;color:rgba(204,210,208,.44);background:none;cursor:pointer}
 .pc-map-breadcrumb button:hover,.pc-map-breadcrumb button:focus-visible{color:#fff;outline:0}
 .pc-map-breadcrumb i{color:#8e3a41;font-style:normal}.pc-map-breadcrumb b{color:#c86a71;font-weight:700}
+.pc-detail-layerbar{display:flex;align-items:center;gap:6px;margin:0 18px 10px;padding:8px;border:1px solid rgba(191,197,195,.1);background:rgba(5,7,8,.72)}
+.pc-detail-layerbar>span{margin:0 8px;color:rgba(201,207,205,.3);font:700 7px/1 ui-monospace,monospace;letter-spacing:.1em;white-space:nowrap}
+.pc-detail-layerbar>button{display:flex;align-items:center;gap:7px;min-height:30px;padding:6px 9px;border:1px solid rgba(194,200,198,.1);color:rgba(212,217,215,.45);background:#090b0c;font:700 8px/1.2 Pretendard,"Noto Sans KR",sans-serif;cursor:pointer}
+.pc-detail-layerbar>button:hover,.pc-detail-layerbar>button:focus-visible{border-color:rgba(193,63,73,.55);color:#fff;outline:0}
+.pc-detail-layerbar>button.is-active{border-color:rgba(196,66,76,.42);color:#e9ebea;background:rgba(101,24,31,.24)}
+.pc-detail-layerbar>button i{width:7px;height:7px;border:1px solid currentColor;border-radius:50%}.pc-detail-layerbar>button i.is-route{height:2px;border:0;border-radius:0;background:#b09a69}.pc-detail-layerbar>button i.is-threat{border-color:#c34a54;box-shadow:0 0 7px rgba(195,74,84,.6)}.pc-detail-layerbar>button i.is-comm{border-color:#67a6a4}.pc-detail-layerbar>button i.is-distortion{border-style:dashed;border-color:#b3975c}
+.pc-detail-layerbar>b{margin-left:auto;color:#a54b53;font:700 7px/1 ui-monospace,monospace;letter-spacing:.08em;white-space:nowrap}
 .pc-map-detail-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:10px;padding:0 18px 18px}
 .pc-map-detail-stage,.pc-map-detail-stage .pc-map-svg{min-height:500px}
+.pc-map-detail-stage.has-focus.pc-map-detail-stage--forest,.pc-map-detail-stage.has-focus.pc-map-detail-stage--deep-forest,.pc-map-detail-stage.has-focus.pc-map-detail-stage--coast{box-shadow:inset 0 0 90px rgba(36,76,52,.28),0 0 0 1px rgba(95,137,103,.08)}
+.pc-map-detail-stage.has-focus.pc-map-detail-stage--dead,.pc-map-detail-stage.has-focus.pc-map-detail-stage--ruins,.pc-map-detail-stage.has-focus.pc-map-detail-stage--silent{box-shadow:inset 0 0 100px rgba(78,23,29,.32),0 0 0 1px rgba(153,58,67,.09)}
 .pc-detail-grid{fill:url(#pc-detail-grid);pointer-events:none}
 .pc-detail-terrain{stroke:rgba(161,173,169,.18);stroke-width:1;vector-effect:non-scaling-stroke}
-.pc-detail-terrain,.pc-detail-river,.pc-detail-canopy,.pc-detail-ruins,.pc-detail-silence,.pc-detail-routes{pointer-events:none}
+.pc-detail-terrain,.pc-detail-river,.pc-detail-canopy,.pc-detail-ruins,.pc-detail-silence,.pc-detail-routes,.pc-detail-overlays{pointer-events:none}
 .pc-detail-terrain--forest{fill:rgba(39,59,43,.42)}
 .pc-detail-terrain--water{fill:rgba(30,42,48,.62);stroke:rgba(93,121,126,.28)}
 .pc-detail-terrain--dead{fill:rgba(50,49,48,.34)}
@@ -498,6 +507,10 @@
 .pc-detail-canopy{fill:none;stroke:rgba(95,121,88,.25);stroke-width:48;stroke-dasharray:2 13;vector-effect:non-scaling-stroke}
 .pc-detail-ruins path{fill:rgba(67,65,61,.23);stroke:rgba(152,150,142,.2);stroke-width:2;stroke-dasharray:8 5;vector-effect:non-scaling-stroke}
 .pc-detail-silence{fill:rgba(3,4,5,.7);stroke:rgba(171,52,61,.3);stroke-width:1.5;stroke-dasharray:3 7;vector-effect:non-scaling-stroke}
+.pc-detail-threat{fill:rgba(179,49,59,.035);stroke:rgba(184,58,67,.22);stroke-width:1;stroke-dasharray:3 5;opacity:.18;vector-effect:non-scaling-stroke;transition:opacity .24s ease}
+.pc-detail-threat.is-active{opacity:.72}.pc-detail-threat--critical{fill:rgba(185,39,51,.11);stroke:rgba(218,62,75,.62)}.pc-detail-threat--high{fill:rgba(166,64,52,.07);stroke:rgba(198,87,74,.42)}.pc-detail-threat--medium{fill:rgba(169,132,61,.05);stroke:rgba(187,148,72,.34)}.pc-detail-threat--low{fill:rgba(58,120,91,.035);stroke:rgba(96,151,124,.25)}
+.pc-detail-comm{fill:rgba(59,127,128,.055);stroke:rgba(93,169,167,.48);stroke-width:1;stroke-dasharray:2 4;opacity:.78;vector-effect:non-scaling-stroke}.pc-detail-comm--open{fill:rgba(56,138,111,.09);stroke:#6aaf91;stroke-width:1.5}.pc-detail-comm.is-muted{opacity:.18}
+.pc-detail-distortion{fill:none;stroke:rgba(183,145,74,.42);stroke-width:1.4;stroke-dasharray:9 5 2 5;opacity:.22;vector-effect:non-scaling-stroke}.pc-detail-distortion.is-active{opacity:.82;animation:pc-detail-distort 5.5s linear infinite}
 .pc-detail-route{fill:none;stroke:#7b9b92;stroke-width:2;stroke-dasharray:6 5;filter:url(#pc-detail-glow);vector-effect:non-scaling-stroke}
 .pc-detail-route--pilgrimage{stroke:#b09a69;stroke-dasharray:3 6}
 .pc-detail-route--hostile{stroke:#c14550;stroke-width:2.5;stroke-dasharray:9 4}
@@ -506,6 +519,7 @@
 .pc-detail-route--broken{stroke:#9b8152;stroke-dasharray:12 7;opacity:.68}
 .pc-detail-route--historical{stroke:#8d8b83;stroke-dasharray:1 6}
 .pc-detail-route-label{fill:rgba(210,216,214,.43);paint-order:stroke;stroke:#050708;stroke-width:3px;font:700 7px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.06em;vector-effect:non-scaling-stroke}
+.pc-detail-route-group{opacity:.78;transition:opacity .24s ease}.pc-detail-route-group.is-muted{opacity:.08}.pc-detail-route-group.is-focused{opacity:1}.pc-detail-route-group.is-focused .pc-detail-route{stroke-width:4;filter:url(#pc-detail-glow);animation:pc-detail-route-flow 5s linear infinite}.pc-detail-route-group.is-focused .pc-detail-route-label{fill:#f1e2c2;font-size:8px}
 .pc-detail-site{cursor:pointer;outline:none}
 .pc-detail-site-hit{fill:transparent;pointer-events:all}
 .pc-detail-site-ring{fill:rgba(6,8,9,.82);stroke:rgba(200,207,204,.52);stroke-width:1.3;vector-effect:non-scaling-stroke}
@@ -524,12 +538,23 @@
 .pc-detail-site.is-allied .pc-detail-site-ring{fill:rgba(30,67,72,.84);stroke:#70a8ac}.pc-detail-site.is-allied .pc-detail-site-core{fill:#78b1b4}
 .pc-detail-site.is-hostile .pc-detail-site-ring,.pc-detail-site.is-failed .pc-detail-site-ring{fill:rgba(102,23,30,.86);stroke:#d9555f}.pc-detail-site.is-hostile .pc-detail-site-core,.pc-detail-site.is-failed .pc-detail-site-core{fill:#db5a65}
 .pc-detail-site.is-unknown .pc-detail-site-ring{stroke:#9c8b64;stroke-dasharray:3 2}
+.pc-detail-site.is-muted{opacity:.18}.pc-detail-site.is-related{opacity:.86}.pc-detail-site.is-selected{opacity:1}
 .pc-map-detail-intel h3{margin:8px 0 10px;color:#eef0ef;font-size:21px;line-height:1.25;letter-spacing:-.025em}
 .pc-map-detail-intel>p{margin:0;color:rgba(211,217,215,.62);font-size:11px;line-height:1.72}
 .pc-detail-state{color:#d4d7d6!important}.pc-detail-state.is-secured,.pc-detail-state.is-allied{color:#79ae94!important}.pc-detail-state.is-contained{color:#c7a35f!important}.pc-detail-state.is-hostile,.pc-detail-state.is-failed{color:#d76068!important}.pc-detail-state.is-unknown{color:#aaa38e!important}
+.pc-detail-risk.is-critical{color:#e05661!important}.pc-detail-risk.is-high{color:#d17a66!important}.pc-detail-risk.is-medium{color:#c1a064!important}.pc-detail-risk.is-low{color:#75a78f!important}
 .pc-detail-verdict-note{display:grid;gap:6px;margin-top:14px;padding:11px 12px;border:1px solid rgba(182,144,72,.25);background:rgba(92,69,25,.1)}
 .pc-detail-verdict-note b{color:#b79353;font:700 8px/1.2 ui-monospace,monospace;letter-spacing:.08em}.pc-detail-verdict-note span{color:rgba(212,216,214,.52);font-size:9px;line-height:1.55}
 .pc-map-detail-entry{margin-top:18px}
+.pc-detail-route-empty{margin-top:16px;padding:11px;border:1px dashed rgba(179,184,182,.16);color:rgba(207,212,210,.38);font-size:9px}
+.pc-detail-route-sequences{display:grid;gap:10px;margin-top:20px;padding-top:15px;border-top:1px solid rgba(194,200,198,.1)}
+.pc-detail-sequence-title{display:flex;justify-content:space-between;gap:10px}.pc-detail-sequence-title b{color:#c65a62;font:700 8px/1.2 ui-monospace,monospace;letter-spacing:.1em}.pc-detail-sequence-title span{color:rgba(207,212,210,.35);font:700 7px/1.2 ui-monospace,monospace}
+.pc-detail-route-card{padding:11px;border:1px solid rgba(187,193,191,.13);background:rgba(5,7,8,.58)}
+.pc-detail-route-card--critical{border-color:rgba(194,61,71,.36)}.pc-detail-route-card--high{border-color:rgba(181,97,75,.3)}.pc-detail-route-card--medium{border-color:rgba(177,144,74,.25)}
+.pc-detail-route-card>header{display:flex;justify-content:space-between;gap:10px;padding-bottom:9px;border-bottom:1px solid rgba(193,199,197,.09)}.pc-detail-route-card>header small{display:block;color:#ce626a;font:700 7px/1.25 ui-monospace,monospace;letter-spacing:.06em}.pc-detail-route-card>header b{display:block;margin-top:4px;color:rgba(214,219,217,.5);font:700 8px/1.3 ui-monospace,monospace}.pc-detail-route-card>header>span{color:#b45058;font:700 11px/1 ui-monospace,monospace}
+.pc-detail-route-card ol{display:grid;gap:1px;margin:9px 0 0;padding:0;list-style:none}.pc-detail-route-card li{min-width:0}.pc-detail-route-card li button{display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;gap:6px;width:100%;min-height:31px;padding:5px 4px;border:0;border-bottom:1px solid rgba(194,200,198,.07);color:rgba(207,213,211,.43);background:transparent;text-align:left;cursor:pointer}.pc-detail-route-card li button:hover,.pc-detail-route-card li button:focus-visible{color:#fff;background:rgba(255,255,255,.025);outline:0}.pc-detail-route-card li i{color:#8b4248;font:700 7px/1 monospace;font-style:normal}.pc-detail-route-card li span{overflow:hidden;font-size:8px;text-overflow:ellipsis;white-space:nowrap}.pc-detail-route-card li em{color:rgba(198,204,202,.25);font:normal 6px/1 monospace}.pc-detail-route-card li button.is-before{color:rgba(111,155,133,.56)}.pc-detail-route-card li button.is-current{color:#f0f1f0;background:rgba(129,31,38,.24);box-shadow:inset 2px 0 #c64c56}.pc-detail-route-card li button.is-current em{color:#d15c65}
+.pc-detail-route-card>p{margin:10px 0 0;padding:8px;border-left:2px solid rgba(185,61,70,.48);color:rgba(214,219,217,.47);background:rgba(103,25,31,.1);font-size:8px;line-height:1.55}
+.pc-detail-route-nav{display:flex;justify-content:space-between;gap:6px;margin-top:9px}.pc-detail-route-nav button,.pc-detail-route-nav span{flex:1;padding:7px 5px;border:1px solid rgba(193,199,197,.1);color:rgba(209,214,212,.42);background:#080a0b;font-size:7px;text-align:center}.pc-detail-route-nav button{cursor:pointer}.pc-detail-route-nav button:hover,.pc-detail-route-nav button:focus-visible{border-color:rgba(193,63,73,.5);color:#fff;outline:0}
 
 .pc-map-timeline {
   display: flex;
@@ -563,6 +588,8 @@
 @keyframes pc-map-live { 50% { opacity: .35; } }
 @keyframes pc-map-ring { from { r: 17; opacity: 1; } to { r: 26; opacity: 0; } }
 @keyframes pc-map-scan { from { background-position: 0 -100px; } to { background-position: 0 520px; } }
+@keyframes pc-detail-route-flow { to { stroke-dashoffset: -42; } }
+@keyframes pc-detail-distort { to { stroke-dashoffset: 38; } }
 
 @media (max-width: 1180px) {
   .pc-map-layout { grid-template-columns: 190px minmax(0, 1fr); }
@@ -599,6 +626,7 @@
   .pc-map-detail-tabs,
   .pc-map-timeline { padding-right: 12px; padding-left: 12px; }
   .pc-map-breadcrumb { padding-right: 12px; padding-left: 12px; }
+  .pc-detail-layerbar { margin-right: 12px; margin-left: 12px; }
 }
 
 @media (max-width: 560px) {
@@ -639,11 +667,18 @@
   .pc-map-timeline button { flex-basis: 104px; }
   .pc-map-detail-tabs button { flex-basis: 166px; }
   .pc-map-detail-tabs button:nth-child(4) { margin-left: 10px; }
+  .pc-detail-layerbar { align-items:stretch;overflow-x:auto;padding:6px;scrollbar-width:thin; }
+  .pc-detail-layerbar>span { display:none; }
+  .pc-detail-layerbar>button { flex:0 0 auto;min-height:36px; }
+  .pc-detail-layerbar>b { align-self:center;padding:0 8px; }
+  .pc-detail-route-card li button { min-height:38px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pc-map-live i,
   .pc-map-marker.is-selected .pc-map-marker-ring,
   .pc-detail-site.is-selected .pc-detail-site-ring,
+  .pc-detail-route-group.is-focused .pc-detail-route,
+  .pc-detail-distortion.is-active,
   .pc-map-scan { animation: none; }
 }

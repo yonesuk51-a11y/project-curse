@@ -1,4 +1,4 @@
-// Project Curse 5.22.0 — live terminal-home intelligence and operation resume owner.
+// Project Curse 5.23.0 — live terminal-home intelligence and operation resume owner.
 (function(root){
   'use strict';
 

@@ -1,4 +1,4 @@
-// Project Curse 5.22.0 — persistent acoustic profiles, ducking and semantic event bridge.
+// Project Curse 5.23.0 — persistent acoustic profiles, ducking and semantic event bridge.
 (function(root){
   'use strict';
 
@@ -144,6 +144,12 @@
 
   function setProfile(next){
     const resolved=manifest.profiles?.[next]?next:(manifest.profiles?.document?'document':'terminal-home');
+    if(resolved!==profileId){
+      stopBus('record');
+      stopBus('interface');
+      clearTimeout(duckTimer);
+      duckScale=1;
+    }
     profileId=resolved;
     apply();
     document.dispatchEvent(new CustomEvent('projectcurse:audio-profile-change',{detail:{profile:profileId}}));

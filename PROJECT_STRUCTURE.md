@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.22.0
+# Project Curse Structure — 5.23.0
 
 ## 활성 소유권
 
@@ -32,8 +32,8 @@
 | 세계 사건 연표 | `assets/js/pages/world-history.js` |
 | 세력 분석실 | `assets/js/pages/faction-analysis.js` |
 | 관제지도 설정 자료 | `assets/js/data/map-room-data.js` |
-| 대흑림·데드존 세부 구역·지점 자료 | `assets/js/data/regional-drilldown-data.js` |
-| 지역 상황도·세부 권역·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
+| 대흑림·데드존 구역·지점·경로 위험·순례 규칙 | `assets/js/data/regional-drilldown-data.js` |
+| 지역 상황도·경로 강조·전술 레이어·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
 | 홈 통계·경보·직접 연결 | `assets/js/pages/terminal-home.js` + `assets/css/terminal-foundation.css` |
 | 원본·보정·복원 이미지 정책 | `ASSET_POLICY.md` |
 | 신규 복원 추정 이미지 출처 대장 | `assets/resources/ASSET_REGISTRY.md` |
@@ -42,7 +42,7 @@
 
 ## 데이터 흐름
 
-`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `field-dossier-data.js`가 네 개의 신규 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역과 38개 지점을 선언한 뒤 `map-room-data.js`가 이를 세계 지도에 결합한다. `home-intelligence-data.js`는 홈 수신 목록을 선언한다. 공통 사건 ID는 연표 기록, 지도 표식, 세부 지점, 작전, 세력 파일과 보관소 기록을 연결한다. 영상 설정 다음에 부팅·오디오·작전 저장소·공통 재생 엔진이 초기화되고, 오디오 컨트롤러가 현재 화면 또는 문서 테마에 맞춰 환경·인터페이스·기록·경보 버스의 비율을 적용한다. 작전 저장소의 변경 이벤트는 문서 시나리오, 작전 지도, 세부 권역의 판단 연동 지점과 홈 경보를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제와 홈 정보 피드가 각 화면을 소유한다.
+`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `field-dossier-data.js`가 네 개의 신규 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 38개 지점과 18개 경로의 위험·신호·순례 규칙을 선언한 뒤 `map-room-data.js`가 이를 세계 지도에 결합한다. `map-room.js`는 선택 지점의 연결 경로를 계산하고 경로·위험 반경·통신권·공간 왜곡 레이어와 단계 패널을 렌더링한다. `home-intelligence-data.js`는 홈 수신 목록을 선언한다. 공통 사건 ID는 연표 기록, 지도 표식, 세부 지점, 작전, 세력 파일과 보관소 기록을 연결한다. 영상 설정 다음에 부팅·오디오·작전 저장소·공통 재생 엔진이 초기화되고, 오디오 컨트롤러가 현재 화면 또는 문서 테마에 맞춰 환경·인터페이스·기록·경보 버스의 비율을 적용한다. 영상 기록 전용 음원은 기록 종료와 화면 이동 이벤트 양쪽에서 정리하며 프로필 전환은 직전 화면의 효과음 버스를 종료한다. 작전 저장소의 변경 이벤트는 문서 시나리오, 작전 지도, 세부 권역의 판단 연동 지점과 홈 경보를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제와 홈 정보 피드가 각 화면을 소유한다.
 
 활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 

@@ -1,4 +1,4 @@
-// Project Curse 5.22.0 — geographic, regional drilldown, and operation trace room.
+// Project Curse 5.23.0 — route focus, threat overlays, regional drilldown, and operation trace room.
 (function(root){
   'use strict';
 
@@ -35,6 +35,7 @@
       marker:null,
       detail:data.drilldowns?.[0]?.id||'',
       detailSite:null,
+      detailLayers:{routes:true,threats:true,comms:false,distortion:true},
       operation:data.operations[0]?.id||'',
       step:operationStore?.get?.().mapStep||0,
       layers:{confirmed:true,estimated:true,zones:true,routes:true}
@@ -46,6 +47,7 @@
     const operationById=id=>data.operations.find(operation=>operation.id===id)||data.operations[0];
     const incidentById=id=>network?.getIncident?.(id)||null;
     const polyline=points=>(points||[]).map(point=>point.join(',')).join(' ');
+    const riskLabels={critical:'치명',high:'높음',medium:'주의',low:'낮음'};
     const detailForMarker=marker=>{
       const map={
         'gbf-core':'gbf-inner-refuges','monsur-church':'gbf-western-marches','unlit-fortress':'gbf-western-marches','black-river':'gbf-western-marches','southern-coast':'gbf-coastal-belt',
@@ -173,15 +175,71 @@
       return {...site,status:outcome?.status||site.status,tone:outcome?.tone||''};
     }
 
-    function detailSiteSymbol(site,index){
+    function routesForSite(detail,siteId){return (detail.routes||[]).filter(route=>(route.siteIds||[]).includes(siteId));}
+    function threatForSite(site){
+      const resolved=resolveDetailSite(site);
+      if(['failed','hostile'].includes(resolved.tone)) return 'critical';
+      if(['allied','secured'].includes(resolved.tone)) return 'low';
+      if(resolved.tone==='contained') return 'medium';
+      if(['unknown','incident','zone','anomaly'].includes(site.type)||site.confidence==='disputed') return 'high';
+      if(['cult','fortress','ruin'].includes(site.type)) return 'medium';
+      return 'low';
+    }
+    function communicationForSite(site){
+      const resolved=resolveDetailSite(site);
+      if(['allied','secured'].includes(resolved.tone)) return 'open';
+      if(['failed','hostile'].includes(resolved.tone)||['unknown','anomaly','zone','incident'].includes(site.type)) return 'lost';
+      if(['facility','signal','settlement','returned','cult'].includes(site.type)) return 'partial';
+      return 'none';
+    }
+
+    function renderDetailOverlays(detail,selected){
+      const threatRadius={critical:78,high:62,medium:48,low:34};
+      const threats=state.detailLayers.threats?detail.sites.map(site=>{
+        const risk=threatForSite(site);
+        const active=!selected||selected.id===site.id;
+        return `<circle class="pc-detail-threat pc-detail-threat--${risk}${active?' is-active':''}" cx="${site.x}" cy="${site.y}" r="${threatRadius[risk]}"></circle>`;
+      }).join(''):'';
+      const comms=state.detailLayers.comms?detail.sites.map(site=>{
+        const comm=communicationForSite(site);
+        if(comm==='none'||comm==='lost') return '';
+        return `<circle class="pc-detail-comm pc-detail-comm--${comm}${selected&&selected.id!==site.id?' is-muted':''}" cx="${site.x}" cy="${site.y}" r="${comm==='open'?88:66}"></circle>`;
+      }).join(''):'';
+      const distortion=state.detailLayers.distortion?detail.sites.map((site,index)=>{
+        if(!['anomaly','unknown'].includes(site.type)&&site.confidence!=='disputed') return '';
+        const active=!selected||selected.id===site.id;
+        return `<ellipse class="pc-detail-distortion${active?' is-active':''}" cx="${site.x}" cy="${site.y}" rx="${74+(index%2)*15}" ry="${42+(index%3)*8}" transform="rotate(${(index%2?18:-14)} ${site.x} ${site.y})"></ellipse>`;
+      }).join(''):'';
+      return `<g class="pc-detail-overlays">${threats}${comms}${distortion}</g>`;
+    }
+
+    function detailSiteSymbol(site,index,relatedSiteIds=new Set()){
       const resolved=resolveDetailSite(site);
       const selected=state.detailSite===site.id?' is-selected':'';
       const tone=resolved.tone?` is-${escapeHTML(resolved.tone)}`:'';
+      const focus=state.detailSite?(relatedSiteIds.has(site.id)?' is-related':' is-muted'):'';
       return `
-        <g class="pc-detail-site pc-detail-site--${escapeHTML(site.type)}${tone}${selected}" data-map-detail-site="${escapeHTML(site.id)}" role="button" tabindex="0" aria-label="${escapeHTML(site.label)}: ${escapeHTML(resolved.status)}" transform="translate(${site.x} ${site.y})">
+        <g class="pc-detail-site pc-detail-site--${escapeHTML(site.type)}${tone}${focus}${selected}" data-map-detail-site="${escapeHTML(site.id)}" role="button" tabindex="0" aria-label="${escapeHTML(site.label)}: ${escapeHTML(resolved.status)}" transform="translate(${site.x} ${site.y})">
           <circle class="pc-detail-site-hit" r="28"></circle><circle class="pc-detail-site-ring" r="12"></circle><path class="pc-detail-site-core" d="M0 -6 L6 0 0 6 -6 0Z"></path>
           <text class="pc-detail-site-index" x="17" y="-10">${String(index+1).padStart(2,'0')}</text><text class="pc-detail-site-label" x="17" y="5">${escapeHTML(site.label)}</text>
         </g>`;
+    }
+
+    function renderRouteSequence(detail,site){
+      if(!site) return '';
+      const routes=routesForSite(detail,site.id);
+      if(!routes.length) return '<div class="pc-detail-route-empty">연결 경로가 복원되지 않았다.</div>';
+      return `<div class="pc-detail-route-sequences"><div class="pc-detail-sequence-title"><b>CONNECTED ROUTE</b><span>${routes.length} TRACE${routes.length>1?'S':''}</span></div>${routes.map(route=>{
+        const current=Math.max(0,(route.siteIds||[]).indexOf(site.id));
+        const previous=route.siteIds?.[current-1];
+        const next=route.siteIds?.[current+1];
+        return `<section class="pc-detail-route-card pc-detail-route-card--${escapeHTML(route.risk||'medium')}">
+          <header><div><small>${escapeHTML(route.label)}</small><b>${escapeHTML(riskLabels[route.risk]||route.risk)} 위험 · ${escapeHTML(String(route.signal||'unknown').toUpperCase())}</b></div><span>${current+1}/${route.siteIds.length}</span></header>
+          <ol>${route.siteIds.map((id,index)=>{const target=detail.sites.find(item=>item.id===id);if(!target)return '';const phase=index<current?'is-before':index===current?'is-current':'is-after';return `<li><button type="button" class="${phase}" data-map-route-step="${escapeHTML(id)}" aria-current="${index===current?'step':'false'}"><i>${String(index+1).padStart(2,'0')}</i><span>${escapeHTML(target.label)}</span><em>${index<current?'PASSED':index===current?'CURRENT':'NEXT'}</em></button></li>`;}).join('')}</ol>
+          <p>${escapeHTML(route.rule||'현장 판단을 우선할 것.')}</p>
+          <div class="pc-detail-route-nav">${previous?`<button type="button" data-map-route-step="${escapeHTML(previous)}">← 이전 지점</button>`:'<span>경로 시작</span>'}${next?`<button type="button" data-map-route-step="${escapeHTML(next)}">다음 지점 →</button>`:'<span>경로 종결</span>'}</div>
+        </section>`;
+      }).join('')}</div>`;
     }
 
     function renderDetailIntel(detail,site){
@@ -197,11 +255,14 @@
       const resolved=resolveDetailSite(site);
       const incident=incidentById(site.incident);
       const records=[...new Set([...(site.records||[]),...(incident?.records||[])])];
+      const connectedRoutes=routesForSite(detail,site.id);
+      const threat=threatForSite(site);
+      const communication=communicationForSite(site);
       return `
         <div class="pc-map-intel-kicker">SELECTED SITE / ${escapeHTML(confidenceLabels[site.confidence]||site.confidence)}</div>
         <h3>${escapeHTML(site.label)}</h3>
         <p>${escapeHTML(site.meta)}</p>
-        <dl class="pc-map-facts"><div><dt>현재 상태</dt><dd class="pc-detail-state${resolved.tone?` is-${escapeHTML(resolved.tone)}`:''}">${escapeHTML(resolved.status)}</dd></div><div><dt>판정</dt><dd>${escapeHTML(confidenceLabels[site.confidence]||site.confidence)}</dd></div>${incident?`<div><dt>사건 코드</dt><dd>${escapeHTML(incident.code)}</dd></div>`:''}</dl>
+        <dl class="pc-map-facts"><div><dt>현재 상태</dt><dd class="pc-detail-state${resolved.tone?` is-${escapeHTML(resolved.tone)}`:''}">${escapeHTML(resolved.status)}</dd></div><div><dt>위험도</dt><dd class="pc-detail-risk is-${escapeHTML(threat)}">${escapeHTML(riskLabels[threat])}</dd></div><div><dt>통신</dt><dd>${escapeHTML(communication.toUpperCase())}</dd></div><div><dt>연결 경로</dt><dd>${connectedRoutes.length} TRACE${connectedRoutes.length>1?'S':''}</dd></div><div><dt>판정</dt><dd>${escapeHTML(confidenceLabels[site.confidence]||site.confidence)}</dd></div>${incident?`<div><dt>사건 코드</dt><dd>${escapeHTML(incident.code)}</dd></div>`:''}</dl>
         ${site.verdictStates?`<div class="pc-detail-verdict-note"><b>OP-BROKEN-CROWN LINK</b><span>${operationStore?.get?.().verdict?`저장된 판단에 따라 지점 상태가 갱신됨`:'판단이 저장되면 지점 상태가 변경됨'}</span></div>`:''}
         ${incident?`<div class="pc-map-incident-summary"><b>${escapeHTML(incident.date)}</b><p>${escapeHTML(incident.summary)}</p></div>`:''}
         ${records.length?`<div class="pc-map-crosslinks"><b>연결 기록</b>${records.map(record=>`<button type="button" data-map-open-record="${escapeHTML(record)}">${escapeHTML(record)}<i>ARCHIVE →</i></button>`).join('')}</div>`:''}
@@ -209,7 +270,8 @@
           ${incident?.history?`<button type="button" data-map-open-history="${escapeHTML(incident.history)}">세계 기록에서 사건 열기</button>`:''}
           ${site.operation?`<button type="button" data-map-open-operation="${escapeHTML(site.operation)}">연결 작전지도 열기</button>`:''}
           <button type="button" data-map-detail-clear="1">구역 개요로 돌아가기</button>
-        </div>`;
+        </div>
+        ${renderRouteSequence(detail,site)}`;
     }
 
     function renderDetail(){
@@ -218,21 +280,32 @@
       state.detail=detail.id;
       state.region=detail.region;
       const selected=detail.sites.find(site=>site.id===state.detailSite)||null;
+      const focusedRoutes=selected?routesForSite(detail,selected.id):[];
+      const focusedRouteIds=new Set(focusedRoutes.map(route=>route.id));
+      const relatedSiteIds=new Set(selected?focusedRoutes.flatMap(route=>route.siteIds||[]):detail.sites.map(site=>site.id));
       const parent=regionById(detail.region);
       return `
         <div class="pc-map-detail-tabs" role="tablist" aria-label="세부 권역">
           ${(data.drilldowns||[]).map(item=>`<button type="button" role="tab" aria-selected="${item.id===detail.id}" class="${item.id===detail.id?'is-active':''}" data-map-detail="${escapeHTML(item.id)}"><small>${escapeHTML(regionById(item.region).label)} · ${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
         </div>
         <div class="pc-map-breadcrumb"><button type="button" data-map-return-region="world">세계</button><i>›</i><button type="button" data-map-return-region="${escapeHTML(parent.id)}">${escapeHTML(parent.label)}</button><i>›</i><b>${escapeHTML(detail.label)}</b></div>
+        <div class="pc-detail-layerbar" role="group" aria-label="세부 지도 레이어">
+          <span>TACTICAL OVERLAY</span>
+          <button type="button" class="${state.detailLayers.routes?'is-active':''}" data-map-detail-layer="routes" aria-pressed="${state.detailLayers.routes}"><i class="is-route"></i>경로</button>
+          <button type="button" class="${state.detailLayers.threats?'is-active':''}" data-map-detail-layer="threats" aria-pressed="${state.detailLayers.threats}"><i class="is-threat"></i>위험 반경</button>
+          <button type="button" class="${state.detailLayers.comms?'is-active':''}" data-map-detail-layer="comms" aria-pressed="${state.detailLayers.comms}"><i class="is-comm"></i>통신권</button>
+          <button type="button" class="${state.detailLayers.distortion?'is-active':''}" data-map-detail-layer="distortion" aria-pressed="${state.detailLayers.distortion}"><i class="is-distortion"></i>공간 왜곡</button>
+          ${selected?`<b>${focusedRoutes.length} CONNECTED TRACE${focusedRoutes.length!==1?'S':''}</b>`:'<b>ALL SIGNALS</b>'}
+        </div>
         <div class="pc-map-detail-grid">
-          <section class="pc-map-stage pc-map-detail-stage pc-map-detail-stage--${escapeHTML(detail.terrain)}" aria-label="${escapeHTML(detail.label)} 세부 지도">
+          <section class="pc-map-stage pc-map-detail-stage pc-map-detail-stage--${escapeHTML(detail.terrain)}${selected?' has-focus':''}" aria-label="${escapeHTML(detail.label)} 세부 지도">
             <div class="pc-map-stage-head"><span>${escapeHTML(detail.code)}</span><b>${escapeHTML(detail.status)} · ${escapeHTML(detail.confidence)}</b></div>
             <svg class="pc-map-svg" viewBox="0 0 1000 540" role="img" aria-labelledby="pcDetailTitle pcDetailDesc" preserveAspectRatio="xMidYMid meet">
               <title id="pcDetailTitle">${escapeHTML(detail.label)} 세부 지도</title><desc id="pcDetailDesc">복원된 경로와 사건 지점을 선택할 수 있는 세부 권역 지도</desc>
               <defs><pattern id="pc-detail-grid" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" class="pc-map-grid-line"></path></pattern><filter id="pc-detail-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="blur"></feGaussianBlur><feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMerge></filter></defs>
-              <rect class="pc-detail-grid" width="1000" height="540"></rect>${detailTerrain(detail)}
-              <g class="pc-detail-routes">${detail.routes.map(route=>{const end=route.points.at(-1)||[0,0];return `<polyline class="pc-detail-route pc-detail-route--${escapeHTML(route.className)}" points="${polyline(route.points)}"></polyline><text class="pc-detail-route-label" x="${end[0]+9}" y="${end[1]-9}">${escapeHTML(route.label)}</text>`;}).join('')}</g>
-              <g class="pc-detail-sites">${detail.sites.map(detailSiteSymbol).join('')}</g>
+              <rect class="pc-detail-grid" width="1000" height="540"></rect>${detailTerrain(detail)}${renderDetailOverlays(detail,selected)}
+              ${state.detailLayers.routes?`<g class="pc-detail-routes">${detail.routes.map(route=>{const end=route.points.at(-1)||[0,0];const focus=selected?(focusedRouteIds.has(route.id)?' is-focused':' is-muted'):'';return `<g class="pc-detail-route-group${focus}" data-detail-route="${escapeHTML(route.id)}"><polyline class="pc-detail-route pc-detail-route--${escapeHTML(route.className)}" points="${polyline(route.points)}"></polyline><text class="pc-detail-route-label" x="${end[0]+9}" y="${end[1]-9}">${escapeHTML(route.label)}</text></g>`;}).join('')}</g>`:''}
+              <g class="pc-detail-sites">${detail.sites.map((site,index)=>detailSiteSymbol(site,index,relatedSiteIds)).join('')}</g>
             </svg>
             <div class="pc-map-scan" aria-hidden="true"></div><div class="pc-map-coordinates">LOCAL TRACE · NOT FOR NAVIGATION · ${escapeHTML(detail.confidence)} INTEGRITY</div>
           </section>
@@ -432,6 +505,8 @@
       }
       if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
       if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapDetailLayer){const layer=control.dataset.mapDetailLayer;state.detailLayers[layer]=!state.detailLayers[layer];root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
+      if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;root.ProjectCurseAudioControl?.play?.('operation.step');render();return;}
       if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapDetailClear){state.detailSite=null;render();return;}
       if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;render();return;}
