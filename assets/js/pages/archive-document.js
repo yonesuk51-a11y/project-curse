@@ -1,4 +1,4 @@
-// Project Curse 5.27.0 — shared archive document, verdict renderer, and recovery handoff.
+// Project Curse 5.28.0 — shared archive document, provenance console, evidence comparison, and verdict renderer.
 (function(){
   'use strict';
 
@@ -8,6 +8,10 @@
   let currentId=null;
   let currentTrigger=null;
   let sectionObserver=null;
+  let currentEvidenceItems=[];
+  let evidenceViewer=null;
+  let evidenceIndex=0;
+  let evidenceTrigger=null;
 
   const el=(tag,className,text)=>{
     const node=document.createElement(tag);
@@ -54,7 +58,7 @@
     target.append(list);
   };
 
-  function appendFigure(target,figureData,embedded,className=''){
+  function appendFigure(target,figureData,embedded,className='',evidenceContext=null){
     if(!figureData?.src) return;
     const figure=el('figure',`archive-doc-figure ${className}`.trim());
     const image=el('img');
@@ -64,9 +68,91 @@
     image.loading=isHero?'eager':'lazy';
     if(isHero) image.fetchPriority='high';
     image.decoding='async';
+    const resolver=window.ProjectCurseVisualEvidence;
+    if(resolver&&evidenceContext?.items){
+      const evidence=resolver.resolve(figureData.src,{recordId:evidenceContext.recordId,sequence:evidenceContext.items.length+1,caption:figureData.caption,alt:figureData.alt});
+      const item={...evidence,displaySrc:image.src,comparison:evidence.comparison?{...evidence.comparison,displaySrc:imagePath(evidence.comparison.src,embedded)}:null};
+      const index=evidenceContext.items.push(item)-1;
+      figure.dataset.evidenceClass=item.className;
+      figure.dataset.evidenceIndex=String(index);
+      const strip=el('div','archive-evidence-strip');
+      const open=el('button','','증거 확대');open.type='button';open.dataset.visualEvidenceOpen=String(index);
+      strip.append(el('i'),el('b','',item.className),el('small','',`${item.assetId} / ${item.classInfo.label}`),open);
+      figure.append(strip);
+    }
     figure.append(image);
     if(figureData.caption) figure.append(rich('figcaption','',figureData.caption));
     target.append(figure);
+  }
+
+  function evidenceConsole(items){
+    if(!items.length) return null;
+    const shell=el('section','archive-evidence-console');
+    const head=el('header');
+    head.append(el('small','','VISUAL EVIDENCE ARCHIVE / SOURCE INTEGRITY'),el('h2','','시각 증거 보존 상태'),el('p','','현재 문서에 사용된 이미지의 출처 등급과 원본 대조 가능 여부를 표시한다. 복원 추정본은 원본 기록을 대신하지 않는다.'));
+    const stats=el('div','archive-evidence-stats');
+    const counts=Object.fromEntries(Object.keys(window.ProjectCurseVisualEvidence?.classes||{}).map(key=>[key,items.filter(item=>item.className===key).length]));
+    [['ORIGINAL','원본'],['STABILIZED','보정본'],['RECONSTRUCTED','복원본'],['UNVERIFIED','대조 대기']].forEach(([key,label])=>{const cell=el('span');cell.append(el('small','',label),el('b','',String(counts[key]||0).padStart(2,'0')));stats.append(cell);});
+    const filters=el('div','archive-evidence-filters');
+    [['ALL','전체'],['ORIGINAL','원본'],['RECONSTRUCTED','복원 추정'],['UNVERIFIED','대조 대기']].forEach(([key,label],index)=>{const button=el('button',index===0?'is-active':'',label);button.type='button';button.dataset.evidenceFilter=key;button.setAttribute('aria-pressed',index===0?'true':'false');filters.append(button);});
+    const list=el('div','archive-evidence-list');
+    items.forEach((item,index)=>{
+      const card=el('button',`archive-evidence-card is-${item.classInfo.tone}`);card.type='button';card.dataset.visualEvidenceOpen=String(index);card.dataset.evidenceClass=item.className;
+      const thumb=el('img');thumb.src=item.displaySrc;thumb.alt='';thumb.loading='lazy';
+      const copy=el('span');copy.append(el('small','',`${String(index+1).padStart(2,'0')} / ${item.assetId}`),el('b','',item.caption||item.alt||'캡션 없는 시각 기록'),el('em','',item.comparison?'SOURCE COMPARISON AVAILABLE':item.originalState==='missing'?'ORIGINAL NOT REGISTERED':item.classInfo.label));
+      card.append(thumb,copy);list.append(card);
+    });
+    filters.addEventListener('click',event=>{
+      const button=event.target.closest?.('[data-evidence-filter]');if(!button) return;
+      const filter=button.dataset.evidenceFilter;
+      Array.from(filters.children).forEach(control=>{const active=control===button;control.classList.toggle('is-active',active);control.setAttribute('aria-pressed',active?'true':'false');});
+      Array.from(list.children).forEach(card=>{card.hidden=filter!=='ALL'&&card.dataset.evidenceClass!==filter;});
+      window.ProjectCurseAudioControl?.play?.('evidence.filter');
+    });
+    shell.append(head,stats,filters,list);return shell;
+  }
+
+  function ensureEvidenceViewer(){
+    if(evidenceViewer) return evidenceViewer;
+    const viewer=el('section','pc-evidence-viewer');viewer.hidden=true;viewer.setAttribute('role','dialog');viewer.setAttribute('aria-modal','true');viewer.setAttribute('aria-labelledby','pcEvidenceTitle');
+    const head=el('header','pc-evidence-viewer-head');head.append(el('i'),el('span'),Object.assign(el('button','','×'),{type:'button'}));head.lastElementChild.dataset.evidenceClose='1';head.lastElementChild.setAttribute('aria-label','시각 증거 닫기');
+    const body=el('div','pc-evidence-viewer-body');body.append(el('div','pc-evidence-stage'),el('aside','pc-evidence-meta'));
+    viewer.append(head,body);document.body.append(viewer);evidenceViewer=viewer;return viewer;
+  }
+
+  function renderEvidenceViewer(){
+    const item=currentEvidenceItems[evidenceIndex];if(!item) return;
+    const viewer=ensureEvidenceViewer();const headCopy=viewer.querySelector('.pc-evidence-viewer-head>span');const stage=viewer.querySelector('.pc-evidence-stage');const meta=viewer.querySelector('.pc-evidence-meta');
+    headCopy.replaceChildren(el('small','',`${item.recordId} / EVIDENCE ${String(evidenceIndex+1).padStart(2,'0')}`),el('b','',`${item.className} · ${item.assetId}`));
+    stage.replaceChildren();
+    if(item.comparison){
+      const compare=el('div','pc-evidence-compare');compare.style.setProperty('--evidence-split','50%');
+      const base=el('div');const baseImage=el('img');baseImage.src=item.comparison.displaySrc;baseImage.alt=`${item.comparison.label} 비교 이미지`;base.append(baseImage);
+      const current=el('div');const currentImage=el('img');currentImage.src=item.displaySrc;currentImage.alt=item.alt||item.caption;current.append(currentImage);
+      const leftLabel=el('label','is-left',item.className);const rightLabel=el('label','is-right',item.comparison.label);
+      const range=el('input','pc-evidence-range');range.type='range';range.min='0';range.max='100';range.value='50';range.setAttribute('aria-label','두 이미지 비교 경계');range.addEventListener('input',()=>compare.style.setProperty('--evidence-split',`${range.value}%`));
+      compare.append(base,current,leftLabel,rightLabel,range);stage.append(compare);
+    }else{
+      const single=el('div','pc-evidence-single');const image=el('img');image.src=item.displaySrc;image.alt=item.alt||item.caption;single.append(image);stage.append(single);
+    }
+    meta.replaceChildren(el('small','',item.classInfo.description),el('h2','',item.caption||item.alt||'시각 기록'),el('p','',item.handling));
+    const facts=el('dl');[['자산 ID',item.assetId],['분류',`${item.className} / ${item.classInfo.label}`],['출처',item.source],['시점',item.date],['무결성',item.integrity],['원본 상태',item.comparison?'비교 자료 연결됨':item.originalState==='missing'?'원본 미등록':item.originalState==='available'?'원본 계열 확인':'추가 대조 필요'],['관계',item.comparison?.relationship||'단일 자산']].forEach(([term,value])=>{const row=el('div');row.append(el('dt','',term),el('dd','',value));facts.append(row);});
+    const warning=el('div',`pc-evidence-warning${item.comparison||item.className==='ORIGINAL'?' is-available':''}`,item.className==='RECONSTRUCTED'&&!item.comparison?'이 이미지는 현존 원본이 아니다. 실제 원본이 확보되기 전까지 기록의 시각적 참고 자료로만 사용한다.':item.comparison?'비교 경계를 움직여 두 사본의 크롭·색상·정보 손실을 직접 대조할 수 있다.':'원본 계보가 완전히 확인되기 전에는 이 이미지를 재구성이나 보정의 기준본으로 사용하지 않는다.');
+    const nav=el('div','pc-evidence-nav');const previous=el('button','','← 이전 증거');previous.type='button';previous.dataset.evidencePrevious='1';const next=el('button','','다음 증거 →');next.type='button';next.dataset.evidenceNext='1';nav.append(previous,next);
+    meta.append(facts,warning,nav);
+  }
+
+  function openEvidence(index,trigger){
+    if(!currentEvidenceItems.length) return false;
+    evidenceIndex=Math.max(0,Math.min(currentEvidenceItems.length-1,Number(index)||0));evidenceTrigger=trigger||document.activeElement;
+    const viewer=ensureEvidenceViewer();renderEvidenceViewer();viewer.hidden=false;document.body.classList.add('pc-evidence-open');document.querySelector('.pc-internal-document-shell:not([hidden])')?.setAttribute('aria-hidden','true');
+    window.ProjectCurseAudioControl?.play?.(currentEvidenceItems[evidenceIndex].comparison?'evidence.compare':'evidence.open');viewer.querySelector('[data-evidence-close]')?.focus({preventScroll:true});return true;
+  }
+
+  function closeEvidence({restoreFocus=true}={}){
+    if(!evidenceViewer||evidenceViewer.hidden) return false;
+    evidenceViewer.hidden=true;document.body.classList.remove('pc-evidence-open');document.querySelector('.pc-internal-document-shell[aria-hidden="true"]')?.removeAttribute('aria-hidden');window.ProjectCurseAudioControl?.play?.('evidence.close');
+    if(restoreFocus&&evidenceTrigger instanceof HTMLElement&&document.contains(evidenceTrigger)) evidenceTrigger.focus({preventScroll:true});evidenceTrigger=null;return true;
   }
 
   function appendTable(target,tableData){
@@ -313,6 +399,8 @@
       root.append(el('h1','archive-doc-missing','기록을 복구할 수 없습니다.'),closeControl(embedded,'기록보관소로 돌아가기'));
       return false;
     }
+    const evidenceItems=[];
+    const evidenceContext={recordId:doc.sourceId||doc.code||'UNKNOWN',items:evidenceItems};
 
     const top=el('div','archive-doc-top');
     const verdictDocument=doc.presentation==='verdict';
@@ -378,6 +466,9 @@
       toc.append(item);
     });
 
+    const heroFragment=document.createDocumentFragment();
+    appendFigure(heroFragment,doc.hero,embedded,'archive-doc-hero',evidenceContext);
+
     const body=el('div','archive-doc-body');
     doc.sections.forEach((section,index)=>{
       const part=el('section','archive-doc-section');
@@ -386,7 +477,7 @@
       const heading=el('h2');
       heading.append(el('span','',String(index+1).padStart(2,'0')),document.createTextNode(section.title));
       part.append(heading);
-      if(section.image?.placement!=='after') appendFigure(part,section.image,embedded);
+      if(section.image?.placement!=='after') appendFigure(part,section.image,embedded,'',evidenceContext);
       appendParagraphs(part,section.paragraphs);
       appendTranscript(part,section.transcript);
       appendTable(part,section.table);
@@ -395,7 +486,7 @@
       (section.groups||[]).forEach(group=>{
         const block=el('div','archive-doc-group');
         block.append(rich('h3','',group.title));
-        appendFigure(block,group.image,embedded,'archive-doc-group-figure');
+        appendFigure(block,group.image,embedded,'archive-doc-group-figure',evidenceContext);
         appendParagraphs(block,group.paragraphs);
         appendTranscript(block,group.transcript);
         appendTable(block,group.table);
@@ -403,7 +494,7 @@
         part.append(block);
       });
       if(section.quote) part.append(rich('blockquote','archive-doc-quote',section.quote));
-      if(section.image?.placement==='after') appendFigure(part,section.image,embedded);
+      if(section.image?.placement==='after') appendFigure(part,section.image,embedded,'',evidenceContext);
       if(section.warning) part.append(rich('aside','archive-doc-warning',section.warning));
       body.append(part);
     });
@@ -416,8 +507,11 @@
     if(fieldAction) root.append(fieldAction);
     if(telemetry) root.append(telemetry);
     root.append(meta);
-    appendFigure(root,doc.hero,embedded,'archive-doc-hero');
+    root.append(heroFragment);
+    const provenance=evidenceConsole(evidenceItems);
+    if(provenance) root.append(provenance);
     root.append(readingGrid,footer);
+    currentEvidenceItems=evidenceItems;
     bindToc(toc,body,embedded);
     return true;
   }
@@ -427,6 +521,7 @@
     const host=document.getElementById('archiveInternalDocument');
     const root=document.getElementById('archiveInternalDocumentBody');
     if(!doc||!host||!root) return false;
+    closeEvidence({restoreFocus:false});
     if(window.ProjectCurseShell?.getRoute()!=='archive-entry') window.ProjectCurseShell?.navigate('archive-entry');
 
     currentId=id;
@@ -465,6 +560,7 @@
     const host=document.getElementById('archiveInternalDocument');
     const root=document.getElementById('archiveInternalDocumentBody');
     if(!host||host.hidden) return false;
+    closeEvidence({restoreFocus:false});
     sectionObserver?.disconnect();
     sectionObserver=null;
     host.hidden=true;
@@ -493,10 +589,19 @@
     }
     currentId=null;
     currentTrigger=null;
+    currentEvidenceItems=[];
     return true;
   }
 
   document.addEventListener('click',event=>{
+    const evidenceOpen=event.target.closest?.('[data-visual-evidence-open]');
+    if(evidenceOpen){event.preventDefault();event.stopImmediatePropagation();openEvidence(evidenceOpen.dataset.visualEvidenceOpen,evidenceOpen);return;}
+    const evidenceControl=event.target.closest?.('[data-evidence-close],[data-evidence-previous],[data-evidence-next]');
+    if(evidenceControl){
+      event.preventDefault();event.stopImmediatePropagation();
+      if(evidenceControl.dataset.evidenceClose!==undefined){closeEvidence();return;}
+      evidenceIndex=(evidenceIndex+(evidenceControl.dataset.evidencePrevious!==undefined?-1:1)+currentEvidenceItems.length)%currentEvidenceItems.length;renderEvidenceViewer();window.ProjectCurseAudioControl?.play?.('record.page');return;
+    }
     const closeButton=event.target.closest?.('[data-internal-document-close]');
     if(!closeButton) return;
     event.preventDefault();
@@ -505,6 +610,7 @@
   },true);
 
   document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&evidenceViewer&&!evidenceViewer.hidden){event.preventDefault();event.stopImmediatePropagation();closeEvidence();return;}
     if(event.key==='Escape'&&currentId){event.preventDefault();close();}
   });
 
@@ -516,6 +622,13 @@
     open,
     close,
     render:(id,root,options)=>render(root,documentFor(id),options),
+    openEvidenceAsset(src,context={},trigger=null){
+      const resolver=window.ProjectCurseVisualEvidence;if(!resolver||!src) return false;
+      const evidence=resolver.resolve(src,{recordId:context.recordId||'CINEMATIC',sequence:context.sequence||1,caption:context.caption||'',alt:context.alt||''});
+      currentEvidenceItems=[{...evidence,displaySrc:imagePath(src,true),comparison:evidence.comparison?{...evidence.comparison,displaySrc:imagePath(evidence.comparison.src,true)}:null}];
+      return openEvidence(0,trigger);
+    },
+    closeEvidence,
     isOpen:()=>Boolean(currentId),
     getCurrentId:()=>currentId
   });

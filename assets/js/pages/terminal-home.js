@@ -1,4 +1,4 @@
-// Project Curse 5.27.0 — live intelligence, reactive field consequences, and recovery resume owner.
+// Project Curse 5.28.0 — live intelligence, reactive field consequences, and recovery resume owner.
 (function(root){
   'use strict';
 

@@ -1118,6 +1118,7 @@
       state.transitioning=false;
       clearSequenceTimers();
       clearCinematicMediaFit(el);
+      el.querySelector('.pc-cinematic-evidence-control')?.remove();
       el.classList.remove('input-ready','frame-ready','page-reveal','black-transition','major-transition','normal-transition');
       el.className = el.className.replace(/\bpc5152as-layout-[^\s]+/g,'').replace(/\s{2,}/g,' ').trim();
       const stageLayout = (function(){
@@ -1179,6 +1180,11 @@
           ?'<div class="pc5152cz-post-flash" data-seq-postflash>'+page.postFlashLines.map(line=>'<span>'+escSeq(line)+'</span>').join('')+'</div>'
           :'';
         bodyEl.innerHTML=(page.subtitle?'<h3 class="pc5152k-seq-subtitle">'+highlightFeralTerms(escSeq(page.subtitle))+'</h3>':'')+'<div class="pc5152k-seq-lines pc5152v-default-red-lines">'+lines+postFlash+'</div>';
+      }
+      if(page.image&&window.ProjectCurseVisualEvidence&&window.ProjectCurseInternalDocumentViewer?.openEvidenceAsset){
+        const evidenceControl=document.createElement('button');
+        evidenceControl.type='button';evidenceControl.className='pc-cinematic-evidence-control';evidenceControl.dataset.cinematicEvidence='1';evidenceControl.textContent='VISUAL SOURCE · 확대 / 대조';
+        el.append(evidenceControl);
       }
       el.querySelector('[data-seq-frame]').textContent=page.frame;
       el.querySelector('[data-seq-counter]').textContent=String(state.pageIndex+1).padStart(2,'0')+' / '+String(activePages.length).padStart(2,'0');
@@ -1546,6 +1552,14 @@
     }
 
     document.addEventListener('click', function(e){
+      if(document.body.classList.contains('pc-evidence-open')) return;
+      const evidenceControl=e.target.closest&&e.target.closest('[data-cinematic-evidence]');
+      if(state.overlay&&state.overlay.classList.contains('show')&&evidenceControl){
+        e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+        const page=getActivePages()[state.pageIndex];
+        if(page?.image){if(!state.autoPaused) toggleSequencePlayback();window.ProjectCurseInternalDocumentViewer?.openEvidenceAsset?.(page.image,{recordId:state.activeRecord,sequence:state.pageIndex+1,caption:page.caption||page.photoCaption||page.title||page.frame,alt:(page.title||'증거 이미지')+' 회수 이미지'},evidenceControl);}
+        return;
+      }
       const action=e.target.closest&&e.target.closest('[data-seq-action]');
       if(state.overlay&&state.overlay.classList.contains('show')&&action){
         e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
@@ -1577,6 +1591,9 @@
 
     
     document.addEventListener('touchend', function(e){
+      if(document.body.classList.contains('pc-evidence-open')) return;
+      const evidenceControl=e.target.closest&&e.target.closest('[data-cinematic-evidence]');
+      if(state.overlay&&state.overlay.classList.contains('show')&&evidenceControl){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();evidenceControl.click();return;}
       const action=e.target.closest&&e.target.closest('[data-seq-action]');
       if(state.overlay&&state.overlay.classList.contains('show')&&action){
         e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
@@ -1600,6 +1617,7 @@
 
     document.addEventListener('keydown', function(e){
       if(!(state.overlay && state.overlay.classList.contains('show'))) return;
+      if(document.body.classList.contains('pc-evidence-open')) return;
       if(e.target.closest&&e.target.closest('[data-seq-action]')) return;
       if(e.key==='ArrowLeft'){e.preventDefault();previousSequence();return;}
       if(e.key==='ArrowRight'){e.preventDefault();advanceSequence();return;}

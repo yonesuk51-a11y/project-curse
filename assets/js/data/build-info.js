@@ -1,4 +1,4 @@
-// Project Curse 5.27.0 — single source of truth for the terminal build.
+// Project Curse 5.28.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.27.0',
-    codename:'Reactive Consequence Network',
-    schema:'project-curse-v18',
+    version:'5.28.0',
+    codename:'Visual Evidence Archive',
+    schema:'project-curse-v19',
     released:'2026-08-17',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

@@ -1,4 +1,4 @@
-// Project Curse 5.27.0 — geographic control map, recovery routes, drilldowns, and shared incident traces.
+// Project Curse 5.28.0 — geographic control map, recovery routes, drilldowns, and shared incident traces.
 (function(root){
   'use strict';
 

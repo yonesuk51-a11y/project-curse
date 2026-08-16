@@ -1,4 +1,4 @@
-// Project Curse 5.27.0 — persistent conditional verdict archive, reactive snapshots, and scenario-unlock owner.
+// Project Curse 5.28.0 — persistent conditional verdict archive, reactive snapshots, and scenario-unlock owner.
 (function(root){
   'use strict';
 

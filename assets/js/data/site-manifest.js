@@ -1,4 +1,4 @@
-// Project Curse 5.27.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.28.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.27.0',
+    version:root.ProjectCurseBuild?.version||'5.28.0',
     schema:root.ProjectCurseBuild?.schema||'project-curse-v16',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
@@ -51,6 +51,7 @@
       canon:'assets/js/data/canon-registry.js',
       incidentRegistry:'assets/js/data/incident-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
+      visualEvidenceData:'assets/js/data/visual-evidence-data.js',
       fieldDossiers:'assets/js/data/field-dossier-data.js',
       homeIntelligence:'assets/js/data/home-intelligence-data.js',
       baseRuntime:'assets/js/core/base-runtime.js',
@@ -81,6 +82,7 @@
       reconciliation:'assets/js/pages/canon-reconciliation.js',
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',
       archiveDocumentViewer:'assets/js/pages/archive-document.js',
+      visualEvidenceCSS:'assets/css/visual-evidence.css',
       mapRoomData:'assets/js/data/map-room-data.js',
       regionalDrilldownData:'assets/js/data/regional-drilldown-data.js',
       mapRoomRuntime:'assets/js/pages/map-room.js',

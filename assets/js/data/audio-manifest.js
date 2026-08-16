@@ -1,4 +1,4 @@
-// Project Curse 5.27.0 — semantic sound-event registry, recovery cues, and acoustic profiles.
+// Project Curse 5.28.0 — semantic sound-event registry, recovery cues, and acoustic profiles.
 (function(root){
   'use strict';
 
@@ -29,6 +29,10 @@
       'channel.archive':Object.freeze({cue:'open',bus:'record',cooldown:420,gain:.92,duck:.56,duckMs:520,exclusive:true}),
       'record.mount':Object.freeze({cue:'open',bus:'record',cooldown:260,gain:1,duck:.48,duckMs:620,exclusive:true}),
       'record.page':Object.freeze({cue:'page',bus:'record',cooldown:180,gain:.72,duck:.82,duckMs:180,exclusive:true}),
+      'evidence.open':Object.freeze({cue:'open',bus:'record',cooldown:260,gain:.74,duck:.5,duckMs:520,exclusive:true}),
+      'evidence.compare':Object.freeze({cue:'scan',bus:'record',cooldown:320,gain:.76,duck:.42,duckMs:680,exclusive:true}),
+      'evidence.filter':Object.freeze({cue:'confirm',bus:'interface',cooldown:150,gain:.5,exclusive:true}),
+      'evidence.close':Object.freeze({cue:'contact',bus:'interface',cooldown:240,gain:.45,exclusive:true}),
       'map.layer':Object.freeze({cue:'analog',bus:'interface',cooldown:160,gain:.58,exclusive:true}),
       'map.signal':Object.freeze({cue:'marker',bus:'interface',cooldown:220,gain:.7,duck:.8,duckMs:200,exclusive:true}),
       'operation.step':Object.freeze({cue:'confirm',bus:'interface',cooldown:160,gain:.62,duck:.84,duckMs:160,exclusive:true}),
