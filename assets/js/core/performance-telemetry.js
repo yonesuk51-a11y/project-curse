@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — live channel state and local performance telemetry.
+// Project Curse 5.32.0 — live channel state and local performance telemetry.
 (function(root){
   'use strict';
 

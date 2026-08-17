@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — reactive scenarios, consequence feedback, and conditional recovery access.
+// Project Curse 5.32.0 — reactive scenarios, consequence feedback, and conditional recovery access.
 (function(root){
   'use strict';
 

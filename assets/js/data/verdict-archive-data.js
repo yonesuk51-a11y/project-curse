@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — conditional field-verdict archive definitions and recovery unlock chain.
+// Project Curse 5.32.0 — conditional field-verdict archive definitions and recovery unlock chain.
 (function(root){
   'use strict';
 

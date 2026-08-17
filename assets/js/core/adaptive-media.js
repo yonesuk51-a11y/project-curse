@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — adaptive image selection, recovery states, route warmup, and diagnostics.
+// Project Curse 5.32.0 — quality-aware image selection, recovery, route warmup, and diagnostics.
 (function(root){
   'use strict';
 
@@ -6,10 +6,13 @@
   if(!manifest) return;
 
   const stats={applied:0,responsive:0,original:0,ready:0,failed:0,warmups:0,warmHits:0};
-  const saveData=()=>Boolean(navigator.connection?.saveData);
-  const slowNetwork=()=>/^(slow-2g|2g)$/.test(navigator.connection?.effectiveType||'');
   const reduceMotion=()=>root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const policy=()=>saveData()||slowNetwork()?'conserve':reduceMotion()?'reduced':'full';
+  const policy=()=>{
+    const tier=root.ProjectCurseQuality?.getState?.().tier;
+    if(tier==='offline'||tier==='constrained') return 'conserve';
+    if(tier==='balanced'||reduceMotion()) return 'reduced';
+    return 'full';
+  };
   const contextual=(requested,assetPath)=>{
     const raw=String(requested||'').replace(/\\/g,'/');
     const marker=raw.indexOf('assets/');
@@ -52,7 +55,7 @@
         image.dispatchEvent(new CustomEvent('projectcurse:media-ready',{bubbles:true,detail:{source:image.dataset.pcMediaSource,mode}}));
       });
     };
-    const failed=()=>{if(image.dataset.pcMediaToken===token&&!loadHandled){loadHandled=true;stats.failed++;setState(image,'error','VISUAL DATA LOST');}};
+    const failed=()=>{if(image.dataset.pcMediaToken===token&&!loadHandled){loadHandled=true;stats.failed++;setState(image,'error',navigator.onLine===false?'OFFLINE / LOCAL FRAME UNAVAILABLE':'VISUAL DATA LOST');image.dispatchEvent(new CustomEvent('projectcurse:media-error',{bubbles:true,detail:{source:image.dataset.pcMediaSource,mode}}));}};
     image.addEventListener('load',ready,{once:true});image.addEventListener('error',failed,{once:true});
 
     image.removeAttribute('srcset');image.removeAttribute('sizes');stats.applied++;
@@ -82,6 +85,7 @@
   }
 
   function preload(requested,{mode='display',timeout=520}={}){
+    if(navigator.onLine===false||root.ProjectCurseQuality&&!root.ProjectCurseQuality.allows('routeWarmup')) return Promise.resolve(false);
     const descriptor=manifest.resolve(requested);if(!descriptor) return Promise.resolve(false);
     const conserve=policy()==='conserve';const target=mode==='thumbnail'||conserve?descriptor.variants[0]:descriptor.variants.at(-1);
     const src=contextual(requested,target.src);
@@ -94,6 +98,7 @@
 
   async function prepareRoute(route,{timeout=520}={}){
     stats.warmups++;const page=document.getElementById(route);if(!page) return {route,requested:0,ready:0};
+    if(root.ProjectCurseQuality&&!root.ProjectCurseQuality.allows('routeWarmup')) return {route,requested:0,ready:0,skipped:true,policy:policy()};
     const sources=Array.from(page.querySelectorAll('img[data-pc-source],img[src]')).map(image=>image.dataset.pcSource||image.getAttribute('src')).filter(source=>manifest.resolve(source));
     const unique=[...new Set(sources)].slice(0,2);if(!unique.length) return {route,requested:0,ready:0};
     const results=await Promise.all(unique.map(source=>preload(source,{timeout})));const ready=results.filter(Boolean).length;stats.warmHits+=ready;
@@ -106,7 +111,15 @@
     return Object.freeze({...stats,policy:policy(),registered:Object.keys(manifest.assets).length,resourceRequests:media.length,transferBytes:media.reduce((sum,item)=>sum+(item.transferSize||0),0),decodedBytes:media.reduce((sum,item)=>sum+(item.decodedBodySize||0),0)});
   }
 
+  function retryFailed(scope=document){
+    const failed=Array.from(scope.querySelectorAll?.('.pc-media-error>img[data-pc-media]')||[]);
+    failed.forEach(image=>apply(image,image.dataset.pcMediaSource,{mode:image.dataset.pcMediaMode||'display',eager:true}));
+    return failed.length;
+  }
+
   const boot=()=>enhance(document);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  root.ProjectCurseMedia=Object.freeze({version:'1.0.0',apply,enhance,preload,prepareRoute,getDiagnostics,getPolicy:policy});
+  document.addEventListener('projectcurse:quality-change',()=>enhance(document));
+  root.addEventListener('online',()=>retryFailed());
+  root.ProjectCurseMedia=Object.freeze({version:'1.1.0',apply,enhance,preload,prepareRoute,retryFailed,getDiagnostics,getPolicy:policy});
 })(window);

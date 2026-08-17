@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — persistent acoustic profiles, ducking and semantic event bridge.
+// Project Curse 5.32.0 — persistent acoustic profiles, ducking and semantic event bridge.
 (function(root){
   'use strict';
 

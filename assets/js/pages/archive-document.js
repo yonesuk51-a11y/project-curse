@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — adaptive archive document, provenance console, evidence comparison, and verdict renderer.
+// Project Curse 5.32.0 — adaptive archive document, provenance console, evidence comparison, and verdict renderer.
 (function(){
   'use strict';
 

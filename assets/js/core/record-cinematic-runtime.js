@@ -635,10 +635,10 @@
       el.className='pc5152h-cult-sequence';
       el.setAttribute('aria-hidden','true');
       el.innerHTML=[
-        '<video class="pc5152h-seq-video" playsinline preload="auto" src="'+pre+'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4"></video>',
-        '<video class="pc5152m-transition-video" playsinline preload="auto" src="'+pre+'assets/video/pc5152m_vhs_transition_18_21_sound.mp4"></video>',
-        '<video class="pc5152q-ending-video" playsinline preload="auto"></video>',
-        '<video class="pc5152an-vhs-overlay-video" muted playsinline loop preload="auto" src="'+pre+'assets/video/pc5152am_cult_trace_vhs_noise.mp4"></video>',
+        '<video class="pc5152h-seq-video" playsinline preload="metadata" src="'+pre+'assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4"></video>',
+        '<video class="pc5152m-transition-video" playsinline preload="metadata" src="'+pre+'assets/video/pc5152m_vhs_transition_18_21_sound.mp4"></video>',
+        '<video class="pc5152q-ending-video" playsinline preload="none"></video>',
+        '<video class="pc5152an-vhs-overlay-video" muted playsinline loop preload="none" src="'+pre+'assets/video/pc5152am_cult_trace_vhs_noise.mp4"></video>',
         '<div class="pc5152h-seq-black"></div>',
         '<div class="pc5152h-seq-scan"></div>',
         '<button class="pc5152x-seq-return" type="button">돌아가기</button>',
@@ -670,6 +670,7 @@
         '</div>'
       ].join('');
       document.body.appendChild(el);
+      if(window.ProjectCurseQuality&&!window.ProjectCurseQuality.allows('videoPreload')) el.querySelectorAll('video').forEach(video=>{video.preload='none';});
       state.overlay=el;
       return el;
     }
@@ -1733,7 +1734,7 @@
     const prefix=path.includes('/docs/')?'../../':path.includes('/archive/')?'../':'';
     const layer=new Audio(prefix+'assets/audio/pc5152an_cult_radio_static_layer.mp3');
     layer.loop=true;
-    layer.preload='metadata';
+    layer.preload='none';
     const sync=()=>{
       const active=document.body.classList.contains('pc5152h-sequence-open')
         && document.body.classList.contains('pc5152h-cult-source-sequence')

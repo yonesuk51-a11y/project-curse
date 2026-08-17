@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.32.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.31.0',
-    schema:root.ProjectCurseBuild?.schema||'project-curse-v22',
+    version:root.ProjectCurseBuild?.version||'5.32.0',
+    schema:root.ProjectCurseBuild?.schema||'project-curse-v23',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'map-room',label:'상황 관제',index:'01'},
@@ -66,6 +66,7 @@
       verdictArchiveData:'assets/js/data/verdict-archive-data.js',
       verdictArchiveState:'assets/js/core/verdict-archive-state.js',
       performanceTelemetry:'assets/js/core/performance-telemetry.js',
+      qualityPolicy:'assets/js/core/quality-policy.js',
       verdictArchiveCSS:'assets/css/verdict-archive.css',
       pilgrimageRuntime:'assets/js/pages/pilgrimage-scenario.js',
       pilgrimageCSS:'assets/css/pilgrimage-scenario.css',
@@ -90,6 +91,7 @@
       archiveDocumentViewer:'assets/js/pages/archive-document.js',
       visualEvidenceCSS:'assets/css/visual-evidence.css',
       adaptiveMediaCSS:'assets/css/adaptive-media.css',
+      qualityPolicyCSS:'assets/css/quality-policy.css',
       mapRoomData:'assets/js/data/map-room-data.js',
       regionalDrilldownData:'assets/js/data/regional-drilldown-data.js',
       mapRoomRuntime:'assets/js/pages/map-room.js',

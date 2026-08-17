@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — visual and operational identity for the five terminal channels.
+// Project Curse 5.32.0 — visual and operational identity for the five terminal channels.
 (function(root){
   'use strict';
 
@@ -11,7 +11,7 @@
   root.ProjectCurseChannelData=freeze({
     version:'1.0.0',
     storageKey:'project_curse_preferences_v1',
-    defaults:{effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on'},
+    defaults:{quality:'auto',effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on'},
     channels:[
       {
         id:'terminal-home',index:'00',code:'COMMAND NODE',label:'단말 상태',shortLabel:'단말',theme:'command',glyph:'CN',
@@ -40,6 +40,7 @@
       }
     ],
     preferences:{
+      quality:{label:'전송 품질',description:'연결 속도와 기기 성능에 맞춰 이미지·영상 준비와 지도 효과를 조절한다.',options:[['auto','AUTO'],['data','DATA SAVE'],['high','HIGH']]},
       effects:{label:'시각 효과',description:'화면 전환과 채널별 환경 연출의 강도를 조절한다.',options:[['full','FULL'],['balanced','BALANCED'],['reduced','REDUCED']]},
       interfaceAudio:{label:'인터페이스 음향',description:'버튼·기록·채널 전환 효과음의 강도를 조절한다.',options:[['full','FULL'],['minimal','MINIMAL'],['off','OFF']]},
       ambient:{label:'환경음',description:'단말 배경 루프만 별도로 켜거나 끈다.',options:[['on','ON'],['off','OFF']]},

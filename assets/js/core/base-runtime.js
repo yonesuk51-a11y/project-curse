@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — boot and persistent shell audio asset owner.
+// Project Curse 5.32.0 — boot and quality-aware persistent shell audio asset owner.
 (function(){
   'use strict';
 
@@ -55,11 +55,13 @@
   }
 
   function startAmbient(){
-    if(!audioUnlocked||!isOn()||!ambientAllowed||audioContext==='cinematic'||document.hidden) return;
+    if(!audioUnlocked||!isOn()||!ambientAllowed||audioContext==='cinematic'||document.hidden||rootQualityBlocksAmbient()) return;
     if(!audio.ambient.paused){ambientStarted=true;return;}
     ambientStarted=true;
     try{audio.ambient.play().catch(()=>{ambientStarted=false;});}catch(_e){ambientStarted=false;}
   }
+
+  function rootQualityBlocksAmbient(){return Boolean(window.ProjectCurseQuality&&!window.ProjectCurseQuality.allows('ambient'));}
 
   function stopMenuAmbient(){
     audioContext='cinematic';
@@ -127,6 +129,12 @@
   document.addEventListener('keydown',unlock);
   document.addEventListener('visibilitychange',()=>{
     if(document.hidden){
+      try{audio.ambient.pause();}catch(_e){}
+      ambientStarted=false;
+    }else if(ambientAllowed&&audioContext!=='cinematic') startAmbient();
+  });
+  document.addEventListener('projectcurse:quality-change',()=>{
+    if(rootQualityBlocksAmbient()){
       try{audio.ambient.pause();}catch(_e){}
       ambientStarted=false;
     }else if(ambientAllowed&&audioContext!=='cinematic') startAmbient();

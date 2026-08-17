@@ -1,4 +1,4 @@
-// Project Curse 5.31.0 — exit, media-aware channel handoff and staged screen entry owner.
+// Project Curse 5.32.0 — exit, quality-aware channel handoff and staged screen entry owner.
 (function(root){
   'use strict';
 
@@ -80,11 +80,11 @@
       if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','54%');
       await wait(timings.cover);
 
-      if(root.ProjectCurseMedia&&!reduceMotion()){
+      if(root.ProjectCurseMedia&&!reduceMotion()&&(!root.ProjectCurseQuality||root.ProjectCurseQuality.allows('routeWarmup'))){
         const mediaHold=mobile()?360:520;
         const prepared=await root.ProjectCurseMedia.prepareRoute(to,{timeout:mediaHold});
         if(nodes.status) nodes.status.textContent=prepared.requested?`${prepared.ready} / ${prepared.requested} VISUAL FRAMES READY`:toPreset.status;
-      }else if(nodes.status) nodes.status.textContent=toPreset.status;
+      }else if(nodes.status) nodes.status.textContent=root.ProjectCurseQuality&&!root.ProjectCurseQuality.allows('routeWarmup')?'CONSERVATION HANDOFF / PRELOAD BYPASSED':toPreset.status;
       if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','76%');
 
       const result=commit();
