@@ -1,4 +1,4 @@
-// Project Curse 5.30.0 — semantic sound-event registry, recovery cues, and acoustic profiles.
+// Project Curse 5.31.0 — semantic sound-event registry, recovery cues, and acoustic profiles.
 (function(root){
   'use strict';
 

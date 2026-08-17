@@ -1,4 +1,4 @@
-// Project Curse 5.30.0 — channel navigation, identity headers and local presentation preferences.
+// Project Curse 5.31.0 — channel navigation, identity headers and local presentation preferences.
 (function(root){
   'use strict';
 
@@ -18,6 +18,7 @@
     let panel=null;
     let lastTrigger=null;
     let arrivalTimer=0;
+    let telemetryFrame=0;
 
     if(!channels.length) return;
 
@@ -69,8 +70,13 @@
       return true;
     }
 
+    function liveStatus(id){
+      return root.ProjectCurseTelemetry?.getChannelStatus?.(id)||{value:'--',label:'LOCAL',tone:'stable',description:'로컬 채널'};
+    }
+
     function navMarkup(channel){
-      return `<i>${channel.index}</i><span><b>${channel.label}</b><small>${channel.code}</small></span><em aria-hidden="true">${channel.glyph}</em>`;
+      const status=liveStatus(channel.id);
+      return `<i>${channel.index}</i><span><b>${channel.label}</b><small>${channel.code}</small></span><em class="pc-channel-live pc-channel-live--${status.tone}" aria-label="${status.description}"><b>${status.value}</b><small>${status.label}</small></em>`;
     }
 
     function enhanceNavigation(){
@@ -100,7 +106,10 @@
     }
 
     function identityMarkup(channel){
-      const metrics=channel.telemetry.map(([label,value])=>`<div><dt>${label}</dt><dd>${value}</dd></div>`).join('');
+      const status=liveStatus(channel.id);
+      const rows=channel.telemetry.map(row=>[...row]);
+      if(rows.length) rows[rows.length-1]=[status.label,status.value];
+      const metrics=rows.map(([label,value],index)=>`<div${index===rows.length-1?' data-channel-live-metric':''}><dt>${label}</dt><dd>${value}</dd></div>`).join('');
       return `<div class="pc-channel-identity-copy"><small><i>${channel.index}</i> / ${channel.code}</small><strong data-screen-heading>${channel.label}</strong><p>${channel.description}</p></div><dl>${metrics}</dl><div class="pc-channel-sigil" aria-hidden="true"><i></i><i></i><span>${channel.glyph}</span><b>${channel.index}</b></div>`;
     }
 
@@ -145,7 +154,43 @@
         const options=definition.options.map(([value,label])=>`<button type="button" data-pc-preference="${key}" data-pc-value="${value}" aria-pressed="false"><span>${label}</span></button>`).join('');
         return `<section class="pc-preference-group"><div><strong>${definition.label}</strong><p>${definition.description}</p></div><div class="pc-preference-options" role="group" aria-label="${definition.label}">${options}</div></section>`;
       }).join('');
-      return `<div class="pc-preference-backdrop" data-pc-preferences-close></div><div class="pc-preference-dialog" role="dialog" aria-modal="true" aria-labelledby="pcPreferenceTitle"><header><div><small>PC-03 / LOCAL CONFIGURATION</small><h2 id="pcPreferenceTitle">표시·음향 설정</h2></div><button type="button" data-pc-preferences-close aria-label="설정 닫기">×</button></header><p class="pc-preference-intro">이 설정은 현재 브라우저에만 저장된다. 상단의 AUDIO LOCAL은 모든 음향을 즉시 끄는 전체 음소거다.</p>${groups}<footer><span data-pc-effective-effects></span><button type="button" data-pc-preferences-close>설정 완료</button></footer></div>`;
+      return `<div class="pc-preference-backdrop" data-pc-preferences-close></div><div class="pc-preference-dialog" role="dialog" aria-modal="true" aria-labelledby="pcPreferenceTitle"><header><div><small>PC-03 / LOCAL CONFIGURATION</small><h2 id="pcPreferenceTitle">표시·음향 설정</h2></div><button type="button" data-pc-preferences-close aria-label="설정 닫기">×</button></header><p class="pc-preference-intro">이 설정은 현재 브라우저에만 저장된다. 상단의 AUDIO LOCAL은 모든 음향을 즉시 끄는 전체 음소거다.</p>${groups}<section class="pc-live-diagnostics" aria-label="현재 세션 성능"><header><div><small>LIVE SESSION TELEMETRY</small><strong>현재 세션 진단</strong></div><span>LOCAL ONLY</span></header><dl><div><dt>BOOT VISIBLE</dt><dd data-pc-telemetry="boot">WAIT</dd></div><div><dt>DOM READY</dt><dd data-pc-telemetry="dom">WAIT</dd></div><div><dt>TRANSFER</dt><dd data-pc-telemetry="transfer">WAIT</dd></div><div><dt>HANDOFF</dt><dd data-pc-telemetry="transition">STANDBY</dd></div></dl><p data-pc-telemetry-summary>브라우저 내부 측정값을 수신하는 중이다.</p></section><footer><span data-pc-effective-effects></span><button type="button" data-pc-preferences-close>설정 완료</button></footer></div>`;
+    }
+
+    function formatBytes(bytes){
+      const value=Number(bytes)||0;
+      return value>=1048576?`${(value/1048576).toFixed(2)} MB`:`${Math.round(value/1024)} KB`;
+    }
+
+    function renderTelemetry(){
+      if(!panel) return;
+      const snapshot=root.ProjectCurseTelemetry?.getSnapshot?.();
+      if(!snapshot) return;
+      const values={
+        boot:snapshot.boot.visible?`${(snapshot.boot.visible/1000).toFixed(2)} S`:(snapshot.boot.complete?`${(snapshot.boot.complete/1000).toFixed(2)} S`:'WAIT'),
+        dom:snapshot.navigation.dom?`${snapshot.navigation.dom} MS`:'WAIT',
+        transfer:formatBytes(snapshot.resources.transfer),
+        transition:snapshot.transitions.last?`${snapshot.transitions.last} MS`:'STANDBY'
+      };
+      Object.entries(values).forEach(([key,value])=>{const node=panel.querySelector(`[data-pc-telemetry="${key}"]`);if(node) node.textContent=value;});
+      const summary=panel.querySelector('[data-pc-telemetry-summary]');
+      if(summary){
+        const bootMode=String(snapshot.boot.mode||'pending').toUpperCase();
+        const count=snapshot.transitions.count;
+        summary.textContent=`${bootMode} / ${snapshot.resources.count} RESOURCES / CLS ${snapshot.vitals.cls.toFixed(3)}${count?` / 평균 전환 ${snapshot.transitions.average}ms`:''}`;
+      }
+    }
+
+    function refreshLiveStatus(){
+      cancelAnimationFrame(telemetryFrame);
+      telemetryFrame=requestAnimationFrame(()=>{
+        channels.forEach(channel=>{
+          const control=quickNav?.querySelector(`[data-channel-route="${channel.id}"]`);
+          if(control) control.innerHTML=navMarkup(channel);
+          ensureIdentity(channel.id);
+        });
+        renderTelemetry();
+      });
     }
 
     function buildPreferences(){
@@ -169,6 +214,7 @@
         if(event.target.closest?.('[data-pc-preferences-close]')) closePreferences();
       });
       document.querySelectorAll('[data-pc-preferences-open]').forEach(control=>control.addEventListener('click',()=>openPreferences(control)));
+      renderTelemetry();
     }
 
     function openPreferences(trigger){
@@ -177,6 +223,8 @@
       panel.hidden=false;
       document.body.classList.add('pc-preferences-open');
       applyPreferences();
+      root.ProjectCurseTelemetry?.refresh?.();
+      renderTelemetry();
       requestAnimationFrame(()=>panel.classList.add('is-open'));
       panel.querySelector('button')?.focus({preventScroll:true});
       root.ProjectCurseAudioControl?.play?.('open',{volume:.55});
@@ -191,10 +239,11 @@
 
     function diagnostics(){
       return {
-        version:'5.30.0',channel:rootElement.dataset.pcChannel,
+        version:'5.31.0',channel:rootElement.dataset.pcChannel,
         identities:document.querySelectorAll(':scope body > .app [data-channel-identity="header"]').length,
         preferences:{...preferences},effectiveEffects:rootElement.dataset.pcEffects,
-        navigation:quickNav?.querySelectorAll('[data-channel-route]').length||0
+        navigation:quickNav?.querySelectorAll('[data-channel-route]').length||0,
+        telemetry:root.ProjectCurseTelemetry?.getSnapshot?.()||null
       };
     }
 
@@ -207,6 +256,7 @@
     document.addEventListener('projectcurse:screen-committed',event=>{
       requestAnimationFrame(()=>activateChannel(event.detail?.target||'terminal-home'));
     });
+    document.addEventListener('projectcurse:telemetry-update',refreshLiveStatus);
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!panel?.hidden) closePreferences();
       if(event.key==='Tab'&&!panel?.hidden){
@@ -219,7 +269,7 @@
     reduceMotion.addEventListener?.('change',()=>applyPreferences());
 
     root.ProjectCurseChannelIdentity=Object.freeze({
-      version:'5.30.0',getChannel:id=>byId.get(id)||null,getPreferences:()=>({...preferences}),
+      version:'5.31.0',getChannel:id=>byId.get(id)||null,getPreferences:()=>({...preferences}),
       setPreference,openPreferences,closePreferences,refresh:()=>activateChannel(root.ProjectCurseShell?.getRoute?.()||'terminal-home',{animate:false}),
       getDiagnostics:diagnostics
     });

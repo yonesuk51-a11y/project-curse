@@ -1,4 +1,4 @@
-// Project Curse 5.30.0 — adaptive image selection, recovery states, route warmup, and diagnostics.
+// Project Curse 5.31.0 — adaptive image selection, recovery states, route warmup, and diagnostics.
 (function(root){
   'use strict';
 

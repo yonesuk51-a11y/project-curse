@@ -1,25 +1,25 @@
 # Future Patch Pointer
 
-Current baseline: `5.30.0 Menu Identity Overhaul`
+Current baseline: `5.31.0 Live Status & Performance`
 
 Completed in this baseline:
-`Five Channel Identity / Purpose-specific Entry Motion / Local FX and Audio Preferences / Mobile Channel Panel`
+`Live Channel Counters / Session Telemetry / Deferred Ambient Audio / Measured Boot and Handoff`
 
 Primary scope:
 
-- 단말·지도·연대기·정보 분석·기록보관소에 서로 다른 색상, 계기, 표식과 배경 문법 부여
-- 런타임 재렌더링 뒤에도 유지되는 공통 채널 정체성 헤더와 다섯 채널 탐색 구조 추가
-- 홈을 포함한 채널 번호·명칭·영문 코드를 데스크톱 상단 메뉴와 모바일 선택 패널에 통합
-- 지도 레이더, 연대기 시간 눈금, 정보망 노드, 보관소 봉인 체계에 맞춘 화면별 진입 동작 추가
-- 시각 효과 FULL/BALANCED/REDUCED, 인터페이스 음향, 환경음, 텍스트 등장 설정을 로컬 저장
-- 운영체제 동작 줄이기 설정을 자동 우선하며 저장된 사용자 선택은 보존
-- 기존 전체 음소거와 세부 음향 버스 설정의 역할을 분리
-- 키보드 포커스 순환, Escape 닫기, 모바일 전체 높이 설정 패널과 진단 API 추가
+- 공개 5.30 첫 기동·전송량·LCP·CLS·다섯 채널 전환 시간을 실제 Chromium에서 기준 측정
+- 부팅 화면 약 8.69초와 채널 전환 0.81–0.84초는 유지해 읽을 수 있는 연출 시간 보존
+- 최초 세션 4.49MB 가운데 3.09MB를 차지하던 환경음을 첫 사용자 입력 뒤 요청하도록 변경
+- 단말 수신 신호, 활성 작전·순례, 연결 사건, 분석 파일, 읽지 않은 판정 기록을 다섯 채널 배지에 연결
+- 작전·순례·판정 저장 이벤트가 메뉴 배지와 화면 헤더 계기를 함께 갱신
+- 부팅 노출, DOM 준비, 전송량, 마지막·평균 채널 전환과 CLS를 로컬 세션 진단 패널에 표시
+- LCP·CLS·long task·리소스·부팅·전환 측정값을 로컬 진단 API로 제공
+- 모바일 채널 배지와 2열 세션 계기판, 모션 감소 시 경보 점멸 제거 적용
 
 Next planned pass:
 
-- 초기 화면과 각 채널의 LCP·CLS·전송량을 실제 공개 배포 환경에서 재측정
+- 5.31 공개 배포 뒤 콜드 캐시 전송량을 다시 측정해 환경음 지연 로딩 절감량 확정
 - 사용자 제공 원본이 추가되면 `RECONSTRUCTED`·`UNVERIFIED` 항목과 직접 비교해 기본 노출본 결정
 - 각 채널 전용 배경음은 라이선스와 잔류 재생 검증이 끝난 자산부터 선택적으로 추가
-- 기록·지도 데이터가 늘어날 때 상단 채널 상태를 실제 미확인 건수와 동기화
+- 세션 진단을 개발자용 상세 패널과 일반 사용자용 간단 상태로 분리할지 사용성 확인
 - 공개 배포 전 음원·영상·이미지 라이선스와 GitHub Pages 배포 보안 최종 점검

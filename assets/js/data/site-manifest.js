@@ -1,4 +1,4 @@
-// Project Curse 5.30.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.31.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.30.0',
-    schema:root.ProjectCurseBuild?.schema||'project-curse-v21',
+    version:root.ProjectCurseBuild?.version||'5.31.0',
+    schema:root.ProjectCurseBuild?.schema||'project-curse-v22',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'map-room',label:'상황 관제',index:'01'},
@@ -65,6 +65,7 @@
       pilgrimageState:'assets/js/core/pilgrimage-state.js',
       verdictArchiveData:'assets/js/data/verdict-archive-data.js',
       verdictArchiveState:'assets/js/core/verdict-archive-state.js',
+      performanceTelemetry:'assets/js/core/performance-telemetry.js',
       verdictArchiveCSS:'assets/css/verdict-archive.css',
       pilgrimageRuntime:'assets/js/pages/pilgrimage-scenario.js',
       pilgrimageCSS:'assets/css/pilgrimage-scenario.css',

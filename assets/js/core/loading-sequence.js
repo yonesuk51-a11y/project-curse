@@ -1,8 +1,8 @@
-// Project Curse 5.30.0 — cold boot, session restore and archive return sequence.
+// Project Curse 5.31.0 — cold boot, session restore and archive return sequence.
 (function(root){
   'use strict';
 
-  const BUILD=()=>root.ProjectCurseBuild?.version||'5.30.0';
+  const BUILD=()=>root.ProjectCurseBuild?.version||'5.31.0';
   const SESSION_KEY=()=>`pc_terminal_boot_${BUILD().replace(/[^a-z0-9]+/gi,'_')}`;
   const MODES={
     cold:{

@@ -1,4 +1,4 @@
-// Project Curse 5.30.0 — boot and persistent shell audio asset owner.
+// Project Curse 5.31.0 — boot and persistent shell audio asset owner.
 (function(){
   'use strict';
 
@@ -26,12 +26,14 @@
     restricted:new Audio(asset('pc5152f_low_denied_oldpc.wav')),
     denied:new Audio(asset('pc5152f_low_denied_oldpc.wav'))
   };
+  Object.values(audio).forEach(node=>{node.preload='none';});
   audio.ambient.loop=true;
   audio.ambient.volume=.088;
   const volumes={contact:.055,analog:.048,open:.078,load:.055,video:.058,radio:.052,page:.058,scan:.05,marker:.054,confirm:.05,boot:.06,alert:.058,restricted:.064,denied:.06};
   Object.entries(volumes).forEach(([name,volume])=>{audio[name].volume=volume;});
 
   let ambientStarted=false;
+  let audioUnlocked=Boolean(navigator.userActivation?.hasBeenActive);
   let ambientAllowed=true;
   let audioContext='shell';
   const lastCue=Object.create(null);
@@ -53,7 +55,7 @@
   }
 
   function startAmbient(){
-    if(!isOn()||!ambientAllowed||audioContext==='cinematic'||document.hidden) return;
+    if(!audioUnlocked||!isOn()||!ambientAllowed||audioContext==='cinematic'||document.hidden) return;
     if(!audio.ambient.paused){ambientStarted=true;return;}
     ambientStarted=true;
     try{audio.ambient.play().catch(()=>{ambientStarted=false;});}catch(_e){ambientStarted=false;}
@@ -98,6 +100,7 @@
     loader?.classList.add('hide');
     app?.classList.add('ready');
     document.body.classList.add('pc5121-boot-complete');
+    document.dispatchEvent(new CustomEvent('projectcurse:boot-hidden',{detail:{elapsed:performance.now()-(window.__pc5152BootStart||0)}}));
   }
 
   function boot(){
@@ -119,7 +122,7 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
 
-  const unlock=()=>{startAmbient();document.removeEventListener('pointerdown',unlock);document.removeEventListener('keydown',unlock);};
+  const unlock=()=>{audioUnlocked=true;startAmbient();document.removeEventListener('pointerdown',unlock);document.removeEventListener('keydown',unlock);};
   document.addEventListener('pointerdown',unlock,{passive:true});
   document.addEventListener('keydown',unlock);
   document.addEventListener('visibilitychange',()=>{

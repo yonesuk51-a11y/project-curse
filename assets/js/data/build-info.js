@@ -1,4 +1,4 @@
-// Project Curse 5.30.0 — single source of truth for the terminal build.
+// Project Curse 5.31.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.30.0',
-    codename:'Menu Identity Overhaul',
-    schema:'project-curse-v21',
+    version:'5.31.0',
+    codename:'Live Status & Performance',
+    schema:'project-curse-v22',
     released:'2026-08-17',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

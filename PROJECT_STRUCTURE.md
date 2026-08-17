@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.30.0
+# Project Curse Structure — 5.31.0
 
 ## 활성 소유권
 
@@ -29,6 +29,7 @@
 | 채널별 전환 설정 | `assets/js/data/transition-manifest.js` |
 | 다섯 채널 명칭·색상·계기·표식·표시 설정 정의 | `assets/js/data/channel-identity-data.js` |
 | 채널 헤더 복원·상단 탐색·표시 및 음향 설정 저장 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
+| 채널 실시간 상태·부팅·전송량·CLS·전환 계측 | `assets/js/core/performance-telemetry.js` |
 | 공통 사건·권역·작전 연결 | `assets/js/data/incident-registry.js` |
 | 화면 퇴장·채널 교체·진입 상태 머신 | `assets/js/core/transition-controller.js` |
 | 공통 전환·화면별 정체성 스타일 | `assets/css/transition-system.css` |
