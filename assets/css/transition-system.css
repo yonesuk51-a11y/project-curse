@@ -1,7 +1,12 @@
-/* Project Curse 5.29.0 — channel transition and screen identity system. */
+/* Project Curse 5.34.0 — channel transition and screen identity system. */
 :root {
   --pc-route-accent: #c84951;
   --pc-route-accent-rgb: 200, 73, 81;
+  --pc-transition-out: .34s;
+  --pc-transition-cover: .3s;
+  --pc-transition-in: .62s;
+  --pc-transition-ease: cubic-bezier(.2,.84,.12,1);
+  --pc-transition-fast: cubic-bezier(.22,.61,.36,1);
 }
 
 html[data-channel-theme="command"] { --pc-route-accent:#c84951; --pc-route-accent-rgb:200,73,81; }
@@ -10,7 +15,7 @@ html[data-channel-theme="chronology"] { --pc-route-accent:#b29a68; --pc-route-ac
 html[data-channel-theme="intelligence"] { --pc-route-accent:#7393a0; --pc-route-accent-rgb:115,147,160; }
 html[data-channel-theme="archive"] { --pc-route-accent:#a85a52; --pc-route-accent-rgb:168,90,82; }
 
-.uac-shell-bar { box-shadow: inset 0 -1px rgba(var(--pc-route-accent-rgb),.28); transition: box-shadow .32s ease; }
+.uac-shell-bar { box-shadow: inset 0 -1px rgba(var(--pc-route-accent-rgb),.28); transition: box-shadow var(--pc-transition-out) var(--pc-transition-fast); }
 .uac-shell-quick a[aria-current="page"] { box-shadow: inset 0 -2px var(--pc-route-accent); }
 .uac-shell-quick a[aria-current="page"] i { color: var(--pc-route-accent); }
 .uac-shell-home i,.uac-shell-switch i { color: var(--pc-route-accent); transition: color .25s ease; }
@@ -35,7 +40,7 @@ html[data-channel-theme="archive"] { --pc-route-accent:#a85a52; --pc-route-accen
   background: #030506;
   transform: scaleY(.015);
   transform-origin: 50% 0;
-  transition: transform .18s cubic-bezier(.76,0,.24,1);
+  transition: transform var(--pc-transition-cover) cubic-bezier(.76,0,.24,1);
 }
 .pc-channel-transition::after {
   content: '';
@@ -46,12 +51,12 @@ html[data-channel-theme="archive"] { --pc-route-accent:#a85a52; --pc-route-accen
     linear-gradient(90deg, transparent 0 49.9%, rgba(255,255,255,.035) 50%, transparent 50.1%),
     repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.026) 3px 4px),
     radial-gradient(circle at 50% 50%, rgba(var(--pc-route-accent-rgb),.11), transparent 44%);
-  transition: opacity .15s ease;
+  transition: opacity var(--pc-transition-cover) var(--pc-transition-fast);
 }
 .pc-channel-transition.is-visible { visibility: visible; }
 .pc-channel-transition.is-covering::before { transform: scaleY(1); }
 .pc-channel-transition.is-covering::after { opacity: 1; }
-.pc-channel-transition.is-revealing::before { transform: scaleY(0); transform-origin: 50% 100%; transition-duration: .3s; }
+.pc-channel-transition.is-revealing::before { transform: scaleY(0); transform-origin: 50% 100%; transition-duration: var(--pc-transition-in); }
 .pc-channel-transition.is-revealing::after { opacity: 0; }
 .pc-channel-transition-panel {
   position: relative;
@@ -63,7 +68,7 @@ html[data-channel-theme="archive"] { --pc-route-accent:#a85a52; --pc-route-accen
   box-shadow: 0 24px 80px rgba(0,0,0,.72), inset 0 0 38px rgba(var(--pc-route-accent-rgb),.04);
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity .12s ease, transform .16s ease;
+  transition: opacity var(--pc-transition-cover) var(--pc-transition-fast), transform var(--pc-transition-cover) var(--pc-transition-fast);
 }
 .pc-channel-transition.is-covering .pc-channel-transition-panel { opacity: 1; transform: none; }
 .pc-channel-transition.is-revealing .pc-channel-transition-panel { opacity: 0; transform: translateY(-6px); }
@@ -75,15 +80,15 @@ html[data-channel-theme="archive"] { --pc-route-accent:#a85a52; --pc-route-accen
 .pc-channel-transition-copy strong { display:block; margin-top:8px; color:#e5e8e6; font:700 clamp(23px,4vw,34px)/1.1 'Malgun Gothic','Apple SD Gothic Neo',sans-serif; letter-spacing:-.04em; }
 .pc-channel-transition-copy span { display:block; margin-top:13px; color:#747d7a; font-size:8px; letter-spacing:.11em; }
 .pc-channel-transition-meter { --pc-transition-progress:12%; position:relative; height:2px; margin-top:22px; background:#1a1f20; }
-.pc-channel-transition-meter i { display:block; width:var(--pc-transition-progress); height:100%; background:var(--pc-transition-accent); box-shadow:0 0 12px color-mix(in srgb,var(--pc-transition-accent) 72%,transparent); transition:width .18s ease; }
+.pc-channel-transition-meter i { display:block; width:var(--pc-transition-progress); height:100%; background:var(--pc-transition-accent); box-shadow:0 0 12px color-mix(in srgb,var(--pc-transition-accent) 72%,transparent); transition: width .25s var(--pc-transition-fast); }
 .pc-channel-transition-grid { position:absolute; z-index:1; inset:0; opacity:.16; background:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px); background-size:48px 48px; }
 html.pc-channel-transition-active body { cursor: progress; }
 html.pc-channel-transition-active .uac-shell-bar,html.pc-channel-transition-active .uac-shell-content { pointer-events:none; }
 html.pc5152cf-archive-return #loader { display:flex !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important; }
 html.pc5152cf-archive-return #loader.hide { opacity:0 !important; visibility:hidden !important; pointer-events:none !important; }
 
-.content-page.pc-screen-exiting { animation:pc-screen-exit .2s cubic-bezier(.4,0,1,1) both !important; }
-.content-page.pc-screen-entering { animation:pc-screen-enter .38s cubic-bezier(.16,.84,.24,1) both !important; }
+.content-page.pc-screen-exiting { animation:pc-screen-exit .34s cubic-bezier(.4,0,1,1) both !important; }
+.content-page.pc-screen-entering { animation:pc-screen-enter .76s var(--pc-transition-ease) both !important; }
 .content-page[data-pc-exit="signal-collapse"] { animation-name:pc-map-exit !important; }
 .content-page[data-pc-exit="timeline-park"] { animation-name:pc-history-exit !important; }
 .content-page[data-pc-exit="file-seal"] { animation-name:pc-intel-exit !important; }
@@ -94,11 +99,11 @@ html.pc5152cf-archive-return #loader.hide { opacity:0 !important; visibility:hid
 .content-page[data-pc-enter="vault-unseal"] { animation-name:pc-archive-enter !important; }
 
 /* Staged assembly inside each channel. */
-.pc-screen-entering :is(.pc5152ca1-home-kicker,.pc-map-room-head,.pc5130-legacy-history>.label,.pc-faction-analysis-intro,.pc-archive-index-head) { animation:pc-component-rise .38s .04s both; }
-.pc-screen-entering :is(.pc5152ca1-home-title,.pc-map-mode-switch,.pc5152bc-world-hub,.pc-faction-index-group:first-child,.pc-archive-format-group:first-of-type) { animation:pc-component-rise .4s .1s both; }
-.pc-screen-entering :is(.pc-terminal-system-strip,.pc-map-view,.overview-stats,.pc-faction-index-group:nth-child(2),.pc-archive-format-group:nth-of-type(2)) { animation:pc-component-rise .42s .17s both; }
-.pc-screen-entering :is(.pc-terminal-dashboard-grid,.timeline-list,.pc-faction-relation-list,.pc-archive-row-list) { animation:pc-component-rise .44s .23s both; }
-.pc-screen-entering :is(.uac-terminal-menu,.pc-terminal-recent) { animation:pc-component-rise .45s .28s both; }
+.pc-screen-entering :is(.pc5152ca1-home-kicker,.pc-map-room-head,.pc5130-legacy-history>.label,.pc-faction-analysis-intro,.pc-archive-index-head) { animation:pc-component-rise .56s .1s both; }
+.pc-screen-entering :is(.pc5152ca1-home-title,.pc-map-mode-switch,.pc5152bc-world-hub,.pc-faction-index-group:first-child,.pc-archive-format-group:first-of-type) { animation:pc-component-rise .64s .18s both; }
+.pc-screen-entering :is(.pc-terminal-system-strip,.pc-map-view,.overview-stats,.pc-faction-index-group:nth-child(2),.pc-archive-format-group:nth-of-type(2)) { animation:pc-component-rise .7s .26s both; }
+.pc-screen-entering :is(.pc-terminal-dashboard-grid,.timeline-list,.pc-faction-relation-list,.pc-archive-row-list) { animation:pc-component-rise .76s .34s both; }
+.pc-screen-entering :is(.uac-terminal-menu,.pc-terminal-recent) { animation:pc-component-rise .84s .42s both; }
 
 /* Channel-specific identity without breaking legacy document ownership. */
 #map-room { --pc-local-accent:#6e9b91; background:radial-gradient(circle at 70% 10%,rgba(72,119,109,.09),transparent 32%),#070a0a; }
@@ -128,8 +133,8 @@ html.pc5152cf-archive-return #loader.hide { opacity:0 !important; visibility:hid
   .pc-channel-transition-panel { width:calc(100vw - 28px); padding:21px 20px; }
   .pc-channel-transition-copy strong { font-size:24px; }
   .pc-channel-transition-grid { background-size:32px 32px; }
-  .content-page.pc-screen-exiting { animation-duration:.15s !important; }
-  .content-page.pc-screen-entering { animation-duration:.3s !important; }
+  .content-page.pc-screen-exiting { animation-duration:.3s !important; }
+  .content-page.pc-screen-entering { animation-duration:.62s !important; }
 }
 
 @media (prefers-reduced-motion:reduce) {

@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — channel identity and transition presets.
+// Project Curse 5.34.0 — channel identity and transition presets.
 (function(root){
   'use strict';
 
@@ -37,8 +37,12 @@
   };
 
   root.ProjectCurseTransitions=freeze({
-    version:'1.0.0',
-    timings:{desktop:{exit:190,cover:170,enter:390},mobile:{exit:140,cover:130,enter:300},reduced:{exit:0,cover:45,enter:70}},
+    version:'1.1.1',
+    timings:{
+      desktop:{exit:280,cover:220,enter:620},
+      mobile:{exit:230,cover:200,enter:470},
+      reduced:{exit:0,cover:70,enter:130}
+    },
     screens,
     get(id){return screens[id]||screens['terminal-home'];}
   });

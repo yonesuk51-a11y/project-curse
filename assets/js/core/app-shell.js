@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — permanent terminal shell, route and channel handoff owner.
+// Project Curse 5.34.0 — route handoff input parity and accessible shell navigation.
 (function(){
   'use strict';
 
@@ -11,14 +11,38 @@
     const homeControl=document.querySelector('.uac-shell-home[data-uac-route="terminal-home"]');
     const shellBar=document.querySelector('.uac-shell-bar');
     const switchControl=document.querySelector('.uac-shell-switch');
+    const quickNav=document.getElementById('uacQuickNav');
     const currentLabel=document.querySelector('[data-uac-current-label]');
     const pages=Array.from(document.querySelectorAll('.content-page[id]'));
     const screenIds=new Set(pages.map(page=>page.id));
     if(!content||!homeControl||!pages.length) return;
 
+    const quickNavItems=()=>{
+      if(!quickNav) return [];
+      return Array.from(quickNav.querySelectorAll('[data-uac-route]'));
+    };
+
     let currentRoute='terminal-home';
     let transitioning=false;
     let queuedRequest=null;
+    let liveRouteLabel='';
+    let quickNavOpen=false;
+
+    function playMenuSound(eventName){
+      try{
+        return window.ProjectCurseAudioControl?.play?.(eventName);
+      }catch(_error){
+        return false;
+      }
+    }
+
+    const routeAnnouncer=document.createElement('p');
+    routeAnnouncer.className='pc-a11y-announcer';
+    routeAnnouncer.setAttribute('aria-live','polite');
+    routeAnnouncer.setAttribute('aria-atomic','true');
+    routeAnnouncer.setAttribute('data-uac-route-announcer','');
+    routeAnnouncer.textContent='단말기 진입 완료.';
+    document.body?.appendChild(routeAnnouncer);
 
     function normalize(target){
       if(target==='faction-relation') return 'faction-info';
@@ -31,9 +55,39 @@
       return buildScreen?.label||target;
     }
 
+    function safeFocus(target){
+      if(!target||typeof target.focus!=='function') return false;
+      try{target.focus({preventScroll:true});}
+      catch(_error){
+        try{target.focus();}
+        catch(__error){return false;}
+      }
+      return true;
+    }
+
     function closeQuickNav(){
+      if(!quickNavOpen) return;
+      quickNavOpen=false;
       shellBar?.classList.remove('is-quick-open');
-      switchControl?.setAttribute('aria-expanded','false');
+      if(switchControl) switchControl.setAttribute('aria-expanded','false');
+      if(!transitioning && document.activeElement && quickNavItems().includes(document.activeElement)){
+        safeFocus(switchControl);
+      }
+      playMenuSound('menu.close');
+    }
+
+    function openQuickNav(){
+      if(quickNavOpen) return;
+      quickNavOpen=true;
+      shellBar?.classList.add('is-quick-open');
+      switchControl?.setAttribute('aria-expanded','true');
+      const control=quickNavItems().find(item=>item.dataset.uacRoute===currentRoute)||quickNavItems()[0];
+      if(control) safeFocus(control);
+      playMenuSound('menu.open');
+    }
+
+    function setQuickNav(open){
+      open ? openQuickNav() : closeQuickNav();
     }
 
     function updateChrome(target){
@@ -46,6 +100,12 @@
       homeControl.hidden=target==='terminal-home';
       homeControl.setAttribute('aria-hidden',target==='terminal-home'?'true':'false');
       closeQuickNav();
+
+      const nextLabel=screenLabel(target);
+      if(liveRouteLabel!==nextLabel){
+        liveRouteLabel=nextLabel;
+        routeAnnouncer.textContent=`${nextLabel} 화면으로 이동했습니다.`;
+      }
     }
 
     function writeHistory(target,mode){
@@ -80,10 +140,10 @@
 
     function focusScreen(target){
       const page=document.getElementById(target);
-      const heading=page?.querySelector('h1,h2,[data-screen-heading]');
-      if(!heading) return;
+      if(!page) return;
+      const heading=page.querySelector('h1,h2,[data-screen-heading]')||page;
       if(!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex','-1');
-      try{heading.focus({preventScroll:true});}catch(_error){}
+      safeFocus(heading);
     }
 
     function queue(target,options){
@@ -139,12 +199,21 @@
       window.setTimeout(()=>control.classList.remove('uac-control-pulse'),220);
     }
 
+    function focusQuickNavByOffset(currentIndex,offset){
+      const list=quickNavItems();
+      if(!list.length) return;
+      const next=list[(currentIndex+offset+list.length)%list.length];
+      safeFocus(next);
+    }
+
     document.addEventListener('click',event=>{
       const routeControl=event.target.closest?.('[data-uac-route]');
       if(!routeControl) return;
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
+      const nextRoute=normalize(routeControl.dataset.uacRoute);
+      if(nextRoute!==currentRoute) playMenuSound('menu.select');
       pulse(routeControl);
       const operation=routeControl.dataset.uacMapOperation;
       const incident=routeControl.dataset.uacMapIncident;
@@ -163,13 +232,34 @@
 
     switchControl?.addEventListener('click',event=>{
       event.preventDefault();
-      const open=!shellBar?.classList.contains('is-quick-open');
-      shellBar?.classList.toggle('is-quick-open',open);
-      switchControl.setAttribute('aria-expanded',open?'true':'false');
+      setQuickNav(!quickNavOpen);
     });
 
+    document.addEventListener('click',event=>{
+      if(!quickNavOpen) return;
+      if(event.target.closest?.('.uac-shell-switch')) return;
+      if(!event.target.closest?.('.uac-shell')){ closeQuickNav(); return; }
+      const navHit=event.target.closest?.('[data-uac-route],[data-uac-audio-toggle]');
+      if(!navHit) closeQuickNav();
+    },true);
+
     document.addEventListener('keydown',event=>{
-      if(event.key==='Escape') closeQuickNav();
+      if(event.key==='Escape'){
+        if(quickNavOpen){closeQuickNav();safeFocus(switchControl);return;}
+      }
+
+      if(!quickNav) return;
+      if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight'&&event.key!=='ArrowUp'&&event.key!=='ArrowDown'&&event.key!=='Home'&&event.key!=='End') return;
+      const inQuickNav=event.target?.closest?.('[data-uac-route]');
+      if(!inQuickNav) return;
+      const list=quickNavItems();
+      const index=list.indexOf(inQuickNav);
+      if(index<0) return;
+      event.preventDefault();
+      if(event.key==='Home') return safeFocus(list[0]);
+      if(event.key==='End') return safeFocus(list[list.length-1]);
+      if(event.key==='ArrowRight'||event.key==='ArrowDown') return focusQuickNavByOffset(index,1);
+      return focusQuickNavByOffset(index,-1);
     });
 
     document.addEventListener('pointerdown',event=>{

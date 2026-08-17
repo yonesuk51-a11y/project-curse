@@ -1,9 +1,10 @@
-// Project Curse 5.33.0 — cold boot, session restore and archive return sequence.
+// Project Curse 5.34.0 — cold boot, session restore and archive return sequence.
 (function(root){
   'use strict';
 
   const BUILD=()=>root.ProjectCurseBuild?.version||'5.33.0';
   const SESSION_KEY=()=>`pc_terminal_boot_${BUILD().replace(/[^a-z0-9]+/gi,'_')}`;
+  const MIN_VISIBLE_MS=4200;
   const MODES={
     cold:{
       title:'로컬 단말기 기동',kicker:'U.A.C 폐쇄 기록 / PC-03',duration:7800,finishDelay:700,skippable:true,
@@ -26,7 +27,7 @@
       starts:[500,1550,2600],ends:[1250,2300,3350]
     },
     returning:{
-      title:'기록 언마운트',kicker:'ARCHIVE RETURN / PC-03',duration:1050,finishDelay:120,skippable:false,
+      title:'기록 언마운트',kicker:'ARCHIVE RETURN / PC-03',duration:3600,finishDelay:300,skippable:false,
       lines:[
         ['RECORD','활성 기록 채널 분리','UNMOUNTED'],
         ['ARCHIVE','공개 색인으로 복귀','READY']
@@ -34,7 +35,7 @@
       starts:[180,520],ends:[430,790]
     },
     reduced:{
-      title:'세션 연결',kicker:'LOCAL ACCESS / PC-03',duration:3000,finishDelay:120,skippable:false,
+      title:'세션 연결',kicker:'LOCAL ACCESS / PC-03',duration:3400,finishDelay:160,skippable:false,
       lines:[['ACCESS','로컬 단말 연결','READY']],starts:[360],ends:[1800]
     },
     skip:{title:'접근 승인',kicker:'LOCAL ACCESS / PC-03',duration:0,finishDelay:0,skippable:false,lines:[['ACCESS','로컬 단말 연결','READY']],starts:[0],ends:[0]}
@@ -77,6 +78,7 @@
     const finish=typeof options.finish==='function'?options.finish:()=>{};
     const mode=resolveMode();
     const config=MODES[mode];
+    const duration=mode==='skip'?0:Math.max(config.duration,MIN_VISIBLE_MS);
     const startedAt=performance.now();
     const progressFloor=mode==='cold'?2:8;
     let completed=false;
@@ -126,8 +128,8 @@
     function complete({skipped=false}={}){
       if(completed) return;
       const elapsed=performance.now()-startedAt;
-      if(!skipped&&elapsed<config.duration-12){
-        timers.push(root.setTimeout(()=>complete(),config.duration-elapsed));
+      if(!skipped&&elapsed<duration-12){
+        timers.push(root.setTimeout(()=>complete(),duration-elapsed));
         return;
       }
       completed=true;
@@ -142,7 +144,7 @@
       remember();
       if(skip) skip.disabled=true;
       if(footer) footer.textContent=`BUILD ${BUILD()} / ACCESS GRANTED`;
-      document.dispatchEvent(new CustomEvent('projectcurse:boot-complete',{detail:{mode,skipped,duration:config.duration}}));
+      document.dispatchEvent(new CustomEvent('projectcurse:boot-complete',{detail:{mode,skipped,duration}}));
       root.setTimeout(finish,skipped?0:config.finishDelay);
     }
 
@@ -150,13 +152,13 @@
     if(config.duration>0){
       const interval=root.setInterval(()=>{
         if(completed) return;
-        const elapsed=Math.min(config.duration,performance.now()-startedAt);
-        const ratio=elapsed/config.duration;
+        const elapsed=Math.min(duration,performance.now()-startedAt);
+        const ratio=elapsed/duration;
         const eased=1-Math.pow(1-ratio,1.45);
         setProgress(progressFloor+eased*(94-progressFloor));
       },80);
       timers.push(interval);
-      const holdAt=Math.max(0,config.duration-1150);
+      const holdAt=Math.max(0,duration-1150);
       timers.push(root.setTimeout(()=>{
         if(footer&&!completed) footer.textContent=`BUILD ${BUILD()} / FINAL ACCESS HOLD`;
         setProgress(94);
@@ -178,7 +180,7 @@
         if(state) state.textContent=row[2];
       },config.ends[index]||0));
     });
-    timers.push(root.setTimeout(()=>complete(),config.duration));
+    timers.push(root.setTimeout(()=>complete(),duration));
 
     if(config.skippable&&skip){
       timers.push(root.setTimeout(()=>{skip.disabled=false;},5600));

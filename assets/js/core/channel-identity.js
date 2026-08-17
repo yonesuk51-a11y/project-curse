@@ -2,6 +2,8 @@
 (function(root){
   'use strict';
 
+  const preferenceFocusable='a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"]), [role="button"], [contenteditable="true"]';
+
   const ready=callback=>document.readyState==='loading'
     ? document.addEventListener('DOMContentLoaded',callback,{once:true})
     : callback();
@@ -29,6 +31,34 @@
       }catch(_error){
         return Object.assign({},data.defaults);
       }
+    }
+
+    function safeFocus(target){
+      if(!target||typeof target.focus!=='function') return false;
+      try{target.focus({preventScroll:true});}
+      catch(_error){
+        try{target.focus();}
+        catch(__error){return false;}
+      }
+      return true;
+    }
+
+    function focusablesForPanel(){
+      if(!panel) return [];
+      return Array.from(panel.querySelectorAll(preferenceFocusable)).filter(node=>{
+        if(node.closest?.('[hidden]')) return false;
+        return node.offsetParent!==null || node===document.activeElement || node.getClientRects().length>0 || node.tabIndex>=0;
+      });
+    }
+
+    function focusInitialPreference(){
+      if(!panel) return;
+      const dialog=panel.querySelector('.pc-preference-dialog');
+      const active=panel.querySelector('[data-pc-preference].is-active');
+      const firstGroup=panel.querySelector('[data-pc-preference]');
+      if(active) return safeFocus(active);
+      if(firstGroup) return safeFocus(firstGroup);
+      if(dialog) return safeFocus(dialog);
     }
 
     function savePreferences(){
@@ -275,8 +305,10 @@
         const scroll=document.createElement('div');scroll.className='pc-preference-scroll';
         Array.from(dialog.children).filter(node=>node!==dialog.firstElementChild&&node!==footer).forEach(node=>scroll.appendChild(node));
         dialog.insertBefore(scroll,footer);
+        dialog.setAttribute('tabindex','-1');
       }
       document.body.appendChild(panel);
+      panel.setAttribute('tabindex','-1');
       panel.addEventListener('click',event=>{
         const preference=event.target.closest?.('[data-pc-preference]');
         if(preference) setPreference(preference.dataset.pcPreference,preference.dataset.pcValue);
@@ -288,6 +320,14 @@
       renderTelemetry();
       renderQuality();
       renderOverview();
+
+      document.addEventListener('mousedown',event=>{
+        if(!panel||panel.hidden) return;
+        if(event.target.closest?.('[data-pc-preferences-open]')) return;
+        if(event.target.closest?.('.pc-preference-panel')) return;
+        if(panel.hidden) return;
+        closePreferences();
+      },true);
     }
 
     function openPreferences(trigger){
@@ -301,7 +341,7 @@
       renderQuality();
       renderOverview();
       requestAnimationFrame(()=>panel.classList.add('is-open'));
-      panel.querySelector('button')?.focus({preventScroll:true});
+      requestAnimationFrame(()=>{focusInitialPreference();});
       root.ProjectCurseAudioControl?.play?.('open',{volume:.55});
     }
 
@@ -309,7 +349,7 @@
       if(!panel||panel.hidden) return;
       panel.classList.remove('is-open');
       document.body.classList.remove('pc-preferences-open');
-      setTimeout(()=>{panel.hidden=true;lastTrigger?.focus?.({preventScroll:true});},180);
+      setTimeout(()=>{panel.hidden=true;safeFocus(lastTrigger);},180);
     }
 
     function diagnostics(){
@@ -338,10 +378,12 @@
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!panel?.hidden) closePreferences();
       if(event.key==='Tab'&&!panel?.hidden){
-        const focusable=Array.from(panel.querySelectorAll('button:not([disabled])'));
+        const focusable=focusablesForPanel();
+        if(!focusable.length){ event.preventDefault(); return; }
         const first=focusable[0],last=focusable.at(-1);
-        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
-        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();safeFocus(last);}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();safeFocus(first);}
+        else if(!focusable.includes(document.activeElement)){event.preventDefault();safeFocus(first);}
       }
     });
     reduceMotion.addEventListener?.('change',()=>applyPreferences());
