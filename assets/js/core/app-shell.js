@@ -65,7 +65,7 @@
       return true;
     }
 
-    function closeQuickNav(){
+    function closeQuickNav({playSound}= {}){
       if(!quickNavOpen) return;
       quickNavOpen=false;
       shellBar?.classList.remove('is-quick-open');
@@ -73,7 +73,7 @@
       if(!transitioning && document.activeElement && quickNavItems().includes(document.activeElement)){
         safeFocus(switchControl);
       }
-      playMenuSound('menu.close');
+      if(playSound!==false) playMenuSound('menu.close');
     }
 
     function openQuickNav(){
@@ -99,7 +99,7 @@
       });
       homeControl.hidden=target==='terminal-home';
       homeControl.setAttribute('aria-hidden',target==='terminal-home'?'true':'false');
-      closeQuickNav();
+      closeQuickNav({playSound:false});
 
       const nextLabel=screenLabel(target);
       if(liveRouteLabel!==nextLabel){
