@@ -1,4 +1,4 @@
-// Project Curse 5.28.0 — reactive field consequences, route focus, and operation trace room.
+// Project Curse 5.29.0 — reactive field consequences, route focus, and operation trace room.
 (function(root){
   'use strict';
 

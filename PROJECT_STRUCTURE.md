@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.28.0
+# Project Curse Structure — 5.29.0
 
 ## 활성 소유권
 
@@ -9,6 +9,8 @@
 | 조직 정사·관계·우시노다 계층 | `assets/js/data/canon-registry.js` |
 | 공개 기록 목록·영상/문서 분류 | `assets/js/data/archive-registry.js` |
 | 시각 증거 등급·출처·원본 비교 관계 | `assets/js/data/visual-evidence-data.js` |
+| 반응형 이미지 원본 치수·파생본 후보 | `assets/js/data/media-manifest.js` |
+| 반응형 선택·현상 상태·사전 준비·진단 | `assets/js/core/adaptive-media.js` + `assets/css/adaptive-media.css` |
 | 대흑림·데드존·순례 규칙·부서진 왕관 문서 | `assets/js/data/field-dossier-data.js` |
 | 홈 실시간 경보·최근 수신 구성 | `assets/js/data/home-intelligence-data.js` |
 | 루트 상단바·단말 허브·화면 이동 | `assets/css/app-shell.css` + `assets/css/terminal-foundation.css` + `assets/js/core/app-shell.js` |
@@ -50,7 +52,7 @@
 
 ## 데이터 흐름
 
-`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `visual-evidence-data.js`가 기록 이미지의 원본·보정·복원·대조 대기 등급과 실제 비교 관계를 선언한다. `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말, 그리고 앞선 선택에 반응하는 후속 변형을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 순례 저장소는 선택 조건을 해석해 후속 현장과 결말을 결정하고, 판정 보관소는 결말이 확정된 순간의 선택과 측정값을 별도 스냅샷으로 저장해 같은 해석을 재현한다. 문서 렌더러는 시각 증거 데이터로 각 이미지의 공개 등급과 비교 화면을 만들고 영상 재생 엔진은 이미지 장면에서 같은 확대 화면을 호출한다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 단계별 작전지도와 홈 수신 신호를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
+`build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, `audio-manifest.js`, `transition-manifest.js`, `incident-registry.js`, 정사·화면 데이터가 로드된다. `archive-document-data.js` 뒤의 `visual-evidence-data.js`가 기록 이미지의 원본·보정·복원·대조 대기 등급과 실제 비교 관계를 선언하고, `media-manifest.js`는 보존 원본과 40개 반응형 WebP 후보의 관계를 선언한다. `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말, 그리고 앞선 선택에 반응하는 후속 변형을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·적응형 미디어·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 미디어 런타임은 일반 화면에는 반응형 후보를 적용하고 증거 확대에서는 원본을 요청하며, 전환 컨트롤러와 영상 엔진에 다음 프레임 사전 준비를 제공한다. 순례 저장소는 선택 조건을 해석해 후속 현장과 결말을 결정하고, 판정 보관소는 결말이 확정된 순간의 선택과 측정값을 별도 스냅샷으로 저장해 같은 해석을 재현한다. 문서 렌더러는 시각 증거 데이터로 각 이미지의 공개 등급과 비교 화면을 만들고 영상 재생 엔진은 이미지 장면에서 같은 확대 화면을 호출한다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 단계별 작전지도와 홈 수신 신호를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·미디어 준비·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
 
 활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 

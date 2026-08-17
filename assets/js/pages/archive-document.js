@@ -1,4 +1,4 @@
-// Project Curse 5.28.0 — shared archive document, provenance console, evidence comparison, and verdict renderer.
+// Project Curse 5.29.0 — adaptive archive document, provenance console, evidence comparison, and verdict renderer.
 (function(){
   'use strict';
 
@@ -12,6 +12,7 @@
   let evidenceViewer=null;
   let evidenceIndex=0;
   let evidenceTrigger=null;
+  let evidenceRenderToken=0;
 
   const el=(tag,className,text)=>{
     const node=document.createElement(tag);
@@ -62,7 +63,7 @@
     if(!figureData?.src) return;
     const figure=el('figure',`archive-doc-figure ${className}`.trim());
     const image=el('img');
-    image.src=imagePath(figureData.src,embedded);
+    const requested=imagePath(figureData.src,embedded);
     image.alt=figureData.alt||'';
     const isHero=className.split(/\s+/).includes('archive-doc-hero');
     image.loading=isHero?'eager':'lazy';
@@ -71,7 +72,7 @@
     const resolver=window.ProjectCurseVisualEvidence;
     if(resolver&&evidenceContext?.items){
       const evidence=resolver.resolve(figureData.src,{recordId:evidenceContext.recordId,sequence:evidenceContext.items.length+1,caption:figureData.caption,alt:figureData.alt});
-      const item={...evidence,displaySrc:image.src,comparison:evidence.comparison?{...evidence.comparison,displaySrc:imagePath(evidence.comparison.src,embedded)}:null};
+      const item={...evidence,displaySrc:requested,comparison:evidence.comparison?{...evidence.comparison,displaySrc:imagePath(evidence.comparison.src,embedded)}:null};
       const index=evidenceContext.items.push(item)-1;
       figure.dataset.evidenceClass=item.className;
       figure.dataset.evidenceIndex=String(index);
@@ -83,6 +84,8 @@
     figure.append(image);
     if(figureData.caption) figure.append(rich('figcaption','',figureData.caption));
     target.append(figure);
+    if(window.ProjectCurseMedia) window.ProjectCurseMedia.apply(image,requested,{mode:isHero?'hero':'display',eager:isHero,sizes:isHero?'(max-width: 760px) 94vw, 1100px':'(max-width: 760px) 94vw, 760px'});
+    else image.src=requested;
   }
 
   function evidenceConsole(items){
@@ -94,13 +97,15 @@
     const counts=Object.fromEntries(Object.keys(window.ProjectCurseVisualEvidence?.classes||{}).map(key=>[key,items.filter(item=>item.className===key).length]));
     [['ORIGINAL','원본'],['STABILIZED','보정본'],['RECONSTRUCTED','복원본'],['UNVERIFIED','대조 대기']].forEach(([key,label])=>{const cell=el('span');cell.append(el('small','',label),el('b','',String(counts[key]||0).padStart(2,'0')));stats.append(cell);});
     const filters=el('div','archive-evidence-filters');
-    [['ALL','전체'],['ORIGINAL','원본'],['RECONSTRUCTED','복원 추정'],['UNVERIFIED','대조 대기']].forEach(([key,label],index)=>{const button=el('button',index===0?'is-active':'',label);button.type='button';button.dataset.evidenceFilter=key;button.setAttribute('aria-pressed',index===0?'true':'false');filters.append(button);});
+    [['ALL','전체'],['ORIGINAL','원본'],['STABILIZED','보정본'],['RECONSTRUCTED','복원 추정'],['UNVERIFIED','대조 대기']].forEach(([key,label],index)=>{const button=el('button',index===0?'is-active':'',label);button.type='button';button.dataset.evidenceFilter=key;button.setAttribute('aria-pressed',index===0?'true':'false');filters.append(button);});
     const list=el('div','archive-evidence-list');
     items.forEach((item,index)=>{
       const card=el('button',`archive-evidence-card is-${item.classInfo.tone}`);card.type='button';card.dataset.visualEvidenceOpen=String(index);card.dataset.evidenceClass=item.className;
-      const thumb=el('img');thumb.src=item.displaySrc;thumb.alt='';thumb.loading='lazy';
+      const thumb=el('img');thumb.alt='';thumb.loading='lazy';
       const copy=el('span');copy.append(el('small','',`${String(index+1).padStart(2,'0')} / ${item.assetId}`),el('b','',item.caption||item.alt||'캡션 없는 시각 기록'),el('em','',item.comparison?'SOURCE COMPARISON AVAILABLE':item.originalState==='missing'?'ORIGINAL NOT REGISTERED':item.classInfo.label));
       card.append(thumb,copy);list.append(card);
+      if(window.ProjectCurseMedia) window.ProjectCurseMedia.apply(thumb,item.displaySrc,{mode:'thumbnail',sizes:'(max-width: 760px) 78px, 92px'});
+      else thumb.src=item.displaySrc;
     });
     filters.addEventListener('click',event=>{
       const button=event.target.closest?.('[data-evidence-filter]');if(!button) return;
@@ -120,21 +125,40 @@
     viewer.append(head,body);document.body.append(viewer);evidenceViewer=viewer;return viewer;
   }
 
+  function loadEvidenceImage(image,src,alt){
+    image.alt=alt||'';
+    return new Promise(resolve=>{
+      let settled=false;const finish=value=>{if(settled)return;settled=true;resolve(value);};
+      image.addEventListener('projectcurse:media-ready',()=>finish(true),{once:true});
+      image.addEventListener('load',()=>{if(!window.ProjectCurseMedia)finish(true);},{once:true});
+      image.addEventListener('error',()=>finish(false),{once:true});
+      if(window.ProjectCurseMedia) window.ProjectCurseMedia.apply(image,src,{mode:'original',eager:true,sizes:'100vw'});
+      else image.src=src;
+    });
+  }
+
   function renderEvidenceViewer(){
     const item=currentEvidenceItems[evidenceIndex];if(!item) return;
+    const renderToken=++evidenceRenderToken;
     const viewer=ensureEvidenceViewer();const headCopy=viewer.querySelector('.pc-evidence-viewer-head>span');const stage=viewer.querySelector('.pc-evidence-stage');const meta=viewer.querySelector('.pc-evidence-meta');
     headCopy.replaceChildren(el('small','',`${item.recordId} / EVIDENCE ${String(evidenceIndex+1).padStart(2,'0')}`),el('b','',`${item.className} · ${item.assetId}`));
-    stage.replaceChildren();
+    stage.replaceChildren();stage.dataset.mediaState='loading';
+    const loadState=el('div','pc-evidence-load-state','FRAME REQUEST / WAITING');loadState.setAttribute('role','status');loadState.setAttribute('aria-live','polite');
+    const pending=[];
     if(item.comparison){
       const compare=el('div','pc-evidence-compare');compare.style.setProperty('--evidence-split','50%');
-      const base=el('div');const baseImage=el('img');baseImage.src=item.comparison.displaySrc;baseImage.alt=`${item.comparison.label} 비교 이미지`;base.append(baseImage);
-      const current=el('div');const currentImage=el('img');currentImage.src=item.displaySrc;currentImage.alt=item.alt||item.caption;current.append(currentImage);
+      const base=el('div');const baseImage=el('img');base.append(baseImage);
+      const current=el('div');const currentImage=el('img');current.append(currentImage);
       const leftLabel=el('label','is-left',item.className);const rightLabel=el('label','is-right',item.comparison.label);
-      const range=el('input','pc-evidence-range');range.type='range';range.min='0';range.max='100';range.value='50';range.setAttribute('aria-label','두 이미지 비교 경계');range.addEventListener('input',()=>compare.style.setProperty('--evidence-split',`${range.value}%`));
+      const range=el('input','pc-evidence-range');range.type='range';range.min='0';range.max='100';range.value='50';range.disabled=true;range.setAttribute('aria-label','두 이미지 비교 경계');range.addEventListener('input',()=>compare.style.setProperty('--evidence-split',`${range.value}%`));
       compare.append(base,current,leftLabel,rightLabel,range);stage.append(compare);
+      pending.push(loadEvidenceImage(baseImage,item.comparison.displaySrc,`${item.comparison.label} 비교 이미지`),loadEvidenceImage(currentImage,item.displaySrc,item.alt||item.caption));
+      Promise.all(pending).then(results=>{if(renderToken!==evidenceRenderToken)return;const complete=results.every(Boolean);stage.dataset.mediaState=complete?'ready':'error';range.disabled=!complete;loadState.textContent=complete?'2 / 2 FRAMES STABILIZED':'COMPARISON FRAME LOST';if(!complete){loadState.classList.add('is-error');const retry=el('button','','다시 요청');retry.type='button';retry.addEventListener('click',event=>{event.stopPropagation();renderEvidenceViewer();});loadState.append(retry);}});
     }else{
-      const single=el('div','pc-evidence-single');const image=el('img');image.src=item.displaySrc;image.alt=item.alt||item.caption;single.append(image);stage.append(single);
+      const single=el('div','pc-evidence-single');const image=el('img');single.append(image);stage.append(single);
+      loadEvidenceImage(image,item.displaySrc,item.alt||item.caption).then(complete=>{if(renderToken!==evidenceRenderToken)return;stage.dataset.mediaState=complete?'ready':'error';loadState.textContent=complete?'1 / 1 FRAME STABILIZED':'VISUAL DATA LOST';if(!complete){loadState.classList.add('is-error');const retry=el('button','','다시 요청');retry.type='button';retry.addEventListener('click',event=>{event.stopPropagation();renderEvidenceViewer();});loadState.append(retry);}});
     }
+    stage.append(loadState);
     meta.replaceChildren(el('small','',item.classInfo.description),el('h2','',item.caption||item.alt||'시각 기록'),el('p','',item.handling));
     const facts=el('dl');[['자산 ID',item.assetId],['분류',`${item.className} / ${item.classInfo.label}`],['출처',item.source],['시점',item.date],['무결성',item.integrity],['원본 상태',item.comparison?'비교 자료 연결됨':item.originalState==='missing'?'원본 미등록':item.originalState==='available'?'원본 계열 확인':'추가 대조 필요'],['관계',item.comparison?.relationship||'단일 자산']].forEach(([term,value])=>{const row=el('div');row.append(el('dt','',term),el('dd','',value));facts.append(row);});
     const warning=el('div',`pc-evidence-warning${item.comparison||item.className==='ORIGINAL'?' is-available':''}`,item.className==='RECONSTRUCTED'&&!item.comparison?'이 이미지는 현존 원본이 아니다. 실제 원본이 확보되기 전까지 기록의 시각적 참고 자료로만 사용한다.':item.comparison?'비교 경계를 움직여 두 사본의 크롭·색상·정보 손실을 직접 대조할 수 있다.':'원본 계보가 완전히 확인되기 전에는 이 이미지를 재구성이나 보정의 기준본으로 사용하지 않는다.');
@@ -151,7 +175,7 @@
 
   function closeEvidence({restoreFocus=true}={}){
     if(!evidenceViewer||evidenceViewer.hidden) return false;
-    evidenceViewer.hidden=true;document.body.classList.remove('pc-evidence-open');document.querySelector('.pc-internal-document-shell[aria-hidden="true"]')?.removeAttribute('aria-hidden');window.ProjectCurseAudioControl?.play?.('evidence.close');
+    evidenceRenderToken++;evidenceViewer.hidden=true;document.body.classList.remove('pc-evidence-open');document.querySelector('.pc-internal-document-shell[aria-hidden="true"]')?.removeAttribute('aria-hidden');window.ProjectCurseAudioControl?.play?.('evidence.close');
     if(restoreFocus&&evidenceTrigger instanceof HTMLElement&&document.contains(evidenceTrigger)) evidenceTrigger.focus({preventScroll:true});evidenceTrigger=null;return true;
   }
 

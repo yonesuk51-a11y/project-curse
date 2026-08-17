@@ -1,29 +1,27 @@
 # Future Patch Pointer
 
-Current baseline: `5.28.0 Visual Evidence Archive`
+Current baseline: `5.29.0 Adaptive Media Pipeline`
 
 Completed in this baseline:
-`Provenance Console / Honest Reconstruction Labels / Source Comparison Viewer / Cinematic Evidence Handoff`
+`Responsive WebP / Original-on-demand / Media Recovery States / Route and Cinematic Warmup`
 
 Primary scope:
 
-- 내부 문서의 모든 대표·본문·그룹 이미지에 시각 증거 ID와 공개 등급 표시
-- ORIGINAL, STABILIZED, RECONSTRUCTED, UNVERIFIED 네 가지 출처 상태 구분
-- 문서별 원본·보정본·복원본·대조 대기 수량과 필터 가능한 증거 카드 패널 추가
-- 증거 카드와 본문 이미지에서 전체 화면 확대·출처 메타데이터·이전/다음 탐색 지원
-- 실제 사본 관계가 등록된 이미지에만 경계 슬라이더 기반 원본 비교 화면 제공
-- 대흑림·데드존 복원 추정본에 `원본 미등록` 상태와 사용 제한 경고 표시
-- 괴이 분류도 두 사본과 IMAGE-241HS 원본 계열·보호 기록 크롭을 실제 비교 관계로 연결
-- 영상형 기록의 이미지 장면에서 재생을 일시정지하고 같은 시각 증거 화면으로 진입
-- 기존 보호 본문을 수정하지 않고 런타임 진입점만 추가해 보호 해시 유지
-- 독립 문서 다섯 개에도 동일한 시각 증거 데이터와 스타일 로드
-- 확대·비교·필터·닫기용 의미 기반 효과음과 모바일 단일 열 비교 화면 추가
-- 새 원본 제공 시 기존 복원본을 덮어쓰지 않고 comparison 항목으로 연결하는 정책 문서화
+- 이미지 86개·16.57MiB를 측정하고 용량 집중도가 높은 PNG·JPEG 원본 20개를 최적화 대상으로 한정
+- 원본 파일은 변경하지 않고 480px·최대 960px WebP 파생본 40개를 별도 `responsive/` 계층에 추가
+- 일반 문서·증거 카드·영상 기록에서 `srcset`과 `sizes`로 화면 폭에 맞는 파생본 선택
+- 증거 확대와 원본 비교 화면에서만 보존 원본을 요청하는 original-on-demand 경로 적용
+- 이미지 요청, 디코딩, 복구 완료, 손실 상태를 실제 load/decode 사건과 연결
+- 원본 비교 슬라이더를 두 프레임이 모두 준비될 때까지 비활성화하고 실패 시 재요청 제공
+- 다음 영상 이미지 사전 준비와 화면 전환 중 대표 프레임 준비를 공통 미디어 런타임으로 연결
+- 데이터 절약·2G·모션 감소 환경에서 가벼운 후보와 연출을 사용하는 적응 정책 추가
+- 적용 수, 준비 성공, 실패, 전송·디코딩 바이트를 확인할 수 있는 로컬 진단 API 추가
+- 독립 문서 다섯 개에도 동일한 미디어 매니페스트·런타임·복구 스타일 적용
 
 Next planned pass:
 
-- 신규 PNG의 WebP 파생본과 데스크톱·모바일 해상도별 `srcset` 최적화
-- 사용 빈도가 높은 기록 이미지의 실제 파일 크기·디코딩 비용·LCP 영향 측정
+- 메뉴별 색상·레이아웃·진입 동작을 지도·연표·분석·기록 용도에 맞게 더 분리
+- 초기 화면과 각 채널의 LCP·CLS·전송량을 실제 공개 배포 환경에서 재측정
 - 사용자 제공 원본이 추가되면 `RECONSTRUCTED`·`UNVERIFIED` 항목과 직접 비교해 기본 노출본 결정
 - 메뉴별 음향 정체성 확대와 긴 배경음의 중복·잔류 여부 재점검
 - 공개 배포 전 음원·영상·이미지 라이선스와 GitHub Pages 배포 보안 최종 점검

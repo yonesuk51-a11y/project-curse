@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.28.0';
-const DATA_VERSION='5.28.0';
+const VERSION='5.29.0';
+const DATA_VERSION='5.29.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -20,8 +20,8 @@ function article(source,id){
 }
 
 const required=[
-  'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/visual-evidence.css','assets/css/verdict-archive.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/pilgrimage-scenario.css','assets/css/app-shell.css','assets/css/terminal-foundation.css','assets/css/transition-system.css',
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
+  'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/visual-evidence.css','assets/css/adaptive-media.css','assets/css/verdict-archive.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/pilgrimage-scenario.css','assets/css/app-shell.css','assets/css/terminal-foundation.css','assets/css/transition-system.css',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/adaptive-media.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
   'assets/js/pages/shared-declutter.js',
@@ -51,6 +51,9 @@ const manifest=read('assets/js/data/site-manifest.js');
 const archiveRegistry=read('assets/js/data/archive-registry.js');
 const visualEvidenceData=read('assets/js/data/visual-evidence-data.js');
 const visualEvidenceCss=read('assets/css/visual-evidence.css');
+const mediaManifestSource=read('assets/js/data/media-manifest.js');
+const adaptiveMediaRuntime=read('assets/js/core/adaptive-media.js');
+const adaptiveMediaCss=read('assets/css/adaptive-media.css');
 const fieldDossierData=read('assets/js/data/field-dossier-data.js');
 const homeIntelligenceData=read('assets/js/data/home-intelligence-data.js');
 const terminalHomeRuntime=read('assets/js/pages/terminal-home.js');
@@ -99,6 +102,7 @@ vm.runInContext(factionAnalysisSource,context,{filename:'faction-analysis-data.j
 vm.runInContext(archiveRegistry,context,{filename:'archive-registry.js'});
 vm.runInContext(read('assets/js/data/archive-document-data.js'),context,{filename:'archive-document-data.js'});
 vm.runInContext(visualEvidenceData,context,{filename:'visual-evidence-data.js'});
+vm.runInContext(mediaManifestSource,context,{filename:'media-manifest.js'});
 vm.runInContext(fieldDossierData,context,{filename:'field-dossier-data.js'});
 vm.runInContext(regionalDrilldownSource,context,{filename:'regional-drilldown-data.js'});
 vm.runInContext(pilgrimageDataSource,context,{filename:'pilgrimage-scenario-data.js'});
@@ -121,6 +125,7 @@ const cinematicData=context.window.ProjectCurseCinematicRegistry;
 const pilgrimageData=context.window.ProjectCursePilgrimageData;
 const verdictData=context.window.ProjectCurseVerdictArchiveData;
 const visualEvidence=context.window.ProjectCurseVisualEvidence;
+const mediaManifest=context.window.ProjectCurseMediaManifest;
 const ordered=[
   'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/canon-registry.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/transition-controller.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
@@ -293,6 +298,19 @@ add('visual-evidence-comparison-viewer',archiveDocumentRuntime.includes('functio
 add('visual-evidence-mobile-and-accessible',visualEvidenceCss.includes('@media(max-width:760px)')&&visualEvidenceCss.includes('@media(prefers-reduced-motion:reduce)')&&archiveDocumentRuntime.includes("viewer.setAttribute('aria-modal','true')")&&archiveDocumentRuntime.includes("range.setAttribute('aria-label','두 이미지 비교 경계')"));
 add('visual-evidence-cinematic-handoff',main.includes('pc-cinematic-evidence-control')&&main.includes('openEvidenceAsset?.(page.image')&&main.includes("document.body.classList.contains('pc-evidence-open')")&&visualEvidenceCss.includes('.pc-cinematic-evidence-control'));
 add('visual-evidence-standalone-documents',['Zone_870815','Unknown_Record1_860204','Unknown_Record2_860205','Unknown_Record3_920711','Unknown_Record4_930314'].every(id=>{const source=read(`docs/${id}/index.html`);return source.includes('visual-evidence.css')&&source.includes('visual-evidence-data.js')&&source.indexOf('visual-evidence-data.js')<source.indexOf('archive-document.js');}));
+const responsiveAssets=Object.values(mediaManifest?.assets||{});
+const responsiveVariants=responsiveAssets.flatMap(asset=>asset.variants||[]);
+add('adaptive-media-owner',structureData?.owners?.mediaManifest==='assets/js/data/media-manifest.js'&&structureData?.owners?.adaptiveMediaRuntime==='assets/js/core/adaptive-media.js'&&structureData?.owners?.adaptiveMediaCSS==='assets/css/adaptive-media.css');
+add('adaptive-media-twenty-sources',mediaManifest?.version==='1.0.0'&&responsiveAssets.length===20&&responsiveVariants.length===40,`${responsiveAssets.length} sources / ${responsiveVariants.length} variants`);
+add('adaptive-media-variant-files',responsiveVariants.every(variant=>existsSync(path(variant.src))&&statSync(path(variant.src)).size>500));
+add('adaptive-media-originals-preserved',responsiveAssets.every(asset=>existsSync(path(asset.source))&&asset.variants.every(variant=>statSync(path(variant.src)).size<statSync(path(asset.source)).size)));
+add('adaptive-media-runtime',adaptiveMediaRuntime.includes("image.srcset=variants.map")&&adaptiveMediaRuntime.includes("mode==='original'")&&adaptiveMediaRuntime.includes('function prepareRoute(route')&&adaptiveMediaRuntime.includes('function getDiagnostics()'));
+add('adaptive-media-loading-presentation',adaptiveMediaCss.includes('.pc-media-loading>img[data-pc-media]')&&adaptiveMediaCss.includes('.pc-media-recovery')&&adaptiveMediaCss.includes('@media(prefers-reduced-motion:reduce)')&&archiveDocumentRuntime.includes("mode:'original'"));
+add('adaptive-media-viewer-gate',archiveDocumentRuntime.includes('range.disabled=true')&&archiveDocumentRuntime.includes("range.disabled=!complete")&&archiveDocumentRuntime.includes('Promise.all(pending)')&&archiveDocumentRuntime.includes('FRAME STABILIZED'));
+add('adaptive-media-cinematic',main.includes('data-pc-source=')&&main.includes("ProjectCurseMedia?.enhance?.(bodyEl")&&main.includes("ProjectCurseMedia?.preload?.(prefix()+nextPage.image"));
+add('adaptive-media-transition-warmup',transitionController.includes('ProjectCurseMedia.prepareRoute')&&transitionController.includes('VISUAL CHANNEL ACQUISITION'));
+add('adaptive-media-root-order',index.includes('assets/css/adaptive-media.css?v=5.29.0')&&index.includes('assets/js/data/media-manifest.js?v=5.29.0')&&index.includes('assets/js/core/adaptive-media.js?v=5.29.0')&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('record-cinematic-runtime.js'));
+add('adaptive-media-standalone-documents',['Zone_870815','Unknown_Record1_860204','Unknown_Record2_860205','Unknown_Record3_920711','Unknown_Record4_930314'].every(id=>{const source=read(`docs/${id}/index.html`);return source.includes('adaptive-media.css')&&source.includes('media-manifest.js')&&source.includes('adaptive-media.js')&&source.indexOf('media-manifest.js')<source.indexOf('archive-document.js');}));
 add('field-dossier-four-records',greatBlackForest?.presentation==='region-dossier'&&deadZonePilgrimage?.presentation==='region-dossier'&&pilgrimRules?.presentation==='guide'&&brokenCrown?.presentation==='scenario');
 add('regional-document-identities',greatBlackForest?.theme==='great-black-forest'&&greatBlackForest?.telemetry?.length===3&&deadZonePilgrimage?.theme==='dead-zone'&&deadZonePilgrimage?.telemetry?.length===3&&archiveDocumentRuntime.includes('dataset.documentTheme')&&read('assets/css/archive-document.css').includes('data-document-theme="great-black-forest"')&&read('assets/css/archive-document.css').includes('data-document-theme="dead-zone"'));
 add('great-black-forest-dossier',greatBlackForest?.sections?.length===5&&JSON.stringify(greatBlackForest).includes('자유의 땅')&&JSON.stringify(greatBlackForest).includes('타락 야생체')&&greatBlackForest?.hero?.caption?.includes('복원 추정본'));

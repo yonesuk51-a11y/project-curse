@@ -22,3 +22,9 @@ Originals under `assets/resources/` and `assets/resources/archive-enex/` retain 
 | `VEA-FER-241HS` | `archive-enex/feral-classification/image-241hs-angel-presence.png` | ORIGINAL | `83d311da1ab7310a567c6023f6151e6c.webp` | Source frame to protected legacy crop |
 
 Comparison links do not authorize deletion or replacement. They only expose both preserved files in the Visual Evidence Archive viewer so that a later source review can decide which copy should be displayed by default.
+
+## Responsive delivery derivatives
+
+`responsive/` contains 40 WebP delivery copies generated on 2026-08-17 from 20 high-cost PNG or JPEG files. Each source has a 480px candidate and either a 960px candidate or a no-upscale candidate at its native width. The measured source set was 14.40 MiB; the complete responsive set is approximately 0.55 MiB.
+
+These files do not replace, reclassify, or authorize removal of their sources. `assets/js/data/media-manifest.js` is the delivery relationship registry. Archive cards, document figures, and cinematic frames may use these candidates; the Visual Evidence Archive requests the preserved source file for original inspection and comparison.

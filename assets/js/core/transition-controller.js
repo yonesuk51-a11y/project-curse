@@ -1,4 +1,4 @@
-// Project Curse 5.28.0 — exit, channel handoff and staged screen entry owner.
+// Project Curse 5.29.0 — exit, media-aware channel handoff and staged screen entry owner.
 (function(root){
   'use strict';
 
@@ -76,9 +76,16 @@
 
       document.documentElement.dataset.transitionState='switching';
       layer.classList.add('is-covering');
-      if(nodes.status) nodes.status.textContent=toPreset.status;
-      if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','68%');
+      if(nodes.status) nodes.status.textContent=root.ProjectCurseMedia?'VISUAL CHANNEL ACQUISITION':'CHANNEL BUFFER ACQUISITION';
+      if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','54%');
       await wait(timings.cover);
+
+      if(root.ProjectCurseMedia&&!reduceMotion()){
+        const mediaHold=mobile()?360:520;
+        const prepared=await root.ProjectCurseMedia.prepareRoute(to,{timeout:mediaHold});
+        if(nodes.status) nodes.status.textContent=prepared.requested?`${prepared.ready} / ${prepared.requested} VISUAL FRAMES READY`:toPreset.status;
+      }else if(nodes.status) nodes.status.textContent=toPreset.status;
+      if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','76%');
 
       const result=commit();
       incoming=document.getElementById(to);

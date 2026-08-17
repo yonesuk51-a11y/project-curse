@@ -1,4 +1,4 @@
-/* Project Curse 5.28.0 — conditional verdict archive and decrypted-report identity. */
+/* Project Curse 5.29.0 — conditional verdict archive and decrypted-report identity. */
 body.pc-archive-index-active #archive-entry .pc-verdict-archive{position:relative;margin:38px 0 12px;padding:1px 0 0;border-top:1px solid rgba(184,151,82,.28);background:linear-gradient(180deg,rgba(107,82,28,.07),transparent 180px)}
 body.pc-archive-index-active #archive-entry .pc-verdict-archive:before{content:'LOCAL VERDICT STORAGE / OUTCOME-BOUND';position:absolute;right:2px;top:-16px;color:rgba(202,174,103,.38);font:8px/1 Consolas,monospace;letter-spacing:.14em}
 body.pc-archive-index-active #archive-entry .pc-verdict-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;padding:24px 17px 20px;border-bottom:1px solid rgba(184,151,82,.2)}

@@ -1,4 +1,4 @@
-// Project Curse 5.28.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.29.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.28.0',
+    version:root.ProjectCurseBuild?.version||'5.29.0',
     schema:root.ProjectCurseBuild?.schema||'project-curse-v16',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
@@ -52,9 +52,11 @@
       incidentRegistry:'assets/js/data/incident-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
       visualEvidenceData:'assets/js/data/visual-evidence-data.js',
+      mediaManifest:'assets/js/data/media-manifest.js',
       fieldDossiers:'assets/js/data/field-dossier-data.js',
       homeIntelligence:'assets/js/data/home-intelligence-data.js',
       baseRuntime:'assets/js/core/base-runtime.js',
+      adaptiveMediaRuntime:'assets/js/core/adaptive-media.js',
       loadingRuntime:'assets/js/core/loading-sequence.js',
       audioController:'assets/js/core/audio-controller.js',
       operationState:'assets/js/core/operation-state.js',
@@ -83,6 +85,7 @@
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',
       archiveDocumentViewer:'assets/js/pages/archive-document.js',
       visualEvidenceCSS:'assets/css/visual-evidence.css',
+      adaptiveMediaCSS:'assets/css/adaptive-media.css',
       mapRoomData:'assets/js/data/map-room-data.js',
       regionalDrilldownData:'assets/js/data/regional-drilldown-data.js',
       mapRoomRuntime:'assets/js/pages/map-room.js',

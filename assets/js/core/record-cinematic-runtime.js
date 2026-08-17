@@ -472,7 +472,7 @@
       const code=escSeq(page.imageCode || page.subtitle || 'IMG---');
       const time=escSeq(page.logTime || page.title || '');
       const cap=escSeq(page.photoCaption || page.frame || 'FIELD IMAGE');
-      const img='<figure class="pc5152v-large-photo pc5152k-seq-line" data-line="0" data-photo="1"><img src="'+prefix()+page.image+'" alt="'+cap+'"/><figcaption><div class="pc5152ba-photo-idline"><b>'+code+'</b>'+(time?'<span>'+time+'</span>':'')+'</div>'+(cap?'<em>'+cap+'</em>':'')+'</figcaption></figure>';
+      const img='<figure class="pc5152v-large-photo pc5152k-seq-line" data-line="0" data-photo="1"><img data-pc-source="'+prefix()+page.image+'" data-pc-media-mode="cinematic" alt="'+cap+'"/><figcaption><div class="pc5152ba-photo-idline"><b>'+code+'</b>'+(time?'<span>'+time+'</span>':'')+'</div>'+(cap?'<em>'+cap+'</em>':'')+'</figcaption></figure>';
       const shifted=(page.lines||[]).map((line,i)=>formatImmortalityLine(line,i+1,page,i)).join('');
       const postFlash=Array.isArray(page.postFlashLines)&&page.postFlashLines.length
         ?'<div class="pc5152cz-post-flash" data-seq-postflash>'+page.postFlashLines.map(line=>'<span>'+escSeq(line)+'</span>').join('')+'</div>'
@@ -498,7 +498,7 @@
       const reportList=Array.isArray(page.report)?page.report:(Array.isArray(page.lines)?page.lines:[]);
       const report=buildEvidenceReportHtml(reportList, page.redAlert, !!page.alertDelay);
       return '<div class="pc5152ax-evidence-center pc5152k-seq-line" data-line="0">'
-        +'<figure class="pc5152ax-evidence-card"><img src="'+pfx+page.image+'" alt="'+imgAlt+'"/></figure>'
+        +'<figure class="pc5152ax-evidence-card"><img data-pc-source="'+pfx+page.image+'" data-pc-media-mode="cinematic" alt="'+imgAlt+'"/></figure>'
         +'<div class="pc5152ba-evidence-titleline"><b data-evidence-code>'+imageCode+'</b><span data-evidence-title>'+title+'</span></div>'
         +(subtitle?'<small class="pc5152ba-evidence-subtitle">'+subtitle+'</small>':'')
         +(caption?'<em class="pc5152ba-evidence-caption" data-evidence-caption>'+highlightFeralTerms(caption)+'</em>':'<em class="pc5152ba-evidence-caption" data-evidence-caption></em>')
@@ -514,7 +514,7 @@
       const report=reportList.filter(v=>String(v||'').trim()).map(line=>'<p>'+highlightFeralTerms(escSeq(line))+'</p>').join('');
       return '<article class="pc5152cf-victim-slide pc5152k-seq-line" data-line="0">'
         +(page.hideIdentity?'':'<header><b>'+title+'</b>'+(subtitle?'<span>['+subtitle+']</span>':'')+'</header>')
-        +'<figure><img src="'+prefix()+page.image+'" alt="'+title+' 피해 현장 기록"/></figure>'
+        +'<figure><img data-pc-source="'+prefix()+page.image+'" data-pc-media-mode="cinematic" alt="'+title+' 피해 현장 기록"/></figure>'
         +'<div class="pc5152cf-victim-report">'+report+'</div>'
         +'<small>'+imageCode+'</small>'
         +'</article>';
@@ -524,7 +524,7 @@
       const caption=escSeq(page.caption||'SIMPLIFIED CLASSIFICATION OF CORRUPTED LIFEFORMS');
       const credit=escSeq(page.credit||'U.A.C FIELD COPY');
       return '<figure class="pc5152cf-classification-chart pc5152k-seq-line" data-line="0">'
-        +'<img src="'+prefix()+page.image+'" alt="괴이 단순화 분류 구조"/>'
+        +'<img data-pc-source="'+prefix()+page.image+'" data-pc-media-mode="cinematic" alt="괴이 단순화 분류 구조"/>'
         +'<figcaption><b>'+caption+'</b><small>'+credit+'</small></figcaption>'
         +'</figure>';
     }
@@ -1061,14 +1061,16 @@
       '.pc5152ax-evidence-card img',
       '.pc5152cf-victim-slide figure img',
       '.pc5152v-large-photo img',
-      '.pc5152cf-classification-chart img'
+      '.pc5152cf-classification-chart img',
+      '.pc5152u-person-card img'
     ].join(',');
     const CINEMATIC_FRAME_SELECTOR=[
       '.pc5152h-seq-frame',
       '.pc5152ax-evidence-card',
       '.pc5152cf-victim-slide figure',
       '.pc5152v-large-photo',
-      '.pc5152cf-classification-chart'
+      '.pc5152cf-classification-chart',
+      '.pc5152u-person-card'
     ].join(',');
 
     function clearCinematicMediaFit(root){
@@ -1163,7 +1165,7 @@
       const bodyEl=el.querySelector('[data-seq-body]');
       const lines=buildSequenceLines(page);
       if(page.layout==='peoplePair' && Array.isArray(page.people)){
-        const people=page.people.map((person)=>'<figure class="pc5152u-person-card is-visible"><img src="'+prefix()+person.image+'" alt="'+escSeq(person.name)+'"/><figcaption class="pc5152w-person-caption"><b class="pc5152v-name-blue">'+escSeq(person.name)+'</b><span>'+escSeq(person.role)+'</span></figcaption></figure>').join('');
+        const people=page.people.map((person)=>'<figure class="pc5152u-person-card is-visible"><img data-pc-source="'+prefix()+person.image+'" data-pc-media-mode="cinematic" alt="'+escSeq(person.name)+'"/><figcaption class="pc5152w-person-caption"><b class="pc5152v-name-blue">'+escSeq(person.name)+'</b><span>'+escSeq(person.role)+'</span></figcaption></figure>').join('');
         bodyEl.innerHTML='<h3 class="pc5152k-seq-subtitle">'+escSeq(page.subtitle||'')+'</h3><div class="pc5152u-people-pair">'+people+'</div>';
       }else if(page.layout==='photoLarge' && page.image){
         bodyEl.innerHTML=buildPhotoLargeBlock(page,lines);
@@ -1192,6 +1194,7 @@
       const fig=el.querySelector('[data-seq-figure]');
       if(page.layout==='peoplePair' || page.layout==='photoLarge' || page.layout==='evidenceCenter' || page.layout==='victimSlide' || page.layout==='classificationChart'){
         img.removeAttribute('src');
+        img.removeAttribute('srcset');
         fig.hidden=true;
         state.revealTimers.push(setTimeout(()=>{ 
           el.classList.add('frame-ready'); 
@@ -1199,7 +1202,8 @@
           if(state.activeRecord===SAKUMA_RECORD && page.photoSfx && !page.specialSequence) playLocal(state.sakumaProjector);
         }, 650));
       }else if(page.image){
-        img.src=prefix()+page.image;
+        if(window.ProjectCurseMedia) window.ProjectCurseMedia.apply(img,prefix()+page.image,{mode:'cinematic',eager:true,sizes:'(max-width: 760px) 94vw, 72vw'});
+        else img.src=prefix()+page.image;
         fig.hidden=false;
         state.revealTimers.push(setTimeout(()=>{ 
           el.classList.add('frame-ready'); 
@@ -1207,9 +1211,13 @@
         }, 900));
       }else{
         img.removeAttribute('src');
+        img.removeAttribute('srcset');
         fig.hidden=true;
       }
+      window.ProjectCurseMedia?.enhance?.(bodyEl,{mode:'cinematic',eager:true});
       fitCinematicImages(el);
+      const nextPage=activePages[state.pageIndex+1];
+      if(nextPage?.image) window.ProjectCurseMedia?.preload?.(prefix()+nextPage.image,{mode:'cinematic',timeout:900});
       const status=el.querySelector('[data-seq-status]');
       status.textContent='SIGNAL READING...';
       state.lineEls=[...bodyEl.querySelectorAll('.pc5152k-seq-line')];

@@ -1,4 +1,4 @@
-/* Project Curse 5.28.0 — visual evidence provenance console and source comparison viewer. */
+/* Project Curse 5.29.0 — visual evidence provenance console and source comparison viewer. */
 .archive-doc-figure[data-evidence-class]{position:relative;overflow:hidden}
 .archive-evidence-strip{display:flex;align-items:center;gap:10px;min-height:38px;padding:7px 9px 7px 12px;border-bottom:1px solid #262c30;background:linear-gradient(90deg,rgba(10,14,15,.96),rgba(5,7,8,.9));font:8px/1.35 Consolas,monospace;letter-spacing:.1em;text-transform:uppercase}
 .archive-evidence-strip>i{width:7px;height:7px;border-radius:50%;background:#9a8e68;box-shadow:0 0 9px currentColor}.archive-evidence-strip>b{color:#b7bfbc}.archive-evidence-strip>small{min-width:0;overflow:hidden;color:#68716e;text-overflow:ellipsis;white-space:nowrap}.archive-evidence-strip>button{min-height:25px;margin-left:auto;padding:0 10px;border:1px solid #30383a;background:#0b0f10;color:#9fa8a5;font:8px/1 Consolas,monospace;letter-spacing:.08em;cursor:pointer}.archive-evidence-strip>button:hover,.archive-evidence-strip>button:focus-visible{border-color:#788581;color:#e2e7e4;outline:0}
