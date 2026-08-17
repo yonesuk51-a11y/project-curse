@@ -1,4 +1,4 @@
-// Project Curse 5.29.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.30.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.29.0',
-    schema:root.ProjectCurseBuild?.schema||'project-curse-v16',
+    version:root.ProjectCurseBuild?.version||'5.30.0',
+    schema:root.ProjectCurseBuild?.schema||'project-curse-v21',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'map-room',label:'상황 관제',index:'01'},
@@ -48,6 +48,7 @@
       manifest:'assets/js/data/site-manifest.js',
       audioManifest:'assets/js/data/audio-manifest.js',
       transitionManifest:'assets/js/data/transition-manifest.js',
+      channelIdentityData:'assets/js/data/channel-identity-data.js',
       canon:'assets/js/data/canon-registry.js',
       incidentRegistry:'assets/js/data/incident-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
@@ -69,6 +70,7 @@
       pilgrimageCSS:'assets/css/pilgrimage-scenario.css',
       transitionController:'assets/js/core/transition-controller.js',
       shellRuntime:'assets/js/core/app-shell.js',
+      channelIdentityRuntime:'assets/js/core/channel-identity.js',
       cinematicRuntime:'assets/js/core/record-cinematic-runtime.js',
       cinematicRegistry:'assets/js/core/record-cinematic-registry.js',
       cinematicRecords:[
@@ -80,6 +82,7 @@
       shellCSS:'assets/css/app-shell.css',
       foundationCSS:'assets/css/terminal-foundation.css',
       transitionCSS:'assets/css/transition-system.css',
+      channelIdentityCSS:'assets/css/channel-identity.css',
       declutter:'assets/js/pages/shared-declutter.js',
       reconciliation:'assets/js/pages/canon-reconciliation.js',
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',

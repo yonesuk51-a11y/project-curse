@@ -1,27 +1,25 @@
 # Future Patch Pointer
 
-Current baseline: `5.29.0 Adaptive Media Pipeline`
+Current baseline: `5.30.0 Menu Identity Overhaul`
 
 Completed in this baseline:
-`Responsive WebP / Original-on-demand / Media Recovery States / Route and Cinematic Warmup`
+`Five Channel Identity / Purpose-specific Entry Motion / Local FX and Audio Preferences / Mobile Channel Panel`
 
 Primary scope:
 
-- 이미지 86개·16.57MiB를 측정하고 용량 집중도가 높은 PNG·JPEG 원본 20개를 최적화 대상으로 한정
-- 원본 파일은 변경하지 않고 480px·최대 960px WebP 파생본 40개를 별도 `responsive/` 계층에 추가
-- 일반 문서·증거 카드·영상 기록에서 `srcset`과 `sizes`로 화면 폭에 맞는 파생본 선택
-- 증거 확대와 원본 비교 화면에서만 보존 원본을 요청하는 original-on-demand 경로 적용
-- 이미지 요청, 디코딩, 복구 완료, 손실 상태를 실제 load/decode 사건과 연결
-- 원본 비교 슬라이더를 두 프레임이 모두 준비될 때까지 비활성화하고 실패 시 재요청 제공
-- 다음 영상 이미지 사전 준비와 화면 전환 중 대표 프레임 준비를 공통 미디어 런타임으로 연결
-- 데이터 절약·2G·모션 감소 환경에서 가벼운 후보와 연출을 사용하는 적응 정책 추가
-- 적용 수, 준비 성공, 실패, 전송·디코딩 바이트를 확인할 수 있는 로컬 진단 API 추가
-- 독립 문서 다섯 개에도 동일한 미디어 매니페스트·런타임·복구 스타일 적용
+- 단말·지도·연대기·정보 분석·기록보관소에 서로 다른 색상, 계기, 표식과 배경 문법 부여
+- 런타임 재렌더링 뒤에도 유지되는 공통 채널 정체성 헤더와 다섯 채널 탐색 구조 추가
+- 홈을 포함한 채널 번호·명칭·영문 코드를 데스크톱 상단 메뉴와 모바일 선택 패널에 통합
+- 지도 레이더, 연대기 시간 눈금, 정보망 노드, 보관소 봉인 체계에 맞춘 화면별 진입 동작 추가
+- 시각 효과 FULL/BALANCED/REDUCED, 인터페이스 음향, 환경음, 텍스트 등장 설정을 로컬 저장
+- 운영체제 동작 줄이기 설정을 자동 우선하며 저장된 사용자 선택은 보존
+- 기존 전체 음소거와 세부 음향 버스 설정의 역할을 분리
+- 키보드 포커스 순환, Escape 닫기, 모바일 전체 높이 설정 패널과 진단 API 추가
 
 Next planned pass:
 
-- 메뉴별 색상·레이아웃·진입 동작을 지도·연표·분석·기록 용도에 맞게 더 분리
 - 초기 화면과 각 채널의 LCP·CLS·전송량을 실제 공개 배포 환경에서 재측정
 - 사용자 제공 원본이 추가되면 `RECONSTRUCTED`·`UNVERIFIED` 항목과 직접 비교해 기본 노출본 결정
-- 메뉴별 음향 정체성 확대와 긴 배경음의 중복·잔류 여부 재점검
+- 각 채널 전용 배경음은 라이선스와 잔류 재생 검증이 끝난 자산부터 선택적으로 추가
+- 기록·지도 데이터가 늘어날 때 상단 채널 상태를 실제 미확인 건수와 동기화
 - 공개 배포 전 음원·영상·이미지 라이선스와 GitHub Pages 배포 보안 최종 점검

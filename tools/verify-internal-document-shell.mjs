@@ -45,25 +45,31 @@ const verdictState=read('assets/js/core/verdict-archive-state.js');
 const pilgrimageRuntime=read('assets/js/pages/pilgrimage-scenario.js');
 const pilgrimageCss=read('assets/css/pilgrimage-scenario.css');
 const terminalHomeRuntime=read('assets/js/pages/terminal-home.js');
+const channelIdentityData=read('assets/js/data/channel-identity-data.js');
+const channelIdentityRuntime=read('assets/js/core/channel-identity.js');
+const channelIdentityCss=read('assets/css/channel-identity.css');
 
 const context={window:{}};
 vm.createContext(context);
 for(const file of [
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
   'assets/js/data/immortality-storyboard.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js',
   'assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js'
 ]) vm.runInContext(read(file),context,{filename:file});
 
-check('version:manifest',context.window.ProjectCurseStructure?.version==='5.29.0',context.window.ProjectCurseStructure?.version);
-check('version:archive',context.window.ProjectCurseArchive?.version==='5.29.0',context.window.ProjectCurseArchive?.version);
-check('version:documents',context.window.ProjectCurseArchiveDocuments?.version==='5.29.0',context.window.ProjectCurseArchiveDocuments?.version);
+check('version:manifest',context.window.ProjectCurseStructure?.version==='5.30.0',context.window.ProjectCurseStructure?.version);
+check('version:archive',context.window.ProjectCurseArchive?.version==='5.30.0',context.window.ProjectCurseArchive?.version);
+check('version:documents',context.window.ProjectCurseArchiveDocuments?.version==='5.30.0',context.window.ProjectCurseArchiveDocuments?.version);
 check('shell:single-static-home',count(index,'class="uac-shell-home"')===1&&index.includes('data-uac-route="terminal-home"'));
 check('shell:no-page-injection',!shell.includes('ensureReturnControl')&&!shell.includes('uac-return-terminal'));
 check('shell:home-owned-outside-pages',index.indexOf('class="uac-shell-home"')<index.indexOf('<main class="uac-shell-content"'));
 check('shell:route-events',shell.includes('projectcurse:route-will-change')&&shell.includes('projectcurse:screen-committed'));
 check('shell:decrypt-effect',read('assets/js/core/transition-controller.js').includes('pc-screen-entering')&&read('assets/css/transition-system.css').includes('@keyframes pc-screen-enter'));
 check('shell:button-feedback',shellCss.includes('@keyframes uac-control-scan')&&shellCss.includes('@keyframes uac-control-pulse'));
+check('shell:five-channel-identity',context.window.ProjectCurseChannelData?.channels?.length===5&&channelIdentityRuntime.includes('ensureIdentity(item.id)'));
+check('shell:identity-preferences',channelIdentityData.includes('project_curse_preferences_v1')&&channelIdentityRuntime.includes('openPreferences')&&channelIdentityCss.includes('.pc-preference-dialog'));
+check('shell:identity-root-order',index.indexOf('channel-identity-data.js')>index.indexOf('transition-manifest.js')&&index.indexOf('channel-identity.js')>index.indexOf('terminal-home.js'));
 
 check('faction:no-detail-route',!faction.includes('#faction-info/')&&!faction.includes('pushState')&&!faction.includes('replaceState'));
 check('faction:no-history-listeners',!faction.includes('hashchange')&&!faction.includes('popstate'));
@@ -81,14 +87,14 @@ check('document:viewer-api',documentViewer.includes('ProjectCurseInternalDocumen
 check('document:route-free-toc',documentViewer.includes("el('button','archive-doc-toc-link'")&&!documentViewer.includes('href="#section-')&&!documentViewer.includes("`#section-${"));
 check('document:embedded-assets',documentViewer.includes("replace(/^(?:\\.\\.\\/)+/,'')"));
 check('document:css-scoped',documentCss.includes('body[data-archive-document]')&&!documentCss.includes('\nbody{'));
-check('document:root-loaded',index.includes('assets/css/archive-document.css?v=5.29.0')&&index.includes('assets/js/pages/archive-document.js?v=5.29.0')&&index.includes('assets/js/data/field-dossier-data.js?v=5.29.0'));
-check('evidence:root-loaded',index.includes('assets/css/visual-evidence.css?v=5.29.0')&&index.includes('assets/js/data/visual-evidence-data.js?v=5.29.0')&&index.indexOf('visual-evidence-data.js')<index.indexOf('field-dossier-data.js'));
+check('document:root-loaded',index.includes('assets/css/archive-document.css?v=5.30.0')&&index.includes('assets/js/pages/archive-document.js?v=5.30.0')&&index.includes('assets/js/data/field-dossier-data.js?v=5.30.0'));
+check('evidence:root-loaded',index.includes('assets/css/visual-evidence.css?v=5.30.0')&&index.includes('assets/js/data/visual-evidence-data.js?v=5.30.0')&&index.indexOf('visual-evidence-data.js')<index.indexOf('field-dossier-data.js'));
 check('evidence:provenance-classes',['ORIGINAL','STABILIZED','RECONSTRUCTED','UNVERIFIED'].every(key=>context.window.ProjectCurseVisualEvidence?.classes?.[key]));
 check('evidence:document-console',documentViewer.includes('function evidenceConsole(items)')&&documentViewer.includes('archive-evidence-card')&&documentViewer.includes('function openEvidence(index,trigger)'));
 check('evidence:comparison-viewer',documentViewer.includes("range.type='range'")&&documentViewer.includes('openEvidenceAsset(src,context={},trigger=null)')&&visualEvidenceCss.includes('.pc-evidence-compare'));
 check('evidence:cinematic-handoff',read('assets/js/core/record-cinematic-runtime.js').includes('pc-cinematic-evidence-control')&&read('assets/js/core/record-cinematic-runtime.js').includes("document.body.classList.contains('pc-evidence-open')"));
 check('media:manifest-twenty-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===20);
-check('media:root-load-order',index.includes('assets/css/adaptive-media.css?v=5.29.0')&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('archive-document.js'));
+check('media:root-load-order',index.includes('assets/css/adaptive-media.css?v=5.30.0')&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('archive-document.js'));
 check('media:responsive-runtime',adaptiveMediaRuntime.includes('image.srcset=variants.map')&&adaptiveMediaRuntime.includes('function prepareRoute(route')&&adaptiveMediaRuntime.includes('function getDiagnostics()'));
 check('media:recovery-states',adaptiveMediaCss.includes('.pc-media-loading>img[data-pc-media]')&&adaptiveMediaCss.includes('.pc-media-ready>.pc-media-recovery')&&adaptiveMediaCss.includes('@media(prefers-reduced-motion:reduce)'));
 check('media:document-original-on-demand',documentViewer.includes("mode:isHero?'hero':'display'")&&documentViewer.includes("mode:'thumbnail'")&&documentViewer.includes("mode:'original'"));
@@ -107,9 +113,9 @@ check('audio:regional-document-profile',documentViewer.includes('setProfile?.(do
 check('operation:persistent-owner',operationState.includes('ProjectCurseOperationState')&&operationState.includes('localStorage.setItem')&&operationState.includes('visitBranch')&&operationState.includes('chooseVerdict'));
 check('operation:four-outcomes',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`)));
 check('operation:document-report',documentViewer.includes('archive-scenario-report')&&documentViewer.includes('data-scenario-verdict')&&documentViewer.includes('data-scenario-reset'));
-check('operation:root-loaded',index.includes('assets/js/core/operation-state.js?v=5.29.0')&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
+check('operation:root-loaded',index.includes('assets/js/core/operation-state.js?v=5.30.0')&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
 const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
-check('map:drilldown-root-loaded',index.includes('assets/js/data/regional-drilldown-data.js?v=5.29.0')&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
+check('map:drilldown-root-loaded',index.includes('assets/js/data/regional-drilldown-data.js?v=5.30.0')&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
 check('map:six-drilldowns',drilldowns.length===6&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38,`${drilldowns.length} districts`);
 check('map:four-level-navigation',mapRoomRuntime.includes('data-map-open-detail')&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('pc-map-breadcrumb'));
 check('map:verdict-site-sync',mapRoomRuntime.includes('resolveDetailSite')&&drilldowns.filter(detail=>detail.sites.some(site=>site.verdictStates)).length>=2);
@@ -139,7 +145,7 @@ check('cinematic:no-photo-drift',!cinematicCss.includes('pcCinematicDrift'));
 check('cinematic:natural-ratio-photo-fit',cinematicRuntime.includes('image.naturalWidth/image.naturalHeight')&&cinematicRuntime.includes('--pc-media-width')&&cinematicCss.includes('.pc-cinematic-frame-fitted'));
 check('cinematic:portrait-height-contained',cinematicRuntime.includes("(window.innerHeight||720)*.56")&&cinematicCss.includes('max-height:56dvh!important'));
 check('mobile:viewport-safe-area',index.includes('viewport-fit=cover')&&cinematicMobileCss.includes('env(safe-area-inset-bottom)'));
-check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.29.0')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
+check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.30.0')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
 check('mobile:phone-stage-scroll-safe',cinematicMobileCss.includes('@media (max-width:600px)')&&cinematicMobileCss.includes('overflow-y:auto!important')&&cinematicMobileCss.includes('overscroll-behavior:contain!important'));
 check('mobile:portrait-video-contained',cinematicMobileCss.includes('.pc5152h-cult-sequence.intro-mode .pc5152h-seq-video')&&cinematicMobileCss.includes('object-fit:contain!important'));
 check('mobile:touch-controls',cinematicMobileCss.includes('grid-template-columns:repeat(4,minmax(0,1fr))')&&cinematicMobileCss.includes('min-height:44px!important'));
@@ -159,7 +165,7 @@ check('audio:no-cinematic-bus-installer',!cinematicRuntime.includes('installClea
 check('audio:sequence-silence-at-entry',count(cinematicRuntime,'silenceMenuAmbientDuringSequence();')>=2);
 check('cinematic:single-chapter-boundary-rule',cinematicRuntime.includes("current.group!==next.group&&getSequenceConfig()?.transitionVideo")&&!cinematicRuntime.includes("current.group==='system' && next.group==='cult'"));
 const immortalityPages=context.window.ProjectCurseImmortalityStoryboard||[];
-check('immortality:canonical-storyboard-loaded',index.includes('assets/js/data/immortality-storyboard.js?v=5.29.0')&&immortalityPages.length===24,immortalityPages.length);
+check('immortality:canonical-storyboard-loaded',index.includes('assets/js/data/immortality-storyboard.js?v=5.30.0')&&immortalityPages.length===24,immortalityPages.length);
 check('immortality:automatic-sequential-reveal',cinematicRuntime.includes('scheduleNextSequenceLine(Number(page.firstLineDelay')&&cinematicRuntime.includes('scheduleNextSequenceLine(nextDelay)'));
 check('immortality:initial-content-hidden',cinematicCss.includes('Immortality starts from a genuinely blank record face')&&cinematicCss.includes('visibility:hidden!important')&&cinematicCss.includes('.pc5152k-seq-line.visible'));
 check('immortality:intro-not-skipped',cinematicRuntime.includes('video.muted=true')&&cinematicRuntime.includes('video.load()')&&!cinematicRuntime.includes('Math.min(Number(cfg.introFallback||10450),4800)'));
@@ -214,9 +220,9 @@ for(const [id,expected] of Object.entries(locked)){
 check('cache:core-busters',[
   'assets/css/app-shell.css','assets/css/archive-document.css','assets/js/core/app-shell.js','assets/js/core/base-runtime.js',
   'assets/js/pages/archive-document.js','assets/js/pages/archive-consolidation.js','assets/js/pages/faction-analysis.js'
-].every(file=>index.includes(`${file}?v=5.29.0`)));
-check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.29.0')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.29.0'));
-check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.29.0'));
+].every(file=>index.includes(`${file}?v=5.30.0`)));
+check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.30.0')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.30.0'));
+check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.30.0'));
 check('manifest:viewer-owner',manifest.includes("archiveDocumentViewer:'assets/js/pages/archive-document.js'"));
 check('registry:no-href-field',!registry.includes("href:'docs/"));
 

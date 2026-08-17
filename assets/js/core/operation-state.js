@@ -1,4 +1,4 @@
-// Project Curse 5.29.0 — persistent OP-BROKEN-CROWN decision and progress owner.
+// Project Curse 5.30.0 — persistent OP-BROKEN-CROWN decision and progress owner.
 (function(root){
   'use strict';
 

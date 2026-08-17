@@ -1,4 +1,4 @@
-// Project Curse 5.29.0 — exit, media-aware channel handoff and staged screen entry owner.
+// Project Curse 5.30.0 — exit, media-aware channel handoff and staged screen entry owner.
 (function(root){
   'use strict';
 

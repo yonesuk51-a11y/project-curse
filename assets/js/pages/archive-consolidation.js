@@ -1,4 +1,4 @@
-// Project Curse 5.29.0 — public archive and conditional field-verdict index owner.
+// Project Curse 5.30.0 — public archive and conditional field-verdict index owner.
 (function(){
   'use strict';
   const archive=window.ProjectCurseArchive;
@@ -131,7 +131,7 @@
     const verdictRows=qa('.pc-verdict-row');
     return {
       name:'archiveIndex',
-      patch:'5.29.0',
+      patch:'5.30.0',
       ok:ids===expectedIds&&(!verdicts||verdictRows.length===verdicts.getSummary().total),
       records:rows.length,
       verdicts:verdictRows.length,
