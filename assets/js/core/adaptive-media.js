@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — quality-aware image selection, recovery, route warmup, and diagnostics.
+// Project Curse 5.33.0 — quality-aware image selection, recovery, route warmup, and diagnostics.
 (function(root){
   'use strict';
 

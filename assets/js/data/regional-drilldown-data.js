@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — regional drilldown districts, route focus, and recovery intelligence.
+// Project Curse 5.33.0 — regional drilldown districts, route focus, and recovery intelligence.
 (function(root){
   'use strict';
 

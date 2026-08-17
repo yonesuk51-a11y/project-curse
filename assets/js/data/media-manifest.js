@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — responsive derivative registry; originals remain immutable evidence sources.
+// Project Curse 5.33.0 — responsive derivative registry; originals remain immutable evidence sources.
 (function(root){
   'use strict';
 

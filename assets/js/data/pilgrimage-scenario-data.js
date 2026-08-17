@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — reactive field scenarios with persistent cross-stage consequences.
+// Project Curse 5.33.0 — reactive field scenarios with persistent cross-stage consequences.
 (function(root){
   'use strict';
 

@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — visual evidence provenance, comparison pairs, and source-status resolver.
+// Project Curse 5.33.0 — visual evidence provenance, comparison pairs, and source-status resolver.
 (function(root){
   'use strict';
 

@@ -4,8 +4,8 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.32.0';
-const DATA_VERSION='5.32.0';
+const VERSION='5.33.0';
+const DATA_VERSION='5.33.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
 const checks=[];
 const path=relative=>ROOT+relative;
@@ -162,6 +162,11 @@ add('telemetry-runtime-owned',structureData?.owners?.performanceTelemetry==='ass
 add('telemetry-live-five-channels',['terminal-home','map-room','history','faction-info','archive-entry'].every(id=>performanceTelemetry.includes(`id==='${id}'`))&&channelIdentityRuntime.includes('ProjectCurseTelemetry?.getChannelStatus'));
 add('telemetry-performance-observers',performanceTelemetry.includes("observe('largest-contentful-paint'")&&performanceTelemetry.includes("observe('layout-shift'")&&performanceTelemetry.includes("observe('longtask'"));
 add('telemetry-boot-and-transition-timing',performanceTelemetry.includes('projectcurse:boot-hidden')&&performanceTelemetry.includes('projectcurse:transition-complete')&&channelIdentityRuntime.includes('data-pc-telemetry="transition"'));
+add('telemetry-session-health',performanceTelemetry.includes("ProjectCurseTelemetry=Object.freeze({version:'1.1.0'")&&performanceTelemetry.includes('usedJSHeapSize')&&performanceTelemetry.includes('hiddenDuration')&&channelIdentityRuntime.includes('data-pc-telemetry="session"')&&channelIdentityRuntime.includes('data-pc-telemetry="heap"'));
+add('settings-readable-overview',channelIdentityRuntime.includes('pc-preference-overview')&&channelIdentityRuntime.includes('function overviewCopy')&&channelIdentityRuntime.includes('자동 최적화됨')&&channelIdentityCss.includes('.pc-preference-overview'));
+add('settings-grouped-sections',channelIdentityRuntime.includes("['quality','effects','textReveal']")&&channelIdentityRuntime.includes("['interfaceAudio','ambient']")&&channelIdentityCss.includes('.pc-preference-section'));
+add('settings-collapsible-diagnostics',channelIdentityRuntime.includes('pc-advanced-diagnostics')&&channelIdentityRuntime.includes('data-pc-diagnostics-refresh')&&channelIdentityCss.includes('.pc-advanced-diagnostics[open]'));
+add('settings-fixed-actions-scroll-body',channelIdentityRuntime.includes("scroll.className='pc-preference-scroll'")&&channelIdentityCss.includes('.pc-preference-scroll')&&channelIdentityCss.includes('flex:0 0 auto'));
 add('audio-deferred-until-activation',baseRuntime.includes("node.preload='none'")&&baseRuntime.includes('audioUnlocked')&&baseRuntime.includes('navigator.userActivation?.hasBeenActive'));
 add('record-cinematic-controls',main.includes('pc-cinematic-controls')&&main.includes('scheduleAutomaticAdvance')&&main.includes('ProjectCurseRecordCinematic'));
 add('record-cinematic-navigation',main.includes('previousSequence')&&main.includes('toggleSequencePlayback')&&main.includes('restartSequence'));
@@ -278,7 +283,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v23',structureData?.schema==='project-curse-v23'&&context.window.ProjectCurseBuild?.schema==='project-curse-v23');
+add('manifest-runtime-schema-v24',structureData?.schema==='project-curse-v24'&&context.window.ProjectCurseBuild?.schema==='project-curse-v24');
 add('archive-registry-version',archiveData?.version===DATA_VERSION);
 const publicArchiveIds=archiveData?.publicRecords?.map(record=>record.id)||[];
 add('archive-thirteen-record-index',publicArchiveIds.length===13&&publicArchiveIds.slice(0,4).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Zone_870815',publicArchiveIds.length);
@@ -332,11 +337,11 @@ add('adaptive-media-loading-presentation',adaptiveMediaCss.includes('.pc-media-l
 add('adaptive-media-viewer-gate',archiveDocumentRuntime.includes('range.disabled=true')&&archiveDocumentRuntime.includes("range.disabled=!complete")&&archiveDocumentRuntime.includes('Promise.all(pending)')&&archiveDocumentRuntime.includes('FRAME STABILIZED'));
 add('adaptive-media-cinematic',main.includes('data-pc-source=')&&main.includes("ProjectCurseMedia?.enhance?.(bodyEl")&&main.includes("ProjectCurseMedia?.preload?.(prefix()+nextPage.image"));
 add('adaptive-media-transition-warmup',transitionController.includes('ProjectCurseMedia.prepareRoute')&&transitionController.includes('VISUAL CHANNEL ACQUISITION'));
-add('adaptive-media-root-order',index.includes('assets/css/adaptive-media.css?v=5.32.0')&&index.includes('assets/js/data/media-manifest.js?v=5.32.0')&&index.includes('assets/js/core/adaptive-media.js?v=5.32.0')&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('record-cinematic-runtime.js'));
+add('adaptive-media-root-order',index.includes('assets/css/adaptive-media.css?v=5.33.0')&&index.includes('assets/js/data/media-manifest.js?v=5.33.0')&&index.includes('assets/js/core/adaptive-media.js?v=5.33.0')&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('record-cinematic-runtime.js'));
 add('quality-policy-owner',structureData?.owners?.qualityPolicy==='assets/js/core/quality-policy.js'&&structureData?.owners?.qualityPolicyCSS==='assets/css/quality-policy.css');
 add('quality-policy-signals',['saveData','effectiveType','downlink','rtt','deviceMemory','hardwareConcurrency'].every(signal=>qualityPolicyRuntime.includes(signal))&&qualityPolicyRuntime.includes("ProjectCurseQuality=Object.freeze"));
-add('quality-policy-root-order',index.includes('assets/css/quality-policy.css?v=5.32.0')&&index.includes('assets/js/core/quality-policy.js?v=5.32.0')&&index.indexOf('performance-telemetry.js')<index.indexOf('quality-policy.js')&&index.indexOf('quality-policy.js')<index.indexOf('adaptive-media.js'));
-add('quality-policy-recovery',qualityPolicyRuntime.includes('pc-connection-recovery')&&qualityPolicyRuntime.includes("root.addEventListener('offline'")&&qualityPolicyRuntime.includes('retryFailed')&&qualityPolicyCss.includes('.pc-connection-recovery'));
+add('quality-policy-root-order',index.includes('assets/css/quality-policy.css?v=5.33.0')&&index.includes('assets/js/core/quality-policy.js?v=5.33.0')&&index.indexOf('performance-telemetry.js')<index.indexOf('quality-policy.js')&&index.indexOf('quality-policy.js')<index.indexOf('adaptive-media.js'));
+add('quality-policy-recovery',qualityPolicyRuntime.includes('pc-connection-recovery')&&qualityPolicyRuntime.includes("root.addEventListener('offline'")&&qualityPolicyRuntime.includes('retryFailed')&&qualityPolicyCss.includes('.pc-connection-recovery')&&qualityPolicyCss.includes('.pc-connection-recovery[hidden]'));
 add('quality-policy-integrations',adaptiveMediaRuntime.includes("allows('routeWarmup')")&&baseRuntime.includes("allows('ambient')")&&transitionController.includes('CONSERVATION HANDOFF / PRELOAD BYPASSED')&&main.includes("allows('videoPreload')"));
 add('adaptive-media-standalone-documents',['Zone_870815','Unknown_Record1_860204','Unknown_Record2_860205','Unknown_Record3_920711','Unknown_Record4_930314'].every(id=>{const source=read(`docs/${id}/index.html`);return source.includes('adaptive-media.css')&&source.includes('media-manifest.js')&&source.includes('adaptive-media.js')&&source.indexOf('media-manifest.js')<source.indexOf('archive-document.js');}));
 add('field-dossier-four-records',greatBlackForest?.presentation==='region-dossier'&&deadZonePilgrimage?.presentation==='region-dossier'&&pilgrimRules?.presentation==='guide'&&brokenCrown?.presentation==='scenario');

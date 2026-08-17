@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — live channel state and local performance telemetry.
+// Project Curse 5.33.0 — live channel state, session health and local performance telemetry.
 (function(root){
   'use strict';
 
@@ -10,6 +10,8 @@
   };
   const transitionStarts=new Map();
   let updateTimer=0;
+  let hiddenStarted=document.hidden?performance.now():0;
+  let hiddenDuration=0;
 
   function finite(value){return Number.isFinite(Number(value))?Number(value):0;}
   function round(value){return Math.round(finite(value));}
@@ -86,10 +88,14 @@
   function getSnapshot(){
     collectNavigation();
     collectResources();
+    const now=performance.now();
+    const memory=performance.memory||null;
+    const hidden=hiddenDuration+(document.hidden&&hiddenStarted?now-hiddenStarted:0);
     return Object.freeze({
-      version:'1.0.0',navigation:Object.freeze({...metrics.navigation}),resources:Object.freeze({...metrics.resources}),
+      version:'1.1.0',navigation:Object.freeze({...metrics.navigation}),resources:Object.freeze({...metrics.resources}),
       vitals:Object.freeze({...metrics.vitals,cls:Number(metrics.vitals.cls.toFixed(4)),longTaskTime:round(metrics.vitals.longTaskTime)}),
-      boot:Object.freeze({...metrics.boot}),transitions:Object.freeze({...metrics.transitions}),state:Object.freeze(stateSnapshot())
+      boot:Object.freeze({...metrics.boot}),transitions:Object.freeze({...metrics.transitions}),state:Object.freeze(stateSnapshot()),
+      session:Object.freeze({elapsed:round(now-startedAt),visible:round(now-startedAt-hidden),hidden:round(hidden),visibility:document.hidden?'hidden':'visible',usedHeap:round(memory?.usedJSHeapSize),totalHeap:round(memory?.totalJSHeapSize),heapLimit:round(memory?.jsHeapSizeLimit)})
     });
   }
 
@@ -124,7 +130,13 @@
     emit('transition');
   });
   ['projectcurse:operation-state-change','projectcurse:pilgrimage-state-change','projectcurse:verdict-archive-change'].forEach(name=>document.addEventListener(name,()=>emit(name)));
+  document.addEventListener('visibilitychange',()=>{
+    const now=performance.now();
+    if(document.hidden) hiddenStarted=now;
+    else if(hiddenStarted){hiddenDuration+=now-hiddenStarted;hiddenStarted=0;}
+    emit('visibility');
+  });
   root.addEventListener('load',()=>root.setTimeout(()=>{collectNavigation();collectResources();emit('load');},0),{once:true});
 
-  root.ProjectCurseTelemetry=Object.freeze({version:'1.0.0',getSnapshot,getChannelStatus,refresh:()=>{collectNavigation();collectResources();emit('manual');return getSnapshot();}});
+  root.ProjectCurseTelemetry=Object.freeze({version:'1.1.0',getSnapshot,getChannelStatus,refresh:()=>{collectNavigation();collectResources();emit('manual');return getSnapshot();}});
 })(window);

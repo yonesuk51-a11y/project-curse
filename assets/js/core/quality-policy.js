@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — shared connection, device and recovery quality policy.
+// Project Curse 5.33.0 — shared connection, device and recovery quality policy.
 (function(root){
   'use strict';
 

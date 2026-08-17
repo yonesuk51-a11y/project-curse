@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — exit, quality-aware channel handoff and staged screen entry owner.
+// Project Curse 5.33.0 — exit, quality-aware channel handoff and staged screen entry owner.
 (function(root){
   'use strict';
 

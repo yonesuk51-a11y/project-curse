@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — boot and quality-aware persistent shell audio asset owner.
+// Project Curse 5.33.0 — boot and quality-aware persistent shell audio asset owner.
 (function(){
   'use strict';
 

@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — visual and operational identity for the five terminal channels.
+// Project Curse 5.33.0 — visual and operational identity for the five terminal channels.
 (function(root){
   'use strict';
 

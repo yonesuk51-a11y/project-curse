@@ -1,4 +1,4 @@
-// Project Curse 5.32.0 — channel navigation, identity headers and adaptive local preferences.
+// Project Curse 5.33.0 — readable settings, session health and adaptive local preferences.
 (function(root){
   'use strict';
 
@@ -67,6 +67,7 @@
       if(!definition?.options?.some(option=>option[0]===value)) return false;
       preferences=Object.assign({},preferences,{[key]:value});
       applyPreferences({persist:true});
+      renderOverview();
       root.ProjectCurseAudioControl?.play?.('contact',{volume:.55});
       return true;
     }
@@ -101,7 +102,7 @@
         settings.className='pc-mobile-preference-link';
         settings.dataset.pcPreferencesOpen='';
         settings.setAttribute('aria-haspopup','dialog');
-        settings.innerHTML='<i aria-hidden="true">◇</i><span><b>표시·음향 설정</b><small>DISPLAY / FX</small></span><em aria-hidden="true">CFG</em>';
+        settings.innerHTML='<i aria-hidden="true">◇</i><span><b>표시·음향 설정</b><small>DISPLAY / FX</small></span><em data-pc-mobile-quality aria-hidden="true">AUTO</em>';
         quickNav.appendChild(settings);
       }
     }
@@ -151,11 +152,51 @@
     }
 
     function preferencePanelMarkup(){
-      const groups=Object.entries(data.preferences).map(([key,definition])=>{
+      const group=key=>{
+        const definition=data.preferences[key];
+        if(!definition) return '';
         const options=definition.options.map(([value,label])=>`<button type="button" data-pc-preference="${key}" data-pc-value="${value}" aria-pressed="false"><span>${label}</span></button>`).join('');
-        return `<section class="pc-preference-group"><div><strong>${definition.label}</strong><p>${definition.description}</p></div><div class="pc-preference-options" role="group" aria-label="${definition.label}">${options}</div></section>`;
-      }).join('');
-      return `<div class="pc-preference-backdrop" data-pc-preferences-close></div><div class="pc-preference-dialog" role="dialog" aria-modal="true" aria-labelledby="pcPreferenceTitle"><header><div><small>PC-03 / LOCAL CONFIGURATION</small><h2 id="pcPreferenceTitle">표시·음향 설정</h2></div><button type="button" data-pc-preferences-close aria-label="설정 닫기">×</button></header><p class="pc-preference-intro">이 설정은 현재 브라우저에만 저장된다. AUTO 전송 품질은 연결과 기기 상태를 판독하며, AUDIO LOCAL은 모든 음향을 즉시 끄는 전체 음소거다.</p>${groups}<section class="pc-quality-diagnostics" aria-label="적응형 전송 품질"><header><div><small>ADAPTIVE DELIVERY POLICY</small><strong>전송·기기 판독</strong></div><span data-pc-quality-tier>SCANNING</span></header><dl><div><dt>LINK</dt><dd data-pc-quality="link">--</dd></div><div><dt>LATENCY</dt><dd data-pc-quality="rtt">--</dd></div><div><dt>MEMORY</dt><dd data-pc-quality="memory">--</dd></div><div><dt>CPU</dt><dd data-pc-quality="cores">--</dd></div></dl><p data-pc-quality-summary>현재 환경에 맞는 전송 정책을 계산하고 있다.</p></section><section class="pc-live-diagnostics" aria-label="현재 세션 성능"><header><div><small>LIVE SESSION TELEMETRY</small><strong>현재 세션 진단</strong></div><span>LOCAL ONLY</span></header><dl><div><dt>BOOT VISIBLE</dt><dd data-pc-telemetry="boot">WAIT</dd></div><div><dt>DOM READY</dt><dd data-pc-telemetry="dom">WAIT</dd></div><div><dt>TRANSFER</dt><dd data-pc-telemetry="transfer">WAIT</dd></div><div><dt>HANDOFF</dt><dd data-pc-telemetry="transition">STANDBY</dd></div></dl><p data-pc-telemetry-summary>브라우저 내부 측정값을 수신하는 중이다.</p></section><footer><span data-pc-effective-effects></span><button type="button" data-pc-preferences-close>설정 완료</button></footer></div>`;
+        return `<section class="pc-preference-group" data-preference-group="${key}"><div><strong>${definition.label}</strong><p>${definition.description}</p></div><div class="pc-preference-options" role="group" aria-label="${definition.label}">${options}</div></section>`;
+      };
+      const visual=['quality','effects','textReveal'].map(group).join('');
+      const audio=['interfaceAudio','ambient'].map(group).join('');
+      return `<div class="pc-preference-backdrop" data-pc-preferences-close></div><div class="pc-preference-dialog" role="dialog" aria-modal="true" aria-labelledby="pcPreferenceTitle"><header><div><small>PC-03 / LOCAL CONFIGURATION</small><h2 id="pcPreferenceTitle">표시·음향 설정</h2></div><button type="button" data-pc-preferences-close aria-label="설정 닫기">×</button></header><section class="pc-preference-overview" aria-live="polite"><i data-pc-overview-icon aria-hidden="true">◇</i><div><small>현재 적용 상태</small><strong data-pc-overview-title>환경 판독 중</strong><p data-pc-overview-copy>브라우저와 연결 상태에 맞는 설정을 확인하고 있다.</p></div><span data-pc-overview-health>CHECK</span><ul><li data-pc-overview-link>연결 확인</li><li data-pc-overview-media>미디어 확인</li><li data-pc-overview-audio>음향 확인</li></ul></section><div class="pc-preference-section"><header><small>01 / VISUAL & DELIVERY</small><strong>화면·전송</strong><p>화면의 움직임과 자료 전송량을 조절한다.</p></header>${visual}</div><div class="pc-preference-section"><header><small>02 / ACOUSTIC CHANNEL</small><strong>음향</strong><p>버튼·기록 효과음과 배경 환경음을 따로 제어한다.</p></header>${audio}</div><details class="pc-advanced-diagnostics"><summary><span><small>03 / ADVANCED DIAGNOSTICS</small><strong>고급 세션 진단</strong><em>문제가 있을 때 연결·성능 원자료를 확인한다.</em></span><b>열기</b></summary><div class="pc-advanced-diagnostics-body"><section class="pc-quality-diagnostics" aria-label="적응형 전송 품질"><header><div><small>ADAPTIVE DELIVERY POLICY</small><strong>전송·기기 판독</strong></div><span data-pc-quality-tier>SCANNING</span></header><dl><div><dt>LINK</dt><dd data-pc-quality="link">--</dd></div><div><dt>LATENCY</dt><dd data-pc-quality="rtt">--</dd></div><div><dt>MEMORY</dt><dd data-pc-quality="memory">--</dd></div><div><dt>CPU</dt><dd data-pc-quality="cores">--</dd></div></dl><p data-pc-quality-summary>현재 환경에 맞는 전송 정책을 계산하고 있다.</p></section><section class="pc-live-diagnostics" aria-label="현재 세션 성능"><header><div><small>LIVE SESSION TELEMETRY</small><strong>현재 세션 진단</strong></div><span>LOCAL ONLY</span></header><dl><div><dt>BOOT VISIBLE</dt><dd data-pc-telemetry="boot">WAIT</dd></div><div><dt>DOM READY</dt><dd data-pc-telemetry="dom">WAIT</dd></div><div><dt>TRANSFER</dt><dd data-pc-telemetry="transfer">WAIT</dd></div><div><dt>HANDOFF</dt><dd data-pc-telemetry="transition">STANDBY</dd></div><div><dt>SESSION</dt><dd data-pc-telemetry="session">0 S</dd></div><div><dt>JS HEAP</dt><dd data-pc-telemetry="heap">N/A</dd></div></dl><p data-pc-telemetry-summary>브라우저 내부 측정값을 수신하는 중이다.</p></section><button type="button" class="pc-diagnostics-refresh" data-pc-diagnostics-refresh>측정값 다시 읽기</button></div></details><footer><span data-pc-effective-effects></span><button type="button" data-pc-preferences-close>설정 완료</button></footer></div>`;
+    }
+
+    function overviewCopy(quality,snapshot){
+      const preference=quality?.preference||preferences.quality;
+      const tier=quality?.tier||'balanced';
+      const stressed=(snapshot?.vitals?.longTaskTime||0)>500;
+      if(tier==='offline') return {title:'오프라인 열람 중',copy:'열린 기록과 저장된 진행은 유지된다. 연결 복구 후 시각 자료를 다시 요청할 수 있다.',health:'OFFLINE',tone:'offline'};
+      if(preference==='data') return {title:'데이터 절약 고정',copy:'작은 이미지 후보를 우선하고 환경음·영상·다음 화면 선로딩을 억제한다.',health:stressed?'WATCH':'SAVING',tone:'constrained'};
+      if(preference==='high') return {title:'고화질 고정',copy:'현재 연결에서 전체 시각 품질과 미디어 준비를 유지한다.',health:stressed?'WATCH':'FULL',tone:'full'};
+      if(tier==='constrained') return {title:'데이터 절약 중',copy:'느린 연결 또는 제한된 기기를 감지해 무거운 전송과 효과를 자동으로 줄였다.',health:stressed?'WATCH':'AUTO SAVE',tone:'constrained'};
+      if(tier==='balanced') return {title:'균형 모드 적용됨',copy:'연출의 흐름은 유지하면서 현재 환경에 맞춰 일부 전송 비용을 조절한다.',health:stressed?'WATCH':'BALANCED',tone:'balanced'};
+      return {title:'자동 최적화됨',copy:'현재 연결과 기기 상태가 안정적이다. 전체 품질을 유지한다.',health:stressed?'WATCH':'STABLE',tone:'full'};
+    }
+
+    function formatDuration(ms){
+      const seconds=Math.max(0,Math.round((Number(ms)||0)/1000));
+      if(seconds<60) return `${seconds} S`;
+      const minutes=Math.floor(seconds/60);return `${minutes} M ${seconds%60} S`;
+    }
+
+    function renderOverview(){
+      if(!panel) return;
+      const quality=root.ProjectCurseQuality?.getDiagnostics?.();
+      const snapshot=root.ProjectCurseTelemetry?.getSnapshot?.();
+      if(!quality) return;
+      const copy=overviewCopy(quality,snapshot);
+      const overview=panel.querySelector('.pc-preference-overview');
+      if(overview) overview.dataset.tone=copy.tone;
+      const title=panel.querySelector('[data-pc-overview-title]');if(title) title.textContent=copy.title;
+      const description=panel.querySelector('[data-pc-overview-copy]');if(description) description.textContent=copy.copy;
+      const health=panel.querySelector('[data-pc-overview-health]');if(health) health.textContent=copy.health;
+      const link=panel.querySelector('[data-pc-overview-link]');if(link) link.textContent=quality.online?`${quality.effectiveType.toUpperCase()} 연결`:'연결 없음';
+      const media=panel.querySelector('[data-pc-overview-media]');if(media) media.textContent=quality.allows.routeWarmup?'미디어 준비 허용':'미디어 준비 절약';
+      const audio=panel.querySelector('[data-pc-overview-audio]');if(audio) audio.textContent=quality.allows.ambient&&preferences.ambient==='on'?'환경음 허용':'환경음 억제';
+      const trigger=document.querySelector('[data-pc-trigger-quality]');if(trigger) trigger.textContent=String(quality.tier).toUpperCase();
+      document.querySelectorAll('[data-pc-mobile-quality]').forEach(node=>{node.textContent=copy.health;});
     }
 
     function renderQuality(){
@@ -188,7 +229,9 @@
         boot:snapshot.boot.visible?`${(snapshot.boot.visible/1000).toFixed(2)} S`:(snapshot.boot.complete?`${(snapshot.boot.complete/1000).toFixed(2)} S`:'WAIT'),
         dom:snapshot.navigation.dom?`${snapshot.navigation.dom} MS`:'WAIT',
         transfer:formatBytes(snapshot.resources.transfer),
-        transition:snapshot.transitions.last?`${snapshot.transitions.last} MS`:'STANDBY'
+        transition:snapshot.transitions.last?`${snapshot.transitions.last} MS`:'STANDBY',
+        session:formatDuration(snapshot.session?.visible),
+        heap:snapshot.session?.usedHeap?formatBytes(snapshot.session.usedHeap):'N/A'
       };
       Object.entries(values).forEach(([key,value])=>{const node=panel.querySelector(`[data-pc-telemetry="${key}"]`);if(node) node.textContent=value;});
       const summary=panel.querySelector('[data-pc-telemetry-summary]');
@@ -208,6 +251,7 @@
           ensureIdentity(channel.id);
         });
         renderTelemetry();
+        renderOverview();
       });
     }
 
@@ -218,22 +262,32 @@
       trigger.className='pc-preference-trigger';
       trigger.dataset.pcPreferencesOpen='';
       trigger.setAttribute('aria-haspopup','dialog');
-      trigger.innerHTML='<i aria-hidden="true">◇</i><span>DISPLAY / FX</span>';
+      trigger.innerHTML='<i aria-hidden="true">◇</i><span>DISPLAY / FX</span><em data-pc-trigger-quality>AUTO</em>';
       shellStatus.insertBefore(trigger,shellStatus.lastElementChild||null);
       panel=document.createElement('section');
       panel.className='pc-preference-panel';
       panel.dataset.pcPreferencesPanel='';
       panel.hidden=true;
       panel.innerHTML=preferencePanelMarkup();
+      const dialog=panel.querySelector('.pc-preference-dialog');
+      const footer=dialog?.querySelector(':scope > footer');
+      if(dialog&&footer){
+        const scroll=document.createElement('div');scroll.className='pc-preference-scroll';
+        Array.from(dialog.children).filter(node=>node!==dialog.firstElementChild&&node!==footer).forEach(node=>scroll.appendChild(node));
+        dialog.insertBefore(scroll,footer);
+      }
       document.body.appendChild(panel);
       panel.addEventListener('click',event=>{
         const preference=event.target.closest?.('[data-pc-preference]');
         if(preference) setPreference(preference.dataset.pcPreference,preference.dataset.pcValue);
+        if(event.target.closest?.('[data-pc-diagnostics-refresh]')){root.ProjectCurseQuality?.refresh?.();root.ProjectCurseTelemetry?.refresh?.();renderQuality();renderTelemetry();renderOverview();}
         if(event.target.closest?.('[data-pc-preferences-close]')) closePreferences();
       });
+      panel.querySelector('.pc-advanced-diagnostics')?.addEventListener('toggle',event=>{if(event.target.open){renderQuality();renderTelemetry();renderOverview();}});
       document.querySelectorAll('[data-pc-preferences-open]').forEach(control=>control.addEventListener('click',()=>openPreferences(control)));
       renderTelemetry();
       renderQuality();
+      renderOverview();
     }
 
     function openPreferences(trigger){
@@ -245,6 +299,7 @@
       root.ProjectCurseTelemetry?.refresh?.();
       renderTelemetry();
       renderQuality();
+      renderOverview();
       requestAnimationFrame(()=>panel.classList.add('is-open'));
       panel.querySelector('button')?.focus({preventScroll:true});
       root.ProjectCurseAudioControl?.play?.('open',{volume:.55});
@@ -259,7 +314,7 @@
 
     function diagnostics(){
       return {
-        version:'5.32.0',channel:rootElement.dataset.pcChannel,
+        version:'5.33.0',channel:rootElement.dataset.pcChannel,
         identities:document.querySelectorAll(':scope body > .app [data-channel-identity="header"]').length,
         preferences:{...preferences},effectiveEffects:rootElement.dataset.pcEffects,
         navigation:quickNav?.querySelectorAll('[data-channel-route]').length||0,
@@ -279,6 +334,7 @@
     });
     document.addEventListener('projectcurse:telemetry-update',refreshLiveStatus);
     document.addEventListener('projectcurse:quality-change',renderQuality);
+    document.addEventListener('projectcurse:quality-change',renderOverview);
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!panel?.hidden) closePreferences();
       if(event.key==='Tab'&&!panel?.hidden){
@@ -291,7 +347,7 @@
     reduceMotion.addEventListener?.('change',()=>applyPreferences());
 
     root.ProjectCurseChannelIdentity=Object.freeze({
-      version:'5.32.0',getChannel:id=>byId.get(id)||null,getPreferences:()=>({...preferences}),
+      version:'5.33.0',getChannel:id=>byId.get(id)||null,getPreferences:()=>({...preferences}),
       setPreference,openPreferences,closePreferences,refresh:()=>activateChannel(root.ProjectCurseShell?.getRoute?.()||'terminal-home',{animate:false}),
       getDiagnostics:diagnostics
     });
