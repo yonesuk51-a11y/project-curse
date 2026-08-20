@@ -1,4 +1,4 @@
-// Project Curse 5.36.0 — era-indexed chronology with canon and evidence states.
+// Project Curse 5.36.1 — era-indexed chronology with post-2006 canon.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
@@ -9,9 +9,9 @@
     <header class="pc-world-history-head">
       <div class="label">세계 기록 / 정사 복구 연표</div>
       <h2>세계 사건 연표</h2>
-      <p>1975년의 공간 개척 실험부터 현재까지 남은 기록을 시대와 근거 수준으로 분리한다. 확정 사실, 현장 관측과 상충 정보는 같은 기록처럼 취급하지 않는다.</p>
+      <p>1975년의 공간 개척 실험부터 2030년 남부 동원까지 남은 기록을 시대와 근거 수준으로 분리한다. 확정 사실, 현장 관측과 상충 정보는 같은 기록처럼 취급하지 않는다.</p>
     </header>
-    <div class="pc-world-history-range">1975–2006 / ONGOING</div>
+    <div class="pc-world-history-range">1975–2030 / ACTIVE ARCHIVE</div>
     <section class="pc-world-history-overview" aria-label="연표 복구 현황">
       <div><b data-history-total>0</b><span>복구 사건</span></div>
       <div><b data-history-era-total>0</b><span>시대 구획</span></div>
@@ -97,8 +97,8 @@
         <div class="pc-world-history-entry-copy"><p>레드울프를 포함한 S.O.N 전력은 위버멘시 프로젝트 미국 지부를 습격해 방랑자 10명과 연구자료 일부를 확보했다. 신원이 확인된 실험 대상자의 자료가 드러나며 U.A.C는 큰 타격을 입었고, 위버멘시 프로젝트의 공식 폐기를 선언했다.</p><p>그러나 U.A.C는 실험의 전체 규모와 피해 기록을 봉인·삭제하며 책임을 숨기려 했다.</p></div>
       </details>
       <details class="pc-world-history-entry">
-        <summary><time>2006년 이후</time><strong>종결되지 않은 전쟁</strong><small>기록은 멈췄지만, 리버스와 전투는 계속된다.</small></summary>
-        <div class="pc-world-history-entry-copy"><p>N.H.C와 S.I.D는 각지에서 봉쇄와 수사를 계속하고, F.H.C와 TAD는 영향력을 유지한다. S.O.N은 이탈 전력을 흡수하며 U.A.C 체제에 맞서고, 우시노다교는 여전히 여러 사회 내부에서 활동하고 있다.</p><p>구출된 방랑자 10명과 사라진 연구자료의 행방, F.H.C와 우시노다교의 실제 연결, U.A.C가 숨긴 실험의 전체 규모는 확인되지 않았다. 이 기록은 결말이 아니라, 현재까지 이어지는 충돌의 가장 최근 기준점이다.</p></div>
+        <summary><time>2006.08–12</time><strong>위버멘시 폭로 후폭풍</strong><small>시설 폐쇄와 자료 소각이 북미 대응망 전체의 신뢰 붕괴로 이어졌다.</small></summary>
+        <div class="pc-world-history-entry-copy"><p>U.A.C는 위버멘시 프로젝트의 공식 폐기를 발표했지만, 미국 지부와 연결된 시설 14곳에서 같은 주간에 자료 소각과 인력 재배치가 시작됐다. N.H.C와 S.I.D는 실험체 명단을 확보하려 했으나 시설마다 서로 다른 폐쇄 명령과 관할권 문서가 제시됐다.</p><p>S.O.N이 유출한 자료에는 납치 경로와 기억 삭제 기록 일부가 포함됐지만, 구출된 방랑자 10명과 연구자료의 최종 행방은 공개되지 않았다. U.A.C 내부 감사관들은 피해 규모를 복원하기 전에 북미 대응망의 명령 체계가 먼저 붕괴할 수 있다고 경고했다.</p></div>
       </details>
     </section>`;
 
@@ -171,9 +171,9 @@
       '회수된 자료에는 실험 대상자의 실제 신원과 납치 경로, 기억 삭제 기록이 포함돼 있었다. 일부 정보가 외부에 폭로되면서 U.A.C는 위버멘시가 단순한 방랑자 보호 연구였다는 주장을 유지할 수 없게 됐다.',
       '프로젝트 폐기로 인공적인 고화력 생체 병기 요원을 생산하는 계획은 중단됐다. 그러나 시설 폐쇄와 동시에 자료 삭제가 진행되면서 불법 인체실험의 전체 규모와 책임자는 끝내 공개되지 않았다.'
     ],
-    '종결되지 않은 전쟁': [
-      'U.A.C는 손상된 권위를 유지한 채 국제 조율을 계속하고, N.H.C와 S.I.D는 각자의 방식으로 현장을 통제한다. F.H.C는 TAD를 앞세워 대응 세력의 외형을 유지하면서 비협력국과 기업권에서 영향력을 넓힌다.',
-      'S.O.N과 레드울프는 U.A.C 체제에 맞서고, 우시노다교는 정부·기업·교육기관 내부에 남아 있다. 어느 세력도 전쟁을 끝낼 만큼 우세하지 않으며, 리버스는 여전히 새로운 지역에서 발생한다.'
+    '위버멘시 폭로 후폭풍': [
+      '자료 소각은 책임자를 감추는 데는 성공했지만 각 기관이 공유하던 실험체 식별번호와 현장 좌표도 함께 지웠다. 내륙에서 리버스가 발생할 때마다 N.H.C, S.I.D와 지역군은 서로 다른 인원을 구조·격리·제거 대상으로 지정했다.',
+      '2006년 말까지 북미 내륙의 대응 지휘소 다섯 곳이 중앙 명령을 거부했다. 이 균열은 이듬해 연속정부 철수와 대륙 무응답 선언으로 이어지는 직접적인 전조가 됐다.'
     ]
   };
 
@@ -195,18 +195,24 @@
     '1997-01-27-classification', '1999-07-12-ubermensch',
     '2001-07-21-independence', '2002-02-20-ground-forces',
     '2003-02-05-city-barrier', '2005-01-21-ash-crew',
-    '2005-09-01-red-wolf', '2006-08-20-ubermensch-raid', '2006-ongoing'
+    '2005-09-01-red-wolf', '2006-08-20-ubermensch-raid', '2006-12-31-aftermath'
   ];
-  const records = entries.map((entry, index) => ({
-    id: recordIds[index],
-    date: entry.querySelector('time')?.textContent.trim() || '',
-    title: entry.querySelector('summary strong')?.textContent.trim() || '',
-    summary: entry.querySelector('summary small')?.textContent.trim() || '',
-    paragraphs: [...entry.querySelectorAll('.pc-world-history-entry-copy p')]
-      .map((p) => p.textContent.trim())
-      .filter(Boolean),
-    ...(chronology?.getRecord?.(recordIds[index]) || {})
-  }));
+  const records = [
+    ...entries.map((entry, index) => ({
+      id: recordIds[index],
+      date: entry.querySelector('time')?.textContent.trim() || '',
+      title: entry.querySelector('summary strong')?.textContent.trim() || '',
+      summary: entry.querySelector('summary small')?.textContent.trim() || '',
+      paragraphs: [...entry.querySelectorAll('.pc-world-history-entry-copy p')]
+        .map((p) => p.textContent.trim())
+        .filter(Boolean),
+      ...(chronology?.getRecord?.(recordIds[index]) || {})
+    })),
+    ...((chronology?.post2006Records || []).map(record => ({
+      ...record,
+      paragraphs:[...(record.paragraphs || [])]
+    })))
+  ];
   const incidentNetwork = window.ProjectCurseIncidentNetwork;
 
   const head = root.querySelector('.pc-world-history-head');

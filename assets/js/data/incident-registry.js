@@ -1,4 +1,4 @@
-// Project Curse 5.36.0 — shared incident, region and operation network.
+// Project Curse 5.36.1 — shared incident, region and operation network.
 (function(root){
   'use strict';
 
@@ -31,9 +31,9 @@
       region:'northamerica',coordinates:[-96,37],history:'2006-08-20-ubermensch-raid',factions:['uac','syndicate'],records:['Unknown_Record3_920711']
     },
     'evt-northern-front':{
-      id:'evt-northern-front',code:'EVT-NORTH-ONGOING',date:'ONGOING',status:'ESCALATING',confidence:'estimated',
-      title:'북부 전선 격화',summary:'일본과 동맹권이 짐승의 길 계열 세력을 밀어내며 전선 신호가 증가하고 있다.',
-      region:'eastasia',coordinates:[130,48],history:'2006-ongoing',factions:['sid','nhc'],records:[]
+      id:'evt-northern-front',code:'EVT-2026-0820',date:'2026.08.20',status:'ADVANTAGE / CONTESTED',confidence:'corroborated',
+      title:'북부전선 역전',summary:'일본과 동맹권이 짐승의 길 계열 세력을 세 번째 차단선 밖으로 밀어냈다.',
+      region:'eastasia',coordinates:[130,48],history:'2026-08-20-northern-reversal',factions:['sid','nhc'],records:[]
     },
     'evt-gbf-unlit':{
       id:'evt-gbf-unlit',code:'EVT-GBF-UNLIT',date:'DATE LOST',status:'ROUTE UNSTABLE',confidence:'testimony',
@@ -41,20 +41,20 @@
       region:'southamerica',coordinates:[-66,-18],factions:['sid'],records:[],operation:'op-unlit-fortress'
     },
     'evt-deadzone-return':{
-      id:'evt-deadzone-return',code:'EVT-DZ-RETURN-07',date:'DATE UNVERIFIED',status:'QUARANTINE ACTIVE',confidence:'observed',
+      id:'evt-deadzone-return',code:'EVT-2029-0412',date:'2029.04.12',status:'QUARANTINE ACTIVE',confidence:'observed',
       title:'검문소 07 귀환자 신원 상충',summary:'네 명의 귀환자와 다섯 번째 생체 신호가 서부 귀환 회랑의 동일 출입 요청으로 감지된 사건.',
-      region:'northamerica',coordinates:[-124,44],factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return'
+      region:'northamerica',coordinates:[-124,44],history:'2029-04-12-checkpoint-07',factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return'
     },
     'evt-deadzone-recovery':{
       id:'evt-deadzone-recovery',code:'EVT-DZ-OUTBOUND-R05',date:'AFTER 06:03',status:'SEALED / VERDICT REQUIRED',confidence:'disputed',
       title:'검문소 07 지하 구조 신호',summary:'역방향 순례 판정에서 복원된 좌표가 데드존 내륙이 아니라 검문소 07 아래의 존재하지 않는 층을 가리킨 사건.',
-      region:'northamerica',coordinates:[-124,44],factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-recovery'
+      region:'northamerica',coordinates:[-124,44],history:'2029-04-12-checkpoint-07',factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-recovery'
     },
     'evt-southern-mobilization':{
-      id:'evt-southern-mobilization',code:'EVT-SOUTH-COUP',date:'ONGOING',status:'CRITICAL / PARTIAL',confidence:'estimated',
+      id:'evt-southern-mobilization',code:'EVT-2030-0117',date:'2030.01.17',status:'CRITICAL / PARTIAL',confidence:'observed',
       title:'남부 집단 소환·쿠데타 전조',
       summary:'남부 해안 분파의 특수부대 집결, 도시권 집단 소환과 성위대 지휘부 침투 정황이 동시에 포착됐다.',
-      region:'southamerica',coordinates:[-46,-23],history:'2006-ongoing',factions:['sid','nhc','ushinoda'],records:['Cults_871104'],operation:'op-southern-coup',
+      region:'southamerica',coordinates:[-46,-23],history:'2030-01-17-broken-crown',factions:['sid','nhc','ushinoda'],records:['Cults_871104'],operation:'op-southern-coup',
       participants:['피의 종교 남부권','남부 해안 분파','성위대 내부 공작망','몬수르 교회 일부','우시노다 잔존 인원'],
       intelligence:[
         '남부 특수부대는 적 전력을 분산시키기 위한 동시다발 소환을 준비 중이다.',
@@ -91,7 +91,7 @@
   };
 
   root.ProjectCurseIncidentNetwork=freeze({
-    version:'5.36.0',
+    version:'5.36.1',
     incidents,
     incidentList:Object.values(incidents),
     operations:[operation],

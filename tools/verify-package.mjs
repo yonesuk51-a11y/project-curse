@@ -4,7 +4,7 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.36.0';
+const VERSION='5.36.1';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -287,7 +287,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v27',structureData?.schema==='project-curse-v27'&&context.window.ProjectCurseBuild?.schema==='project-curse-v27');
+add('manifest-runtime-schema-v28',structureData?.schema==='project-curse-v28'&&context.window.ProjectCurseBuild?.schema==='project-curse-v28');
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);
 const publicArchiveIds=archiveData?.publicRecords?.map(record=>record.id)||[];
 add('archive-thirteen-record-index',publicArchiveIds.length===13&&publicArchiveIds.slice(0,4).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Zone_870815',publicArchiveIds.length);
@@ -476,9 +476,11 @@ add('faction-mark-name-index',factionAnalysisRuntime.includes('pc-faction-card')
 add('faction-auxiliary-page',factionAnalysisRuntime.includes('pc-faction-back')&&factionAnalysisRuntime.includes('openDossier')&&factionAnalysisRuntime.includes('renderDossier')&&factionAnalysisRuntime.includes("navigate('faction-info')"));
 add('history-faction-renames',worldHistory.includes('S.O.N')&&worldHistory.includes('P.O.H')&&!/신디케이트|하이문/.test(worldHistory));
 add('uac-independent-in-history',worldHistory.includes('UN 산하기관은 아니며')&&factionAnalysisSource.includes('UN 산하기관은 아니며'));
-add('history-five-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===5&&worldHistoryData.eras.map(era=>era.id).join('|')==='origin|exposure|institution|separation|fracture');
-add('history-eighteen-evidence-records',Object.keys(worldHistoryData?.records||{}).length===18&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
-add('history-canon-gap-registry',worldHistoryData?.unresolved?.length===5&&worldHistoryData.unresolved.some(item=>item.id==='alt-japan-technology')&&read('WORLD_CANON_LEDGER.md').includes('실제 역사 결합 원칙'));
+add('history-eight-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===8&&worldHistoryData.eras.map(era=>era.id).join('|')==='origin|exposure|institution|separation|fracture|silence|frontiers|mobilization');
+add('history-thirty-two-evidence-records',Object.keys(worldHistoryData?.records||{}).length===32&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
+add('history-post-2006-chronicle',worldHistoryData?.post2006Records?.length===14&&worldHistoryData.post2006Records.every(record=>record.id&&record.date&&record.title&&record.summary&&record.paragraphs?.length>=3)&&worldHistoryData.records['2030-01-17-broken-crown']?.title==='부서진 왕관 개시');
+add('history-incident-date-links',incidentData?.incidents?.['evt-northern-front']?.history==='2026-08-20-northern-reversal'&&incidentData?.incidents?.['evt-deadzone-return']?.history==='2029-04-12-checkpoint-07'&&incidentData?.incidents?.['evt-southern-mobilization']?.history==='2030-01-17-broken-crown');
+add('history-canon-gap-registry',worldHistoryData?.unresolved?.length===4&&!worldHistoryData.unresolved.some(item=>item.id==='post-2006-chronology')&&worldHistoryData.unresolved.some(item=>item.id==='alt-japan-technology')&&read('WORLD_CANON_LEDGER.md').includes('2007–2030 가상 역사 기준점')&&read('WORLD_CANON_LEDGER.md').includes('실제 역사 결합 원칙'));
 add('history-era-filter-runtime',worldHistory.includes('historyEraFilter')&&worldHistory.includes('function renderIndex')&&worldHistory.includes('pc-world-history-record-state')&&worldHistory.includes('ProjectCurseWorldHistoryData'));
 for(const file of [structureData?.audio?.ambient,...Object.values(structureData?.audio?.effects||{})]){
   add(`audio-asset:${file}`,!!file&&existsSync(path(`assets/audio/${file}`)));
