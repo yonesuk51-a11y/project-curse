@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — visual and operational identity for the five terminal channels.
+// Project Curse 5.43.1 — visual and operational identity for the five terminal channels.
 (function(root){
   'use strict';
 
@@ -26,7 +26,7 @@
       {
         id:'history',index:'02',code:'CHRONOLOGY',label:'세계 기록',shortLabel:'연대기',theme:'chronology',glyph:'CH',
         description:'분절된 사건 기록을 시간축에 재배열해 세계의 변곡점을 추적한다.',
-        telemetry:[['SPAN','1980–2030'],['INDEX','PARTIAL'],['DRIFT','DETECTED']]
+        telemetry:[['SPAN','1975–2042'],['INDEX','43 RECORDS'],['EVENTS','9']]
       },
       {
         id:'faction-info',index:'03',code:'INTELLIGENCE',label:'정보 분석',shortLabel:'분석',theme:'intelligence',glyph:'IA',

@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.42.0';
+const VERSION='5.43.1';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');

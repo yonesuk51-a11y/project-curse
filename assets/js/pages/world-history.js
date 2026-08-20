@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — authored archive fragments, document voices and technology trace.
+// Project Curse 5.43.1 — authored archive fragments, document voices and post-2030 common canon.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
@@ -11,9 +11,9 @@
     <header class="pc-world-history-head">
       <div class="label">세계 기록 / 정사 복구 연표</div>
       <h2>세계 사건 연표</h2>
-      <p>1975년의 공간 개척 실험부터 2030년 남부 동원까지 남은 기록을 시대와 근거 수준으로 분리한다. 확정 사실, 현장 관측과 상충 정보는 같은 기록처럼 취급하지 않는다.</p>
+      <p>1975년의 공간 개척 실험부터 2042년 삼야 무응답까지 남은 기록을 시대와 근거 수준으로 분리한다. 2030년 작전의 로컬 결말은 공통 연표와 분리하고, 이후 확인된 생존 규칙과 신호만 등록한다.</p>
     </header>
-    <div class="pc-world-history-range">1975–2030 / ACTIVE ARCHIVE</div>
+    <div class="pc-world-history-range">1975–2042 / ACTIVE ARCHIVE</div>
     <section class="pc-world-history-overview" aria-label="연표 복구 현황">
       <div><b data-history-total>0</b><span>복구 사건</span></div>
       <div><b data-history-era-total>0</b><span>시대 구획</span></div>
@@ -519,10 +519,18 @@
     });
 
     const linkedIncidents=incidentNetwork?.incidentList?.filter(item=>item.history===record.id)||[];
+    const linkedFactions=[...new Set([
+      ...(Array.isArray(record.factions)?record.factions:[]),
+      ...linkedIncidents.flatMap(incident=>incident.factions)
+    ])].filter(key=>window.ProjectCurseCanon?.factions?.[key]).slice(0,4);
+    const linkedRecords=[...new Set([
+      ...(Array.isArray(record.records)?record.records:[]),
+      ...linkedIncidents.flatMap(incident=>incident.records)
+    ])].slice(0,4);
     const linkPanel=detailView.querySelector('[data-history-record-links]');
     const linkHost=linkPanel?.querySelector('div');
     linkHost?.replaceChildren();
-    if(linkedIncidents.length&&linkPanel&&linkHost){
+    if((linkedIncidents.length||linkedFactions.length||linkedRecords.length)&&linkPanel&&linkHost){
       const addLink=(label,dataName,value)=>{
         const button=document.createElement('button');
         button.type='button';
@@ -534,11 +542,8 @@
         addLink(`${incident.title} 위치`,'historyMapIncident',incident.id);
         if(incident.operation) addLink(`${incident.title} 작전`,'historyMapOperation',incident.operation);
       });
-      [...new Set(linkedIncidents.flatMap(incident=>incident.factions))]
-        .filter(key=>window.ProjectCurseCanon?.factions?.[key]).slice(0,4)
-        .forEach(key=>addLink(`${window.ProjectCurseCanon.factions[key].name} 분석`,'historyFaction',key));
-      [...new Set(linkedIncidents.flatMap(incident=>incident.records))].slice(0,4)
-        .forEach(id=>addLink(`${id} 기록`,'historyArchive',id));
+      linkedFactions.forEach(key=>addLink(`${window.ProjectCurseCanon.factions[key].name} 분석`,'historyFaction',key));
+      linkedRecords.forEach(id=>addLink(`${id} 기록`,'historyArchive',id));
       linkPanel.hidden=false;
     }else if(linkPanel){
       linkPanel.hidden=true;

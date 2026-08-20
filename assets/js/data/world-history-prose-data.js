@@ -1,4 +1,4 @@
-// Project Curse 5.36.2 — authored prose, document voices and archival fragments.
+// Project Curse 5.43.1 — authored prose, document voices and post-2030 archival fragments.
 (function(root){
   'use strict';
 
@@ -268,6 +268,56 @@
         {label:'명령 상충',kind:'document',text:'지휘관을 공작원으로 지목한 보고와 생존 시 처형하라는 명령은 서로 다른 발신 계통에서 들어왔다. 두 문서 모두 정상 승인 기록이 없다. 신원 확인 전 처형 명령을 집행하지 않는다.'},
         {label:'현재 기록',kind:'annotation',text:'도시 소환 차단, 해안 이동로 봉쇄와 민간 성채 철수가 동시에 진행 중이다. 쿠데타가 시작됐는지, 그렇게 믿게 만드는 것이 작전의 목적이었는지는 아직 보고할 수 없다.'}
       ]
+    },
+    '2031-02-03-branch-seal':{
+      documentType:'review',author:'U.A.C 기록무결성위원회',recipient:'중앙기록고·N.H.C·S.I.D 기록책임자',purpose:'OP-BROKEN-CROWN 결과철의 정사 효력 제한',
+      fragments:[
+        {label:'인계대장',kind:'log',text:'02.03 08:40  결과철 BC-EX 인계\n02.03 08:40  결과철 BC-CP 인계\n02.03 08:40  결과철 BC-CO 인계\n02.03 08:40  결과철 BC-HL 인계\n공통 봉인번호  17-BCR-0\n본문 해시  전부 불일치'},
+        {label:'보존 명령',kind:'directive',text:'네 결과철 가운데 하나를 원본으로 승격하지 않는다. 작전 개시 시각, 소환 반응과 침투 흔적만 공통 연표에 등록한다. 지휘관 신원·처분·협력과 쿠데타 종결 여부는 결과철별 지역 판정으로 격리한다.'},
+        {label:'위원회 한계',kind:'annotation',text:'동일 인계번호의 원인은 확인되지 않았다. 기록 조작, 통신 중첩과 현장 단말의 분기 저장은 모두 조사 대상이며 어느 설명도 현실 분할의 증거로 사용하지 않는다.'}
+      ]
+    },
+    '2032-08-14-three-bells-compact':{
+      documentType:'contested',author:'대흑림 성채 공동서기 / 서부 회랑 안내인',recipient:'문지기·야간 순례대',purpose:'성채 간 종 신호의 공통 의미 대조',
+      fragments:[
+        {label:'문지기 필사본',kind:'directive',text:'긴 종 하나: 해가 진 뒤에도 문이 열린다.\n짧은 종 둘: 문 안에 오염이 있다.\n간격을 둔 종 셋: 어제의 길이 오늘은 없다.\n마지막 소리를 들은 자가 다음 성에 옮긴다.'},
+        {label:'회랑 안내인',kind:'quote',text:'“열두 성의 대표가 모였다는 얘기는 나중에 붙었습니다. 나는 세 장을 옮겼고 셋 다 글씨가 달랐어요. 종 순서만 같았습니다. 세 번째 종을 들었으면 표지석부터 의심해야 합니다.”'},
+        {label:'서기 주석',kind:'annotation',text:'동일 신호가 열두 장부에서 확인된다. 최초 제안자와 합의 장소는 비어 있다. 종이 안전을 보증한다는 조항은 어느 장부에도 없다.'}
+      ]
+    },
+    '2034-04-22-inland-beacon-31':{
+      documentType:'forensic',author:'S.I.D 데드 존 신호감식반',recipient:'서부 해안 격리선·검문소 01–09',purpose:'폐쇄 항로표지기 응답열의 발신지 감식',
+      fragments:[
+        {label:'정비기록',kind:'log',text:'14:02:11  표지기 전원 인가\n14:02:19  내륙 반향 1 수신\n14:02:37  호출부호 31개 연속 응답\n14:03:53  응답열 반복 / 날짜 -1\n14:05:27  전원 물리 차단 후 6초간 수신 지속'},
+        {label:'파형 대조',kind:'finding',text:'첫 여덟 호출부호는 2007년 이전 구조대 대장과 일치한다. 나머지는 등록 이력이 없다. 세 반복은 음성 내용이 같지만 경과 날짜가 하루씩 앞선다. 위조 송신에서 사용되는 압축 흔적은 검출되지 않았다.'},
+        {label:'배포 제한',kind:'directive',text:'좌표는 순례 경로로 배포하지 않는다. 검문소 판정기는 파형 지문만 수신하며 같은 응답을 포착해도 구조 승인으로 처리하지 않는다.'}
+      ]
+    },
+    '2036-12-12-central-callsign-loss':{
+      documentType:'intercept',author:'S.I.D 교단감청과',recipient:'우시노다 계보 재검토실',purpose:'중앙 호출부호의 명령권 소실 여부 판정',
+      fragments:[
+        {label:'무응답표',kind:'log',text:'00:00  중앙 호출명 정시 송신 없음\n00:07  중계지 1·2 자동응답 없음\n00:19  중계지 3–9 반향 없음\n03일차  혈교 날짜표 단독 재개\n04일차  그림자교 역순 암호표 재개'},
+        {label:'잔존 송신',kind:'quote',text:'“중앙의 밤은 끝났다. 날짜는 각자의 피로 센다.”\n“이름을 기다리지 마라. 그림자가 먼저 도착한 곳이 명령지다.”'},
+        {label:'감청 판정',kind:'analysis',text:'공통 호출명은 더 이상 세 파벌의 동시 행동을 설명하지 못한다. 타락교 문구가 남부 보급명령과 F.H.C 잔존시설 경고문에 함께 나타났지만 동일 발신자의 증거는 없다.'},
+        {label:'계보 주의',kind:'annotation',text:'중앙호출명의 소실을 우시노다교 전체의 제거로 기록하지 않는다. 파벌, 지역 교회와 잔존 인원은 별도 계보에서 계속 추적한다.'}
+      ]
+    },
+    '2038-06-29-sixth-northern-line':{
+      documentType:'review',author:'일본 북부 공동지휘소 제6차 전황검토반',recipient:'동맹권 차단망 운영회의',purpose:'연속 도시 방벽 복구와 잔존 회랑 평가',
+      fragments:[
+        {label:'노드 운용 결과',kind:'finding',text:'독립시계 노드는 구조 요청의 내용을 판독하지 않았다. 서로 다른 철도·방재망에 남은 반환 지문 두 개가 맞을 때만 예비대 이동 승인이 열렸다. 복제 신호에 의한 오배치는 90일 대조기간 동안 여섯 건에서 한 건으로 줄었다.'},
+        {label:'전황표',kind:'log',text:'제1 회랑  18:12 도시 방벽 외곽 이탈\n제2 회랑  19:44 산악 통로로 분산\n제3 회랑  22:03 주력 송신 종료\n동맹군 추격  승인 안 함\n폐쇄역 감시노드  17개 잔류'},
+        {label:'작전회의 결론',kind:'directive',text:'전쟁 종료를 선포하지 않는다. 연속 도시권의 대규모 돌파 능력이 감소한 사실만 등록한다. 차단선 사이의 의식대와 단독 복제 신호는 현장 위협으로 유지한다.'}
+      ]
+    },
+    '2042-10-31-three-night-silence':{
+      documentType:'contested',author:'S.I.D 대륙간 신호합동실 / 성채·검문소 기록원',recipient:'U.A.C 연대기 편찬실',purpose:'대흑림·데드 존 동시 무응답 기록 대조',
+      fragments:[
+        {label:'공통 시각표',kind:'log',text:'10.31 02:17  대흑림 성채 6곳 외부망 소실\n10.31 02:17  데드 존 검문소 4곳 외부망 소실\n11.02 15:18  양측 연결 복구\n무응답  61시간 01분\n현지 방벽·조명  중단 보고 없음'},
+        {label:'대흑림 장부',kind:'quote',text:'“둘째 밤, 서쪽 문이 검문소 07의 호출명을 세 번 울렸다. 우리 종에는 그런 글자를 새긴 적이 없다. 문은 열지 않았다.”'},
+        {label:'검문소 자동기록',kind:'finding',text:'음성기록에서 성채 문지기 두 명의 이름이 검출됐다. 이름의 철자와 호흡 간격은 대흑림 장부의 구술본과 일치하지만 전송 경로, 중계기와 발신 장치는 발견되지 않았다.'},
+        {label:'합동실 유보',kind:'annotation',text:'동시 무응답은 복수 기록 일치로 보존한다. 장거리 전송, 시간 중첩과 제3자 모방은 현재 자료로 구분할 수 없다. 두 권역의 지리적 연결을 정사에 추가하지 않는다.'}
+      ]
     }
   };
 
@@ -279,7 +329,7 @@
   });
 
   root.ProjectCurseWorldHistoryProse=freeze({
-    version:root.ProjectCurseBuild?.version||'5.42.0',
+    version:root.ProjectCurseBuild?.version||'5.43.1',
     documentTypes,records,
     getRecord:id=>records[id]||null,
     getDocumentType:id=>documentTypes[id]||documentTypes.analysis
