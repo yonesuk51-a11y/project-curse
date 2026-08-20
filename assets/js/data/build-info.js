@@ -1,4 +1,4 @@
-// Project Curse 5.37.0 — single source of truth for the terminal build.
+// Project Curse 5.37.1 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.37.0',
-    codename:'Faction Sigil Authentication',
+    version:'5.37.1',
+    codename:'Unified Faction Sigils',
     schema:'project-curse-v30',
     released:'2026-08-20',
     screens:[

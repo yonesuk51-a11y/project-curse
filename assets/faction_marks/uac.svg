@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">U.A.C 공식 기관 휘장</title>
+  <desc id="desc">이중 격리환과 중앙의 미확인 흑원, 네 방향의 접근축으로 구성된 은백색 국제기관 문장</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <circle cx="256" cy="256" r="178" stroke="#707d82" stroke-width="10" stroke-dasharray="222 24 84 24"/>
+    <circle cx="256" cy="256" r="148" stroke="#d8d7cf" stroke-width="8"/>
+    <path stroke="#d8d7cf" stroke-width="15" d="M256 58v118M256 336v118M58 256h118M336 256h118"/>
+    <path stroke="#9b3037" stroke-width="9" d="m256 78-18 34h36l-18-34ZM434 256l-34-18v36l34-18ZM256 434l18-34h-36l18 34ZM78 256l34 18v-36l-34 18Z"/>
+    <path stroke="#707d82" stroke-width="8" d="M138 138l70 70M374 138l-70 70M374 374l-70-70M138 374l70-70"/>
+    <circle cx="256" cy="256" r="76" stroke="#d8d7cf" stroke-width="12"/>
+    <circle cx="256" cy="256" r="49" fill="#080a0a" stroke="#707d82" stroke-width="8"/>
+    <path stroke="#d8d7cf" stroke-width="10" d="M256 207a49 49 0 0 0 0 98 39 39 0 0 1 0-98Z"/>
+    <path stroke="#d8d7cf" stroke-width="7" d="m289 220 5 11 11 5-11 5-5 11-5-11-11-5 11-5 5-11ZM307 268l4 9 9 4-9 4-4 9-4-9-9-4 9-4 4-9Z"/>
+  </g>
+</svg>

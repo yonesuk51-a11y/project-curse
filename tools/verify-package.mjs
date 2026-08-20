@@ -4,7 +4,7 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.37.0';
+const VERSION='5.37.1';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -28,7 +28,7 @@ const required=[
   'assets/js/pages/shared-declutter.js',
   'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','ASSET_POLICY.md','WORLD_CANON_LEDGER.md','WRITING_STYLE_GUIDE.md','assets/resources/ASSET_REGISTRY.md',
   'assets/resources/derived/great-black-forest_reconstructed-v1.png','assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',
-  'assets/faction_marks/sid.svg','assets/faction_marks/syndicate.svg','assets/faction_marks/ushinoda.svg','assets/faction_marks/haimun.svg',
+  'assets/faction_marks/uac.svg','assets/faction_marks/nhc.svg','assets/faction_marks/sid.svg','assets/faction_marks/fhc.svg','assets/faction_marks/syndicate.svg','assets/faction_marks/ushinoda.svg','assets/faction_marks/haimun.svg','assets/faction_marks/ashcrew.svg','assets/faction_marks/arf.svg','assets/faction_marks/cpd.svg','assets/faction_marks/amarion.svg',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
   'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
   'assets/audio/pc5152cf_feral_dying_memories_bgm.mp3',
@@ -478,7 +478,7 @@ add('faction-analysis-seven',factionAnalysis?.order?.join('|')==='uac|nhc|sid|fh
 add('faction-analysis-groups',factionAnalysis?.groups?.map(group=>group.keys.join(',')).join('|')==='uac,nhc,sid,fhc|syndicate,ushinoda,haimun');
 add('faction-analysis-depth',factionAnalysis?.order?.every(key=>factionAnalysis.factions[key]?.overview?.length>=3&&factionAnalysis.factions[key]?.chronology?.length>=5&&factionAnalysis.factions[key]?.relations?.length>=3));
 add('faction-mark-registry-eleven',factionMarks?.version===VERSION&&Object.keys(factionMarks?.marks||{}).length===11);
-add('faction-mark-four-redesigns',factionMarks?.redesigned?.join('|')==='sid|syndicate|ushinoda|haimun'&&factionMarks.redesigned.every(key=>factionMarks.marks[key]?.asset?.endsWith('.svg')&&factionMarks.marks[key]?.symbols?.length>=3));
+add('faction-mark-eleven-vector-masters',factionMarks?.redesigned?.join('|')==='uac|nhc|sid|fhc|syndicate|ushinoda|haimun|ashcrew|arf|cpd|amarion'&&factionMarks.redesigned.every(key=>factionMarks.marks[key]?.asset?.endsWith('.svg')&&factionMarks.marks[key]?.legacyAsset?.endsWith('.webp')&&factionMarks.marks[key]?.symbols?.length>=3));
 add('faction-mark-assets',Object.values(factionMarks?.marks||{}).every(mark=>existsSync(path(mark.asset))&&(!mark.legacyAsset||existsSync(path(mark.legacyAsset)))));
 add('faction-mark-auth-runtime',factionAnalysisRuntime.includes('ProjectCurseFactionMarks')&&factionAnalysisRuntime.includes('MARK AUTHENTICATION / SIGIL RECORD')&&factionAnalysisRuntime.includes('bindMarkFallbacks'));
 add('faction-single-menu',count(index,'data-uac-route="faction-info"')>=2&&count(index,'data-uac-route="faction-relation"')===0&&index.includes('<b>정보 분석</b>'));

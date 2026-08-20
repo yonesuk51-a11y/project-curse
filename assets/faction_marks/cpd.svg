@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">C.P.D 민간선 식별 패치</title>
+  <desc id="desc">열린 방패 안의 세 사람과 검문 게이트, 승인과 격리로 갈라지는 통로를 배치한 민간 대피 패치</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path stroke="#707a7e" stroke-width="12" d="M256 62 416 120v138c0 102-58 164-160 200C154 422 96 360 96 258V120l160-58Z"/>
+    <path stroke="#d2cdc0" stroke-width="9" d="M256 94 384 140v118c0 78-40 130-128 164-88-34-128-86-128-164V140l128-46Z"/>
+    <path stroke="#6f858e" stroke-width="12" d="M154 168h204M174 168v106M338 168v106M154 274h204"/>
+    <circle cx="256" cy="200" r="26" fill="#d2cdc0"/>
+    <circle cx="204" cy="214" r="20" fill="#d2cdc0"/>
+    <circle cx="308" cy="214" r="20" fill="#d2cdc0"/>
+    <path stroke="#d2cdc0" stroke-width="16" d="M256 226v70M204 238v58M308 238v58"/>
+    <path stroke="#a63a3e" stroke-width="11" d="M256 296v90M256 340l-58 54M256 340l58 54"/>
+    <path stroke="#d2cdc0" stroke-width="8" d="m186 382 12 12 18-4M326 390l18 4 12-12"/>
+    <path stroke="#707a7e" stroke-width="7" d="M154 150v-26M358 150v-26M186 274v24M326 274v24"/>
+  </g>
+</svg>

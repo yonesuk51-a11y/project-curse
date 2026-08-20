@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">F.H.C 기업 연구부문 문장</title>
+  <desc id="desc">육각 연구 프레임 안의 붉은 관측 렌즈와 수직 계측축, 세 개의 자산 궤도로 구성된 기업 문장</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path stroke="#686f72" stroke-width="11" d="M152 72h208l104 184-104 184H152L48 256 152 72Z"/>
+    <path stroke="#d7d4cb" stroke-width="8" d="M174 104h164l82 152-82 152H174L92 256l82-152Z"/>
+    <path stroke="#777f81" stroke-width="8" d="M256 76v104M256 332v104M86 256h92M334 256h92"/>
+    <path stroke="#b43139" stroke-width="12" d="M116 256c40-58 87-86 140-86s100 28 140 86c-40 58-87 86-140 86s-100-28-140-86Z"/>
+    <circle cx="256" cy="256" r="62" stroke="#d7d4cb" stroke-width="11"/>
+    <circle cx="256" cy="256" r="31" fill="#9f242c" stroke="#4d5558" stroke-width="8"/>
+    <path stroke="#d7d4cb" stroke-width="8" d="M224 118h64M224 394h64M132 222v68M380 222v68"/>
+    <path stroke="#777f81" stroke-width="6" d="M198 152c-54 13-89 50-106 104 17 54 52 91 106 104M314 152c54 13 89 50 106 104-17 54-52 91-106 104"/>
+    <path stroke="#b43139" stroke-width="7" d="m256 120 12 22h-24l12-22ZM392 256l-22 12v-24l22 12ZM256 392l-12-22h24l-12 22Z"/>
+  </g>
+</svg>

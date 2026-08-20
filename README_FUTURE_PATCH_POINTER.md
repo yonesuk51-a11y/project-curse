@@ -1,6 +1,6 @@
 # Future Patch Pointer
 
-Current baseline: `5.37.0 Faction Sigil Authentication`
+Current baseline: `5.37.1 Unified Faction Sigils`
 
 Completed in this baseline:
 `32 Authored Records / Eight Document Voices / Provenance UI / Writing Standard`

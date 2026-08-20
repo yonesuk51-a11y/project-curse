@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Ash Crew 현장 수습 패치</title>
+  <desc id="desc">방패 안의 인식표와 잔불, 교차한 회수 집게로 구성된 회백색 현장 패치</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path stroke="#6d716d" stroke-width="12" d="M256 58 416 118v142c0 104-61 166-160 198C157 426 96 364 96 260V118l160-60Z"/>
+    <path stroke="#d0c9b9" stroke-width="9" d="M256 88 386 136v124c0 82-44 134-130 166-86-32-130-84-130-166V136l130-48Z"/>
+    <path stroke="#9d3034" stroke-width="13" d="M176 360 336 196M336 360 176 196"/>
+    <path stroke="#d0c9b9" stroke-width="11" d="m216 124 80 22v152l-40 38-40-38V124Z"/>
+    <circle cx="274" cy="161" r="9" fill="#080a0a" stroke="#6d716d" stroke-width="6"/>
+    <path stroke="#a93438" stroke-width="10" d="M256 276c-34-26-21-54 4-77 0 21 16 25 19 43 18-10 26-25 26-42 28 34 20 71-11 89-17 10-30 10-38-13Z"/>
+    <path stroke="#d0c9b9" stroke-width="8" d="M168 188l24 16-16 24M344 188l-24 16 16 24M168 368l24-16-16-24M344 368l-24-16 16-24"/>
+  </g>
+</svg>

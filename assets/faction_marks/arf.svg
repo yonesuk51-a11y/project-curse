@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">A.R.F 회수조직 패치</title>
+  <desc id="desc">삼각 회수틀과 상부 견인 고리, 균열이 생긴 오염 핵을 둘러싼 회수 화살로 구성된 패치</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path stroke="#70777a" stroke-width="12" d="M256 62 438 410H74L256 62Z"/>
+    <path stroke="#d0cbc0" stroke-width="9" d="M256 112 392 382H120l136-270Z"/>
+    <path stroke="#a82f36" stroke-width="13" d="M256 70v112M164 364l64-84M348 364l-64-84"/>
+    <circle cx="256" cy="242" r="78" stroke="#d0cbc0" stroke-width="11"/>
+    <circle cx="256" cy="242" r="48" fill="#401519" stroke="#a82f36" stroke-width="9"/>
+    <path stroke="#d0cbc0" stroke-width="8" d="m256 194-18 30 24 18-20 27 22 21M278 201l-13 26 20 16-13 31"/>
+    <path stroke="#70777a" stroke-width="9" d="M214 112c0-29 18-47 42-47s42 18 42 47M226 112h60"/>
+    <path stroke="#a82f36" stroke-width="9" d="m196 276-30 88 84-28M316 276l30 88-84-28"/>
+    <path stroke="#d0cbc0" stroke-width="7" d="M118 410h276M218 434h76"/>
+  </g>
+</svg>

@@ -29,10 +29,17 @@ The following SVG files are code-authored INTERFACE assets. They are visual iden
 
 | Asset | Class | Faction | Handling |
 |---|---|---|---|
+| `../faction_marks/uac.svg` | INTERFACE | U.A.C | Simplified containment seal; legacy ornate WebP retained |
+| `../faction_marks/nhc.svg` | INTERFACE | N.H.C | Unified field-response patch; legacy circular WebP retained |
 | `../faction_marks/sid.svg` | INTERFACE | S.I.D | New double-lens evidence frame; legacy eagle WebP retained |
+| `../faction_marks/fhc.svg` | INTERFACE | F.H.C | Internal research-division lens; legacy occult-eye WebP retained |
 | `../faction_marks/syndicate.svg` | INTERFACE | S.O.N | New broken-containment common mark; legacy skull WebP retained |
 | `../faction_marks/ushinoda.svg` | INTERFACE | Ushinoda | Field-reconstructed common ritual geometry; not presented as a verified official seal |
 | `../faction_marks/haimun.svg` | INTERFACE | P.O.H | New covert logistics code; legacy fist WebP retained |
+| `../faction_marks/ashcrew.svg` | INTERFACE | Ash Crew | Simplified recovery tag and ember patch; legacy textured WebP retained |
+| `../faction_marks/arf.svg` | INTERFACE | A.R.F | Retrieval frame and contaminated-core patch; legacy tactical WebP retained |
+| `../faction_marks/cpd.svg` | INTERFACE | C.P.D | Civilian gate and triage-route patch; legacy checkpoint WebP retained |
+| `../faction_marks/amarion.svg` | INTERFACE | Amarion | Restored spatial-coordinate corporate master; legacy geometric WebP retained |
 
 Design and authentication metadata are owned by `assets/js/data/faction-mark-registry.js`. These marks may be used in faction dossiers, maps and timelines, but their interface role must not be relabeled as ORIGINAL evidence.
 

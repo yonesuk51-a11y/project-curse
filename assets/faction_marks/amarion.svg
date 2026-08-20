@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Amarion 폐업 기업 문장</title>
+  <desc id="desc">삼각 공간 좌표와 어긋난 중심축, 세 관측점이 놓인 궤도로 구성된 구형 연구기업 로고</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path stroke="#d5d6d1" stroke-width="13" d="M256 62 438 410H74L256 62Z"/>
+    <path stroke="#6c7f87" stroke-width="8" d="M256 112 386 380H126l130-268Z"/>
+    <circle cx="256" cy="256" r="132" stroke="#7c898e" stroke-width="7" stroke-dasharray="118 18 64 18"/>
+    <ellipse cx="256" cy="256" rx="176" ry="72" stroke="#d5d6d1" stroke-width="8" transform="rotate(-18 256 256)"/>
+    <path stroke="#d5d6d1" stroke-width="11" d="M242 146v220M274 146v220"/>
+    <path stroke="#6c7f87" stroke-width="8" d="M198 318 314 194M210 194l92 124"/>
+    <circle cx="102" cy="307" r="13" fill="#a3343a" stroke="#d5d6d1" stroke-width="6"/>
+    <circle cx="405" cy="203" r="13" fill="#a3343a" stroke="#d5d6d1" stroke-width="6"/>
+    <circle cx="256" cy="124" r="11" fill="#a3343a" stroke="#d5d6d1" stroke-width="6"/>
+    <circle cx="256" cy="256" r="24" fill="#080a0a" stroke="#a3343a" stroke-width="9"/>
+  </g>
+</svg>

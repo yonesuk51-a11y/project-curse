@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">N.H.C 현장 부대 패치</title>
+  <desc id="desc">폐쇄된 작전환 안에 수직 방어창과 좌우 철수 회랑, 네 임무점을 배치한 적백색 패치</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <circle cx="256" cy="256" r="186" stroke="#d6d7d3" stroke-width="12"/>
+    <circle cx="256" cy="256" r="158" stroke="#8e252d" stroke-width="8"/>
+    <path stroke="#d6d7d3" stroke-width="15" d="m256 82 42 68v170l-42 108-42-108V150l42-68Z"/>
+    <path stroke="#a92f37" stroke-width="13" d="M256 112v280M214 188l-70 96 70 36M298 188l70 96-70 36"/>
+    <path stroke="#d6d7d3" stroke-width="10" d="M144 284h70M298 284h70M194 350l62 78 62-78"/>
+    <path stroke="#d6d7d3" stroke-width="7" d="m150 150 7 15 15 7-15 7-7 15-7-15-15-7 15-7 7-15ZM362 150l7 15 15 7-15 7-7 15-7-15-15-7 15-7 7-15ZM150 334l7 15 15 7-15 7-7 15-7-15-15-7 15-7 7-15ZM362 334l7 15 15 7-15 7-7 15-7-15-15-7 15-7 7-15Z"/>
+    <rect x="239" y="232" width="34" height="86" fill="#080a0a" stroke="#d6d7d3" stroke-width="8"/>
+  </g>
+</svg>
