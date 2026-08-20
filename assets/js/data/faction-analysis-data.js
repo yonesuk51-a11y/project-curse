@@ -1,4 +1,4 @@
-// Project Curse 5.38.0 — faction analysis and cult-lineage dossier data.
+// Project Curse 5.39.0 — faction analysis and cult-lineage dossier data.
 (function(root){
   'use strict';
 
@@ -323,7 +323,7 @@
   };
 
   root.ProjectCurseFactionAnalysis = freeze({
-    version: root.ProjectCurseBuild?.version||'5.38.0',
+    version: root.ProjectCurseBuild?.version||'5.39.0',
     groups: [
       {label:'PRIMARY INSTITUTIONS', keys:['uac','nhc','sid','fhc']},
       {label:'EXTERNAL POWERS', keys:['syndicate','ushinoda','haimun']},

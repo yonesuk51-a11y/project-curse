@@ -1,4 +1,4 @@
-/* Project Curse 5.36.2 — authored archive fragments and document provenance. */
+/* Project Curse 5.39.0 — authored archive fragments, provenance and technology trace. */
 #history.pc-world-history{max-width:1580px;margin:0 auto;padding:clamp(22px,3vw,48px);border-color:rgba(158,168,173,.2);background:linear-gradient(145deg,#0c0f11,#070809 72%)}
 #history .pc-world-history-head{max-width:900px;margin:0 0 26px}
 #history .pc-world-history-head .label{margin-bottom:12px}
@@ -10,6 +10,43 @@
 #history .pc-world-history-overview>div:last-child{border-right:0}
 #history .pc-world-history-overview b{color:#e8eaeb;font:650 1.25rem/1 ui-monospace,Consolas,monospace}
 #history .pc-world-history-overview span{color:rgba(205,211,213,.48);font:600 .62rem/1.35 ui-monospace,Consolas,monospace;letter-spacing:.08em}
+#history .pc-japan-tech-trace{max-width:1280px;margin:0 0 18px;border:1px solid rgba(155,172,178,.18);background:linear-gradient(125deg,rgba(11,24,29,.88),rgba(8,10,11,.95) 56%,rgba(56,15,20,.18))}
+#history .pc-japan-tech-trace>header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:20px 21px;border-bottom:1px solid rgba(155,172,178,.16)}
+#history .pc-japan-tech-trace>header small{display:block;color:#73a5b1;font:700 .58rem/1.35 ui-monospace,Consolas,monospace;letter-spacing:.14em}
+#history .pc-japan-tech-trace>header h3{margin:5px 0 7px;color:#edf0f0;font-size:1.18rem;letter-spacing:-.02em}
+#history .pc-japan-tech-trace>header p{max-width:64ch;margin:0;color:rgba(213,220,221,.59);font-size:.75rem;line-height:1.65}
+#history .pc-japan-tech-trace>header>span{display:grid;flex:0 0 auto;gap:5px;text-align:right}
+#history .pc-japan-tech-trace>header>span b{color:rgba(221,226,227,.68);font:700 .64rem/1.3 ui-monospace,Consolas,monospace;letter-spacing:.08em}
+#history .pc-japan-tech-trace>header>span small{color:rgba(201,89,96,.75)}
+#history .pc-japan-tech-track{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;padding:1px;background:rgba(155,172,178,.14)}
+#history .pc-japan-tech-track button{position:relative;display:grid;grid-template-columns:25px minmax(0,1fr);gap:8px;min-width:0;min-height:146px;padding:15px 11px;border:0;background:#090c0d;color:inherit;text-align:left;cursor:pointer}
+#history .pc-japan-tech-track button::after{content:'';position:absolute;left:34px;right:-1px;top:28px;height:1px;background:rgba(182,63,72,.52)}
+#history .pc-japan-tech-track button:last-child::after{right:12px}
+#history .pc-japan-tech-track button:hover,#history .pc-japan-tech-track button:focus-visible{z-index:1;background:linear-gradient(145deg,rgba(19,42,48,.65),#0a0d0e);outline:1px solid rgba(101,155,168,.46)}
+#history .pc-japan-tech-track button[data-japan-tech-state="derived"]{background:linear-gradient(145deg,rgba(18,37,43,.58),#090c0d)}
+#history .pc-japan-tech-track button[data-japan-tech-state="derived"]::after{background:repeating-linear-gradient(90deg,rgba(99,154,167,.66) 0 6px,transparent 6px 10px)}
+#history .pc-japan-tech-track i{position:relative;z-index:1;display:grid;width:24px;height:24px;place-items:center;border:1px solid rgba(185,65,74,.48);border-radius:50%;color:#dc747b;background:#0b0d0e;font:normal 700 .52rem/1 ui-monospace,Consolas,monospace}
+#history .pc-japan-tech-track button[data-japan-tech-state="derived"] i{border-color:rgba(99,154,167,.56);color:#8db9c3}
+#history .pc-japan-tech-track span{display:grid;align-content:start;min-width:0;padding-top:34px}
+#history .pc-japan-tech-track small{overflow:hidden;color:rgba(108,162,175,.69);font:700 .49rem/1.3 ui-monospace,Consolas,monospace;letter-spacing:.06em;text-overflow:ellipsis;white-space:nowrap}
+#history .pc-japan-tech-track b{margin-top:5px;color:rgba(231,234,234,.85);font-size:.71rem;line-height:1.35}
+#history .pc-japan-tech-track em{margin-top:7px;color:rgba(202,209,211,.48);font-size:.62rem;font-style:normal;line-height:1.55}
+#history .pc-japan-tech-outcomes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;padding:1px;border-top:1px solid rgba(155,172,178,.14);background:rgba(155,172,178,.14)}
+#history .pc-japan-tech-outcomes>div{padding:13px 14px;background:rgba(7,10,11,.94)}
+#history .pc-japan-tech-outcomes b{display:block;margin-bottom:5px;color:rgba(214,219,220,.74);font:700 .61rem/1.4 ui-monospace,Consolas,monospace}
+#history .pc-japan-tech-outcomes p{margin:0;color:rgba(198,206,208,.49);font-size:.64rem;line-height:1.6}
+#history .pc-japan-tech-public{border-top:1px solid rgba(155,172,178,.14)}
+#history .pc-japan-tech-public summary{padding:13px 18px;color:rgba(110,165,177,.78);font:700 .6rem/1.4 ui-monospace,Consolas,monospace;letter-spacing:.09em;cursor:pointer}
+#history .pc-japan-tech-public>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;padding:1px;background:rgba(155,172,178,.13)}
+#history .pc-japan-tech-public article{padding:15px 16px;background:#090c0d}
+#history .pc-japan-tech-public h4{margin:0 0 8px;color:rgba(230,233,233,.8);font-size:.73rem;line-height:1.45}
+#history .pc-japan-tech-public p{margin:0 0 7px;color:rgba(205,212,213,.54);font-size:.66rem;line-height:1.65}
+#history .pc-japan-tech-public p.is-boundary{padding-left:10px;border-left:1px solid rgba(190,73,81,.42);color:rgba(217,200,201,.61)}
+#history .pc-japan-tech-public a{color:rgba(112,172,185,.78);font:700 .58rem/1.4 ui-monospace,Consolas,monospace;text-decoration:none}
+#history .pc-japan-tech-public a:hover,#history .pc-japan-tech-public a:focus-visible{color:#a9d2da;outline:0;text-decoration:underline}
+#history .pc-japan-tech-trace>aside{display:grid;grid-template-columns:112px 1fr;gap:13px;padding:12px 17px;border-top:1px solid rgba(181,74,82,.2);background:rgba(68,18,22,.12)}
+#history .pc-japan-tech-trace>aside b{color:rgba(207,82,90,.76);font:700 .57rem/1.5 ui-monospace,Consolas,monospace;letter-spacing:.08em}
+#history .pc-japan-tech-trace>aside span{color:rgba(204,210,211,.49);font-size:.63rem;line-height:1.65}
 #history .pc-world-history-controls{max-width:1180px;margin:0 0 26px;padding:16px;border:1px solid rgba(166,177,182,.14);background:linear-gradient(120deg,rgba(29,32,34,.54),rgba(8,10,11,.82))}
 #history .pc-world-history-filter-head{display:flex;justify-content:space-between;gap:18px;margin-bottom:11px;color:rgba(201,207,209,.5);font:600 .62rem/1.35 ui-monospace,Consolas,monospace;letter-spacing:.12em}
 #history .pc-world-history-filter-head b{color:rgba(215,105,112,.78)}
@@ -55,6 +92,8 @@
 #history .pc-world-history-era-records{display:grid;gap:7px}
 #history .pc-world-history-index-row{display:grid;width:100%;grid-template-columns:112px minmax(0,1fr) auto;align-items:center;gap:15px;padding:15px 17px;border:1px solid rgba(166,177,182,.17);background:rgba(14,17,19,.82);color:inherit;text-align:left;cursor:pointer;transition:border-color .16s ease,background .16s ease,transform .16s ease}
 #history .pc-world-history-index-row:hover,#history .pc-world-history-index-row:focus-visible{border-color:rgba(191,72,80,.58);background:linear-gradient(100deg,rgba(70,17,21,.26),rgba(14,17,19,.94) 46%);outline:none;transform:translateX(2px)}
+#history .pc-world-history-index-row.is-japan-technology{border-left:2px solid rgba(98,157,170,.56);background:linear-gradient(100deg,rgba(14,42,49,.23),rgba(14,17,19,.86) 42%)}
+#history .pc-world-history-index-row.is-japan-technology:hover,#history .pc-world-history-index-row.is-japan-technology:focus-visible{border-color:rgba(98,157,170,.7);background:linear-gradient(100deg,rgba(16,55,64,.38),rgba(14,17,19,.94) 48%)}
 #history .pc-world-history-index-row time{color:#d16a70;font:600 .76rem/1.2 ui-monospace,Consolas,monospace;letter-spacing:.04em}
 #history .pc-world-history-index-row strong{min-width:0;color:#e5e7e7;font-size:1rem;font-weight:650;line-height:1.35}
 #history .pc-world-history-index-row small{grid-column:2;color:rgba(210,214,215,.57);font-size:.79rem;line-height:1.45}
@@ -76,6 +115,8 @@
 #history .pc-world-history-detail-head time{display:block;margin-bottom:8px;color:#d76b72;font:600 .78rem/1.2 ui-monospace,Consolas,monospace;letter-spacing:.08em}
 #history .pc-world-history-detail-head h2{margin:0;color:#f0f0f0;font-size:clamp(2rem,3vw,3rem);letter-spacing:-.04em}
 #history .pc-world-history-detail-head p{max-width:65ch;margin:12px 0 0;color:rgba(215,219,220,.62);font-size:.95rem;line-height:1.72}
+#history[data-japan-technology-record] .pc-world-history-detail-head{border-bottom-color:rgba(96,156,169,.4)}
+#history[data-japan-technology-record] .pc-world-history-detail-head .label,#history[data-japan-technology-record] .pc-world-history-detail-head time{color:#78aeb9}
 #history .pc-world-history-record-state{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:1180px;margin:18px 0 0;border:1px solid rgba(169,179,183,.16);background:rgba(8,10,11,.72)}
 #history .pc-world-history-record-state>div{display:grid;gap:7px;padding:13px 15px;border-right:1px solid rgba(169,179,183,.11)}
 #history .pc-world-history-record-state>div:nth-child(4){border-right:0}
@@ -121,6 +162,10 @@
   #history .pc-world-history-provenance{grid-template-columns:1fr}
   #history .pc-world-history-provenance>div{border-right:0;border-bottom:1px solid rgba(178,151,94,.1)}
   #history .pc-world-history-provenance>div:last-child{border-bottom:0}
+  #history .pc-japan-tech-track{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #history .pc-japan-tech-track button::after{display:none}
+  #history .pc-japan-tech-track button:last-child{grid-column:1/-1}
+  #history .pc-japan-tech-outcomes,#history .pc-japan-tech-public>div{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 @media (max-width:620px){
@@ -134,6 +179,11 @@
   #history .pc-world-history-index-meta{align-items:flex-start;flex-direction:column;gap:5px}
   #history .pc-world-history-detail-nav{grid-template-columns:1fr 1fr}
   #history .pc-world-history-detail-nav [data-history-index]{grid-column:1/-1;grid-row:1}
+  #history .pc-japan-tech-trace>header{display:grid;align-items:start;padding:17px 15px}
+  #history .pc-japan-tech-trace>header>span{text-align:left}
+  #history .pc-japan-tech-track button{min-height:132px}
+  #history .pc-japan-tech-outcomes,#history .pc-japan-tech-public>div{grid-template-columns:1fr}
+  #history .pc-japan-tech-trace>aside{grid-template-columns:1fr;gap:5px}
 }
 
 @media (prefers-reduced-motion:reduce){

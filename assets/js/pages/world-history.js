@@ -1,9 +1,10 @@
-// Project Curse 5.36.2 — authored archive fragments and document voices.
+// Project Curse 5.39.0 — authored archive fragments, document voices and technology trace.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
   const chronology = window.ProjectCurseWorldHistoryData;
   const prose = window.ProjectCurseWorldHistoryProse;
+  const japanTechnology = window.ProjectCurseJapanTechnology;
 
   root.classList.add('pc-world-history');
   root.innerHTML = `
@@ -19,6 +20,7 @@
       <div><b data-history-confirmed>0</b><span>확정 기록</span></div>
       <div><b data-history-unresolved>0</b><span>정사 공백</span></div>
     </section>
+    <section class="pc-japan-tech-trace" data-japan-tech-trace aria-label="일본 기술 도약 계보"></section>
     <section class="pc-world-history-controls" aria-label="세계 사건 연표 필터">
       <div class="pc-world-history-filter-head"><b>ERA INDEX</b><span data-history-filter-status aria-live="polite"></span></div>
       <div class="pc-world-history-filters" data-history-filters></div>
@@ -214,16 +216,29 @@
         ...(proseRecord || {})
       };
     }),
+    ...((japanTechnology?.records || []).map(record => {
+      const type=prose?.documentTypes?.[record.documentType];
+      return {...record,documentLabel:type?.label||'내부 기술기록',documentCode:type?.code||'TECHNICAL RECORD',paragraphs:record.fragments.map(fragment=>fragment.text)};
+    })),
     ...((chronology?.post2006Records || []).map(record => ({
       ...record,
       ...(prose?.getRecord?.(record.id) || {})
     })))
-  ];
+  ].sort((a,b)=>{
+    const key=record=>{
+      if(record.sort) return record.sort;
+      const parts=String(record.date).match(/\d+/g)?.map(Number)||[9999];
+      const after=/이후|전후/.test(record.date);
+      return parts[0]*10000+(parts[1]??(after?99:0))*100+(parts[2]??(after?99:0));
+    };
+    return key(a)-key(b);
+  });
   const incidentNetwork = window.ProjectCurseIncidentNetwork;
 
   const head = root.querySelector('.pc-world-history-head');
   const range = root.querySelector('.pc-world-history-range');
   const overview = root.querySelector('.pc-world-history-overview');
+  const technologyTrace = root.querySelector('[data-japan-tech-trace]');
   const controls = root.querySelector('.pc-world-history-controls');
   const filterHost = root.querySelector('[data-history-filters]');
   const filterStatus = root.querySelector('[data-history-filter-status]');
@@ -235,6 +250,62 @@
   root.querySelector('[data-history-era-total]').textContent = String(chronology?.eras?.length || 1);
   root.querySelector('[data-history-confirmed]').textContent = String(records.filter(record => record.evidence === 'confirmed').length);
   root.querySelector('[data-history-unresolved]').textContent = String(chronology?.unresolved?.length || 0);
+
+  function renderTechnologyTrace(){
+    if(!technologyTrace||!japanTechnology) return;
+    technologyTrace.replaceChildren();
+    const header=document.createElement('header');
+    const heading=document.createElement('div');
+    heading.innerHTML=`<small>${japanTechnology.program.code}</small><h3>${japanTechnology.program.name}</h3><p>${japanTechnology.program.purpose}</p>`;
+    const status=document.createElement('span');
+    status.innerHTML=`<b>${japanTechnology.program.period}</b><small>${japanTechnology.program.status}</small>`;
+    header.append(heading,status);
+
+    const track=document.createElement('div');
+    track.className='pc-japan-tech-track';
+    japanTechnology.technologies.forEach((item,index)=>{
+      const button=document.createElement('button');
+      button.type='button';
+      button.dataset.japanTechState=item.state;
+      button.innerHTML=`<i>${String(index+1).padStart(2,'0')}</i><span><small>${item.code}</small><b>${item.name}</b><em>${item.summary}</em></span>`;
+      button.addEventListener('click',()=>{
+        const recordIndex=records.findIndex(record=>record.id===item.record);
+        if(recordIndex<0) return;
+        window.ProjectCurseAudioControl?.play?.('history.open');
+        openRecord(recordIndex,'push');
+      });
+      track.appendChild(button);
+    });
+
+    const outcomes=document.createElement('div');
+    outcomes.className='pc-japan-tech-outcomes';
+    japanTechnology.socialOutcomes.forEach(item=>{
+      const row=document.createElement('div');
+      row.innerHTML=`<b>${item.label}</b><p>${item.text}</p>`;
+      outcomes.appendChild(row);
+    });
+
+    const publicBasis=document.createElement('details');
+    publicBasis.className='pc-japan-tech-public';
+    const summary=document.createElement('summary');
+    summary.textContent='PUBLIC HISTORY BASIS / 실제 역사와 가상 기록의 경계';
+    const grid=document.createElement('div');
+    japanTechnology.publicAnchors.forEach(anchor=>{
+      const article=document.createElement('article');
+      const title=document.createElement('h4');
+      title.textContent=`${anchor.range} / ${anchor.label}`;
+      const fact=document.createElement('p');fact.textContent=anchor.fact;
+      const boundary=document.createElement('p');boundary.className='is-boundary';boundary.textContent=anchor.boundary;
+      const source=document.createElement('a');source.href=anchor.url;source.target='_blank';source.rel='noopener noreferrer';source.textContent=`근거 확인 · ${anchor.source} ↗`;
+      article.append(title,fact,boundary,source);grid.appendChild(article);
+    });
+    publicBasis.append(summary,grid);
+
+    const warning=document.createElement('aside');
+    warning.innerHTML=`<b>OPEN QUESTIONS</b><span>${japanTechnology.openQuestions.join(' ')}</span>`;
+    technologyTrace.append(header,track,outcomes,publicBasis,warning);
+  }
+  renderTechnologyTrace();
 
   const canonKey = root.querySelector('[data-history-canon-key]');
   Object.entries(chronology?.evidenceLevels || {}).forEach(([key, item]) => {
@@ -258,6 +329,7 @@
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'pc-world-history-index-row';
+    if(japanTechnology?.getRecord?.(record.id)) button.classList.add('is-japan-technology');
     button.dataset.historyRecord = record.id;
     button.dataset.historyEra = record.era || 'unassigned';
     button.setAttribute('aria-label', `${record.date} ${record.title} 열람`);
@@ -384,9 +456,11 @@
   function showIndex() {
     activeIndex = -1;
     root.classList.remove('pc-world-history-detail-mode');
+    root.removeAttribute('data-japan-technology-record');
     if (head) head.hidden = false;
     if (range) range.hidden = false;
     if (overview) overview.hidden = false;
+    if (technologyTrace) technologyTrace.hidden = false;
     if (controls) controls.hidden = false;
     indexView.hidden = false;
     detailView.hidden = true;
@@ -399,9 +473,11 @@
     if (!record) return showIndex();
     activeIndex = index;
     root.classList.add('pc-world-history-detail-mode');
+    root.toggleAttribute('data-japan-technology-record',!!japanTechnology?.getRecord?.(record.id));
     if (head) head.hidden = true;
     if (range) range.hidden = true;
     if (overview) overview.hidden = true;
+    if (technologyTrace) technologyTrace.hidden = true;
     if (controls) controls.hidden = true;
     indexView.hidden = true;
     detailView.hidden = false;

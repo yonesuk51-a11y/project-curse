@@ -1,4 +1,4 @@
-// Project Curse 5.38.0 — single source of truth for the terminal build.
+// Project Curse 5.39.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,10 +9,10 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.38.0',
-    codename:'Faction Lineage Atlas',
-    schema:'project-curse-v31',
-    released:'2026-08-20',
+    version:'5.39.0',
+    codename:'Japan Technology Trace',
+    schema:'project-curse-v32',
+    released:'2026-08-21',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},
       {id:'map-room',index:'01',label:'상황 관제',shortLabel:'관제'},

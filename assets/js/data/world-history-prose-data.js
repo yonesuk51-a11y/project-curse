@@ -120,6 +120,7 @@
       documentType:'official',author:'U.A.C 도시차단망 사업단',recipient:'협력도시 공안·군사기관',purpose:'C.A.P-17 및 C.I. 스캐너 배치 승인',
       fragments:[
         {label:'배치 목적',kind:'document',text:'C.A.P-17은 리버스 발생 구역의 확장을 늦추고, C.I. 스캐너는 초기 이상 신호를 공안·군사기관에 전달한다. 두 장비는 현상을 예방하는 설비가 아니며 민간 대피와 현장 봉쇄가 뒤따르지 않으면 단독 운용 효과를 보증하지 않는다.'},
+        {label:'일본측 인터페이스',kind:'analysis',text:'C.I. 판정기는 제6계측계획의 독립시계 합의와 광반환 지문 형식을 입력 규격으로 받아들였다. 센서 본체, 경보 기준과 국제 전송망은 U.A.C 사업단이 새로 설계했으므로 JID-87 장치의 개명판으로 분류하지 않는다.'},
         {label:'현장 주의',kind:'directive',text:'차단선 밖의 신호를 장비 오류로 종결하지 말 것. 외곽 지역은 탐지기 수보다 보고 지연이 더 큰 위험으로 확인됐다.'}
       ]
     },
@@ -231,6 +232,7 @@
       documentType:'review',author:'일본 북부 공동지휘소 전황검토반',recipient:'동맹권 작전회의',purpose:'차단선 탈환과 적 후퇴 범위 확인',
       fragments:[
         {label:'변경된 절차',kind:'analysis',text:'새 식별 절차는 구조 요청자의 목소리보다 신호가 통과한 공간 왜곡 흔적을 비교했다. 복제 신호가 분리되자 잘못 배치돼 있던 예비대가 본래 구역으로 돌아왔다.'},
+        {label:'기술 계보',kind:'finding',text:'공동지휘소는 1992년 분산 이관된 JID-87 기록 형식과 2003년형 C.I. 판정기를 함께 사용했다. 오래된 노드는 적 신호를 판독하지 못했지만 기준시계와 반환 지문을 남겼고, 새 판정기는 그 차이를 전선 전체에서 비교했다.'},
         {label:'전황 통보',kind:'document',text:'동맹군은 의식 거점과 보급 회랑을 탈환했고 짐승의 길 주력은 세 번째 차단선 밖으로 물러났다. N.H.C는 국면 전환, 일본 지휘부는 제한적 승리로 각각 표기했다. 적 전력의 소멸은 확인하지 않았다.'},
         {label:'S.I.D 부속 의견',kind:'annotation',text:'후퇴 부대 일부가 남부권 통신 경로를 사용했다. 지원, 통행 허용 또는 탈취 가운데 어느 관계였는지는 감청만으로 구분되지 않는다.'}
       ]
@@ -277,7 +279,7 @@
   });
 
   root.ProjectCurseWorldHistoryProse=freeze({
-    version:root.ProjectCurseBuild?.version||'5.38.0',
+    version:root.ProjectCurseBuild?.version||'5.39.0',
     documentTypes,records,
     getRecord:id=>records[id]||null,
     getDocumentType:id=>documentTypes[id]||documentTypes.analysis

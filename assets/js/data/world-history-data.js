@@ -18,8 +18,8 @@
   };
 
   const eras=[
-    {id:'origin',index:'01',range:'1975–1982',title:'공간 개척과 전조',summary:'아마리온의 공간 연구가 F.H.C로 승계되고 비공개 감시가 시작된 시기.'},
-    {id:'exposure',index:'02',range:'1986–1989',title:'교단 노출과 회수 작전',summary:'피의 호수와 도쿄 지부 기록을 통해 교단 침투가 개별 사고가 아님이 드러난 시기.'},
+    {id:'origin',index:'01',range:'1975–1985',title:'공간 개척과 계측 도약',summary:'아마리온의 공간 연구가 F.H.C로 승계되고 일본의 제6계측계획이 비정합 경로를 측정하기 시작한 시기.'},
+    {id:'exposure',index:'02',range:'1986–1992',title:'교단 노출과 분산 계측',summary:'교단 침투가 드러나는 동안 일본의 계측 규격이 도시 설비로 퍼지고 중앙계획 해산 뒤 분산 보존된 시기.'},
     {id:'institution',index:'03',range:'1993–1999',title:'공식 대응 체계와 모방',summary:'U.A.C가 공개되고 분류·봉쇄 체계가 만들어졌지만 대응기관도 적의 방식을 모방하기 시작한 시기.'},
     {id:'separation',index:'04',range:'2001–2003',title:'지휘권 분산과 도시 차단망',summary:'N.H.C와 S.I.D가 독립하고 국가별 현장 대응과 도시 봉쇄 인프라가 확장된 시기.'},
     {id:'fracture',index:'05',range:'2005–2006',title:'이탈·폭로와 체제 균열',summary:'현장조직의 재편, 레드울프 이탈과 위버멘시 폭로로 기존 대응 체계의 신뢰가 무너진 시기.'},
@@ -223,14 +223,13 @@
   post2006Records.forEach(record=>{ records[record.id]=record; });
 
   const unresolved=[
-    {id:'alt-japan-technology',scope:'세계사',label:'일본의 1980~90년대 기술 도약',reason:'도약의 시작 연도·핵심 기술·초상기술과의 인과가 아직 정사 데이터에 없다.'},
     {id:'southern-geography',scope:'지리',label:'대흑림과 남방 데드존의 공식 경계',reason:'문화권과 작전권은 분리되지만 지도상의 행정·자연 경계가 고정되지 않았다.'},
     {id:'cult-lineage',scope:'세력',label:'혈교 남부권과 우시노다 세 파벌의 관계',reason:'동맹·계승·흡수 중 어느 관계인지 기록별 표현이 다르다.'},
     {id:'feral-origin',scope:'현상',label:'괴이·타락체·Corrupted Ferals의 기원 관계',reason:'동일 현상의 단계인지 서로 다른 계통인지 최종 분류가 없다.'}
   ];
 
   root.ProjectCurseWorldHistoryData=freeze({
-    version:root.ProjectCurseBuild?.version||'5.38.0',
+    version:root.ProjectCurseBuild?.version||'5.39.0',
     eras,evidenceLevels,records,unresolved,post2006Records,
     getEra:id=>eras.find(era=>era.id===id)||null,
     getRecord:id=>records[id]||null,
