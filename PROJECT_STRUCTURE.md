@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.43.1
+# Project Curse Structure — 5.44.0
 
 ## 활성 소유권
 
@@ -55,9 +55,9 @@
 | 영상·문서·권역·작전 기록 카드 색인 | `assets/js/pages/archive-consolidation.js` |
 | 시대별 세계 사건 연표·필터·정사 판정 화면 | `assets/js/pages/world-history.js` + `assets/css/world-history.css` |
 | 세력 분석실 | `assets/js/pages/faction-analysis.js` |
-| 관제지도 설정 자료 | `assets/js/data/map-room-data.js` |
+| 관제지도 설정 자료·2042 독립 동시관측점 | `assets/js/data/map-room-data.js` |
 | 대흑림·데드존 구역·지점·경로 위험·순례 규칙 | `assets/js/data/regional-drilldown-data.js` |
-| 지역 상황도·경로 강조·전술 레이어·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
+| 지역 상황도·경로 강조·독립 신호층·모바일 레이어 제어·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
 | 홈 통계·경보·직접 연결 | `assets/js/pages/terminal-home.js` + `assets/css/terminal-foundation.css` |
 | 원본·보정·복원 이미지 정책 | `ASSET_POLICY.md` |
 | 신규 복원 추정 이미지 출처 대장 | `assets/resources/ASSET_REGISTRY.md` |
@@ -69,6 +69,8 @@
 성능 계측 다음에 품질 정책이 연결·기기 신호와 사용자의 전송 품질 설정을 판독하고, 적응형 미디어·오디오·영상·전환 런타임이 같은 판정 결과를 공유한다. 오프라인 전환과 시각 자료 재요청도 이 정책에서 단일하게 전달한다.
 
 `build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, 오디오·전환·채널 데이터, 조직 정사와 `world-history-data.js`의 시대·판정 대장이 로드된다. `japan-technology-data.js`가 제6계측계획 다섯 사건, 실제 역사 기준과 2003·2026년까지 이어지는 기술 계보를 제공하고 `world-history-prose-data.js`가 기존 기록과 2031–2042 후속 사건의 작성자·수신자·목적과 기록 조각을 결합한다. 세계 기록 런타임은 세 대장을 함께 읽어 아홉 시대·43개 사건을 표시한다. 이어서 사건·화면 데이터와 기록·시각 증거·반응형 미디어 데이터가 로드된다. `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말, 그리고 앞선 선택에 반응하는 후속 변형을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·적응형 미디어·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 단계별 작전지도와 홈 수신 신호를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·미디어 준비·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
+
+2042년 삼야 무응답은 `map-room-data.js`에서 대흑림 성채 여섯 곳과 데드 존 검문소 네 곳의 독립 관측점으로 등록한다. 이 사건은 연결 경로를 소유하지 않으며, 지도 런타임도 두 권역 사이 선을 생성하지 않는다.
 
 `media-provenance-data.js`는 `MEDIA_PROVENANCE_OVERRIDES.json`과 실제 `assets` 파일 집합에서 생성되는 공개 감사 스냅샷이다. 기록보관소는 이 스냅샷의 총자산·검토 대기·미디어 종류·참고 전용 노출 상태를 표시한다. 파일별 승인 근거는 오버라이드에서만 수정하고 생성 대장은 직접 편집하지 않는다.
 

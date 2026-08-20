@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — reactive field consequences, route focus, and operation trace room.
+// Project Curse 5.44.0 — reactive field consequences, isolated synchrony signals, and operation trace room.
 (function(root){
   'use strict';
 
@@ -35,16 +35,19 @@
       mode:'region',
       region:'world',
       marker:null,
+      synchronyPoint:null,
       detail:data.drilldowns?.[0]?.id||'',
       detailSite:null,
       detailLayers:{routes:true,threats:true,comms:false,distortion:true},
       operation:data.operations[0]?.id||'',
       step:operationStore?.get?.().mapStep||0,
-      layers:{confirmed:true,estimated:true,zones:true,routes:true}
+      layers:{confirmed:true,estimated:true,zones:true,routes:true,synchrony:true}
     };
 
     const regionById=id=>data.regions.find(region=>region.id===id)||data.regions[0];
     const markerById=id=>data.markers.find(marker=>marker.id===id)||null;
+    const synchronyEvents=data.synchronyEvents||[];
+    const synchronyPointById=id=>synchronyEvents.flatMap(event=>event.points.map(point=>({event,point}))).find(item=>item.point.id===id)||null;
     const detailById=id=>(data.drilldowns||[]).find(detail=>detail.id===id)||(data.drilldowns||[])[0]||null;
     const operationById=id=>data.operations.find(operation=>operation.id===id)||data.operations[0];
     const incidentById=id=>network?.getIncident?.(id)||null;
@@ -141,7 +144,49 @@
         </g>`;
     }
 
-    function renderRegionIntel(region,marker){
+    function synchronyPointSymbol(event,point,region){
+      const selected=state.synchronyPoint===point.id?' is-selected':'';
+      const regional=region.id==='world'?' is-world':' is-regional';
+      const title=`${event.title} / ${point.label}`;
+      return `
+        <g class="pc-map-synchrony-point pc-map-synchrony-point--${escapeHTML(point.kind)}${regional}${selected}" data-map-synchrony-point="${escapeHTML(point.id)}" role="button" tabindex="0" aria-label="${escapeHTML(title)}: ${escapeHTML(point.site)}" transform="translate(${point.x} ${point.y})">
+          <circle class="pc-map-synchrony-hit" r="24"></circle>
+          <circle class="pc-map-synchrony-wave pc-map-synchrony-wave--outer" r="16"></circle>
+          <circle class="pc-map-synchrony-wave" r="10"></circle>
+          <rect class="pc-map-synchrony-core" x="-3.5" y="-3.5" width="7" height="7" rx="1"></rect>
+          <text class="pc-map-synchrony-code" x="12" y="-8">${escapeHTML(point.code)}</text>
+          ${region.id==='world'?'':`<text class="pc-map-synchrony-label" x="12" y="5">${escapeHTML(point.label)}</text>`}
+        </g>`;
+    }
+
+    function renderSynchronyIntel(event,point){
+      const regionCount=event.points.filter(item=>item.region===point.region).length;
+      const regionLabel=point.region==='southamerica'?'대흑림 성채':'데드 존 검문소';
+      return `
+        <div class="pc-map-intel-kicker">SYNCHRONY EVENT / ${escapeHTML(confidenceLabels[event.confidence]||event.confidence)}</div>
+        <h3>${escapeHTML(event.title)}</h3>
+        <p>${escapeHTML(point.label)} · ${escapeHTML(point.site)}</p>
+        <dl class="pc-map-facts">
+          <div><dt>사건 코드</dt><dd>${escapeHTML(event.code)}</dd></div>
+          <div><dt>관측 시각</dt><dd>${escapeHTML(event.date)}</dd></div>
+          <div><dt>무응답</dt><dd>${escapeHTML(event.duration)}</dd></div>
+          <div><dt>현장 묶음</dt><dd>${escapeHTML(regionLabel)} ${regionCount}곳</dd></div>
+          <div><dt>수신 호출</dt><dd>${escapeHTML(point.callsign)}</dd></div>
+          <div><dt>복구 장부</dt><dd>${escapeHTML(point.log)}</dd></div>
+        </dl>
+        <div class="pc-map-synchrony-summary">
+          <small>SIMULTANEOUS OBSERVATION</small>
+          <div><b>06</b><span>GBF CASTLES</span><i></i><b>04</b><span>DZ CHECKPOINTS</span></div>
+          <p>${escapeHTML(event.summary)}</p>
+        </div>
+        <div class="pc-map-warning pc-map-synchrony-boundary"><b>NO ROUTE / NO GEOGRAPHIC LINK</b>${escapeHTML(event.boundary)}</div>
+        <div class="pc-map-intel-actions">
+          <button type="button" data-map-open-history="${escapeHTML(event.history)}">세계 기록에서 삼야 무응답 열기</button>
+        </div>`;
+    }
+
+    function renderRegionIntel(region,marker,synchronySignal){
+      if(synchronySignal) return renderSynchronyIntel(synchronySignal.event,synchronySignal.point);
       const regionalDetails=(data.drilldowns||[]).filter(detail=>detail.region===region.id);
       if(!marker){
         return `
@@ -360,10 +405,22 @@
         return inRegion&&(estimated?state.layers.estimated:state.layers.confirmed);
       });
       const selectedMarker=markerById(state.marker);
+      const synchronySignals=synchronyEvents.flatMap(event=>event.points
+        .filter(point=>region.id==='world'||point.region===region.id)
+        .map(point=>({event,point})));
+      const selectedSynchrony=synchronyPointById(state.synchronyPoint);
 
       return `
         <div class="pc-map-region-tabs" role="tablist" aria-label="관제 권역">
           ${data.regions.map(item=>`<button type="button" role="tab" aria-selected="${item.id===region.id}" class="${item.id===region.id?'is-active':''}" data-map-region="${escapeHTML(item.id)}"><small>${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
+        </div>
+        <div class="pc-map-mobile-layerbar" role="group" aria-label="지도 레이어 빠른 제어">
+          <span>LAYERS</span>
+          <button type="button" class="${state.layers.confirmed?'is-active':''}" data-map-layer="confirmed" aria-pressed="${state.layers.confirmed}">확인</button>
+          <button type="button" class="${state.layers.estimated?'is-active':''}" data-map-layer="estimated" aria-pressed="${state.layers.estimated}">추정</button>
+          <button type="button" class="${state.layers.zones?'is-active':''}" data-map-layer="zones" aria-pressed="${state.layers.zones}">권역</button>
+          <button type="button" class="${state.layers.routes?'is-active':''}" data-map-layer="routes" aria-pressed="${state.layers.routes}">경로</button>
+          <button type="button" class="pc-map-mobile-synchrony${state.layers.synchrony?' is-active':''}" data-map-layer="synchrony" aria-pressed="${state.layers.synchrony}">2042 신호 <b>10</b></button>
         </div>
         <div class="pc-map-layout">
           <aside class="pc-map-sidebar pc-map-layers">
@@ -372,6 +429,7 @@
             <button class="pc-map-layer-row${state.layers.estimated?' is-active':''}" type="button" data-map-layer="estimated" aria-pressed="${state.layers.estimated}"><i class="is-estimated"></i><span>추정·증언 좌표</span><b>${state.layers.estimated?'ON':'OFF'}</b></button>
             <button class="pc-map-layer-row${state.layers.zones?' is-active':''}" type="button" data-map-layer="zones" aria-pressed="${state.layers.zones}"><i class="is-hostile"></i><span>오염·무응답 권역</span><b>${state.layers.zones?'ON':'OFF'}</b></button>
             <button class="pc-map-layer-row${state.layers.routes?' is-active':''}" type="button" data-map-layer="routes" aria-pressed="${state.layers.routes}"><i class="is-route"></i><span>순례·동원 경로</span><b>${state.layers.routes?'ON':'OFF'}</b></button>
+            <button class="pc-map-layer-row pc-map-layer-row--synchrony${state.layers.synchrony?' is-active':''}" type="button" data-map-layer="synchrony" aria-pressed="${state.layers.synchrony}"><i class="is-synchrony"></i><span>2042 동시 무응답</span><b>${state.layers.synchrony?'10':'OFF'}</b></button>
             <div class="pc-map-meter"><span>MAP INTEGRITY</span><b>${escapeHTML(region.confidence)}</b><i><em style="--pc-map-meter:${region.id==='northamerica'?'22%':region.id==='southamerica'?'31%':region.id==='world'?'63%':'78%'}"></em></i></div>
             <div class="pc-map-legend">
               <b>기호 판독</b>
@@ -388,11 +446,12 @@
               <desc id="pcMapDesc">실제 해안선 기준 권역 위에 사건, 시설, 추정 좌표와 오염 구역을 분리해 표시한 정보 지도</desc>
               ${renderGeography(region)}
               <g class="pc-map-markers">${markers.map(markerSymbol).join('')}</g>
+              ${state.layers.synchrony?`<g class="pc-map-synchrony" data-synchrony-event="three-night-silence">${synchronySignals.map(item=>synchronyPointSymbol(item.event,item.point,region)).join('')}</g>`:''}
             </svg>
             <div class="pc-map-scan" aria-hidden="true"></div>
             <div class="pc-map-coordinates">LAT/LON RECONSTRUCTED · NAVIGATION PROHIBITED</div>
           </section>
-          <aside class="pc-map-sidebar pc-map-intel">${renderRegionIntel(region,selectedMarker)}</aside>
+          <aside class="pc-map-sidebar pc-map-intel">${renderRegionIntel(region,selectedMarker,selectedSynchrony)}</aside>
         </div>`;
     }
 
@@ -550,11 +609,11 @@
     }
 
     mount.addEventListener('click',event=>{
-      const control=event.target.closest('button,[data-map-marker],[data-map-detail-site]');
+      const control=event.target.closest('button,[data-map-marker],[data-map-synchrony-point],[data-map-detail-site]');
       if(!control) return;
       if(control.dataset.mapMode){state.mode=control.dataset.mapMode;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
-      if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
-      if(control.dataset.mapLayer){state.layers[control.dataset.mapLayer]=!state.layers[control.dataset.mapLayer];state.marker=null;root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
+      if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;state.synchronyPoint=null;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapLayer){state.layers[control.dataset.mapLayer]=!state.layers[control.dataset.mapLayer];state.marker=null;if(control.dataset.mapLayer==='synchrony') state.synchronyPoint=null;root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
       if(control.dataset.mapOpenHistory){root.ProjectCurseAudioControl?.play?.('incident.link');openHistory(control.dataset.mapOpenHistory);return;}
       if(control.dataset.mapOpenFaction){root.ProjectCurseAudioControl?.play?.('incident.link');openFaction(control.dataset.mapOpenFaction);return;}
       if(control.dataset.mapOpenRecord){root.ProjectCurseAudioControl?.play?.('incident.link');openArchive(control.dataset.mapOpenRecord);return;}
@@ -562,7 +621,16 @@
       if(control.dataset.mapMarker){
         const marker=markerById(control.dataset.mapMarker);
         state.marker=state.marker===control.dataset.mapMarker?null:control.dataset.mapMarker;
+        state.synchronyPoint=null;
         if(marker?.overview&&state.marker===marker.id) state.region='world';
+        root.ProjectCurseAudioControl?.play?.('map.signal');
+        render();return;
+      }
+      if(control.dataset.mapSynchronyPoint){
+        const signal=synchronyPointById(control.dataset.mapSynchronyPoint);
+        if(!signal) return;
+        state.marker=null;
+        state.synchronyPoint=state.synchronyPoint===signal.point.id?null:signal.point.id;
         root.ProjectCurseAudioControl?.play?.('map.signal');
         render();return;
       }
@@ -572,7 +640,7 @@
       if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;root.ProjectCurseAudioControl?.play?.('operation.step');render();return;}
       if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapDetailClear){state.detailSite=null;render();return;}
-      if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;render();return;}
+      if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;render();return;}
       if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
       if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=operationStep(operationById(state.operation));root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapStep!==undefined){
@@ -582,11 +650,11 @@
         else render();
         return;
       }
-      if(control.dataset.mapReturnRegion){state.mode='region';state.region=control.dataset.mapReturnRegion;state.marker=null;render();}
+      if(control.dataset.mapReturnRegion){state.mode='region';state.region=control.dataset.mapReturnRegion;state.marker=null;state.synchronyPoint=null;render();}
     });
 
     mount.addEventListener('keydown',event=>{
-      const marker=event.target.closest('[data-map-marker],[data-map-detail-site]');
+      const marker=event.target.closest('[data-map-marker],[data-map-synchrony-point],[data-map-detail-site]');
       if(!marker||(event.key!=='Enter'&&event.key!==' ')) return;
       event.preventDefault();
       marker.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
@@ -602,10 +670,11 @@
 
     render();
     root.ProjectCurseMapRoomRuntime=Object.freeze({
-      showRegion(id){if(regionById(id).id!==id) return false;state.mode='region';state.region=id;state.marker=null;render();return true;},
+      showRegion(id){if(regionById(id).id!==id) return false;state.mode='region';state.region=id;state.marker=null;state.synchronyPoint=null;render();return true;},
       showDetail(id,siteId){const detail=detailById(id);if(!detail||detail.id!==id) return false;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;render();return true;},
       showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));render();return true;},
-      showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.mode='region';state.region=marker.region;state.marker=marker.id;render();return true;},
+      showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;render();return true;},
+      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||event.points[0];state.mode='region';state.region=point.region;state.marker=null;state.synchronyPoint=point.id;state.layers.synchrony=true;render();return true;},
       getState:()=>({...state})
     });
   });

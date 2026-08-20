@@ -4,7 +4,7 @@ import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.43.1';
+const VERSION='5.44.0';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -305,7 +305,11 @@ add('regional-route-sequence',mapRoomRuntime.includes('renderRouteSequence')&&ma
 add('shared-incident-network',incidentData?.version===VERSION&&incidentData.incidentList.length>=7&&incidentData.incidents['evt-southern-mobilization']?.operation==='op-southern-coup');
 add('southern-coup-operation',context.window.ProjectCurseMapRoom?.operations?.some(operation=>operation.id==='op-southern-coup'&&operation.steps.length>=6&&operation.directive));
 add('geographic-layer-controls',mapRoomRuntime.includes('renderGraticule')&&mapRoomRuntime.includes('data-map-layer')&&mapRoomRuntime.includes('state.layers'));
-add('geographic-route-layer',context.window.ProjectCurseMapRoom?.routes?.length>=4&&mapRoomRuntime.includes('pc-map-routes')&&mapRoomRuntime.includes("layers:{confirmed:true,estimated:true,zones:true,routes:true}"));
+add('geographic-route-layer',context.window.ProjectCurseMapRoom?.routes?.length>=4&&mapRoomRuntime.includes('pc-map-routes')&&mapRoomRuntime.includes("layers:{confirmed:true,estimated:true,zones:true,routes:true,synchrony:true}"));
+const synchronyEvent=context.window.ProjectCurseMapRoom?.synchronyEvents?.find(event=>event.id==='three-night-silence');
+add('three-night-synchrony-ten-points',synchronyEvent?.points?.length===10&&synchronyEvent.points.filter(point=>point.region==='southamerica'&&point.kind==='castle').length===6&&synchronyEvent.points.filter(point=>point.region==='northamerica'&&point.kind==='checkpoint').length===4,synchronyEvent?.points?.length);
+add('three-night-synchrony-no-route',synchronyEvent?.connection==='UNRESOLVED'&&synchronyEvent.route===null&&!('points' in (synchronyEvent.route||{}))&&synchronyEvent.boundary.includes('지리적 연결'));
+add('three-night-synchrony-runtime',mapRoomRuntime.includes('data-map-synchrony-point')&&mapRoomRuntime.includes('renderSynchronyIntel')&&mapRoomRuntime.includes('NO ROUTE / NO GEOGRAPHIC LINK')&&mapRoomRuntime.includes('showSynchrony(')&&mapRoomCss.includes('pc-map-mobile-layerbar'));
 add('incident-screen-crosslinks',mapRoomRuntime.includes('data-map-open-history')&&mapRoomRuntime.includes('data-map-open-faction')&&mapRoomRuntime.includes('data-map-open-record')&&worldHistory.includes('ProjectCurseWorldHistoryRuntime')&&factionAnalysisRuntime.includes('data-pc-faction-incident')&&archiveRuntime.includes('open:openRecord'));
 add('cinematic-registry-four-records',cinematicData?.ids?.().join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicData?.ids?.().join('|'));
 add('cinematic-record-config-owned-by-modules',![cinematicCults,cinematicImmortality,cinematicFerals,cinematicSakuma].some(source=>!source.includes('ProjectCurseCinematicRegistry?.register'))&&main.includes('cinematicRegistry?.get?.(state.activeRecord)')&&main.includes('cinematicRegistry?.pages?.(recordId)'));
@@ -321,7 +325,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v36',structureData?.schema==='project-curse-v36'&&context.window.ProjectCurseBuild?.schema==='project-curse-v36');
+add('manifest-runtime-schema-v37',structureData?.schema==='project-curse-v37'&&context.window.ProjectCurseBuild?.schema==='project-curse-v37');
 add('manifest-japan-technology-owner',structureData?.owners?.japanTechnologyData==='assets/js/data/japan-technology-data.js');
 add('manifest-lineage-owner',structureData?.owners?.factionLineage==='assets/js/data/faction-lineage-data.js');
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);

@@ -1,4 +1,4 @@
-// Project Curse 5.43.1 — single source of truth for the terminal build.
+// Project Curse 5.44.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.43.1',
-    codename:'Aftermath Chronicle',
-    schema:'project-curse-v36',
+    version:'5.44.0',
+    codename:'Signal Concordance Map',
+    schema:'project-curse-v37',
     released:'2026-08-21',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

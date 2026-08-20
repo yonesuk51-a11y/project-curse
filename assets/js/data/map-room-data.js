@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — geographic control map, recovery routes, drilldowns, and shared incident traces.
+// Project Curse 5.44.0 — geographic control map, isolated synchrony signals, drilldowns, and shared incident traces.
 (function(root){
   'use strict';
 
@@ -11,7 +11,7 @@
   const network=root.ProjectCurseIncidentNetwork;
 
   root.ProjectCurseMapRoom=freeze({
-    version:'map-room-v9',
+    version:'map-room-v10',
     viewBox:'0 0 1200 620',
     geography:[
       {id:'greenland',d:'M319 53 L360 39 394 70 378 121 341 132 311 95 Z'},
@@ -65,6 +65,26 @@
       {id:'gbf-western',region:'southamerica',className:'pilgrimage',points:[[425,397],[391,414],[351,442],[371,477],[408,489]],label:'WESTERN PILGRIM TRACE'},
       {id:'southern-mobilization',region:'southamerica',className:'hostile',points:[[427,398],[406,372],[379,354],[350,340]],label:'COASTAL MOBILIZATION'},
       {id:'northern-pressure',region:'eastasia',className:'front',points:[[841,197],[887,166],[934,120],[980,148]],label:'NORTHERN FRONT'}
+    ],
+    synchronyEvents:[
+      {
+        id:'three-night-silence',code:'SYNC-2042-1031',date:'2042.10.31',title:'삼야 무응답',duration:'61H 01M',
+        status:'OBSERVED / CAUSE UNRESOLVED',confidence:'observed',history:'2042-10-31-three-night-silence',connection:'UNRESOLVED',route:null,
+        summary:'대흑림 성채 여섯 곳과 데드 존 검문소 네 곳이 61시간 1분 동안 외부 교신을 잃었다. 복구 장부에는 상대 권역의 호출 부호가 남았지만, 중계 경로는 확인되지 않았다.',
+        boundary:'열 개 표식은 같은 시간대의 독립 관측점이다. 대륙 사이의 통로·항로·지리적 연결을 뜻하지 않는다.',
+        points:[
+          {id:'gbf-bell-01',region:'southamerica',x:338,y:362,code:'G01',kind:'castle',label:'성채 종 장부 01',site:'대흑림 북서 성채권',callsign:'DZ-GATE-07',log:'검문소 호출 부호 1회 기록'},
+          {id:'gbf-bell-02',region:'southamerica',x:381,y:350,code:'G02',kind:'castle',label:'성채 종 장부 02',site:'대흑림 북부 성채권',callsign:'DZ-WHITE-ASH',log:'백색 재 검문 코드 3회 기록'},
+          {id:'gbf-bell-03',region:'southamerica',x:420,y:378,code:'G03',kind:'castle',label:'성채 종 장부 03',site:'대흑림 동부 성채권',callsign:'DZ-RETURN-04',log:'귀환자 검문 호출 2회 기록'},
+          {id:'gbf-bell-04',region:'southamerica',x:342,y:422,code:'G04',kind:'castle',label:'성채 종 장부 04',site:'대흑림 서부 성채권',callsign:'DZ-CHECK-11',log:'미등록 검문 호출 1회 기록'},
+          {id:'gbf-bell-05',region:'southamerica',x:394,y:453,code:'G05',kind:'castle',label:'성채 종 장부 05',site:'대흑림 내측 성채권',callsign:'DZ-GATE-07',log:'동일 호출의 역순 재생 기록'},
+          {id:'gbf-bell-06',region:'southamerica',x:371,y:501,code:'G06',kind:'castle',label:'성채 종 장부 06',site:'대흑림 남서 성채권',callsign:'DZ-WHITE-ASH',log:'폐쇄 확인문 일부 기록'},
+          {id:'dz-check-a',region:'northamerica',x:142,y:183,code:'D01',kind:'checkpoint',label:'검문소 무응답 기록 A',site:'데드 존 서부 검문권',callsign:'GBF-BELL-01',log:'성채 종지기 호출 2회 기록'},
+          {id:'dz-check-b',region:'northamerica',x:184,y:214,code:'D02',kind:'checkpoint',label:'검문소 무응답 기록 B',site:'데드 존 남서 검문권',callsign:'GBF-BELL-04',log:'서부 성채 응답문 1회 기록'},
+          {id:'dz-check-c',region:'northamerica',x:235,y:164,code:'D03',kind:'checkpoint',label:'검문소 무응답 기록 C',site:'검문소 07 인접 관측권',callsign:'GBF-BELL-06',log:'남서 성채 종 장부 문구 기록'},
+          {id:'dz-check-d',region:'northamerica',x:292,y:196,code:'D04',kind:'checkpoint',label:'검문소 무응답 기록 D',site:'데드 존 동부 검문권',callsign:'GBF-BELL-02',log:'북부 성채 폐쇄 확인문 기록'}
+        ]
+      }
     ],
     markers:[
       {id:'east-overview',region:'eastasia',overview:true,x:913,y:170,type:'signal',title:'동아시아 감시권',meta:'도쿄·란저우·북부 전선',status:'감시 강화',confidence:'confirmed'},
