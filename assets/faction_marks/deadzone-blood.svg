@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">데드존 혈교 자치 문양</title><desc id="desc">열린 혈액 방울을 통과하는 순례로와 두 피난 거점이 결합된 문양</desc>
+  <g fill="none" stroke="#d5d9d7" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M128 29v52M128 81 83 53M128 81l45-28M83 53 55 92 27 63M173 53l28 92-27 63"/>
+    <path d="M62 188h46M148 188h46M77 188v31M179 188v31"/>
+  </g>
+  <path d="M128 83c-18 28-31 44-31 64 0 11 4 20 11 27M148 174c7-7 11-16 11-27 0-20-13-36-31-64" fill="none" stroke="#9f3340" stroke-width="9" stroke-linecap="round"/>
+  <path d="M128 124v104" fill="none" stroke="#9f3340" stroke-width="8" stroke-linecap="round"/>
+  <path d="M113 211l15 17 15-17" fill="none" stroke="#9f3340" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#9f3340"><circle cx="77" cy="188" r="7"/><circle cx="179" cy="188" r="7"/></g>
+</svg>

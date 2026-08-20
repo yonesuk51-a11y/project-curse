@@ -1,6 +1,6 @@
 # Future Patch Pointer
 
-Current baseline: `5.37.1 Unified Faction Sigils`
+Current baseline: `5.38.0 Faction Lineage Atlas`
 
 Completed in this baseline:
 `32 Authored Records / Eight Document Voices / Provenance UI / Writing Standard`
@@ -19,6 +19,6 @@ Next planned pass:
 - 일본 기술 도약의 시작 연도·기술·사회적 결과 확정
 - 대흑림·데드 존 설정글과 시나리오 선택지를 새 문체 기준으로 감사
 - 2030년 이후 작전 결과는 플레이어 판정과 고정 정사를 분리해 작성
-- 세력 계층과 시기별 관계 변화를 정보 분석 화면에 연결
+- 2030년 이후 남부 혈교·데드존 혈교의 선택 결과를 고정 정사와 분리해 작성
 - 실제 브라우저에서 세계 기록 데스크톱·모바일·키보드 동작 검증
 - 공개 배포 전 음원·영상·이미지 라이선스와 GitHub Pages 배포 보안 최종 점검

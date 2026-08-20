@@ -1,10 +1,12 @@
-// Project Curse 5.37.1 — intelligence dossier, unified faction marks and shared incident owner.
+// Project Curse 5.38.0 — intelligence dossier, cult lineage atlas and shared incident owner.
 (function(){
   'use strict';
 
   const source=window.ProjectCurseFactionAnalysis;
   const incidentNetwork=window.ProjectCurseIncidentNetwork;
   const markRegistry=window.ProjectCurseFactionMarks;
+  const lineage=window.ProjectCurseFactionLineage;
+  const historyData=window.ProjectCurseWorldHistoryData;
   if(!source?.factions) return;
 
   const q=(selector,root=document)=>root.querySelector(selector);
@@ -36,9 +38,11 @@
 
   function factionCard(key){
     const faction=source.factions[key];
+    const lineageNode=lineage?.nodes?.[key];
     return `<button class="pc-faction-card" data-pc-faction-open="${esc(key)}" type="button"${markStyle(key)}>
       ${markImage(key)}
       <b>${esc(faction.name)}</b>
+      ${lineageNode?`<small data-pc-lineage-state="${esc(lineageNode.state)}">${esc(lineageNode.kind)}</small>`:''}
     </button>`;
   }
 
@@ -85,6 +89,37 @@
     </section>`;
   }
 
+  function lineageAtlas(key){
+    const active=lineage?.nodes?.[key];
+    if(!active) return '';
+    const state=lineage.states?.[active.state];
+    const nodes=lineage.order.map(nodeKey=>{
+      const node=lineage.nodes[nodeKey];
+      return `<button type="button" class="pc-lineage-node${nodeKey===key?' is-active':''}" data-pc-faction-open="${esc(nodeKey)}" data-lineage-state="${esc(node.state)}"${markStyle(nodeKey)}>
+        ${markImage(nodeKey,'',true)}
+        <span><b>${esc(node.name)}</b><small>${esc(node.short)}</small></span>
+      </button>`;
+    }).join('');
+    const edges=lineage.edges.map(edge=>{
+      const edgeState=lineage.states?.[edge.state];
+      return `<li data-lineage-state="${esc(edge.state)}"><span>${esc(lineage.nodes[edge.from]?.name)}</span><i aria-hidden="true"></i><span>${esc(lineage.nodes[edge.to]?.name)}</span><small>${esc(edge.label)} · ${esc(edgeState?.label)}</small></li>`;
+    }).join('');
+    const history=(active.history||[]).map(id=>{
+      const record=historyData?.records?.[id];
+      const meta=lineage.historyMeta?.[id];
+      if(!record&&!meta) return null;
+      return {id,date:record?.date||meta?.date||'DATE PARTIAL',title:record?.title||meta?.title||id};
+    }).filter(Boolean);
+    return `<section class="pc-faction-lineage" aria-labelledby="pc-lineage-title">
+      <header><div><small>CULT LINEAGE / COMMAND STATUS</small><h4 id="pc-lineage-title">교단 계보 감식</h4></div><span data-lineage-state="${esc(active.state)}">${esc(state?.label||active.state)}</span></header>
+      <div class="pc-lineage-current"><strong>${esc(active.kind)}</strong><span>${esc(active.command)}</span><p>${esc(active.summary)}</p></div>
+      <div class="pc-lineage-atlas" aria-label="우시노다 계보 노드">${nodes}</div>
+      <ol class="pc-lineage-edges">${edges}</ol>
+      <aside class="pc-lineage-warning"><b>판정 유보</b><span>${esc(lineage.unresolved.map(item=>item.text).join(' '))}</span></aside>
+      ${history.length?`<div class="pc-lineage-history"><h5>연결 세계 기록</h5>${history.map(record=>`<button type="button" data-pc-faction-history="${esc(record.id)}"><time>${esc(record.date)}</time><span>${esc(record.title)}</span><i aria-hidden="true">↗</i></button>`).join('')}</div>`:''}
+    </section>`;
+  }
+
   function dossier(key){
     const faction=source.factions[key]||source.factions.uac;
     const incidents=(incidentNetwork?.incidentList||[]).filter(item=>item.factions.includes(key));
@@ -95,6 +130,7 @@
       </header>
       <p class="pc-faction-lead">${esc(faction.lead)}</p>
       ${markAuthentication(key)}
+      ${lineageAtlas(key)}
       <section class="pc-faction-copy" aria-label="조직 개요">
         ${faction.overview.map((paragraph)=>`<p>${esc(paragraph)}</p>`).join('')}
       </section>
@@ -199,6 +235,16 @@
     });
 
     document.addEventListener('click',(event)=>{
+      const history=event.target.closest?.('[data-pc-faction-history]');
+      if(history){
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        window.ProjectCurseAudioControl?.play?.('incident.link');
+        window.ProjectCurseShell?.navigate('history',{replace:false,historyMode:'push'}).then(()=>{
+          window.ProjectCurseWorldHistoryRuntime?.open?.(history.dataset.pcFactionHistory);
+        });
+        return;
+      }
       const incident=event.target.closest?.('[data-pc-faction-incident]');
       if(incident){
         event.preventDefault();

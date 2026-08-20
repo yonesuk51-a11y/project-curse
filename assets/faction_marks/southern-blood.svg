@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">남부 혈교 전시 문양</title><desc id="desc">혈교 방울 위에 뒤집힌 전시 왕관과 세 작전축이 결합된 문양</desc>
+  <g fill="none" stroke="#d7d9d8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M55 68 83 91l45-47 45 47 28-23-17 48H72Z"/>
+    <path d="M72 116 48 157l37 10-13 43M184 116l24 41-37 10 13 43"/>
+    <path d="M128 44v52M128 171v55"/>
+  </g>
+  <path d="M128 94c-20 31-35 50-35 72a35 35 0 0 0 70 0c0-22-15-41-35-72Z" fill="none" stroke="#ae2330" stroke-width="9"/>
+  <path d="M112 164c7 10 18 13 31 5" fill="none" stroke="#ae2330" stroke-width="7" stroke-linecap="round"/>
+  <g fill="#ae2330"><circle cx="55" cy="68" r="7"/><circle cx="201" cy="68" r="7"/><circle cx="128" cy="226" r="7"/></g>
+</svg>

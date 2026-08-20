@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">타락교 감식 재구성 문양</title><desc id="desc">우시노다 공통 세 갈래 획 안에서 비대칭 생체 가지가 자라는 문양</desc>
+  <g fill="none" stroke="#d6d9d8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M128 29v58M128 87 83 55M128 87l45-32"/>
+    <path d="M77 55 48 91l25 34-17 50 42 49M179 55l29 36-25 34 17 50-42 49"/>
+    <path d="M128 87v105M99 117l29 25 31-26M97 178l31-27 34 29"/>
+  </g>
+  <g fill="none" stroke="#a62c36" stroke-width="8" stroke-linecap="round">
+    <path d="M91 103c-18 7-23 21-17 38M164 102c19 7 24 22 16 39M128 143c-20 14-25 34-12 55"/>
+  </g>
+  <g fill="#a62c36"><circle cx="74" cy="142" r="7"/><circle cx="181" cy="142" r="7"/><circle cx="116" cy="200" r="7"/></g>
+</svg>

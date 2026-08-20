@@ -230,7 +230,7 @@
   ];
 
   root.ProjectCurseWorldHistoryData=freeze({
-    version:root.ProjectCurseBuild?.version||'5.37.1',
+    version:root.ProjectCurseBuild?.version||'5.38.0',
     eras,evidenceLevels,records,unresolved,post2006Records,
     getEra:id=>eras.find(era=>era.id===id)||null,
     getRecord:id=>records[id]||null,

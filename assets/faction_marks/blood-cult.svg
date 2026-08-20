@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">혈교 감식 재구성 문양</title><desc id="desc">우시노다 공통 골격 안에 혈액 방울과 두 흐름이 결합된 문양</desc>
+  <g fill="none" stroke="#d6d9d8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M128 28v55M128 83 82 53M128 83l46-30M82 53 50 94l28 62M174 53l31 94-28 62"/>
+    <path d="M94 121h68M100 179l28 42 28-42"/>
+  </g>
+  <path d="M128 82c-17 27-30 43-30 62 0 18 13 32 30 32s30-14 30-32c0-19-13-35-30-62Z" fill="none" stroke="#ac2431" stroke-width="9"/>
+  <path d="M116 145c5 8 12 11 21 7" fill="none" stroke="#ac2431" stroke-width="7" stroke-linecap="round"/>
+  <g fill="#ac2431"><circle cx="82" cy="53" r="7"/><circle cx="174" cy="53" r="7"/><circle cx="128" cy="222" r="7"/></g>
+</svg>

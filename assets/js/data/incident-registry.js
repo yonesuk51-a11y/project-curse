@@ -1,4 +1,4 @@
-// Project Curse 5.36.2 — shared incident, region and operation network.
+// Project Curse 5.38.0 — shared incident, region, operation and cult-lineage network.
 (function(root){
   'use strict';
 
@@ -17,13 +17,13 @@
     'evt-blood-lake':{
       id:'evt-blood-lake',code:'EVT-1986-0725',date:'1986.07.25',status:'RESIDUAL',confidence:'confirmed',
       title:'피의 호수 사건',summary:'F.H.C 조사팀이 북해권 혈액성 수역에 진입한 뒤 발생한 회수·실종 사건.',
-      region:'europe',coordinates:[9.2,55.5],history:'1986-07-25-immortality',factions:['fhc','uac','nhc'],
+      region:'europe',coordinates:[9.2,55.5],history:'1986-07-25-immortality',factions:['fhc','uac','nhc','blood-cult'],
       records:['Immortality_860201','Unknown_Record2_860205'],operation:'op-immortality'
     },
     'evt-tokyo-record':{
       id:'evt-tokyo-record',code:'EVT-1989-0823',date:'1989.08.23',status:'ARCHIVED',confidence:'observed',
       title:'도쿄 지부 기록',summary:'교육기관 내부의 의식 교육과 인간 위장형 괴이 피해가 확인된 기록.',
-      region:'eastasia',coordinates:[139.69,35.68],history:'1989-08-23-tokyo',factions:['sid','fhc','ushinoda'],records:['Sakuma_Tape_991028','Cults_871104']
+      region:'eastasia',coordinates:[139.69,35.68],history:'1989-08-23-tokyo',factions:['sid','fhc','ushinoda','corruption-cult','shadow-cult'],records:['Sakuma_Tape_991028','Cults_871104']
     },
     'evt-deadzone-raid':{
       id:'evt-deadzone-raid',code:'EVT-2006-0820',date:'2006.08.20',status:'SITE LOST',confidence:'historical',
@@ -43,7 +43,7 @@
     'evt-deadzone-return':{
       id:'evt-deadzone-return',code:'EVT-2029-0412',date:'2029.04.12',status:'QUARANTINE ACTIVE',confidence:'observed',
       title:'검문소 07 귀환자 신원 상충',summary:'네 명의 귀환자와 다섯 번째 생체 신호가 서부 귀환 회랑의 동일 출입 요청으로 감지된 사건.',
-      region:'northamerica',coordinates:[-124,44],history:'2029-04-12-checkpoint-07',factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return'
+      region:'northamerica',coordinates:[-124,44],history:'2029-04-12-checkpoint-07',factions:['uac','deadzone-blood'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return'
     },
     'evt-deadzone-recovery':{
       id:'evt-deadzone-recovery',code:'EVT-DZ-OUTBOUND-R05',date:'AFTER 06:03',status:'SEALED / VERDICT REQUIRED',confidence:'disputed',
@@ -54,7 +54,7 @@
       id:'evt-southern-mobilization',code:'EVT-2030-0117',date:'2030.01.17',status:'CRITICAL / PARTIAL',confidence:'observed',
       title:'남부 집단 소환·쿠데타 전조',
       summary:'남부 해안 분파의 특수부대 집결, 도시권 집단 소환과 성위대 지휘부 침투 정황이 동시에 포착됐다.',
-      region:'southamerica',coordinates:[-46,-23],history:'2030-01-17-broken-crown',factions:['sid','nhc','ushinoda'],records:['Cults_871104'],operation:'op-southern-coup',
+      region:'southamerica',coordinates:[-46,-23],history:'2030-01-17-broken-crown',factions:['sid','nhc','ushinoda','southern-blood'],records:['Cults_871104'],operation:'op-southern-coup',
       participants:['피의 종교 남부권','남부 해안 분파','성위대 내부 공작망','몬수르 교회 일부','우시노다 잔존 인원'],
       intelligence:[
         '남부 특수부대는 적 전력을 분산시키기 위한 동시다발 소환을 준비 중이다.',
@@ -91,7 +91,7 @@
   };
 
   root.ProjectCurseIncidentNetwork=freeze({
-    version:'5.37.1',
+    version:root.ProjectCurseBuild?.version||'5.38.0',
     incidents,
     incidentList:Object.values(incidents),
     operations:[operation],

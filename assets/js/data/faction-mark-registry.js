@@ -1,4 +1,4 @@
-// Project Curse 5.37.1 — canonical faction mark registry.
+// Project Curse 5.38.0 — canonical faction mark and cult-derivative registry.
 (function(root){
   'use strict';
 
@@ -80,6 +80,60 @@
       ],
       note:'교단이 직접 승인한 공식 문양인지는 확인되지 않았다. 잘못된 획을 포함한 영상 자료도 존재한다.'
     },
+    'corruption-cult':{
+      name:'타락교',asset:'assets/faction_marks/corruption-cult.svg',type:'종파 의식문양 / 감식 재구성',source:'생체 의식지·Flesh Path 교재 반복획',assetState:'파생 벡터 / 현장형 통합',
+      firstSeen:'1989.08.23 이전',confidence:'B',usage:'신체 의식진·교재·피부 각인',accent:'#a62c36',
+      symbols:[
+        {label:'비대칭 생체 가지',text:'같은 몸에서도 통제되지 않는 타락과 증식을 뜻한다.'},
+        {label:'세 갈래 공통축',text:'우시노다 공통문양에서 파생된 정식 종파임을 표시한다.'},
+        {label:'열린 성장점',text:'완성된 신체보다 계속 재작성되는 육체를 신앙 대상으로 삼는다는 해석이다.'}
+      ],note:'지역 의식마다 가지 수가 다르다. 이 등록본은 반복 빈도가 높은 세 성장점을 남긴 감식용 통합형이다.'
+    },
+    'blood-cult':{
+      name:'혈교',asset:'assets/faction_marks/blood-cult.svg',type:'종파 의식문양 / 감식 재구성',source:'피의 호수·Blood Path 교재·의식 저장소',assetState:'파생 벡터 / 중앙 종파 추정형',
+      firstSeen:'1986.07.25 이전',confidence:'B',usage:'혈액 의식진·저장용기·교재',accent:'#ac2431',
+      symbols:[
+        {label:'닫힌 혈액 방울',text:'피를 소모품이 아니라 기억과 통로를 보존하는 그릇으로 본다.'},
+        {label:'좌우 유입축',text:'희생자와 의식자가 같은 혈액 좌표에 묶이는 구조를 나타낸다.'},
+        {label:'하부 결속점',text:'의식이 끝난 뒤에도 혈연과 기억의 연결이 남는다는 표시다.'}
+      ],note:'남부·데드존 변형과 구분하기 위한 중앙 종파 감식형이다. 실제 교단 승인본 여부는 확인되지 않았다.'
+    },
+    'shadow-cult':{
+      name:'그림자교',asset:'assets/faction_marks/shadow-cult.svg',type:'종파 의식문양 / 감식 재구성',source:'빙의 현장·반사면 기록·조작 영상 원본 대조',assetState:'파생 벡터 / 이중 노출형',
+      firstSeen:'1989.08.23 이전',confidence:'C',usage:'잠복 거점·무광 봉인문·빙의 표식',accent:'#6e7883',
+      symbols:[
+        {label:'어긋난 두 축',text:'몸과 그 몸을 대신하는 그림자가 완전히 일치하지 않는 상태를 뜻한다.'},
+        {label:'끊긴 외곽환',text:'관측자의 시선이 이어지지 않는 순간에 잠복 경로가 열린다는 해석이다.'},
+        {label:'공유 하부점',text:'서로 다른 신원 기록이 하나의 개체로 수렴하는 감식 흔적을 나타낸다.'}
+      ],note:'그림자교가 의도적으로 틀린 획을 유포한 사례가 있어 신뢰도 C를 유지한다.'
+    },
+    'first-apostle':{
+      name:'첫 번째 사도',asset:'assets/faction_marks/first-apostle.svg',type:'예외개체 감식 표상',source:'교단 기원 기록·세 권능 출현 보고의 교차 재구성',assetState:'분석용 벡터 / 공식 문양 아님',
+      firstSeen:'교단 창설 이전 기록',confidence:'D',usage:'예외개체 문서·세 권능 동시 출현 경고',accent:'#af2633',
+      symbols:[
+        {label:'닫힌 이중환',text:'세 종파의 현재 정원 밖에서 독립적으로 판정해야 하는 존재임을 뜻한다.'},
+        {label:'삼권능 중첩',text:'신체 가지·혈액 방울·그림자 절단선이 한 중심을 공유한다.'},
+        {label:'상부 선행점',text:'현존 교단보다 먼저 존재했다는 기록을 연대축 위에 표시한다.'}
+      ],note:'이 표상은 현장 식별을 위한 U.A.C 분석 기호다. 첫 번째 사도가 직접 사용한 휘장으로 제시하지 않는다.'
+    },
+    'southern-blood':{
+      name:'남부 혈교',asset:'assets/faction_marks/southern-blood.svg',type:'지역 전시지휘 문양',source:'남부 감청문·소환 앵커·성위대 침투 장비',assetState:'파생 벡터 / 작전형 통합',
+      firstSeen:'2016.02.21 이전',confidence:'B',usage:'충성 서약·작전표·도시 소환 앵커',accent:'#ae2330',
+      symbols:[
+        {label:'뒤집힌 전시 왕관',text:'교회와 성채를 종교국가가 아닌 임시 전시 지휘망 아래 묶는다는 뜻이다.'},
+        {label:'폐쇄된 혈액핵',text:'자원과 의식 재료를 남부 지휘부가 통제하는 구조를 나타낸다.'},
+        {label:'세 작전축',text:'해안 보급·도시 소환·성위대 침투를 하나의 일정표로 연결한다.'}
+      ],note:'우시노다 혈교의 정통 휘장으로 판정되지 않았다. 계승 주장을 시각화한 지역 작전형이다.'
+    },
+    'deadzone-blood':{
+      name:'데드존 혈교',asset:'assets/faction_marks/deadzone-blood.svg',type:'지역 자치분파 문양',source:'순례자 숙영지·구호표식·2016년 결별문',assetState:'파생 벡터 / 열린 회랑형',
+      firstSeen:'2016.02.21 이전',confidence:'B',usage:'순례로·응급 숙영지·남부 명령 거부문',accent:'#9f3340',
+      symbols:[
+        {label:'열린 혈액 방울',text:'혈액 의례를 유지하면서도 남부의 폐쇄 지휘를 거부한다는 표시다.'},
+        {label:'관통 순례로',text:'중립 순례자에게 이동과 귀환의 가능성을 남겨두는 현장 원칙을 뜻한다.'},
+        {label:'두 피난 거점',text:'교단 구성원과 외부 생존자가 제한적으로 같은 보호선을 쓸 수 있음을 나타낸다.'}
+      ],note:'구조 행위가 확인된 거점의 공통형이다. 이 표식만으로 안전이나 우호를 보증할 수 없다.'
+    },
     haimun:{
       name:'P.O.H',asset:'assets/faction_marks/haimun.svg',legacyAsset:'assets/faction_marks/haimun.webp',
       type:'비공식 운송 코드',source:'압수 송장·냉동차량·위장 진료소 공통형',assetState:'벡터 마스터 / 통합 등록',
@@ -134,9 +188,10 @@
   };
 
   root.ProjectCurseFactionMarks=freeze({
-    version:'5.37.1',
+    version:root.ProjectCurseBuild?.version||'5.38.0',
     schema:'project-curse-faction-marks-v1',
     redesigned:['uac','nhc','sid','fhc','syndicate','ushinoda','haimun','ashcrew','arf','cpd','amarion'],
+    lineageMarks:['corruption-cult','blood-cult','shadow-cult','first-apostle','southern-blood','deadzone-blood'],
     marks
   });
 })(window);

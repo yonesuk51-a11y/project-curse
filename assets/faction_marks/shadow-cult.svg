@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">그림자교 감식 재구성 문양</title><desc id="desc">두 개의 어긋난 그림자 축과 끊긴 외곽환이 겹친 문양</desc>
+  <g fill="none" stroke="#d4d8d7" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M105 34v54L66 63M105 88 66 117l19 48-23 40"/>
+    <path d="M147 30v58l42-25M147 88l42 29-19 48 23 40"/>
+    <path d="M105 88l42 0M88 140h80M85 165l43 57 42-57"/>
+  </g>
+  <g fill="none" stroke="#6e7883" stroke-width="7" stroke-linecap="round" stroke-dasharray="22 14">
+    <path d="M51 108a83 83 0 0 1 154 0M206 151a83 83 0 0 1-156 0"/>
+  </g>
+  <g fill="#a92c38"><circle cx="105" cy="88" r="7"/><circle cx="147" cy="88" r="7"/><circle cx="128" cy="222" r="7"/></g>
+</svg>
