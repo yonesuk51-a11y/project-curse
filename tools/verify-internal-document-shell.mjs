@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.40.0';
+const VERSION='5.41.0';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -132,13 +132,16 @@ check('audio:route-profile-sync',audioController.includes('projectcurse:screen-c
 check('audio:regional-document-profile',documentViewer.includes('setProfile?.(doc.theme')&&documentViewer.includes("'great-black-forest':'region.forest'")&&documentViewer.includes("'dead-zone':'region.deadzone'"));
 check('operation:persistent-owner',operationState.includes('ProjectCurseOperationState')&&operationState.includes('localStorage.setItem')&&operationState.includes('visitBranch')&&operationState.includes('chooseVerdict'));
 check('operation:four-outcomes',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`)));
+check('operation:canon-boundary',operationState.includes('COMMON CANON UNCHANGED')&&operationState.includes('fixedFacts:Object.freeze([')&&operationState.includes('pendingFacts:Object.freeze([')&&count(operationState,"canonEffect:'none'")===4);
 check('operation:document-report',documentViewer.includes('archive-scenario-report')&&documentViewer.includes('data-scenario-verdict')&&documentViewer.includes('data-scenario-reset'));
+check('operation:document-boundary-ui',documentViewer.includes('archive-scenario-canon-boundary')&&documentViewer.includes('archive-scenario-report-layers')&&documentCss.includes('.archive-scenario-lineage-guard'));
 check('operation:root-loaded',index.includes(`assets/js/core/operation-state.js?v=${VERSION}`)&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
 const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
 check('map:drilldown-root-loaded',index.includes(`assets/js/data/regional-drilldown-data.js?v=${VERSION}`)&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
 check('map:six-drilldowns',drilldowns.length===6&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38,`${drilldowns.length} districts`);
 check('map:four-level-navigation',mapRoomRuntime.includes('data-map-open-detail')&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('pc-map-breadcrumb'));
 check('map:verdict-site-sync',mapRoomRuntime.includes('resolveDetailSite')&&drilldowns.filter(detail=>detail.sites.some(site=>site.verdictStates)).length>=2);
+check('map:local-operation-boundary',mapRoomRuntime.includes('LOCAL OPERATION LAYER')&&mapRoomRuntime.includes('COMMON CANON UNCHANGED')&&mapRoomRuntime.includes('pc-op-canon-boundary'));
 const detailRoutes=drilldowns.flatMap(detail=>detail.routes.map(route=>({detail,route})));
 check('map:nineteen-route-traces',detailRoutes.length===19&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
 check('map:route-focus-and-layers',mapRoomRuntime.includes('routesForSite')&&mapRoomRuntime.includes('renderDetailOverlays')&&mapRoomRuntime.includes('data-map-detail-layer')&&mapRoomRuntime.includes('data-map-route-step'));

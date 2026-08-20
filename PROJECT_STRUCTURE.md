@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.40.0
+# Project Curse Structure — 5.41.0
 
 ## 활성 소유권
 
@@ -25,7 +25,7 @@
 | 공통 오디오 자산과 기본 환경음 | `assets/js/core/base-runtime.js` |
 | 의미 기반 재생·프로필·덕킹·중첩 제한 | `assets/js/core/audio-controller.js` |
 | 화면별 음향 프로필·효과음 사건 목록 | `assets/js/data/audio-manifest.js` |
-| 부서진 왕관 정보 회수·판단·지도 단계 저장 | `assets/js/core/operation-state.js` |
+| 부서진 왕관 정보 회수·로컬 판정·정사 및 계보 경계·지도 단계 저장 | `assets/js/core/operation-state.js` |
 | 세 현장 시나리오·고정 관측·로컬 판정 경계·반응형 결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
 | 다중 시나리오 진행·계기·판정 저장과 선택 조건 해석 | `assets/js/core/pilgrimage-state.js` |
 | 순례·귀환 검문·회수 진입, 판단 봉인 연출과 결과 화면 | `assets/js/pages/pilgrimage-scenario.js` + `assets/css/pilgrimage-scenario.css` |
@@ -89,7 +89,7 @@
 - `assets/js/core/base-runtime.js`: 부팅과 메뉴 환경음·효과음 자산을 소유한다.
 - `assets/js/core/loading-sequence.js`: 빌드별 첫 기동, 세션 복원, 기록 복귀와 모션 감소용 최소 노출 시간을 관리한다.
 - `assets/js/core/audio-controller.js`: 화면·문서 음향 프로필, 의미 이벤트, 덕킹, 음소거 저장과 동시재생 제한을 담당한다.
-- `assets/js/core/operation-state.js`: 부서진 왕관의 회수 정보, 지휘 판단, 현재 작전 단계와 초기화를 단독 소유한다.
+- `assets/js/core/operation-state.js`: 부서진 왕관의 회수 정보, 네 로컬 지휘 판정, 고정·미확정 사실과 계보 보호 경계, 현재 작전 단계와 초기화를 단독 소유한다. 선택 결과는 지도 사본만 바꾸며 세계 공통 정사를 수정하지 않는다.
 - `assets/js/core/pilgrimage-state.js`: 세 시나리오의 진행, 현장 판단, 계기 수치와 결말을 저장하고 앞선 선택 조건으로 후속 장면과 결말을 해석한다.
 - `assets/js/core/verdict-archive-state.js`: 확인한 결말의 선택·측정값 사본과 판정 문서 읽음 상태를 별도로 저장한다.
 - `assets/js/core/quality-policy.js`: 자동·데이터 절약·고화질 설정을 실제 연결과 기기 신호에 결합하고 오프라인 복구 상태를 소유한다.

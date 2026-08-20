@@ -4,7 +4,7 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.40.0';
+const VERSION='5.41.0';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -209,10 +209,14 @@ add('home-deep-links',appShell.includes('dataset.uacArchiveRecord')&&appShell.in
 add('operation-state-owned',structureData?.owners?.operationState==='assets/js/core/operation-state.js'&&operationState.includes('ProjectCurseOperationState=Object.freeze')&&count(index,'assets/js/core/operation-state.js')===1);
 add('operation-state-persistence',operationState.includes("storageKey='pc_operation_broken_crown_v1'")&&operationState.includes('localStorage.setItem')&&operationState.includes('localStorage.removeItem')&&operationState.includes('projectcurse:operation-state-change'));
 add('operation-four-verdicts',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`))&&operationState.includes("branchIds=['signal','witness','deadzone']"));
+add('operation-common-canon-boundary',operationState.includes('COMMON CANON UNCHANGED')&&operationState.includes('fixedFacts:Object.freeze([')&&operationState.includes('pendingFacts:Object.freeze([')&&operationState.includes("lineageGuard:'어느 선택도"));
+add('operation-four-local-only-effects',count(operationState,"scope:'local-command-verdict'")===4&&count(operationState,"canonEffect:'none'")===4&&count(operationState,"lineageEffect:'none'")===4);
 add('operation-safe-reset',operationState.includes('function reset()')&&read('assets/js/pages/archive-document.js').includes('confirmReset')&&read('assets/js/pages/archive-document.js').includes('한 번 더 눌러 초기화 확인'));
 add('operation-scenario-report',read('assets/js/pages/archive-document.js').includes('archive-scenario-verdicts')&&read('assets/js/pages/archive-document.js').includes('archive-scenario-report')&&read('assets/js/pages/archive-document.js').includes('operation.chooseVerdict'));
+add('operation-document-boundary-ui',read('assets/js/pages/archive-document.js').includes('archive-scenario-canon-boundary')&&read('assets/js/pages/archive-document.js').includes('archive-scenario-report-layers')&&read('assets/js/pages/archive-document.js').includes('정사 효력')&&read('assets/css/archive-document.css').includes('.archive-scenario-lineage-guard'));
 add('operation-map-outcome-sync',mapRoomRuntime.includes('operationStore.getDecision')&&mapRoomRuntime.includes('pc-op-route--verdict')&&mapRoomRuntime.includes('decision?.siteStates')&&mapRoomRuntime.includes('stepStates'));
-add('operation-home-resume',terminalHomeRuntime.includes('operationState?.getSummary')&&terminalHomeRuntime.includes('작전 분석 재개')&&terminalHomeRuntime.includes('VERDICT SAVED')&&terminalHomeRuntime.includes('projectcurse:operation-state-change'));
+add('operation-local-map-and-home-labels',mapRoomRuntime.includes('LOCAL OPERATION LAYER')&&mapRoomRuntime.includes('COMMON CANON UNCHANGED')&&mapRoomRuntime.includes('pc-op-canon-boundary')&&terminalHomeRuntime.includes('LOCAL VERDICT SAVED')&&terminalHomeRuntime.includes('LOCAL / CANON UNCHANGED'));
+add('operation-home-resume',terminalHomeRuntime.includes('operationState?.getSummary')&&terminalHomeRuntime.includes('작전 분석 재개')&&terminalHomeRuntime.includes('LOCAL VERDICT')&&terminalHomeRuntime.includes('projectcurse:operation-state-change'));
 const unlitPilgrimage=pilgrimageData?.scenarios?.['unlit-fortress'];
 const deadzoneReturn=pilgrimageData?.scenarios?.['deadzone-return'];
 const deadzoneRecovery=pilgrimageData?.scenarios?.['deadzone-recovery'];
@@ -305,7 +309,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v33',structureData?.schema==='project-curse-v33'&&context.window.ProjectCurseBuild?.schema==='project-curse-v33');
+add('manifest-runtime-schema-v34',structureData?.schema==='project-curse-v34'&&context.window.ProjectCurseBuild?.schema==='project-curse-v34');
 add('manifest-japan-technology-owner',structureData?.owners?.japanTechnologyData==='assets/js/data/japan-technology-data.js');
 add('manifest-lineage-owner',structureData?.owners?.factionLineage==='assets/js/data/faction-lineage-data.js');
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);

@@ -1,4 +1,4 @@
-// Project Curse 5.40.0 — adaptive archive document, source provenance, evidence comparison, and verdict renderer.
+// Project Curse 5.41.0 — adaptive archive document, source provenance, local-verdict boundary, and verdict renderer.
 (function(){
   'use strict';
 
@@ -261,6 +261,13 @@
       panel.id=id;
       panel.hidden=true;
       panel.append(el('small','','RECOVERED FRAGMENT'),rich('h3','',entry.label),rich('p','',entry.reveal));
+      if(entry.source||entry.evidence||entry.limit){
+        const source=el('dl','archive-scenario-source');
+        [['출처',entry.source],['근거',entry.evidence],['판정 한계',entry.limit]].filter(([,value])=>value).forEach(([term,value])=>{
+          const row=el('div');row.append(el('dt','',term),rich('dd','',value));source.append(row);
+        });
+        panel.append(source);
+      }
       controls.append(button);
       panels.append(panel);
     });
@@ -270,13 +277,28 @@
     const report=operation?el('article','archive-scenario-report'):null;
     const decisionStatus=operation?el('p','archive-scenario-decision-status','세 정보 경로를 모두 회수해야 지휘 판단을 기록할 수 있다.'):null;
     if(operation){
+      const boundary=operation.canonBoundary;
       const decisionHead=el('header','archive-scenario-decision-head');
-      decisionHead.append(el('small','','COMMAND VERDICT'),el('h3','','임시 지휘 판단'),decisionStatus);
+      decisionHead.append(el('small','','LOCAL COMMAND VERDICT'),el('h3','','현장 작전 사본 판정'),decisionStatus);
+      const boundaryShell=el('aside','archive-scenario-canon-boundary');
+      const boundaryHead=el('header');
+      boundaryHead.append(el('small','',boundary.status),el('b','','정사 승인 경계'),rich('p','',boundary.scope));
+      const boundaryColumns=el('div','archive-scenario-canon-columns');
+      [['FIXED CANON','2030년에 확정된 사실',boundary.fixedFacts],['PENDING REVIEW','후대 승인 대기',boundary.pendingFacts]].forEach(([code,title,items])=>{
+        const column=el('section');
+        column.append(el('small','',code),el('h4','',title));
+        const list=el('ul');
+        items.forEach(item=>list.append(rich('li','',item)));
+        column.append(list);boundaryColumns.append(column);
+      });
+      const lineage=el('div','archive-scenario-lineage-guard');
+      lineage.append(el('b','','LINEAGE GUARD'),rich('p','',boundary.lineageGuard));
+      boundaryShell.append(boundaryHead,boundaryColumns,lineage);
       Object.values(operation.decisions).forEach(decision=>{
         const button=el('button','archive-scenario-verdict');
         button.type='button';
         button.dataset.scenarioVerdict=decision.id;
-        button.append(el('small','',decision.code),rich('strong','',decision.title),rich('span','',decision.consequence));
+        button.append(el('small','',`${decision.code} / LOCAL ONLY`),rich('strong','',decision.title),rich('span','',decision.immediate));
         decisionGrid.append(button);
       });
       report.hidden=true;
@@ -288,32 +310,43 @@
       resetButton.type='button';
       resetButton.dataset.scenarioReset='1';
       actions.append(mapButton,resetButton);
-      decisionShell.append(decisionHead,decisionGrid,report,actions);
+      decisionShell.append(decisionHead,boundaryShell,decisionGrid,report,actions);
     }
 
     function renderReport(state){
       if(!report) return;
       const decision=operation.getDecision(state.verdict);
+      const boundary=operation.canonBoundary;
       report.replaceChildren();
       report.hidden=!decision;
       if(!decision) return;
       const header=el('header');
-      header.append(el('small','',`${decision.code} / ${decision.status}`),rich('h3','',decision.title));
+      header.append(el('small','',`${decision.code} / LOCAL COMMAND VERDICT`),rich('h3','',decision.title),el('span','archive-scenario-canon-status',boundary.status));
       const facts=el('dl','archive-scenario-report-facts');
       [
         ['회수 정보',`${state.visited.length} / ${entries.length}`],
         ['현재 작전 단계',`${state.mapStep+1} / 6`],
-        ['판단 상태',decision.status],
+        ['로컬 판정',decision.status],
+        ['공통 정사',boundary.status],
         ['최종 갱신',state.updatedAt?new Date(state.updatedAt).toLocaleString('ko-KR'):'기록 없음']
       ].forEach(([term,value])=>{
         const row=el('div');row.append(el('dt','',term),el('dd','',value));facts.append(row);
       });
       const summary=rich('p','archive-scenario-report-summary',decision.summary);
+      const layers=el('div','archive-scenario-report-layers');
+      [
+        ['현장 관측',decision.observed],
+        ['로컬 지도 효과',decision.immediate],
+        ['승인 대기',decision.unresolved],
+        ['정사 효력','없음. 이 판정은 공통 연표와 혈교 지휘 계보를 변경하지 않는다.']
+      ].forEach(([label,value])=>{
+        const item=el('div');item.append(el('b','',label),rich('p','',value));layers.append(item);
+      });
       const consequence=el('div','archive-scenario-report-consequence');
-      consequence.append(el('b','','예상 영향'),rich('p','',decision.consequence));
+      consequence.append(el('b','','작전 영향'),rich('p','',decision.consequence));
       const directive=el('div','archive-scenario-report-directive');
       directive.append(el('b','','후속 지침'),rich('p','',decision.directive));
-      report.append(header,facts,summary,consequence,directive);
+      report.append(header,facts,summary,layers,consequence,directive);
     }
 
     function sync(){
@@ -329,8 +362,8 @@
       complete.classList.toggle('is-visible',ready);
       if(operation){
         decisionStatus.textContent=state.verdict
-          ? `${operation.getDecision(state.verdict).status} / 저장된 판단을 다시 선택해 변경할 수 있다.`
-          : ready?'모든 정보가 복구됐다. 임시 지휘 판단을 선택하라.':'세 정보 경로를 모두 회수해야 지휘 판단을 기록할 수 있다.';
+          ? `${operation.getDecision(state.verdict).status} / 로컬 사본에만 저장됨 · 공통 정사 변화 없음.`
+          : ready?'모든 정보가 복구됐다. 공통 정사를 바꾸지 않는 현장 판정을 선택하라.':'세 정보 경로를 모두 회수해야 로컬 지휘 판정을 기록할 수 있다.';
         Array.from(decisionGrid.children).forEach(button=>{
           button.disabled=!ready;
           button.classList.toggle('is-selected',button.dataset.scenarioVerdict===state.verdict);

@@ -49,8 +49,8 @@
       if(primary) primary.textContent=`${regions}개 관제 권역과 ${operations}개 특수 작전, ${records}개 공개 기록을 하나의 사건망에서 확인할 수 있다.`;
 
       const alertTitle=unreadVerdict?'새 현장 판정 기록':decision?.title||feed.alert.title;
-      const alertPriority=unreadVerdict?'NEW RECORD DECRYPTED':decision?(operation.status==='deferred'?'DECISION DEFERRED':'VERDICT RECORDED'):feed.alert.priority;
-      const alertCopy=unreadVerdict?`${unreadVerdict.id} 「${unreadVerdict.title}」 기록을 복원했다. 결말이 확정된 순간의 선택과 측정값이 별도 사본으로 보존됐다.`:decision?.summary||(operation.recovered
+      const alertPriority=unreadVerdict?'NEW RECORD DECRYPTED':decision?(operation.status==='deferred'?'LOCAL DECISION DEFERRED':'LOCAL VERDICT SAVED'):feed.alert.priority;
+      const alertCopy=unreadVerdict?`${unreadVerdict.id} 「${unreadVerdict.title}」 기록을 복원했다. 결말이 확정된 순간의 선택과 측정값이 별도 사본으로 보존됐다.`:decision?`${decision.summary} 공통 정사와 세력 계보에는 반영되지 않는다.`:(operation.recovered
         ? `부서진 왕관 정보 경로 ${operation.recovered}/${operation.total}개가 복구됐다. 지휘 판단은 아직 확정되지 않았다.`
         : incident?.summary||'남방 해안권에서 상충하는 지휘 신호가 감지됐다.');
       const alertAction=unreadVerdict?'새 판정 기록 열기':decision?'작전 결과 지도 열기':operation.recovered?'작전 분석 재개':feed.alert.action;
@@ -63,7 +63,7 @@
           <dl>
             <div><dt>${unreadVerdict?'복호화 기록':'정보 회수'}</dt><dd>${unreadVerdict?`${verdictSummary.unlocked} / ${verdictSummary.total}`:`${operation.recovered} / ${operation.total}`}</dd></div>
             <div><dt>${unreadVerdict?'읽지 않음':'작전 단계'}</dt><dd>${unreadVerdict?verdictSummary.unread:`${operation.mapStep+1} / 6`}</dd></div>
-            <div><dt>판단 상태</dt><dd>${escapeHTML(unreadVerdict?'LOCAL SNAPSHOT':decision?.status||feed.alert.threat)}</dd></div>
+            <div><dt>${decision?'판정 범위':'판단 상태'}</dt><dd>${escapeHTML(unreadVerdict?'LOCAL SNAPSHOT':decision?'LOCAL / CANON UNCHANGED':feed.alert.threat)}</dd></div>
           </dl>
           <a data-uac-route="${unreadVerdict?'archive-entry':'map-room'}" ${unreadVerdict?`data-uac-archive-record="${escapeHTML(unreadVerdict.id)}"`:`data-uac-map-operation="${escapeHTML(feed.alert.operation)}"`} href="#${unreadVerdict?'archive-entry':'map-room'}">${escapeHTML(alertAction)}&nbsp;›</a>`;
       }
@@ -72,7 +72,7 @@
         if(index===0) return {
           ...signal,
           label:decision?`부서진 왕관 · ${decision.title}`:operation.recovered?`부서진 왕관 정보 ${operation.recovered}/${operation.total} 복구`:signal.label,
-          status:decision?(operation.status==='deferred'?'DEFERRED':'VERDICT SAVED'):operation.recovered?'ANALYSIS':signal.status,
+          status:decision?(operation.status==='deferred'?'LOCAL DEFERRED':'LOCAL VERDICT'):operation.recovered?'ANALYSIS':signal.status,
           tone:decision?(operation.status==='deferred'?'unstable':'recovered'):signal.tone
         };
         if(index===1) return {

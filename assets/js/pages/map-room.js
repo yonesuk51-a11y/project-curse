@@ -299,7 +299,7 @@
         <h3>${escapeHTML(site.label)}</h3>
         <p>${escapeHTML(site.meta)}</p>
         <dl class="pc-map-facts"><div><dt>현재 상태</dt><dd class="pc-detail-state${resolved.tone?` is-${escapeHTML(resolved.tone)}`:''}">${escapeHTML(resolved.status)}</dd></div><div><dt>위험도</dt><dd class="pc-detail-risk is-${escapeHTML(threat)}">${escapeHTML(riskLabels[threat])}</dd></div><div><dt>통신</dt><dd>${escapeHTML(communication.toUpperCase())}</dd></div><div><dt>연결 경로</dt><dd>${connectedRoutes.length} TRACE${connectedRoutes.length>1?'S':''}</dd></div><div><dt>판정</dt><dd>${escapeHTML(confidenceLabels[site.confidence]||site.confidence)}</dd></div>${incident?`<div><dt>사건 코드</dt><dd>${escapeHTML(incident.code)}</dd></div>`:''}</dl>
-        ${site.verdictStates?`<div class="pc-detail-verdict-note"><b>OP-BROKEN-CROWN LINK</b><span>${operationStore?.get?.().verdict?`저장된 판단에 따라 지점 상태가 갱신됨`:'판단이 저장되면 지점 상태가 변경됨'}</span></div>`:''}
+        ${site.verdictStates?`<div class="pc-detail-verdict-note"><b>LOCAL OPERATION LAYER</b><span>${operationStore?.get?.().verdict?`로컬 판정에 따라 이 지도 사본만 갱신됨 · 공통 정사 변화 없음`:'판정을 저장하면 이 지도 사본의 지점 상태만 변경됨'}</span></div>`:''}
         ${incident?`<div class="pc-map-incident-summary"><b>${escapeHTML(incident.date)}</b><p>${escapeHTML(incident.summary)}</p></div>`:''}
         ${records.length?`<div class="pc-map-crosslinks"><b>연결 기록</b>${records.map(record=>`<button type="button" data-map-open-record="${escapeHTML(record)}">${escapeHTML(record)}<i>ARCHIVE →</i></button>`).join('')}</div>`:''}
         <div class="pc-map-intel-actions">
@@ -454,6 +454,7 @@
       const step=operation.steps[state.step];
       const persistent=operation.id===operationStore?.operationId?operationStore.get():null;
       const decision=persistent?operationStore.getDecision(persistent.verdict):null;
+      const canonBoundary=persistent?operationStore.canonBoundary:null;
       const recovered=persistent?.visited?.length||0;
       const scenarioId=operationScenarioId(operation);const scenarioState=scenarioId?pilgrimageStore?.get?.(scenarioId):null;
       const scenarioEnding=scenarioId?pilgrimageOutcome(scenarioId)?.endingData:null;
@@ -469,7 +470,7 @@
         </div>
         <div class="pc-map-operation-grid${decision?` has-verdict is-${escapeHTML(decision.tone)}`:scenarioEnding?` has-verdict is-${escapeHTML(scenarioEnding.tone)}`:''}${operation.id==='op-deadzone-recovery'&&!recoveryUnlocked()?' is-scenario-locked':''}"${persistent?` data-operation-persistence="active" data-operation-verdict="${escapeHTML(persistent.verdict||'pending')}"`:''}>
           <section class="pc-map-stage pc-map-operation-stage" aria-label="${escapeHTML(operation.label)} 작전 경로">
-            <div class="pc-map-stage-head"><span>${escapeHTML(operation.code)}</span><b>${persistent?`SAVED · INTEL ${recovered}/3 · `:''}TRACE ${state.step+1}/${operation.steps.length}</b></div>
+            <div class="pc-map-stage-head"><span>${escapeHTML(operation.code)}</span><b>${persistent?`LOCAL COPY · INTEL ${recovered}/3 · `:''}TRACE ${state.step+1}/${operation.steps.length}</b></div>
             <svg class="pc-map-svg" viewBox="0 0 1000 540" role="img" aria-labelledby="pcOpTitle pcOpDesc" preserveAspectRatio="xMidYMid meet">
               <title id="pcOpTitle">${escapeHTML(operation.label)} 작전 경로</title>
               <desc id="pcOpDesc">시간 단계에 따라 복구된 이동 경로와 인원 신호를 표시한 작전 지도</desc>
@@ -487,17 +488,18 @@
               <g>${step.units.map(unitSymbol).join('')}</g>
             </svg>
             <div class="pc-map-scan" aria-hidden="true"></div>
-            <div class="pc-map-coordinates">ROUTE RECONSTRUCTION · ${escapeHTML(step.time)} · ${escapeHTML(decision?.status||scenarioEnding?.status||'SIGNAL NOT VERIFIED')}</div>
+            <div class="pc-map-coordinates">ROUTE RECONSTRUCTION · ${escapeHTML(step.time)} · ${escapeHTML(decision?.status||scenarioEnding?.status||'SIGNAL NOT VERIFIED')}${decision?' · COMMON CANON UNCHANGED':''}</div>
           </section>
           <aside class="pc-map-sidebar pc-map-operation-intel">
             <div class="pc-map-intel-kicker">${escapeHTML(operation.region)} / ${escapeHTML(operation.code)}</div>
             <h3><time>${escapeHTML(step.time)}</time>${escapeHTML(step.title)}</h3>
             <p>${escapeHTML(step.note)}</p>
             <div class="pc-op-status"><span>${persistent?'정보 복구':'경로 복구'}</span><b>${persistent?`${recovered}/3 · ${Math.round(((state.step+1)/operation.steps.length)*100)}%`:Math.round(((state.step+1)/operation.steps.length)*100)+'%'}</b></div>
-            ${decision?`<div class="pc-op-verdict"><small>${escapeHTML(decision.code)}</small><b>${escapeHTML(decision.title)}</b><p>${escapeHTML(decision.summary)}</p></div>`:''}
+            ${decision?`<div class="pc-op-verdict"><small>${escapeHTML(decision.code)} / LOCAL COMMAND VERDICT</small><b>${escapeHTML(decision.title)}</b><p>${escapeHTML(decision.summary)}</p></div>`:''}
+            ${decision&&canonBoundary?`<div class="pc-op-canon-boundary"><small>${escapeHTML(canonBoundary.status)}</small><b>이 지도는 작전 사본이다</b><p>${escapeHTML(canonBoundary.scope)}</p><span>${escapeHTML(canonBoundary.lineageGuard)}</span></div>`:''}
             ${!decision&&scenarioEnding?`<div class="pc-op-verdict"><small>${escapeHTML(scenarioEnding.code)}</small><b>${escapeHTML(scenarioEnding.title)}</b><p>${escapeHTML(scenarioEnding.summary)}</p></div>`:''}
             <div class="pc-map-warning">${escapeHTML(decision?.consequence||scenarioEnding?.consequence||operation.summary)}</div>
-            ${operation.classification?`<dl class="pc-map-facts pc-op-classification"><div><dt>분류</dt><dd>${escapeHTML(operation.classification)}</dd></div><div><dt>작전 상태</dt><dd>${escapeHTML(decision?.status||scenarioEnding?.status||operation.status)}</dd></div></dl>`:''}
+            ${operation.classification?`<dl class="pc-map-facts pc-op-classification"><div><dt>분류</dt><dd>${escapeHTML(operation.classification)}</dd></div><div><dt>${decision?'로컬 판정':'작전 상태'}</dt><dd>${escapeHTML(decision?.status||scenarioEnding?.status||operation.status)}</dd></div>${decision?`<div><dt>정사 효력</dt><dd>없음 / 승인 대기</dd></div>`:''}</dl>`:''}
             ${(decision?.directive||operation.directive)?`<div class="pc-op-directive"><b>COMMAND DIRECTIVE</b><p>${escapeHTML(decision?.directive||operation.directive)}</p></div>`:''}
             ${objectives?`<div class="pc-op-objectives"><b>OPERATION OBJECTIVES</b><ol>${objectives}</ol></div>`:''}
             ${operation.id==='op-unlit-fortress'?`<button class="pc-map-region-return pc-map-pilgrimage-entry" type="button" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome('unlit-fortress')?.status==='idle'?'현장 순례 시나리오 개시':pilgrimageOutcome('unlit-fortress')?.status==='complete'?'순례 결과 열기':'저장된 순례 재개'}</button>`:''}

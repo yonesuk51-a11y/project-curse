@@ -1,20 +1,20 @@
 # Future Patch Pointer
 
-Current baseline: `5.40.0 Field Voice Audit`
+Current baseline: `5.41.0 Broken Crown Verdict Boundary`
 
 Completed in this baseline:
-`15 Authored Field Sections / 3 Canon-Bounded Scenarios / 18 Decision Stages / 10 Local Verdicts`
+`4 Broken Crown Local Verdicts / 4 Fixed Operation Facts / 4 Pending Outcomes / 0 Canon Mutations`
 
 Primary scope:
 
-- 대흑림·데드 존·순례자 규칙 15개 단락에 작성·수신·근거·한계 등록
-- 현지 주민, 귀환 순례자, 사냥대, 교단 감청과 기관 편집자 목소리 분리
-- 세 현장 시나리오에 고정 관측 9개와 플레이어 판정 경계 등록
-- 18단계 선택 카드에 행동 의도·예상 노출·판정 봉인 구조 적용
-- 선택 피드백과 열 결말을 공통 정사가 아닌 로컬 판정으로 표시
-- 규칙의 효력을 과학적 사실로 확정하지 않고 구술 반복과 생환 편향을 함께 보존
+- 부서진 왕관의 작전 개시·동시다발 신호·지휘관 관련 명령·미확정 결말을 공통 정사 경계로 등록
+- 처형·생포·협력·판단 보류를 브라우저 로컬 지휘 판정으로 분리
+- 각 분기에 현장 관측, 즉시 지도 효과, 승인 대기 사실과 정사·계보 효력 없음 표시
+- 작전 문서의 세 정보 조각에 출처·근거·판정 한계 등록
+- 문서, 세부 지도, 작전지도와 홈 수신 상태에 `COMMON CANON UNCHANGED` 경계 동기화
+- 남부 혈교·우시노다 중앙 혈교·데드존 혈교의 계보가 선택 하나로 합쳐지지 않도록 보호
 
 Next planned pass:
 
-- 2030년 이후 작전 결과와 남부·데드존 혈교의 선택 결과를 플레이어 판정과 고정 정사로 분리해 작성
 - 공개 배포 전 음원·영상·이미지 라이선스와 GitHub Pages 배포 보안 최종 점검
+- 2030년 이후의 공통 연표는 플레이어 분기와 분리된 별도 정사 승인안으로 작성

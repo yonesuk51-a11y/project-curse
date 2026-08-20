@@ -469,6 +469,11 @@
 .pc-map-operation-grid.is-allied .pc-op-verdict{border-color:rgba(91,153,124,.5);background:linear-gradient(135deg,rgba(31,77,58,.25),rgba(7,9,10,.76))}
 .pc-map-operation-grid.is-contained .pc-op-verdict{border-color:rgba(184,148,80,.5);background:linear-gradient(135deg,rgba(82,64,28,.25),rgba(7,9,10,.76))}
 .pc-map-operation-grid.is-pending .pc-op-verdict{border-style:dashed;border-color:rgba(156,164,165,.35);background:#090b0c}
+.pc-op-canon-boundary{display:grid;gap:6px;margin-top:10px;padding:13px;border:1px solid rgba(86,132,142,.38);background:linear-gradient(135deg,rgba(28,63,70,.2),rgba(7,10,11,.82))}
+.pc-op-canon-boundary small{color:#78a5af;font:8px/1.3 ui-monospace,monospace;letter-spacing:.1em}
+.pc-op-canon-boundary b{color:#d5e0e2;font-size:11px;line-height:1.4}
+.pc-op-canon-boundary p,.pc-op-canon-boundary span{margin:0;color:rgba(205,217,218,.58);font-size:9px;line-height:1.65}
+.pc-op-canon-boundary span{padding-top:7px;border-top:1px solid rgba(86,132,142,.2);color:rgba(214,188,191,.62)}
 
 /* Regional drilldown */
 .pc-map-detail-tabs{
