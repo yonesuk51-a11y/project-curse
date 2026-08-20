@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.36.2
+# Project Curse Structure — 5.37.0
 
 ## 활성 소유권
 
@@ -7,6 +7,8 @@
 | 빌드 버전·화면 명칭과 순서 | `assets/js/data/build-info.js` |
 | 잠금 기록·런타임 소유권 목록 | `assets/js/data/site-manifest.js` |
 | 조직 정사·관계·우시노다 계층 | `assets/js/data/canon-registry.js` |
+| 세력 문양 자산·출처·감식 신뢰도·상징 해석 | `assets/js/data/faction-mark-registry.js` |
+| 세력 분석·문양 감식 화면 | `assets/js/pages/faction-analysis.js` + `assets/css/faction-analysis.css` |
 | 세계사 시대·사건 판정·근거·결정 대기 | `assets/js/data/world-history-data.js` + `WORLD_CANON_LEDGER.md` |
 | 세계사 작성자·수신자·문서 형식·본문 조각 | `assets/js/data/world-history-prose-data.js` + `WRITING_STYLE_GUIDE.md` |
 | 공개 기록 목록·형식·분류·위험도·출처 상태 | `assets/js/data/archive-registry.js` |

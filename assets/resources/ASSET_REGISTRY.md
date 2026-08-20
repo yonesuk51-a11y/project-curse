@@ -23,6 +23,19 @@ Originals under `assets/resources/` and `assets/resources/archive-enex/` retain 
 
 Comparison links do not authorize deletion or replacement. They only expose both preserved files in the Visual Evidence Archive viewer so that a later source review can decide which copy should be displayed by default.
 
+## Faction mark interface assets
+
+The following SVG files are code-authored INTERFACE assets. They are visual identity masters for the intelligence interface, not photographed evidence and not reconstructions of protected archive imagery. Legacy WebP marks remain available as fallbacks and historical design references.
+
+| Asset | Class | Faction | Handling |
+|---|---|---|---|
+| `../faction_marks/sid.svg` | INTERFACE | S.I.D | New double-lens evidence frame; legacy eagle WebP retained |
+| `../faction_marks/syndicate.svg` | INTERFACE | S.O.N | New broken-containment common mark; legacy skull WebP retained |
+| `../faction_marks/ushinoda.svg` | INTERFACE | Ushinoda | Field-reconstructed common ritual geometry; not presented as a verified official seal |
+| `../faction_marks/haimun.svg` | INTERFACE | P.O.H | New covert logistics code; legacy fist WebP retained |
+
+Design and authentication metadata are owned by `assets/js/data/faction-mark-registry.js`. These marks may be used in faction dossiers, maps and timelines, but their interface role must not be relabeled as ORIGINAL evidence.
+
 ## Responsive delivery derivatives
 
 `responsive/` contains 40 WebP delivery copies generated on 2026-08-17 from 20 high-cost PNG or JPEG files. Each source has a 480px candidate and either a 960px candidate or a no-upscale candidate at its native width. The measured source set was 14.40 MiB; the complete responsive set is approximately 0.55 MiB.

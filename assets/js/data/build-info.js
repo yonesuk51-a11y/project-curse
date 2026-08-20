@@ -1,4 +1,4 @@
-// Project Curse 5.36.2 — single source of truth for the terminal build.
+// Project Curse 5.37.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.36.2',
-    codename:'Humanized Archive Prose',
-    schema:'project-curse-v29',
+    version:'5.37.0',
+    codename:'Faction Sigil Authentication',
+    schema:'project-curse-v30',
     released:'2026-08-20',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

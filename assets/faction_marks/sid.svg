@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">S.I.D 공식 수사기관 휘장</title>
+  <desc id="desc">분할된 사각 감식 프레임 안에 이중 렌즈와 중앙 증거점이 놓인 금빛 문양</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path stroke="#596267" stroke-width="12" d="M82 178V82h96M334 82h96v96M430 334v96h-96M178 430H82v-96"/>
+    <path stroke="#b8a16a" stroke-width="10" d="M112 256c38-62 84-94 144-94s106 32 144 94c-38 62-84 94-144 94s-106-32-144-94Z"/>
+    <circle cx="210" cy="256" r="48" stroke="#d7d2c3" stroke-width="9"/>
+    <circle cx="302" cy="256" r="48" stroke="#d7d2c3" stroke-width="9"/>
+    <path stroke="#596267" stroke-width="8" d="M210 208v96M302 208v96M162 256h188"/>
+    <path stroke="#b8a16a" stroke-width="9" d="m256 222 34 34-34 34-34-34 34-34Z"/>
+    <circle cx="256" cy="256" r="9" fill="#b83a3f" stroke="#e4ded0" stroke-width="5"/>
+    <path stroke="#b8a16a" stroke-width="7" d="M256 119v24M256 369v24M119 256h24M369 256h24"/>
+    <path stroke="#596267" stroke-width="5" d="M132 132l34 34M380 132l-34 34M380 380l-34-34M132 380l34-34"/>
+  </g>
+</svg>

@@ -1,6 +1,6 @@
 # Future Patch Pointer
 
-Current baseline: `5.36.2 Humanized Archive Prose`
+Current baseline: `5.37.0 Faction Sigil Authentication`
 
 Completed in this baseline:
 `32 Authored Records / Eight Document Voices / Provenance UI / Writing Standard`

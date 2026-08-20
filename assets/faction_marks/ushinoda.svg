@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">우시노다교 의식 공통문양</title>
+  <desc id="desc">빈 중심을 둘러싼 세 갈래 획과 열린 하단 경계로 구성된 붉은 의식 문양</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <circle cx="256" cy="244" r="154" stroke="#5d151c" stroke-width="12" stroke-dasharray="208 28 82 28"/>
+    <path stroke="#b51f2e" stroke-width="20" d="M256 66v124M256 298v148"/>
+    <path stroke="#d8d0c2" stroke-width="14" d="m256 190-92-70M256 190l92-70M256 298l-108 94M256 298l108 94"/>
+    <path stroke="#b51f2e" stroke-width="17" d="M164 120v74l92 50 92-50v-74M148 392h54l54 54 54-54h54"/>
+    <path stroke="#d8d0c2" stroke-width="12" d="M202 244h108M256 190v108"/>
+    <circle cx="256" cy="244" r="42" stroke="#b51f2e" stroke-width="13"/>
+    <circle cx="256" cy="244" r="13" fill="#080a0a" stroke="#d8d0c2" stroke-width="7"/>
+    <path stroke="#5d151c" stroke-width="9" d="m126 208 38 18M386 208l-38 18M126 314l38-18M386 314l-38-18"/>
+  </g>
+</svg>

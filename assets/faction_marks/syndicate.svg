@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">S.O.N 분산 연합 공통 표식</title>
+  <desc id="desc">파손된 통제환과 절단된 중앙축, 바깥으로 향하는 네 개의 화살로 구성된 붉고 흰 표식</desc>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path stroke="#d9d9d4" stroke-width="18" d="M202 72A190 190 0 0 0 72 202M310 72a190 190 0 0 1 130 130M440 310a190 190 0 0 1-130 130M202 440A190 190 0 0 1 72 310"/>
+    <path stroke="#7a1a20" stroke-width="10" d="M216 105A158 158 0 0 0 105 216M296 105a158 158 0 0 1 111 111M407 296a158 158 0 0 1-111 111M216 407A158 158 0 0 1 105 296"/>
+    <path stroke="#bd383d" stroke-width="20" d="M256 118v96M256 298v96M118 256h96M298 256h96"/>
+    <path stroke="#d9d9d4" stroke-width="14" d="m210 170 46 46 46-46M210 342l46-46 46 46M170 210l46 46-46 46M342 210l-46 46 46 46"/>
+    <path stroke="#bd383d" stroke-width="12" d="M167 167 92 92m0 0 10 48m-10-48 48 10M345 167l75-75m0 0-10 48m10-48-48 10M167 345l-75 75m0 0 48-10m-48 10 10-48M345 345l75 75m0 0-48-10m48 10-10-48"/>
+    <path stroke="#111516" stroke-width="28" d="m224 224 64 64M288 224l-64 64"/>
+    <path stroke="#d9d9d4" stroke-width="8" d="m236 236 40 40M276 236l-40 40"/>
+  </g>
+</svg>

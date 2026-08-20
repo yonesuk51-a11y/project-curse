@@ -5,7 +5,8 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.35.0';
+const VERSION='5.37.0';
+const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
 const count=(source,needle)=>source.split(needle).length-1;
@@ -63,7 +64,7 @@ for(const file of [
 ]) vm.runInContext(read(file),context,{filename:file});
 
 check('version:manifest',context.window.ProjectCurseStructure?.version===VERSION,context.window.ProjectCurseStructure?.version);
-check('version:archive',context.window.ProjectCurseArchive?.version===VERSION,context.window.ProjectCurseArchive?.version);
+check('version:archive',context.window.ProjectCurseArchive?.version===ARCHIVE_VERSION,context.window.ProjectCurseArchive?.version);
 check('version:documents',context.window.ProjectCurseArchiveDocuments?.version==='5.33.0',context.window.ProjectCurseArchiveDocuments?.version);
 check('shell:single-static-home',count(index,'class="uac-shell-home"')===1&&index.includes('data-uac-route="terminal-home"'));
 check('shell:no-page-injection',!shell.includes('ensureReturnControl')&&!shell.includes('uac-return-terminal'));

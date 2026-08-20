@@ -91,7 +91,7 @@
   };
 
   root.ProjectCurseIncidentNetwork=freeze({
-    version:'5.36.2',
+    version:'5.37.0',
     incidents,
     incidentList:Object.values(incidents),
     operations:[operation],
