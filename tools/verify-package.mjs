@@ -4,7 +4,7 @@ import {existsSync,readFileSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.35.0';
+const VERSION='5.36.0';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -22,11 +22,11 @@ function article(source,id){
 
 const required=[
   'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/visual-evidence.css','assets/css/adaptive-media.css','assets/css/quality-policy.css','assets/css/verdict-archive.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/pilgrimage-scenario.css','assets/css/app-shell.css','assets/css/terminal-foundation.css','assets/css/transition-system.css','assets/css/channel-identity.css',
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/adaptive-media.js','assets/js/core/quality-policy.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/core/channel-identity.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/world-history-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/adaptive-media.js','assets/js/core/quality-policy.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/core/channel-identity.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
   'assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','ASSET_POLICY.md','assets/resources/ASSET_REGISTRY.md',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','ASSET_POLICY.md','WORLD_CANON_LEDGER.md','assets/resources/ASSET_REGISTRY.md',
   'assets/resources/derived/great-black-forest_reconstructed-v1.png','assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
   'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
@@ -85,6 +85,7 @@ const channelIdentityRuntime=read('assets/js/core/channel-identity.js');
 const channelIdentityCss=read('assets/css/channel-identity.css');
 const performanceTelemetry=read('assets/js/core/performance-telemetry.js');
 const incidentRegistrySource=read('assets/js/data/incident-registry.js');
+const worldHistoryDataSource=read('assets/js/data/world-history-data.js');
 const regionalDrilldownSource=read('assets/js/data/regional-drilldown-data.js');
 const transitionController=read('assets/js/core/transition-controller.js');
 const transitionCss=read('assets/css/transition-system.css');
@@ -105,6 +106,7 @@ vm.runInContext(audioManifest,context,{filename:'audio-manifest.js'});
 vm.runInContext(transitionManifest,context,{filename:'transition-manifest.js'});
 vm.runInContext(channelIdentityDataSource,context,{filename:'channel-identity-data.js'});
 vm.runInContext(canon,context,{filename:'canon-registry.js'});
+vm.runInContext(worldHistoryDataSource,context,{filename:'world-history-data.js'});
 vm.runInContext(incidentRegistrySource,context,{filename:'incident-registry.js'});
 vm.runInContext(factionAnalysisSource,context,{filename:'faction-analysis-data.js'});
 vm.runInContext(archiveRegistry,context,{filename:'archive-registry.js'});
@@ -126,6 +128,7 @@ vm.runInContext(cinematicFerals,context,{filename:'cinematic-ferals.js'});
 vm.runInContext(cinematicSakuma,context,{filename:'cinematic-sakuma.js'});
 const canonData=context.window.ProjectCurseCanon;
 const incidentData=context.window.ProjectCurseIncidentNetwork;
+const worldHistoryData=context.window.ProjectCurseWorldHistoryData;
 const factionAnalysis=context.window.ProjectCurseFactionAnalysis;
 const structureData=context.window.ProjectCurseStructure;
 const archiveData=context.window.ProjectCurseArchive;
@@ -136,7 +139,7 @@ const visualEvidence=context.window.ProjectCurseVisualEvidence;
 const mediaManifest=context.window.ProjectCurseMediaManifest;
 const channelIdentityData=context.window.ProjectCurseChannelData;
 const ordered=[
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/world-history-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/quality-policy.js','assets/js/core/adaptive-media.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/transition-controller.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
   'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','assets/js/core/channel-identity.js'
 ];
@@ -284,7 +287,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v26',structureData?.schema==='project-curse-v26'&&context.window.ProjectCurseBuild?.schema==='project-curse-v26');
+add('manifest-runtime-schema-v27',structureData?.schema==='project-curse-v27'&&context.window.ProjectCurseBuild?.schema==='project-curse-v27');
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);
 const publicArchiveIds=archiveData?.publicRecords?.map(record=>record.id)||[];
 add('archive-thirteen-record-index',publicArchiveIds.length===13&&publicArchiveIds.slice(0,4).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Zone_870815',publicArchiveIds.length);
@@ -473,6 +476,10 @@ add('faction-mark-name-index',factionAnalysisRuntime.includes('pc-faction-card')
 add('faction-auxiliary-page',factionAnalysisRuntime.includes('pc-faction-back')&&factionAnalysisRuntime.includes('openDossier')&&factionAnalysisRuntime.includes('renderDossier')&&factionAnalysisRuntime.includes("navigate('faction-info')"));
 add('history-faction-renames',worldHistory.includes('S.O.N')&&worldHistory.includes('P.O.H')&&!/신디케이트|하이문/.test(worldHistory));
 add('uac-independent-in-history',worldHistory.includes('UN 산하기관은 아니며')&&factionAnalysisSource.includes('UN 산하기관은 아니며'));
+add('history-five-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===5&&worldHistoryData.eras.map(era=>era.id).join('|')==='origin|exposure|institution|separation|fracture');
+add('history-eighteen-evidence-records',Object.keys(worldHistoryData?.records||{}).length===18&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
+add('history-canon-gap-registry',worldHistoryData?.unresolved?.length===5&&worldHistoryData.unresolved.some(item=>item.id==='alt-japan-technology')&&read('WORLD_CANON_LEDGER.md').includes('실제 역사 결합 원칙'));
+add('history-era-filter-runtime',worldHistory.includes('historyEraFilter')&&worldHistory.includes('function renderIndex')&&worldHistory.includes('pc-world-history-record-state')&&worldHistory.includes('ProjectCurseWorldHistoryData'));
 for(const file of [structureData?.audio?.ambient,...Object.values(structureData?.audio?.effects||{})]){
   add(`audio-asset:${file}`,!!file&&existsSync(path(`assets/audio/${file}`)));
 }

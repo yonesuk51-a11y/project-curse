@@ -1,26 +1,24 @@
 # Future Patch Pointer
 
-Current baseline: `5.33.0 Readable Settings & Session Health`
+Current baseline: `5.36.0 Canon Chronology Ledger`
 
 Completed in this baseline:
-`Readable Preference Hierarchy / Session Health / Collapsible Diagnostics / Mobile-safe Actions`
+`Five Era Index / Evidence Grades / Canon Gap Registry / Actual-history Integration Policy`
 
 Primary scope:
 
-- 설정 상단에 현재 운용 상태와 링크·미디어·환경음 상태를 한눈에 읽는 요약 카드 추가
-- 전송·화면과 음향 설정을 목적별 섹션으로 분리하고 현재 품질 등급을 설정 버튼에도 표시
-- 부팅·DOM·전송량·전환·세션 시간·힙 메모리를 접힌 고급 진단으로 이동
-- 진단값을 즉시 다시 측정하는 새로고침 동작과 세션 가시·비가시 시간 계측 추가
-- 모바일 설정 본문만 독립 스크롤하고 닫기·초기화 버튼은 화면 하단에 항상 유지
-- 숨겨진 연결 복구 패널이 모바일 포인터 입력을 가로채던 충돌 제거
-- 390px 저사양 환경에서 가로 넘침 0, 고급 진단 스크롤 후 하단 동작 유지, 브라우저 오류 0 확인
+- 기존 18개 세계 사건을 다섯 시대 구획으로 분리
+- 사건별 정사 판정, 판정 근거와 자료 상태 등록
+- 시대 필터, 복구 현황과 판정 기준 패널 추가
+- 일본 기술 도약과 2006년 이후 연표 등 다섯 정사 공백을 결정 대기로 관리
+- 실제 역사와 비공개 작전을 결합하는 작성 원칙 수립
+- 참고 ZIP 이미지를 공식 설정과 공개 자산에서 분리
 
 Next planned pass:
 
-- 설정·기록·지도 화면의 키보드 이동 순서, 포커스 표시, 스크린리더 안내를 통합 점검
-- 상태 변화 알림의 `aria-live` 빈도와 중복 발화를 실제 보조 기술 환경에서 조정
-- 저대비 텍스트, 작은 터치 목표, 모션 감소 모드의 시각적 대체 표현을 전 채널에서 재검토
-- 실제 중저가 Android 기기에서 배터리·발열·메모리 사용량을 장시간 측정
-- 사용자 제공 원본이 추가되면 `RECONSTRUCTED`·`UNVERIFIED` 항목과 직접 비교해 기본 노출본 결정
-- 각 채널 전용 배경음은 라이선스와 잔류 재생 검증이 끝난 자산부터 선택적으로 추가
+- 실제 역사 자료를 확인한 뒤 `공개 기록 / 비공개 작전 / 후대 분석` 3층 사건 작성
+- 일본 기술 도약의 시작 연도·기술·사회적 결과 확정
+- 2006년 이후 북부 전선과 남부 동원 사건의 상대·절대연도 정리
+- 세력 계층과 시기별 관계 변화를 정보 분석 화면에 연결
+- 실제 브라우저에서 세계 기록 데스크톱·모바일·키보드 동작 검증
 - 공개 배포 전 음원·영상·이미지 라이선스와 GitHub Pages 배포 보안 최종 점검

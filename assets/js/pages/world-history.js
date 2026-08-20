@@ -1,16 +1,32 @@
-// Project Curse 5.33.0 — chronology view with shared incident crosslinks.
+// Project Curse 5.36.0 — era-indexed chronology with canon and evidence states.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
+  const chronology = window.ProjectCurseWorldHistoryData;
 
   root.classList.add('pc-world-history');
   root.innerHTML = `
     <header class="pc-world-history-head">
-      <div class="label">세계 기록 / 복구 연표</div>
+      <div class="label">세계 기록 / 정사 복구 연표</div>
       <h2>세계 사건 연표</h2>
-      <p>1975년의 공간 개척 실험부터 위버멘시 프로젝트 폐기까지. 이후의 전투는 아직 종결되지 않았다.</p>
+      <p>1975년의 공간 개척 실험부터 현재까지 남은 기록을 시대와 근거 수준으로 분리한다. 확정 사실, 현장 관측과 상충 정보는 같은 기록처럼 취급하지 않는다.</p>
     </header>
     <div class="pc-world-history-range">1975–2006 / ONGOING</div>
+    <section class="pc-world-history-overview" aria-label="연표 복구 현황">
+      <div><b data-history-total>0</b><span>복구 사건</span></div>
+      <div><b data-history-era-total>0</b><span>시대 구획</span></div>
+      <div><b data-history-confirmed>0</b><span>확정 기록</span></div>
+      <div><b data-history-unresolved>0</b><span>정사 공백</span></div>
+    </section>
+    <section class="pc-world-history-controls" aria-label="세계 사건 연표 필터">
+      <div class="pc-world-history-filter-head"><b>ERA INDEX</b><span data-history-filter-status aria-live="polite"></span></div>
+      <div class="pc-world-history-filters" data-history-filters></div>
+      <details class="pc-world-history-canon-key">
+        <summary>기록 판정 기준과 결정 대기 항목</summary>
+        <div class="pc-world-history-canon-grid" data-history-canon-key></div>
+        <div class="pc-world-history-unresolved" data-history-unresolved-list></div>
+      </details>
+    </section>
     <section class="pc-world-history-list" aria-label="세계 사건 연표">
       <details class="pc-world-history-entry">
         <summary><time>1975.09.12</time><strong>아마리온 설립</strong><small>공간 개척과 자원 독점을 목표로 한 미국 연구기업.</small></summary>
@@ -188,21 +204,50 @@
     summary: entry.querySelector('summary small')?.textContent.trim() || '',
     paragraphs: [...entry.querySelectorAll('.pc-world-history-entry-copy p')]
       .map((p) => p.textContent.trim())
-      .filter(Boolean)
+      .filter(Boolean),
+    ...(chronology?.getRecord?.(recordIds[index]) || {})
   }));
   const incidentNetwork = window.ProjectCurseIncidentNetwork;
 
   const head = root.querySelector('.pc-world-history-head');
   const range = root.querySelector('.pc-world-history-range');
+  const overview = root.querySelector('.pc-world-history-overview');
+  const controls = root.querySelector('.pc-world-history-controls');
+  const filterHost = root.querySelector('[data-history-filters]');
+  const filterStatus = root.querySelector('[data-history-filter-status]');
   const indexView = root.querySelector('.pc-world-history-list');
   indexView.classList.add('pc-world-history-index');
   indexView.replaceChildren();
 
-  records.forEach((record, index) => {
+  root.querySelector('[data-history-total]').textContent = String(records.length);
+  root.querySelector('[data-history-era-total]').textContent = String(chronology?.eras?.length || 1);
+  root.querySelector('[data-history-confirmed]').textContent = String(records.filter(record => record.evidence === 'confirmed').length);
+  root.querySelector('[data-history-unresolved]').textContent = String(chronology?.unresolved?.length || 0);
+
+  const canonKey = root.querySelector('[data-history-canon-key]');
+  Object.entries(chronology?.evidenceLevels || {}).forEach(([key, item]) => {
+    const row = document.createElement('div');
+    row.className = 'pc-world-history-key-row';
+    row.innerHTML = `<span class="pc-world-history-evidence is-${key}">${item.label}</span><p>${item.description}</p>`;
+    canonKey?.appendChild(row);
+  });
+
+  const unresolvedHost = root.querySelector('[data-history-unresolved-list]');
+  (chronology?.unresolved || []).forEach((item) => {
+    const row = document.createElement('div');
+    row.innerHTML = `<b>${item.scope} / ${item.label}</b><p>${item.reason}</p>`;
+    unresolvedHost?.appendChild(row);
+  });
+
+  let activeEra = 'all';
+
+  function buildRecordButton(record) {
+    const index = records.indexOf(record);
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'pc-world-history-index-row';
     button.dataset.historyRecord = record.id;
+    button.dataset.historyEra = record.era || 'unassigned';
     button.setAttribute('aria-label', `${record.date} ${record.title} 열람`);
 
     const time = document.createElement('time');
@@ -211,17 +256,72 @@
     title.textContent = record.title;
     const summary = document.createElement('small');
     summary.textContent = record.summary;
+    const meta = document.createElement('span');
+    meta.className = 'pc-world-history-index-meta';
+    const evidence = chronology?.getEvidence?.(record.evidence);
+    const badge = document.createElement('span');
+    badge.className = `pc-world-history-evidence is-${record.evidence || 'estimated'}`;
+    badge.textContent = evidence?.label || '판정 대기';
+    const source = document.createElement('span');
+    source.textContent = record.sourceState || '출처 상태 미등록';
+    meta.append(badge, source);
     const arrow = document.createElement('i');
     arrow.textContent = '→';
     arrow.setAttribute('aria-hidden', 'true');
 
-    button.append(time, title, summary, arrow);
+    button.append(time, title, summary, meta, arrow);
     button.addEventListener('click', () => {
       window.ProjectCurseAudioControl?.play?.('history.open');
       openRecord(index, 'push');
     });
-    indexView.appendChild(button);
+    return button;
+  }
+
+  function renderIndex() {
+    indexView.replaceChildren();
+    const visibleEras = (chronology?.eras || []).filter(era => activeEra === 'all' || era.id === activeEra);
+    let visibleCount = 0;
+    visibleEras.forEach((era) => {
+      const eraRecords = records.filter(record => record.era === era.id);
+      if (!eraRecords.length) return;
+      visibleCount += eraRecords.length;
+      const group = document.createElement('section');
+      group.className = 'pc-world-history-era';
+      group.dataset.historyEraGroup = era.id;
+      const eraHead = document.createElement('header');
+      eraHead.className = 'pc-world-history-era-head';
+      eraHead.innerHTML = `<span>${era.index}</span><div><b>${era.title}</b><small>${era.range} / ${era.summary}</small></div><i>${String(eraRecords.length).padStart(2, '0')} RECORDS</i>`;
+      const rows = document.createElement('div');
+      rows.className = 'pc-world-history-era-records';
+      eraRecords.forEach(record => rows.appendChild(buildRecordButton(record)));
+      group.append(eraHead, rows);
+      indexView.appendChild(group);
+    });
+    if (filterStatus) filterStatus.textContent = `${visibleCount}개 사건 표시`;
+  }
+
+  function setEraFilter(eraId) {
+    activeEra = eraId;
+    filterHost?.querySelectorAll('button').forEach(button => {
+      const selected = button.dataset.historyEraFilter === eraId;
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+    renderIndex();
+  }
+
+  [{id:'all',index:'ALL',title:'전체 시대'}, ...(chronology?.eras || [])].forEach((era) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.historyEraFilter = era.id;
+    button.innerHTML = `<span>${era.index}</span>${era.title}`;
+    button.addEventListener('click', () => {
+      window.ProjectCurseAudioControl?.play?.('history.step');
+      setEraFilter(era.id);
+    });
+    filterHost?.appendChild(button);
   });
+  setEraFilter('all');
 
   const detailView = document.createElement('article');
   detailView.className = 'pc-world-history-detail';
@@ -234,6 +334,12 @@
       <h2 data-history-record-title></h2>
       <p data-history-record-summary></p>
     </header>
+    <section class="pc-world-history-record-state" aria-label="기록 판정">
+      <div><span>시대 구획</span><b data-history-record-era></b></div>
+      <div><span>정사 판정</span><b data-history-record-evidence></b></div>
+      <div><span>자료 상태</span><b data-history-record-source></b></div>
+      <p data-history-record-basis></p>
+    </section>
     <div class="pc-world-history-detail-body" data-history-record-body></div>
     <section class="pc-world-history-links" data-history-record-links hidden>
       <b>CONNECTED INTELLIGENCE</b><div></div>
@@ -259,6 +365,8 @@
     root.classList.remove('pc-world-history-detail-mode');
     if (head) head.hidden = false;
     if (range) range.hidden = false;
+    if (overview) overview.hidden = false;
+    if (controls) controls.hidden = false;
     indexView.hidden = false;
     detailView.hidden = true;
     document.title = originalDocumentTitle;
@@ -272,6 +380,8 @@
     root.classList.add('pc-world-history-detail-mode');
     if (head) head.hidden = true;
     if (range) range.hidden = true;
+    if (overview) overview.hidden = true;
+    if (controls) controls.hidden = true;
     indexView.hidden = true;
     detailView.hidden = false;
 
@@ -280,6 +390,15 @@
     detailView.querySelector('[data-history-record-date]').textContent = record.date;
     detailView.querySelector('[data-history-record-title]').textContent = record.title;
     detailView.querySelector('[data-history-record-summary]').textContent = record.summary;
+
+    const era = chronology?.getEra?.(record.era);
+    const evidence = chronology?.getEvidence?.(record.evidence);
+    detailView.querySelector('[data-history-record-era]').textContent = era ? `${era.index} / ${era.title}` : '미분류';
+    const evidenceNode = detailView.querySelector('[data-history-record-evidence]');
+    evidenceNode.textContent = evidence?.label || '판정 대기';
+    evidenceNode.className = `pc-world-history-evidence is-${record.evidence || 'estimated'}`;
+    detailView.querySelector('[data-history-record-source]').textContent = record.sourceState || '출처 상태 미등록';
+    detailView.querySelector('[data-history-record-basis]').textContent = record.basis || '판정 근거가 등록되지 않았다.';
 
     const body = detailView.querySelector('[data-history-record-body]');
     body.replaceChildren();

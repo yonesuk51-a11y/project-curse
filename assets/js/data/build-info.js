@@ -1,4 +1,4 @@
-// Project Curse 5.35.0 — single source of truth for the terminal build.
+// Project Curse 5.36.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.35.0',
-    codename:'Archive Signal Library',
-    schema:'project-curse-v26',
+    version:'5.36.0',
+    codename:'Canon Chronology Ledger',
+    schema:'project-curse-v27',
     released:'2026-08-20',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},
