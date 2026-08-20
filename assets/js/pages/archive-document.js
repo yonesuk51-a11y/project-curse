@@ -1,4 +1,4 @@
-// Project Curse 5.41.0 — adaptive archive document, source provenance, local-verdict boundary, and verdict renderer.
+// Project Curse 5.42.0 — adaptive archive document, source provenance, local-verdict boundary, and verdict renderer.
 (function(){
   'use strict';
 

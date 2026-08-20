@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseHomeIntelligence=freeze({
-    version:'5.41.0',
+    version:'5.42.0',
     alert:{
       incident:'evt-southern-mobilization',
       title:'남부 집단 소환·쿠데타 전조',

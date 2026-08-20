@@ -1,4 +1,4 @@
-// Project Curse 5.41.0 — persistent local-verdict archive, reactive snapshots, and scenario-unlock owner.
+// Project Curse 5.42.0 — persistent local-verdict archive, reactive snapshots, and scenario-unlock owner.
 (function(root){
   'use strict';
 

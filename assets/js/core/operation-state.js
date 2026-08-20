@@ -1,4 +1,4 @@
-// Project Curse 5.41.0 — persistent OP-BROKEN-CROWN local verdict and canon-boundary owner.
+// Project Curse 5.42.0 — persistent OP-BROKEN-CROWN local verdict and canon-boundary owner.
 (function(root){
   'use strict';
 

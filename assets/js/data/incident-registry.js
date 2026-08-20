@@ -1,4 +1,4 @@
-// Project Curse 5.41.0 — shared incident, region, operation and cult-lineage network.
+// Project Curse 5.42.0 — shared incident, region, operation and cult-lineage network.
 (function(root){
   'use strict';
 
@@ -91,7 +91,7 @@
   };
 
   root.ProjectCurseIncidentNetwork=freeze({
-    version:root.ProjectCurseBuild?.version||'5.41.0',
+    version:root.ProjectCurseBuild?.version||'5.42.0',
     incidents,
     incidentList:Object.values(incidents),
     operations:[operation],

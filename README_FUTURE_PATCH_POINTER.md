@@ -1,20 +1,23 @@
 # Future Patch Pointer
 
-Current baseline: `5.41.0 Broken Crown Verdict Boundary`
+Current baseline: `5.42.0 Media Provenance & Release Audit`
 
 Completed in this baseline:
-`4 Broken Crown Local Verdicts / 4 Fixed Operation Facts / 4 Pending Outcomes / 0 Canon Mutations`
+`174 Registered Media / 144 Images / 23 Audio / 7 Video / 0 Reference Exposures`
 
 Primary scope:
 
-- 부서진 왕관의 작전 개시·동시다발 신호·지휘관 관련 명령·미확정 결말을 공통 정사 경계로 등록
-- 처형·생포·협력·판단 보류를 브라우저 로컬 지휘 판정으로 분리
-- 각 분기에 현장 관측, 즉시 지도 효과, 승인 대기 사실과 정사·계보 효력 없음 표시
-- 작전 문서의 세 정보 조각에 출처·근거·판정 한계 등록
-- 문서, 세부 지도, 작전지도와 홈 수신 상태에 `COMMON CANON UNCHANGED` 경계 동기화
-- 남부 혈교·우시노다 중앙 혈교·데드존 혈교의 계보가 선택 하나로 합쳐지지 않도록 보호
+- GitHub Pages 공개 경로의 이미지·음원·영상 174개에 파일 해시·용량·사용처 등록
+- 인터페이스·원본 계열·복원 추정·전송 파생·구형 사본의 출처 등급 분리
+- 프로젝트 관리 24개와 `SOURCE_REVIEW`·`LICENSE_REVIEW` 150개 분리
+- 음원 23개와 영상 7개를 제작자·원출처·사용 허가 확인 전 공개 승인 대기로 유지
+- 기록보관소에 공개 미디어 감사 요약, 우선 검토 대기열과 참고 전용 자료 경계 추가
+- `지옥.zip`, `Pictures.zip`, `Pictures2.zip`의 공개 자산 노출 0건 검증
+- 전체 미디어 파일 집합·SHA-256·용량·반응형 파생 관계의 재생성 일치 검사 추가
 
 Next planned pass:
 
-- 공개 배포 전 음원·영상·이미지 라이선스와 GitHub Pages 배포 보안 최종 점검
-- 2030년 이후의 공통 연표는 플레이어 분기와 분리된 별도 정사 승인안으로 작성
+- 우선순위 음원·영상 30개의 출처 증빙 확보 또는 자체 제작 자산으로 교체
+- Archive ENEX 원본 계열의 공개 재배포 범위를 파일 단위로 검토
+- GitHub Pages 관리형 Actions 경고와 정적 배포 보안 범위를 분리해 점검
+- 권리 검토 대기열을 정리한 뒤 2030년 이후 공통 연표 승인안 작성

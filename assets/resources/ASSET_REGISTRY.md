@@ -2,6 +2,12 @@
 
 This registry supplements `ASSET_POLICY.md`. It records project-added derivatives without changing or replacing protected source records.
 
+## 5.42 release-audit integration
+
+The complete published media inventory is generated in `assets/js/data/media-provenance-data.js` from the repository file set and `MEDIA_PROVENANCE_OVERRIDES.json`. The generated ledger currently registers 174 files: 144 images, 23 audio files and 7 videos.
+
+Evidence provenance and release permission are separate. An `ORIGINAL` Archive ENEX source remains `SOURCE_REVIEW` until its public redistribution scope is documented. Existing audio and video files remain `LICENSE_REVIEW`; their filenames and prior use do not establish authorship or permission. The public archive audit reports this open state instead of presenting registration as clearance.
+
 | Asset | Class | Used by | Source and handling | Required public label |
 |---|---|---|---|---|
 | `derived/great-black-forest_reconstructed-v1.png` | RECONSTRUCTED | `Great_Black_Forest_Region` | Generated for this project from the Great Black Forest setting brief; no user original existed for this scene. The image is additive and does not replace protected Cults or Immortality media. | `복원 추정본` |

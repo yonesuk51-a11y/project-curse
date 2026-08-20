@@ -1,4 +1,4 @@
-// Project Curse 5.41.0 — intelligence dossier, cult lineage atlas and shared incident owner.
+// Project Curse 5.42.0 — intelligence dossier, cult lineage atlas and shared incident owner.
 (function(){
   'use strict';
 

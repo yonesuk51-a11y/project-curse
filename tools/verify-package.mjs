@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import {createHash} from 'node:crypto';
-import {existsSync,readFileSync,statSync} from 'node:fs';
+import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.41.0';
+const VERSION='5.42.0';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -14,6 +14,14 @@ const read=relative=>readFileSync(path(relative),'utf8');
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const add=(name,pass,detail='')=>checks.push({name,pass:!!pass,detail});
 const count=(source,needle)=>source.split(needle).length-1;
+const MEDIA_EXTENSIONS=new Set(['.png','.jpg','.jpeg','.webp','.gif','.svg','.mp3','.wav','.ogg','.mp4','.webm']);
+const fileTree=directory=>readdirSync(directory,{withFileTypes:true}).flatMap(entry=>{
+  if(entry.name==='.git'||entry.name==='node_modules') return [];
+  const absolute=directory+entry.name;
+  if(entry.isDirectory()) return fileTree(absolute+'/');
+  return [absolute.slice(ROOT.length).replace(/\\/g,'/')];
+});
+const mediaTree=directory=>fileTree(directory).filter(relative=>MEDIA_EXTENSIONS.has(relative.slice(relative.lastIndexOf('.')).toLowerCase()));
 function article(source,id){
   const start=source.indexOf(`<article class="record-detail" data-record="${id}"`);
   const end=start<0?-1:source.indexOf('</article>',start);
@@ -22,11 +30,11 @@ function article(source,id){
 
 const required=[
   'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/visual-evidence.css','assets/css/adaptive-media.css','assets/css/quality-policy.css','assets/css/verdict-archive.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/pilgrimage-scenario.css','assets/css/app-shell.css','assets/css/terminal-foundation.css','assets/css/transition-system.css','assets/css/channel-identity.css',
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/faction-mark-registry.js','assets/js/data/world-history-data.js','assets/js/data/japan-technology-data.js','assets/js/data/faction-lineage-data.js','assets/js/data/world-history-prose-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/adaptive-media.js','assets/js/core/quality-policy.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/core/channel-identity.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/faction-mark-registry.js','assets/js/data/world-history-data.js','assets/js/data/japan-technology-data.js','assets/js/data/faction-lineage-data.js','assets/js/data/world-history-prose-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/adaptive-media.js','assets/js/core/quality-policy.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/core/channel-identity.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
   'assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','ASSET_POLICY.md','WORLD_CANON_LEDGER.md','WRITING_STYLE_GUIDE.md','assets/resources/ASSET_REGISTRY.md',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','ASSET_POLICY.md','MEDIA_CREDITS.md','WORLD_CANON_LEDGER.md','WRITING_STYLE_GUIDE.md','assets/resources/ASSET_REGISTRY.md','assets/resources/MEDIA_PROVENANCE_OVERRIDES.json','tools/build-media-provenance.mjs',
   'assets/resources/derived/great-black-forest_reconstructed-v1.png','assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',
   'assets/faction_marks/uac.svg','assets/faction_marks/nhc.svg','assets/faction_marks/sid.svg','assets/faction_marks/fhc.svg','assets/faction_marks/syndicate.svg','assets/faction_marks/ushinoda.svg','assets/faction_marks/haimun.svg','assets/faction_marks/ashcrew.svg','assets/faction_marks/arf.svg','assets/faction_marks/cpd.svg','assets/faction_marks/amarion.svg','assets/faction_marks/corruption-cult.svg','assets/faction_marks/blood-cult.svg','assets/faction_marks/shadow-cult.svg','assets/faction_marks/first-apostle.svg','assets/faction_marks/southern-blood.svg','assets/faction_marks/deadzone-blood.svg',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
@@ -54,6 +62,7 @@ const archiveRegistry=read('assets/js/data/archive-registry.js');
 const visualEvidenceData=read('assets/js/data/visual-evidence-data.js');
 const visualEvidenceCss=read('assets/css/visual-evidence.css');
 const mediaManifestSource=read('assets/js/data/media-manifest.js');
+const mediaProvenanceSource=read('assets/js/data/media-provenance-data.js');
 const adaptiveMediaRuntime=read('assets/js/core/adaptive-media.js');
 const adaptiveMediaCss=read('assets/css/adaptive-media.css');
 const qualityPolicyRuntime=read('assets/js/core/quality-policy.js');
@@ -123,6 +132,7 @@ vm.runInContext(archiveRegistry,context,{filename:'archive-registry.js'});
 vm.runInContext(read('assets/js/data/archive-document-data.js'),context,{filename:'archive-document-data.js'});
 vm.runInContext(visualEvidenceData,context,{filename:'visual-evidence-data.js'});
 vm.runInContext(mediaManifestSource,context,{filename:'media-manifest.js'});
+vm.runInContext(mediaProvenanceSource,context,{filename:'media-provenance-data.js'});
 vm.runInContext(fieldDossierData,context,{filename:'field-dossier-data.js'});
 vm.runInContext(regionalDrilldownSource,context,{filename:'regional-drilldown-data.js'});
 vm.runInContext(pilgrimageDataSource,context,{filename:'pilgrimage-scenario-data.js'});
@@ -151,9 +161,10 @@ const pilgrimageData=context.window.ProjectCursePilgrimageData;
 const verdictData=context.window.ProjectCurseVerdictArchiveData;
 const visualEvidence=context.window.ProjectCurseVisualEvidence;
 const mediaManifest=context.window.ProjectCurseMediaManifest;
+const mediaProvenance=context.window.ProjectCurseMediaProvenance;
 const channelIdentityData=context.window.ProjectCurseChannelData;
 const ordered=[
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/faction-mark-registry.js','assets/js/data/world-history-data.js','assets/js/data/japan-technology-data.js','assets/js/data/faction-lineage-data.js','assets/js/data/world-history-prose-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/faction-mark-registry.js','assets/js/data/world-history-data.js','assets/js/data/japan-technology-data.js','assets/js/data/faction-lineage-data.js','assets/js/data/world-history-prose-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/quality-policy.js','assets/js/core/adaptive-media.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/transition-controller.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
   'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','assets/js/core/channel-identity.js'
 ];
@@ -309,7 +320,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v34',structureData?.schema==='project-curse-v34'&&context.window.ProjectCurseBuild?.schema==='project-curse-v34');
+add('manifest-runtime-schema-v35',structureData?.schema==='project-curse-v35'&&context.window.ProjectCurseBuild?.schema==='project-curse-v35');
 add('manifest-japan-technology-owner',structureData?.owners?.japanTechnologyData==='assets/js/data/japan-technology-data.js');
 add('manifest-lineage-owner',structureData?.owners?.factionLineage==='assets/js/data/faction-lineage-data.js');
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);
@@ -358,6 +369,20 @@ add('visual-evidence-comparison-viewer',archiveDocumentRuntime.includes('functio
 add('visual-evidence-mobile-and-accessible',visualEvidenceCss.includes('@media(max-width:760px)')&&visualEvidenceCss.includes('@media(prefers-reduced-motion:reduce)')&&archiveDocumentRuntime.includes("viewer.setAttribute('aria-modal','true')")&&archiveDocumentRuntime.includes("range.setAttribute('aria-label','두 이미지 비교 경계')"));
 add('visual-evidence-cinematic-handoff',main.includes('pc-cinematic-evidence-control')&&main.includes('openEvidenceAsset?.(page.image')&&main.includes("document.body.classList.contains('pc-evidence-open')")&&visualEvidenceCss.includes('.pc-cinematic-evidence-control'));
 add('visual-evidence-standalone-documents',['Zone_870815','Unknown_Record1_860204','Unknown_Record2_860205','Unknown_Record3_920711','Unknown_Record4_930314'].every(id=>{const source=read(`docs/${id}/index.html`);return source.includes('visual-evidence.css')&&source.includes('visual-evidence-data.js')&&source.indexOf('visual-evidence-data.js')<source.indexOf('archive-document.js');}));
+const provenanceAssets=mediaProvenance?.assets||[];
+const repositoryMedia=mediaTree(ROOT+'assets/').sort();
+const provenancePaths=provenanceAssets.map(asset=>asset.path).sort();
+const forbiddenReferenceNames=new Set(['지옥.zip','Pictures.zip','Pictures2.zip']);
+const exposedReferenceFiles=fileTree(ROOT).filter(relative=>forbiddenReferenceNames.has(relative.split('/').at(-1)));
+add('media-provenance-owner',structureData?.owners?.mediaProvenance==='assets/js/data/media-provenance-data.js'&&mediaProvenance?.version==='1.0.0');
+add('media-provenance-all-174-assets',provenanceAssets.length===174&&repositoryMedia.join('|')===provenancePaths.join('|'),`${provenanceAssets.length} registered / ${repositoryMedia.length} files`);
+add('media-provenance-hash-and-size',provenanceAssets.every(asset=>existsSync(path(asset.path))&&statSync(path(asset.path)).size===asset.bytes&&hash(readFileSync(path(asset.path)))===asset.sha256));
+add('media-provenance-kind-counts',mediaProvenance?.stats?.byKind?.image===144&&mediaProvenance?.stats?.byKind?.audio===23&&mediaProvenance?.stats?.byKind?.video===7);
+add('media-provenance-honest-review',provenanceAssets.filter(asset=>asset.kind==='audio'||asset.kind==='video').every(asset=>asset.release==='LICENSE_REVIEW')&&mediaProvenance?.stats?.review===150&&mediaProvenance?.stats?.managed===24);
+add('media-provenance-reference-boundary',mediaProvenance?.referenceOnly?.map(item=>item.name).join('|')==='지옥.zip|Pictures.zip|Pictures2.zip'&&mediaProvenance?.stats?.referenceExposure===exposedReferenceFiles.length&&exposedReferenceFiles.length===0);
+add('media-provenance-delivery-lineage',provenanceAssets.filter(asset=>asset.provenance==='DELIVERY_DERIVATIVE').length===40&&provenanceAssets.filter(asset=>asset.provenance==='DELIVERY_DERIVATIVE').every(asset=>asset.derivedFrom&&provenancePaths.includes(asset.derivedFrom)));
+add('media-provenance-root-order',index.includes(`assets/js/data/media-provenance-data.js?v=${VERSION}`)&&index.indexOf('media-manifest.js')<index.indexOf('media-provenance-data.js')&&index.indexOf('media-provenance-data.js')<index.indexOf('archive-consolidation.js'));
+add('media-provenance-public-audit-ui',archiveRuntime.includes('function provenanceAuditMarkup()')&&archiveRuntime.includes('data-pc-media-audit')&&archiveRuntime.includes('PUBLIC RELEASE NOT YET CLEARED')&&read('assets/css/archive-consolidation.css').includes('.pc-media-audit-telemetry'));
 const responsiveAssets=Object.values(mediaManifest?.assets||{});
 const responsiveVariants=responsiveAssets.flatMap(asset=>asset.variants||[]);
 add('adaptive-media-owner',structureData?.owners?.mediaManifest==='assets/js/data/media-manifest.js'&&structureData?.owners?.adaptiveMediaRuntime==='assets/js/core/adaptive-media.js'&&structureData?.owners?.adaptiveMediaCSS==='assets/css/adaptive-media.css');

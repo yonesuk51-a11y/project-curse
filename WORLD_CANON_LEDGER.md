@@ -1,6 +1,6 @@
 # Project Curse World Canon Ledger
 
-Status: `5.41.0 / field voice and local verdict boundary`
+Status: `5.42.0 / field voice and local verdict boundary`
 
 이 문서는 Project Curse의 새 설정을 확정하기 전에 대조하는 내부 정사 대장이다. 사이트에 공개되는 설정글이 아니며, 설정 충돌과 임의 확정을 막는 기준으로 사용한다.
 

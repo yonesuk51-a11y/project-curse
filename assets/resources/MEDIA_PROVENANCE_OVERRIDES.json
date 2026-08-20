@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "referenceOnly": [
+    {
+      "name": "지옥.zip",
+      "role": "외부 영감과 공포 연출 무드 참고",
+      "rule": "REFERENCE ONLY / 공개 자산 편입 금지"
+    },
+    {
+      "name": "Pictures.zip",
+      "role": "기존 Project Curse AI 시각화 방향 참고",
+      "rule": "REFERENCE ONLY / 별도 승인 전 편입 금지"
+    },
+    {
+      "name": "Pictures2.zip",
+      "role": "기존 Project Curse AI 시각화 방향 참고",
+      "rule": "REFERENCE ONLY / 별도 승인 전 편입 금지"
+    }
+  ],
+  "assets": {
+    "assets/resources/derived/great-black-forest_reconstructed-v1.png": {
+      "credit": "Project Curse setting brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md"
+    },
+    "assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png": {
+      "credit": "Project Curse setting brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md"
+    }
+  }
+}

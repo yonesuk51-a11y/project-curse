@@ -1,4 +1,4 @@
-// Project Curse 5.41.0 — alternate Japan technology history and public-history boundaries.
+// Project Curse 5.42.0 — alternate Japan technology history and public-history boundaries.
 (function(root){
   'use strict';
 
@@ -113,7 +113,7 @@
   ];
 
   root.ProjectCurseJapanTechnology=freeze({
-    version:root.ProjectCurseBuild?.version||'5.41.0',schema:'project-curse-japan-technology-v1',
+    version:root.ProjectCurseBuild?.version||'5.42.0',schema:'project-curse-japan-technology-v1',
     program:{name:'제6계측계획',code:'J6 INSTRUMENTATION PROGRAM',period:'1982–1992 / DISTRIBUTED LEGACY',status:'CENTRAL OFFICE CLOSED',purpose:'복제 가능한 메시지보다 복제하기 어려운 시간·경로 흔적을 측정한다.'},
     publicAnchors,records,technologies,edges,
     socialOutcomes:[

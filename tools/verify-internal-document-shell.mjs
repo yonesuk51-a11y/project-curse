@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.41.0';
+const VERSION='5.42.0';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -32,6 +32,7 @@ const documentCss=read('assets/css/archive-document.css');
 const visualEvidenceData=read('assets/js/data/visual-evidence-data.js');
 const visualEvidenceCss=read('assets/css/visual-evidence.css');
 const mediaManifestSource=read('assets/js/data/media-manifest.js');
+const mediaProvenanceSource=read('assets/js/data/media-provenance-data.js');
 const adaptiveMediaRuntime=read('assets/js/core/adaptive-media.js');
 const adaptiveMediaCss=read('assets/css/adaptive-media.css');
 const qualityPolicyRuntime=read('assets/js/core/quality-policy.js');
@@ -57,7 +58,7 @@ const performanceTelemetry=read('assets/js/core/performance-telemetry.js');
 const context={window:{}};
 vm.createContext(context);
 for(const file of [
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
   'assets/js/data/immortality-storyboard.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js',
   'assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js'
@@ -114,6 +115,9 @@ check('evidence:document-console',documentViewer.includes('function evidenceCons
 check('evidence:comparison-viewer',documentViewer.includes("range.type='range'")&&documentViewer.includes('openEvidenceAsset(src,context={},trigger=null)')&&visualEvidenceCss.includes('.pc-evidence-compare'));
 check('evidence:cinematic-handoff',read('assets/js/core/record-cinematic-runtime.js').includes('pc-cinematic-evidence-control')&&read('assets/js/core/record-cinematic-runtime.js').includes("document.body.classList.contains('pc-evidence-open')"));
 check('media:manifest-twenty-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===20);
+check('media:provenance-all-assets',context.window.ProjectCurseMediaProvenance?.stats?.registered===174&&context.window.ProjectCurseMediaProvenance?.assets?.length===174);
+check('media:provenance-honest-review',context.window.ProjectCurseMediaProvenance?.stats?.review===150&&context.window.ProjectCurseMediaProvenance?.stats?.managed===24&&context.window.ProjectCurseMediaProvenance?.stats?.referenceExposure===0);
+check('media:provenance-audit-ui',archive.includes('function provenanceAuditMarkup()')&&archive.includes('PUBLIC RELEASE NOT YET CLEARED')&&read('assets/css/archive-consolidation.css').includes('.pc-media-audit'));
 check('media:root-load-order',index.includes(`assets/css/adaptive-media.css?v=${VERSION}`)&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('archive-document.js'));
 check('media:responsive-runtime',adaptiveMediaRuntime.includes('image.srcset=variants.map')&&adaptiveMediaRuntime.includes('function prepareRoute(route')&&adaptiveMediaRuntime.includes('function getDiagnostics()'));
 check('media:recovery-states',adaptiveMediaCss.includes('.pc-media-loading>img[data-pc-media]')&&adaptiveMediaCss.includes('.pc-media-ready>.pc-media-recovery')&&adaptiveMediaCss.includes('@media(prefers-reduced-motion:reduce)'));
