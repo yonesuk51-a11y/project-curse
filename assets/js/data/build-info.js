@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — single source of truth for the terminal build.
+// Project Curse 5.43.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.42.0',
-    codename:'Media Provenance & Release Audit',
-    schema:'project-curse-v35',
+    version:'5.43.0',
+    codename:'Core Sound Identity',
+    schema:'project-curse-v36',
     released:'2026-08-21',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

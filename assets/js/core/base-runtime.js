@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — boot and quality-aware persistent shell audio asset owner.
+// Project Curse 5.43.0 — boot, ambient and protected cinematic compatibility audio owner.
 (function(){
   'use strict';
 
@@ -21,7 +21,7 @@
     scan:new Audio(asset('pc5152x_late_log_beep_195s.mp3')),
     marker:new Audio(asset('pc5152v_field_photo_click_42s.mp3')),
     confirm:new Audio(asset('pc5152h_frame_pop.wav')),
-    boot:new Audio(asset('pc5152f_boot_access_oldpc.wav')),
+    boot:new Audio(asset('core/pc-core-terminal-connect.wav')),
     alert:new Audio(asset('pc5152f_low_denied_oldpc.wav')),
     restricted:new Audio(asset('pc5152f_low_denied_oldpc.wav')),
     denied:new Audio(asset('pc5152f_low_denied_oldpc.wav'))

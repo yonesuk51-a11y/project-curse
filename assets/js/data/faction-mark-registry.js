@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — canonical faction mark and cult-derivative registry.
+// Project Curse 5.43.0 — canonical faction mark and cult-derivative registry.
 (function(root){
   'use strict';
 
@@ -188,7 +188,7 @@
   };
 
   root.ProjectCurseFactionMarks=freeze({
-    version:root.ProjectCurseBuild?.version||'5.42.0',
+    version:root.ProjectCurseBuild?.version||'5.43.0',
     schema:'project-curse-faction-marks-v1',
     redesigned:['uac','nhc','sid','fhc','syndicate','ushinoda','haimun','ashcrew','arf','cpd','amarion'],
     lineageMarks:['corruption-cult','blood-cult','shadow-cult','first-apostle','southern-blood','deadzone-blood'],

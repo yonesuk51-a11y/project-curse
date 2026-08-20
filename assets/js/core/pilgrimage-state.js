@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — persistent reactive-scenario state, content variants, and consequence owner.
+// Project Curse 5.43.0 — persistent reactive-scenario state, content variants, and consequence owner.
 (function(root){
   'use strict';
 

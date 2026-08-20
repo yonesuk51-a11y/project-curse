@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — visual and operational identity for the five terminal channels.
+// Project Curse 5.43.0 — visual, operational and acoustic identity for the five terminal channels.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseChannelData=freeze({
-    version:'1.0.0',
+    version:'1.1.0',
     storageKey:'project_curse_preferences_v1',
-    defaults:{quality:'auto',effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on'},
+    defaults:{quality:'auto',effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on',audioVolumes:{master:1,ambient:1,interface:1,record:1,alert:1}},
     channels:[
       {
         id:'terminal-home',index:'00',code:'COMMAND NODE',label:'단말 상태',shortLabel:'단말',theme:'command',glyph:'CN',

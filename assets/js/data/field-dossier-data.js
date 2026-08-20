@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — authored field dossiers and source-layer boundaries.
+// Project Curse 5.43.0 — authored field dossiers and source-layer boundaries.
 (function(root){
   'use strict';
 

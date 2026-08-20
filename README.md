@@ -1,6 +1,12 @@
 # Project Curse U.A.C Closed Server
 
-Current build: `5.42.0 Media Provenance & Release Audit`
+Current build: `5.43.0 Core Sound Identity`
+
+5.43.0은 공통 메뉴·채널·기록 조작음을 기존 기록 음향에서 분리했다. 단말 연결·분리, 메뉴 열기·닫기·선택·뒤로, 접근 거부, 기록 마운트·언마운트, 증거 프레임, 통신 연결, 작전 확인의 12개 핵심 신호를 외부 샘플 없이 코드로 합성했다. 생성기는 같은 입력에서 같은 48 kHz 모노 WAV와 SHA-256을 다시 만들며, 기록 영상·기록글 전용 배경음과 보호 기록의 음향은 교체하지 않는다.
+
+다섯 채널은 같은 효과음을 무작정 공유하지 않고 `CRT RELAY`, `GRID PULSE`, `TAPE INDEX`, `SIGNAL INTERCEPT`, `VAULT DECK` 음향 프로필을 사용한다. 화면·문서·지역·시나리오 프로필은 버스 게인과 미세한 재생 속도를 달리하고, 빠른 메뉴 조작의 중복 재생·경고 우선순위·환경음 덕킹은 공통 컨트롤러가 제한한다.
+
+표시·음향 설정에는 `CORE SOUND IDENTITY / PC-CORE-01` 실험실을 추가했다. 12종을 개별 미리듣고 MASTER·AMBIENT·INTERFACE·RECORD·ALERT 볼륨을 저장할 수 있으며, 현재 화면의 음향 정체성과 마지막 재생 신호를 확인할 수 있다. 미디어 대장은 이제 186개를 등록하고 새 12개만 `PROJECT_SYNTHESIS / PROJECT_GENERATED`로, 기존 음원 23개는 계속 `LICENSE_REVIEW`로 구분한다.
 
 5.42.0은 GitHub Pages에 포함되는 이미지·음원·영상 174개를 파일 단위로 등록했다. 144개 이미지, 23개 음원, 7개 영상에는 SHA-256, 용량, 저장소 사용처, 출처 등급, 공개 검토 상태와 반응형 파생 관계가 기록된다. 프로젝트 관리 자산 24개와 출처·권리 확인이 필요한 자산 150개를 분리하며 등록 자체를 사용 허가로 표시하지 않는다.
 

@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.43.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.42.0',
-    schema:root.ProjectCurseBuild?.schema||'project-curse-v35',
+    version:root.ProjectCurseBuild?.version||'5.43.0',
+    schema:root.ProjectCurseBuild?.schema||'project-curse-v36',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'map-room',label:'상황 관제',index:'01'},
@@ -40,8 +40,9 @@
         marker:'pc5152v_field_photo_click_42s.mp3',
         radio:'pc5152v_comm_line_cue_73_74.mp3',
         denied:'pc5152f_low_denied_oldpc.wav',
-        boot:'pc5152f_boot_access_oldpc.wav'
-      }
+        boot:'core/pc-core-terminal-connect.wav'
+      },
+      corePack:['terminal.connect','terminal.disconnect','menu.open','menu.close','menu.select','menu.back','access.denied','record.mount','record.unmount','evidence.open','comm.connect','operation.confirm']
     },
     owners:{
       buildInfo:'assets/js/data/build-info.js',
@@ -66,6 +67,7 @@
       adaptiveMediaRuntime:'assets/js/core/adaptive-media.js',
       loadingRuntime:'assets/js/core/loading-sequence.js',
       audioController:'assets/js/core/audio-controller.js',
+      coreSoundGenerator:'tools/build-core-sounds.mjs',
       operationState:'assets/js/core/operation-state.js',
       pilgrimageData:'assets/js/data/pilgrimage-scenario-data.js',
       pilgrimageState:'assets/js/core/pilgrimage-state.js',

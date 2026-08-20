@@ -52,6 +52,9 @@ function baseClassification(path){
   if(path.includes('/archive-enex/')){
     return {kind,provenance:'ORIGINAL_SOURCE',release:'SOURCE_REVIEW',source:'Archive ENEX에서 보존한 원본 계열 사본',handling:'원본 계보는 보존하되 공개 사용 권리는 별도 확인'};
   }
+  if(path.startsWith('assets/audio/core/')){
+    return {kind,provenance:'PROJECT_SYNTHESIS',release:'PROJECT_GENERATED',source:'tools/build-core-sounds.mjs 결정론적 무샘플 합성',handling:'외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호'};
+  }
   if(path.startsWith('assets/audio/')){
     return {kind,provenance:'UNVERIFIED',release:'LICENSE_REVIEW',source:'기존 Project Curse 음향 자산 묶음',handling:'제작자·원출처·허가 범위 확인 전 공개 승인 금지'};
   }
@@ -106,8 +109,8 @@ const reviewQueue=assets.filter(asset=>reviewStatuses.has(asset.release)).sort((
   return priority[a.kind]-priority[b.kind]||b.bytes-a.bytes||a.path.localeCompare(b.path);
 }).slice(0,12).map(({path,kind,release,source,referenced})=>({path,kind,release,source,referenced}));
 
-const payload={version:'1.0.0',generated:'2026-08-21',policy:'MEDIA PROVENANCE / RELEASE AUDIT',overridesVersion:overrides.version||'UNKNOWN',referenceOnly,referenceExposures:exposedReferenceFiles,stats,reviewQueue,assets};
-const output=`// Project Curse 5.42.0 — generated media provenance and release-review ledger.\n(function(root){\n  'use strict';\n  const data=${JSON.stringify(payload,null,2)};\n  const freeze=value=>{if(!value||typeof value!=='object'||Object.isFrozen(value)) return value;Object.values(value).forEach(freeze);return Object.freeze(value);};\n  root.ProjectCurseMediaProvenance=freeze(data);\n})(window);\n`;
+const payload={version:'1.1.0',generated:'2026-08-21',policy:'MEDIA PROVENANCE / RELEASE AUDIT',overridesVersion:overrides.version||'UNKNOWN',referenceOnly,referenceExposures:exposedReferenceFiles,stats,reviewQueue,assets};
+const output=`// Project Curse 5.43.0 — generated media provenance and release-review ledger.\n(function(root){\n  'use strict';\n  const data=${JSON.stringify(payload,null,2)};\n  const freeze=value=>{if(!value||typeof value!=='object'||Object.isFrozen(value)) return value;Object.values(value).forEach(freeze);return Object.freeze(value);};\n  root.ProjectCurseMediaProvenance=freeze(data);\n})(window);\n`;
 
 if(process.argv.includes('--write')){
   writeFileSync(resolve(ROOT,TARGET),output,'utf8');

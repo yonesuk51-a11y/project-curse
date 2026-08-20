@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — authored archive fragments, document voices and technology trace.
+// Project Curse 5.43.0 — authored archive fragments, document voices and technology trace.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;

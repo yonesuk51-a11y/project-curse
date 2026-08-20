@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — readable settings, session health and adaptive local preferences.
+// Project Curse 5.43.0 — readable settings, core-sound laboratory and adaptive local preferences.
 (function(root){
   'use strict';
 
@@ -27,9 +27,11 @@
     function loadPreferences(){
       try{
         const stored=JSON.parse(localStorage.getItem(data.storageKey)||'{}');
-        return Object.assign({},data.defaults,stored&&typeof stored==='object'?stored:{});
+        const loaded=Object.assign({},data.defaults,stored&&typeof stored==='object'?stored:{});
+        loaded.audioVolumes=Object.assign({},data.defaults.audioVolumes,stored?.audioVolumes||{});
+        return loaded;
       }catch(_error){
-        return Object.assign({},data.defaults);
+        return Object.assign({},data.defaults,{audioVolumes:{...data.defaults.audioVolumes}});
       }
     }
 
@@ -67,7 +69,12 @@
 
     function audioLevels(){
       const interfaceLevels={full:{interface:1,record:1},minimal:{interface:.34,record:.58},off:{interface:0,record:0}};
-      return Object.assign({ambient:preferences.ambient==='on'?1:0},interfaceLevels[preferences.interfaceAudio]||interfaceLevels.full);
+      const mode=interfaceLevels[preferences.interfaceAudio]||interfaceLevels.full;
+      const mix=preferences.audioVolumes||data.defaults.audioVolumes;
+      return {
+        master:Number(mix.master),ambient:preferences.ambient==='on'?Number(mix.ambient):0,
+        interface:Number(mix.interface)*mode.interface,record:Number(mix.record)*mode.record,alert:Number(mix.alert)
+      };
     }
 
     function applyPreferences({persist=false}={}){
@@ -90,6 +97,7 @@
         ? '운영체제의 동작 줄이기 설정으로 REDUCED가 우선 적용 중이다.'
         : `현재 적용: ${String(effectiveEffects).toUpperCase()}`;
       document.dispatchEvent(new CustomEvent('projectcurse:preferences-change',{detail:{...preferences,effectiveEffects}}));
+      renderAudioLab();
     }
 
     function setPreference(key,value){
@@ -98,7 +106,15 @@
       preferences=Object.assign({},preferences,{[key]:value});
       applyPreferences({persist:true});
       renderOverview();
-      root.ProjectCurseAudioControl?.play?.('contact',{volume:.55});
+      root.ProjectCurseAudioControl?.play?.('menu.select');
+      return true;
+    }
+
+    function setAudioVolume(bus,value){
+      if(!['master','ambient','interface','record','alert'].includes(bus)) return false;
+      const safe=Math.max(0,Math.min(1,Number(value)));
+      preferences=Object.assign({},preferences,{audioVolumes:Object.assign({},preferences.audioVolumes,{[bus]:safe})});
+      applyPreferences({persist:true});
       return true;
     }
 
@@ -190,7 +206,28 @@
       };
       const visual=['quality','effects','textReveal'].map(group).join('');
       const audio=['interfaceAudio','ambient'].map(group).join('');
-      return `<div class="pc-preference-backdrop" data-pc-preferences-close></div><div class="pc-preference-dialog" role="dialog" aria-modal="true" aria-labelledby="pcPreferenceTitle"><header><div><small>PC-03 / LOCAL CONFIGURATION</small><h2 id="pcPreferenceTitle">표시·음향 설정</h2></div><button type="button" data-pc-preferences-close aria-label="설정 닫기">×</button></header><section class="pc-preference-overview" aria-live="polite"><i data-pc-overview-icon aria-hidden="true">◇</i><div><small>현재 적용 상태</small><strong data-pc-overview-title>환경 판독 중</strong><p data-pc-overview-copy>브라우저와 연결 상태에 맞는 설정을 확인하고 있다.</p></div><span data-pc-overview-health>CHECK</span><ul><li data-pc-overview-link>연결 확인</li><li data-pc-overview-media>미디어 확인</li><li data-pc-overview-audio>음향 확인</li></ul></section><div class="pc-preference-section"><header><small>01 / VISUAL & DELIVERY</small><strong>화면·전송</strong><p>화면의 움직임과 자료 전송량을 조절한다.</p></header>${visual}</div><div class="pc-preference-section"><header><small>02 / ACOUSTIC CHANNEL</small><strong>음향</strong><p>버튼·기록 효과음과 배경 환경음을 따로 제어한다.</p></header>${audio}</div><details class="pc-advanced-diagnostics"><summary><span><small>03 / ADVANCED DIAGNOSTICS</small><strong>고급 세션 진단</strong><em>문제가 있을 때 연결·성능 원자료를 확인한다.</em></span><b>열기</b></summary><div class="pc-advanced-diagnostics-body"><section class="pc-quality-diagnostics" aria-label="적응형 전송 품질"><header><div><small>ADAPTIVE DELIVERY POLICY</small><strong>전송·기기 판독</strong></div><span data-pc-quality-tier>SCANNING</span></header><dl><div><dt>LINK</dt><dd data-pc-quality="link">--</dd></div><div><dt>LATENCY</dt><dd data-pc-quality="rtt">--</dd></div><div><dt>MEMORY</dt><dd data-pc-quality="memory">--</dd></div><div><dt>CPU</dt><dd data-pc-quality="cores">--</dd></div></dl><p data-pc-quality-summary>현재 환경에 맞는 전송 정책을 계산하고 있다.</p></section><section class="pc-live-diagnostics" aria-label="현재 세션 성능"><header><div><small>LIVE SESSION TELEMETRY</small><strong>현재 세션 진단</strong></div><span>LOCAL ONLY</span></header><dl><div><dt>BOOT VISIBLE</dt><dd data-pc-telemetry="boot">WAIT</dd></div><div><dt>DOM READY</dt><dd data-pc-telemetry="dom">WAIT</dd></div><div><dt>TRANSFER</dt><dd data-pc-telemetry="transfer">WAIT</dd></div><div><dt>HANDOFF</dt><dd data-pc-telemetry="transition">STANDBY</dd></div><div><dt>SESSION</dt><dd data-pc-telemetry="session">0 S</dd></div><div><dt>JS HEAP</dt><dd data-pc-telemetry="heap">N/A</dd></div></dl><p data-pc-telemetry-summary>브라우저 내부 측정값을 수신하는 중이다.</p></section><button type="button" class="pc-diagnostics-refresh" data-pc-diagnostics-refresh>측정값 다시 읽기</button></div></details><footer><span data-pc-effective-effects></span><button type="button" data-pc-preferences-close>설정 완료</button></footer></div>`;
+      const soundCatalog=(root.ProjectCurseAudioControl?.getCatalog?.()||Object.entries(root.ProjectCurseAudioManifest?.sounds||{}).map(([id,item])=>({id,...item})))
+        .map((sound,index)=>`<button type="button" data-pc-sound-preview="${sound.id}" aria-label="${sound.label} 효과음 미리듣기"><i>${String(index+1).padStart(2,'0')}</i><span><b>${sound.label}</b><small>${sound.family} · ${sound.durationMs} MS</small></span><em aria-hidden="true">▶</em></button>`).join('');
+      const mixLabels={master:'MASTER',ambient:'AMBIENT',interface:'INTERFACE',record:'RECORD',alert:'ALERT'};
+      const mixers=Object.entries(mixLabels).map(([bus,label])=>`<label><span>${label}<b data-pc-audio-level="${bus}">100</b></span><input type="range" min="0" max="100" step="1" value="100" data-pc-audio-bus="${bus}" aria-label="${label} 음량"/></label>`).join('');
+      const soundLab=`<details class="pc-sound-lab"><summary><span><small>CORE SOUND IDENTITY / PC-CORE-01</small><strong>효과음 실험실</strong><em>12종 공통 조작음을 듣고 버스별 음량을 조절한다.</em></span><b>열기</b></summary><div class="pc-sound-lab-body"><header><div><small>ACTIVE ACOUSTIC PROFILE</small><strong data-pc-sound-profile>LOCAL RELAY</strong><p data-pc-sound-status>12 CORE SIGNALS / PROJECT GENERATED</p></div><span data-pc-sound-pack>PCM · 48 KHZ</span></header><div class="pc-sound-mixer">${mixers}</div><div class="pc-sound-grid" role="group" aria-label="핵심 효과음 미리듣기">${soundCatalog}</div><p class="pc-sound-note">미리듣기는 현재 채널의 음색·재생 속도 프로필을 그대로 사용한다. 기록 영상과 기록글 전용 배경음은 이 패널에서 변경하지 않는다.</p></div></details>`;
+      return `<div class="pc-preference-backdrop" data-pc-preferences-close></div><div class="pc-preference-dialog" role="dialog" aria-modal="true" aria-labelledby="pcPreferenceTitle"><header><div><small>PC-03 / LOCAL CONFIGURATION</small><h2 id="pcPreferenceTitle">표시·음향 설정</h2></div><button type="button" data-pc-preferences-close aria-label="설정 닫기">×</button></header><section class="pc-preference-overview" aria-live="polite"><i data-pc-overview-icon aria-hidden="true">◇</i><div><small>현재 적용 상태</small><strong data-pc-overview-title>환경 판독 중</strong><p data-pc-overview-copy>브라우저와 연결 상태에 맞는 설정을 확인하고 있다.</p></div><span data-pc-overview-health>CHECK</span><ul><li data-pc-overview-link>연결 확인</li><li data-pc-overview-media>미디어 확인</li><li data-pc-overview-audio>음향 확인</li></ul></section><div class="pc-preference-section"><header><small>01 / VISUAL & DELIVERY</small><strong>화면·전송</strong><p>화면의 움직임과 자료 전송량을 조절한다.</p></header>${visual}</div><div class="pc-preference-section"><header><small>02 / ACOUSTIC CHANNEL</small><strong>음향</strong><p>버튼·기록 효과음과 배경 환경음을 따로 제어한다.</p></header>${audio}${soundLab}</div><details class="pc-advanced-diagnostics"><summary><span><small>03 / ADVANCED DIAGNOSTICS</small><strong>고급 세션 진단</strong><em>문제가 있을 때 연결·성능 원자료를 확인한다.</em></span><b>열기</b></summary><div class="pc-advanced-diagnostics-body"><section class="pc-quality-diagnostics" aria-label="적응형 전송 품질"><header><div><small>ADAPTIVE DELIVERY POLICY</small><strong>전송·기기 판독</strong></div><span data-pc-quality-tier>SCANNING</span></header><dl><div><dt>LINK</dt><dd data-pc-quality="link">--</dd></div><div><dt>LATENCY</dt><dd data-pc-quality="rtt">--</dd></div><div><dt>MEMORY</dt><dd data-pc-quality="memory">--</dd></div><div><dt>CPU</dt><dd data-pc-quality="cores">--</dd></div></dl><p data-pc-quality-summary>현재 환경에 맞는 전송 정책을 계산하고 있다.</p></section><section class="pc-live-diagnostics" aria-label="현재 세션 성능"><header><div><small>LIVE SESSION TELEMETRY</small><strong>현재 세션 진단</strong></div><span>LOCAL ONLY</span></header><dl><div><dt>BOOT VISIBLE</dt><dd data-pc-telemetry="boot">WAIT</dd></div><div><dt>DOM READY</dt><dd data-pc-telemetry="dom">WAIT</dd></div><div><dt>TRANSFER</dt><dd data-pc-telemetry="transfer">WAIT</dd></div><div><dt>HANDOFF</dt><dd data-pc-telemetry="transition">STANDBY</dd></div><div><dt>SESSION</dt><dd data-pc-telemetry="session">0 S</dd></div><div><dt>JS HEAP</dt><dd data-pc-telemetry="heap">N/A</dd></div></dl><p data-pc-telemetry-summary>브라우저 내부 측정값을 수신하는 중이다.</p></section><button type="button" class="pc-diagnostics-refresh" data-pc-diagnostics-refresh>측정값 다시 읽기</button></div></details><footer><span data-pc-effective-effects></span><button type="button" data-pc-preferences-close>설정 완료</button></footer></div>`;
+    }
+
+    function renderAudioLab(){
+      if(!panel) return;
+      const state=root.ProjectCurseAudioControl?.getState?.()||audioLevels();
+      const diagnostics=root.ProjectCurseAudioControl?.getDiagnostics?.()||{};
+      panel.querySelectorAll('[data-pc-audio-bus]').forEach(input=>{
+        const value=Math.round(Number(preferences.audioVolumes?.[input.dataset.pcAudioBus]??state[input.dataset.pcAudioBus]??1)*100);
+        if(document.activeElement!==input) input.value=String(value);
+        const label=panel.querySelector(`[data-pc-audio-level="${input.dataset.pcAudioBus}"]`);
+        if(label) label.textContent=String(value).padStart(3,'0');
+      });
+      const profile=panel.querySelector('[data-pc-sound-profile]');
+      if(profile) profile.textContent=`${String(diagnostics.identity||'LOCAL RELAY')} / ${String(diagnostics.profile||'terminal-home').toUpperCase()}`;
+      const status=panel.querySelector('[data-pc-sound-status]');
+      if(status) status.textContent=state.muted?'AUDIO MUTED — 상단 AUDIO LOCAL을 켜면 미리들을 수 있다.':`${diagnostics.coreSounds||12} CORE SIGNALS / ${diagnostics.lastSound?`LAST ${String(diagnostics.lastSound).toUpperCase()}`:'READY'}`;
     }
 
     function overviewCopy(quality,snapshot){
@@ -312,14 +349,27 @@
       panel.addEventListener('click',event=>{
         const preference=event.target.closest?.('[data-pc-preference]');
         if(preference) setPreference(preference.dataset.pcPreference,preference.dataset.pcValue);
+        const preview=event.target.closest?.('[data-pc-sound-preview]');
+        if(preview){
+          const played=root.ProjectCurseAudioControl?.preview?.(preview.dataset.pcSoundPreview);
+          preview.classList.toggle('is-playing',Boolean(played));
+          root.setTimeout(()=>preview.classList.remove('is-playing'),420);
+          renderAudioLab();
+        }
         if(event.target.closest?.('[data-pc-diagnostics-refresh]')){root.ProjectCurseQuality?.refresh?.();root.ProjectCurseTelemetry?.refresh?.();renderQuality();renderTelemetry();renderOverview();}
         if(event.target.closest?.('[data-pc-preferences-close]')) closePreferences();
       });
+      panel.addEventListener('input',event=>{
+        const mixer=event.target.closest?.('[data-pc-audio-bus]');
+        if(mixer) setAudioVolume(mixer.dataset.pcAudioBus,Number(mixer.value)/100);
+      });
       panel.querySelector('.pc-advanced-diagnostics')?.addEventListener('toggle',event=>{if(event.target.open){renderQuality();renderTelemetry();renderOverview();}});
+      panel.querySelector('.pc-sound-lab')?.addEventListener('toggle',event=>{if(event.target.open) renderAudioLab();});
       document.querySelectorAll('[data-pc-preferences-open]').forEach(control=>control.addEventListener('click',()=>openPreferences(control)));
       renderTelemetry();
       renderQuality();
       renderOverview();
+      renderAudioLab();
 
       document.addEventListener('mousedown',event=>{
         if(!panel||panel.hidden) return;
@@ -340,26 +390,29 @@
       renderTelemetry();
       renderQuality();
       renderOverview();
+      renderAudioLab();
       requestAnimationFrame(()=>panel.classList.add('is-open'));
       requestAnimationFrame(()=>{focusInitialPreference();});
-      root.ProjectCurseAudioControl?.play?.('open',{volume:.55});
+      root.ProjectCurseAudioControl?.play?.('menu.open');
     }
 
     function closePreferences(){
       if(!panel||panel.hidden) return;
       panel.classList.remove('is-open');
       document.body.classList.remove('pc-preferences-open');
+      root.ProjectCurseAudioControl?.play?.('menu.close');
       setTimeout(()=>{panel.hidden=true;safeFocus(lastTrigger);},180);
     }
 
     function diagnostics(){
       return {
-        version:'5.33.0',channel:rootElement.dataset.pcChannel,
+        version:'5.43.0',channel:rootElement.dataset.pcChannel,
         identities:document.querySelectorAll(':scope body > .app [data-channel-identity="header"]').length,
         preferences:{...preferences},effectiveEffects:rootElement.dataset.pcEffects,
         navigation:quickNav?.querySelectorAll('[data-channel-route]').length||0,
         telemetry:root.ProjectCurseTelemetry?.getSnapshot?.()||null,
-        quality:root.ProjectCurseQuality?.getDiagnostics?.()||null
+        quality:root.ProjectCurseQuality?.getDiagnostics?.()||null,
+        audio:root.ProjectCurseAudioControl?.getDiagnostics?.()||null
       };
     }
 
@@ -375,6 +428,8 @@
     document.addEventListener('projectcurse:telemetry-update',refreshLiveStatus);
     document.addEventListener('projectcurse:quality-change',renderQuality);
     document.addEventListener('projectcurse:quality-change',renderOverview);
+    document.addEventListener('projectcurse:audio-change',renderAudioLab);
+    document.addEventListener('projectcurse:audio-profile-change',renderAudioLab);
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!panel?.hidden) closePreferences();
       if(event.key==='Tab'&&!panel?.hidden){
@@ -389,8 +444,8 @@
     reduceMotion.addEventListener?.('change',()=>applyPreferences());
 
     root.ProjectCurseChannelIdentity=Object.freeze({
-      version:'5.33.0',getChannel:id=>byId.get(id)||null,getPreferences:()=>({...preferences}),
-      setPreference,openPreferences,closePreferences,refresh:()=>activateChannel(root.ProjectCurseShell?.getRoute?.()||'terminal-home',{animate:false}),
+      version:'5.43.0',getChannel:id=>byId.get(id)||null,getPreferences:()=>({...preferences,audioVolumes:{...preferences.audioVolumes}}),
+      setPreference,setAudioVolume,openPreferences,closePreferences,refresh:()=>activateChannel(root.ProjectCurseShell?.getRoute?.()||'terminal-home',{animate:false}),
       getDiagnostics:diagnostics
     });
   });

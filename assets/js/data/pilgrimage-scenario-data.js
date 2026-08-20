@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — reactive field scenarios with explicit canon boundaries.
+// Project Curse 5.43.0 — reactive field scenarios with explicit canon boundaries.
 (function(root){
   'use strict';
 

@@ -12,7 +12,7 @@
 
 ## 파일과 메타데이터
 
-원본은 `assets/resources/originals/`, 파생본은 `assets/resources/derived/`, UI 자산은 해당 기능 폴더에서 관리하는 것을 기본으로 한다. 새 파일 이름은 `record-id_sequence_kind.ext` 형식을 권장한다. 예: `immortality-860201_005_original.webp`.
+원본은 `assets/resources/originals/`, 파생본은 `assets/resources/derived/`, UI 자산은 해당 기능 폴더에서 관리하는 것을 기본으로 한다. 코드 합성 공통 음향은 `assets/audio/core/`에 두고 `tools/build-core-sounds.mjs`에서만 재생성한다. 새 기록 파일 이름은 `record-id_sequence_kind.ext` 형식을 권장한다. 예: `immortality-860201_005_original.webp`.
 
 기록 이미지에는 가능한 경우 다음 정보를 함께 둔다.
 
@@ -40,13 +40,24 @@
 시각 증거 등급과 공개 사용 권리 상태는 서로 다른 판정이다. `ORIGINAL`은 원본 계열이라는 뜻일 뿐 공개 재배포 허가가 확인됐다는 뜻이 아니다. `RECONSTRUCTED` 역시 제작 방식 표시이며 자동으로 공개 승인 상태가 되지 않는다.
 
 - `CLEARED`: 프로젝트가 직접 관리하는 인터페이스 자산
-- `PROJECT_GENERATED`: 설정 브리프 기반 생성형 재구성과 그 전송 파생본
+- `PROJECT_GENERATED`: 설정 브리프 기반 생성형 재구성과 그 전송 파생본, 또는 외부 샘플 없이 프로젝트 코드로 합성한 음향
 - `SOURCE_REVIEW`: 원본 계열은 확인됐지만 공개 재배포 범위 확인이 필요한 자산
 - `LICENSE_REVIEW`: 제작자·원출처·라이선스 또는 사용 허가 자료가 등록되지 않은 자산
 
 파일별 상태는 `assets/resources/MEDIA_PROVENANCE_OVERRIDES.json`에서 승인 근거와 함께 갱신한다. 생성된 `assets/js/data/media-provenance-data.js`는 직접 수정하지 않는다. 등록만으로 권리 검토가 끝난 것으로 표시하지 않는다.
 
 음원과 영상은 이미지와 같은 기준으로 관리한다. 파일 이름, 기존 화면 배치 또는 과거 사용 이력만으로 제작자와 허가 범위를 추정하지 않는다. 내장 음향이 있는 영상은 영상과 음향의 사용 범위를 함께 확인한다.
+
+## 코드 합성 핵심 음향
+
+`assets/audio/core/`의 WAV는 `PROJECT_SYNTHESIS` 출처 등급을 사용한다. 이 등급은 외부 음원·샘플·녹음물을 포함하지 않고 저장소의 생성 코드만으로 파형을 만든 자산에만 부여한다.
+
+- 생성기는 동일한 버전과 입력에서 바이트가 같은 파일을 만들어야 한다.
+- 출력은 48 kHz, 16-bit, 모노 PCM WAV를 기본으로 하며 클리핑·무음·비정상 헤더를 검증한다.
+- 음향 정의, 파일명, 표시 이름, 버스, 길이는 `audio-manifest.js`와 생성기 사이에서 일치해야 한다.
+- 기록 영상·기록글 전용 음향을 새 핵심 신호로 자동 교체하지 않는다.
+- 생성 WAV를 수동 편집하지 않는다. 음색 수정은 생성 레시피를 바꾼 뒤 전체 팩을 재생성한다.
+- `PROJECT_SYNTHESIS`는 제작 계보를 설명하는 상태이며, 기존 `LICENSE_REVIEW` 음향의 권리 상태를 승계하거나 해제하지 않는다.
 
 ## 참고 전용 자료 차단
 
