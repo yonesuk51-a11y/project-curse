@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — reactive field scenarios with persistent cross-stage consequences.
+// Project Curse 5.40.0 — reactive field scenarios with explicit canon boundaries.
 (function(root){
   'use strict';
 
@@ -9,12 +9,15 @@
   }
 
   root.ProjectCursePilgrimageData=freeze({
-    version:'2.1.0',
+    version:'2.2.0',
     scenarios:{
       'unlit-fortress':{
         id:'unlit-fortress',code:'PILGRIMAGE / GBF-07',title:'불빛 없는 성채',region:'남미 대흑림 · 서부 순례 회랑',
         summary:'몬수르 서부 교회가 맡긴 작은 종을 운반하고, 불빛 없는 성채의 구조 신호가 실제 생존자에게서 나온 것인지 확인한다.',
         directive:'현상과의 접촉을 최소화하되, 도움 요청에는 성채 바깥에서 응답한다.',
+        decisionStandard:'규칙을 맹신하지 않는다. 현재 관측으로 설명할 수 있는 행동 의도와 접촉 범위를 먼저 기록한다.',
+        canonBoundary:'선택과 결말은 이 단말에 저장되는 현장 판정이다. 대흑림의 공통 정사, 성채의 정체와 피난권을 자동으로 확정하지 않는다.',
+        fixedFacts:['몬수르 서부 교회가 종 운반을 요청했다.','불빛 없는 성채에서 생활 소음과 구조 신호가 관측됐다.','조사 결과의 해석과 생환 상태는 선택 분기로 남는다.'],
         theme:'forest',channel:'U.A.C FIELD PILGRIMAGE CHANNEL',entryLabel:'VOLUNTARY ENTRY / NO RETURN GUARANTEE',directiveLabel:'PILGRIM DIRECTIVE',
         metrics:[{key:'fear',label:'FEAR',tone:'fear',initial:8},{key:'corruption',label:'CORRUPTION',tone:'corruption',initial:0},{key:'signal',label:'SIGNAL',tone:'signal',initial:86}],
         outcomeLabels:{kept:'RULE KEPT',broken:'RULE BROKEN'},negativeOutcomes:['broken'],
@@ -94,6 +97,9 @@
         id:'deadzone-return',code:'RETURN PROTOCOL / DZ-07',title:'돌아온 자의 이름',region:'북미 데드존 · 서부 귀환 회랑',
         summary:'데드존 경계에서 회수된 네 명의 귀환자와 다섯 번째 생체 신호를 분리하고, 검문소 07 내부로 들이기 전에 신원과 기억의 연속성을 판정한다.',
         directive:'귀환자의 증언을 전진 항법에 사용하지 말고, 사람의 수보다 서로 다른 기억의 수를 우선 확인한다.',
+        decisionStandard:'인도적 보호와 신원 검증을 별개 절차로 기록한다. 빠른 통과가 인간 판정을 뜻하지 않으며 봉쇄가 적대 판정을 뜻하지도 않는다.',
+        canonBoundary:'검문 결과는 플레이어가 만든 지역 판정 기록이다. 2029년 검문소 07에서 네 귀환자와 다섯 번째 신호가 충돌했다는 사실만 공통 정사로 유지된다.',
+        fixedFacts:['육안 인원은 네 명, 열상 반응은 다섯 개였다.','귀환자들의 기억과 출발 기록이 일치하지 않았다.','누가 귀환 승인을 받았는지는 선택 분기로 남는다.'],
         theme:'deadzone',channel:'U.A.C RETURN SCREENING CHANNEL',entryLabel:'QUARANTINE AUTHORITY / IDENTITY NOT GUARANTEED',directiveLabel:'RETURN DIRECTIVE',
         metrics:[{key:'identity',label:'IDENTITY',tone:'identity',initial:82},{key:'exposure',label:'EXPOSURE',tone:'exposure',initial:14},{key:'coherence',label:'COHERENCE',tone:'coherence',initial:76},{key:'trust',label:'TRUST',tone:'trust',initial:58}],
         outcomeLabels:{verified:'CHECK VERIFIED',compromised:'CHECK COMPROMISED',contained:'RISK CONTAINED'},negativeOutcomes:['compromised'],
@@ -171,6 +177,9 @@
         id:'deadzone-recovery',code:'OUTBOUND RECOVERY / DZ-R05',title:'검문소 아래의 구조 신호',region:'북미 데드존 · 지하 전진 회수선',
         summary:'DZ-VR-04에 남은 좌표를 따라 검문소 07 아래의 존재하지 않는 층으로 내려가, 최초 구조 신호의 발생원과 먼저 도착해 있는 회수팀의 흔적을 확인한다.',
         directive:'호출 부호는 본인이 먼저 말하기 전까지 대신 부르지 않는다. 귀환자의 공통 기억과 앞으로 남겨질 자신의 흔적을 항법 자료로 사용하지 않는다.',
+        decisionStandard:'영상·음성·명단보다 물리 견인선과 독립 시계를 우선한다. 회수 가치와 지상 봉쇄선의 안전을 같은 항목으로 계산하지 않는다.',
+        canonBoundary:'이 회수 작전은 DZ-VR-04에서 해금되는 플레이어 후속 기록이다. 지하 회랑의 최종 생존자 수와 다섯 번째 중계기의 운명은 세계 공통 연표에 고정되지 않는다.',
+        fixedFacts:['검문소 07 아래에서 최초 구조 신호가 반복됐다.','지하 회랑은 귀환 명단과 현재 호출 부호를 재생했다.','중계기의 회수·봉쇄·등록 여부는 선택 분기로 남는다.'],
         theme:'recovery',channel:'U.A.C OUTBOUND RECOVERY CHANNEL',entryLabel:'DZ-VR-04 VERIFIED / OUTBOUND AUTHORIZED',directiveLabel:'RECOVERY DIRECTIVE',
         unlock:{type:'verdict',id:'DZ-VR-04',label:'역방향 순례 판정 필요'},
         metrics:[{key:'team',label:'TEAM',tone:'team',initial:100},{key:'tether',label:'TETHER',tone:'tether',initial:88},{key:'depth',label:'DEPTH',tone:'depth',initial:6},{key:'echo',label:'ECHO',tone:'echo',initial:4}],

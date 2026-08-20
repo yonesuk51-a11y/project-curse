@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — reactive scenarios, consequence feedback, and conditional recovery access.
+// Project Curse 5.40.0 — authored decisions, canon boundaries, and conditional recovery access.
 (function(root){
   'use strict';
 
@@ -33,6 +33,7 @@
       return summary.corruption>=55||summary.signal<=35?'critical':summary.corruption>=28||summary.fear>=58?'unstable':'nominal';
     };
     const meter=(metric,value)=>`<div class="pc-pilgrimage-meter is-${escapeHTML(metric.tone||metric.key)}"><span>${escapeHTML(metric.label)}</span><b>${String(value).padStart(2,'0')}%</b><i><em style="--pilgrimage-meter:${value}%"></em></i></div>`;
+    const exposureLabel=tone=>({safe:'접촉 최소화',neutral:'통제된 손실',risk:'규칙 이탈 가능',danger:'직접 노출'}[tone]||'현장 판단');
 
     function renderTerrain(current){
       if(current.theme==='deadzone') return `<path class="pc-pilgrimage-wasteland" d="M0 62 C131 105 228 31 347 91 S566 43 695 103 817 58 900 97 L900 420 0 420Z"></path><path class="pc-pilgrimage-quarantine" d="M126 0V420M278 0V420M432 0V420M590 0V420M746 0V420"></path><path class="pc-pilgrimage-dead-road" d="M0 48 C173 126 257 191 398 231 S651 310 900 392"></path>`;
@@ -64,6 +65,7 @@
         <h1 id="pcPilgrimageTitle">${escapeHTML(current.title)}</h1><p>${escapeHTML(current.summary)}</p>
         <dl><div><dt>권역</dt><dd>${escapeHTML(current.region)}</dd></div><div><dt>연결 사건</dt><dd>${escapeHTML(current.incident.toUpperCase())}</dd></div><div><dt>현재 상태</dt><dd>${resume?escapeHTML(summary.status.toUpperCase()):'NOT STARTED'}</dd></div><div><dt>진행도</dt><dd>${summary.progress}%</dd></div></dl>
         <div class="pc-pilgrimage-directive"><b>${escapeHTML(current.directiveLabel)}</b><p>${escapeHTML(current.directive)}</p></div>
+        <section class="pc-pilgrimage-canon-boundary" aria-label="고정 정사와 선택 분기 경계"><header><small>CANON BOUNDARY</small><b>확정된 관측과 단말 판정을 분리한다</b></header><ul>${(current.fixedFacts||[]).map(fact=>`<li>${escapeHTML(fact)}</li>`).join('')}</ul><p>${escapeHTML(current.canonBoundary)}</p></section>
         <div class="pc-pilgrimage-intro-actions"><button type="button" data-pilgrimage-start>${resume?'현장 기록 이어 보기':current.theme==='deadzone'?'귀환자 검문 시작':current.theme==='recovery'?'전진 회수 작전 시작':'순례 시작'}</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.guideRecord)}">관련 기록 먼저 확인</button></div>
       </article>`;
     }
@@ -75,7 +77,8 @@
         ${reactive?'<div class="pc-pilgrimage-reactive-flag"><i></i><span>EARLIER DECISION DETECTED</span><b>이전 현장 판단이 현재 신호를 변경했습니다.</b></div>':''}
         <div class="pc-pilgrimage-transmission"><i></i><span>${escapeHTML(stage.signal)}</span></div><p class="pc-pilgrimage-narrative">${escapeHTML(stage.narrative)}</p>
         <aside class="pc-pilgrimage-rule"><small>${escapeHTML(stage.rule.code)}</small><b>${escapeHTML(stage.rule.text)}</b></aside>
-        <div class="pc-pilgrimage-choices" aria-label="현장에서 할 행동 선택">${stage.choices.map((choice,index)=>`<button type="button" class="is-${escapeHTML(choice.tone)}" data-pilgrimage-choice="${escapeHTML(choice.id)}"><i>${String(index+1).padStart(2,'0')}</i><span><b>${escapeHTML(choice.label)}</b><small>${escapeHTML(choice.description)}</small></span><em>이 행동 선택&nbsp;›</em></button>`).join('')}</div>
+        <aside class="pc-pilgrimage-decision-standard"><small>DECISION STANDARD</small><p>${escapeHTML(current.decisionStandard)}</p></aside>
+        <div class="pc-pilgrimage-choices" aria-label="현장에서 할 행동 선택">${stage.choices.map((choice,index)=>`<button type="button" class="is-${escapeHTML(choice.tone)}" data-pilgrimage-choice="${escapeHTML(choice.id)}"><i>${String(index+1).padStart(2,'0')}</i><span class="pc-pilgrimage-choice-copy"><b>${escapeHTML(choice.label)}</b><small>${escapeHTML(choice.description)}</small><span class="pc-pilgrimage-choice-meta"><span>행동 의도 기록</span><span>${escapeHTML(exposureLabel(choice.tone))}</span></span></span><em>판정 봉인&nbsp;›</em></button>`).join('')}</div>
       </article>`;
     }
 
@@ -88,7 +91,7 @@
       }).join('');
       return `<article class="pc-pilgrimage-feedback is-${escapeHTML(feedback.choice.ruleOutcome)}" role="status" aria-live="assertive">
         <div class="pc-pilgrimage-feedback-scan" aria-hidden="true"></div><small>FIELD DECISION SEALED / ${escapeHTML(feedback.stage.code)}</small>
-        <h1 id="pcPilgrimageTitle">${escapeHTML(feedback.choice.label)}</h1><b>${escapeHTML(outcome)}</b><p>${escapeHTML(feedback.choice.description)}</p>
+        <h1 id="pcPilgrimageTitle">${escapeHTML(feedback.choice.label)}</h1><b>${escapeHTML(outcome)}</b><p>${escapeHTML(feedback.choice.description)}</p><aside class="pc-pilgrimage-feedback-boundary"><small>LOCAL VERDICT</small><span>${escapeHTML(current.canonBoundary)}</span></aside>
         <div class="pc-pilgrimage-feedback-metrics">${deltas||'<span><small>TRACE</small><b>±0</b><em>기록 유지</em></span>'}</div>
         <footer><i></i><span>선택 결과를 지도와 후속 현장 신호에 기록하는 중</span><em>${feedback.after.status==='complete'?'FINAL VERDICT':'NEXT TRACE'}</em></footer>
       </article>`;
@@ -100,7 +103,7 @@
       const metricStats=current.metrics.map(metric=>`<div><dt>${escapeHTML(metric.label)}</dt><dd>${summary.metrics[metric.key]}%</dd></div>`).join('');
       return `<article class="pc-pilgrimage-ending is-${escapeHTML(ending.tone)}">
         <small>${escapeHTML(ending.code)}</small><h1 id="pcPilgrimageTitle">${escapeHTML(ending.title)}</h1><b>${escapeHTML(ending.status)}</b><p>${escapeHTML(ending.summary)}</p>
-        <div class="pc-pilgrimage-ending-consequence"><span>관제 결과</span><p>${escapeHTML(ending.consequence)}</p></div><dl>${metricStats}</dl>
+        <div class="pc-pilgrimage-ending-consequence"><span>관제 결과</span><p>${escapeHTML(ending.consequence)}</p></div><aside class="pc-pilgrimage-ending-boundary"><small>PLAYER VERDICT / NON-CANON BRANCH</small><p>${escapeHTML(current.canonBoundary)}</p></aside><dl>${metricStats}</dl>
         <div class="pc-pilgrimage-ending-actions">${verdict?`<button type="button" data-pilgrimage-open-verdict="${escapeHTML(verdict.id)}">복호화된 판정 기록 열기</button>`:''}<button type="button" data-pilgrimage-open-map>관제도에서 결과 확인</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.primaryRecord)}">관련 지역 기록 열기</button><button type="button" class="is-reset" data-pilgrimage-reset>${current.theme==='deadzone'?'현재 검문 진행 초기화':current.theme==='recovery'?'현재 회수 작전 초기화':'현재 순례 진행 초기화'}</button></div>
       </article>`;
     }

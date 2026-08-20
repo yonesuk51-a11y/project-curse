@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.39.0
+# Project Curse Structure — 5.40.0
 
 ## 활성 소유권
 
@@ -18,7 +18,7 @@
 | 반응형 이미지 원본 치수·파생본 후보 | `assets/js/data/media-manifest.js` |
 | 반응형 선택·현상 상태·사전 준비·진단 | `assets/js/core/adaptive-media.js` + `assets/css/adaptive-media.css` |
 | 연결·기기 기반 품질 판정과 오프라인 복구 | `assets/js/core/quality-policy.js` + `assets/css/quality-policy.css` |
-| 대흑림·데드존·순례 규칙·부서진 왕관 문서 | `assets/js/data/field-dossier-data.js` |
+| 대흑림·데드존·순례 규칙·부서진 왕관 문서와 단락별 출처 층 | `assets/js/data/field-dossier-data.js` |
 | 홈 실시간 경보·최근 수신 구성 | `assets/js/data/home-intelligence-data.js` |
 | 루트 상단바·단말 허브·화면 이동 | `assets/css/app-shell.css` + `assets/css/terminal-foundation.css` + `assets/js/core/app-shell.js` |
 | 부팅 시퀀스 | `assets/js/core/loading-sequence.js` |
@@ -26,7 +26,7 @@
 | 의미 기반 재생·프로필·덕킹·중첩 제한 | `assets/js/core/audio-controller.js` |
 | 화면별 음향 프로필·효과음 사건 목록 | `assets/js/data/audio-manifest.js` |
 | 부서진 왕관 정보 회수·판단·지도 단계 저장 | `assets/js/core/operation-state.js` |
-| 세 현장 시나리오·반응형 후속 장면·결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
+| 세 현장 시나리오·고정 관측·로컬 판정 경계·반응형 결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
 | 다중 시나리오 진행·계기·판정 저장과 선택 조건 해석 | `assets/js/core/pilgrimage-state.js` |
 | 순례·귀환 검문·회수 진입, 판단 봉인 연출과 결과 화면 | `assets/js/pages/pilgrimage-scenario.js` + `assets/css/pilgrimage-scenario.css` |
 | 결말별 판정 기록 정의·윤문된 후속 분석 | `assets/js/data/verdict-archive-data.js` |

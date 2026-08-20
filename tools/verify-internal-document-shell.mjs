@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.39.0';
+const VERSION='5.40.0';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -103,6 +103,11 @@ check('document:route-free-toc',documentViewer.includes("el('button','archive-do
 check('document:embedded-assets',documentViewer.includes("replace(/^(?:\\.\\.\\/)+/,'')"));
 check('document:css-scoped',documentCss.includes('body[data-archive-document]')&&!documentCss.includes('\nbody{'));
 check('document:root-loaded',index.includes(`assets/css/archive-document.css?v=${VERSION}`)&&index.includes(`assets/js/pages/archive-document.js?v=${VERSION}`)&&index.includes(`assets/js/data/field-dossier-data.js?v=${VERSION}`));
+check('document:source-layer-context',documentViewer.includes('function appendRecordContext')&&documentViewer.includes('section.record')&&documentCss.includes('.archive-doc-record-context'));
+const authoredFieldDocuments=['Great_Black_Forest_Region','Dead_Zone_Pilgrimage','Pilgrim_Rules_GBF'].map(id=>context.window.ProjectCurseArchiveDocuments?.documents?.[id]);
+const authoredFieldSections=authoredFieldDocuments.flatMap(document=>document?.sections||[]);
+check('document:fifteen-authored-field-sections',authoredFieldSections.length===15&&authoredFieldSections.every(section=>section.record?.author&&section.record?.recipient&&section.record?.evidence&&section.record?.limit),authoredFieldSections.length);
+check('document:scenario-canon-boundary',pilgrimageData.includes("version:'2.2.0'")&&pilgrimageData.includes('canonBoundary:')&&pilgrimageRuntime.includes('PLAYER VERDICT / NON-CANON BRANCH')&&pilgrimageCss.includes('.pc-pilgrimage-canon-boundary'));
 check('evidence:root-loaded',index.includes(`assets/css/visual-evidence.css?v=${VERSION}`)&&index.includes(`assets/js/data/visual-evidence-data.js?v=${VERSION}`)&&index.indexOf('visual-evidence-data.js')<index.indexOf('field-dossier-data.js'));
 check('evidence:provenance-classes',['ORIGINAL','STABILIZED','RECONSTRUCTED','UNVERIFIED'].every(key=>context.window.ProjectCurseVisualEvidence?.classes?.[key]));
 check('evidence:document-console',documentViewer.includes('function evidenceConsole(items)')&&documentViewer.includes('archive-evidence-card')&&documentViewer.includes('function openEvidence(index,trigger)'));

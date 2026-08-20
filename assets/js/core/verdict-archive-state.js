@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — persistent conditional verdict archive, reactive snapshots, and scenario-unlock owner.
+// Project Curse 5.40.0 — persistent local-verdict archive, reactive snapshots, and scenario-unlock owner.
 (function(root){
   'use strict';
 
@@ -106,10 +106,10 @@
     const metricRows=scenario.metrics.map(metric=>[metric.label,`${snapshot.metrics?.[metric.key]??0}%`]);
     return {
       sourceId:id,scenarioId:entry.scenarioId,unlockScenario:entry.unlockScenario||null,presentation:'verdict',theme:entry.theme,code:entry.code,title:entry.title,
-      summary:entry.summary,date:new Date(snapshot.unlockedAt).toLocaleString('ko-KR'),owner:'U.A.C 현장 판정 보관소',classification:'현장 결말 확인·복호화 완료',
+      summary:entry.summary,date:new Date(snapshot.unlockedAt).toLocaleString('ko-KR'),owner:'U.A.C 현장 판정 보관소',classification:'로컬 현장 판정·공통 정사 미확정',
       telemetry:[['판정 상태',ending.status],['선택 기록',`${choiceRows.length} / ${scenario.stages.length}`],['규칙 위반',`${snapshot.violations}회`],['열람 상태',entry.unread?'새 기록':'확인함']],
       sections:[
-        {title:'판정 요약',paragraphs:[entry.summary,ending.summary],warning:`최종 관제 결과: ${ending.consequence}`},
+        {title:'판정 요약',record:{code:'LOCAL VERDICT',type:'플레이어 선택 사본',author:'현재 단말 현장 판정 저장소',recipient:'로컬 관제 기록',evidence:'저장된 선택·측정값',limit:scenario.canonBoundary},paragraphs:[entry.summary,ending.summary],warning:`로컬 관제 결과: ${ending.consequence} ${scenario.canonBoundary}`},
         {title:'현장 선택 기록',paragraphs:['아래 내용은 결말이 확정된 순간의 선택 기록이다. 이후 시나리오를 다시 시작해도 이 사본은 바뀌지 않는다.'],table:{headers:['단계','현장','선택한 행동','규칙 판정'],rows:choiceRows}},
         {title:'최종 측정값',paragraphs:['수치는 현장 판정이 끝난 시점의 값이다. 서로 다른 시점의 결과를 직접 비교할 때는 선택 기록도 함께 확인한다.'],table:{headers:['항목','최종 값'],rows:metricRows}},
         {title:'분석과 후속 조치',paragraphs:[entry.finding,entry.directive],quote:entry.hidden}

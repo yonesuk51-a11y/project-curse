@@ -279,7 +279,7 @@
   });
 
   root.ProjectCurseWorldHistoryProse=freeze({
-    version:root.ProjectCurseBuild?.version||'5.39.0',
+    version:root.ProjectCurseBuild?.version||'5.40.0',
     documentTypes,records,
     getRecord:id=>records[id]||null,
     getDocumentType:id=>documentTypes[id]||documentTypes.analysis

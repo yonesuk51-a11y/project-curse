@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — adaptive archive document, provenance console, evidence comparison, and verdict renderer.
+// Project Curse 5.40.0 — adaptive archive document, source provenance, evidence comparison, and verdict renderer.
 (function(){
   'use strict';
 
@@ -214,6 +214,22 @@
       transcript.append(line);
     });
     target.append(transcript);
+  }
+
+  function appendRecordContext(target,record){
+    if(!record) return;
+    const context=el('aside','archive-doc-record-context');
+    const head=el('header');
+    head.append(el('small','',record.code||'SOURCE LAYER'),rich('b','',record.type||'편집 기록'),el('span','',record.evidence||'판정 미등록'));
+    const facts=el('dl');
+    [
+      ['작성',record.author],
+      ['수신',record.recipient],
+      ['한계',record.limit]
+    ].filter(([,value])=>value).forEach(([term,value])=>{
+      const row=el('div');row.append(el('dt','',term),rich('dd','',value));facts.append(row);
+    });
+    context.append(head,facts);target.append(context);
   }
 
   function appendBranches(target,branchData,operationScenario=false){
@@ -501,6 +517,7 @@
       const heading=el('h2');
       heading.append(el('span','',String(index+1).padStart(2,'0')),document.createTextNode(section.title));
       part.append(heading);
+      appendRecordContext(part,section.record);
       if(section.image?.placement!=='after') appendFigure(part,section.image,embedded,'',evidenceContext);
       appendParagraphs(part,section.paragraphs);
       appendTranscript(part,section.transcript);

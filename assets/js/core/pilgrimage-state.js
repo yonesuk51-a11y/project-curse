@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — persistent reactive-scenario state, content variants, and consequence owner.
+// Project Curse 5.40.0 — persistent reactive-scenario state, content variants, and consequence owner.
 (function(root){
   'use strict';
 
@@ -165,7 +165,7 @@
   }
 
   root.ProjectCursePilgrimageState=Object.freeze({
-    version:'2.1.0',scenarioId:defaultScenarioId,storageKey,legacyKey,
+    version:'2.2.0',scenarioId:defaultScenarioId,storageKey,legacyKey,
     getActiveScenarioId:()=>activeScenarioId,getScenario:id=>scenarioFor(id||activeScenarioId),select,
     get:id=>snapshot(id),getSummary,getAllSummaries,getStage,getEnding,resolveEnding,matchesCondition,start,choose,reset
   });
