@@ -1,4 +1,4 @@
-// Project Curse 5.36.1 — shared incident, region and operation network.
+// Project Curse 5.36.2 — shared incident, region and operation network.
 (function(root){
   'use strict';
 
@@ -91,7 +91,7 @@
   };
 
   root.ProjectCurseIncidentNetwork=freeze({
-    version:'5.36.1',
+    version:'5.36.2',
     incidents,
     incidentList:Object.values(incidents),
     operations:[operation],

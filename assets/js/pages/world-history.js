@@ -1,8 +1,9 @@
-// Project Curse 5.36.1 — era-indexed chronology with post-2006 canon.
+// Project Curse 5.36.2 — authored archive fragments and document voices.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
   const chronology = window.ProjectCurseWorldHistoryData;
+  const prose = window.ProjectCurseWorldHistoryProse;
 
   root.classList.add('pc-world-history');
   root.innerHTML = `
@@ -198,19 +199,24 @@
     '2005-09-01-red-wolf', '2006-08-20-ubermensch-raid', '2006-12-31-aftermath'
   ];
   const records = [
-    ...entries.map((entry, index) => ({
-      id: recordIds[index],
-      date: entry.querySelector('time')?.textContent.trim() || '',
-      title: entry.querySelector('summary strong')?.textContent.trim() || '',
-      summary: entry.querySelector('summary small')?.textContent.trim() || '',
-      paragraphs: [...entry.querySelectorAll('.pc-world-history-entry-copy p')]
-        .map((p) => p.textContent.trim())
-        .filter(Boolean),
-      ...(chronology?.getRecord?.(recordIds[index]) || {})
-    })),
+    ...entries.map((entry, index) => {
+      const id=recordIds[index];
+      const proseRecord=prose?.getRecord?.(id);
+      return {
+        id,
+        date: entry.querySelector('time')?.textContent.trim() || '',
+        title: entry.querySelector('summary strong')?.textContent.trim() || '',
+        summary: entry.querySelector('summary small')?.textContent.trim() || '',
+        paragraphs: [...entry.querySelectorAll('.pc-world-history-entry-copy p')]
+          .map((p) => p.textContent.trim())
+          .filter(Boolean),
+        ...(chronology?.getRecord?.(id) || {}),
+        ...(proseRecord || {})
+      };
+    }),
     ...((chronology?.post2006Records || []).map(record => ({
       ...record,
-      paragraphs:[...(record.paragraphs || [])]
+      ...(prose?.getRecord?.(record.id) || {})
     })))
   ];
   const incidentNetwork = window.ProjectCurseIncidentNetwork;
@@ -268,9 +274,12 @@
     const badge = document.createElement('span');
     badge.className = `pc-world-history-evidence is-${record.evidence || 'estimated'}`;
     badge.textContent = evidence?.label || '판정 대기';
+    const documentBadge = document.createElement('span');
+    documentBadge.className = 'pc-world-history-document-badge';
+    documentBadge.textContent = record.documentLabel || '편집자 해설';
     const source = document.createElement('span');
     source.textContent = record.sourceState || '출처 상태 미등록';
-    meta.append(badge, source);
+    meta.append(badge, documentBadge, source);
     const arrow = document.createElement('i');
     arrow.textContent = '→';
     arrow.setAttribute('aria-hidden', 'true');
@@ -343,8 +352,14 @@
     <section class="pc-world-history-record-state" aria-label="기록 판정">
       <div><span>시대 구획</span><b data-history-record-era></b></div>
       <div><span>정사 판정</span><b data-history-record-evidence></b></div>
+      <div><span>문서 성격</span><b data-history-record-document></b></div>
       <div><span>자료 상태</span><b data-history-record-source></b></div>
       <p data-history-record-basis></p>
+    </section>
+    <section class="pc-world-history-provenance" aria-label="문서 생산 정보">
+      <div><span>작성</span><b data-history-record-author></b></div>
+      <div><span>수신</span><b data-history-record-recipient></b></div>
+      <div><span>목적</span><b data-history-record-purpose></b></div>
     </section>
     <div class="pc-world-history-detail-body" data-history-record-body></div>
     <section class="pc-world-history-links" data-history-record-links hidden>
@@ -403,15 +418,28 @@
     const evidenceNode = detailView.querySelector('[data-history-record-evidence]');
     evidenceNode.textContent = evidence?.label || '판정 대기';
     evidenceNode.className = `pc-world-history-evidence is-${record.evidence || 'estimated'}`;
+    detailView.querySelector('[data-history-record-document]').textContent =
+      `${record.documentCode || 'EDITORIAL NOTE'} / ${record.documentLabel || '편집자 해설'}`;
     detailView.querySelector('[data-history-record-source]').textContent = record.sourceState || '출처 상태 미등록';
     detailView.querySelector('[data-history-record-basis]').textContent = record.basis || '판정 근거가 등록되지 않았다.';
+    detailView.querySelector('[data-history-record-author]').textContent = record.author || '작성 주체 미상';
+    detailView.querySelector('[data-history-record-recipient]').textContent = record.recipient || '수신 기록 없음';
+    detailView.querySelector('[data-history-record-purpose]').textContent = record.purpose || '편찬 목적 미등록';
 
     const body = detailView.querySelector('[data-history-record-body]');
     body.replaceChildren();
-    record.paragraphs.forEach((paragraph) => {
-      const p = document.createElement('p');
-      p.textContent = paragraph;
-      body.appendChild(p);
+    (record.fragments || record.paragraphs.map((text,index)=>({label:`기록 ${index+1}`,kind:'document',text}))).forEach((fragment) => {
+      const section=document.createElement('section');
+      section.className=`pc-world-history-fragment is-${fragment.kind || 'document'}`;
+      const label=document.createElement('small');
+      label.textContent=fragment.label || '기록 발췌';
+      let copy;
+      if(fragment.kind==='log') copy=document.createElement('pre');
+      else if(fragment.kind==='quote') copy=document.createElement('blockquote');
+      else copy=document.createElement('p');
+      copy.textContent=fragment.text;
+      section.append(label,copy);
+      body.appendChild(section);
     });
 
     const linkedIncidents=incidentNetwork?.incidentList?.filter(item=>item.history===record.id)||[];

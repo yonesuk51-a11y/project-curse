@@ -1,6 +1,6 @@
 # Project Curse World Canon Ledger
 
-Status: `5.36.1 / post-2006 chronology fixed`
+Status: `5.36.2 / authored chronology prose`
 
 이 문서는 Project Curse의 새 설정을 확정하기 전에 대조하는 내부 정사 대장이다. 사이트에 공개되는 설정글이 아니며, 설정 충돌과 임의 확정을 막는 기준으로 사용한다.
 
@@ -9,9 +9,10 @@ Status: `5.36.1 / post-2006 chronology fixed`
 1. 보호된 원문 기록 `Cults_871104`, `Immortality_860201`
 2. `assets/js/data/canon-registry.js`에 등록된 조직 정사
 3. `assets/js/data/world-history-data.js`의 연대기 판정
-4. 공통 사건·지도·작전 데이터
-5. 후대 분석문과 현장 증언
-6. 콘셉트 이미지와 외부 영감 자료
+4. `assets/js/data/world-history-prose-data.js`의 작성 주체·문서 형식·기록 조각
+5. 공통 사건·지도·작전 데이터
+6. 후대 분석문과 현장 증언
+7. 콘셉트 이미지와 외부 영감 자료
 
 낮은 순위의 자료는 높은 순위의 자료를 자동으로 덮어쓰지 않는다. 서로 충돌하면 사건을 삭제하거나 억지로 합치지 않고 `상충 기록` 또는 `결정 대기`로 남긴다.
 
@@ -101,3 +102,5 @@ Status: `5.36.1 / post-2006 chronology fixed`
 - 기존 기록과 충돌하면 충돌 사실을 데이터에 남긴다.
 - 보호 기록의 본문은 별도 승인 없이 수정하지 않는다.
 - 공개 UI는 판정 등급을 숨기지 않으며, 추정과 사실을 동일한 색상으로 표시하지 않는다.
+- 새 본문은 `WRITING_STYLE_GUIDE.md`의 작성자·수신자·목적·정보 한계를 등록한다.
+- 정사 데이터와 서술 대장을 분리하고 문체 수정만으로 날짜·세력·판정을 바꾸지 않는다.

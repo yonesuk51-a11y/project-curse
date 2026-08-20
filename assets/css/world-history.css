@@ -1,4 +1,4 @@
-/* Project Curse 5.36.1 — era-indexed world history and canon evidence states. */
+/* Project Curse 5.36.2 — authored archive fragments and document provenance. */
 #history.pc-world-history{max-width:1580px;margin:0 auto;padding:clamp(22px,3vw,48px);border-color:rgba(158,168,173,.2);background:linear-gradient(145deg,#0c0f11,#070809 72%)}
 #history .pc-world-history-head{max-width:900px;margin:0 0 26px}
 #history .pc-world-history-head .label{margin-bottom:12px}
@@ -59,6 +59,7 @@
 #history .pc-world-history-index-row strong{min-width:0;color:#e5e7e7;font-size:1rem;font-weight:650;line-height:1.35}
 #history .pc-world-history-index-row small{grid-column:2;color:rgba(210,214,215,.57);font-size:.79rem;line-height:1.45}
 #history .pc-world-history-index-meta{display:flex;grid-column:2;align-items:center;gap:9px;color:rgba(199,205,207,.38);font:600 .59rem/1.35 ui-monospace,Consolas,monospace;letter-spacing:.04em}
+#history .pc-world-history-document-badge{display:inline-flex;width:max-content;padding:3px 6px;border:1px solid rgba(181,151,91,.25);color:rgba(209,185,135,.72);font:700 .56rem/1.15 ui-monospace,Consolas,monospace;letter-spacing:.05em;white-space:nowrap}
 #history .pc-world-history-index-row i{grid-column:3;grid-row:1 / span 3;align-self:center;color:rgba(218,221,222,.55);font:normal 1rem/1 ui-monospace,Consolas,monospace}
 #history .pc-world-history-evidence{display:inline-flex;align-items:center;width:max-content;padding:4px 6px;border:1px solid rgba(169,179,183,.22);color:rgba(224,227,228,.7);font:700 .58rem/1.1 ui-monospace,Consolas,monospace;letter-spacing:.05em;white-space:nowrap}
 #history .pc-world-history-evidence.is-confirmed{border-color:rgba(111,161,148,.38);color:#8fc0b2;background:rgba(31,70,61,.18)}
@@ -75,15 +76,29 @@
 #history .pc-world-history-detail-head time{display:block;margin-bottom:8px;color:#d76b72;font:600 .78rem/1.2 ui-monospace,Consolas,monospace;letter-spacing:.08em}
 #history .pc-world-history-detail-head h2{margin:0;color:#f0f0f0;font-size:clamp(2rem,3vw,3rem);letter-spacing:-.04em}
 #history .pc-world-history-detail-head p{max-width:65ch;margin:12px 0 0;color:rgba(215,219,220,.62);font-size:.95rem;line-height:1.72}
-#history .pc-world-history-record-state{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:980px;margin:18px 0 0;border:1px solid rgba(169,179,183,.16);background:rgba(8,10,11,.72)}
+#history .pc-world-history-record-state{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:1180px;margin:18px 0 0;border:1px solid rgba(169,179,183,.16);background:rgba(8,10,11,.72)}
 #history .pc-world-history-record-state>div{display:grid;gap:7px;padding:13px 15px;border-right:1px solid rgba(169,179,183,.11)}
-#history .pc-world-history-record-state>div:nth-child(3){border-right:0}
+#history .pc-world-history-record-state>div:nth-child(4){border-right:0}
 #history .pc-world-history-record-state span:not(.pc-world-history-evidence){color:rgba(202,208,210,.42);font:600 .58rem/1.3 ui-monospace,Consolas,monospace;letter-spacing:.08em}
 #history .pc-world-history-record-state b{color:rgba(229,231,232,.79);font-size:.76rem;line-height:1.45}
 #history .pc-world-history-record-state>p{grid-column:1/-1;margin:0;padding:12px 15px;border-top:1px solid rgba(169,179,183,.11);color:rgba(213,217,218,.58);font-size:.76rem;line-height:1.6}
-#history .pc-world-history-detail-body{max-width:90ch;padding:28px 0 36px;color:rgba(229,231,232,.91);font-size:1rem;line-height:1.95}
-#history .pc-world-history-detail-body p{margin:0 0 20px;color:inherit;font-size:inherit;line-height:inherit}
-#history .pc-world-history-detail-body p:last-child{margin-bottom:0}
+#history .pc-world-history-provenance{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:1180px;margin:7px 0 0;border:1px solid rgba(178,151,94,.14);background:rgba(28,24,16,.24)}
+#history .pc-world-history-provenance>div{display:grid;gap:5px;padding:10px 14px;border-right:1px solid rgba(178,151,94,.1)}
+#history .pc-world-history-provenance>div:last-child{border-right:0}
+#history .pc-world-history-provenance span{color:rgba(196,178,139,.42);font:600 .56rem/1.3 ui-monospace,Consolas,monospace;letter-spacing:.08em}
+#history .pc-world-history-provenance b{color:rgba(222,215,199,.68);font-size:.7rem;line-height:1.5}
+#history .pc-world-history-detail-body{display:grid;max-width:90ch;padding:28px 0 36px;color:rgba(229,231,232,.91);font-size:1rem;line-height:1.95}
+#history .pc-world-history-fragment{position:relative;padding:22px 0 24px;border-bottom:1px solid rgba(169,179,183,.13)}
+#history .pc-world-history-fragment:first-child{padding-top:0}
+#history .pc-world-history-fragment:last-child{padding-bottom:0;border-bottom:0}
+#history .pc-world-history-fragment>small{display:block;margin:0 0 11px;color:rgba(203,104,111,.72);font:700 .61rem/1.3 ui-monospace,Consolas,monospace;letter-spacing:.11em;text-transform:uppercase}
+#history .pc-world-history-fragment p,#history .pc-world-history-fragment blockquote,#history .pc-world-history-fragment pre{margin:0;color:inherit;font:inherit;line-height:inherit}
+#history .pc-world-history-fragment blockquote{padding:4px 0 4px 18px;border-left:2px solid rgba(142,122,166,.48);color:rgba(226,220,232,.9)}
+#history .pc-world-history-fragment pre{padding:14px 16px;border:1px solid rgba(111,150,158,.18);background:rgba(5,12,14,.66);color:rgba(184,211,214,.82);font:600 .78rem/1.82 ui-monospace,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+#history .pc-world-history-fragment.is-annotation{margin-top:3px;padding-left:18px;border-left:1px solid rgba(181,151,91,.3)}
+#history .pc-world-history-fragment.is-annotation>small{color:rgba(203,179,126,.68)}
+#history .pc-world-history-fragment.is-directive>small{color:rgba(205,91,98,.88)}
+#history .pc-world-history-fragment.is-analysis>small,#history .pc-world-history-fragment.is-finding>small{color:rgba(126,168,178,.78)}
 #history .pc-world-history-links{max-width:980px;margin:0 0 30px;padding:18px;border:1px solid rgba(180,72,79,.25);background:linear-gradient(120deg,rgba(83,20,25,.18),rgba(10,12,13,.82))}
 #history .pc-world-history-links>b{display:block;margin-bottom:10px;color:rgba(211,101,108,.72);font:700 .64rem/1.3 ui-monospace,Consolas,monospace;letter-spacing:.12em}
 #history .pc-world-history-links>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px}
@@ -103,6 +118,9 @@
   #history .pc-world-history-record-state{grid-template-columns:1fr}
   #history .pc-world-history-record-state>div{border-right:0;border-bottom:1px solid rgba(169,179,183,.11)}
   #history .pc-world-history-record-state>p{grid-column:1}
+  #history .pc-world-history-provenance{grid-template-columns:1fr}
+  #history .pc-world-history-provenance>div{border-right:0;border-bottom:1px solid rgba(178,151,94,.1)}
+  #history .pc-world-history-provenance>div:last-child{border-bottom:0}
 }
 
 @media (max-width:620px){

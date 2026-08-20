@@ -1,4 +1,4 @@
-// Project Curse 5.36.1 — chronology eras, evidence grades and post-2006 canon.
+// Project Curse 5.36.2 — chronology eras, evidence grades and post-2006 canon.
 (function(root){
   'use strict';
 
@@ -230,7 +230,7 @@
   ];
 
   root.ProjectCurseWorldHistoryData=freeze({
-    version:root.ProjectCurseBuild?.version||'5.36.1',
+    version:root.ProjectCurseBuild?.version||'5.36.2',
     eras,evidenceLevels,records,unresolved,post2006Records,
     getEra:id=>eras.find(era=>era.id===id)||null,
     getRecord:id=>records[id]||null,
