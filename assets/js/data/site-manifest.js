@@ -1,4 +1,4 @@
-// Project Curse 5.34.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.35.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.34.0',
-    schema:root.ProjectCurseBuild?.schema||'project-curse-v25',
+    version:root.ProjectCurseBuild?.version||'5.35.0',
+    schema:root.ProjectCurseBuild?.schema||'project-curse-v26',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'map-room',label:'상황 관제',index:'01'},
@@ -88,6 +88,7 @@
       declutter:'assets/js/pages/shared-declutter.js',
       reconciliation:'assets/js/pages/canon-reconciliation.js',
       archiveConsolidation:'assets/js/pages/archive-consolidation.js',
+      archiveConsolidationCSS:'assets/css/archive-consolidation.css',
       archiveDocumentViewer:'assets/js/pages/archive-document.js',
       visualEvidenceCSS:'assets/css/visual-evidence.css',
       adaptiveMediaCSS:'assets/css/adaptive-media.css',

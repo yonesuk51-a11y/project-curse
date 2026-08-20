@@ -1,9 +1,9 @@
-// Project Curse 5.34.0 — semantic sound-event registry, navigation mix and acoustic profiles.
+// Project Curse 5.35.0 — semantic sound-event registry, navigation mix and acoustic profiles.
 (function(root){
   'use strict';
 
   root.ProjectCurseAudioManifest=Object.freeze({
-    version:'2.2.0',
+    version:'2.3.0',
     storageKey:'pc_audio_settings_v1',
     buses:Object.freeze({master:1,ambient:1,interface:1,record:1,alert:1}),
     profiles:Object.freeze({
@@ -27,6 +27,7 @@
       'channel.chronology':Object.freeze({cue:'page',bus:'record',cooldown:360,gain:.78,duck:.76,duckMs:320,exclusive:true}),
       'channel.intelligence':Object.freeze({cue:'radio',bus:'interface',cooldown:360,gain:.78,duck:.7,duckMs:420,exclusive:true}),
       'channel.archive':Object.freeze({cue:'open',bus:'record',cooldown:420,gain:.92,duck:.56,duckMs:520,exclusive:true}),
+      'archive.filter':Object.freeze({cue:'analog',bus:'interface',cooldown:140,gain:.48,duck:.82,duckMs:140,exclusive:true}),
       'record.mount':Object.freeze({cue:'open',bus:'record',cooldown:260,gain:1,duck:.48,duckMs:620,exclusive:true}),
       'record.page':Object.freeze({cue:'page',bus:'record',cooldown:180,gain:.72,duck:.82,duckMs:180,exclusive:true}),
       'evidence.open':Object.freeze({cue:'open',bus:'record',cooldown:260,gain:.74,duck:.5,duckMs:520,exclusive:true}),

@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.34.0
+# Project Curse Structure — 5.35.0
 
 ## 활성 소유권
 
@@ -7,7 +7,7 @@
 | 빌드 버전·화면 명칭과 순서 | `assets/js/data/build-info.js` |
 | 잠금 기록·런타임 소유권 목록 | `assets/js/data/site-manifest.js` |
 | 조직 정사·관계·우시노다 계층 | `assets/js/data/canon-registry.js` |
-| 공개 기록 목록·영상/문서 분류 | `assets/js/data/archive-registry.js` |
+| 공개 기록 목록·형식·분류·위험도·출처 상태 | `assets/js/data/archive-registry.js` |
 | 시각 증거 등급·출처·원본 비교 관계 | `assets/js/data/visual-evidence-data.js` |
 | 반응형 이미지 원본 치수·파생본 후보 | `assets/js/data/media-manifest.js` |
 | 반응형 선택·현상 상태·사전 준비·진단 | `assets/js/core/adaptive-media.js` + `assets/css/adaptive-media.css` |
@@ -25,7 +25,7 @@
 | 순례·귀환 검문·회수 진입, 판단 봉인 연출과 결과 화면 | `assets/js/pages/pilgrimage-scenario.js` + `assets/css/pilgrimage-scenario.css` |
 | 결말별 판정 기록 정의·윤문된 후속 분석 | `assets/js/data/verdict-archive-data.js` |
 | 판정 해금·선택 스냅샷·읽음 상태 저장 | `assets/js/core/verdict-archive-state.js` |
-| 조건부 판정 색인·잠금·문서 시각 체계 | `assets/js/pages/archive-consolidation.js` + `assets/css/verdict-archive.css` |
+| 분류형 기록 라이브러리·검색·조건부 판정 색인 | `assets/js/pages/archive-consolidation.js` + `assets/css/archive-consolidation.css` + `assets/css/verdict-archive.css` |
 | 문서·영상 이미지의 출처 패널·확대·비교 화면 | `assets/js/pages/archive-document.js` + `assets/css/visual-evidence.css` |
 | 채널별 전환 설정 | `assets/js/data/transition-manifest.js` |
 | 다섯 채널 명칭·색상·계기·표식·표시 설정 정의 | `assets/js/data/channel-identity-data.js` |
@@ -43,7 +43,7 @@
 | 사쿠마의 테이프 영상 설정 | `assets/js/pages/cinematic-sakuma.js` |
 | 공통 중복 연결 정리 | `assets/js/pages/shared-declutter.js` |
 | 비보호 화면 명칭 정합화 | `assets/js/pages/canon-reconciliation.js` |
-| 영상/문서 기록 색인 | `assets/js/pages/archive-consolidation.js` |
+| 영상·문서·권역·작전 기록 카드 색인 | `assets/js/pages/archive-consolidation.js` |
 | 세계 사건 연표 | `assets/js/pages/world-history.js` |
 | 세력 분석실 | `assets/js/pages/faction-analysis.js` |
 | 관제지도 설정 자료 | `assets/js/data/map-room-data.js` |
@@ -53,7 +53,7 @@
 | 원본·보정·복원 이미지 정책 | `ASSET_POLICY.md` |
 | 신규 복원 추정 이미지 출처 대장 | `assets/resources/ASSET_REGISTRY.md` |
 | 5.15.2ce 범위 스타일 | `assets/css/stabilization.css` |
-| 5.15.2cf 기록철 목록·상세 스타일 | `assets/css/archive-consolidation.css` |
+| 5.35 분류형 기록 카드·검색·출처 상태 스타일 | `assets/css/archive-consolidation.css` |
 
 ## 데이터 흐름
 
