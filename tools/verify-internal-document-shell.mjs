@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.43.0';
+const VERSION='5.42.0';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -115,8 +115,8 @@ check('evidence:document-console',documentViewer.includes('function evidenceCons
 check('evidence:comparison-viewer',documentViewer.includes("range.type='range'")&&documentViewer.includes('openEvidenceAsset(src,context={},trigger=null)')&&visualEvidenceCss.includes('.pc-evidence-compare'));
 check('evidence:cinematic-handoff',read('assets/js/core/record-cinematic-runtime.js').includes('pc-cinematic-evidence-control')&&read('assets/js/core/record-cinematic-runtime.js').includes("document.body.classList.contains('pc-evidence-open')"));
 check('media:manifest-twenty-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===20);
-check('media:provenance-all-assets',context.window.ProjectCurseMediaProvenance?.stats?.registered===186&&context.window.ProjectCurseMediaProvenance?.assets?.length===186);
-check('media:provenance-honest-review',context.window.ProjectCurseMediaProvenance?.stats?.review===150&&context.window.ProjectCurseMediaProvenance?.stats?.managed===36&&context.window.ProjectCurseMediaProvenance?.stats?.referenceExposure===0);
+check('media:provenance-all-assets',context.window.ProjectCurseMediaProvenance?.stats?.registered===174&&context.window.ProjectCurseMediaProvenance?.assets?.length===174);
+check('media:provenance-honest-review',context.window.ProjectCurseMediaProvenance?.stats?.review===150&&context.window.ProjectCurseMediaProvenance?.stats?.managed===24&&context.window.ProjectCurseMediaProvenance?.stats?.referenceExposure===0);
 check('media:provenance-audit-ui',archive.includes('function provenanceAuditMarkup()')&&archive.includes('PUBLIC RELEASE NOT YET CLEARED')&&read('assets/css/archive-consolidation.css').includes('.pc-media-audit'));
 check('media:root-load-order',index.includes(`assets/css/adaptive-media.css?v=${VERSION}`)&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('archive-document.js'));
 check('media:responsive-runtime',adaptiveMediaRuntime.includes('image.srcset=variants.map')&&adaptiveMediaRuntime.includes('function prepareRoute(route')&&adaptiveMediaRuntime.includes('function getDiagnostics()'));
@@ -130,11 +130,10 @@ check('audio:persistent-context',audio.includes("setContext('document')")||docum
 check('audio:no-ambient-rewind',!audio.includes('audio.ambient.currentTime=0'));
 check('audio:visibility-resume',audio.includes("else if(ambientAllowed&&audioContext!=='cinematic') startAmbient()"));
 check('audio:cinematic-compatibility',audio.includes('stopMenuAmbient')&&audio.includes('resumeMenuAmbient')&&audio.includes('syncAudioState'));
-check('audio:semantic-profile-manifest',audioManifest.includes("version:'3.0.0'")&&audioManifest.includes("pack:Object.freeze({id:'PC-CORE-01'")&&audioManifest.includes("'menu.back'")&&audioManifest.includes("'archive.filter'")&&audioManifest.includes("'great-black-forest'")&&audioManifest.includes("'dead-zone'")&&audioManifest.includes("'scenario.arm'")&&audioManifest.includes("'recovery-scenario'"));
+check('audio:semantic-profile-manifest',audioManifest.includes("version:'2.3.0'")&&audioManifest.includes("'archive.filter'")&&audioManifest.includes("'great-black-forest'")&&audioManifest.includes("'dead-zone'")&&audioManifest.includes("'scenario.arm'")&&audioManifest.includes("'recovery-scenario'"));
 check('audio:ducking-and-bus-limit',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes('activeByBus'));
 check('audio:route-profile-sync',audioController.includes('projectcurse:screen-committed')&&audioController.includes('setProfile'));
 check('audio:regional-document-profile',documentViewer.includes('setProfile?.(doc.theme')&&documentViewer.includes("'great-black-forest':'region.forest'")&&documentViewer.includes("'dead-zone':'region.deadzone'"));
-check('audio:core-sound-lab',audioController.includes('function preview(soundId)')&&channelIdentityRuntime.includes('data-pc-sound-preview')&&channelIdentityRuntime.includes('data-pc-audio-bus')&&channelIdentityCss.includes('.pc-sound-grid'));
 check('operation:persistent-owner',operationState.includes('ProjectCurseOperationState')&&operationState.includes('localStorage.setItem')&&operationState.includes('visitBranch')&&operationState.includes('chooseVerdict'));
 check('operation:four-outcomes',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`)));
 check('operation:canon-boundary',operationState.includes('COMMON CANON UNCHANGED')&&operationState.includes('fixedFacts:Object.freeze([')&&operationState.includes('pendingFacts:Object.freeze([')&&count(operationState,"canonEffect:'none'")===4);

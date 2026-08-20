@@ -1,8 +1,8 @@
-// Project Curse 5.43.0 — generated media provenance and release-review ledger.
+// Project Curse 5.42.0 — generated media provenance and release-review ledger.
 (function(root){
   'use strict';
   const data={
-  "version": "1.1.0",
+  "version": "1.0.0",
   "generated": "2026-08-21",
   "policy": "MEDIA PROVENANCE / RELEASE AUDIT",
   "overridesVersion": "1.0.0",
@@ -25,29 +25,28 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 186,
-    "referenced": 186,
+    "registered": 174,
+    "referenced": 174,
     "unreferenced": 0,
     "review": 150,
-    "managed": 36,
+    "managed": 24,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "byKind": {
-      "audio": 35,
+      "audio": 23,
       "image": 144,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 18,
+      "PROJECT_GENERATED": 6,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
       "DELIVERY_DERIVATIVE": 40,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "PROJECT_SYNTHESIS": 12,
       "RECONSTRUCTED": 2,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
@@ -140,216 +139,6 @@
     }
   ],
   "assets": [
-    {
-      "path": "assets/audio/core/pc-core-access-denied.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 51884,
-      "sha256": "856c2cca425394dcb49ed5660c07c071b8f78bd4dc0bab80791034a6cdbe1974",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "assets/resources/ASSET_REGISTRY.md",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-comm-connect.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 71084,
-      "sha256": "5aaed6125e7f5772004444cbeb8ebd695074fb3fc48a7c9c4917f3715001d001",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "assets/resources/ASSET_REGISTRY.md",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-evidence-open.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 36524,
-      "sha256": "fef0dbe9b769d28c32d983d12d10e26ebc169338e311fa54fab0117bc8eaee63",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "assets/resources/ASSET_REGISTRY.md",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-menu-back.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 22124,
-      "sha256": "a37d5829fff9853ac0e9dc13c152f025198b333034d80fa33e92a676c3415f24",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-menu-close.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 19244,
-      "sha256": "8de7fbfa3a3e7467b57dea1f414bafadb55dc08d4c7a2d101f7681fba904f381",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-menu-open.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 21164,
-      "sha256": "b8e2a0839f3d5e434e09b9375f9329643820a1e8e76deef0eec8e7cb1392d650",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-menu-select.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 11564,
-      "sha256": "2bc85d61c9f2ed99f201d02675e55761da959aa20bd759d14bd3b571fc13cc18",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-operation-confirm.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 53804,
-      "sha256": "ad5e33f55c70603d26dc38319971bebf9a307f6e101281cf72e42f7feb49fe14",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "assets/resources/ASSET_REGISTRY.md",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-record-mount.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 65324,
-      "sha256": "9d9abd1587e1a0bcf4e48b08a874cf9022d2c3480df6a18736472426cc34f608",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-record-unmount.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 43244,
-      "sha256": "8f75f0276f776e5e903977471772aae68ef1498806ed359f0a943e9fcac439df",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-terminal-connect.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 61484,
-      "sha256": "7f2006f96ebd764bede85e7138a1d69155a943c8dda6475582b7ad0887f29aee",
-      "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/data/audio-manifest.js",
-        "assets/js/data/site-manifest.js",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
-    {
-      "path": "assets/audio/core/pc-core-terminal-disconnect.wav",
-      "kind": "audio",
-      "provenance": "PROJECT_SYNTHESIS",
-      "release": "PROJECT_GENERATED",
-      "source": "tools/build-core-sounds.mjs 결정론적 무샘플 합성",
-      "handling": "외부 음원·샘플 없이 코드로 생성한 Project Curse 공통 인터페이스 신호",
-      "bytes": 44204,
-      "sha256": "f2d1f91284c05c067a707068966d9b3a0ff4f56e9dd9aac8f2077c4962c236ca",
-      "usedBy": [
-        "assets/js/data/audio-manifest.js",
-        "tools/build-core-sounds.mjs",
-        "tools/verify-package.mjs"
-      ],
-      "referenced": true,
-      "protectedScope": false
-    },
     {
       "path": "assets/audio/pc5152am_immortality_scp087_theme.mp3",
       "kind": "audio",
@@ -542,6 +331,8 @@
       "bytes": 211758,
       "sha256": "375997a886c16f32fe450403f1b4a013f23779718adc6e9bc7906ef55623941d",
       "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/data/site-manifest.js",
         "assets/js/main.js"
       ],
       "referenced": true,

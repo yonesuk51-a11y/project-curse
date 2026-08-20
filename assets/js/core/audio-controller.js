@@ -1,4 +1,4 @@
-// Project Curse 5.43.0 — generated core-sound playback, persistent buses and route identities.
+// Project Curse 5.34.0 — persistent acoustic profiles, navigation mix, ducking and semantic event bridge.
 (function(root){
   'use strict';
 
@@ -13,33 +13,16 @@
   const nodeBuses=new WeakMap();
   const activeByBus=new Map();
   const lastEvent=Object.create(null);
-  const coreNodes=new Map();
   let profileId=document.body?.dataset.route||'terminal-home';
   let duckScale=1;
   let duckTimer=0;
   let pulseTimer=0;
   let blocked=false;
   let lastPlayed=null;
-  let lastSound=null;
-
-  const prefix=()=>{
-    const path=location.pathname||'';
-    if(path.includes('/docs/')) return '../../';
-    if(path.includes('/archive/')) return '../';
-    return '';
-  };
   Object.entries(legacy.audio||{}).forEach(([name,node])=>{
     baseVolumes[name]=Number(node.volume)||0;
     nodeGains.set(node,1);
     nodeBuses.set(node,cueBus[name]||'interface');
-  });
-  Object.entries(manifest.sounds||{}).forEach(([id,definition])=>{
-    const node=new Audio(prefix()+definition.src);
-    node.preload='none';
-    baseVolumes[id]=Number(definition.baseVolume)||.16;
-    nodeGains.set(node,1);
-    nodeBuses.set(node,definition.bus||'interface');
-    coreNodes.set(id,node);
   });
 
   function clamp(value){return Math.max(0,Math.min(1,Number(value)));}
@@ -65,15 +48,15 @@
     const bus=nodeBuses.get(node)||cueBus[name]||'interface';
     const profileGain=Number(profile()?.[bus]??1);
     const duck=bus==='ambient'?duckScale:1;
-    return clamp((baseVolumes[name]??0)*clamp(state.master)*clamp(state[bus])*profileGain*(nodeGains.get(node)||1)*duck);
+    return clamp((baseVolumes[name]||0)*clamp(state.master)*clamp(state[bus])*profileGain*(nodeGains.get(node)||1)*duck);
   }
   function applyNode(name,node){node.volume=state.muted?0:volume(name,node);}
-  function allNodes(){return [...Object.entries(legacy.audio||{}),...Array.from(coreNodes.entries())];}
   function apply(){
-    allNodes().forEach(([name,node])=>applyNode(name,node));
+    Object.entries(legacy.audio||{}).forEach(([name,node])=>{
+      applyNode(name,node);
+    });
     document.documentElement.dataset.audio=state.muted?'muted':'on';
     document.documentElement.dataset.audioProfile=profileId;
-    document.documentElement.dataset.audioIdentity=profile()?.identity||'LOCAL RELAY';
     document.documentElement.toggleAttribute('data-audio-blocked',blocked);
     document.querySelectorAll('[data-uac-audio-toggle]').forEach(button=>{
       button.setAttribute('aria-pressed',state.muted?'true':'false');
@@ -122,15 +105,19 @@
     activeByBus.delete(bus);
   }
 
-  function playNode(node,{name,bus='interface',gain=1,rate=1,exclusive=true,priority=0,duck,duckMs,eventName=null}={}){
-    if(!node||state.muted) return false;
-    activeByBus.forEach((activeNode,activeBus)=>{if(activeNode===node) activeByBus.delete(activeBus);});
-    if(priority>1){stopBus('interface');stopBus('record');}
-    if(exclusive!==false) stopBus(bus);
-    nodeBuses.set(node,bus);
-    nodeGains.set(node,Number(gain)||1);
-    node.playbackRate=Math.max(.72,Math.min(1.28,(Number(rate)||1)*(Number(profile()?.rate)||1)));
-    applyNode(name,node);
+  function play(eventName){
+    const event=manifest.events[eventName];
+    if(!event||state.muted) return false;
+    const now=performance.now();
+    if(lastEvent[eventName]&&now-lastEvent[eventName]<event.cooldown) return false;
+    const node=legacy.audio?.[event.cue];
+    if(!node) return false;
+    lastEvent[eventName]=now;
+    if(event.priority>1){stopBus('interface');stopBus('record');}
+    if(event.exclusive!==false) stopBus(event.bus);
+    nodeBuses.set(node,event.bus);
+    nodeGains.set(node,Number(event.gain)||1);
+    applyNode(event.cue,node);
     try{
       node.currentTime=0;
       const promise=node.play();
@@ -140,44 +127,19 @@
       }).catch(()=>{
         blocked=true;
         document.documentElement.setAttribute('data-audio-blocked','');
-        document.dispatchEvent(new CustomEvent('projectcurse:audio-blocked',{detail:{event:eventName,sound:name}}));
+        document.dispatchEvent(new CustomEvent('projectcurse:audio-blocked',{detail:{event:eventName}}));
       });
     }catch(_error){blocked=true;document.documentElement.setAttribute('data-audio-blocked','');}
-    activeByBus.set(bus,node);
+    activeByBus.set(event.bus,node);
     node.onended=()=>{
-      if(activeByBus.get(bus)===node) activeByBus.delete(bus);
+      if(activeByBus.get(event.bus)===node) activeByBus.delete(event.bus);
       nodeGains.set(node,1);
-      node.playbackRate=1;
       node.onended=null;
     };
-    if(duck!==undefined) duckAmbient(duck,duckMs);
-    pulse(bus);
-    lastSound=name;
+    if(event.duck!==undefined) duckAmbient(event.duck,event.duckMs);
+    pulse(event.bus);
+    lastPlayed=eventName;
     return true;
-  }
-
-  function play(eventName){
-    const event=manifest.events[eventName];
-    if(!event||state.muted) return false;
-    const now=performance.now();
-    if(lastEvent[eventName]&&now-lastEvent[eventName]<event.cooldown) return false;
-    const soundId=event.sound;
-    const node=coreNodes.get(soundId)||legacy.audio?.[event.cue];
-    const name=coreNodes.has(soundId)?soundId:event.cue;
-    if(!node) return false;
-    lastEvent[eventName]=now;
-    const played=playNode(node,{name,bus:event.bus,gain:event.gain,rate:event.rate,exclusive:event.exclusive,priority:event.priority,duck:event.duck,duckMs:event.duckMs,eventName});
-    if(played) lastPlayed=eventName;
-    return played;
-  }
-
-  function preview(soundId){
-    const definition=manifest.sounds?.[soundId];
-    const node=coreNodes.get(soundId);
-    if(!definition||!node) return false;
-    const played=playNode(node,{name:soundId,bus:definition.bus,gain:.88,exclusive:true,eventName:'preview'});
-    if(played) lastPlayed='preview';
-    return played;
   }
 
   function setProfile(next){
@@ -190,7 +152,7 @@
     }
     profileId=resolved;
     apply();
-    document.dispatchEvent(new CustomEvent('projectcurse:audio-profile-change',{detail:{profile:profileId,identity:profile()?.identity}}));
+    document.dispatchEvent(new CustomEvent('projectcurse:audio-profile-change',{detail:{profile:profileId}}));
     return profileId;
   }
 
@@ -205,12 +167,10 @@
   apply();
   root.ProjectCurseAudioControl=Object.freeze({
     play,
-    preview,
     update,
     setProfile,
     toggle:()=>update({muted:!state.muted}),
-    getCatalog:()=>Object.entries(manifest.sounds||{}).map(([id,definition])=>({id,...definition})),
     getState:()=>({...state}),
-    getDiagnostics:()=>({profile:profileId,identity:profile()?.identity||'LOCAL RELAY',blocked,lastPlayed,lastSound,coreSounds:coreNodes.size,activeBuses:Array.from(activeByBus.keys()),duck:duckScale})
+    getDiagnostics:()=>({profile:profileId,blocked,lastPlayed,activeBuses:Array.from(activeByBus.keys()),duck:duckScale})
   });
 })(window);

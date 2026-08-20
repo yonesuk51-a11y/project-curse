@@ -76,11 +76,8 @@
   function provenanceAuditMarkup(){
     if(!mediaAudit?.stats) return '';
     const stats=mediaAudit.stats;
-    const releaseLabels={CLEARED:'프로젝트 관리',PROJECT_GENERATED:'프로젝트 생성',SOURCE_REVIEW:'원본 사용 범위 확인',LICENSE_REVIEW:'라이선스 확인'};
+    const releaseLabels={CLEARED:'프로젝트 관리',PROJECT_GENERATED:'생성형 재구성',SOURCE_REVIEW:'원본 사용 범위 확인',LICENSE_REVIEW:'라이선스 확인'};
     const kindLabels={image:'IMAGE',audio:'AUDIO',video:'VIDEO'};
-    const audioReview=(mediaAudit.assets||[]).filter(item=>item.kind==='audio'&&['LICENSE_REVIEW','SOURCE_REVIEW'].includes(item.release)).length;
-    const audioGenerated=(mediaAudit.assets||[]).filter(item=>item.kind==='audio'&&item.release==='PROJECT_GENERATED').length;
-    const videoReview=(mediaAudit.assets||[]).filter(item=>item.kind==='video'&&['LICENSE_REVIEW','SOURCE_REVIEW'].includes(item.release)).length;
     const queue=(mediaAudit.reviewQueue||[]).map(item=>`<li data-media-kind="${esc(item.kind)}" data-media-release="${esc(item.release)}"><span>${esc(kindLabels[item.kind]||item.kind)}</span><code>${esc(item.path.replace(/^assets\//,''))}</code><b>${esc(releaseLabels[item.release]||item.release)}</b></li>`).join('');
     const references=(mediaAudit.referenceOnly||[]).map(item=>`<li><code>${esc(item.name)}</code><span>${esc(item.role)}</span><b>${esc(item.rule)}</b></li>`).join('');
     const reviewTone=stats.referenceExposure>0?'blocked':stats.review>0?'review':'cleared';
@@ -94,8 +91,8 @@
       </dl>
       <div class="pc-media-audit-kinds">
         <div><span>IMAGE</span><b>${stats.byKind.image}</b><small>${stats.byProvenance.RECONSTRUCTED||0} RECONSTRUCTED · ${stats.byProvenance.DELIVERY_DERIVATIVE||0} DELIVERY DERIVATIVES</small></div>
-        <div><span>AUDIO</span><b>${stats.byKind.audio}</b><small>${audioGenerated} PROJECT GENERATED · ${audioReview} REQUIRE REVIEW</small></div>
-        <div><span>VIDEO</span><b>${stats.byKind.video}</b><small>${videoReview} FILES REQUIRE SOURCE REVIEW</small></div>
+        <div><span>AUDIO</span><b>${stats.byKind.audio}</b><small>${stats.byRelease.LICENSE_REVIEW?`${stats.byKind.audio} FILES REQUIRE SOURCE REVIEW`:'SOURCE REGISTERED'}</small></div>
+        <div><span>VIDEO</span><b>${stats.byKind.video}</b><small>${stats.byKind.video} FILES REQUIRE SOURCE REVIEW</small></div>
       </div>
       <details class="pc-media-audit-details"><summary><span>우선 검토 대기열</span><b>${stats.byRelease.LICENSE_REVIEW||0} LICENSE · ${stats.byRelease.SOURCE_REVIEW||0} SOURCE</b></summary><div><p>배경음·효과음·내장 음향 영상부터 제작자, 원출처와 공개 허가 범위를 확인한다. 아래 항목은 삭제 명령이 아니라 우선 확인 목록이다.</p><ol>${queue}</ol></div></details>
       <details class="pc-media-audit-details is-reference"><summary><span>참고 전용 자료 경계</span><b>${stats.referenceOnly} REGISTERED · ${stats.referenceExposure} EXPOSED</b></summary><div><p>다음 자료는 분위기와 과거 시각화 분석에만 사용하며, 별도 승인 없이 공개 자산이나 공식 설정 증거로 편입하지 않는다.</p><ul>${references}</ul></div></details>
@@ -209,7 +206,7 @@
     const expectedIds=archive.publicRecords.map(record=>record.id).join('|');
     const verdictRows=qa('.pc-verdict-row');
     const audit=q('[data-pc-media-audit="1"]');
-    return {name:'archiveIndex',patch:'5.43.0',ok:ids===expectedIds&&cards.every(card=>card.dataset.pcArchiveCategory)&&(!verdicts||verdictRows.length===verdicts.getSummary().total)&&(!mediaAudit||!!audit),records:cards.length,verdicts:verdictRows.length,media:mediaAudit?.stats?.registered||0,issues:ids===expectedIds?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]};
+    return {name:'archiveIndex',patch:'5.42.0',ok:ids===expectedIds&&cards.every(card=>card.dataset.pcArchiveCategory)&&(!verdicts||verdictRows.length===verdicts.getSummary().total)&&(!mediaAudit||!!audit),records:cards.length,verdicts:verdictRows.length,media:mediaAudit?.stats?.registered||0,issues:ids===expectedIds?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]};
   }
 
   function openRecord(id,trigger){

@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.43.0
+# Project Curse Structure — 5.42.0
 
 ## 활성 소유권
 
@@ -25,10 +25,9 @@
 | 홈 실시간 경보·최근 수신 구성 | `assets/js/data/home-intelligence-data.js` |
 | 루트 상단바·단말 허브·화면 이동 | `assets/css/app-shell.css` + `assets/css/terminal-foundation.css` + `assets/js/core/app-shell.js` |
 | 부팅 시퀀스 | `assets/js/core/loading-sequence.js` |
-| 보호 기록 호환 음향·기본 환경음·부팅 연결음 | `assets/js/core/base-runtime.js` |
-| 핵심 효과음 재생·프로필·덕킹·버스 믹스·미리듣기 | `assets/js/core/audio-controller.js` |
-| 화면별 음향 정체성·효과음 카탈로그·의미 사건 목록 | `assets/js/data/audio-manifest.js` |
-| 외부 샘플 없는 핵심 WAV 12종 결정론적 생성 | `tools/build-core-sounds.mjs` + `assets/audio/core/` |
+| 공통 오디오 자산과 기본 환경음 | `assets/js/core/base-runtime.js` |
+| 의미 기반 재생·프로필·덕킹·중첩 제한 | `assets/js/core/audio-controller.js` |
+| 화면별 음향 프로필·효과음 사건 목록 | `assets/js/data/audio-manifest.js` |
 | 부서진 왕관 정보 회수·로컬 판정·정사 및 계보 경계·지도 단계 저장 | `assets/js/core/operation-state.js` |
 | 세 현장 시나리오·고정 관측·로컬 판정 경계·반응형 결말 데이터 | `assets/js/data/pilgrimage-scenario-data.js` |
 | 다중 시나리오 진행·계기·판정 저장과 선택 조건 해석 | `assets/js/core/pilgrimage-state.js` |
@@ -39,7 +38,7 @@
 | 문서·영상 이미지의 출처 패널·확대·비교 화면 | `assets/js/pages/archive-document.js` + `assets/css/visual-evidence.css` |
 | 채널별 전환 설정 | `assets/js/data/transition-manifest.js` |
 | 다섯 채널 명칭·색상·계기·표식·표시 설정 정의 | `assets/js/data/channel-identity-data.js` |
-| 채널 헤더 복원·상단 탐색·표시 설정·5버스 믹서·음향 실험실 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
+| 채널 헤더 복원·상단 탐색·표시 및 음향 설정 저장 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
 | 채널 실시간 상태·부팅·전송량·CLS·전환 계측 | `assets/js/core/performance-telemetry.js` |
 | 설정 상태 요약·그룹·접이식 세션 진단 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
 | 공통 사건·권역·작전 연결 | `assets/js/data/incident-registry.js` |
@@ -71,7 +70,7 @@
 
 `build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, 오디오·전환·채널 데이터, 조직 정사와 `world-history-data.js`의 시대·판정 대장이 로드된다. `japan-technology-data.js`가 제6계측계획 다섯 사건, 실제 역사 기준과 2003·2026년까지 이어지는 기술 계보를 제공하고 `world-history-prose-data.js`가 기존 32개 사건의 작성자·수신자·목적과 기록 조각을 결합한다. 세계 기록 런타임은 세 대장을 함께 읽어 여덟 시대·37개 사건을 표시한다. 이어서 사건·화면 데이터와 기록·시각 증거·반응형 미디어 데이터가 로드된다. `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말, 그리고 앞선 선택에 반응하는 후속 변형을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·적응형 미디어·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 단계별 작전지도와 홈 수신 신호를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·미디어 준비·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
 
-`media-provenance-data.js`는 `MEDIA_PROVENANCE_OVERRIDES.json`과 실제 `assets` 파일 집합에서 생성되는 공개 감사 스냅샷이다. 기록보관소는 이 스냅샷의 총자산·검토 대기·미디어 종류·참고 전용 노출 상태를 표시한다. `assets/audio/core/`의 12개 파일은 `build-core-sounds.mjs`가 재현 가능하게 합성한 `PROJECT_SYNTHESIS`이며, 기존 음원 23개와 분리한다. 파일별 승인 근거는 오버라이드에서만 수정하고 생성 대장은 직접 편집하지 않는다.
+`media-provenance-data.js`는 `MEDIA_PROVENANCE_OVERRIDES.json`과 실제 `assets` 파일 집합에서 생성되는 공개 감사 스냅샷이다. 기록보관소는 이 스냅샷의 총자산·검토 대기·미디어 종류·참고 전용 노출 상태를 표시한다. 파일별 승인 근거는 오버라이드에서만 수정하고 생성 대장은 직접 편집하지 않는다.
 
 활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 
@@ -92,9 +91,9 @@
 ## 런타임 소유권
 
 - `assets/js/core/app-shell.js`: 단말 허브와 화면 이동의 유일한 소유자다.
-- `assets/js/core/base-runtime.js`: 부팅 연결음, 메뉴 환경음과 보호 기록 호환용 기존 효과음 자산을 소유한다.
+- `assets/js/core/base-runtime.js`: 부팅과 메뉴 환경음·효과음 자산을 소유한다.
 - `assets/js/core/loading-sequence.js`: 빌드별 첫 기동, 세션 복원, 기록 복귀와 모션 감소용 최소 노출 시간을 관리한다.
-- `assets/js/core/audio-controller.js`: 생성 핵심 효과음, 화면·문서 음향 프로필, 의미 이벤트, 5버스 음량 저장, 미리듣기, 덕킹과 동시재생 제한을 담당한다.
+- `assets/js/core/audio-controller.js`: 화면·문서 음향 프로필, 의미 이벤트, 덕킹, 음소거 저장과 동시재생 제한을 담당한다.
 - `assets/js/core/operation-state.js`: 부서진 왕관의 회수 정보, 네 로컬 지휘 판정, 고정·미확정 사실과 계보 보호 경계, 현재 작전 단계와 초기화를 단독 소유한다. 선택 결과는 지도 사본만 바꾸며 세계 공통 정사를 수정하지 않는다.
 - `assets/js/core/pilgrimage-state.js`: 세 시나리오의 진행, 현장 판단, 계기 수치와 결말을 저장하고 앞선 선택 조건으로 후속 장면과 결말을 해석한다.
 - `assets/js/core/verdict-archive-state.js`: 확인한 결말의 선택·측정값 사본과 판정 문서 읽음 상태를 별도로 저장한다.

@@ -1,4 +1,4 @@
-// Project Curse 5.43.0 — Ushinoda cult lineage, command boundaries and evidence states.
+// Project Curse 5.42.0 — Ushinoda cult lineage, command boundaries and evidence states.
 (function(root){
   'use strict';
 
@@ -69,7 +69,7 @@
   };
 
   root.ProjectCurseFactionLineage=freeze({
-    version:root.ProjectCurseBuild?.version||'5.43.0',
+    version:root.ProjectCurseBuild?.version||'5.42.0',
     schema:'project-curse-faction-lineage-v1',
     root:'ushinoda',
     order:['ushinoda','corruption-cult','blood-cult','shadow-cult','first-apostle','southern-blood','deadzone-blood'],

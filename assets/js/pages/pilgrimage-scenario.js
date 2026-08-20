@@ -1,4 +1,4 @@
-// Project Curse 5.43.0 — authored decisions, canon boundaries, and conditional recovery access.
+// Project Curse 5.42.0 — authored decisions, canon boundaries, and conditional recovery access.
 (function(root){
   'use strict';
 

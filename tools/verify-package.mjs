@@ -4,7 +4,7 @@ import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.43.0';
+const VERSION='5.42.0';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -14,11 +14,6 @@ const read=relative=>readFileSync(path(relative),'utf8');
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const add=(name,pass,detail='')=>checks.push({name,pass:!!pass,detail});
 const count=(source,needle)=>source.split(needle).length-1;
-const wavInfo=relative=>{
-  const buffer=readFileSync(path(relative));
-  if(buffer.length<44||buffer.toString('ascii',0,4)!=='RIFF'||buffer.toString('ascii',8,12)!=='WAVE') return null;
-  return {channels:buffer.readUInt16LE(22),sampleRate:buffer.readUInt32LE(24),bits:buffer.readUInt16LE(34),dataBytes:buffer.readUInt32LE(40),bytes:buffer.length};
-};
 const MEDIA_EXTENSIONS=new Set(['.png','.jpg','.jpeg','.webp','.gif','.svg','.mp3','.wav','.ogg','.mp4','.webm']);
 const fileTree=directory=>readdirSync(directory,{withFileTypes:true}).flatMap(entry=>{
   if(entry.name==='.git'||entry.name==='node_modules') return [];
@@ -39,7 +34,7 @@ const required=[
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
   'assets/js/pages/shared-declutter.js',
-  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','ASSET_POLICY.md','MEDIA_CREDITS.md','WORLD_CANON_LEDGER.md','WRITING_STYLE_GUIDE.md','assets/resources/ASSET_REGISTRY.md','assets/resources/MEDIA_PROVENANCE_OVERRIDES.json','tools/build-media-provenance.mjs','tools/build-core-sounds.mjs','tools/verify-core-sound-browser.mjs',
+  'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','ASSET_POLICY.md','MEDIA_CREDITS.md','WORLD_CANON_LEDGER.md','WRITING_STYLE_GUIDE.md','assets/resources/ASSET_REGISTRY.md','assets/resources/MEDIA_PROVENANCE_OVERRIDES.json','tools/build-media-provenance.mjs',
   'assets/resources/derived/great-black-forest_reconstructed-v1.png','assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',
   'assets/faction_marks/uac.svg','assets/faction_marks/nhc.svg','assets/faction_marks/sid.svg','assets/faction_marks/fhc.svg','assets/faction_marks/syndicate.svg','assets/faction_marks/ushinoda.svg','assets/faction_marks/haimun.svg','assets/faction_marks/ashcrew.svg','assets/faction_marks/arf.svg','assets/faction_marks/cpd.svg','assets/faction_marks/amarion.svg','assets/faction_marks/corruption-cult.svg','assets/faction_marks/blood-cult.svg','assets/faction_marks/shadow-cult.svg','assets/faction_marks/first-apostle.svg','assets/faction_marks/southern-blood.svg','assets/faction_marks/deadzone-blood.svg',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
@@ -53,10 +48,6 @@ const required=[
   'assets/audio/pc5152x_late_log_beep_195s.mp3',
   'assets/audio/pc5152v_field_photo_click_42s.mp3',
   'assets/audio/pc5152v_comm_line_cue_73_74.mp3',
-  'assets/audio/core/pc-core-terminal-connect.wav','assets/audio/core/pc-core-terminal-disconnect.wav',
-  'assets/audio/core/pc-core-menu-open.wav','assets/audio/core/pc-core-menu-close.wav','assets/audio/core/pc-core-menu-select.wav','assets/audio/core/pc-core-menu-back.wav',
-  'assets/audio/core/pc-core-access-denied.wav','assets/audio/core/pc-core-record-mount.wav','assets/audio/core/pc-core-record-unmount.wav',
-  'assets/audio/core/pc-core-evidence-open.wav','assets/audio/core/pc-core-comm-connect.wav','assets/audio/core/pc-core-operation-confirm.wav',
   'docs/Cults_871104/index.html','docs/Immortality_860201/index.html'
 ];
 required.forEach(relative=>add(`required:${relative}`,existsSync(path(relative))));
@@ -193,7 +184,7 @@ add('channel-identity-distinct-themes',new Set(channelIdentityData?.channels?.ma
 add('channel-identity-runtime-api',channelIdentityRuntime.includes('ProjectCurseChannelIdentity=Object.freeze')&&channelIdentityRuntime.includes('function ensureIdentity')&&channelIdentityRuntime.includes('projectcurse:screen-committed')&&channelIdentityRuntime.includes("control.setAttribute('aria-current','page')"));
 add('channel-preference-persistence',channelIdentityData?.storageKey==='project_curse_preferences_v1'&&channelIdentityRuntime.includes('localStorage.setItem')&&channelIdentityRuntime.includes('data-pc-preference'));
 add('channel-adaptive-quality-preference',channelIdentityData?.defaults?.quality==='auto'&&channelIdentityData?.preferences?.quality?.options?.length===3&&channelIdentityRuntime.includes('ProjectCurseQuality?.setPreference'));
-add('channel-preference-audio-buses',channelIdentityRuntime.includes('ProjectCurseAudioControl?.update')&&channelIdentityRuntime.includes("interface:.34")&&channelIdentityRuntime.includes("preferences.ambient==='on'?Number(mix.ambient):0"));
+add('channel-preference-audio-buses',channelIdentityRuntime.includes('ProjectCurseAudioControl?.update')&&channelIdentityRuntime.includes("interface:.34")&&channelIdentityRuntime.includes("ambient:preferences.ambient==='on'?1:0"));
 add('channel-preference-reduced-motion',channelIdentityRuntime.includes("prefers-reduced-motion: reduce")&&channelIdentityCss.includes(':root[data-pc-effects="reduced"]')&&channelIdentityCss.includes('@media(prefers-reduced-motion:reduce)'));
 add('channel-mobile-navigation',channelIdentityCss.includes('@media(max-width:600px)')&&channelIdentityCss.includes('grid-template-columns:1fr!important')&&channelIdentityCss.includes('max-height:calc(100dvh - 82px)')&&channelIdentityRuntime.includes('pc-mobile-preference-link'));
 add('telemetry-runtime-owned',structureData?.owners?.performanceTelemetry==='assets/js/core/performance-telemetry.js'&&performanceTelemetry.includes('ProjectCurseTelemetry=Object.freeze')&&performanceTelemetry.includes('getChannelStatus'));
@@ -205,7 +196,6 @@ add('settings-readable-overview',channelIdentityRuntime.includes('pc-preference-
 add('settings-grouped-sections',channelIdentityRuntime.includes("['quality','effects','textReveal']")&&channelIdentityRuntime.includes("['interfaceAudio','ambient']")&&channelIdentityCss.includes('.pc-preference-section'));
 add('settings-collapsible-diagnostics',channelIdentityRuntime.includes('pc-advanced-diagnostics')&&channelIdentityRuntime.includes('data-pc-diagnostics-refresh')&&channelIdentityCss.includes('.pc-advanced-diagnostics[open]'));
 add('settings-fixed-actions-scroll-body',channelIdentityRuntime.includes("scroll.className='pc-preference-scroll'")&&channelIdentityCss.includes('.pc-preference-scroll')&&channelIdentityCss.includes('flex:0 0 auto'));
-add('settings-core-sound-lab',channelIdentityRuntime.includes('pc-sound-lab')&&channelIdentityRuntime.includes('data-pc-sound-preview')&&channelIdentityRuntime.includes('data-pc-audio-bus')&&channelIdentityCss.includes('.pc-sound-grid')&&channelIdentityCss.includes('.pc-sound-mixer'));
 add('audio-deferred-until-activation',baseRuntime.includes("node.preload='none'")&&baseRuntime.includes('audioUnlocked')&&baseRuntime.includes('navigator.userActivation?.hasBeenActive'));
 add('record-cinematic-controls',main.includes('pc-cinematic-controls')&&main.includes('scheduleAutomaticAdvance')&&main.includes('ProjectCurseRecordCinematic'));
 add('record-cinematic-navigation',main.includes('previousSequence')&&main.includes('toggleSequencePlayback')&&main.includes('restartSequence'));
@@ -279,22 +269,17 @@ add('legacy-route-compatibility',appShell.includes("target==='faction-relation'"
 add('loading-sequence-owned',loadingRuntime.includes('ProjectCurseLoading')&&loadingRuntime.includes('prefers-reduced-motion')&&loadingRuntime.includes("return hasSeen()?'restore':'cold'")&&index.includes('data-boot-skip'));
 add('loading-modes-and-readable-timing',loadingRuntime.includes('duration:8600')&&loadingRuntime.includes('duration:5200')&&loadingRuntime.includes('duration:4600')&&loadingRuntime.includes('duration:3600')&&loadingRuntime.includes('MIN_VISIBLE_MS=4600')&&loadingRuntime.includes('FINAL ACCESS HOLD')&&loadingRuntime.includes("classList.add('is-authorized')")&&loadingRuntime.includes('SESSION_KEY=()=>')&&loadingRuntime.includes("get('boot')")&&index.includes('data-boot-gate'));
 add('audio-controller-owned',audioManifest.includes('ProjectCurseAudioManifest')&&audioController.includes('ProjectCurseAudioControl')&&index.includes('data-uac-audio-toggle'));
-add('semantic-field-audio',context.window.ProjectCurseAudioManifest?.version==='3.0.0'&&['archive.filter','map.layer','map.signal','operation.step','history.open','faction.open','incident.link','scenario.reveal','scenario.complete','pilgrimage.enter','pilgrimage.step','pilgrimage.danger','pilgrimage.complete','pilgrimage.exit','screening.enter','screening.step','screening.mismatch','screening.complete','screening.exit'].every(event=>context.window.ProjectCurseAudioManifest.events[event]));
+add('semantic-field-audio',context.window.ProjectCurseAudioManifest?.version==='2.3.0'&&['archive.filter','map.layer','map.signal','operation.step','history.open','faction.open','incident.link','scenario.reveal','scenario.complete','pilgrimage.enter','pilgrimage.step','pilgrimage.danger','pilgrimage.complete','pilgrimage.exit','screening.enter','screening.step','screening.mismatch','screening.complete','screening.exit'].every(event=>context.window.ProjectCurseAudioManifest.events[event]));
 add('semantic-evidence-audio',['evidence.open','evidence.compare','evidence.filter','evidence.close'].every(event=>context.window.ProjectCurseAudioManifest?.events?.[event]));
 add('acoustic-screen-profiles',['terminal-home','map-room','history','faction-info','archive-entry','document','great-black-forest','dead-zone','guide','scenario','recovery-scenario'].every(profile=>context.window.ProjectCurseAudioManifest?.profiles?.[profile]));
 add('recovery-semantic-audio',['recovery.enter','recovery.tether','recovery.contain','recovery.echo','recovery.complete','recovery.exit'].every(event=>context.window.ProjectCurseAudioManifest?.events?.[event])&&pilgrimageRuntime.includes("'recovery.complete'")&&pilgrimageRuntime.includes("'recovery-scenario'"));
-const coreSoundEntries=Object.entries(context.window.ProjectCurseAudioManifest?.sounds||{});
-add('core-sound-pack-twelve',context.window.ProjectCurseAudioManifest?.pack?.id==='PC-CORE-01'&&coreSoundEntries.length===12&&coreSoundEntries.every(([id,item])=>item.src.startsWith('assets/audio/core/')&&item.label&&item.family&&item.bus&&item.durationMs>80),coreSoundEntries.length);
-add('core-sound-wav-format',coreSoundEntries.every(([_id,item])=>{const info=wavInfo(item.src);return info?.channels===1&&info.sampleRate===48000&&info.bits===16&&info.dataBytes===info.bytes-44;}));
-add('core-sound-semantic-coverage',Object.values(context.window.ProjectCurseAudioManifest?.events||{}).every(event=>!event.sound||context.window.ProjectCurseAudioManifest.sounds[event.sound])&&['menu.open','menu.close','menu.select','menu.back','record.mount','record.unmount','access.denied'].every(sound=>context.window.ProjectCurseAudioManifest.sounds[sound]));
 add('distinct-interface-cues',['pc5152h_terminal_contact_clear.wav','pc5152f_analog_contact_soft.wav','pc5152h_record_mount_clear.wav','pc5152p_internal_projector_vhs_step.wav','pc5152x_late_log_beep_195s.mp3','pc5152v_field_photo_click_42s.mp3','pc5152v_comm_line_cue_73_74.mp3'].every(asset=>baseRuntime.includes(asset)));
-add('audio-ducking-and-polyphony',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes("if(priority>1){stopBus('interface');stopBus('record');}")&&audioController.includes('exclusive!==false'));
+add('audio-ducking-and-polyphony',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes("if(event.priority>1){stopBus('interface');stopBus('record');}")&&audioController.includes('event.exclusive!==false'));
 add('audio-profile-route-sync',audioController.includes("projectcurse:screen-committed")&&audioController.includes('setProfile(event.detail?.target')&&audioController.includes('data-audio-blocked'));
-add('audio-core-preview-and-mix',audioController.includes('function preview(soundId)')&&audioController.includes('getCatalog:')&&audioController.includes('lastSound')&&channelIdentityRuntime.includes('setAudioVolume'));
 add('record-audio-route-isolation',main.includes("projectcurse:route-will-change")&&main.includes("document.body.classList.contains('pc5152h-sequence-open')")&&main.includes("pc5152h-cult-source-sequence"));
 add('audio-profile-clears-previous-buses',audioController.includes("if(resolved!==profileId)")&&audioController.includes("stopBus('record')")&&audioController.includes("stopBus('interface')"));
 add('screen-action-audio',mapRoomRuntime.includes("'operation.step'")&&worldHistory.includes("'history.open'")&&worldHistory.includes("'history.step'")&&factionAnalysisRuntime.includes("'faction.open'")&&factionAnalysisRuntime.includes("'faction.back'"));
-add('regional-document-audio',read('assets/js/pages/archive-document.js').includes("'great-black-forest':'region.forest'")&&read('assets/js/pages/archive-document.js').includes("'dead-zone':'region.deadzone'")&&read('assets/js/pages/archive-document.js').includes("scenario:'scenario.arm'")&&read('assets/js/pages/archive-document.js').includes("play?.('record.unmount')"));
+add('regional-document-audio',read('assets/js/pages/archive-document.js').includes("'great-black-forest':'region.forest'")&&read('assets/js/pages/archive-document.js').includes("'dead-zone':'region.deadzone'")&&read('assets/js/pages/archive-document.js').includes("scenario:'scenario.arm'"));
 add('transition-controller-owned',context.window.ProjectCurseTransitions?.screens&&Object.keys(context.window.ProjectCurseTransitions.screens).length===5&&transitionController.includes('ProjectCurseTransition')&&transitionController.includes("dataset.transitionState='switching'"));
 add('transition-state-machine',appShell.includes('transitioning=true')&&appShell.includes('queuedRequest')&&appShell.includes('ProjectCurseTransition.run')&&appShell.includes("history.pushState({route:target}"));
 add('screen-identity-presets',transitionCss.includes('coordinate-acquire')&&transitionCss.includes('chronology-rewind')&&transitionCss.includes('dossier-assemble')&&transitionCss.includes('vault-unseal'));
@@ -335,10 +320,9 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v36',structureData?.schema==='project-curse-v36'&&context.window.ProjectCurseBuild?.schema==='project-curse-v36');
+add('manifest-runtime-schema-v35',structureData?.schema==='project-curse-v35'&&context.window.ProjectCurseBuild?.schema==='project-curse-v35');
 add('manifest-japan-technology-owner',structureData?.owners?.japanTechnologyData==='assets/js/data/japan-technology-data.js');
 add('manifest-lineage-owner',structureData?.owners?.factionLineage==='assets/js/data/faction-lineage-data.js');
-add('manifest-core-sound-owner',structureData?.owners?.coreSoundGenerator==='tools/build-core-sounds.mjs'&&structureData?.audio?.corePack?.length===12);
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);
 const publicArchiveIds=archiveData?.publicRecords?.map(record=>record.id)||[];
 add('archive-thirteen-record-index',publicArchiveIds.length===13&&publicArchiveIds.slice(0,4).join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Zone_870815',publicArchiveIds.length);
@@ -390,17 +374,15 @@ const repositoryMedia=mediaTree(ROOT+'assets/').sort();
 const provenancePaths=provenanceAssets.map(asset=>asset.path).sort();
 const forbiddenReferenceNames=new Set(['지옥.zip','Pictures.zip','Pictures2.zip']);
 const exposedReferenceFiles=fileTree(ROOT).filter(relative=>forbiddenReferenceNames.has(relative.split('/').at(-1)));
-add('media-provenance-owner',structureData?.owners?.mediaProvenance==='assets/js/data/media-provenance-data.js'&&mediaProvenance?.version==='1.1.0');
-add('media-provenance-all-186-assets',provenanceAssets.length===186&&repositoryMedia.join('|')===provenancePaths.join('|'),`${provenanceAssets.length} registered / ${repositoryMedia.length} files`);
+add('media-provenance-owner',structureData?.owners?.mediaProvenance==='assets/js/data/media-provenance-data.js'&&mediaProvenance?.version==='1.0.0');
+add('media-provenance-all-174-assets',provenanceAssets.length===174&&repositoryMedia.join('|')===provenancePaths.join('|'),`${provenanceAssets.length} registered / ${repositoryMedia.length} files`);
 add('media-provenance-hash-and-size',provenanceAssets.every(asset=>existsSync(path(asset.path))&&statSync(path(asset.path)).size===asset.bytes&&hash(readFileSync(path(asset.path)))===asset.sha256));
-add('media-provenance-kind-counts',mediaProvenance?.stats?.byKind?.image===144&&mediaProvenance?.stats?.byKind?.audio===35&&mediaProvenance?.stats?.byKind?.video===7);
-const coreProvenance=provenanceAssets.filter(asset=>asset.path.startsWith('assets/audio/core/'));
-const legacyAudiovisual=provenanceAssets.filter(asset=>(asset.kind==='audio'&&!asset.path.startsWith('assets/audio/core/'))||asset.kind==='video');
-add('media-provenance-honest-review',legacyAudiovisual.every(asset=>asset.release==='LICENSE_REVIEW')&&coreProvenance.length===12&&coreProvenance.every(asset=>asset.release==='PROJECT_GENERATED'&&asset.provenance==='PROJECT_SYNTHESIS')&&mediaProvenance?.stats?.review===150&&mediaProvenance?.stats?.managed===36);
+add('media-provenance-kind-counts',mediaProvenance?.stats?.byKind?.image===144&&mediaProvenance?.stats?.byKind?.audio===23&&mediaProvenance?.stats?.byKind?.video===7);
+add('media-provenance-honest-review',provenanceAssets.filter(asset=>asset.kind==='audio'||asset.kind==='video').every(asset=>asset.release==='LICENSE_REVIEW')&&mediaProvenance?.stats?.review===150&&mediaProvenance?.stats?.managed===24);
 add('media-provenance-reference-boundary',mediaProvenance?.referenceOnly?.map(item=>item.name).join('|')==='지옥.zip|Pictures.zip|Pictures2.zip'&&mediaProvenance?.stats?.referenceExposure===exposedReferenceFiles.length&&exposedReferenceFiles.length===0);
 add('media-provenance-delivery-lineage',provenanceAssets.filter(asset=>asset.provenance==='DELIVERY_DERIVATIVE').length===40&&provenanceAssets.filter(asset=>asset.provenance==='DELIVERY_DERIVATIVE').every(asset=>asset.derivedFrom&&provenancePaths.includes(asset.derivedFrom)));
 add('media-provenance-root-order',index.includes(`assets/js/data/media-provenance-data.js?v=${VERSION}`)&&index.indexOf('media-manifest.js')<index.indexOf('media-provenance-data.js')&&index.indexOf('media-provenance-data.js')<index.indexOf('archive-consolidation.js'));
-add('media-provenance-public-audit-ui',archiveRuntime.includes('function provenanceAuditMarkup()')&&archiveRuntime.includes('data-pc-media-audit')&&archiveRuntime.includes('audioGenerated')&&archiveRuntime.includes('PUBLIC RELEASE NOT YET CLEARED')&&read('assets/css/archive-consolidation.css').includes('.pc-media-audit-telemetry'));
+add('media-provenance-public-audit-ui',archiveRuntime.includes('function provenanceAuditMarkup()')&&archiveRuntime.includes('data-pc-media-audit')&&archiveRuntime.includes('PUBLIC RELEASE NOT YET CLEARED')&&read('assets/css/archive-consolidation.css').includes('.pc-media-audit-telemetry'));
 const responsiveAssets=Object.values(mediaManifest?.assets||{});
 const responsiveVariants=responsiveAssets.flatMap(asset=>asset.variants||[]);
 add('adaptive-media-owner',structureData?.owners?.mediaManifest==='assets/js/data/media-manifest.js'&&structureData?.owners?.adaptiveMediaRuntime==='assets/js/core/adaptive-media.js'&&structureData?.owners?.adaptiveMediaCSS==='assets/css/adaptive-media.css');

@@ -1,4 +1,4 @@
-// Project Curse 5.43.0 — adaptive archive document, source provenance, local-verdict boundary, and verdict renderer.
+// Project Curse 5.42.0 — adaptive archive document, source provenance, local-verdict boundary, and verdict renderer.
 (function(){
   'use strict';
 
@@ -647,7 +647,6 @@
     document.title=originalTitle;
     window.ProjectCurseAudio?.setContext?.('shell');
     window.ProjectCurseAudioControl?.setProfile?.(window.ProjectCurseShell?.getRoute?.()||'archive-entry');
-    window.ProjectCurseAudioControl?.play?.('record.unmount');
     const scrollRoot=document.querySelector('.uac-shell-content');
     if(scrollRoot) scrollRoot.scrollTop=0;
     if(restoreFocus){
