@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — terminal-home intelligence feed.
+// Project Curse 5.34.0 — terminal-home intelligence feed.
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseHomeIntelligence=freeze({
-    version:'5.33.0',
+    version:'5.34.0',
     alert:{
       incident:'evt-southern-mobilization',
       title:'남부 집단 소환·쿠데타 전조',

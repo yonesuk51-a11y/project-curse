@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — exit, quality-aware channel handoff and staged screen entry owner.
+// Project Curse 5.34.0 — cinematic exit, quality-aware handoff, settle hold and staged channel entry.
 (function(root){
   'use strict';
 
@@ -19,8 +19,22 @@
       code:document.querySelector('[data-transition-code]'),
       label:document.querySelector('[data-transition-label]'),
       status:document.querySelector('[data-transition-status]'),
-      progress:document.querySelector('[data-transition-progress]')
+      progress:document.querySelector('[data-transition-progress]'),
+      symbol:document.querySelector('[data-transition-symbol]'),
+      signal:document.querySelector('[data-transition-signal]'),
+      phases:Array.from(document.querySelectorAll('[data-transition-phase]'))
     };
+  }
+
+  function setPhase(nodes,index,preset,status,progress){
+    nodes.phases.forEach((node,nodeIndex)=>{
+      node.classList.toggle('is-active',nodeIndex===index);
+      node.classList.toggle('is-complete',nodeIndex<index);
+      const copy=node.querySelector('b');
+      if(copy) copy.textContent=preset.phases?.[nodeIndex]||copy.textContent;
+    });
+    if(nodes.status&&status) nodes.status.textContent=status;
+    if(nodes.progress&&Number.isFinite(progress)) nodes.progress.style.setProperty('--pc-transition-progress',progress+'%');
   }
 
   function cleanup(layer,outgoing,incoming){
@@ -36,6 +50,7 @@
     }
     document.documentElement.classList.remove('pc-channel-transition-active');
     document.documentElement.removeAttribute('data-transition-state');
+    document.body?.removeAttribute('data-route-pending');
   }
 
   async function run({from,to,commit,instant=false}={}){
@@ -64,8 +79,10 @@
       if(nodes.to) nodes.to.textContent=toPreset.code;
       if(nodes.code) nodes.code.textContent=toPreset.request;
       if(nodes.label) nodes.label.textContent=toPreset.label;
-      if(nodes.status) nodes.status.textContent='CHANNEL HANDOFF / LOCAL ONLY';
-      if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','12%');
+      if(nodes.symbol) nodes.symbol.textContent=toPreset.symbol||toPreset.code.slice(0,2);
+      if(nodes.signal) nodes.signal.textContent=toPreset.signal||toPreset.code;
+      document.body.dataset.routePending=to;
+      setPhase(nodes,0,toPreset,'CURRENT CHANNEL / CONTROL RELEASE',10);
 
       outgoing?.setAttribute('data-pc-exit',fromPreset.exit);
       outgoing?.classList.add('pc-screen-exiting');
@@ -76,8 +93,7 @@
 
       document.documentElement.dataset.transitionState='switching';
       layer.classList.add('is-covering');
-      if(nodes.status) nodes.status.textContent=root.ProjectCurseMedia?'VISUAL CHANNEL ACQUISITION':'CHANNEL BUFFER ACQUISITION';
-      if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','54%');
+      setPhase(nodes,1,toPreset,root.ProjectCurseMedia?'VISUAL CHANNEL / FRAME ACQUISITION':'CHANNEL BUFFER / ACQUISITION',46);
       await wait(timings.cover);
 
       if(root.ProjectCurseMedia&&!reduceMotion()&&(!root.ProjectCurseQuality||root.ProjectCurseQuality.allows('routeWarmup'))){
@@ -85,7 +101,8 @@
         const prepared=await root.ProjectCurseMedia.prepareRoute(to,{timeout:mediaHold});
         if(nodes.status) nodes.status.textContent=prepared.requested?`${prepared.ready} / ${prepared.requested} VISUAL FRAMES READY`:toPreset.status;
       }else if(nodes.status) nodes.status.textContent=root.ProjectCurseQuality&&!root.ProjectCurseQuality.allows('routeWarmup')?'CONSERVATION HANDOFF / PRELOAD BYPASSED':toPreset.status;
-      if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','76%');
+      setPhase(nodes,2,toPreset,nodes.status?.textContent||toPreset.status,78);
+      await wait(timings.settle||0);
 
       const result=commit();
       incoming=document.getElementById(to);
@@ -99,6 +116,7 @@
       document.documentElement.dataset.transitionState='entering';
       layer.classList.remove('is-covering');
       layer.classList.add('is-revealing');
+      if(nodes.status) nodes.status.textContent=toPreset.status;
       if(nodes.progress) nodes.progress.style.setProperty('--pc-transition-progress','100%');
       root.ProjectCurseAudioControl?.play?.(toPreset.sound);
       await wait(timings.enter);

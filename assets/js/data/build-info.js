@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — single source of truth for the terminal build.
+// Project Curse 5.34.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,10 +9,10 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.33.0',
-    codename:'Readable Settings & Session Health',
-    schema:'project-curse-v24',
-    released:'2026-08-17',
+    version:'5.34.0',
+    codename:'Cinematic Channel Handoff',
+    schema:'project-curse-v25',
+    released:'2026-08-20',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},
       {id:'map-room',index:'01',label:'상황 관제',shortLabel:'관제'},

@@ -1,9 +1,9 @@
-// Project Curse 5.33.0 — semantic sound-event registry, recovery cues, and acoustic profiles.
+// Project Curse 5.34.0 — semantic sound-event registry, navigation mix and acoustic profiles.
 (function(root){
   'use strict';
 
   root.ProjectCurseAudioManifest=Object.freeze({
-    version:'2.1.0',
+    version:'2.2.0',
     storageKey:'pc_audio_settings_v1',
     buses:Object.freeze({master:1,ambient:1,interface:1,record:1,alert:1}),
     profiles:Object.freeze({
@@ -21,7 +21,7 @@
     }),
     events:Object.freeze({
       'boot.start':Object.freeze({cue:'boot',bus:'interface',cooldown:1600,gain:1,duck:.38,duckMs:900,exclusive:true}),
-      'channel.request':Object.freeze({cue:'contact',bus:'interface',cooldown:260,gain:.72,duck:.78,duckMs:260,exclusive:true}),
+      'channel.request':Object.freeze({cue:'contact',bus:'interface',cooldown:320,gain:.58,duck:.72,duckMs:320,exclusive:true}),
       'channel.command':Object.freeze({cue:'confirm',bus:'interface',cooldown:360,gain:.72,exclusive:true}),
       'channel.cartography':Object.freeze({cue:'scan',bus:'interface',cooldown:360,gain:.82,duck:.72,duckMs:360,exclusive:true}),
       'channel.chronology':Object.freeze({cue:'page',bus:'record',cooldown:360,gain:.78,duck:.76,duckMs:320,exclusive:true}),
@@ -33,9 +33,9 @@
       'evidence.compare':Object.freeze({cue:'scan',bus:'record',cooldown:320,gain:.76,duck:.42,duckMs:680,exclusive:true}),
       'evidence.filter':Object.freeze({cue:'confirm',bus:'interface',cooldown:150,gain:.5,exclusive:true}),
       'evidence.close':Object.freeze({cue:'contact',bus:'interface',cooldown:240,gain:.45,exclusive:true}),
-      'menu.open':Object.freeze({cue:'contact',bus:'interface',cooldown:220,gain:.5,duck:.72,duckMs:210,exclusive:false}),
-      'menu.close':Object.freeze({cue:'contact',bus:'interface',cooldown:220,gain:.45,duck:.72,duckMs:210,exclusive:false}),
-      'menu.select':Object.freeze({cue:'confirm',bus:'interface',cooldown:140,gain:.52,duck:.68,duckMs:170,exclusive:false}),
+      'menu.open':Object.freeze({cue:'contact',bus:'interface',cooldown:280,gain:.42,duck:.78,duckMs:180,exclusive:false}),
+      'menu.close':Object.freeze({cue:'analog',bus:'interface',cooldown:280,gain:.36,duck:.82,duckMs:160,exclusive:false}),
+      'menu.select':Object.freeze({cue:'confirm',bus:'interface',cooldown:220,gain:.44,duck:.7,duckMs:220,exclusive:false}),
       'map.layer':Object.freeze({cue:'analog',bus:'interface',cooldown:160,gain:.58,exclusive:true}),
       'map.signal':Object.freeze({cue:'marker',bus:'interface',cooldown:220,gain:.7,duck:.8,duckMs:200,exclusive:true}),
       'operation.step':Object.freeze({cue:'confirm',bus:'interface',cooldown:160,gain:.62,duck:.84,duckMs:160,exclusive:true}),

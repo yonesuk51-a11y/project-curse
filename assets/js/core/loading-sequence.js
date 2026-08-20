@@ -2,41 +2,44 @@
 (function(root){
   'use strict';
 
-  const BUILD=()=>root.ProjectCurseBuild?.version||'5.33.0';
+  const BUILD=()=>root.ProjectCurseBuild?.version||'5.34.0';
   const SESSION_KEY=()=>`pc_terminal_boot_${BUILD().replace(/[^a-z0-9]+/gi,'_')}`;
-  const MIN_VISIBLE_MS=4200;
+  const MIN_VISIBLE_MS=4600;
   const MODES={
     cold:{
-      title:'로컬 단말기 기동',kicker:'U.A.C 폐쇄 기록 / PC-03',duration:7800,finishDelay:700,skippable:true,
+      title:'로컬 단말기 기동',kicker:'U.A.C 폐쇄 기록 / PC-03',duration:8600,finishDelay:900,skippable:true,
       lines:[
         ['PC-03','로컬 커널 및 권한 검사','OK'],
         ['AUDIO','로컬 중계 채널 연결','LINKED'],
         ['ARCHIVE','폐쇄 기록 색인 복구','RECOVERED'],
         ['CARTO','관제 좌표 계층 동기화','PARTIAL'],
-        ['RZ/881120','레드라인 흔적 검사','DETECTED']
+        ['RZ/881120','레드라인 흔적 검사','DETECTED'],
+        ['ACCESS','현장 열람 권한 봉인','GRANTED']
       ],
-      starts:[520,1650,2800,3950,5100],ends:[1300,2440,3590,4740,5890]
+      starts:[520,1680,2860,4100,5480,6880],ends:[1320,2480,3720,4980,6360,7720]
     },
     restore:{
-      title:'세션 복원',kicker:'LOCAL SESSION / PC-03',duration:4800,finishDelay:520,skippable:false,
+      title:'세션 복원',kicker:'LOCAL SESSION / PC-03',duration:5200,finishDelay:650,skippable:false,
       lines:[
         ['SESSION','이전 로컬 세션 확인','FOUND'],
         ['CHANNEL','마지막 채널 상태 복구','RESTORED'],
-        ['OPERATOR','현장 열람 권한 확인','LIMITED']
+        ['OPERATOR','현장 열람 권한 확인','LIMITED'],
+        ['ACCESS','로컬 채널 재봉인','GRANTED']
       ],
-      starts:[500,1550,2600],ends:[1250,2300,3350]
+      starts:[420,1420,2500,3580],ends:[1120,2140,3220,4320]
     },
     returning:{
-      title:'기록 언마운트',kicker:'ARCHIVE RETURN / PC-03',duration:3600,finishDelay:300,skippable:false,
+      title:'기록 언마운트',kicker:'ARCHIVE RETURN / PC-03',duration:4600,finishDelay:450,skippable:false,
       lines:[
         ['RECORD','활성 기록 채널 분리','UNMOUNTED'],
-        ['ARCHIVE','공개 색인으로 복귀','READY']
+        ['ARCHIVE','공개 색인으로 복귀','READY'],
+        ['ACCESS','보관소 접근선 재연결','GRANTED']
       ],
-      starts:[180,520],ends:[430,790]
+      starts:[360,1420,2700],ends:[1080,2200,3680]
     },
     reduced:{
-      title:'세션 연결',kicker:'LOCAL ACCESS / PC-03',duration:3400,finishDelay:160,skippable:false,
-      lines:[['ACCESS','로컬 단말 연결','READY']],starts:[360],ends:[1800]
+      title:'세션 연결',kicker:'LOCAL ACCESS / PC-03',duration:3600,finishDelay:200,skippable:false,
+      lines:[['ACCESS','로컬 단말 연결','READY'],['CHANNEL','현재 채널 확인','RESTORED']],starts:[300,1500],ends:[1180,2780]
     },
     skip:{title:'접근 승인',kicker:'LOCAL ACCESS / PC-03',duration:0,finishDelay:0,skippable:false,lines:[['ACCESS','로컬 단말 연결','READY']],starts:[0],ends:[0]}
   };
@@ -75,10 +78,11 @@
     const percent=document.querySelector('[data-boot-percent]');
     const footer=document.querySelector('.pc-boot-footer > span');
     const skip=document.querySelector('[data-boot-skip]');
+    const gates=Array.from(document.querySelectorAll('[data-boot-gate]'));
     const finish=typeof options.finish==='function'?options.finish:()=>{};
     const mode=resolveMode();
     const config=MODES[mode];
-    const duration=mode==='skip'?0:Math.max(config.duration,MIN_VISIBLE_MS);
+    const duration=mode==='skip'?0:(mode==='reduced'?config.duration:Math.max(config.duration,MIN_VISIBLE_MS));
     const startedAt=performance.now();
     const progressFloor=mode==='cold'?2:8;
     let completed=false;
@@ -86,7 +90,9 @@
     let progressValue=progressFloor;
 
     loader?.classList.add('pc-boot-mode-'+mode);
+    loader?.classList.remove('is-authorized');
     loader?.setAttribute('data-boot-mode',mode);
+    loader?.setAttribute('data-boot-phase','link');
     if(title) title.textContent=config.title;
     if(kicker) kicker.textContent=config.kicker;
     if(footer) footer.textContent=`BUILD ${BUILD()} / ${mode==='cold'?'COLD BOOT':mode==='restore'?'SESSION RESTORE':mode==='returning'?'ARCHIVE RETURN':'LOCAL ACCESS'}`;
@@ -95,12 +101,25 @@
       skip.disabled=true;
     }
 
+    function syncGates(value){
+      const thresholds=[18,42,68,96];
+      let activeIndex=thresholds.findIndex(threshold=>value<threshold);
+      if(activeIndex<0) activeIndex=thresholds.length-1;
+      gates.forEach((gate,index)=>{
+        gate.classList.toggle('is-complete',value>=thresholds[index]);
+        gate.classList.toggle('is-active',index===activeIndex&&value<100);
+      });
+      const phase=value<18?'link':value<42?'index':value<68?'verify':value<96?'access':'granted';
+      loader?.setAttribute('data-boot-phase',phase);
+    }
+
     function setProgress(value){
       const safe=Math.max(progressValue,Math.max(0,Math.min(100,Math.round(value))));
       progressValue=safe;
       if(progress) progress.style.setProperty('--boot-progress',safe+'%');
       if(percent) percent.textContent=String(safe).padStart(3,'0')+'%';
       loader?.setAttribute('aria-valuenow',String(safe));
+      syncGates(safe);
     }
 
     function setLine(node,row,index){
@@ -141,9 +160,10 @@
         if(state) state.textContent=line.dataset.bootFinal||'OK';
       });
       setProgress(100);
+      loader?.classList.add('is-authorized');
       remember();
       if(skip) skip.disabled=true;
-      if(footer) footer.textContent=`BUILD ${BUILD()} / ACCESS GRANTED`;
+      if(footer) footer.textContent=`BUILD ${BUILD()} / ACCESS GRANTED / CHANNEL STABLE`;
       document.dispatchEvent(new CustomEvent('projectcurse:boot-complete',{detail:{mode,skipped,duration}}));
       root.setTimeout(finish,skipped?0:config.finishDelay);
     }
@@ -183,7 +203,7 @@
     timers.push(root.setTimeout(()=>complete(),duration));
 
     if(config.skippable&&skip){
-      timers.push(root.setTimeout(()=>{skip.disabled=false;},5600));
+      timers.push(root.setTimeout(()=>{skip.disabled=false;},6400));
       skip.addEventListener('click',()=>complete({skipped:true}),{once:true});
     }
 

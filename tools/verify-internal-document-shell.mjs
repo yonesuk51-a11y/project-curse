@@ -61,7 +61,7 @@ for(const file of [
   'assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js'
 ]) vm.runInContext(read(file),context,{filename:file});
 
-check('version:manifest',context.window.ProjectCurseStructure?.version==='5.33.0',context.window.ProjectCurseStructure?.version);
+check('version:manifest',context.window.ProjectCurseStructure?.version==='5.34.0',context.window.ProjectCurseStructure?.version);
 check('version:archive',context.window.ProjectCurseArchive?.version==='5.33.0',context.window.ProjectCurseArchive?.version);
 check('version:documents',context.window.ProjectCurseArchiveDocuments?.version==='5.33.0',context.window.ProjectCurseArchiveDocuments?.version);
 check('shell:single-static-home',count(index,'class="uac-shell-home"')===1&&index.includes('data-uac-route="terminal-home"'));
@@ -76,7 +76,7 @@ check('shell:identity-root-order',index.indexOf('channel-identity-data.js')>inde
 check('shell:live-status-telemetry',performanceTelemetry.includes('ProjectCurseTelemetry=Object.freeze')&&channelIdentityRuntime.includes('pc-channel-live')&&channelIdentityCss.includes('.pc-live-diagnostics'));
 check('shell:telemetry-root-order',index.indexOf('performance-telemetry.js')>index.indexOf('verdict-archive-state.js')&&index.indexOf('performance-telemetry.js')<index.indexOf('channel-identity.js'));
 check('shell:audio-user-activation-gate',audio.includes("node.preload='none'")&&audio.includes('audioUnlocked=true')&&audio.includes('projectcurse:boot-hidden'));
-check('shell:adaptive-quality-policy',index.includes('assets/js/core/quality-policy.js?v=5.33.0')&&index.indexOf('quality-policy.js')<index.indexOf('adaptive-media.js')&&qualityPolicyRuntime.includes('ProjectCurseQuality=Object.freeze')&&qualityPolicyCss.includes('.pc-quality-diagnostics'));
+check('shell:adaptive-quality-policy',index.includes('assets/js/core/quality-policy.js?v=5.34.0')&&index.indexOf('quality-policy.js')<index.indexOf('adaptive-media.js')&&qualityPolicyRuntime.includes('ProjectCurseQuality=Object.freeze')&&qualityPolicyCss.includes('.pc-quality-diagnostics'));
 check('shell:adaptive-quality-preference',channelIdentityData.includes("quality:{label:'전송 품질'")&&channelIdentityRuntime.includes('renderQuality'));
 check('shell:offline-recovery',qualityPolicyRuntime.includes("root.addEventListener('offline'")&&qualityPolicyRuntime.includes('data-pc-connection-retry')&&adaptiveMediaRuntime.includes('function retryFailed'));
 check('shell:readable-settings-overview',channelIdentityRuntime.includes('pc-preference-overview')&&channelIdentityRuntime.includes('자동 최적화됨')&&channelIdentityCss.includes('.pc-preference-overview'));
@@ -100,35 +100,35 @@ check('document:viewer-api',documentViewer.includes('ProjectCurseInternalDocumen
 check('document:route-free-toc',documentViewer.includes("el('button','archive-doc-toc-link'")&&!documentViewer.includes('href="#section-')&&!documentViewer.includes("`#section-${"));
 check('document:embedded-assets',documentViewer.includes("replace(/^(?:\\.\\.\\/)+/,'')"));
 check('document:css-scoped',documentCss.includes('body[data-archive-document]')&&!documentCss.includes('\nbody{'));
-check('document:root-loaded',index.includes('assets/css/archive-document.css?v=5.33.0')&&index.includes('assets/js/pages/archive-document.js?v=5.33.0')&&index.includes('assets/js/data/field-dossier-data.js?v=5.33.0'));
-check('evidence:root-loaded',index.includes('assets/css/visual-evidence.css?v=5.33.0')&&index.includes('assets/js/data/visual-evidence-data.js?v=5.33.0')&&index.indexOf('visual-evidence-data.js')<index.indexOf('field-dossier-data.js'));
+check('document:root-loaded',index.includes('assets/css/archive-document.css?v=5.34.0')&&index.includes('assets/js/pages/archive-document.js?v=5.34.0')&&index.includes('assets/js/data/field-dossier-data.js?v=5.34.0'));
+check('evidence:root-loaded',index.includes('assets/css/visual-evidence.css?v=5.34.0')&&index.includes('assets/js/data/visual-evidence-data.js?v=5.34.0')&&index.indexOf('visual-evidence-data.js')<index.indexOf('field-dossier-data.js'));
 check('evidence:provenance-classes',['ORIGINAL','STABILIZED','RECONSTRUCTED','UNVERIFIED'].every(key=>context.window.ProjectCurseVisualEvidence?.classes?.[key]));
 check('evidence:document-console',documentViewer.includes('function evidenceConsole(items)')&&documentViewer.includes('archive-evidence-card')&&documentViewer.includes('function openEvidence(index,trigger)'));
 check('evidence:comparison-viewer',documentViewer.includes("range.type='range'")&&documentViewer.includes('openEvidenceAsset(src,context={},trigger=null)')&&visualEvidenceCss.includes('.pc-evidence-compare'));
 check('evidence:cinematic-handoff',read('assets/js/core/record-cinematic-runtime.js').includes('pc-cinematic-evidence-control')&&read('assets/js/core/record-cinematic-runtime.js').includes("document.body.classList.contains('pc-evidence-open')"));
 check('media:manifest-twenty-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===20);
-check('media:root-load-order',index.includes('assets/css/adaptive-media.css?v=5.33.0')&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('archive-document.js'));
+check('media:root-load-order',index.includes('assets/css/adaptive-media.css?v=5.34.0')&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('archive-document.js'));
 check('media:responsive-runtime',adaptiveMediaRuntime.includes('image.srcset=variants.map')&&adaptiveMediaRuntime.includes('function prepareRoute(route')&&adaptiveMediaRuntime.includes('function getDiagnostics()'));
 check('media:recovery-states',adaptiveMediaCss.includes('.pc-media-loading>img[data-pc-media]')&&adaptiveMediaCss.includes('.pc-media-ready>.pc-media-recovery')&&adaptiveMediaCss.includes('@media(prefers-reduced-motion:reduce)'));
 check('media:document-original-on-demand',documentViewer.includes("mode:isHero?'hero':'display'")&&documentViewer.includes("mode:'thumbnail'")&&documentViewer.includes("mode:'original'"));
 check('media:comparison-ready-gate',documentViewer.includes('range.disabled=true')&&documentViewer.includes('range.disabled=!complete')&&documentViewer.includes('Promise.all(pending)'));
-check('media:transition-warmup',read('assets/js/core/transition-controller.js').includes('ProjectCurseMedia.prepareRoute')&&read('assets/js/core/transition-controller.js').includes('VISUAL CHANNEL ACQUISITION'));
+check('media:transition-warmup',read('assets/js/core/transition-controller.js').includes('ProjectCurseMedia.prepareRoute')&&read('assets/js/core/transition-controller.js').includes('VISUAL CHANNEL / FRAME ACQUISITION'));
 check('media:standalone-shells',['Zone_870815','Unknown_Record1_860204','Unknown_Record2_860205','Unknown_Record3_920711','Unknown_Record4_930314'].every(id=>{const source=read(`docs/${id}/index.html`);return source.includes('adaptive-media.css')&&source.includes('media-manifest.js')&&source.includes('adaptive-media.js');}));
 
 check('audio:persistent-context',audio.includes("setContext('document')")||documentViewer.includes("setContext?.('document')"));
 check('audio:no-ambient-rewind',!audio.includes('audio.ambient.currentTime=0'));
 check('audio:visibility-resume',audio.includes("else if(ambientAllowed&&audioContext!=='cinematic') startAmbient()"));
 check('audio:cinematic-compatibility',audio.includes('stopMenuAmbient')&&audio.includes('resumeMenuAmbient')&&audio.includes('syncAudioState'));
-check('audio:semantic-profile-manifest',audioManifest.includes("version:'2.1.0'")&&audioManifest.includes("'great-black-forest'")&&audioManifest.includes("'dead-zone'")&&audioManifest.includes("'scenario.arm'")&&audioManifest.includes("'recovery-scenario'"));
+check('audio:semantic-profile-manifest',audioManifest.includes("version:'2.2.0'")&&audioManifest.includes("'great-black-forest'")&&audioManifest.includes("'dead-zone'")&&audioManifest.includes("'scenario.arm'")&&audioManifest.includes("'recovery-scenario'"));
 check('audio:ducking-and-bus-limit',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes('activeByBus'));
 check('audio:route-profile-sync',audioController.includes('projectcurse:screen-committed')&&audioController.includes('setProfile'));
 check('audio:regional-document-profile',documentViewer.includes('setProfile?.(doc.theme')&&documentViewer.includes("'great-black-forest':'region.forest'")&&documentViewer.includes("'dead-zone':'region.deadzone'"));
 check('operation:persistent-owner',operationState.includes('ProjectCurseOperationState')&&operationState.includes('localStorage.setItem')&&operationState.includes('visitBranch')&&operationState.includes('chooseVerdict'));
 check('operation:four-outcomes',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`)));
 check('operation:document-report',documentViewer.includes('archive-scenario-report')&&documentViewer.includes('data-scenario-verdict')&&documentViewer.includes('data-scenario-reset'));
-check('operation:root-loaded',index.includes('assets/js/core/operation-state.js?v=5.33.0')&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
+check('operation:root-loaded',index.includes('assets/js/core/operation-state.js?v=5.34.0')&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
 const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
-check('map:drilldown-root-loaded',index.includes('assets/js/data/regional-drilldown-data.js?v=5.33.0')&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
+check('map:drilldown-root-loaded',index.includes('assets/js/data/regional-drilldown-data.js?v=5.34.0')&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
 check('map:six-drilldowns',drilldowns.length===6&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38,`${drilldowns.length} districts`);
 check('map:four-level-navigation',mapRoomRuntime.includes('data-map-open-detail')&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('pc-map-breadcrumb'));
 check('map:verdict-site-sync',mapRoomRuntime.includes('resolveDetailSite')&&drilldowns.filter(detail=>detail.sites.some(site=>site.verdictStates)).length>=2);
@@ -158,7 +158,7 @@ check('cinematic:no-photo-drift',!cinematicCss.includes('pcCinematicDrift'));
 check('cinematic:natural-ratio-photo-fit',cinematicRuntime.includes('image.naturalWidth/image.naturalHeight')&&cinematicRuntime.includes('--pc-media-width')&&cinematicCss.includes('.pc-cinematic-frame-fitted'));
 check('cinematic:portrait-height-contained',cinematicRuntime.includes("(window.innerHeight||720)*.56")&&cinematicCss.includes('max-height:56dvh!important'));
 check('mobile:viewport-safe-area',index.includes('viewport-fit=cover')&&cinematicMobileCss.includes('env(safe-area-inset-bottom)'));
-check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.33.0')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
+check('mobile:cinematic-override-loaded-last',index.includes('assets/css/record-cinematic-mobile.css?v=5.34.0')&&index.indexOf('assets/css/record-cinematic-mobile.css')>index.indexOf('assets/css/app-shell.css'));
 check('mobile:phone-stage-scroll-safe',cinematicMobileCss.includes('@media (max-width:600px)')&&cinematicMobileCss.includes('overflow-y:auto!important')&&cinematicMobileCss.includes('overscroll-behavior:contain!important'));
 check('mobile:portrait-video-contained',cinematicMobileCss.includes('.pc5152h-cult-sequence.intro-mode .pc5152h-seq-video')&&cinematicMobileCss.includes('object-fit:contain!important'));
 check('mobile:touch-controls',cinematicMobileCss.includes('grid-template-columns:repeat(4,minmax(0,1fr))')&&cinematicMobileCss.includes('min-height:44px!important'));
@@ -178,7 +178,7 @@ check('audio:no-cinematic-bus-installer',!cinematicRuntime.includes('installClea
 check('audio:sequence-silence-at-entry',count(cinematicRuntime,'silenceMenuAmbientDuringSequence();')>=2);
 check('cinematic:single-chapter-boundary-rule',cinematicRuntime.includes("current.group!==next.group&&getSequenceConfig()?.transitionVideo")&&!cinematicRuntime.includes("current.group==='system' && next.group==='cult'"));
 const immortalityPages=context.window.ProjectCurseImmortalityStoryboard||[];
-check('immortality:canonical-storyboard-loaded',index.includes('assets/js/data/immortality-storyboard.js?v=5.33.0')&&immortalityPages.length===24,immortalityPages.length);
+check('immortality:canonical-storyboard-loaded',index.includes('assets/js/data/immortality-storyboard.js?v=5.34.0')&&immortalityPages.length===24,immortalityPages.length);
 check('immortality:automatic-sequential-reveal',cinematicRuntime.includes('scheduleNextSequenceLine(Number(page.firstLineDelay')&&cinematicRuntime.includes('scheduleNextSequenceLine(nextDelay)'));
 check('immortality:initial-content-hidden',cinematicCss.includes('Immortality starts from a genuinely blank record face')&&cinematicCss.includes('visibility:hidden!important')&&cinematicCss.includes('.pc5152k-seq-line.visible'));
 check('immortality:intro-not-skipped',cinematicRuntime.includes('video.muted=true')&&cinematicRuntime.includes('video.load()')&&!cinematicRuntime.includes('Math.min(Number(cfg.introFallback||10450),4800)'));
@@ -233,9 +233,9 @@ for(const [id,expected] of Object.entries(locked)){
 check('cache:core-busters',[
   'assets/css/app-shell.css','assets/css/archive-document.css','assets/js/core/app-shell.js','assets/js/core/base-runtime.js',
   'assets/js/pages/archive-document.js','assets/js/pages/archive-consolidation.js','assets/js/pages/faction-analysis.js'
-].every(file=>index.includes(`${file}?v=5.33.0`)));
-check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.33.0')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.33.0'));
-check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.33.0'));
+].every(file=>index.includes(`${file}?v=5.34.0`)));
+check('cache:cinematic-busters',index.includes('assets/css/record-cinematic.css?v=5.34.0')&&index.includes('assets/js/core/record-cinematic-runtime.js?v=5.34.0'));
+check('cache:mobile-cinematic-buster',index.includes('assets/css/record-cinematic-mobile.css?v=5.34.0'));
 check('manifest:viewer-owner',manifest.includes("archiveDocumentViewer:'assets/js/pages/archive-document.js'"));
 check('registry:no-href-field',!registry.includes("href:'docs/"));
 

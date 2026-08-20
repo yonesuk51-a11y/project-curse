@@ -148,6 +148,10 @@
 
     function queue(target,options){
       return new Promise(resolve=>{
+        if(queuedRequest?.target===target){
+          queuedRequest.resolvers.push(resolve);
+          return;
+        }
         if(queuedRequest) queuedRequest.resolvers.forEach(done=>done(currentRoute));
         queuedRequest={target,options,resolvers:[resolve]};
       });
@@ -171,6 +175,9 @@
       };
 
       transitioning=true;
+      content.setAttribute('aria-busy','true');
+      document.body.dataset.routePending=target;
+      if(!instant) playMenuSound('menu.select');
       document.dispatchEvent(new CustomEvent('projectcurse:route-will-change',{detail:{target,previous}}));
       try{
         if(window.ProjectCurseTransition?.run){
@@ -183,6 +190,8 @@
         return target;
       }finally{
         transitioning=false;
+        content.removeAttribute('aria-busy');
+        document.body.removeAttribute('data-route-pending');
         if(queuedRequest){
           const next=queuedRequest;
           queuedRequest=null;
@@ -212,8 +221,6 @@
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      const nextRoute=normalize(routeControl.dataset.uacRoute);
-      if(nextRoute!==currentRoute) playMenuSound('menu.select');
       pulse(routeControl);
       const operation=routeControl.dataset.uacMapOperation;
       const incident=routeControl.dataset.uacMapIncident;
