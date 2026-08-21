@@ -1,4 +1,4 @@
-// Project Curse 5.45.0 — session-restored cartography, isolated synchrony signals, and operation trace room.
+// Project Curse 5.46.0 — evidence-gated cartography with session-restored mobile intelligence panels.
 (function(root){
   'use strict';
 
@@ -43,6 +43,7 @@
       detailLayers:{routes:true,threats:true,comms:false,distortion:true},
       operation:data.operations[0]?.id||'',
       step:operationStore?.get?.().mapStep||0,
+      intelCollapsed:true,
       layers:{confirmed:true,estimated:true,zones:true,routes:true,synchrony:true}
     };
 
@@ -78,6 +79,7 @@
       if(detail?.sites?.some(site=>site.id===saved.detailSite)) state.detailSite=saved.detailSite;
       if(data.operations.some(operation=>operation.id===saved.operation)) state.operation=saved.operation;
       if(Number.isFinite(saved.step)) state.step=Math.max(0,Math.floor(saved.step));
+      if(typeof saved.intelCollapsed==='boolean') state.intelCollapsed=saved.intelCollapsed;
       Object.keys(state.layers).forEach(key=>{if(typeof saved.layers?.[key]==='boolean') state.layers[key]=saved.layers[key];});
       Object.keys(state.detailLayers).forEach(key=>{if(typeof saved.detailLayers?.[key]==='boolean') state.detailLayers[key]=saved.detailLayers[key];});
     }
@@ -86,7 +88,7 @@
         sessionStorage.setItem(sessionKey,JSON.stringify({
           mode:state.mode,region:state.region,marker:state.marker,synchronyPoint:state.synchronyPoint,
           detail:state.detail,detailSite:state.detailSite,detailLayers:{...state.detailLayers},
-          operation:state.operation,step:state.step,layers:{...state.layers}
+          operation:state.operation,step:state.step,intelCollapsed:state.intelCollapsed,layers:{...state.layers}
         }));
       }catch(_error){}
     }
@@ -386,6 +388,14 @@
         ${renderRouteSequence(detail,site)}`;
     }
 
+    function renderIntelPanel(type,title,content){
+      const bodyId=`pcMap${type[0].toUpperCase()}${type.slice(1)}IntelBody`;
+      const expanded=!state.intelCollapsed;
+      return `<button type="button" class="pc-map-intel-toggle" data-map-intel-toggle aria-expanded="${expanded}" aria-controls="${bodyId}" aria-label="${expanded?'지도 선택 정보 접기':'지도 선택 정보 펼치기'}"><small>FIELD INTELLIGENCE</small><b>${escapeHTML(title)}</b><i aria-hidden="true"></i></button><div class="pc-map-intel-body" id="${bodyId}">${content}</div>`;
+    }
+
+    function intelPanelClass(){return `pc-map-intel-panel${state.intelCollapsed?' is-collapsed':''}`;}
+
     function renderDetail(){
       const detail=detailById(state.detail);
       if(!detail) return '<div class="pc-map-warning">세부 권역 자료를 불러올 수 없다.</div>';
@@ -421,7 +431,7 @@
             </svg>
             <div class="pc-map-scan" aria-hidden="true"></div><div class="pc-map-coordinates">LOCAL TRACE · NOT FOR NAVIGATION · ${escapeHTML(detail.confidence)} INTEGRITY</div>
           </section>
-          <aside class="pc-map-sidebar pc-map-detail-intel">${renderDetailIntel(detail,selected)}</aside>
+          <aside class="pc-map-sidebar pc-map-detail-intel ${intelPanelClass()}">${renderIntelPanel('detail',selected?.label||detail.label,renderDetailIntel(detail,selected))}</aside>
         </div>`;
     }
 
@@ -479,7 +489,7 @@
             <div class="pc-map-scan" aria-hidden="true"></div>
             <div class="pc-map-coordinates">LAT/LON RECONSTRUCTED · NAVIGATION PROHIBITED</div>
           </section>
-          <aside class="pc-map-sidebar pc-map-intel">${renderRegionIntel(region,selectedMarker,selectedSynchrony)}</aside>
+          <aside class="pc-map-sidebar pc-map-intel ${intelPanelClass()}">${renderIntelPanel('region',selectedSynchrony?.point?.label||selectedMarker?.title||region.label,renderRegionIntel(region,selectedMarker,selectedSynchrony))}</aside>
         </div>`;
     }
 
@@ -577,7 +587,8 @@
             <div class="pc-map-scan" aria-hidden="true"></div>
             <div class="pc-map-coordinates">ROUTE RECONSTRUCTION · ${escapeHTML(step.time)} · ${escapeHTML(decision?.status||scenarioEnding?.status||'SIGNAL NOT VERIFIED')}${decision?' · COMMON CANON UNCHANGED':''}</div>
           </section>
-          <aside class="pc-map-sidebar pc-map-operation-intel">
+          <aside class="pc-map-sidebar pc-map-operation-intel ${intelPanelClass()}">
+            ${renderIntelPanel('operation',`${step.time} · ${step.title}`,`
             <div class="pc-map-intel-kicker">${escapeHTML(operation.region)} / ${escapeHTML(operation.code)}</div>
             <h3><time>${escapeHTML(step.time)}</time>${escapeHTML(step.title)}</h3>
             <p>${escapeHTML(step.note)}</p>
@@ -594,7 +605,7 @@
             ${operation.id==='op-deadzone-recovery'?scenarioButton('deadzone-recovery',{idle:'전진 회수 작전 개시',active:'저장된 전진 회수 작전 재개',complete:'전진 회수 판정 결과 열기'}):''}
             ${persistent?`<button class="pc-map-region-return" type="button" data-map-open-record="Operation_Broken_Crown">작전 판단 기록 열기</button>`:''}
             ${operationIncident?.history?`<button class="pc-map-region-return" type="button" data-map-open-history="${escapeHTML(operationIncident.history)}">세계 기록에서 연결 사건 보기</button>`:''}
-            <button class="pc-map-region-return" type="button" data-map-return-region="${targetRegion}">해당 권역에서 보기</button>
+            <button class="pc-map-region-return" type="button" data-map-return-region="${targetRegion}">해당 권역에서 보기</button>`)}
           </aside>
         </div>
         <div class="pc-map-timeline" aria-label="작전 시간 단계">
@@ -640,8 +651,9 @@
     mount.addEventListener('click',event=>{
       const control=event.target.closest('button,[data-map-marker],[data-map-synchrony-point],[data-map-detail-site]');
       if(!control) return;
-      if(control.dataset.mapMode){state.mode=control.dataset.mapMode;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
-      if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;state.synchronyPoint=null;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapIntelToggle!==undefined){state.intelCollapsed=!state.intelCollapsed;const panel=control.closest('.pc-map-intel-panel');panel?.classList.toggle('is-collapsed',state.intelCollapsed);control.setAttribute('aria-expanded',String(!state.intelCollapsed));control.setAttribute('aria-label',state.intelCollapsed?'지도 선택 정보 펼치기':'지도 선택 정보 접기');root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});saveMapSession();return;}
+      if(control.dataset.mapMode){state.mode=control.dataset.mapMode;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapLayer){state.layers[control.dataset.mapLayer]=!state.layers[control.dataset.mapLayer];state.marker=null;if(control.dataset.mapLayer==='synchrony') state.synchronyPoint=null;root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
       if(control.dataset.mapOpenHistory){root.ProjectCurseAudioControl?.play?.('incident.link');openHistory(control.dataset.mapOpenHistory);return;}
       if(control.dataset.mapOpenFaction){root.ProjectCurseAudioControl?.play?.('incident.link');openFaction(control.dataset.mapOpenFaction);return;}
@@ -651,6 +663,7 @@
         const marker=markerById(control.dataset.mapMarker);
         state.marker=state.marker===control.dataset.mapMarker?null:control.dataset.mapMarker;
         state.synchronyPoint=null;
+        state.intelCollapsed=!state.marker;
         if(marker?.overview&&state.marker===marker.id) state.region='world';
         root.ProjectCurseAudioControl?.play?.('map.signal');
         render();return;
@@ -660,26 +673,28 @@
         if(!signal) return;
         state.marker=null;
         state.synchronyPoint=state.synchronyPoint===signal.point.id?null:signal.point.id;
+        state.intelCollapsed=!state.synchronyPoint;
         root.ProjectCurseAudioControl?.play?.('map.signal');
         render();return;
       }
-      if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
-      if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
+      if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapDetailLayer){const layer=control.dataset.mapDetailLayer;state.detailLayers[layer]=!state.detailLayers[layer];root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
-      if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;root.ProjectCurseAudioControl?.play?.('operation.step');render();return;}
-      if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
-      if(control.dataset.mapDetailClear){state.detailSite=null;render();return;}
-      if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;render();return;}
-      if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
-      if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=operationStep(operationById(state.operation));root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('operation.step');render();return;}
+      if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;state.intelCollapsed=!state.detailSite;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapDetailClear){state.detailSite=null;state.intelCollapsed=true;render();return;}
+      if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render();return;}
+      if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
+      if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=operationStep(operationById(state.operation));state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapStep!==undefined){
         state.step=Number(control.dataset.mapStep)||0;
+        state.intelCollapsed=false;
         root.ProjectCurseAudioControl?.play?.('operation.step');
         if(state.operation===operationStore?.operationId) operationStore.setMapStep(state.step);
         else render();
         return;
       }
-      if(control.dataset.mapReturnRegion){state.mode='region';state.region=control.dataset.mapReturnRegion;state.marker=null;state.synchronyPoint=null;render();}
+      if(control.dataset.mapReturnRegion){state.mode='region';state.region=control.dataset.mapReturnRegion;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render();}
     });
 
     mount.addEventListener('keydown',event=>{
@@ -699,11 +714,11 @@
 
     render();
     root.ProjectCurseMapRoomRuntime=Object.freeze({
-      showRegion(id){if(regionById(id).id!==id) return false;state.mode='region';state.region=id;state.marker=null;state.synchronyPoint=null;render();return true;},
-      showDetail(id,siteId){const detail=detailById(id);if(!detail||detail.id!==id) return false;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;render();return true;},
-      showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));render();return true;},
-      showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;render();return true;},
-      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;render();return true;},
+      showRegion(id){if(regionById(id).id!==id) return false;state.mode='region';state.region=id;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render();return true;},
+      showDetail(id,siteId){const detail=detailById(id);if(!detail||detail.id!==id) return false;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;state.intelCollapsed=!state.detailSite;render();return true;},
+      showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));state.intelCollapsed=false;render();return true;},
+      showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;state.intelCollapsed=false;render();return true;},
+      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;state.intelCollapsed=!point;render();return true;},
       getState:()=>({...state,layers:{...state.layers},detailLayers:{...state.detailLayers}})
     });
   });

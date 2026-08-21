@@ -4,7 +4,7 @@ import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.45.0';
+const VERSION='5.46.0';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -313,7 +313,9 @@ add('three-night-synchrony-ten-points',synchronyEvent?.points?.length===10&&sync
 add('three-night-synchrony-no-route',synchronyEvent?.connection==='UNRESOLVED'&&synchronyEvent.route===null&&!('points' in (synchronyEvent.route||{}))&&synchronyEvent.boundary.includes('지리적 연결'));
 add('three-night-synchrony-runtime',mapRoomRuntime.includes('data-map-synchrony-point')&&mapRoomRuntime.includes('renderSynchronyIntel')&&mapRoomRuntime.includes('NO ROUTE / NO GEOGRAPHIC LINK')&&mapRoomRuntime.includes('showSynchrony(')&&mapRoomCss.includes('pc-map-mobile-layerbar'));
 add('history-map-bidirectional-handoff',worldHistory.includes('linkedSynchrony')&&worldHistoryCss.includes('data-history-map-synchrony')&&worldHistory.includes('showSynchrony?.(button.dataset.historyMapSynchrony)')&&mapRoomRuntime.includes("state.region=point?.region||'world'"));
-add('map-session-restore',mapRoomRuntime.includes("sessionKey='project_curse_map_session_v1'")&&mapRoomRuntime.includes('function restoreMapSession')&&mapRoomRuntime.includes('function saveMapSession')&&mapRoomRuntime.includes('detailLayers:{...state.detailLayers}'));
+add('history-map-rendered-marker-gate',worldHistory.includes('mappedIncidentIds')&&worldHistory.includes('mappedOperationIds')&&worldHistory.includes('if(mappedIncidentIds.has(incident.id))')&&context.window.ProjectCurseIncidentNetwork?.incidents?.['evt-amarion-foundation']?.coordinates?.length===2&&!context.window.ProjectCurseMapRoom?.markers?.some(marker=>marker.incident==='evt-amarion-foundation'));
+add('mobile-map-intel-panel',mapRoomRuntime.includes('function renderIntelPanel')&&mapRoomRuntime.includes('data-map-intel-toggle')&&mapRoomRuntime.includes('state.intelCollapsed')&&mapRoomCss.includes('.pc-map-intel-panel.is-collapsed .pc-map-intel-body'));
+add('map-session-restore',mapRoomRuntime.includes("sessionKey='project_curse_map_session_v1'")&&mapRoomRuntime.includes('function restoreMapSession')&&mapRoomRuntime.includes('function saveMapSession')&&mapRoomRuntime.includes('detailLayers:{...state.detailLayers}')&&mapRoomRuntime.includes('intelCollapsed:state.intelCollapsed'));
 add('incident-screen-crosslinks',mapRoomRuntime.includes('data-map-open-history')&&mapRoomRuntime.includes('data-map-open-faction')&&mapRoomRuntime.includes('data-map-open-record')&&worldHistory.includes('ProjectCurseWorldHistoryRuntime')&&factionAnalysisRuntime.includes('data-pc-faction-incident')&&archiveRuntime.includes('open:openRecord'));
 add('cinematic-registry-four-records',cinematicData?.ids?.().join('|')==='Cults_871104|Immortality_860201|Ferals_860722|Sakuma_Tape_991028',cinematicData?.ids?.().join('|'));
 add('cinematic-record-config-owned-by-modules',![cinematicCults,cinematicImmortality,cinematicFerals,cinematicSakuma].some(source=>!source.includes('ProjectCurseCinematicRegistry?.register'))&&main.includes('cinematicRegistry?.get?.(state.activeRecord)')&&main.includes('cinematicRegistry?.pages?.(recordId)'));
@@ -329,7 +331,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v38',structureData?.schema==='project-curse-v38'&&context.window.ProjectCurseBuild?.schema==='project-curse-v38');
+add('manifest-runtime-schema-v39',structureData?.schema==='project-curse-v39'&&context.window.ProjectCurseBuild?.schema==='project-curse-v39');
 add('manifest-japan-technology-owner',structureData?.owners?.japanTechnologyData==='assets/js/data/japan-technology-data.js');
 add('manifest-lineage-owner',structureData?.owners?.factionLineage==='assets/js/data/faction-lineage-data.js');
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);

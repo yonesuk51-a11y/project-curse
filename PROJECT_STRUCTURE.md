@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.45.0
+# Project Curse Structure — 5.46.0
 
 ## 활성 소유권
 
@@ -53,11 +53,11 @@
 | 공통 중복 연결 정리 | `assets/js/pages/shared-declutter.js` |
 | 비보호 화면 명칭 정합화 | `assets/js/pages/canon-reconciliation.js` |
 | 영상·문서·권역·작전 기록 카드 색인 | `assets/js/pages/archive-consolidation.js` |
-| 시대별 세계 사건 연표·필터·정사 판정·지도 역방향 연결 | `assets/js/pages/world-history.js` + `assets/css/world-history.css` |
+| 시대별 세계 사건 연표·필터·정사 판정·실제 표식 기반 지도 역방향 연결 | `assets/js/pages/world-history.js` + `assets/css/world-history.css` |
 | 세력 분석실 | `assets/js/pages/faction-analysis.js` |
 | 관제지도 설정 자료·2042 독립 동시관측점 | `assets/js/data/map-room-data.js` |
 | 대흑림·데드존 구역·지점·경로 위험·순례 규칙 | `assets/js/data/regional-drilldown-data.js` |
-| 지역 상황도·경로 강조·독립 신호층·세션 복원·모바일 레이어 제어·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
+| 지역 상황도·경로 강조·독립 신호층·세션 복원·모바일 레이어 및 접이식 정보 패널·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
 | 홈 통계·경보·직접 연결 | `assets/js/pages/terminal-home.js` + `assets/css/terminal-foundation.css` |
 | 원본·보정·복원 이미지 정책 | `ASSET_POLICY.md` |
 | 신규 복원 추정 이미지 출처 대장 | `assets/resources/ASSET_REGISTRY.md` |
@@ -73,6 +73,8 @@
 2042년 삼야 무응답은 `map-room-data.js`에서 대흑림 성채 여섯 곳과 데드 존 검문소 네 곳의 독립 관측점으로 등록한다. 이 사건은 연결 경로를 소유하지 않으며, 지도 런타임도 두 권역 사이 선을 생성하지 않는다.
 
 5.45.0의 연표→지도 이동은 `synchronyEvents[].history`를 기준으로 생성한다. 지도 선택과 채널 밀도는 `sessionStorage`에만 저장하고 공통 정사 데이터나 영구 로컬 판정 저장소를 변경하지 않는다.
+
+5.46.0부터 일반 사건의 연표→지도 위치 버튼은 `map-room-data.js`의 실제 렌더링 표식이 해당 사건 ID를 참조할 때만 생성한다. 사건 등록부의 위·경도만으로는 공개 지도 위치를 소유하지 않는다. 모바일 지역·세부·작전 정보 패널의 접힘 상태도 지도 세션에만 저장한다.
 
 `media-provenance-data.js`는 `MEDIA_PROVENANCE_OVERRIDES.json`과 실제 `assets` 파일 집합에서 생성되는 공개 감사 스냅샷이다. 기록보관소는 이 스냅샷의 총자산·검토 대기·미디어 종류·참고 전용 노출 상태를 표시한다. 파일별 승인 근거는 오버라이드에서만 수정하고 생성 대장은 직접 편집하지 않는다.
 

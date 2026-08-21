@@ -1,4 +1,4 @@
-/* Project Curse 5.44.0 — route focus, isolated synchrony signals, regional drilldown, and operation trace room */
+/* Project Curse 5.46.0 — evidence-gated map links and collapsible mobile intelligence panels */
 #map-room {
   padding: 0;
   border: 0;
@@ -203,6 +203,8 @@
   border: 1px solid var(--map-line);
   background: linear-gradient(160deg, rgba(20, 24, 25, .9), rgba(7, 9, 10, .96));
 }
+.pc-map-intel-toggle { display: none; }
+.pc-map-intel-body { display: contents; }
 
 .pc-map-panel-title { margin-bottom: 16px; }
 
@@ -693,6 +695,16 @@
   .pc-map-mobile-layerbar .pc-map-mobile-synchrony.is-active { border-color: rgba(218, 168, 91, .56); color: #efd5a5; background: rgba(102, 63, 23, .23); }
   .pc-map-mobile-layerbar button b { margin-left: 5px; color: #dbab62; font: inherit; }
   .pc-map-intel { display: block; }
+  .pc-map-sidebar.pc-map-intel-panel { padding: 0; overflow: hidden; }
+  .pc-map-intel-toggle { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 4px 12px; width: 100%; min-height: 58px; padding: 10px 14px; border: 0; border-bottom: 1px solid rgba(190,197,194,.11); color: #dce2df; background: linear-gradient(110deg,rgba(123,35,42,.17),rgba(8,11,12,.96)); text-align: left; cursor: pointer; }
+  .pc-map-intel-toggle small { grid-column: 1; color: rgba(202,84,92,.62); font: 700 7px/1 ui-monospace,Consolas,monospace; letter-spacing: .12em; }
+  .pc-map-intel-toggle b { grid-column: 1; overflow: hidden; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+  .pc-map-intel-toggle i { grid-column: 2; grid-row: 1/3; width: 9px; height: 9px; border-right: 1px solid #bd656c; border-bottom: 1px solid #bd656c; transform: rotate(45deg); transition: transform .28s cubic-bezier(.16,1,.3,1); }
+  .pc-map-intel-toggle[aria-expanded="true"] i { transform: translateY(3px) rotate(225deg); }
+  .pc-map-intel-toggle:hover,.pc-map-intel-toggle:focus-visible { color: #fff; background: linear-gradient(110deg,rgba(147,43,51,.28),rgba(8,11,12,.96)); outline: 1px solid rgba(205,79,88,.5); outline-offset: -1px; }
+  .pc-map-intel-body { display: block; padding: 15px; }
+  .pc-map-intel-panel.is-collapsed .pc-map-intel-toggle { border-bottom-color: transparent; }
+  .pc-map-intel-panel.is-collapsed .pc-map-intel-body { display: none; }
   .pc-map-operation-stage,
   .pc-map-operation-stage .pc-map-svg,
   .pc-map-detail-stage,
@@ -739,6 +751,7 @@
   .pc-map-stage-head { font-size: 6.5px; }
   .pc-map-coordinates { display: none; }
   .pc-map-sidebar { padding: 15px; }
+  .pc-map-sidebar.pc-map-intel-panel { padding: 0; }
   .pc-map-operation-intel h3,
   .pc-map-intel h3,
   .pc-map-detail-intel h3 { font-size: 19px; }

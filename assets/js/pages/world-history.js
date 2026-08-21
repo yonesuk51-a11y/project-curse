@@ -1,4 +1,4 @@
-// Project Curse 5.45.0 — authored archive fragments with bidirectional chronology-to-map handoff.
+// Project Curse 5.46.0 — authored archive fragments with evidence-gated chronology-to-map handoff.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
@@ -520,6 +520,8 @@
 
     const linkedIncidents=incidentNetwork?.incidentList?.filter(item=>item.history===record.id)||[];
     const linkedSynchrony=(window.ProjectCurseMapRoom?.synchronyEvents||[]).filter(event=>event.history===record.id);
+    const mappedIncidentIds=new Set((window.ProjectCurseMapRoom?.markers||[]).map(marker=>marker.incident).filter(Boolean));
+    const mappedOperationIds=new Set((window.ProjectCurseMapRoom?.operations||[]).map(operation=>operation.id));
     const linkedFactions=[...new Set([
       ...(Array.isArray(record.factions)?record.factions:[]),
       ...linkedIncidents.flatMap(incident=>incident.factions)
@@ -540,8 +542,8 @@
         linkHost.appendChild(button);
       };
       linkedIncidents.forEach(incident=>{
-        addLink(`${incident.title} 위치`,'historyMapIncident',incident.id);
-        if(incident.operation) addLink(`${incident.title} 작전`,'historyMapOperation',incident.operation);
+        if(mappedIncidentIds.has(incident.id)) addLink(`${incident.title} 위치`,'historyMapIncident',incident.id);
+        if(incident.operation&&mappedOperationIds.has(incident.operation)) addLink(`${incident.title} 작전`,'historyMapOperation',incident.operation);
       });
       linkedSynchrony.forEach(event=>addLink(`${event.title} 관측도 · ${event.points.length}개 신호`,'historyMapSynchrony',event.id));
       linkedFactions.forEach(key=>addLink(`${window.ProjectCurseCanon.factions[key].name} 분석`,'historyFaction',key));
