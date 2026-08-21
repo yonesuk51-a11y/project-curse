@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.48.0
+# Project Curse Structure — 5.48.1
 
 ## 활성 소유권
 
@@ -9,7 +9,7 @@
 | 조직 정사·관계·우시노다 계층 | `assets/js/data/canon-registry.js` |
 | 세력 문양 자산·출처·감식 신뢰도·상징 해석 | `assets/js/data/faction-mark-registry.js` |
 | 우시노다 종파·지역 혈교 계보·지휘 상태·세계사 연결 | `assets/js/data/faction-lineage-data.js` |
-| 세력 분석·문양 감식 화면 | `assets/js/pages/faction-analysis.js` + `assets/css/faction-analysis.css` |
+| 세력 분석·선택형 현장 판독·문양 감식 화면 | `assets/js/pages/faction-analysis.js` + `assets/css/faction-analysis.css` |
 | 세계사 시대·사건 판정·근거·결정 대기 | `assets/js/data/world-history-data.js` + `WORLD_CANON_LEDGER.md` |
 | 일본 제6계측계획·실제 역사 경계·기술 계보 | `assets/js/data/japan-technology-data.js` |
 | 세계사 작성자·수신자·문서 형식·본문 조각 | `assets/js/data/world-history-prose-data.js` + `WRITING_STYLE_GUIDE.md` |
@@ -71,6 +71,8 @@
 성능 계측 다음에 품질 정책이 연결·기기 신호와 사용자의 전송 품질 설정을 판독하고, 적응형 미디어·오디오·영상·전환 런타임이 같은 판정 결과를 공유한다. 오프라인 전환과 시각 자료 재요청도 이 정책에서 단일하게 전달한다.
 
 `build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, 오디오·전환·채널 데이터, 조직 정사와 `world-history-data.js`의 시대·판정 대장이 로드된다. `japan-technology-data.js`가 제6계측계획 다섯 사건, 실제 역사 기준과 2003·2026년까지 이어지는 기술 계보를 제공하고 `world-history-prose-data.js`가 기존 기록과 2031–2042 후속 사건의 작성자·수신자·목적과 기록 조각을 결합한다. 세계 기록 런타임은 세 대장을 함께 읽어 아홉 시대·43개 사건을 표시한다. 이어서 사건·화면 데이터와 기록·시각 증거·반응형 미디어 데이터가 로드된다. `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말, 그리고 앞선 선택에 반응하는 후속 변형을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. `map-signal-index-data.js`는 이 지도 자료와 공통 사건 등록부를 읽어 29개 검색 항목을 파생하며 별도의 위치나 사건을 만들지 않는다. 영상 설정 다음에는 부팅·오디오·적응형 미디어·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 단계별 작전지도와 홈 수신 신호를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·미디어 준비·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
+
+5.48.1의 문체 패스는 사건 정사 대장인 `world-history-data.js`를 수정하지 않는다. `world-history-prose-data.js`의 2031–2042 기록 조각만 윤문하며, U.A.C·우시노다교·혈교의 선택형 `profile` 블록은 기존 세력 관계와 계보를 덮어쓰지 않는다. 시각 증거 분류도 기존 네 등급을 유지하고 표시 순서와 한국어 배지만 정리한다.
 
 2042년 삼야 무응답은 `map-room-data.js`에서 대흑림 성채 여섯 곳과 데드 존 검문소 네 곳의 독립 관측점으로 등록한다. 이 사건은 연결 경로를 소유하지 않으며, 지도 런타임도 두 권역 사이 선을 생성하지 않는다.
 

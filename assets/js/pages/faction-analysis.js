@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — intelligence dossier, cult lineage atlas and shared incident owner.
+// Project Curse 5.48.1 — intelligence dossier, faction-specific field profile, cult lineage and incident owner.
 (function(){
   'use strict';
 
@@ -61,6 +61,16 @@
       <strong>${esc(target.name)}<small>${esc(relation.label)}</small></strong>
       <span>${esc(relation.text)}</span><i aria-hidden="true">›</i>
     </button>`;
+  }
+
+  function factionProfile(faction){
+    const profile=faction.profile;
+    if(!profile?.items?.length) return '';
+    return `<section class="pc-faction-profile" aria-label="${esc(profile.label)}">
+      <header><small>${esc(profile.code)}</small><h4>${esc(profile.label)}</h4></header>
+      <p>${esc(profile.note)}</p>
+      <dl>${profile.items.map(([term,text])=>`<div><dt>${esc(term)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>
+    </section>`;
   }
 
   function markAuthentication(key){
@@ -134,6 +144,7 @@
       <section class="pc-faction-copy" aria-label="조직 개요">
         ${faction.overview.map((paragraph)=>`<p>${esc(paragraph)}</p>`).join('')}
       </section>
+      ${factionProfile(faction)}
       <div class="pc-faction-brief-grid">
         <section class="pc-faction-operations"><h4 class="pc-faction-section-title">확인된 활동</h4>
           <ul>${faction.operations.map((item)=>`<li>${esc(item)}</li>`).join('')}</ul>

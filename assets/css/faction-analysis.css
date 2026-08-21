@@ -1,4 +1,4 @@
-/* Project Curse 5.42.0 — unified faction analysis room, marks and lineage atlas */
+/* Project Curse 5.48.1 — unified faction analysis room, field profiles, marks and lineage atlas */
 #faction-relation {
   display: none !important;
 }
@@ -231,6 +231,7 @@ body.pc-faction-analysis-ready #faction-info {
 }
 
 .pc-faction-lead {
+  max-width: 76ch;
   margin: 0;
   padding: 23px 0 25px;
   border-bottom: 1px solid #202526;
@@ -501,15 +502,68 @@ body.pc-faction-analysis-ready #faction-info {
 }
 
 .pc-faction-copy p {
+  max-width: 78ch;
   margin: 0 0 13px;
   color: #aeb4b5;
   font-size: 13px;
   line-height: 1.9;
+  word-break: keep-all;
 }
 
 .pc-faction-copy p:last-child {
   margin-bottom: 0;
 }
+
+.pc-faction-profile {
+  margin-top: 24px;
+  border: 1px solid #292e2f;
+  border-left: 2px solid var(--pc-faction-mark-accent, #9f292f);
+  background: linear-gradient(110deg,color-mix(in srgb,var(--pc-faction-mark-accent,#9f292f) 8%,transparent),transparent 42%),#080a0a;
+}
+
+.pc-faction-profile > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 15px 17px;
+  border-bottom: 1px solid #252a2b;
+}
+
+.pc-faction-profile > header small {
+  color: var(--pc-faction-mark-accent, #b63138);
+  font: 700 8px/1.4 var(--mono, monospace);
+  letter-spacing: .14em;
+}
+
+.pc-faction-profile > header h4 {
+  margin: 0;
+  color: #dce0df;
+  font-size: 14px;
+}
+
+.pc-faction-profile > p {
+  max-width: 76ch;
+  margin: 0;
+  padding: 16px 17px;
+  color: #aeb5b5;
+  font-size: 12px;
+  line-height: 1.8;
+  word-break: keep-all;
+}
+
+.pc-faction-profile dl {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 1px;
+  margin: 0;
+  border-top: 1px solid #252a2b;
+  background: #252a2b;
+}
+
+.pc-faction-profile dl > div { min-width: 0; padding: 13px 15px; background: #090b0b; }
+.pc-faction-profile dt { margin-bottom: 6px; color: var(--pc-faction-mark-accent,#b63138); font: 700 8px/1.35 var(--mono,monospace); letter-spacing: .1em; }
+.pc-faction-profile dd { margin: 0; color: #9ea6a6; font-size: 11px; line-height: 1.7; word-break: keep-all; }
 
 .pc-faction-section-title {
   display: flex;
@@ -690,4 +744,6 @@ body.pc-faction-analysis-ready #faction-info {
   .pc-lineage-edges small { grid-column: 1 / -1; }
   .pc-lineage-warning { grid-template-columns: 1fr; gap: 4px; }
   .pc-lineage-history { grid-template-columns: 1fr; }
+  .pc-faction-profile > header { align-items: flex-start; flex-direction: column; gap: 5px; }
+  .pc-faction-profile dl { grid-template-columns: 1fr; }
 }

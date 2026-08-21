@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.48.0';
+const VERSION='5.48.1';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -26,6 +26,8 @@ const audioManifest=read('assets/js/data/audio-manifest.js');
 const audioController=read('assets/js/core/audio-controller.js');
 const operationState=read('assets/js/core/operation-state.js');
 const faction=read('assets/js/pages/faction-analysis.js');
+const factionData=read('assets/js/data/faction-analysis-data.js');
+const historyProse=read('assets/js/data/world-history-prose-data.js');
 const archive=read('assets/js/pages/archive-consolidation.js');
 const documentViewer=read('assets/js/pages/archive-document.js');
 const documentCss=read('assets/css/archive-document.css');
@@ -90,6 +92,9 @@ check('shell:settings-scroll-and-recovery-hitbox',channelIdentityRuntime.include
 check('faction:no-detail-route',!faction.includes('#faction-info/')&&!faction.includes('pushState')&&!faction.includes('replaceState'));
 check('faction:no-history-listeners',!faction.includes('hashchange')&&!faction.includes('popstate'));
 check('faction:internal-state',faction.includes('let selected=null')&&faction.includes('renderIndex()')&&faction.includes('renderDossier'));
+check('faction:three-field-profiles',faction.includes('factionProfile(faction)')&&['AUTHORITY DESK / RELEASE 17-C','RITUAL LINEAGE / DO NOT MERGE','BLOOD MEDIUM / COMMAND UNKNOWN'].every(marker=>factionData.includes(marker)));
+check('history:distinct-working-voices',['봉인실 메모','정비반 음성','신호장교 구두보고'].every(marker=>historyProse.includes(marker)));
+check('evidence:korean-first-status',documentViewer.includes('archive-evidence-badge')&&['원본 보존','열람 보정','복원 추정','출처 대조 대기'].every(label=>documentViewer.includes(label))&&visualEvidenceCss.includes('.archive-evidence-badge'));
 
 const documents=context.window.ProjectCurseArchive?.publicRecords?.filter(record=>record.format==='document')||[];
 check('archive:nine-documents',documents.length===9,documents.length);

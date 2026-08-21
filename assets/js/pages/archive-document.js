@@ -1,4 +1,4 @@
-// Project Curse 5.42.0 — adaptive archive document, source provenance, local-verdict boundary, and verdict renderer.
+// Project Curse 5.48.1 — adaptive archive document, readable provenance badges and local-verdict boundary.
 (function(){
   'use strict';
 
@@ -78,7 +78,7 @@
       figure.dataset.evidenceIndex=String(index);
       const strip=el('div','archive-evidence-strip');
       const open=el('button','','증거 확대');open.type='button';open.dataset.visualEvidenceOpen=String(index);
-      strip.append(el('i'),el('b','',item.className),el('small','',`${item.assetId} / ${item.classInfo.label}`),open);
+      strip.append(el('i'),el('b','archive-evidence-badge',item.classInfo.label),el('small','',`${item.className} / ${item.assetId}`),open);
       figure.append(strip);
     }
     figure.append(image);
@@ -95,9 +95,9 @@
     head.append(el('small','','VISUAL EVIDENCE ARCHIVE / SOURCE INTEGRITY'),el('h2','','시각 증거 보존 상태'),el('p','','현재 문서에 사용된 이미지의 출처 등급과 원본 대조 가능 여부를 표시한다. 복원 추정본은 원본 기록을 대신하지 않는다.'));
     const stats=el('div','archive-evidence-stats');
     const counts=Object.fromEntries(Object.keys(window.ProjectCurseVisualEvidence?.classes||{}).map(key=>[key,items.filter(item=>item.className===key).length]));
-    [['ORIGINAL','원본'],['STABILIZED','보정본'],['RECONSTRUCTED','복원본'],['UNVERIFIED','대조 대기']].forEach(([key,label])=>{const cell=el('span');cell.append(el('small','',label),el('b','',String(counts[key]||0).padStart(2,'0')));stats.append(cell);});
+    [['ORIGINAL','원본 보존'],['STABILIZED','열람 보정'],['RECONSTRUCTED','복원 추정'],['UNVERIFIED','출처 대조 대기']].forEach(([key,label])=>{const cell=el('span');cell.append(el('small','',label),el('b','',String(counts[key]||0).padStart(2,'0')));stats.append(cell);});
     const filters=el('div','archive-evidence-filters');
-    [['ALL','전체'],['ORIGINAL','원본'],['STABILIZED','보정본'],['RECONSTRUCTED','복원 추정'],['UNVERIFIED','대조 대기']].forEach(([key,label],index)=>{const button=el('button',index===0?'is-active':'',label);button.type='button';button.dataset.evidenceFilter=key;button.setAttribute('aria-pressed',index===0?'true':'false');filters.append(button);});
+    [['ALL','전체'],['ORIGINAL','원본 보존'],['STABILIZED','열람 보정'],['RECONSTRUCTED','복원 추정'],['UNVERIFIED','출처 대조 대기']].forEach(([key,label],index)=>{const button=el('button',index===0?'is-active':'',label);button.type='button';button.dataset.evidenceFilter=key;button.setAttribute('aria-pressed',index===0?'true':'false');filters.append(button);});
     const list=el('div','archive-evidence-list');
     items.forEach((item,index)=>{
       const card=el('button',`archive-evidence-card is-${item.classInfo.tone}`);card.type='button';card.dataset.visualEvidenceOpen=String(index);card.dataset.evidenceClass=item.className;

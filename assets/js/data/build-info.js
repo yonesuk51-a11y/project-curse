@@ -1,4 +1,4 @@
-// Project Curse 5.48.0 — single source of truth for the terminal build.
+// Project Curse 5.48.1 — writing and readability pass build manifest.
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.48.0',
-    codename:'Release Clearance',
+    version:'5.48.1',
+    codename:'Writing & Readability',
     schema:'project-curse-v41',
     released:'2026-08-21',
     screens:[

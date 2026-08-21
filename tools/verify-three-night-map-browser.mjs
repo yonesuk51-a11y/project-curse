@@ -30,7 +30,7 @@ async function openMap(viewport,label){
   page.on('request',request=>requests.push(request.url()));
   await page.goto(baseUrl,{waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.1');
   await page.evaluate(()=>window.ProjectCurseShell.navigate('map-room',{historyMode:'replace'}));
   await page.waitForFunction(()=>document.body.dataset.route==='map-room');
   await page.waitForSelector('[data-synchrony-event="three-night-silence"]');
@@ -110,7 +110,7 @@ check('desktop:gbf-six-filter',await desktop.page.locator('[data-map-synchrony-p
 await desktop.page.locator('[data-map-synchrony-point="gbf-bell-03"]').click();
 await desktop.page.waitForSelector('[data-map-synchrony-point="gbf-bell-03"].is-selected');
 check('desktop:no-generated-core-audio-requests',!desktop.requests.some(url=>url.includes('/assets/audio/core/')),desktop.requests.filter(url=>url.includes('/assets/audio/')).join(' | '));
-const desktopShot=join(tmpdir(),'project-curse-5.48.0-synchrony-map-desktop.png');
+const desktopShot=join(tmpdir(),'project-curse-5.48.1-synchrony-map-desktop.png');
 await desktop.page.screenshot({path:desktopShot,fullPage:false});
 check('desktop:no-final-errors',desktop.errors.length===0,desktop.errors.join(' | '));
 await desktop.context.close();
@@ -150,7 +150,7 @@ check('mobile:signal-intel',mobileIntel.title==='삼야 무응답'&&mobileIntel.
 check('mobile:no-detail-overflow',mobileIntel.documentWidth<=mobileIntel.viewport&&mobileIntel.shellWidth<=mobileIntel.viewport,JSON.stringify(mobileIntel));
 check('mobile:no-generated-core-audio-requests',!mobile.requests.some(url=>url.includes('/assets/audio/core/')),mobile.requests.filter(url=>url.includes('/assets/audio/')).join(' | '));
 await mobile.page.locator('.pc-map-intel').scrollIntoViewIfNeeded();
-const mobileShot=join(tmpdir(),'project-curse-5.48.0-synchrony-map-mobile.png');
+const mobileShot=join(tmpdir(),'project-curse-5.48.1-synchrony-map-mobile.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-final-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();

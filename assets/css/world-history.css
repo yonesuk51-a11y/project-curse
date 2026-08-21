@@ -1,4 +1,4 @@
-/* Project Curse 5.45.0 — authored archive fragments, provenance and chronology-to-map handoff. */
+/* Project Curse 5.48.1 — authored archive fragments with focused reading width and map handoff. */
 #history.pc-world-history{max-width:1580px;margin:0 auto;padding:clamp(22px,3vw,48px);border-color:rgba(158,168,173,.2);background:linear-gradient(145deg,#0c0f11,#070809 72%)}
 #history .pc-world-history-head{max-width:900px;margin:0 0 26px}
 #history .pc-world-history-head .label{margin-bottom:12px}
@@ -128,7 +128,7 @@
 #history .pc-world-history-provenance>div:last-child{border-right:0}
 #history .pc-world-history-provenance span{color:rgba(196,178,139,.42);font:600 .56rem/1.3 ui-monospace,Consolas,monospace;letter-spacing:.08em}
 #history .pc-world-history-provenance b{color:rgba(222,215,199,.68);font-size:.7rem;line-height:1.5}
-#history .pc-world-history-detail-body{display:grid;max-width:90ch;padding:28px 0 36px;color:rgba(229,231,232,.91);font-size:1rem;line-height:1.95}
+#history .pc-world-history-detail-body{display:grid;max-width:78ch;padding:28px 0 36px;color:rgba(229,231,232,.91);font-size:1rem;line-height:1.9;word-break:keep-all}
 #history .pc-world-history-fragment{position:relative;padding:22px 0 24px;border-bottom:1px solid rgba(169,179,183,.13)}
 #history .pc-world-history-fragment:first-child{padding-top:0}
 #history .pc-world-history-fragment:last-child{padding-bottom:0;border-bottom:0}

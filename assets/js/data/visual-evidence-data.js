@@ -1,11 +1,11 @@
-// Project Curse 5.33.0 — visual evidence provenance, comparison pairs, and source-status resolver.
+// Project Curse 5.48.1 — visual evidence provenance, Korean status labels, comparison pairs and resolver.
 (function(root){
   'use strict';
 
   const classes=Object.freeze({
     ORIGINAL:Object.freeze({label:'원본 보존',tone:'original',description:'원본 출처 계열에서 회수된 기록 자산'}),
     STABILIZED:Object.freeze({label:'열람 보정본',tone:'stabilized',description:'원본을 보존한 채 열람을 위해 보정한 파생본'}),
-    RECONSTRUCTED:Object.freeze({label:'복원 추정본',tone:'reconstructed',description:'소실 장면을 설정과 증언을 바탕으로 재구성한 이미지'}),
+    RECONSTRUCTED:Object.freeze({label:'복원 추정',tone:'reconstructed',description:'소실 장면을 설정과 증언을 바탕으로 재구성한 이미지'}),
     UNVERIFIED:Object.freeze({label:'출처 대조 대기',tone:'unverified',description:'기존 기록 자산이지만 원본 계보가 아직 대조되지 않은 이미지'})
   });
 
@@ -43,5 +43,5 @@
     return Object.freeze({...entry,path,className,classInfo:classes[className],assetId:entry.assetId||`VEA-${String(context.recordId||'UNKNOWN').replace(/[^a-z0-9]+/gi,'-').toUpperCase()}-${sequence}`,recordId:context.recordId||'UNKNOWN',sequence:Number(context.sequence||1),caption:context.caption||'',alt:context.alt||'',comparison:entry.comparison?Object.freeze({...entry.comparison,path:normalize(entry.comparison.src),classInfo:classes[entry.comparison.className]||classes.UNVERIFIED}):null});
   }
 
-  root.ProjectCurseVisualEvidence=Object.freeze({version:'1.0.0',classes,known,normalize,resolve});
+  root.ProjectCurseVisualEvidence=Object.freeze({version:'1.1.0',classes,known,normalize,resolve});
 })(window);

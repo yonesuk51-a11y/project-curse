@@ -1,11 +1,20 @@
 # Future Patch Pointer
 
-Current baseline: `5.48.0 Release Clearance`
+Current baseline: `5.48.1 Writing & Readability`
 
 Completed in this baseline:
-`174 Registered Assets / 150 Reviews Open / 30 Priority Reviews / 3 Reference-Only Bundles / 0 Exposures`
+`6 Aftermath Records Revoiced / 3 Faction Profiles / 4 Evidence Labels / 0 Canon Changes`
 
 Primary scope:
+
+- 기존 홈·여섯 채널·로딩·음향·지도 배치 보존
+- 2031–2042 여섯 사건의 문서 조각을 작성 주체별 목소리로 보강
+- U.A.C·우시노다교·혈교에 서로 다른 현장 판독 블록 시범 적용
+- 시각 증거의 한국어 상태 배지와 기술 코드 표시 순서 정리
+- 세계사 상세와 세력 설명의 읽기 폭·줄 간격 미세 조정
+- 정사 사건, 세력 관계, 보호 기록과 미디어 자산 변경 없음
+
+Release-clearance scope retained from 5.48.0:
 
 - 여섯 번째 단말 채널 `미디어 감사`와 독립적인 청록·황동 계열 UI 추가
 - 실제 공개 자산 174개의 파일 등록·원본 계보·공개 허가 판정을 분리

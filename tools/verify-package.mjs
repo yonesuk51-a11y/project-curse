@@ -4,7 +4,7 @@ import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.48.0';
+const VERSION='5.48.1';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -381,7 +381,7 @@ const feralCinematic=context.window.ProjectCurseFeralCinematic;
 add('archive-zone-term-colors',archiveDocumentRuntime.includes("'그린존':'green'")&&archiveDocumentRuntime.includes("'레드존':'red'")&&read('assets/css/archive-document.css').includes('.archive-term-black'));
 add('archive-rich-document-runtime',archiveDocumentRuntime.includes('appendFigure')&&archiveDocumentRuntime.includes('appendTable')&&archiveDocumentRuntime.includes('section.groups'));
 add('archive-source-layer-runtime',archiveDocumentRuntime.includes('function appendRecordContext')&&archiveDocumentRuntime.includes('archive-doc-record-context')&&archiveDocumentRuntime.includes('section.record')&&read('assets/css/archive-document.css').includes('.archive-doc-record-context'));
-add('visual-evidence-owner',structureData?.owners?.visualEvidenceData==='assets/js/data/visual-evidence-data.js'&&structureData?.owners?.visualEvidenceCSS==='assets/css/visual-evidence.css'&&visualEvidence?.version==='1.0.0');
+add('visual-evidence-owner',structureData?.owners?.visualEvidenceData==='assets/js/data/visual-evidence-data.js'&&structureData?.owners?.visualEvidenceCSS==='assets/css/visual-evidence.css'&&visualEvidence?.version==='1.1.0');
 add('visual-evidence-classes',['ORIGINAL','STABILIZED','RECONSTRUCTED','UNVERIFIED'].every(key=>visualEvidence?.classes?.[key])&&read('ASSET_POLICY.md').includes('**UNVERIFIED**'));
 add('visual-evidence-honest-reconstructions',['assets/resources/derived/great-black-forest_reconstructed-v1.png','assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png'].every(src=>{const item=visualEvidence?.resolve?.(src);return item?.className==='RECONSTRUCTED'&&item?.originalState==='missing'&&!item?.comparison;}));
 add('visual-evidence-real-comparison-links',visualEvidence?.resolve?.('assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp')?.comparison?.path?.includes('114223e8cf8c8ea96c6d4ffca6cae2ce')&&visualEvidence?.resolve?.('assets/resources/archive-enex/feral-classification/image-241hs-angel-presence.png')?.comparison?.path?.includes('83d311da1ab7310a567c6023f6151e6c'));
@@ -595,6 +595,10 @@ add('history-prose-canon-id-parity',Object.keys(worldHistoryProse?.records||{}).
 add('history-eight-document-voices',Object.keys(worldHistoryProse?.documentTypes||{}).length===8&&proseTypes.size===8);
 add('history-variable-fragment-structure',fragmentCounts.size>=3&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='log'))&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='quote')));
 add('history-prose-pattern-audit',!/~의 계기가|결국 .*이어졌다|단순한 .*아니었다|진실은 확인되지|라고 판단했다|에 가까웠다|이때부터|두 번째 이유/.test(proseText));
+const aftermathProse=['2031-02-03-branch-seal','2032-08-14-three-bells-compact','2034-04-22-inland-beacon-31','2036-12-12-central-callsign-loss','2038-06-29-sixth-northern-line','2042-10-31-three-night-silence'].map(id=>worldHistoryProse.records[id]);
+add('history-aftermath-distinct-working-voices',aftermathProse.every(record=>record?.author&&record?.recipient&&record?.purpose&&record.fragments?.length>=3)&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='봉인실 메모'))&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='정비반 음성'))&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='신호장교 구두보고')));
+add('faction-three-distinct-field-profiles',['uac','ushinoda','blood-cult'].every(key=>factionAnalysis?.factions?.[key]?.profile?.items?.length===3)&&new Set(['uac','ushinoda','blood-cult'].map(key=>factionAnalysis.factions[key].profile.code)).size===3&&factionAnalysisRuntime.includes('function factionProfile'));
+add('visual-evidence-readable-status-badges',visualEvidence?.version==='1.1.0'&&visualEvidence.classes.ORIGINAL.label==='원본 보존'&&visualEvidence.classes.RECONSTRUCTED.label==='복원 추정'&&visualEvidence.classes.UNVERIFIED.label==='출처 대조 대기'&&read('assets/js/pages/archive-document.js').includes('archive-evidence-badge')&&visualEvidenceCss.includes('.archive-evidence-badge'));
 add('history-1995-public-record-boundary',worldHistoryProse?.records?.['1995-03-20-tokyo-subway']?.fragments?.some(fragment=>fragment.text.includes('실제 공격의 실행 주체와 피해 사실은 공개 수사·재판 기록을 따른다'))&&worldHistoryProse.records['1995-03-20-tokyo-subway'].fragments.some(fragment=>fragment.text.includes('직접적인 인과관계는 등록하지 않는다')));
 add('history-writing-standard',read('WRITING_STYLE_GUIDE.md').includes('기록 작성 전 확인')&&read('WRITING_STYLE_GUIDE.md').includes('기관별 목소리')&&read('WRITING_STYLE_GUIDE.md').includes('실제 역사'));
 add('history-era-filter-runtime',worldHistory.includes('historyEraFilter')&&worldHistory.includes('function renderIndex')&&worldHistory.includes('pc-world-history-record-state')&&worldHistory.includes('ProjectCurseWorldHistoryData'));

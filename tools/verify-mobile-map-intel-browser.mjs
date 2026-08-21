@@ -31,7 +31,7 @@ async function openSite(viewport,label){
   });
   await page.reload({waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.1');
   return {context,page,errors,requests};
 }
 
@@ -119,7 +119,7 @@ const finalMobile=await mobile.page.evaluate(()=>({
 check('mobile:operation-step-auto-expands',finalMobile.expanded==='true'&&finalMobile.title?.includes('T-'),JSON.stringify(finalMobile));
 check('mobile:no-overflow',finalMobile.documentWidth<=finalMobile.viewport,JSON.stringify(finalMobile));
 check('mobile:no-new-core-audio',!mobile.requests.some(url=>url.includes('/assets/audio/core/')));
-const mobileShot=join(tmpdir(),'project-curse-5.48.0-mobile-map-intel.png');
+const mobileShot=join(tmpdir(),'project-curse-5.48.1-mobile-map-intel.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();
