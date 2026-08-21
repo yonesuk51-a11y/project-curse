@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.47.0
+# Project Curse Structure — 5.48.0
 
 ## 활성 소유권
 
@@ -17,6 +17,7 @@
 | 시각 증거 등급·출처·원본 비교 관계 | `assets/js/data/visual-evidence-data.js` |
 | 반응형 이미지 원본 치수·파생본 후보 | `assets/js/data/media-manifest.js` |
 | 전체 이미지·음원·영상 출처·권리·해시·사용처 생성 대장 | `assets/js/data/media-provenance-data.js` |
+| 검색 가능한 미디어 감사 화면과 우선 검토 대기열 | `assets/js/pages/media-clearance.js` + `assets/css/media-clearance.css` |
 | 사람이 승인하는 자산별 출처·권리 예외 | `assets/resources/MEDIA_PROVENANCE_OVERRIDES.json` |
 | 미디어 대장 생성·최신 상태 검사 | `tools/build-media-provenance.mjs` |
 | 반응형 선택·현상 상태·사전 준비·진단 | `assets/js/core/adaptive-media.js` + `assets/css/adaptive-media.css` |
@@ -37,7 +38,7 @@
 | 분류형 기록 라이브러리·검색·조건부 판정 색인 | `assets/js/pages/archive-consolidation.js` + `assets/css/archive-consolidation.css` + `assets/css/verdict-archive.css` |
 | 문서·영상 이미지의 출처 패널·확대·비교 화면 | `assets/js/pages/archive-document.js` + `assets/css/visual-evidence.css` |
 | 채널별 전환 설정 | `assets/js/data/transition-manifest.js` |
-| 다섯 채널 명칭·색상·계기·표식·표시 및 자동 압축 정책 | `assets/js/data/channel-identity-data.js` |
+| 여섯 채널 명칭·색상·계기·표식·표시 및 자동 압축 정책 | `assets/js/data/channel-identity-data.js` |
 | 채널 헤더 복원·상단 탐색·세션별 접기 상태·표시 및 음향 설정 저장 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
 | 채널 실시간 상태·부팅·전송량·CLS·전환 계측 | `assets/js/core/performance-telemetry.js` |
 | 설정 상태 요약·그룹·접이식 세션 진단 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
@@ -81,7 +82,9 @@
 
 `media-provenance-data.js`는 `MEDIA_PROVENANCE_OVERRIDES.json`과 실제 `assets` 파일 집합에서 생성되는 공개 감사 스냅샷이다. 기록보관소는 이 스냅샷의 총자산·검토 대기·미디어 종류·참고 전용 노출 상태를 표시한다. 파일별 승인 근거는 오버라이드에서만 수정하고 생성 대장은 직접 편집하지 않는다.
 
-활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry` 다섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
+5.48.0의 `media-clearance.js`는 이 생성 대장을 수정하지 않고 읽기 전용 감사 채널로 표시한다. 최우선 30개는 음원 23개와 영상 7개이며, 순위는 재생 가능 종류·보호 기록 연결·실제 사용 위치를 근거로 생성 시점에 계산한다. 전체 174개 자산 검색, 종류·검토 상태 필터, SHA-256·용량·파생 원본·사용처 상세를 제공하지만 미디어 자체는 로드하거나 재생하지 않는다. `지옥.zip`, `Pictures.zip`, `Pictures2.zip`은 이름과 차단 규칙만 표시하고 내부 파일은 공개 미리보기로 가져오지 않는다.
+
+활성 화면은 `terminal-home`, `map-room`, `history`, `faction-info`, `archive-entry`, `media-audit` 여섯 개다. 폐기된 별도 지도 주소 `region-map`, `zone-map`, `operation-map`은 통합 관제도로 전환하고 `faction-relation`은 정보 분석으로 전환한다.
 
 단말 상태의 대시보드와 상단 빠른 이동 메뉴가 화면 이동을 공유한다. PC와 모바일은 같은 DOM과 같은
 `click` 경로를 사용하며 모바일에서는 상단 메뉴를 드롭다운으로 배치한다. 사이드 메뉴, 서랍,

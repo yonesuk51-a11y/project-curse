@@ -1,24 +1,23 @@
 # Future Patch Pointer
 
-Current baseline: `5.47.0 Signal Index`
+Current baseline: `5.48.0 Release Clearance`
 
 Completed in this baseline:
-`9 Eras / 43 History Records / 29 Indexed Contacts / 10 Isolated Synchrony Points / 0 Geographic Links`
+`174 Registered Assets / 150 Reviews Open / 30 Priority Reviews / 3 Reference-Only Bundles / 0 Exposures`
 
 Primary scope:
 
-- 지도 표식 13개·작전 5개·독립 관측 10개·위치 보류 사건 1개를 파생 색인으로 통합
-- 사건·현장·작전·동시 관측·확인·추정·미해결·기록 연결 필터와 통합 검색 제공
-- 색인 선택 시 권역·레이어·표식·관측점·작전 단계를 자동으로 열기
-- 데스크톱 3열 판독 패널과 모바일 접근 가능 하단 시트 제공
-- 검색·필터·선택·열림 상태를 현재 탭의 지도 세션에 보존
-- 아마리온 설립을 `POSITION WITHHELD`로 유지하고 이전 지도 선택 제거
-- 삼야 무응답 10개 항목에 `NO ROUTE` 경계 유지
-- 새 음원 없이 5.42.0 음향 기준 유지
+- 여섯 번째 단말 채널 `미디어 감사`와 독립적인 청록·황동 계열 UI 추가
+- 실제 공개 자산 174개의 파일 등록·원본 계보·공개 허가 판정을 분리
+- 음원 23개와 영상 7개를 최우선 검토 30개로 고정하고 근거·사용처 표시
+- 전체 자산의 파일명·사용 화면·출처 상태 검색과 종류·검토 상태 필터 제공
+- SHA-256·용량·파생 원본·보호 기록 연결·실제 사용 위치 상세 제공
+- 참고 ZIP 3개는 내부 파일을 불러오지 않고 공개 노출 0건 경계만 표시
+- 미디어 미리보기·자동 재생·자동 삭제·근거 없는 공개 승인 없음
 
 Next planned pass:
 
-- 우선순위 음원·영상 30개의 출처 증빙 확보 또는 자체 제작 자산으로 교체
+- 우선 대기열 1–30번의 제작자·원출처·라이선스·재배포 허가 증빙을 실제로 확보하거나 자체 제작 자산으로 교체
 - Archive ENEX 원본 계열의 공개 재배포 범위를 파일 단위로 검토
 - GitHub Pages 관리형 Actions 경고와 정적 배포 보안 범위를 분리해 점검
 - 2042 관측점의 정확 좌표가 정사 자료로 확정될 때까지 현재 위치를 비항법용 추정 좌표로 유지

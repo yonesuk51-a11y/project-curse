@@ -1,8 +1,8 @@
-// Project Curse 5.47.0 — generated media provenance and release-review ledger.
+// Project Curse 5.48.0 — generated media provenance and release-clearance ledger.
 (function(root){
   'use strict';
   const data={
-  "version": "1.0.0",
+  "version": "1.1.0",
   "generated": "2026-08-21",
   "policy": "MEDIA PROVENANCE / RELEASE AUDIT",
   "overridesVersion": "1.0.0",
@@ -32,6 +32,9 @@
     "managed": 24,
     "referenceOnly": 3,
     "referenceExposure": 0,
+    "priority": 30,
+    "priorityAudio": 23,
+    "priorityVideo": 7,
     "byKind": {
       "audio": 23,
       "image": 144,
@@ -168,7 +171,8 @@
       "usedBy": [
         "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
-        "assets/js/main.js"
+        "assets/js/main.js",
+        "tools/verify-media-clearance-browser.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3057,6 +3061,607 @@
       ],
       "referenced": true,
       "protectedScope": true
+    }
+  ],
+  "priorityQueue": [
+    {
+      "rank": 1,
+      "path": "assets/audio/pc5152am_immortality_scp087_theme.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": true,
+      "bytes": 10446836,
+      "sha256": "c36e55d8c0d75d7ec4623f2d03ff19b419345bb5a90fe9d380bfbf33a05d3bed",
+      "usedBy": [
+        "assets/js/main.js",
+        "assets/js/pages/cinematic-immortality.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 109,
+      "priorityReason": "보호 기록에 연결된 음향 · 제작자와 공개 허가 범위 우선 확인"
+    },
+    {
+      "rank": 2,
+      "path": "assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": true,
+      "bytes": 8698779,
+      "sha256": "582b23ae0af63c89616d51ba3cbc0c5b550b4c7bd43b1f956aa10023b64d75a0",
+      "usedBy": [
+        "assets/js/main.js",
+        "assets/js/pages/cinematic-cults.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 109,
+      "priorityReason": "보호 기록에 연결된 음향 · 제작자와 공개 허가 범위 우선 확인"
+    },
+    {
+      "rank": 3,
+      "path": "assets/video/pc5152k_damaged_signal_intro_sound_10s.mp4",
+      "kind": "video",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 영상 자산 묶음",
+      "handling": "영상·내장 음향의 제작자와 사용 범위 확인 필요",
+      "referenced": true,
+      "protectedScope": true,
+      "bytes": 435600,
+      "sha256": "05a7f1d782fea302f79c9a526dd563720bf7c31b92dd24cf79f5ee9641def0ad",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/main.js",
+        "assets/js/pages/cinematic-cults.js",
+        "assets/js/pages/cinematic-ferals.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 101,
+      "priorityReason": "보호 기록에 연결된 영상 · 영상과 내장 음향 권리를 함께 확인"
+    },
+    {
+      "rank": 4,
+      "path": "assets/video/pc5152m_vhs_transition_18_21_sound.mp4",
+      "kind": "video",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 영상 자산 묶음",
+      "handling": "영상·내장 음향의 제작자와 사용 범위 확인 필요",
+      "referenced": true,
+      "protectedScope": true,
+      "bytes": 286254,
+      "sha256": "26f50df5f64c79916647fb95b05e313c332ab9e4a9e51b7d71cd68e3faad7c39",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/main.js",
+        "assets/js/pages/cinematic-cults.js",
+        "assets/js/pages/cinematic-ferals.js",
+        "assets/js/pages/cinematic-sakuma.js"
+      ],
+      "priorityScore": 101,
+      "priorityReason": "보호 기록에 연결된 영상 · 영상과 내장 음향 권리를 함께 확인"
+    },
+    {
+      "rank": 5,
+      "path": "assets/video/pc5152r_immortality_recordopen_static_13_27.mp4",
+      "kind": "video",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 영상 자산 묶음",
+      "handling": "영상·내장 음향의 제작자와 사용 범위 확인 필요",
+      "referenced": true,
+      "protectedScope": true,
+      "bytes": 784433,
+      "sha256": "a0a3154b1662d7b0e14264b2e122bf0ab32a142296f512eaa185786b3b0d73de",
+      "usedBy": [
+        "assets/js/main.js",
+        "assets/js/pages/cinematic-immortality.js"
+      ],
+      "priorityScore": 98,
+      "priorityReason": "보호 기록에 연결된 영상 · 영상과 내장 음향 권리를 함께 확인"
+    },
+    {
+      "rank": 6,
+      "path": "assets/video/pc5152q_immortality_fhc_transition_204_209.mp4",
+      "kind": "video",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 영상 자산 묶음",
+      "handling": "영상·내장 음향의 제작자와 사용 범위 확인 필요",
+      "referenced": true,
+      "protectedScope": true,
+      "bytes": 192554,
+      "sha256": "003cadfce0ed61c3b8ed1ec4990c3ac26a1b3058d0d3e220fe1f9a1b3c876ed7",
+      "usedBy": [
+        "assets/js/pages/cinematic-immortality.js"
+      ],
+      "priorityScore": 97,
+      "priorityReason": "보호 기록에 연결된 영상 · 영상과 내장 음향 권리를 함께 확인"
+    },
+    {
+      "rank": 7,
+      "path": "assets/audio/pc5152p_internal_projector_vhs_step.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 79056,
+      "sha256": "81effbc48a4a46d64699b1ba64a2260dbc54fb90c40ede38e94608d58d82686d",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 93,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 8,
+      "path": "assets/audio/pc5152x_late_log_beep_195s.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 16212,
+      "sha256": "15dce06ebad99699c6c54be99b913f3ac8dff9b35dcb3a628e3c8ac59ecab9cb",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 93,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 9,
+      "path": "assets/audio/pc5152v_comm_line_cue_73_74.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 13973,
+      "sha256": "56f02dc68089337961497d9191a41a42eae975c51a437276f87c1d9624eaec03",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 93,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 10,
+      "path": "assets/audio/pc5152v_field_photo_click_42s.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 13921,
+      "sha256": "f7f57ea6d38160cb9dcb148b32c53db45569f378af337eefe9acb1c27750004d",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 93,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 11,
+      "path": "assets/audio/pc5152cf_feral_dying_memories_bgm.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 8761095,
+      "sha256": "5e2fca0fade4150d25d13b6dbbc190b64c64bb738b6a44c6124e22cdc2c37a76",
+      "usedBy": [
+        "README_MapPatch5_15_2cf.md",
+        "assets/js/data/feral-cinematic-data.js",
+        "assets/js/pages/cinematic-ferals.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 92,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 12,
+      "path": "assets/audio/pc5152am_menu_old_computer.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 3163908,
+      "sha256": "791381f008e06a8450b2f9459557dbc56f84b597af634f6b6e170b27be0f4f09",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-media-clearance-browser.mjs"
+      ],
+      "priorityScore": 92,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 13,
+      "path": "assets/audio/pc5152h_record_mount_clear.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 110328,
+      "sha256": "4852eec8d99536584851d2c2c802f0e025461da47c656518625e3c9dd652e9ea",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 92,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 14,
+      "path": "assets/audio/pc5152f_analog_contact_soft.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 30104,
+      "sha256": "50344c9e7f7a2c7e54b458d1a33dec917d31023d42040fc3dfff594103c3fec0",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 92,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 15,
+      "path": "assets/audio/pc5152h_terminal_contact_clear.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 30104,
+      "sha256": "fc4b005e78be32541db6793a99c977462bed70de53424a8929f34515291e97b3",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 92,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 16,
+      "path": "assets/audio/pc5152an_cult_radio_static_layer.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 1118529,
+      "sha256": "3ad8d1b5cb05a8599c4b6058d3c79574b5e6df7c8683631d53a5be7227c4f164",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/main.js",
+        "tools/verify-package.mjs"
+      ],
+      "priorityScore": 91,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 17,
+      "path": "assets/audio/pc5152f_boot_access_oldpc.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 211758,
+      "sha256": "375997a886c16f32fe450403f1b4a013f23779718adc6e9bc7906ef55623941d",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js"
+      ],
+      "priorityScore": 91,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 18,
+      "path": "assets/audio/pc5152cf_sakuma_projector_advance.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 65396,
+      "sha256": "3d2b557c7d25b3c60e107d61ffcce3bea3e99392014c6bdb2dcf43acac2585d3",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/main.js"
+      ],
+      "priorityScore": 91,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 19,
+      "path": "assets/audio/pc5152f_low_denied_oldpc.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 54762,
+      "sha256": "471bffa0a34f75f36af67d3ddf2257ab4db04c87c93ec8a9516f45f1a4056d94",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js"
+      ],
+      "priorityScore": 91,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 20,
+      "path": "assets/audio/pc5152h_frame_pop.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 14156,
+      "sha256": "db6c9de68c7f073a254f47521bd493362abacc58ccfffae779602a7407186225",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/main.js"
+      ],
+      "priorityScore": 91,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 21,
+      "path": "assets/audio/pc5152dd_immortality_pursuit_range.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 60376,
+      "sha256": "f60e316c0aa08612115654a45f51664542103c160a904751556f218fe86ee612",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "tools/verify-internal-document-shell.mjs"
+      ],
+      "priorityScore": 90,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 22,
+      "path": "assets/audio/pc5152db_immortality_report_progress.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 49091,
+      "sha256": "372c256723f7ef6c9561b5de14555beabe9329141519460ba39f2fc1757c7154",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "tools/verify-internal-document-shell.mjs"
+      ],
+      "priorityScore": 90,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 23,
+      "path": "assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 45491,
+      "sha256": "32d5c745cfc28f9a22b8942d6b77b9b5543e177cac0e2b7f24b059bf63de120a",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/main.js"
+      ],
+      "priorityScore": 90,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 24,
+      "path": "assets/audio/pc5152db_immortality_intrusion_voice.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 13982,
+      "sha256": "b96d16b57ce28e099e486b9fc90d73338cb0835a86bc7f2ba66a978b125b2ba6",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "tools/verify-internal-document-shell.mjs"
+      ],
+      "priorityScore": 90,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 25,
+      "path": "assets/audio/pc5152cf_sakuma_vcr_hiss_bgm.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 5062229,
+      "sha256": "0d772212f772f33f3409ef61497caec9e0dc94c4badb490d3a08fdda76e15e53",
+      "usedBy": [
+        "assets/js/pages/cinematic-sakuma.js"
+      ],
+      "priorityScore": 89,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 26,
+      "path": "assets/audio/pc5152cf_sakuma_birthday_cue.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 115847,
+      "sha256": "88caaa17323cd8cf8b8e04c2ce39a0ac543e8f3e5146a9de20cd88d61b1096d3",
+      "usedBy": [
+        "assets/js/pages/cinematic-sakuma.js"
+      ],
+      "priorityScore": 89,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 27,
+      "path": "assets/audio/pc5152f_record_mount_soft.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 110328,
+      "sha256": "af8fd8e3c1b73a303569d3021a7820f85f1bef5d029c692c903d04782c1106ef",
+      "usedBy": [
+        "assets/js/main.js"
+      ],
+      "priorityScore": 89,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 28,
+      "path": "assets/video/pc5152am_cult_trace_vhs_noise.mp4",
+      "kind": "video",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 영상 자산 묶음",
+      "handling": "영상·내장 음향의 제작자와 사용 범위 확인 필요",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 9297920,
+      "sha256": "93723dfab5866b2b1125feb0da0cf0994ed82bdbefb9fabe99c056102e76faaf",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/main.js"
+      ],
+      "priorityScore": 80,
+      "priorityReason": "재생 가능한 영상 · 영상과 내장 음향의 제작·사용 범위 확인"
+    },
+    {
+      "rank": 29,
+      "path": "assets/video/pc5152cf_sakuma_vhs_intro.mp4",
+      "kind": "video",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 영상 자산 묶음",
+      "handling": "영상·내장 음향의 제작자와 사용 범위 확인 필요",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 9483406,
+      "sha256": "87eac7dd1d1fcca92bf9a496803ef8ce3f735b508a01c00c9ab8053eeb606d0f",
+      "usedBy": [
+        "assets/js/pages/cinematic-sakuma.js"
+      ],
+      "priorityScore": 79,
+      "priorityReason": "재생 가능한 영상 · 영상과 내장 음향의 제작·사용 범위 확인"
+    },
+    {
+      "rank": 30,
+      "path": "assets/video/pc5152cf_sakuma_end_transition.mp4",
+      "kind": "video",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 영상 자산 묶음",
+      "handling": "영상·내장 음향의 제작자와 사용 범위 확인 필요",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 596795,
+      "sha256": "259dd4619f2a6200e290c24ff042bd3977ed01837515444d68ce793f55b9a6ed",
+      "usedBy": [
+        "assets/js/pages/cinematic-sakuma.js"
+      ],
+      "priorityScore": 79,
+      "priorityReason": "재생 가능한 영상 · 영상과 내장 음향의 제작·사용 범위 확인"
     }
   ]
 };

@@ -82,11 +82,11 @@
     const references=(mediaAudit.referenceOnly||[]).map(item=>`<li><code>${esc(item.name)}</code><span>${esc(item.role)}</span><b>${esc(item.rule)}</b></li>`).join('');
     const reviewTone=stats.referenceExposure>0?'blocked':stats.review>0?'review':'cleared';
     return `<section class="pc-media-audit" data-pc-media-audit="1" data-audit-status="${reviewTone}" aria-label="미디어 출처와 공개 검토 상태">
-      <header class="pc-media-audit-head"><div><span>MEDIA PROVENANCE / RELEASE AUDIT</span><h4>공개 미디어 감식 대장</h4><p>사이트에 게시되는 이미지·음원·영상의 파일 상태와 출처 확인 단계를 분리한다. <strong>등록은 사용 허가를 의미하지 않는다.</strong></p></div><em>${stats.review>0?'REVIEW OPEN':'RELEASE CLEARED'}</em></header>
+      <header class="pc-media-audit-head"><div><span>MEDIA PROVENANCE / RELEASE AUDIT</span><h4>공개 미디어 감식 대장</h4><p>사이트에 게시되는 이미지·음원·영상의 파일 상태와 출처 확인 단계를 분리한다. <strong>등록은 사용 허가를 의미하지 않는다.</strong></p></div><aside><em>${stats.review>0?'REVIEW OPEN':'RELEASE CLEARED'}</em><a data-uac-route="media-audit" href="#media-audit">전체 감사 대장 열기&nbsp;›</a></aside></header>
       <dl class="pc-media-audit-telemetry">
         <div><dt>등록 자산</dt><dd>${stats.registered}<small>FILES</small></dd></div>
         <div><dt>프로젝트 관리</dt><dd>${stats.managed}<small>KNOWN</small></dd></div>
-        <div><dt>출처·권리 검토</dt><dd>${stats.review}<small>OPEN</small></dd></div>
+        <div><dt>출처·권리 검토</dt><dd>${stats.review}<small>OPEN · PRIORITY ${stats.priority||0}</small></dd></div>
         <div><dt>미등록·참고 노출</dt><dd>0<small>BLOCK</small></dd></div>
       </dl>
       <div class="pc-media-audit-kinds">

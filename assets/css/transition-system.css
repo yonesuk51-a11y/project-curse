@@ -14,6 +14,7 @@ html[data-channel-theme="cartography"] { --pc-route-accent:#6e9b91; --pc-route-a
 html[data-channel-theme="chronology"] { --pc-route-accent:#b29a68; --pc-route-accent-rgb:178,154,104; }
 html[data-channel-theme="intelligence"] { --pc-route-accent:#7393a0; --pc-route-accent-rgb:115,147,160; }
 html[data-channel-theme="archive"] { --pc-route-accent:#a85a52; --pc-route-accent-rgb:168,90,82; }
+html[data-channel-theme="clearance"] { --pc-route-accent:#65aaa3; --pc-route-accent-rgb:101,170,163; }
 
 .uac-shell-bar { box-shadow: inset 0 -1px rgba(var(--pc-route-accent-rgb),.28); transition: box-shadow var(--pc-transition-out) var(--pc-transition-fast); }
 .uac-shell-quick a[aria-current="page"] { box-shadow: inset 0 -2px var(--pc-route-accent); }

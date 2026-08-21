@@ -89,6 +89,45 @@ const assets=mediaFiles.map(absolute=>{
 
 const countBy=(key)=>Object.fromEntries([...new Set(assets.map(asset=>asset[key]))].sort().map(value=>[value,assets.filter(asset=>asset[key]===value).length]));
 const reviewStatuses=new Set(['LICENSE_REVIEW','SOURCE_REVIEW']);
+const priorityReason=asset=>{
+  if(asset.kind==='audio') return asset.protectedScope
+    ? '보호 기록에 연결된 음향 · 제작자와 공개 허가 범위 우선 확인'
+    : '재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인';
+  if(asset.kind==='video') return asset.protectedScope
+    ? '보호 기록에 연결된 영상 · 영상과 내장 음향 권리를 함께 확인'
+    : '재생 가능한 영상 · 영상과 내장 음향의 제작·사용 범위 확인';
+  if(asset.release==='SOURCE_REVIEW') return '원본 계보 보존 · 공개 재배포 범위 확인';
+  return asset.protectedScope
+    ? '보호 기록 이미지 · 원본 계보와 공개 사용 근거 대조'
+    : '기존 공개 이미지 · 제작자, 원출처와 허가 범위 대조';
+};
+const priorityScore=asset=>{
+  if(!reviewStatuses.has(asset.release)) return 0;
+  const kindScore={audio:70,video:60,image:20}[asset.kind]||0;
+  return kindScore+(asset.protectedScope?18:0)+(asset.referenced?8:0)+(asset.release==='LICENSE_REVIEW'?10:4)+Math.min(asset.usedBy.length,6);
+};
+const reviewAssets=assets.filter(asset=>reviewStatuses.has(asset.release)).map(asset=>({
+  ...asset,
+  priorityScore:priorityScore(asset),
+  priorityReason:priorityReason(asset)
+})).sort((a,b)=>b.priorityScore-a.priorityScore||b.usedBy.length-a.usedBy.length||b.bytes-a.bytes||a.path.localeCompare(b.path));
+const priorityQueue=reviewAssets.slice(0,30).map((asset,index)=>({
+  rank:index+1,
+  path:asset.path,
+  kind:asset.kind,
+  release:asset.release,
+  provenance:asset.provenance,
+  source:asset.source,
+  handling:asset.handling,
+  referenced:asset.referenced,
+  protectedScope:asset.protectedScope,
+  bytes:asset.bytes,
+  sha256:asset.sha256,
+  usedBy:asset.usedBy,
+  derivedFrom:asset.derivedFrom,
+  priorityScore:asset.priorityScore,
+  priorityReason:asset.priorityReason
+}));
 const stats={
   registered:assets.length,
   referenced:assets.filter(asset=>asset.referenced).length,
@@ -97,6 +136,9 @@ const stats={
   managed:assets.filter(asset=>!reviewStatuses.has(asset.release)).length,
   referenceOnly:referenceOnly.length,
   referenceExposure:exposedReferenceFiles.length,
+  priority:priorityQueue.length,
+  priorityAudio:priorityQueue.filter(asset=>asset.kind==='audio').length,
+  priorityVideo:priorityQueue.filter(asset=>asset.kind==='video').length,
   byKind:countBy('kind'),
   byRelease:countBy('release'),
   byProvenance:countBy('provenance')
@@ -107,7 +149,9 @@ const reviewQueue=assets.filter(asset=>reviewStatuses.has(asset.release)).sort((
 }).slice(0,12).map(({path,kind,release,source,referenced})=>({path,kind,release,source,referenced}));
 
 const payload={version:'1.0.0',generated:'2026-08-21',policy:'MEDIA PROVENANCE / RELEASE AUDIT',overridesVersion:overrides.version||'UNKNOWN',referenceOnly,referenceExposures:exposedReferenceFiles,stats,reviewQueue,assets};
-const output=`// Project Curse 5.47.0 — generated media provenance and release-review ledger.\n(function(root){\n  'use strict';\n  const data=${JSON.stringify(payload,null,2)};\n  const freeze=value=>{if(!value||typeof value!=='object'||Object.isFrozen(value)) return value;Object.values(value).forEach(freeze);return Object.freeze(value);};\n  root.ProjectCurseMediaProvenance=freeze(data);\n})(window);\n`;
+payload.version='1.1.0';
+payload.priorityQueue=priorityQueue;
+const output=`// Project Curse 5.48.0 — generated media provenance and release-clearance ledger.\n(function(root){\n  'use strict';\n  const data=${JSON.stringify(payload,null,2)};\n  const freeze=value=>{if(!value||typeof value!=='object'||Object.isFrozen(value)) return value;Object.values(value).forEach(freeze);return Object.freeze(value);};\n  root.ProjectCurseMediaProvenance=freeze(data);\n})(window);\n`;
 
 if(process.argv.includes('--write')){
   writeFileSync(resolve(ROOT,TARGET),output,'utf8');

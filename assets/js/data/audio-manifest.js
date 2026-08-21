@@ -12,6 +12,7 @@
       history:Object.freeze({ambient:.74,interface:.8,record:1.04,alert:.96}),
       'faction-info':Object.freeze({ambient:.7,interface:.96,record:.9,alert:1}),
       'archive-entry':Object.freeze({ambient:.55,interface:.76,record:1.1,alert:1}),
+      'media-audit':Object.freeze({ambient:.24,interface:.7,record:.4,alert:.82}),
       document:Object.freeze({ambient:.4,interface:.64,record:1.12,alert:.94}),
       'great-black-forest':Object.freeze({ambient:.3,interface:.58,record:1.08,alert:.9}),
       'dead-zone':Object.freeze({ambient:.2,interface:.62,record:1.12,alert:.96}),

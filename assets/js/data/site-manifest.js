@@ -1,4 +1,4 @@
-// Project Curse 5.47.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.48.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,14 +9,15 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.47.0',
-    schema:root.ProjectCurseBuild?.schema||'project-curse-v40',
+    version:root.ProjectCurseBuild?.version||'5.48.0',
+    schema:root.ProjectCurseBuild?.schema||'project-curse-v41',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
       {id:'map-room',label:'상황 관제',index:'01'},
       {id:'history',label:'세계 기록',index:'02'},
       {id:'faction-info',label:'정보 분석',index:'03'},
-      {id:'archive-entry',label:'기록보관소',index:'04'}
+      {id:'archive-entry',label:'기록보관소',index:'04'},
+      {id:'media-audit',label:'미디어 감사',index:'05'}
     ],
     lockedRecords:[
       {id:'Cults_871104',title:'종교'},
@@ -60,6 +61,8 @@
       visualEvidenceData:'assets/js/data/visual-evidence-data.js',
       mediaManifest:'assets/js/data/media-manifest.js',
       mediaProvenance:'assets/js/data/media-provenance-data.js',
+      mediaClearanceRuntime:'assets/js/pages/media-clearance.js',
+      mediaClearanceCSS:'assets/css/media-clearance.css',
       fieldDossiers:'assets/js/data/field-dossier-data.js',
       homeIntelligence:'assets/js/data/home-intelligence-data.js',
       baseRuntime:'assets/js/core/base-runtime.js',

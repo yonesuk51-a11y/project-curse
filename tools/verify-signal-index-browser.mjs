@@ -30,7 +30,7 @@ async function openMap(viewport,label){
   await page.waitForSelector('#app.ready',{timeout:12000});
   await page.evaluate(()=>window.ProjectCurseShell.navigate('map-room',{historyMode:'replace'}));
   await page.waitForFunction(()=>document.body.dataset.route==='map-room');
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.47.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.0');
   check(`${label}:no-initial-errors`,errors.length===0,errors.join(' | '));
   return {context,page,errors,requests};
 }
@@ -164,7 +164,7 @@ await mobile.page.keyboard.press('Escape');
 check('mobile:escape-and-focus',await mobile.page.evaluate(()=>!document.querySelector('.pc-map-signal-index')?.classList.contains('is-open')&&document.activeElement?.matches('[data-map-index-toggle]')));
 check('mobile:no-overflow',restored.width<=390,JSON.stringify(restored));
 check('mobile:no-new-core-audio',!mobile.requests.some(url=>url.includes('/assets/audio/core/')));
-const mobileShot=join(tmpdir(),'project-curse-5.47.0-signal-index-mobile.png');
+const mobileShot=join(tmpdir(),'project-curse-5.48.0-signal-index-mobile.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();

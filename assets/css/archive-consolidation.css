@@ -110,6 +110,9 @@ body.pc-archive-index-active #archive-entry .pc-media-audit-head h4{margin:7px 0
 body.pc-archive-index-active #archive-entry .pc-media-audit-head p{margin:0;color:#7f8b8e;font-size:.7rem;line-height:1.7}
 body.pc-archive-index-active #archive-entry .pc-media-audit-head p strong{color:#b7c1c2;font-weight:500}
 body.pc-archive-index-active #archive-entry .pc-media-audit-head em{padding:7px 9px;border:1px solid rgba(188,126,70,.42);background:rgba(103,65,26,.12);color:#c19866;font:8px/1 Consolas,monospace;letter-spacing:.13em;white-space:nowrap}
+body.pc-archive-index-active #archive-entry .pc-media-audit-head>aside{display:grid;justify-items:end;gap:9px}
+body.pc-archive-index-active #archive-entry .pc-media-audit-head>aside a{padding:8px 10px;border:1px solid rgba(83,125,133,.38);color:#87a8ad;background:rgba(24,63,68,.14);font:7px/1 Consolas,monospace;letter-spacing:.08em;text-decoration:none;white-space:nowrap}
+body.pc-archive-index-active #archive-entry .pc-media-audit-head>aside a:hover,body.pc-archive-index-active #archive-entry .pc-media-audit-head>aside a:focus-visible{border-color:#66949c;color:#dce6e7;outline:0}
 body.pc-archive-index-active #archive-entry .pc-media-audit[data-audit-status="blocked"] .pc-media-audit-head em{border-color:#8d343b;color:#cf6269}
 body.pc-archive-index-active #archive-entry .pc-media-audit[data-audit-status="cleared"] .pc-media-audit-head em{border-color:#3d755e;color:#6dae91}
 body.pc-archive-index-active #archive-entry .pc-media-audit-telemetry{display:grid;grid-template-columns:repeat(4,1fr);margin:0;border-bottom:1px solid rgba(83,125,133,.22)}

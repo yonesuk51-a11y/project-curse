@@ -82,6 +82,10 @@
       const unread=state.verdicts.unread||0;
       return Object.freeze({value:String(unread||state.records),label:unread?'UNREAD':'OPEN',tone:unread?'alert':'stable',description:unread?`읽지 않은 판정 기록 ${unread}건`:`공개 기록 ${state.records}건`});
     }
+    if(id==='media-audit'){
+      const review=Number(root.ProjectCurseMediaProvenance?.stats?.review||0);
+      return Object.freeze({value:String(review),label:'REVIEW',tone:review?'warning':'stable',description:`출처·권리 검토 ${review}건`});
+    }
     return Object.freeze({value:'--',label:'LOCAL',tone:'stable',description:'로컬 채널'});
   }
 

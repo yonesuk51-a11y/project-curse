@@ -10,8 +10,9 @@
 :root[data-pc-channel-theme="chronology"]{--pc-channel:#c39a5c;--pc-channel-rgb:195,154,92;--pc-channel-soft:#785f3c}
 :root[data-pc-channel-theme="intelligence"]{--pc-channel:#72a4c6;--pc-channel-rgb:114,164,198;--pc-channel-soft:#45677f}
 :root[data-pc-channel-theme="archive"]{--pc-channel:#d45c65;--pc-channel-rgb:212,92,101;--pc-channel-soft:#83383f}
+:root[data-pc-channel-theme="clearance"]{--pc-channel:#65aaa3;--pc-channel-rgb:101,170,163;--pc-channel-soft:#3d706b}
 
-/* Five-channel navigation */
+/* Six-channel navigation */
 .uac-shell-quick{min-width:0}
 .uac-shell-quick a[data-channel-route]{
   position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;
@@ -25,6 +26,7 @@
 .uac-shell-quick a[data-channel-theme="chronology"]{--nav-accent:#c39a5c}
 .uac-shell-quick a[data-channel-theme="intelligence"]{--nav-accent:#72a4c6}
 .uac-shell-quick a[data-channel-theme="archive"]{--nav-accent:#d45c65}
+.uac-shell-quick a[data-channel-theme="clearance"]{--nav-accent:#65aaa3}
 .uac-shell-quick a[data-channel-route]>i{color:var(--nav-accent,#b84249);font-size:8px}
 .uac-shell-quick a[data-channel-route]>span{display:grid;gap:3px;min-width:0}
 .uac-shell-quick a[data-channel-route] b{overflow:hidden;color:#d7dcda;font:700 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap}
