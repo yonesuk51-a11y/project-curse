@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.48.0';
+const VERSION='5.49.0';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -73,7 +73,7 @@ check('shell:home-owned-outside-pages',index.indexOf('class="uac-shell-home"')<i
 check('shell:route-events',shell.includes('projectcurse:route-will-change')&&shell.includes('projectcurse:screen-committed'));
 check('shell:decrypt-effect',read('assets/js/core/transition-controller.js').includes('pc-screen-entering')&&read('assets/css/transition-system.css').includes('@keyframes pc-screen-enter'));
 check('shell:button-feedback',shellCss.includes('@keyframes uac-control-scan')&&shellCss.includes('@keyframes uac-control-pulse'));
-check('shell:six-channel-identity',context.window.ProjectCurseChannelData?.channels?.length===6&&channelIdentityRuntime.includes('ensureIdentity(item.id)'));
+check('shell:five-public-channel-identity',context.window.ProjectCurseChannelData?.channels?.length===5&&channelIdentityRuntime.includes('ensureIdentity(item.id)'));
 check('shell:identity-preferences',channelIdentityData.includes('project_curse_preferences_v1')&&channelIdentityRuntime.includes('openPreferences')&&channelIdentityCss.includes('.pc-preference-dialog'));
 check('shell:identity-root-order',index.indexOf('channel-identity-data.js')>index.indexOf('transition-manifest.js')&&index.indexOf('channel-identity.js')>index.indexOf('terminal-home.js'));
 check('shell:live-status-telemetry',performanceTelemetry.includes('ProjectCurseTelemetry=Object.freeze')&&channelIdentityRuntime.includes('pc-channel-live')&&channelIdentityCss.includes('.pc-live-diagnostics'));
@@ -117,7 +117,7 @@ check('evidence:cinematic-handoff',read('assets/js/core/record-cinematic-runtime
 check('media:manifest-twenty-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===20);
 check('media:provenance-all-assets',context.window.ProjectCurseMediaProvenance?.stats?.registered===174&&context.window.ProjectCurseMediaProvenance?.assets?.length===174);
 check('media:provenance-honest-review',context.window.ProjectCurseMediaProvenance?.stats?.review===150&&context.window.ProjectCurseMediaProvenance?.stats?.managed===24&&context.window.ProjectCurseMediaProvenance?.stats?.referenceExposure===0);
-check('media:provenance-audit-ui',archive.includes('function provenanceAuditMarkup()')&&archive.includes('PUBLIC RELEASE NOT YET CLEARED')&&read('assets/css/archive-consolidation.css').includes('.pc-media-audit'));
+check('media:public-credit-note',archive.includes('function provenanceNoticeMarkup()')&&archive.includes('pc-public-credits-note')&&read('assets/css/archive-consolidation.css').includes('.pc-public-credits-note'));
 check('media:clearance-priority-queue',context.window.ProjectCurseMediaProvenance?.priorityQueue?.length===30&&context.window.ProjectCurseMediaProvenance?.stats?.priorityAudio===23&&context.window.ProjectCurseMediaProvenance?.stats?.priorityVideo===7);
 check('media:clearance-screen',index.includes('id="media-audit"')&&index.includes(`assets/css/media-clearance.css?v=${VERSION}`)&&index.includes(`assets/js/pages/media-clearance.js?v=${VERSION}`));
 check('media:root-load-order',index.includes(`assets/css/adaptive-media.css?v=${VERSION}`)&&index.indexOf('media-manifest.js')<index.indexOf('adaptive-media.js')&&index.indexOf('adaptive-media.js')<index.indexOf('archive-document.js'));

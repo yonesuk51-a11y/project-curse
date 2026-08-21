@@ -1,4 +1,4 @@
-// Project Curse 5.35.0 — semantic sound-event registry, navigation mix and acoustic profiles.
+// Project Curse 5.49.0 — minimal public interface mix and semantic record cues.
 (function(root){
   'use strict';
 

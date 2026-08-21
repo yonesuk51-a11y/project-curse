@@ -31,7 +31,7 @@ async function openSite(viewport,label){
   });
   await page.reload({waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.49.0');
   return {context,page,errors,requests};
 }
 
@@ -99,7 +99,7 @@ const restored=await desktop.page.evaluate(()=>({
 check('desktop:map-session-restored',restored.route==='map-room'&&restored.region==='southamerica'&&restored.selected==='gbf-bell-03'&&restored.points===6,JSON.stringify(restored));
 check('desktop:no-overflow',restored.overflow<=0,JSON.stringify(restored));
 check('desktop:no-new-core-audio',!desktop.requests.some(url=>url.includes('/assets/audio/core/')));
-const desktopShot=join(tmpdir(),'project-curse-5.48.0-history-map-density-desktop.png');
+const desktopShot=join(tmpdir(),'project-curse-5.49.0-history-map-density-desktop.png');
 await desktop.page.screenshot({path:desktopShot,fullPage:false});
 check('desktop:no-errors',desktop.errors.length===0,desktop.errors.join(' | '));
 await desktop.context.close();
@@ -114,10 +114,10 @@ const mobileState=await mobile.page.evaluate(()=>({
   metricDisplay:getComputedStyle(document.querySelector('#map-room>.pc-channel-identity>dl')).display
 }));
 check('mobile:compact-working-height',mobileDensity.compact.height<70,JSON.stringify(mobileDensity));
-check('mobile:compact-priority',mobileState.title==='상황 관제'&&mobileState.metricDisplay==='none',JSON.stringify(mobileState));
+check('mobile:compact-priority',mobileState.title==='전장·권역'&&mobileState.metricDisplay==='none',JSON.stringify(mobileState));
 check('mobile:no-overflow',mobileState.documentWidth<=mobileState.viewport,JSON.stringify(mobileState));
 check('mobile:no-new-core-audio',!mobile.requests.some(url=>url.includes('/assets/audio/core/')));
-const mobileShot=join(tmpdir(),'project-curse-5.48.0-history-map-density-mobile.png');
+const mobileShot=join(tmpdir(),'project-curse-5.49.0-history-map-density-mobile.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();

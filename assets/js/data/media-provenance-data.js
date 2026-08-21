@@ -1,4 +1,4 @@
-// Project Curse 5.48.0 — generated media provenance and release-clearance ledger.
+// Project Curse 5.49.0 — generated operator media provenance and release-clearance ledger.
 (function(root){
   'use strict';
   const data={

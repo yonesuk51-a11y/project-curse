@@ -1,4 +1,4 @@
-// Project Curse 5.34.0 — persistent acoustic profiles, navigation mix, ducking and semantic event bridge.
+// Project Curse 5.49.0 — minimal-by-default navigation mix and semantic record cues.
 (function(root){
   'use strict';
 
@@ -6,7 +6,7 @@
   const legacy=root.ProjectCurseAudio;
   if(!manifest||!legacy) return;
 
-  const defaults={muted:false,master:1,ambient:1,interface:1,record:1,alert:1};
+  const defaults={muted:false,master:1,ambient:0,interface:.34,record:.58,alert:1};
   const cueBus={ambient:'ambient',contact:'interface',analog:'interface',open:'record',load:'interface',video:'record',radio:'interface',page:'record',scan:'interface',marker:'interface',confirm:'interface',boot:'interface',alert:'alert',restricted:'alert',denied:'alert'};
   const baseVolumes={};
   const nodeGains=new WeakMap();

@@ -102,6 +102,8 @@ body.pc-archive-index-active #archive-entry .pc-archive-source-legend [data-prov
 body.pc-archive-index-active #archive-entry .pc-archive-source-legend dd{margin:4px 0 0;color:#626a6c;font-size:.64rem;line-height:1.5}
 
 /* Public-facing release audit: registration and permission review stay visibly separate. */
+.pc-public-credits-note{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;margin-top:18px;padding:18px 20px;border:1px solid rgba(139,151,155,.18);background:rgba(8,11,12,.72)}
+.pc-public-credits-note div{display:grid;gap:6px}.pc-public-credits-note span{color:#687572;font:700 7px/1.3 Consolas,monospace;letter-spacing:.13em}.pc-public-credits-note b{color:#c5cbc9;font-size:.82rem}.pc-public-credits-note p{max-width:74ch;margin:0;color:#757f7c;font-size:.68rem;line-height:1.65}.pc-public-credits-note>a{color:#9fa9a6;font:700 8px/1.4 Consolas,monospace;letter-spacing:.04em;text-decoration:none}.pc-public-credits-note>a:hover,.pc-public-credits-note>a:focus-visible{color:#e0e4e2;outline:0;text-decoration:underline;text-underline-offset:4px}
 body.pc-archive-index-active #archive-entry .pc-media-audit{margin:18px 0 30px;border:1px solid rgba(83,125,133,.34);background:radial-gradient(circle at 0 0,rgba(30,73,81,.17),transparent 38rem),#070a0b;box-shadow:0 22px 52px rgba(0,0,0,.2)}
 body.pc-archive-index-active #archive-entry .pc-media-audit-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:21px 22px;border-bottom:1px solid rgba(83,125,133,.28)}
 body.pc-archive-index-active #archive-entry .pc-media-audit-head>div{max-width:720px}
@@ -167,6 +169,7 @@ body.pc-archive-index-active #archive-entry .pc-archive-row:focus-visible{outlin
   body.pc-archive-index-active #archive-entry .pc-archive-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:720px){
+  .pc-public-credits-note{grid-template-columns:1fr;gap:14px;padding:16px}
   body.pc-archive-index-active #archive-entry .pc-archive-index-head{gap:24px;padding:24px 18px 20px}
   body.pc-archive-index-active #archive-entry .pc-archive-index-head:before{right:18px;top:12px;font-size:6px}
   body.pc-archive-index-active #archive-entry .pc-archive-heading h3{margin-top:18px}

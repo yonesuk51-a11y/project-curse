@@ -5,6 +5,7 @@ import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
 const baseUrl=process.env.PC_SITE_URL||'http://127.0.0.1:4173/?boot=skip';
+const operatorUrl=new URL(baseUrl);operatorUrl.searchParams.set('boot','skip');operatorUrl.searchParams.set('operator','media');operatorUrl.hash='media-audit';
 const modulePath=process.env.PC_PLAYWRIGHT_MODULE;
 const executablePath=[process.env.PC_CHROME_PATH,'C:/Program Files/Google/Chrome/Application/chrome.exe','C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'].filter(Boolean).find(existsSync);
 if(!modulePath||!existsSync(modulePath)) throw new Error('Set PC_PLAYWRIGHT_MODULE to the absolute path of Playwright index.mjs.');
@@ -23,7 +24,7 @@ async function openAudit(viewport,label){
   page.on('pageerror',error=>errors.push(`page: ${error.message}`));
   page.on('console',message=>{if(message.type()==='error') errors.push(`console: ${message.text()}`);});
   page.on('request',request=>requests.push(request.url()));
-  await page.goto(baseUrl,{waitUntil:'networkidle'});
+  await page.goto(operatorUrl.href,{waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
   await page.evaluate(()=>sessionStorage.removeItem('project_curse_media_clearance_v1'));
   await page.reload({waitUntil:'networkidle'});
@@ -33,7 +34,7 @@ async function openAudit(viewport,label){
   await page.waitForSelector('[data-media-clearance-owner]');
   await page.waitForTimeout(120);
   requests.length=0;
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.49.0');
   check(`${label}:no-initial-errors`,errors.length===0,errors.join(' | '));
   return {context,page,errors,requests};
 }
@@ -121,7 +122,7 @@ check('desktop:escape-clears-search',await desktop.page.evaluate(()=>document.qu
 const desktopAuditMedia=desktop.requests.filter(url=>/\/(?:assets\/audio|assets\/video|assets\/resources)\//.test(url)&&!url.endsWith('/assets/audio/pc5152am_menu_old_computer.mp3'));
 check('desktop:no-audit-media-requests',desktopAuditMedia.length===0,desktopAuditMedia.join(' | '));
 check('desktop:no-errors',desktop.errors.length===0,desktop.errors.join(' | '));
-const desktopShot=join(tmpdir(),'project-curse-5.48.0-media-clearance-desktop.png');
+const desktopShot=join(tmpdir(),'project-curse-5.49.0-media-clearance-desktop.png');
 await desktop.page.screenshot({path:desktopShot,fullPage:false});
 await desktop.context.close();
 
@@ -139,7 +140,7 @@ const mobileLayout=await mobile.page.evaluate(()=>(
 check('mobile:single-column-workspace',mobileLayout.columns.split(' ').length===1&&mobileLayout.rows===30,JSON.stringify(mobileLayout));
 check('mobile:touch-readable-list',mobileLayout.rowHeight>=54&&mobileLayout.listHeight>300,JSON.stringify(mobileLayout));
 check('mobile:no-overflow',mobileLayout.width<=mobileLayout.viewport,JSON.stringify(mobileLayout));
-const mobileTopShot=join(tmpdir(),'project-curse-5.48.0-media-clearance-mobile-top.png');
+const mobileTopShot=join(tmpdir(),'project-curse-5.49.0-media-clearance-mobile-top.png');
 await mobile.page.screenshot({path:mobileTopShot,fullPage:false});
 await mobile.page.locator('[data-media-scope="all"]').click();
 await mobile.page.locator('[data-media-kind="video"]').click();
@@ -151,7 +152,7 @@ await mobile.page.waitForFunction(()=>document.querySelector('[data-media-path].
 check('mobile:runtime-direct-open',await mobile.page.evaluate(()=>document.querySelector('[data-media-detail] h3')?.textContent==='pc5152am_menu_old_computer.mp3'));
 const mobileAuditMedia=mobile.requests.filter(url=>/\/(?:assets\/audio|assets\/video|assets\/resources)\//.test(url)&&!url.endsWith('/assets/audio/pc5152am_menu_old_computer.mp3'));
 check('mobile:no-audit-media-requests',mobileAuditMedia.length===0,mobileAuditMedia.join(' | '));
-const mobileShot=join(tmpdir(),'project-curse-5.48.0-media-clearance-mobile.png');
+const mobileShot=join(tmpdir(),'project-curse-5.49.0-media-clearance-mobile.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();

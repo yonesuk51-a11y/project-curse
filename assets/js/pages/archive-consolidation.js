@@ -1,9 +1,8 @@
-// Project Curse 5.35.0 — classified archive signal library and conditional verdict index owner.
+// Project Curse 5.49.0 — lore-first archive index and conditional verdict owner.
 (function(){
   'use strict';
   const archive=window.ProjectCurseArchive;
   const verdicts=window.ProjectCurseVerdictArchiveState;
-  const mediaAudit=window.ProjectCurseMediaProvenance;
   if(!archive?.publicRecords) return;
 
   const q=(selector,root=document)=>root.querySelector(selector);
@@ -73,31 +72,8 @@
     </section>`;
   }
 
-  function provenanceAuditMarkup(){
-    if(!mediaAudit?.stats) return '';
-    const stats=mediaAudit.stats;
-    const releaseLabels={CLEARED:'프로젝트 관리',PROJECT_GENERATED:'생성형 재구성',SOURCE_REVIEW:'원본 사용 범위 확인',LICENSE_REVIEW:'라이선스 확인'};
-    const kindLabels={image:'IMAGE',audio:'AUDIO',video:'VIDEO'};
-    const queue=(mediaAudit.reviewQueue||[]).map(item=>`<li data-media-kind="${esc(item.kind)}" data-media-release="${esc(item.release)}"><span>${esc(kindLabels[item.kind]||item.kind)}</span><code>${esc(item.path.replace(/^assets\//,''))}</code><b>${esc(releaseLabels[item.release]||item.release)}</b></li>`).join('');
-    const references=(mediaAudit.referenceOnly||[]).map(item=>`<li><code>${esc(item.name)}</code><span>${esc(item.role)}</span><b>${esc(item.rule)}</b></li>`).join('');
-    const reviewTone=stats.referenceExposure>0?'blocked':stats.review>0?'review':'cleared';
-    return `<section class="pc-media-audit" data-pc-media-audit="1" data-audit-status="${reviewTone}" aria-label="미디어 출처와 공개 검토 상태">
-      <header class="pc-media-audit-head"><div><span>MEDIA PROVENANCE / RELEASE AUDIT</span><h4>공개 미디어 감식 대장</h4><p>사이트에 게시되는 이미지·음원·영상의 파일 상태와 출처 확인 단계를 분리한다. <strong>등록은 사용 허가를 의미하지 않는다.</strong></p></div><aside><em>${stats.review>0?'REVIEW OPEN':'RELEASE CLEARED'}</em><a data-uac-route="media-audit" href="#media-audit">전체 감사 대장 열기&nbsp;›</a></aside></header>
-      <dl class="pc-media-audit-telemetry">
-        <div><dt>등록 자산</dt><dd>${stats.registered}<small>FILES</small></dd></div>
-        <div><dt>프로젝트 관리</dt><dd>${stats.managed}<small>KNOWN</small></dd></div>
-        <div><dt>출처·권리 검토</dt><dd>${stats.review}<small>OPEN · PRIORITY ${stats.priority||0}</small></dd></div>
-        <div><dt>미등록·참고 노출</dt><dd>0<small>BLOCK</small></dd></div>
-      </dl>
-      <div class="pc-media-audit-kinds">
-        <div><span>IMAGE</span><b>${stats.byKind.image}</b><small>${stats.byProvenance.RECONSTRUCTED||0} RECONSTRUCTED · ${stats.byProvenance.DELIVERY_DERIVATIVE||0} DELIVERY DERIVATIVES</small></div>
-        <div><span>AUDIO</span><b>${stats.byKind.audio}</b><small>${stats.byRelease.LICENSE_REVIEW?`${stats.byKind.audio} FILES REQUIRE SOURCE REVIEW`:'SOURCE REGISTERED'}</small></div>
-        <div><span>VIDEO</span><b>${stats.byKind.video}</b><small>${stats.byKind.video} FILES REQUIRE SOURCE REVIEW</small></div>
-      </div>
-      <details class="pc-media-audit-details"><summary><span>우선 검토 대기열</span><b>${stats.byRelease.LICENSE_REVIEW||0} LICENSE · ${stats.byRelease.SOURCE_REVIEW||0} SOURCE</b></summary><div><p>배경음·효과음·내장 음향 영상부터 제작자, 원출처와 공개 허가 범위를 확인한다. 아래 항목은 삭제 명령이 아니라 우선 확인 목록이다.</p><ol>${queue}</ol></div></details>
-      <details class="pc-media-audit-details is-reference"><summary><span>참고 전용 자료 경계</span><b>${stats.referenceOnly} REGISTERED · ${stats.referenceExposure} EXPOSED</b></summary><div><p>다음 자료는 분위기와 과거 시각화 분석에만 사용하며, 별도 승인 없이 공개 자산이나 공식 설정 증거로 편입하지 않는다.</p><ul>${references}</ul></div></details>
-      <footer><span>PROJECT MANAGED ${stats.managed}</span><span>RELEASE REVIEW ${stats.review}</span><span>UNREGISTERED 0</span><b>PUBLIC RELEASE NOT YET CLEARED</b></footer>
-    </section>`;
+  function provenanceNoticeMarkup(){
+    return `<aside class="pc-public-credits-note" aria-label="자료 출처 안내"><div><span>SOURCE &amp; RECONSTRUCTION</span><b>자료 출처·복원 상태 안내</b><p>기록 이미지는 원본 보존·복원 추정·출처 대조 대기를 구분한다. 복원 이미지는 실제 촬영 원본을 대신하지 않는다.</p></div><a href="MEDIA_CREDITS.md">크레딧과 공개 검토 원칙&nbsp;›</a></aside>`;
   }
 
   function indexMarkup(){
@@ -124,7 +100,7 @@
       <div class="pc-archive-card-grid">${cards}</div>
       <div class="pc-archive-empty" hidden data-pc-archive-empty><span>NO MATCHING SIGNAL</span><b>일치하는 기록이 없습니다.</b><button type="button" data-pc-archive-reset>분류 초기화</button></div>
       <aside class="pc-archive-source-legend" aria-label="이미지 출처 상태 안내"><span>SOURCE STATE</span><dl><div data-provenance="ORIGINAL"><dt>원본 보존</dt><dd>원본 출처 계열에서 회수된 자료</dd></div><div data-provenance="RECONSTRUCTED"><dt>복원 추정본</dt><dd>설정·증언을 근거로 재구성한 장면</dd></div><div data-provenance="UNVERIFIED"><dt>출처 대조 대기</dt><dd>기존 자산이나 원본 계보 확인 전인 자료</dd></div></dl></aside>
-      ${provenanceAuditMarkup()}
+      ${provenanceNoticeMarkup()}
       ${verdictMarkup()}
     </section>`;
   }
@@ -205,8 +181,8 @@
     const ids=cards.map(card=>card.dataset.pcArchiveOpen).join('|');
     const expectedIds=archive.publicRecords.map(record=>record.id).join('|');
     const verdictRows=qa('.pc-verdict-row');
-    const audit=q('[data-pc-media-audit="1"]');
-    return {name:'archiveIndex',patch:'5.42.0',ok:ids===expectedIds&&cards.every(card=>card.dataset.pcArchiveCategory)&&(!verdicts||verdictRows.length===verdicts.getSummary().total)&&(!mediaAudit||!!audit),records:cards.length,verdicts:verdictRows.length,media:mediaAudit?.stats?.registered||0,issues:ids===expectedIds?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]};
+    const credits=q('.pc-public-credits-note');
+    return {name:'archiveIndex',patch:'5.49.0',ok:ids===expectedIds&&cards.every(card=>card.dataset.pcArchiveCategory)&&(!verdicts||verdictRows.length===verdicts.getSummary().total)&&!!credits,records:cards.length,verdicts:verdictRows.length,media:window.ProjectCurseMediaProvenance?.stats?.registered||0,issues:ids===expectedIds?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]};
   }
 
   function openRecord(id,trigger){

@@ -1,9 +1,15 @@
-// Project Curse 5.48.0 — searchable media provenance and release-clearance console.
+// Project Curse 5.49.0 — operator-only media provenance and release-clearance console.
 (function(root){
   'use strict';
 
   const data=root.ProjectCurseMediaProvenance;
   if(!data?.assets?.length) return;
+  let operatorAccess=false;
+  try{operatorAccess=new URLSearchParams(location.search).get('operator')==='media';}catch(_error){}
+  if(!operatorAccess){
+    root.ProjectCurseMediaClearanceRuntime=Object.freeze({available:false,open:()=>Promise.resolve(null),getState:()=>Object.freeze({}),getVisibleCount:()=>0});
+    return;
+  }
 
   const ready=callback=>document.readyState==='loading'
     ? document.addEventListener('DOMContentLoaded',callback,{once:true})
@@ -225,6 +231,7 @@
     if(event.detail?.target==='media-audit') install();
   });
   root.ProjectCurseMediaClearanceRuntime=Object.freeze({
+    available:true,
     open(path=''){
       const item=assetFor(path);
       if(item) state=Object.assign({},state,{scope:'all',query:'',kind:'all',release:'all',selected:item.path});
