@@ -1,4 +1,4 @@
-# Project Curse Structure — 5.44.0
+# Project Curse Structure — 5.45.0
 
 ## 활성 소유권
 
@@ -37,8 +37,8 @@
 | 분류형 기록 라이브러리·검색·조건부 판정 색인 | `assets/js/pages/archive-consolidation.js` + `assets/css/archive-consolidation.css` + `assets/css/verdict-archive.css` |
 | 문서·영상 이미지의 출처 패널·확대·비교 화면 | `assets/js/pages/archive-document.js` + `assets/css/visual-evidence.css` |
 | 채널별 전환 설정 | `assets/js/data/transition-manifest.js` |
-| 다섯 채널 명칭·색상·계기·표식·표시 설정 정의 | `assets/js/data/channel-identity-data.js` |
-| 채널 헤더 복원·상단 탐색·표시 및 음향 설정 저장 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
+| 다섯 채널 명칭·색상·계기·표식·표시 및 자동 압축 정책 | `assets/js/data/channel-identity-data.js` |
+| 채널 헤더 복원·상단 탐색·세션별 접기 상태·표시 및 음향 설정 저장 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
 | 채널 실시간 상태·부팅·전송량·CLS·전환 계측 | `assets/js/core/performance-telemetry.js` |
 | 설정 상태 요약·그룹·접이식 세션 진단 | `assets/js/core/channel-identity.js` + `assets/css/channel-identity.css` |
 | 공통 사건·권역·작전 연결 | `assets/js/data/incident-registry.js` |
@@ -53,11 +53,11 @@
 | 공통 중복 연결 정리 | `assets/js/pages/shared-declutter.js` |
 | 비보호 화면 명칭 정합화 | `assets/js/pages/canon-reconciliation.js` |
 | 영상·문서·권역·작전 기록 카드 색인 | `assets/js/pages/archive-consolidation.js` |
-| 시대별 세계 사건 연표·필터·정사 판정 화면 | `assets/js/pages/world-history.js` + `assets/css/world-history.css` |
+| 시대별 세계 사건 연표·필터·정사 판정·지도 역방향 연결 | `assets/js/pages/world-history.js` + `assets/css/world-history.css` |
 | 세력 분석실 | `assets/js/pages/faction-analysis.js` |
 | 관제지도 설정 자료·2042 독립 동시관측점 | `assets/js/data/map-room-data.js` |
 | 대흑림·데드존 구역·지점·경로 위험·순례 규칙 | `assets/js/data/regional-drilldown-data.js` |
-| 지역 상황도·경로 강조·독립 신호층·모바일 레이어 제어·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
+| 지역 상황도·경로 강조·독립 신호층·세션 복원·모바일 레이어 제어·작전지도 | `assets/js/pages/map-room.js` + `assets/css/map-room.css` |
 | 홈 통계·경보·직접 연결 | `assets/js/pages/terminal-home.js` + `assets/css/terminal-foundation.css` |
 | 원본·보정·복원 이미지 정책 | `ASSET_POLICY.md` |
 | 신규 복원 추정 이미지 출처 대장 | `assets/resources/ASSET_REGISTRY.md` |
@@ -71,6 +71,8 @@
 `build-info.js`가 현재 빌드와 화면 명칭을 먼저 선언한다. 이후 `site-manifest.js`, 오디오·전환·채널 데이터, 조직 정사와 `world-history-data.js`의 시대·판정 대장이 로드된다. `japan-technology-data.js`가 제6계측계획 다섯 사건, 실제 역사 기준과 2003·2026년까지 이어지는 기술 계보를 제공하고 `world-history-prose-data.js`가 기존 기록과 2031–2042 후속 사건의 작성자·수신자·목적과 기록 조각을 결합한다. 세계 기록 런타임은 세 대장을 함께 읽어 아홉 시대·43개 사건을 표시한다. 이어서 사건·화면 데이터와 기록·시각 증거·반응형 미디어 데이터가 로드된다. `field-dossier-data.js`가 네 개의 공개 문서를 병합하고 `regional-drilldown-data.js`가 대흑림·데드존 6개 구역, 42개 지점과 19개 경로의 위험·신호·순례 규칙을 선언한다. `pilgrimage-scenario-data.js`는 불빛 없는 성채, 돌아온 자의 이름, 검문소 아래의 구조 신호에 쓰이는 열여덟 현장과 열 결말, 그리고 앞선 선택에 반응하는 후속 변형을 선언한다. 이어서 `verdict-archive-data.js`가 결말별 후속 판정 문구와 DZ-VR-04 작전 해금을 제공하고 `map-room-data.js`가 모든 자료를 세계 지도에 결합한다. 영상 설정 다음에는 부팅·오디오·적응형 미디어·작전·순례 저장소와 판정 보관소, 공통 재생 엔진이 차례로 초기화된다. 작전·순례·판정 저장소의 변경 이벤트는 문서, 단계별 작전지도와 홈 수신 신호를 동시에 갱신한다. `transition-controller.js`와 `app-shell.js`는 화면 퇴장·미디어 준비·교체·진입을 공동 관리한다. 이후 기록 색인, 세계 기록, 정보 분석, 상황 관제, 순례 오버레이와 홈 정보 피드가 각 화면을 소유한다.
 
 2042년 삼야 무응답은 `map-room-data.js`에서 대흑림 성채 여섯 곳과 데드 존 검문소 네 곳의 독립 관측점으로 등록한다. 이 사건은 연결 경로를 소유하지 않으며, 지도 런타임도 두 권역 사이 선을 생성하지 않는다.
+
+5.45.0의 연표→지도 이동은 `synchronyEvents[].history`를 기준으로 생성한다. 지도 선택과 채널 밀도는 `sessionStorage`에만 저장하고 공통 정사 데이터나 영구 로컬 판정 저장소를 변경하지 않는다.
 
 `media-provenance-data.js`는 `MEDIA_PROVENANCE_OVERRIDES.json`과 실제 `assets` 파일 집합에서 생성되는 공개 감사 스냅샷이다. 기록보관소는 이 스냅샷의 총자산·검토 대기·미디어 종류·참고 전용 노출 상태를 표시한다. 파일별 승인 근거는 오버라이드에서만 수정하고 생성 대장은 직접 편집하지 않는다.
 

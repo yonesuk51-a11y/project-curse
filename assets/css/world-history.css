@@ -1,4 +1,4 @@
-/* Project Curse 5.43.1 — authored archive fragments, provenance and post-2030 chronology. */
+/* Project Curse 5.45.0 — authored archive fragments, provenance and chronology-to-map handoff. */
 #history.pc-world-history{max-width:1580px;margin:0 auto;padding:clamp(22px,3vw,48px);border-color:rgba(158,168,173,.2);background:linear-gradient(145deg,#0c0f11,#070809 72%)}
 #history .pc-world-history-head{max-width:900px;margin:0 0 26px}
 #history .pc-world-history-head .label{margin-bottom:12px}
@@ -145,6 +145,9 @@
 #history .pc-world-history-links>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px}
 #history .pc-world-history-links button{min-height:40px;padding:9px 11px;border:1px solid rgba(171,181,185,.16);background:rgba(8,10,11,.78);color:rgba(226,228,228,.7);font:inherit;font-size:.72rem;font-weight:600;line-height:1.35;text-align:left;cursor:pointer}
 #history .pc-world-history-links button:hover,#history .pc-world-history-links button:focus-visible{border-color:rgba(198,73,82,.58);color:#fff;outline:0}
+#history .pc-world-history-links button[data-history-map-synchrony]{border-color:rgba(195,154,92,.42);color:#e8cb96;background:linear-gradient(120deg,rgba(105,73,31,.28),rgba(8,10,11,.86))}
+#history .pc-world-history-links button[data-history-map-synchrony]::before{content:'◇ 2042 SIGNAL LAYER';display:block;margin-bottom:5px;color:rgba(195,154,92,.58);font:700 .51rem/1.2 ui-monospace,Consolas,monospace;letter-spacing:.11em}
+#history .pc-world-history-links button[data-history-map-synchrony]:hover,#history .pc-world-history-links button[data-history-map-synchrony]:focus-visible{border-color:#c39a5c;color:#fff}
 #history .pc-world-history-detail-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;padding-top:20px;border-top:1px solid rgba(169,179,183,.16)}
 #history .pc-world-history-detail-nav button{padding:11px 13px;border:1px solid rgba(171,181,185,.19);background:rgba(16,19,21,.82);color:rgba(225,227,228,.78);font:inherit;cursor:pointer}
 #history .pc-world-history-detail-nav button:last-child{text-align:right}

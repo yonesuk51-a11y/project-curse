@@ -1,6 +1,6 @@
 # Project Curse World Canon Ledger
 
-Status: `5.44.0 / post-2030 chronology, isolated synchrony map and local verdict boundary`
+Status: `5.45.0 / chronology-map handoff, isolated synchrony map and local verdict boundary`
 
 이 문서는 Project Curse의 새 설정을 확정하기 전에 대조하는 내부 정사 대장이다. 사이트에 공개되는 설정글이 아니며, 설정 충돌과 임의 확정을 막는 기준으로 사용한다.
 
@@ -76,6 +76,7 @@ Status: `5.44.0 / post-2030 chronology, isolated synchrony map and local verdict
 - 2042년 10월 31일부터 61시간 1분 동안 대흑림 성채 여섯 곳과 데드 존 검문소 네 곳이 외부 교신을 잃은 관측은 고정한다.
 - 복구 장부에 상대 권역의 호출 부호가 남았다는 사실은 고정하지만, 호출을 실제로 누가 송신했는지와 어떤 매체가 전달했는지는 승인 대기로 남긴다.
 - 지도상의 열 개 좌표는 사건을 비교하기 위한 비항법용 추정 위치다. 성채와 검문소의 정확 위치 또는 현재 생존 상태를 확정하지 않는다.
+- 세계 기록에서 관측도로 이동하거나 이전 지도 선택을 같은 탭에서 복원하는 것은 열람 편의 기능이다. 이동 이력과 화면 상태는 통로·항로·시간 중첩 또는 새 사건의 증거로 취급하지 않는다.
 - 열 개 표식 사이에는 이동선·중계선·통로선을 그리지 않는다. 동시 발생은 대흑림과 데드 존의 지리적 연결, 순간 이동로, 동일 공간 또는 공통 지휘망의 증거가 아니다.
 - 향후 조사로 경로가 제안되더라도 별도 정사 승인 전에는 기존 순례·동원 경로 데이터에 병합하지 않는다.
 

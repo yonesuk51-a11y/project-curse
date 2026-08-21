@@ -1,4 +1,4 @@
-// Project Curse 5.43.1 — authored archive fragments, document voices and post-2030 common canon.
+// Project Curse 5.45.0 — authored archive fragments with bidirectional chronology-to-map handoff.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
@@ -519,6 +519,7 @@
     });
 
     const linkedIncidents=incidentNetwork?.incidentList?.filter(item=>item.history===record.id)||[];
+    const linkedSynchrony=(window.ProjectCurseMapRoom?.synchronyEvents||[]).filter(event=>event.history===record.id);
     const linkedFactions=[...new Set([
       ...(Array.isArray(record.factions)?record.factions:[]),
       ...linkedIncidents.flatMap(incident=>incident.factions)
@@ -530,7 +531,7 @@
     const linkPanel=detailView.querySelector('[data-history-record-links]');
     const linkHost=linkPanel?.querySelector('div');
     linkHost?.replaceChildren();
-    if((linkedIncidents.length||linkedFactions.length||linkedRecords.length)&&linkPanel&&linkHost){
+    if((linkedIncidents.length||linkedSynchrony.length||linkedFactions.length||linkedRecords.length)&&linkPanel&&linkHost){
       const addLink=(label,dataName,value)=>{
         const button=document.createElement('button');
         button.type='button';
@@ -542,6 +543,7 @@
         addLink(`${incident.title} 위치`,'historyMapIncident',incident.id);
         if(incident.operation) addLink(`${incident.title} 작전`,'historyMapOperation',incident.operation);
       });
+      linkedSynchrony.forEach(event=>addLink(`${event.title} 관측도 · ${event.points.length}개 신호`,'historyMapSynchrony',event.id));
       linkedFactions.forEach(key=>addLink(`${window.ProjectCurseCanon.factions[key].name} 분석`,'historyFaction',key));
       linkedRecords.forEach(id=>addLink(`${id} 기록`,'historyArchive',id));
       linkPanel.hidden=false;
@@ -589,6 +591,10 @@
     if(button.dataset.historyMapIncident){
       await window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'});
       window.ProjectCurseMapRoomRuntime?.showIncident?.(button.dataset.historyMapIncident);
+    }else if(button.dataset.historyMapSynchrony){
+      await window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'});
+      window.ProjectCurseMapRoomRuntime?.showSynchrony?.(button.dataset.historyMapSynchrony);
+      requestAnimationFrame(()=>document.querySelector('#map-room .pc-map-region-tabs')?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
     }else if(button.dataset.historyMapOperation){
       await window.ProjectCurseShell?.navigate?.('map-room',{replace:false,historyMode:'push'});
       window.ProjectCurseMapRoomRuntime?.showOperation?.(button.dataset.historyMapOperation);

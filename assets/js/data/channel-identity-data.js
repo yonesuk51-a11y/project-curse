@@ -1,4 +1,4 @@
-// Project Curse 5.43.1 — visual and operational identity for the five terminal channels.
+// Project Curse 5.45.0 — visual identity and adaptive density policy for the five terminal channels.
 (function(root){
   'use strict';
 
@@ -11,6 +11,7 @@
   root.ProjectCurseChannelData=freeze({
     version:'1.0.0',
     storageKey:'project_curse_preferences_v1',
+    density:{storageKey:'project_curse_channel_density_v1',autoCompactMs:1800,excluded:['terminal-home']},
     defaults:{quality:'auto',effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on'},
     channels:[
       {

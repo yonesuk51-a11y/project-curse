@@ -1,4 +1,4 @@
-// Project Curse 5.44.0 — generated media provenance and release-review ledger.
+// Project Curse 5.45.0 — generated media provenance and release-review ledger.
 (function(root){
   'use strict';
   const data={

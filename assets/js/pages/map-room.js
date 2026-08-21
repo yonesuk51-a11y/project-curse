@@ -1,4 +1,4 @@
-// Project Curse 5.44.0 — reactive field consequences, isolated synchrony signals, and operation trace room.
+// Project Curse 5.45.0 — session-restored cartography, isolated synchrony signals, and operation trace room.
 (function(root){
   'use strict';
 
@@ -30,6 +30,8 @@
     const pilgrimageStore=root.ProjectCursePilgrimageState;
     const verdictStore=root.ProjectCurseVerdictArchiveState;
     if(!mount||!data) return;
+
+    const sessionKey='project_curse_map_session_v1';
 
     const state={
       mode:'region',
@@ -63,6 +65,32 @@
     const operationScenarioId=operation=>operation?.scenario||({'op-unlit-fortress':'unlit-fortress','op-deadzone-return':'deadzone-return','op-deadzone-recovery':'deadzone-recovery'}[operation?.id]||null);
     const operationStep=operation=>{const id=operationScenarioId(operation);if(!id) return operation?.id===operationStore?.operationId?operationStore.get().mapStep:0;const summary=pilgrimageOutcome(id);return summary?.status==='complete'?(operation.steps.length-1):summary?.status==='active'?summary.step:0;};
     const recoveryUnlocked=()=>Boolean(verdictStore?.isUnlocked?.('DZ-VR-04'));
+    function restoreMapSession(){
+      let saved;
+      try{saved=JSON.parse(sessionStorage.getItem(sessionKey)||'null');}catch(_error){return;}
+      if(!saved||typeof saved!=='object') return;
+      if(['region','detail','operation'].includes(saved.mode)) state.mode=saved.mode;
+      if(data.regions.some(region=>region.id===saved.region)) state.region=saved.region;
+      if(data.markers.some(marker=>marker.id===saved.marker)) state.marker=saved.marker;
+      if(synchronyPointById(saved.synchronyPoint)) state.synchronyPoint=saved.synchronyPoint;
+      if((data.drilldowns||[]).some(detail=>detail.id===saved.detail)) state.detail=saved.detail;
+      const detail=detailById(state.detail);
+      if(detail?.sites?.some(site=>site.id===saved.detailSite)) state.detailSite=saved.detailSite;
+      if(data.operations.some(operation=>operation.id===saved.operation)) state.operation=saved.operation;
+      if(Number.isFinite(saved.step)) state.step=Math.max(0,Math.floor(saved.step));
+      Object.keys(state.layers).forEach(key=>{if(typeof saved.layers?.[key]==='boolean') state.layers[key]=saved.layers[key];});
+      Object.keys(state.detailLayers).forEach(key=>{if(typeof saved.detailLayers?.[key]==='boolean') state.detailLayers[key]=saved.detailLayers[key];});
+    }
+    function saveMapSession(){
+      try{
+        sessionStorage.setItem(sessionKey,JSON.stringify({
+          mode:state.mode,region:state.region,marker:state.marker,synchronyPoint:state.synchronyPoint,
+          detail:state.detail,detailSite:state.detailSite,detailLayers:{...state.detailLayers},
+          operation:state.operation,step:state.step,layers:{...state.layers}
+        }));
+      }catch(_error){}
+    }
+    restoreMapSession();
     const scenarioButton=(scenarioId,labels)=>{
       const summary=pilgrimageOutcome(scenarioId);
       if(scenarioId==='deadzone-recovery'&&!recoveryUnlocked()) return `<button type="button" class="pc-map-pilgrimage-entry is-locked" data-map-open-pilgrimage="deadzone-return">DZ-VR-04 역방향 순례 판정으로 해금</button>`;
@@ -591,6 +619,7 @@
           </div>
           <div class="pc-map-view">${state.mode==='region'?renderRegion():state.mode==='detail'?renderDetail():renderOperation()}</div>
         </div>`;
+      saveMapSession();
     }
 
     async function openHistory(recordId){
@@ -674,8 +703,8 @@
       showDetail(id,siteId){const detail=detailById(id);if(!detail||detail.id!==id) return false;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;render();return true;},
       showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));render();return true;},
       showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;render();return true;},
-      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||event.points[0];state.mode='region';state.region=point.region;state.marker=null;state.synchronyPoint=point.id;state.layers.synchrony=true;render();return true;},
-      getState:()=>({...state})
+      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;render();return true;},
+      getState:()=>({...state,layers:{...state.layers},detailLayers:{...state.detailLayers}})
     });
   });
 })(window);

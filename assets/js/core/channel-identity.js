@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — readable settings, session health and adaptive local preferences.
+// Project Curse 5.45.0 — readable settings, adaptive channel density, and local preferences.
 (function(root){
   'use strict';
 
@@ -20,7 +20,9 @@
     let panel=null;
     let lastTrigger=null;
     let arrivalTimer=0;
+    let densityTimer=0;
     let telemetryFrame=0;
+    let density=loadDensity();
 
     if(!channels.length) return;
 
@@ -31,6 +33,17 @@
       }catch(_error){
         return Object.assign({},data.defaults);
       }
+    }
+
+    function loadDensity(){
+      try{
+        const stored=JSON.parse(sessionStorage.getItem(data.density?.storageKey)||'{}');
+        return stored&&typeof stored==='object'?stored:{};
+      }catch(_error){return {};}
+    }
+
+    function saveDensity(){
+      try{sessionStorage.setItem(data.density?.storageKey,JSON.stringify(density));}catch(_error){}
     }
 
     function safeFocus(target){
@@ -142,7 +155,41 @@
       const rows=channel.telemetry.map(row=>[...row]);
       if(rows.length) rows[rows.length-1]=[status.label,status.value];
       const metrics=rows.map(([label,value],index)=>`<div${index===rows.length-1?' data-channel-live-metric':''}><dt>${label}</dt><dd>${value}</dd></div>`).join('');
-      return `<div class="pc-channel-identity-copy"><small><i>${channel.index}</i> / ${channel.code}</small><strong data-screen-heading>${channel.label}</strong><p>${channel.description}</p></div><dl>${metrics}</dl><div class="pc-channel-sigil" aria-hidden="true"><i></i><i></i><span>${channel.glyph}</span><b>${channel.index}</b></div>`;
+      return `<div class="pc-channel-identity-copy"><small><i>${channel.index}</i> / ${channel.code}</small><strong data-screen-heading>${channel.label}</strong><p>${channel.description}</p></div><dl>${metrics}</dl><div class="pc-channel-sigil" aria-hidden="true"><i></i><i></i><span>${channel.glyph}</span><b>${channel.index}</b></div><button type="button" class="pc-channel-density-toggle" data-channel-density-toggle aria-expanded="true"><span>채널 정보 접기</span><i aria-hidden="true"></i></button>`;
+    }
+
+    function densityExcluded(id){return (data.density?.excluded||[]).includes(id);}
+
+    function syncDensityControl(id,identity=document.querySelector(`#${id}>[data-channel-identity]`)){
+      const page=document.getElementById(id);
+      const button=identity?.querySelector('[data-channel-density-toggle]');
+      if(!page||!button) return;
+      const excluded=densityExcluded(id);
+      const compact=!excluded&&page.classList.contains('pc-channel-compact');
+      button.hidden=excluded;
+      button.setAttribute('aria-expanded',compact?'false':'true');
+      button.setAttribute('aria-label',compact?'채널 정보 펼치기':'채널 정보 접기');
+      const label=button.querySelector('span');
+      if(label) label.textContent=compact?'채널 정보 펼치기':'채널 정보 접기';
+    }
+
+    function setChannelCompact(id,compact,{persist=true}={}){
+      const page=document.getElementById(id);
+      if(!page||densityExcluded(id)) return false;
+      page.classList.toggle('pc-channel-compact',Boolean(compact));
+      if(persist){density={...density,[id]:Boolean(compact)};saveDensity();}
+      syncDensityControl(id);
+      return true;
+    }
+
+    function scheduleDensity(id){
+      clearTimeout(densityTimer);
+      if(densityExcluded(id)) return setChannelCompact(id,false,{persist:false});
+      if(Object.prototype.hasOwnProperty.call(density,id)) return setChannelCompact(id,density[id],{persist:false});
+      if(reduceMotion.matches) return setChannelCompact(id,true);
+      setChannelCompact(id,false,{persist:false});
+      densityTimer=setTimeout(()=>setChannelCompact(id,true),Number(data.density?.autoCompactMs)||1800);
+      return true;
     }
 
     function ensureIdentity(id){
@@ -160,6 +207,21 @@
         page.insertBefore(identity,page.firstElementChild||null);
       }
       identity.innerHTML=identityMarkup(channel);
+      syncDensityControl(id,identity);
+      return identity;
+    }
+
+    function refreshIdentityStatus(id){
+      const channel=byId.get(id);
+      const identity=document.querySelector(`#${id}>[data-channel-identity]`);
+      const metric=identity?.querySelector('[data-channel-live-metric]');
+      if(!channel||!identity||!metric) return ensureIdentity(id);
+      const status=liveStatus(id);
+      const label=metric.querySelector('dt');
+      const value=metric.querySelector('dd');
+      if(label) label.textContent=status.label;
+      if(value) value.textContent=status.value;
+      syncDensityControl(id,identity);
       return identity;
     }
 
@@ -173,6 +235,7 @@
         else control.removeAttribute('aria-current');
       });
       const page=document.getElementById(channel.id);
+      scheduleDensity(channel.id);
       if(!page||!animate) return;
       clearTimeout(arrivalTimer);
       page.classList.remove('pc-channel-arrival');
@@ -278,7 +341,7 @@
         channels.forEach(channel=>{
           const control=quickNav?.querySelector(`[data-channel-route="${channel.id}"]`);
           if(control) control.innerHTML=navMarkup(channel);
-          ensureIdentity(channel.id);
+          refreshIdentityStatus(channel.id);
         });
         renderTelemetry();
         renderOverview();
@@ -354,8 +417,9 @@
 
     function diagnostics(){
       return {
-        version:'5.33.0',channel:rootElement.dataset.pcChannel,
+        version:'5.45.0',channel:rootElement.dataset.pcChannel,
         identities:document.querySelectorAll(':scope body > .app [data-channel-identity="header"]').length,
+        density:{...density},compact:document.getElementById(rootElement.dataset.pcChannel)?.classList.contains('pc-channel-compact')||false,
         preferences:{...preferences},effectiveEffects:rootElement.dataset.pcEffects,
         navigation:quickNav?.querySelectorAll('[data-channel-route]').length||0,
         telemetry:root.ProjectCurseTelemetry?.getSnapshot?.()||null,
@@ -375,6 +439,15 @@
     document.addEventListener('projectcurse:telemetry-update',refreshLiveStatus);
     document.addEventListener('projectcurse:quality-change',renderQuality);
     document.addEventListener('projectcurse:quality-change',renderOverview);
+    document.addEventListener('click',event=>{
+      const button=event.target.closest?.('[data-channel-density-toggle]');
+      if(!button) return;
+      const page=button.closest('.content-page');
+      if(!page) return;
+      clearTimeout(densityTimer);
+      setChannelCompact(page.id,!page.classList.contains('pc-channel-compact'));
+      root.ProjectCurseAudioControl?.play?.('contact',{volume:.34});
+    });
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!panel?.hidden) closePreferences();
       if(event.key==='Tab'&&!panel?.hidden){
@@ -386,11 +459,12 @@
         else if(!focusable.includes(document.activeElement)){event.preventDefault();safeFocus(first);}
       }
     });
-    reduceMotion.addEventListener?.('change',()=>applyPreferences());
+    reduceMotion.addEventListener?.('change',()=>{applyPreferences();scheduleDensity(rootElement.dataset.pcChannel||'terminal-home');});
 
     root.ProjectCurseChannelIdentity=Object.freeze({
-      version:'5.33.0',getChannel:id=>byId.get(id)||null,getPreferences:()=>({...preferences}),
+      version:'5.45.0',getChannel:id=>byId.get(id)||null,getPreferences:()=>({...preferences}),
       setPreference,openPreferences,closePreferences,refresh:()=>activateChannel(root.ProjectCurseShell?.getRoute?.()||'terminal-home',{animate:false}),
+      setCompact:(id,compact)=>{clearTimeout(densityTimer);return setChannelCompact(id,compact);},
       getDiagnostics:diagnostics
     });
   });
