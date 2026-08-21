@@ -1,4 +1,4 @@
-// Project Curse 5.49.0 — public entry routes, live alert and field consequence owner.
+// Project Curse 5.33.0 — live intelligence, reactive field consequences, and recovery resume owner.
 (function(root){
   'use strict';
 
@@ -40,9 +40,13 @@
       const decision=operation.decision;
       const strip=home.querySelector('.pc-terminal-system-strip');
       if(strip) strip.innerHTML=`
+        <span><small>NETWORK</small><b>ISOLATED</b></span>
         <span><small>ARCHIVE</small><b>${records} OPEN</b></span>
         <span><small>OPERATIONS</small><b>${operations} ACTIVE</b></span>
         <span><small>UNRESOLVED</small><b>${unresolved} SIGNALS</b></span>`;
+
+      const primary=home.querySelector('.pc-terminal-primary p');
+      if(primary) primary.textContent=`${regions}개 관제 권역과 ${operations}개 특수 작전, ${records}개 공개 기록을 하나의 사건망에서 확인할 수 있다.`;
 
       const alertTitle=unreadVerdict?'새 현장 판정 기록':decision?.title||feed.alert.title;
       const alertPriority=unreadVerdict?'NEW RECORD DECRYPTED':decision?(operation.status==='deferred'?'LOCAL DECISION DEFERRED':'LOCAL VERDICT SAVED'):feed.alert.priority;

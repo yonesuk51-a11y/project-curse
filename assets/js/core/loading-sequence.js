@@ -1,13 +1,13 @@
-// Project Curse 5.49.0 — one meaningful cold boot and lightweight return handoffs.
+// Project Curse 5.34.0 — cold boot, session restore and archive return sequence.
 (function(root){
   'use strict';
 
-  const BUILD=()=>root.ProjectCurseBuild?.version||'5.49.0';
+  const BUILD=()=>root.ProjectCurseBuild?.version||'5.34.0';
   const SESSION_KEY=()=>`pc_terminal_boot_${BUILD().replace(/[^a-z0-9]+/gi,'_')}`;
-  const MIN_VISIBLE_MS=0;
+  const MIN_VISIBLE_MS=4600;
   const MODES={
     cold:{
-      title:'로컬 단말기 기동',kicker:'U.A.C 폐쇄 기록 / PC-03',duration:3600,finishDelay:260,skippable:true,
+      title:'로컬 단말기 기동',kicker:'U.A.C 폐쇄 기록 / PC-03',duration:8600,finishDelay:900,skippable:true,
       lines:[
         ['PC-03','로컬 커널 및 권한 검사','OK'],
         ['AUDIO','로컬 중계 채널 연결','LINKED'],
@@ -16,30 +16,30 @@
         ['RZ/881120','레드라인 흔적 검사','DETECTED'],
         ['ACCESS','현장 열람 권한 봉인','GRANTED']
       ],
-      starts:[180,620,1080,1540,2100,2700],ends:[520,960,1420,1880,2460,3220]
+      starts:[520,1680,2860,4100,5480,6880],ends:[1320,2480,3720,4980,6360,7720]
     },
     restore:{
-      title:'세션 복원',kicker:'LOCAL SESSION / PC-03',duration:700,finishDelay:80,skippable:false,
+      title:'세션 복원',kicker:'LOCAL SESSION / PC-03',duration:5200,finishDelay:650,skippable:false,
       lines:[
         ['SESSION','이전 로컬 세션 확인','FOUND'],
         ['CHANNEL','마지막 채널 상태 복구','RESTORED'],
         ['OPERATOR','현장 열람 권한 확인','LIMITED'],
         ['ACCESS','로컬 채널 재봉인','GRANTED']
       ],
-      starts:[60,170,300,430],ends:[150,270,400,560]
+      starts:[420,1420,2500,3580],ends:[1120,2140,3220,4320]
     },
     returning:{
-      title:'기록 언마운트',kicker:'ARCHIVE RETURN / PC-03',duration:420,finishDelay:40,skippable:false,
+      title:'기록 언마운트',kicker:'ARCHIVE RETURN / PC-03',duration:4600,finishDelay:450,skippable:false,
       lines:[
         ['RECORD','활성 기록 채널 분리','UNMOUNTED'],
         ['ARCHIVE','공개 색인으로 복귀','READY'],
         ['ACCESS','보관소 접근선 재연결','GRANTED']
       ],
-      starts:[40,130,240],ends:[110,210,340]
+      starts:[360,1420,2700],ends:[1080,2200,3680]
     },
     reduced:{
-      title:'세션 연결',kicker:'LOCAL ACCESS / PC-03',duration:280,finishDelay:30,skippable:false,
-      lines:[['ACCESS','로컬 단말 연결','READY'],['CHANNEL','현재 채널 확인','RESTORED']],starts:[20,100],ends:[80,210]
+      title:'세션 연결',kicker:'LOCAL ACCESS / PC-03',duration:3600,finishDelay:200,skippable:false,
+      lines:[['ACCESS','로컬 단말 연결','READY'],['CHANNEL','현재 채널 확인','RESTORED']],starts:[300,1500],ends:[1180,2780]
     },
     skip:{title:'접근 승인',kicker:'LOCAL ACCESS / PC-03',duration:0,finishDelay:0,skippable:false,lines:[['ACCESS','로컬 단말 연결','READY']],starts:[0],ends:[0]}
   };
@@ -203,7 +203,7 @@
     timers.push(root.setTimeout(()=>complete(),duration));
 
     if(config.skippable&&skip){
-      timers.push(root.setTimeout(()=>{skip.disabled=false;},1200));
+      timers.push(root.setTimeout(()=>{skip.disabled=false;},6400));
       skip.addEventListener('click',()=>complete({skipped:true}),{once:true});
     }
 

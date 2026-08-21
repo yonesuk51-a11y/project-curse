@@ -1,4 +1,4 @@
-/* Project Curse 5.49.0 — operator-only media provenance and release-clearance console. */
+/* Project Curse 5.48.0 — media provenance and release-clearance console. */
 #media-audit{padding-bottom:46px;background:radial-gradient(circle at 92% 8%,rgba(181,126,58,.075),transparent 30rem),linear-gradient(180deg,rgba(10,27,28,.28),transparent 420px)}
 #media-audit>.pc-channel-identity{border-top:3px solid var(--pc-channel);background:linear-gradient(112deg,rgba(18,70,70,.34),rgba(7,12,13,.97) 46%,rgba(82,53,17,.17))}
 #media-audit .pc-channel-sigil{border-radius:3px;transform:rotate(45deg) scale(.76)}

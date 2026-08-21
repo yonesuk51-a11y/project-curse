@@ -151,7 +151,7 @@ const reviewQueue=assets.filter(asset=>reviewStatuses.has(asset.release)).sort((
 const payload={version:'1.0.0',generated:'2026-08-21',policy:'MEDIA PROVENANCE / RELEASE AUDIT',overridesVersion:overrides.version||'UNKNOWN',referenceOnly,referenceExposures:exposedReferenceFiles,stats,reviewQueue,assets};
 payload.version='1.1.0';
 payload.priorityQueue=priorityQueue;
-const output=`// Project Curse 5.49.0 — generated operator media provenance and release-clearance ledger.\n(function(root){\n  'use strict';\n  const data=${JSON.stringify(payload,null,2)};\n  const freeze=value=>{if(!value||typeof value!=='object'||Object.isFrozen(value)) return value;Object.values(value).forEach(freeze);return Object.freeze(value);};\n  root.ProjectCurseMediaProvenance=freeze(data);\n})(window);\n`;
+const output=`// Project Curse 5.48.0 — generated media provenance and release-clearance ledger.\n(function(root){\n  'use strict';\n  const data=${JSON.stringify(payload,null,2)};\n  const freeze=value=>{if(!value||typeof value!=='object'||Object.isFrozen(value)) return value;Object.values(value).forEach(freeze);return Object.freeze(value);};\n  root.ProjectCurseMediaProvenance=freeze(data);\n})(window);\n`;
 
 if(process.argv.includes('--write')){
   writeFileSync(resolve(ROOT,TARGET),output,'utf8');

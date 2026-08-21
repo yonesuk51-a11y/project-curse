@@ -1,4 +1,4 @@
-// Project Curse 5.49.0 — public route handoff and operator-only utility boundary.
+// Project Curse 5.34.0 — route handoff input parity and accessible shell navigation.
 (function(){
   'use strict';
 
@@ -15,10 +15,6 @@
     const currentLabel=document.querySelector('[data-uac-current-label]');
     const pages=Array.from(document.querySelectorAll('.content-page[id]'));
     const screenIds=new Set(pages.map(page=>page.id));
-    const publicIds=new Set((window.ProjectCurseBuild?.screens||[]).map(screen=>screen.id));
-    const internalIds=new Set((window.ProjectCurseBuild?.internalScreens||[]).map(screen=>screen.id));
-    let internalAccess=false;
-    try{internalAccess=new URLSearchParams(location.search).get('operator')==='media';}catch(_error){}
     if(!content||!homeControl||!pages.length) return;
 
     const quickNavItems=()=>{
@@ -51,13 +47,11 @@
     function normalize(target){
       if(target==='faction-relation') return 'faction-info';
       if(target==='region-map'||target==='zone-map'||target==='operation-map') return 'map-room';
-      if(internalIds.has(target)) return internalAccess?target:'terminal-home';
-      if(publicIds.size&&!publicIds.has(target)) return 'terminal-home';
       return screenIds.has(target)?target:'terminal-home';
     }
 
     function screenLabel(target){
-      const buildScreen=[...(window.ProjectCurseBuild?.screens||[]),...(window.ProjectCurseBuild?.internalScreens||[])].find(screen=>screen.id===target);
+      const buildScreen=window.ProjectCurseBuild?.screens?.find(screen=>screen.id===target);
       return buildScreen?.label||target;
     }
 

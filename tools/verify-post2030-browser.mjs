@@ -30,7 +30,7 @@ async function openHistory(viewport,label){
   page.on('request',request=>requests.push(request.url()));
   await page.goto(baseUrl,{waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.49.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.0');
   await page.evaluate(()=>window.ProjectCurseShell.navigate('history',{historyMode:'replace'}));
   await page.waitForFunction(()=>document.body.dataset.route==='history');
   await page.waitForSelector('[data-history-era-filter="aftermath"]');
@@ -96,7 +96,7 @@ check('desktop:authored-detail',detail.document?.includes('상충 기록')&&deta
 check('desktop:direct-crosslinks',detail.links.includes('U.A.C 분석')&&detail.links.includes('S.I.D 분석')&&detail.links.includes('Great_Black_Forest_Region 기록')&&detail.links.includes('Dead_Zone_Pilgrimage 기록'),JSON.stringify(detail));
 check('desktop:no-detail-overflow',detail.documentWidth<=detail.viewport,JSON.stringify(detail));
 check('desktop:no-generated-core-audio-requests',!desktop.requests.some(url=>url.includes('/assets/audio/core/')),desktop.requests.filter(url=>url.includes('/assets/audio/')).join(' | '));
-const desktopShot=join(tmpdir(),'project-curse-5.49.0-aftermath-desktop.png');
+const desktopShot=join(tmpdir(),'project-curse-5.48.0-aftermath-desktop.png');
 await desktop.page.screenshot({path:desktopShot,fullPage:false});
 check('desktop:no-final-errors',desktop.errors.length===0,desktop.errors.join(' | '));
 await desktop.context.close();
@@ -117,7 +117,7 @@ const mobileLayout=await mobile.page.evaluate(()=>({
 check('mobile:latest-detail',mobileLayout.title==='삼야 무응답'&&mobileLayout.links===5&&mobileLayout.fragments===4,JSON.stringify(mobileLayout));
 check('mobile:no-horizontal-overflow',mobileLayout.document<=mobileLayout.viewport&&mobileLayout.shell<=mobileLayout.viewport,JSON.stringify(mobileLayout));
 check('mobile:no-generated-core-audio-requests',!mobile.requests.some(url=>url.includes('/assets/audio/core/')),mobile.requests.filter(url=>url.includes('/assets/audio/')).join(' | '));
-const mobileShot=join(tmpdir(),'project-curse-5.49.0-aftermath-mobile.png');
+const mobileShot=join(tmpdir(),'project-curse-5.48.0-aftermath-mobile.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-final-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();

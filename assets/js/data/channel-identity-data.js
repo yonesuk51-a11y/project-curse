@@ -1,4 +1,4 @@
-// Project Curse 5.49.0 — visual identity and adaptive density policy for five public lore channels.
+// Project Curse 5.48.0 — visual identity and adaptive density policy for the six terminal channels.
 (function(root){
   'use strict';
 
@@ -12,25 +12,25 @@
     version:'1.0.0',
     storageKey:'project_curse_preferences_v1',
     density:{storageKey:'project_curse_channel_density_v1',autoCompactMs:1800,excluded:['terminal-home']},
-    defaults:{quality:'auto',effects:'balanced',interfaceAudio:'minimal',ambient:'off',textReveal:'on'},
+    defaults:{quality:'auto',effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on'},
     channels:[
       {
-        id:'terminal-home',index:'00',code:'ARCHIVE ENTRY',label:'단말',shortLabel:'단말',theme:'command',glyph:'CN',
-        description:'금기를 무기로 삼은 세계의 역사와 전장, 세력과 회수 기록으로 진입한다.',
+        id:'terminal-home',index:'00',code:'COMMAND NODE',label:'단말 상태',shortLabel:'단말',theme:'command',glyph:'CN',
+        description:'폐쇄 서버의 현재 신호와 모든 기록 채널을 통합 지휘한다.',
         telemetry:[['NETWORK','ISOLATED'],['UPLINK','LOCAL'],['THREAT','ESCALATED']]
       },
       {
-        id:'map-room',index:'01',code:'CARTOGRAPHY',label:'전장·권역',shortLabel:'지도',theme:'cartography',glyph:'MR',
+        id:'map-room',index:'01',code:'CARTOGRAPHY',label:'상황 관제',shortLabel:'관제',theme:'cartography',glyph:'MR',
         description:'권역·현장·작전 좌표를 겹쳐 보고 생존 가능한 이동 경로를 판독한다.',
         telemetry:[['GRID','ACTIVE'],['LAYERS','SYNCHRONIZED'],['SIGNAL','UNSTABLE']]
       },
       {
-        id:'history',index:'02',code:'CHRONOLOGY',label:'세계 역사',shortLabel:'연대기',theme:'chronology',glyph:'CH',
+        id:'history',index:'02',code:'CHRONOLOGY',label:'세계 기록',shortLabel:'연대기',theme:'chronology',glyph:'CH',
         description:'분절된 사건 기록을 시간축에 재배열해 세계의 변곡점을 추적한다.',
         telemetry:[['SPAN','1975–2042'],['INDEX','43 RECORDS'],['EVENTS','9']]
       },
       {
-        id:'faction-info',index:'03',code:'INTELLIGENCE',label:'세력 정보',shortLabel:'세력',theme:'intelligence',glyph:'IA',
+        id:'faction-info',index:'03',code:'INTELLIGENCE',label:'정보 분석',shortLabel:'분석',theme:'intelligence',glyph:'IA',
         description:'기관·교단·독립 세력의 관계와 충돌 가능성을 분석한다.',
         telemetry:[['DOSSIERS','ACTIVE'],['TRUST','VARIABLE'],['NETWORK','CONTESTED']]
       },
@@ -38,6 +38,11 @@
         id:'archive-entry',index:'04',code:'ARCHIVE VAULT',label:'기록보관소',shortLabel:'보관소',theme:'archive',glyph:'AV',
         description:'회수 영상과 복구 문서를 분류하고 봉인 상태와 출처를 검증한다.',
         telemetry:[['VAULT','MOUNTED'],['RECOVERY','PARTIAL'],['ACCESS','LIMITED']]
+      },
+      {
+        id:'media-audit',index:'05',code:'RELEASE CLEARANCE',label:'미디어 감사',shortLabel:'감사',theme:'clearance',glyph:'RC',
+        description:'게시 자산의 파일 등록, 원본 계보와 공개 허가 증빙을 서로 분리해 점검한다.',
+        telemetry:[['ASSETS','174'],['PRIORITY','30'],['REVIEW','150 OPEN']]
       }
     ],
     preferences:{
