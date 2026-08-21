@@ -1,4 +1,4 @@
-// Project Curse 5.46.0 — single source of truth for the terminal build.
+// Project Curse 5.47.0 — single source of truth for the terminal build.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.46.0',
-    codename:'Field Panel Control',
-    schema:'project-curse-v39',
+    version:'5.47.0',
+    codename:'Signal Index',
+    schema:'project-curse-v40',
     released:'2026-08-21',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

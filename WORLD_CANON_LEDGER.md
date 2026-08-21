@@ -1,6 +1,6 @@
 # Project Curse World Canon Ledger
 
-Status: `5.46.0 / rendered-marker evidence gate, isolated synchrony map and local verdict boundary`
+Status: `5.47.0 / derived signal index, rendered-marker evidence gate, isolated synchrony map and local verdict boundary`
 
 이 문서는 Project Curse의 새 설정을 확정하기 전에 대조하는 내부 정사 대장이다. 사이트에 공개되는 설정글이 아니며, 설정 충돌과 임의 확정을 막는 기준으로 사용한다.
 
@@ -27,6 +27,14 @@ Status: `5.46.0 / rendered-marker evidence gate, isolated synchrony map and loca
 | 증언 기반 | 관계자 증언이 중심이며 물증이 제한적이다. |
 | 상충 기록 | 기관·세력별 기록이 서로 충돌한다. |
 | 정보 추정 | 현재 신호와 부분 자료로 재구성한 임시 판단이다. |
+
+## 지도 신호 색인 경계
+
+- `SIGNAL INDEX`는 기존 사건 등록부와 지도 자료를 찾아보기 쉽게 정렬한 파생 색인이다. 항목의 등재가 새 사건·위치·인과관계를 확정하지 않는다.
+- 렌더링 지도 표식, 작전 경로와 독립 관측점은 각 원본 자료의 신뢰도·상태·연결 경계를 그대로 사용한다.
+- 아마리온 설립은 북미 권역 사건이라는 기록과 좌표값이 있으나 공개 지도 표식의 등급·유형·현재 잔존 상태가 승인되지 않았다. 색인에서는 `POSITION WITHHELD`로 표시하고 정확 위치 이동을 제공하지 않는다.
+- 위치 보류 항목을 선택하면 이전 지도 표식과 독립 관측 선택을 지운다. 화면에 남은 다른 지점을 해당 사건의 위치로 오인하게 해서는 안 된다.
+- 삼야 무응답의 열 관측점은 검색 가능한 개별 항목이지만, 같은 색인에 등재됐다는 이유로 서로의 중계 경로나 지리적 연결을 생성하지 않는다.
 
 ## 현재 고정된 조직 기준점
 

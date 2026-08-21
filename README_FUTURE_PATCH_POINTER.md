@@ -1,17 +1,19 @@
 # Future Patch Pointer
 
-Current baseline: `5.46.0 Field Panel Control`
+Current baseline: `5.47.0 Signal Index`
 
 Completed in this baseline:
-`9 Eras / 43 History Records / 10 Isolated Synchrony Points / 0 Geographic Links / 3 Collapsible Map Panels`
+`9 Eras / 43 History Records / 29 Indexed Contacts / 10 Isolated Synchrony Points / 0 Geographic Links`
 
 Primary scope:
 
-- 지역 상황도·세부 권역·작전지도의 모바일 정보 패널을 공통 접이식 UI로 통합
-- 개요는 접힌 상태로 시작하고 표식·현장·새 작전 단계 선택 시 자동 펼침
-- 정보 패널 펼침 상태를 현재 탭의 지도 세션에 함께 보존
-- 세계 기록의 위치 버튼을 실제 렌더링 지도 표식이 있는 사건으로 제한
-- 지도 표식이 없는 아마리온 설립은 세력·기록 연결만 유지
+- 지도 표식 13개·작전 5개·독립 관측 10개·위치 보류 사건 1개를 파생 색인으로 통합
+- 사건·현장·작전·동시 관측·확인·추정·미해결·기록 연결 필터와 통합 검색 제공
+- 색인 선택 시 권역·레이어·표식·관측점·작전 단계를 자동으로 열기
+- 데스크톱 3열 판독 패널과 모바일 접근 가능 하단 시트 제공
+- 검색·필터·선택·열림 상태를 현재 탭의 지도 세션에 보존
+- 아마리온 설립을 `POSITION WITHHELD`로 유지하고 이전 지도 선택 제거
+- 삼야 무응답 10개 항목에 `NO ROUTE` 경계 유지
 - 새 음원 없이 5.42.0 음향 기준 유지
 
 Next planned pass:
@@ -23,4 +25,4 @@ Next planned pass:
 - 다른 연표 사건을 지도 계층으로 확장할 경우 사건별 독립 토글과 정사 경계를 먼저 정의
 - 2031–2042 사건이 기존 세력 상세의 현재 상태를 자동으로 덮어쓰지 않는지 정사 감사를 계속하기
 - 아마리온 설립 위치를 지도에 추가하려면 좌표의 정사 등급·표식 유형·현재 잔존 상태를 먼저 확정하기
-- 지도 표식을 키보드와 목록으로 함께 탐색할 수 있는 신호 색인 패널 검토
+- 신호 색인에 세부 권역 42개 지점을 추가하려면 중복 표시 규칙과 2단계 탐색 구조를 먼저 정의

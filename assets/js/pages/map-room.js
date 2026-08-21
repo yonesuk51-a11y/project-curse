@@ -1,4 +1,4 @@
-// Project Curse 5.46.0 — evidence-gated cartography with session-restored mobile intelligence panels.
+// Project Curse 5.47.0 — searchable signal index and evidence-gated cartographic intelligence.
 (function(root){
   'use strict';
 
@@ -25,6 +25,7 @@
   ready(function(){
     const mount=document.getElementById('uacMapRoom');
     const data=root.ProjectCurseMapRoom;
+    const signalIndex=root.ProjectCurseMapSignalIndex;
     const network=root.ProjectCurseIncidentNetwork;
     const operationStore=root.ProjectCurseOperationState;
     const pilgrimageStore=root.ProjectCursePilgrimageState;
@@ -44,6 +45,10 @@
       operation:data.operations[0]?.id||'',
       step:operationStore?.get?.().mapStep||0,
       intelCollapsed:true,
+      indexOpen:false,
+      indexQuery:'',
+      indexFilter:'all',
+      indexSelection:null,
       layers:{confirmed:true,estimated:true,zones:true,routes:true,synchrony:true}
     };
 
@@ -80,6 +85,10 @@
       if(data.operations.some(operation=>operation.id===saved.operation)) state.operation=saved.operation;
       if(Number.isFinite(saved.step)) state.step=Math.max(0,Math.floor(saved.step));
       if(typeof saved.intelCollapsed==='boolean') state.intelCollapsed=saved.intelCollapsed;
+      if(typeof saved.indexOpen==='boolean') state.indexOpen=saved.indexOpen;
+      if(typeof saved.indexQuery==='string') state.indexQuery=saved.indexQuery.slice(0,80);
+      if(signalIndex?.filters?.some(filter=>filter.id===saved.indexFilter)) state.indexFilter=saved.indexFilter;
+      if(signalIndex?.items?.some(item=>item.id===saved.indexSelection)) state.indexSelection=saved.indexSelection;
       Object.keys(state.layers).forEach(key=>{if(typeof saved.layers?.[key]==='boolean') state.layers[key]=saved.layers[key];});
       Object.keys(state.detailLayers).forEach(key=>{if(typeof saved.detailLayers?.[key]==='boolean') state.detailLayers[key]=saved.detailLayers[key];});
     }
@@ -88,7 +97,9 @@
         sessionStorage.setItem(sessionKey,JSON.stringify({
           mode:state.mode,region:state.region,marker:state.marker,synchronyPoint:state.synchronyPoint,
           detail:state.detail,detailSite:state.detailSite,detailLayers:{...state.detailLayers},
-          operation:state.operation,step:state.step,intelCollapsed:state.intelCollapsed,layers:{...state.layers}
+          operation:state.operation,step:state.step,intelCollapsed:state.intelCollapsed,
+          indexOpen:state.indexOpen,indexQuery:state.indexQuery,indexFilter:state.indexFilter,indexSelection:state.indexSelection,
+          layers:{...state.layers}
         }));
       }catch(_error){}
     }
@@ -117,6 +128,114 @@
       };
       return detailById(map[marker?.id]||(marker?.region==='southamerica'?'gbf-western-marches':marker?.region==='northamerica'?'deadzone-return-corridor':''));
     };
+
+    const indexItems=signalIndex?.items||[];
+    const indexItemById=id=>indexItems.find(item=>item.id===id)||null;
+    const indexTypeLabel=item=>signalIndex?.categoryLabels?.[item.category]||item.category.toUpperCase();
+    const indexConfidenceLabel=item=>signalIndex?.confidenceLabels?.[item.confidence]||confidenceLabels[item.confidence]||item.confidence;
+    const isMobileIndex=()=>matchMedia('(max-width: 820px)').matches;
+    const indexMatchesFilter=item=>{
+      if(state.indexFilter==='all') return true;
+      if(['event','site','operation','synchrony'].includes(state.indexFilter)) return item.category===state.indexFilter;
+      if(state.indexFilter==='confirmed') return !item.uncertain&&item.category!=='withheld';
+      if(state.indexFilter==='estimated') return item.uncertain;
+      if(state.indexFilter==='unresolved') return item.unresolved;
+      if(state.indexFilter==='linked') return item.linked;
+      return true;
+    };
+    const filteredIndexItems=()=>{
+      const query=state.indexQuery.trim().toLocaleLowerCase('ko-KR');
+      return indexItems.filter(item=>indexMatchesFilter(item)&&(!query||item.search.includes(query)));
+    };
+
+    function renderIndexResults(){
+      const items=filteredIndexItems();
+      if(!items.length) return '<div class="pc-map-index-empty"><b>NO MATCHING CONTACT</b><span>검색어나 필터를 바꾸면 다른 관측 기록을 확인할 수 있다.</span></div>';
+      return items.map(item=>{
+        const selected=state.indexSelection===item.id;
+        const mapLabel=item.mapStatus==='withheld'?'POSITION WITHHELD':item.mapStatus==='independent'?'NO ROUTE':item.mapStatus==='operation'?'TRACE MAP':'MAP CONTACT';
+        const links=item.records.length+(item.history?1:0)+(item.factions?.length||0);
+        const actions=item.category==='withheld'?`<div class="pc-map-index-item-actions">
+          ${item.history?`<button type="button" data-map-open-history="${escapeHTML(item.history)}">세계 기록</button>`:''}
+          ${(item.factionKeys||[]).map(key=>`<button type="button" data-map-open-faction="${escapeHTML(key)}">${escapeHTML(root.ProjectCurseCanon?.factions?.[key]?.name||key)}</button>`).join('')}
+          ${item.records.map(record=>`<button type="button" data-map-open-record="${escapeHTML(record)}">${escapeHTML(record)}</button>`).join('')}
+        </div>`:'';
+        return `<article class="pc-map-index-item pc-map-index-item--${escapeHTML(item.category)}${selected?' is-selected':''}" role="listitem">
+          <button type="button" data-map-index-item="${escapeHTML(item.id)}" aria-current="${selected?'true':'false'}"${item.category==='withheld'?' aria-describedby="pcMapIndexWithheldNote"':''}>
+            <span class="pc-map-index-kind"><i></i>${escapeHTML(indexTypeLabel(item))}<time>${escapeHTML(item.year)}</time></span>
+            <strong>${escapeHTML(item.title)}</strong>
+            <small>${escapeHTML(item.code)} · ${escapeHTML(item.region)}</small>
+            <p>${escapeHTML(item.meta)}</p>
+            <span class="pc-map-index-tags"><b>${escapeHTML(indexConfidenceLabel(item))}</b><em>${escapeHTML(mapLabel)}</em><i>${links} LINK${links===1?'':'S'}</i></span>
+          </button>${actions}
+        </article>`;
+      }).join('');
+    }
+
+    function renderSignalIndex(){
+      if(!signalIndex) return '';
+      const matches=filteredIndexItems().length;
+      const selected=indexItemById(state.indexSelection);
+      const mobile=isMobileIndex();
+      return `
+        <div class="pc-map-index-bar">
+          <button type="button" class="pc-map-index-toggle${state.indexOpen?' is-active':''}" data-map-index-toggle aria-expanded="${state.indexOpen}" aria-controls="pcMapSignalIndex">
+            <span><i></i>SIGNAL INDEX</span><b>${indexItems.length} CONTACTS</b><small>${selected?escapeHTML(selected.title):'검색·필터·지도 자동 추적'}</small><em aria-hidden="true"></em>
+          </button>
+        </div>
+        <button type="button" class="pc-map-index-scrim${state.indexOpen?' is-visible':''}" data-map-index-close aria-label="신호 색인 닫기" tabindex="${state.indexOpen?'0':'-1'}"></button>
+        <section class="pc-map-signal-index${state.indexOpen?' is-open':''}" id="pcMapSignalIndex" role="dialog" aria-modal="${mobile}" aria-hidden="${!state.indexOpen}" aria-labelledby="pcMapIndexTitle"${state.indexOpen?'':' inert'}>
+          <header class="pc-map-index-head">
+            <div><span>U.A.C CARTOGRAPHIC CONTACT REGISTER</span><h3 id="pcMapIndexTitle">SIGNAL INDEX</h3><p>표식·작전·독립 관측과 위치 보류 기록을 하나의 판독 목록으로 묶는다.</p></div>
+            <div><b>${String(indexItems.length).padStart(2,'0')}</b><small>TOTAL CONTACTS</small></div>
+            <button type="button" data-map-index-close aria-label="신호 색인 닫기"><i></i></button>
+          </header>
+          <div class="pc-map-index-tools">
+            <label><span>CONTACT SEARCH</span><input type="search" value="${escapeHTML(state.indexQuery)}" placeholder="사건·권역·세력·호출부호 검색" maxlength="80" autocomplete="off" spellcheck="false" data-map-index-search></label>
+            <button type="button" data-map-index-clear${state.indexQuery?'':' disabled'}>검색 초기화</button>
+          </div>
+          <div class="pc-map-index-filters" role="group" aria-label="신호 색인 필터">
+            ${signalIndex.filters.map(filter=>`<button type="button" class="${state.indexFilter===filter.id?'is-active':''}" data-map-index-filter="${escapeHTML(filter.id)}" aria-pressed="${state.indexFilter===filter.id}">${escapeHTML(filter.label)}</button>`).join('')}
+          </div>
+          <div class="pc-map-index-result-head"><span role="status" aria-live="polite" data-map-index-count>${matches}개 접촉 정보</span><b>${escapeHTML(signalIndex.filters.find(filter=>filter.id===state.indexFilter)?.label||'전체')} / ${state.indexQuery?'SEARCH ACTIVE':'ARCHIVE READY'}</b></div>
+          <div class="pc-map-index-results" role="list" data-map-index-results>${renderIndexResults()}</div>
+          <p class="pc-map-index-withheld-note" id="pcMapIndexWithheldNote">POSITION WITHHELD 항목은 사건을 부정하지 않는다. 승인된 지도 표식이 없어 위치 이동만 제한한다.</p>
+        </section>`;
+    }
+
+    function updateSignalIndex(){
+      const results=mount.querySelector('[data-map-index-results]');
+      if(results) results.innerHTML=renderIndexResults();
+      const count=mount.querySelector('[data-map-index-count]');
+      if(count) count.textContent=`${filteredIndexItems().length}개 접촉 정보`;
+      mount.querySelectorAll('[data-map-index-filter]').forEach(button=>{
+        const active=button.dataset.mapIndexFilter===state.indexFilter;
+        button.classList.toggle('is-active',active);
+        button.setAttribute('aria-pressed',String(active));
+      });
+      const clear=mount.querySelector('[data-map-index-clear]');
+      if(clear) clear.disabled=!state.indexQuery;
+      saveMapSession();
+    }
+
+    function selectIndexItem(item){
+      if(!item) return;
+      state.indexSelection=item.id;
+      if(item.target.kind==='marker'){
+        const marker=markerById(item.target.id);
+        state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;state.intelCollapsed=false;
+        state.layers[['estimated','testimony','disputed'].includes(marker.confidence)?'estimated':'confirmed']=true;
+      }else if(item.target.kind==='synchrony'){
+        state.mode='region';state.region=item.regionId;state.marker=null;state.synchronyPoint=item.target.id;state.layers.synchrony=true;state.intelCollapsed=false;
+      }else if(item.target.kind==='operation'){
+        state.mode='operation';state.operation=item.target.id;state.step=operationStep(operationById(item.target.id));state.intelCollapsed=false;
+      }else if(item.target.kind==='withheld'){
+        state.mode='region';state.region=item.regionId;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;
+      }
+      if(item.target.kind!=='withheld'&&isMobileIndex()) state.indexOpen=false;
+      root.ProjectCurseAudioControl?.play?.(item.target.kind==='withheld'?'map.layer':'map.signal');
+      render();
+    }
 
     function renderGraticule(region){
       const meridians=[-120,-60,0,60,120].map(lon=>{
@@ -628,6 +747,7 @@
             <button type="button" role="tab" aria-selected="${state.mode==='detail'}" class="${state.mode==='detail'?'is-active':''}" data-map-mode="detail"><small>02</small>세부 권역</button>
             <button type="button" role="tab" aria-selected="${state.mode==='operation'}" class="${state.mode==='operation'?'is-active':''}" data-map-mode="operation"><small>03</small>작전지도</button>
           </div>
+          ${renderSignalIndex()}
           <div class="pc-map-view">${state.mode==='region'?renderRegion():state.mode==='detail'?renderDetail():renderOperation()}</div>
         </div>`;
       saveMapSession();
@@ -651,10 +771,23 @@
     mount.addEventListener('click',event=>{
       const control=event.target.closest('button,[data-map-marker],[data-map-synchrony-point],[data-map-detail-site]');
       if(!control) return;
+      if(control.dataset.mapIndexToggle!==undefined){
+        state.indexOpen=!state.indexOpen;render();
+        mount.querySelector(state.indexOpen?'[data-map-index-search]':'[data-map-index-toggle]')?.focus();
+        root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});return;
+      }
+      if(control.dataset.mapIndexClose!==undefined){
+        state.indexOpen=false;render();mount.querySelector('[data-map-index-toggle]')?.focus();return;
+      }
+      if(control.dataset.mapIndexClear!==undefined){
+        state.indexQuery='';const input=mount.querySelector('[data-map-index-search]');if(input) input.value='';updateSignalIndex();input?.focus();return;
+      }
+      if(control.dataset.mapIndexFilter){state.indexFilter=control.dataset.mapIndexFilter;updateSignalIndex();return;}
+      if(control.dataset.mapIndexItem){selectIndexItem(indexItemById(control.dataset.mapIndexItem));return;}
       if(control.dataset.mapIntelToggle!==undefined){state.intelCollapsed=!state.intelCollapsed;const panel=control.closest('.pc-map-intel-panel');panel?.classList.toggle('is-collapsed',state.intelCollapsed);control.setAttribute('aria-expanded',String(!state.intelCollapsed));control.setAttribute('aria-label',state.intelCollapsed?'지도 선택 정보 펼치기':'지도 선택 정보 접기');root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});saveMapSession();return;}
-      if(control.dataset.mapMode){state.mode=control.dataset.mapMode;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
-      if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
-      if(control.dataset.mapLayer){state.layers[control.dataset.mapLayer]=!state.layers[control.dataset.mapLayer];state.marker=null;if(control.dataset.mapLayer==='synchrony') state.synchronyPoint=null;root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
+      if(control.dataset.mapMode){state.mode=control.dataset.mapMode;state.indexSelection=state.mode==='operation'?`operation:${state.operation}`:null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapLayer){state.layers[control.dataset.mapLayer]=!state.layers[control.dataset.mapLayer];state.marker=null;if(control.dataset.mapLayer==='synchrony') state.synchronyPoint=null;state.indexSelection=state.synchronyPoint?`synchrony:${state.synchronyPoint}`:null;root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
       if(control.dataset.mapOpenHistory){root.ProjectCurseAudioControl?.play?.('incident.link');openHistory(control.dataset.mapOpenHistory);return;}
       if(control.dataset.mapOpenFaction){root.ProjectCurseAudioControl?.play?.('incident.link');openFaction(control.dataset.mapOpenFaction);return;}
       if(control.dataset.mapOpenRecord){root.ProjectCurseAudioControl?.play?.('incident.link');openArchive(control.dataset.mapOpenRecord);return;}
@@ -662,6 +795,7 @@
       if(control.dataset.mapMarker){
         const marker=markerById(control.dataset.mapMarker);
         state.marker=state.marker===control.dataset.mapMarker?null:control.dataset.mapMarker;
+        state.indexSelection=state.marker?`marker:${state.marker}`:null;
         state.synchronyPoint=null;
         state.intelCollapsed=!state.marker;
         if(marker?.overview&&state.marker===marker.id) state.region='world';
@@ -673,19 +807,20 @@
         if(!signal) return;
         state.marker=null;
         state.synchronyPoint=state.synchronyPoint===signal.point.id?null:signal.point.id;
+        state.indexSelection=state.synchronyPoint?`synchrony:${state.synchronyPoint}`:null;
         state.intelCollapsed=!state.synchronyPoint;
         root.ProjectCurseAudioControl?.play?.('map.signal');
         render();return;
       }
-      if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
-      if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
+      if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapDetailLayer){const layer=control.dataset.mapDetailLayer;state.detailLayers[layer]=!state.detailLayers[layer];root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
       if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('operation.step');render();return;}
       if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;state.intelCollapsed=!state.detailSite;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapDetailClear){state.detailSite=null;state.intelCollapsed=true;render();return;}
-      if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render();return;}
-      if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
-      if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=operationStep(operationById(state.operation));state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;render();return;}
+      if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
+      if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapStep!==undefined){
         state.step=Number(control.dataset.mapStep)||0;
         state.intelCollapsed=false;
@@ -694,7 +829,24 @@
         else render();
         return;
       }
-      if(control.dataset.mapReturnRegion){state.mode='region';state.region=control.dataset.mapReturnRegion;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render();}
+      if(control.dataset.mapReturnRegion){state.mode='region';state.region=control.dataset.mapReturnRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;render();}
+    });
+
+    mount.addEventListener('input',event=>{
+      if(!event.target.matches('[data-map-index-search]')) return;
+      state.indexQuery=event.target.value.slice(0,80);
+      updateSignalIndex();
+    });
+
+    document.addEventListener('keydown',event=>{
+      if(state.indexOpen&&event.key==='Escape'){
+        event.preventDefault();state.indexOpen=false;render();mount.querySelector('[data-map-index-toggle]')?.focus();return;
+      }
+      if(state.indexOpen&&isMobileIndex()&&event.key==='Tab'){
+        const panel=mount.querySelector('.pc-map-signal-index');
+        const focusable=[...panel.querySelectorAll('button:not([disabled]),input:not([disabled])')].filter(node=>node.offsetParent!==null);
+        if(focusable.length){const first=focusable[0];const last=focusable.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();return;}if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();return;}}
+      }
     });
 
     mount.addEventListener('keydown',event=>{
@@ -714,11 +866,12 @@
 
     render();
     root.ProjectCurseMapRoomRuntime=Object.freeze({
-      showRegion(id){if(regionById(id).id!==id) return false;state.mode='region';state.region=id;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render();return true;},
-      showDetail(id,siteId){const detail=detailById(id);if(!detail||detail.id!==id) return false;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;state.intelCollapsed=!state.detailSite;render();return true;},
-      showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));state.intelCollapsed=false;render();return true;},
-      showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;state.intelCollapsed=false;render();return true;},
-      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;state.intelCollapsed=!point;render();return true;},
+      showRegion(id){if(regionById(id).id!==id) return false;state.indexOpen=false;state.indexSelection=null;state.mode='region';state.region=id;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render();return true;},
+      showDetail(id,siteId){const detail=detailById(id);if(!detail||detail.id!==id) return false;state.indexOpen=false;state.indexSelection=null;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;state.intelCollapsed=!state.detailSite;render();return true;},
+      showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.indexOpen=false;state.indexSelection=`operation:${id}`;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));state.intelCollapsed=false;render();return true;},
+      showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.indexOpen=false;state.indexSelection=`marker:${marker.id}`;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;state.intelCollapsed=false;render();return true;},
+      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.indexOpen=false;state.indexSelection=point?`synchrony:${point.id}`:null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;state.intelCollapsed=!point;render();return true;},
+      openSignalIndex(query=''){state.indexQuery=String(query).slice(0,80);state.indexOpen=true;render();return true;},
       getState:()=>({...state,layers:{...state.layers},detailLayers:{...state.detailLayers}})
     });
   });
