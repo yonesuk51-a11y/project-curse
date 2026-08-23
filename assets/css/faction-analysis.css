@@ -510,6 +510,24 @@ body.pc-faction-analysis-ready #faction-info {
   word-break: keep-all;
 }
 
+.pc-faction-assessment{margin:24px 0 0;border:1px solid #292e2f;background:linear-gradient(135deg,rgba(116,25,31,.11),transparent 42%),#070909}
+.pc-faction-assessment>header{display:flex;align-items:end;justify-content:space-between;gap:20px;padding:16px 18px;border-bottom:1px solid #252a2b}
+.pc-faction-assessment>header small{color:#a73238;font:700 9px/1.35 var(--mono,monospace);letter-spacing:.13em}
+.pc-faction-assessment>header h4{margin:0;color:#d9dddd;font-size:15px}
+.pc-faction-assessment dl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin:0}
+.pc-faction-assessment dl>div{min-width:0;padding:15px;border-right:1px solid #202526}
+.pc-faction-assessment dl>div:last-child{border-right:0}
+.pc-faction-assessment dt{margin-bottom:8px;color:#7f8889;font:700 9px/1.35 var(--mono,monospace);letter-spacing:.06em}
+.pc-faction-assessment dd{margin:0;color:#b9bfc0;font-size:11px;line-height:1.72;word-break:keep-all}
+.pc-faction-assessment [data-assessment-layer="misread"]{background:rgba(122,91,35,.07)}
+.pc-faction-assessment [data-assessment-layer="unresolved"]{background:rgba(113,29,34,.1)}
+.pc-faction-assessment [data-assessment-layer="unresolved"] dt{color:#b34d54}
+.pc-faction-visual{display:grid;width:100%!important;max-width:none!important;grid-template-columns:minmax(260px,.82fr) 1fr;margin:24px 0 0;border:1px solid #292e2f;background:#070909}
+.pc-faction-visual img{display:block;width:100%;height:100%;max-height:430px;object-fit:cover;filter:grayscale(.4) contrast(1.08) brightness(.78)}
+.pc-faction-visual figcaption{display:grid!important;align-content:end;gap:9px;padding:22px;background:linear-gradient(120deg,rgba(122,31,38,.16),transparent)}
+.pc-faction-visual figcaption b{color:#bf676d;font:700 9px/1.5 var(--mono,monospace);letter-spacing:.1em}
+.pc-faction-visual figcaption span{max-width:56ch;color:#aeb5b5;font-size:12px;line-height:1.75}
+
 .pc-faction-copy p:last-child {
   margin-bottom: 0;
 }
@@ -721,6 +739,10 @@ body.pc-faction-analysis-ready #faction-info {
   .pc-faction-brief-grid { grid-template-columns: 1fr; }
   .pc-faction-fault { padding-left: 0; padding-top: 22px; border-left: 0; border-top: 1px solid #542126; }
   .pc-lineage-atlas { grid-template-columns: repeat(4,minmax(0,1fr)); }
+  .pc-faction-assessment dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pc-faction-assessment dl>div{border-bottom:1px solid #202526}
+  .pc-faction-assessment dl>div:nth-child(2n){border-right:0}
+  .pc-faction-assessment dl>div:last-child{grid-column:1/-1;border-bottom:0}
 }
 
 @media (max-width: 720px) {
@@ -746,4 +768,10 @@ body.pc-faction-analysis-ready #faction-info {
   .pc-lineage-history { grid-template-columns: 1fr; }
   .pc-faction-profile > header { align-items: flex-start; flex-direction: column; gap: 5px; }
   .pc-faction-profile dl { grid-template-columns: 1fr; }
+  .pc-faction-assessment>header{align-items:flex-start;flex-direction:column;gap:5px}
+  .pc-faction-assessment dl{grid-template-columns:1fr}
+  .pc-faction-assessment dl>div,.pc-faction-assessment dl>div:nth-child(2n){border-right:0;border-bottom:1px solid #202526}
+  .pc-faction-assessment dl>div:last-child{grid-column:auto;border-bottom:0}
+  .pc-faction-visual{grid-template-columns:1fr}
+  .pc-faction-visual img{max-height:300px}
 }

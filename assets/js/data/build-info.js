@@ -1,4 +1,4 @@
-// Project Curse 5.48.3 — diegetic language pass build manifest.
+// Project Curse 5.49.0 — archive orientation and evidence pass build manifest.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.48.3',
-    codename:'Diegetic Language Pass',
-    schema:'project-curse-v41',
+    version:'5.49.0',
+    codename:'Archive Orientation & Evidence Pass',
+    schema:'project-curse-v42',
     released:'2026-08-23',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

@@ -17,6 +17,27 @@
     'assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png':Object.freeze({
       assetId:'VEA-DZ-R01',className:'RECONSTRUCTED',source:'Project Curse 데드존 순례 브리프 기반 시각 재구성',date:'2026-08-16',integrity:'SYNTHETIC REFERENCE',originalState:'missing',handling:'현존 원본이 아닌 재구성 이미지다. 원본이 확보되면 이 항목의 comparison에 추가한다.'
     }),
+    'assets/resources/derived/project-curse-world-keyart-concept-v1.png':Object.freeze({
+      assetId:'VEA-PC-KEY-01',className:'RECONSTRUCTED',source:'Project Curse 세계관·권역 브리프 기반 편집 키아트',date:'2026-08-23',integrity:'EDITORIAL SYNTHETIC',originalState:'missing',handling:'단말 방향을 소개하는 편집 이미지다. 사건 원본, 감시 화면 또는 지리 증거로 사용하지 않는다.'
+    }),
+    'assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png':Object.freeze({
+      assetId:'VEA-GBF-BELL-01',className:'RECONSTRUCTED',source:'대흑림 성채 귀환자 증언 기반 분석 재구성',date:'2026-08-23',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'복수 증언의 종 운반 장면을 합성했다. 특정 성채나 순례단의 원본 기록으로 취급하지 않는다.'
+    }),
+    'assets/resources/derived/checkpoint-07-five-thermal-concept-v1.png':Object.freeze({
+      assetId:'VEA-DZ-CP07-01',className:'RECONSTRUCTED',source:'검문소 07 열상 기록·심사 증언 기반 분석 재구성',date:'2026-08-23',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'열 신호 수의 불일치를 시각화한 도식이다. 다섯 번째 신호의 신원과 적대 여부를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/broken-crown-erased-commander-concept-v1.png':Object.freeze({
+      assetId:'VEA-BC-CMD-01',className:'RECONSTRUCTED',source:'부서진 왕관 상충 명령 브리프 기반 분석 재구성',date:'2026-08-23',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'지휘관 신원 공백과 명령 사본을 상징화했다. 실제 인물 외형이나 명령 진위를 입증하지 않는다.'
+    }),
+    'assets/resources/derived/first-apostle-three-traces-reconstruction-concept-v1.png':Object.freeze({
+      assetId:'VEA-AP1-TRACE-01',className:'RECONSTRUCTED',source:'첫 번째 사도 상충 증언·세 권능 흔적 기반 분석 재구성',date:'2026-08-23',integrity:'UNVERIFIED SUBJECT RECONSTRUCTION',originalState:'missing',handling:'타락·혈액·그림자 흔적을 한 형상에 겹친 분석 도식이다. 외형, 신원과 단일 개체 여부는 미확정이다.'
+    }),
+    'assets/resources/derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png':Object.freeze({
+      assetId:'VEA-JRU-11-01',className:'RECONSTRUCTED',source:'2006년 연말 인원표·회수물 불일치 기반 분석 재구성',date:'2026-08-23',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'열 명의 명부와 빈 열한 번째 자리라는 기록 불일치를 시각화했다. 실제 단체사진이나 추가 인원 증거가 아니다.'
+    }),
+    'assets/resources/derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png':Object.freeze({
+      assetId:'VEA-NHC-FB-01',className:'RECONSTRUCTED',source:'N.H.C 전진기지 생활기록·인원 명부 기반 분석 재구성',date:'2026-08-23',integrity:'UNVERIFIED PERSONNEL COMPOSITE',originalState:'missing',handling:'서로 다른 시점의 인원 기록을 한 장면으로 병합했다. 실제 단체사진, 개인 외형, 부대 편제와 소매 표식을 확정하지 않는다.'
+    }),
     'assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp':Object.freeze({
       assetId:'VEA-FER-CLS-A',className:'UNVERIFIED',source:'기존 공개 기록 자산 묶음',date:'UNKNOWN',integrity:'LEGACY COPY',originalState:'available',handling:'동일한 분류 도식의 Archive ENEX 사본과 픽셀 구성을 대조할 수 있다.',comparison:Object.freeze({src:'assets/resources/archive-enex/feral-classification/114223e8cf8c8ea96c6d4ffca6cae2ce.webp',label:'ARCHIVE ENEX SOURCE',className:'ORIGINAL',relationship:'DUPLICATE SOURCE CHECK'})
     }),

@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.48.3';
+const VERSION='5.49.0';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -121,9 +121,9 @@ check('evidence:provenance-classes',['ORIGINAL','STABILIZED','RECONSTRUCTED','UN
 check('evidence:document-console',documentViewer.includes('function evidenceConsole(items)')&&documentViewer.includes('archive-evidence-card')&&documentViewer.includes('function openEvidence(index,trigger)'));
 check('evidence:comparison-viewer',documentViewer.includes("range.type='range'")&&documentViewer.includes('openEvidenceAsset(src,context={},trigger=null)')&&visualEvidenceCss.includes('.pc-evidence-compare'));
 check('evidence:cinematic-handoff',read('assets/js/core/record-cinematic-runtime.js').includes('pc-cinematic-evidence-control')&&read('assets/js/core/record-cinematic-runtime.js').includes("document.body.classList.contains('pc-evidence-open')"));
-check('media:manifest-twenty-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===20);
-check('media:provenance-all-assets',context.window.ProjectCurseMediaProvenance?.stats?.registered===174&&context.window.ProjectCurseMediaProvenance?.assets?.length===174);
-check('media:provenance-honest-review',context.window.ProjectCurseMediaProvenance?.stats?.review===150&&context.window.ProjectCurseMediaProvenance?.stats?.managed===24&&context.window.ProjectCurseMediaProvenance?.stats?.referenceExposure===0);
+check('media:manifest-twenty-one-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===21);
+check('media:provenance-all-assets',context.window.ProjectCurseMediaProvenance?.stats?.registered===183&&context.window.ProjectCurseMediaProvenance?.assets?.length===183);
+check('media:provenance-honest-review',context.window.ProjectCurseMediaProvenance?.stats?.review===150&&context.window.ProjectCurseMediaProvenance?.stats?.managed===33&&context.window.ProjectCurseMediaProvenance?.stats?.referenceExposure===0);
 check('media:provenance-audit-ui',archive.includes('function provenanceAuditMarkup()')&&archive.includes('PUBLIC RELEASE NOT YET CLEARED')&&read('assets/css/archive-consolidation.css').includes('.pc-media-audit'));
 check('media:clearance-priority-queue',context.window.ProjectCurseMediaProvenance?.priorityQueue?.length===30&&context.window.ProjectCurseMediaProvenance?.stats?.priorityAudio===23&&context.window.ProjectCurseMediaProvenance?.stats?.priorityVideo===7);
 check('media:clearance-screen',index.includes('id="media-audit"')&&index.includes(`assets/css/media-clearance.css?v=${VERSION}`)&&index.includes(`assets/js/pages/media-clearance.js?v=${VERSION}`));

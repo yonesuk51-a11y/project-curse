@@ -33,7 +33,7 @@ async function openAudit(viewport,label){
   await page.waitForSelector('[data-media-clearance-owner]');
   await page.waitForTimeout(120);
   requests.length=0;
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.48.3');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.49.0');
   check(`${label}:no-initial-errors`,errors.length===0,errors.join(' | '));
   return {context,page,errors,requests};
 }
@@ -51,7 +51,7 @@ const dataState=await desktop.page.evaluate(()=>(
     ranks:window.ProjectCurseMediaProvenance?.priorityQueue?.map(item=>item.rank).join('|')
   }
 ));
-check('desktop:data-ledger',dataState.registered===174&&dataState.review===150&&dataState.managed===24,JSON.stringify(dataState));
+check('desktop:data-ledger',dataState.registered===183&&dataState.review===150&&dataState.managed===33,JSON.stringify(dataState));
 check('desktop:priority-thirty',dataState.priority===30&&dataState.priorityAudio===23&&dataState.priorityVideo===7&&dataState.ranks.startsWith('1|2|3')&&dataState.ranks.endsWith('|30'),JSON.stringify(dataState));
 check('desktop:reference-boundary',dataState.exposure===0,JSON.stringify(dataState));
 
@@ -76,14 +76,14 @@ await desktop.page.locator('[data-media-search]').fill('pc5152am_menu_old_comput
 check('desktop:priority-search',await desktop.page.locator('[data-media-path]').count()===1);
 await desktop.page.locator('[data-media-scope="all"]').click();
 await desktop.page.locator('[data-media-search]').fill('');
-check('desktop:all-assets',await desktop.page.locator('[data-media-path]').count()===174);
+check('desktop:all-assets',await desktop.page.locator('[data-media-path]').count()===183);
 await desktop.page.locator('[data-media-kind="image"]').click();
-check('desktop:image-filter',await desktop.page.locator('[data-media-path]').count()===144);
+check('desktop:image-filter',await desktop.page.locator('[data-media-path]').count()===153);
 await desktop.page.locator('[data-media-kind="all"]').click();
 await desktop.page.locator('[data-media-release="review"]').click();
 check('desktop:review-filter',await desktop.page.locator('[data-media-path]').count()===150);
 await desktop.page.locator('[data-media-release="managed"]').click();
-check('desktop:managed-filter',await desktop.page.locator('[data-media-path]').count()===24);
+check('desktop:managed-filter',await desktop.page.locator('[data-media-path]').count()===33);
 
 await desktop.page.locator('[data-media-scope="reference"]').click();
 const reference=await desktop.page.evaluate(()=>(
@@ -121,7 +121,7 @@ check('desktop:escape-clears-search',await desktop.page.evaluate(()=>document.qu
 const desktopAuditMedia=desktop.requests.filter(url=>/\/(?:assets\/audio|assets\/video|assets\/resources)\//.test(url)&&!url.endsWith('/assets/audio/pc5152am_menu_old_computer.mp3'));
 check('desktop:no-audit-media-requests',desktopAuditMedia.length===0,desktopAuditMedia.join(' | '));
 check('desktop:no-errors',desktop.errors.length===0,desktop.errors.join(' | '));
-const desktopShot=join(tmpdir(),'project-curse-5.48.3-media-clearance-desktop.png');
+const desktopShot=join(tmpdir(),'project-curse-5.49.0-media-clearance-desktop.png');
 await desktop.page.screenshot({path:desktopShot,fullPage:false});
 await desktop.context.close();
 
@@ -139,7 +139,7 @@ const mobileLayout=await mobile.page.evaluate(()=>(
 check('mobile:single-column-workspace',mobileLayout.columns.split(' ').length===1&&mobileLayout.rows===30,JSON.stringify(mobileLayout));
 check('mobile:touch-readable-list',mobileLayout.rowHeight>=54&&mobileLayout.listHeight>300,JSON.stringify(mobileLayout));
 check('mobile:no-overflow',mobileLayout.width<=mobileLayout.viewport,JSON.stringify(mobileLayout));
-const mobileTopShot=join(tmpdir(),'project-curse-5.48.3-media-clearance-mobile-top.png');
+const mobileTopShot=join(tmpdir(),'project-curse-5.49.0-media-clearance-mobile-top.png');
 await mobile.page.screenshot({path:mobileTopShot,fullPage:false});
 await mobile.page.locator('[data-media-scope="all"]').click();
 await mobile.page.locator('[data-media-kind="video"]').click();
@@ -151,7 +151,7 @@ await mobile.page.waitForFunction(()=>document.querySelector('[data-media-path].
 check('mobile:runtime-direct-open',await mobile.page.evaluate(()=>document.querySelector('[data-media-detail] h3')?.textContent==='pc5152am_menu_old_computer.mp3'));
 const mobileAuditMedia=mobile.requests.filter(url=>/\/(?:assets\/audio|assets\/video|assets\/resources)\//.test(url)&&!url.endsWith('/assets/audio/pc5152am_menu_old_computer.mp3'));
 check('mobile:no-audit-media-requests',mobileAuditMedia.length===0,mobileAuditMedia.join(' | '));
-const mobileShot=join(tmpdir(),'project-curse-5.48.3-media-clearance-mobile.png');
+const mobileShot=join(tmpdir(),'project-curse-5.49.0-media-clearance-mobile.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();

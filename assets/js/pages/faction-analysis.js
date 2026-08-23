@@ -73,6 +73,31 @@
     </section>`;
   }
 
+  function factionAssessment(faction){
+    const assessment=faction.assessment;
+    if(!assessment) return '';
+    const rows=[
+      ['현재 상태',assessment.status,'current'],
+      ['지휘·계보',assessment.lineage,'lineage'],
+      ['오해하기 쉬운 점',assessment.misconception,'misread'],
+      ['남은 과거',assessment.past,'past'],
+      ['미해결',assessment.unresolved,'unresolved']
+    ];
+    return `<section class="pc-faction-assessment" aria-label="현재 판정 요약">
+      <header><small>CURRENT ASSESSMENT / FIVE-LAYER READ</small><h4>현재 판정 요약</h4></header>
+      <dl>${rows.map(([term,text,tone])=>`<div data-assessment-layer="${tone}"><dt>${esc(term)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>
+    </section>`;
+  }
+
+  function factionVisual(faction){
+    const visual=faction.visual;
+    if(!visual?.src) return '';
+    return `<figure class="pc-faction-visual" data-evidence-class="${esc(visual.className||'UNVERIFIED')}">
+      <img src="${esc(visual.src)}" alt="${esc(visual.alt||'')}" loading="lazy" decoding="async">
+      <figcaption><b>${esc(visual.label||'ANALYTICAL RECONSTRUCTION')}</b><span>${esc(visual.caption||'')}</span></figcaption>
+    </figure>`;
+  }
+
   function markAuthentication(key){
     const data=markData(key);
     const symbols=(data.symbols||[]).map(item=>`<li><strong>${esc(item.label)}</strong><span>${esc(item.text)}</span></li>`).join('');
@@ -139,6 +164,8 @@
         <div><span>FACTION DOSSIER / CONFIRMED HISTORY</span><h3>${esc(faction.name)}</h3></div>
       </header>
       <p class="pc-faction-lead">${esc(faction.lead)}</p>
+      ${factionAssessment(faction)}
+      ${factionVisual(faction)}
       ${markAuthentication(key)}
       ${lineageAtlas(key)}
       <section class="pc-faction-copy" aria-label="조직 개요">

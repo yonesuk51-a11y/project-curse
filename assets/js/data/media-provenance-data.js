@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 174,
-    "referenced": 174,
+    "registered": 183,
+    "referenced": 183,
     "unreferenced": 0,
     "review": 150,
-    "managed": 24,
+    "managed": 33,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 144,
+      "image": 153,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 6,
+      "PROJECT_GENERATED": 15,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 40,
+      "DELIVERY_DERIVATIVE": 42,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 2,
+      "RECONSTRUCTED": 9,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2139,6 +2139,48 @@
       "protectedScope": true
     },
     {
+      "path": "assets/resources/derived/broken-crown-erased-commander-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "부서진 왕관 상충 명령 브리프 기반 분석 재구성",
+      "handling": "지휘관 외형이나 처형 명령의 진위 증거로 표시 금지",
+      "credit": "Project Curse Broken Crown operation brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1793048,
+      "sha256": "274c906226a985dc5e5ea698abe974dc8d76cdb56edcf63acad968e7da7dfb87",
+      "usedBy": [
+        "assets/js/data/field-dossier-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/checkpoint-07-five-thermal-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "검문소 07 열상 기록·심사 증언 기반 분석 재구성",
+      "handling": "다섯 번째 신호의 신원과 적대 여부를 확정하지 않음",
+      "credit": "Project Curse Checkpoint 07 incident brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1680273,
+      "sha256": "8d2f4e1fc13ac4f9e09f4caaf280203092ac5cc1d1102d5bfd5d8a01df96ee9e",
+      "usedBy": [
+        "assets/js/data/field-dossier-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2153,6 +2195,27 @@
         "assets/js/data/archive-registry.js",
         "assets/js/data/field-dossier-data.js",
         "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/first-apostle-three-traces-reconstruction-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "첫 번째 사도 상충 증언·세 권능 흔적 기반 분석 재구성",
+      "handling": "대상의 외형·신원·단일 개체 여부를 확정하지 않음",
+      "credit": "Project Curse First Apostle dossier brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1724255,
+      "sha256": "19592711f68938480c46ebe4e810bcfc88e5361577fa970a540ba9b5d71828e3",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
@@ -2179,6 +2242,91 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "대흑림 성채 귀환자 증언 기반 분석 재구성",
+      "handling": "특정 성채 또는 순례단의 원본 장면으로 표시 금지",
+      "credit": "Project Curse Great Black Forest witness brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1692215,
+      "sha256": "b70f7e97a07a2dd46c21cc344538efbad017510471670de62bda0c4fd1f7b2f1",
+      "usedBy": [
+        "assets/js/data/field-dossier-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2006년 연말 인원표·회수물 불일치 기반 분석 재구성",
+      "handling": "실제 단체사진이나 열한 번째 인원의 존재 증거로 표시 금지",
+      "credit": "Project Curse 2006 aftermath record brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2129263,
+      "sha256": "3f0aba89794fe10d19264c1dd572410fd1677249c46ad2c2f82dbc1b7ab9b123",
+      "usedBy": [
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "N.H.C 전진기지 생활기록·인원 명부 기반 분석 재구성",
+      "handling": "실제 단체사진, 개인 외형, 부대 편제나 소매 표식의 증거로 표시 금지",
+      "credit": "Project Curse N.H.C forward-base personnel brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2458256,
+      "sha256": "d17bfc89c540eb57aeea0e0d40b80f4adb247502730049945cc64bd357233cef",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/project-curse-world-keyart-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "Project Curse 세계관·권역 브리프 기반 편집 키아트",
+      "handling": "사건 원본이나 지도 증거가 아닌 편집 방향 이미지로만 표시",
+      "credit": "Project Curse archive orientation brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1852611,
+      "sha256": "473ee8fe8882177ca523249f3f37640ad848a1254b98b75fa27d9323315fc798",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "index.html",
         "tools/verify-package.mjs"
       ],
       "referenced": true,
@@ -2880,6 +3028,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/great-black-forest_reconstructed-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/project-curse-world-keyart-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/project-curse-world-keyart-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10026,
+      "sha256": "b1e87315ee6dc305ee7b7491018a363db3bdc84693ddc73d9665183451263313",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/project-curse-world-keyart-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/project-curse-world-keyart-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/project-curse-world-keyart-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 32952,
+      "sha256": "b2c440c876c5686561b0c99f43b0db60a8d08d7e7a026d245e30fc11d3db085f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/project-curse-world-keyart-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

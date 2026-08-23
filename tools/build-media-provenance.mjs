@@ -11,6 +11,7 @@ const MEDIA_EXTENSIONS=new Set(['.png','.jpg','.jpeg','.webp','.gif','.svg','.mp
 const TEXT_EXTENSIONS=new Set(['.js','.mjs','.css','.html','.md','.json']);
 const overrides=JSON.parse(readFileSync(resolve(ROOT,OVERRIDES),'utf8'));
 const referenceOnly=Object.freeze(overrides.referenceOnly||[]);
+const internalOnly=new Set(overrides.internalOnly||[]);
 
 const walk=(directory,predicate)=>readdirSync(directory,{withFileTypes:true}).flatMap(entry=>{
   if(entry.name==='.git'||entry.name==='node_modules') return [];
@@ -19,7 +20,7 @@ const walk=(directory,predicate)=>readdirSync(directory,{withFileTypes:true}).fl
   return predicate(absolute)?[absolute]:[];
 });
 const normalized=absolute=>relative(ROOT,absolute).replace(/\\/g,'/');
-const mediaFiles=walk(resolve(ROOT,'assets'),absolute=>MEDIA_EXTENSIONS.has(extname(absolute).toLowerCase())).sort((a,b)=>normalized(a).localeCompare(normalized(b)));
+const mediaFiles=walk(resolve(ROOT,'assets'),absolute=>MEDIA_EXTENSIONS.has(extname(absolute).toLowerCase())&&!internalOnly.has(normalized(absolute))).sort((a,b)=>normalized(a).localeCompare(normalized(b)));
 const repositoryFiles=walk(ROOT,()=>true).map(normalized);
 const textFiles=walk(ROOT,absolute=>TEXT_EXTENSIONS.has(extname(absolute).toLowerCase())&&normalized(absolute)!==TARGET).map(absolute=>({path:normalized(absolute),text:readFileSync(absolute,'utf8')}));
 const mediaPaths=mediaFiles.map(normalized);

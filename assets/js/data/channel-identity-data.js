@@ -42,7 +42,7 @@
       {
         id:'media-audit',index:'05',code:'RELEASE CLEARANCE',label:'미디어 감사',shortLabel:'감사',theme:'clearance',glyph:'RC',
         description:'게시 자산의 파일 등록, 원본 계보와 공개 허가 증빙을 서로 분리해 점검한다.',
-        telemetry:[['ASSETS','174'],['PRIORITY','30'],['REVIEW','150 OPEN']]
+        telemetry:[['ASSETS','183'],['PRIORITY','30'],['REVIEW','150 OPEN']]
       }
     ],
     preferences:{

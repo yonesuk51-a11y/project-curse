@@ -433,6 +433,10 @@
       <div><span>수신</span><b data-history-record-recipient></b></div>
       <div><span>목적</span><b data-history-record-purpose></b></div>
     </section>
+    <aside class="pc-world-history-limit" aria-label="기록의 한계">
+      <span>ARCHIVE LIMIT / 이 기록으로 확정할 수 없는 것</span>
+      <p data-history-record-limit></p>
+    </aside>
     <div class="pc-world-history-detail-body" data-history-record-body></div>
     <section class="pc-world-history-links" data-history-record-links hidden>
       <b>CONNECTED INTELLIGENCE</b><div></div>
@@ -501,9 +505,22 @@
     detailView.querySelector('[data-history-record-author]').textContent = record.author || '작성 주체 미상';
     detailView.querySelector('[data-history-record-recipient]').textContent = record.recipient || '수신 기록 없음';
     detailView.querySelector('[data-history-record-purpose]').textContent = record.purpose || '편찬 목적 미등록';
+    detailView.querySelector('[data-history-record-limit]').textContent = record.archiveLimit || '후대 결과와 미회수 자료는 이 문서의 판정 범위에 포함하지 않는다.';
 
     const body = detailView.querySelector('[data-history-record-body]');
     body.replaceChildren();
+    if(record.visual?.src){
+      const figure=document.createElement('figure');
+      figure.className='pc-world-history-visual';
+      figure.dataset.evidenceClass=record.visual.className||'RECONSTRUCTED';
+      const image=document.createElement('img');
+      image.src=record.visual.src;
+      image.alt=record.visual.alt||'';
+      image.loading='lazy';image.decoding='async';
+      const caption=document.createElement('figcaption');
+      caption.innerHTML=`<b>${record.visual.label||'INTERPRETIVE RECONSTRUCTION'}</b><span>${record.visual.caption||''}</span>`;
+      figure.append(image,caption);body.appendChild(figure);
+    }
     (record.fragments || record.paragraphs.map((text,index)=>({label:`기록 ${index+1}`,kind:'document',text}))).forEach((fragment) => {
       const section=document.createElement('section');
       section.className=`pc-world-history-fragment is-${fragment.kind || 'document'}`;
@@ -534,20 +551,20 @@
     const linkHost=linkPanel?.querySelector('div');
     linkHost?.replaceChildren();
     if((linkedIncidents.length||linkedSynchrony.length||linkedFactions.length||linkedRecords.length)&&linkPanel&&linkHost){
-      const addLink=(label,dataName,value)=>{
+      const addLink=(label,dataName,value,kind)=>{
         const button=document.createElement('button');
         button.type='button';
-        button.textContent=label;
+        button.innerHTML=`<span>${label}</span><small>${kind}</small>`;
         button.dataset[dataName]=value;
         linkHost.appendChild(button);
       };
       linkedIncidents.forEach(incident=>{
-        if(mappedIncidentIds.has(incident.id)) addLink(`${incident.title} 위치`,'historyMapIncident',incident.id);
-        if(incident.operation&&mappedOperationIds.has(incident.operation)) addLink(`${incident.title} 작전`,'historyMapOperation',incident.operation);
+        if(mappedIncidentIds.has(incident.id)) addLink(`${incident.title} 위치`,'historyMapIncident',incident.id,'관측 좌표');
+        if(incident.operation&&mappedOperationIds.has(incident.operation)) addLink(`${incident.title} 작전`,'historyMapOperation',incident.operation,'작전 레이어');
       });
-      linkedSynchrony.forEach(event=>addLink(`${event.title} 관측도 · ${event.points.length}개 신호`,'historyMapSynchrony',event.id));
-      linkedFactions.forEach(key=>addLink(`${window.ProjectCurseCanon.factions[key].name} 분석`,'historyFaction',key));
-      linkedRecords.forEach(id=>addLink(`${id} 기록`,'historyArchive',id));
+      linkedSynchrony.forEach(event=>addLink(`${event.title} 관측도 · ${event.points.length}개 신호`,'historyMapSynchrony',event.id,'동시 관측'));
+      linkedFactions.forEach(key=>addLink(`${window.ProjectCurseCanon.factions[key].name} 분석`,'historyFaction',key,'세력 문서'));
+      linkedRecords.forEach(id=>addLink(`${id} 기록`,'historyArchive',id,'회수 원문'));
       linkPanel.hidden=false;
     }else if(linkPanel){
       linkPanel.hidden=true;

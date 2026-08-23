@@ -17,6 +17,9 @@
       "rule": "REFERENCE ONLY / 별도 승인 전 편입 금지"
     }
   ],
+  "internalOnly": [
+    "assets/resources/derived/project-curse-world-keyart-concept-v2.png"
+  ],
   "assets": {
     "assets/resources/derived/great-black-forest_reconstructed-v1.png": {
       "credit": "Project Curse setting brief / built-in image generation",
@@ -25,6 +28,62 @@
     "assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png": {
       "credit": "Project Curse setting brief / built-in image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md"
+    },
+    "assets/resources/derived/project-curse-world-keyart-concept-v1.png": {
+      "credit": "Project Curse archive orientation brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "Project Curse 세계관·권역 브리프 기반 편집 키아트",
+      "handling": "사건 원본이나 지도 증거가 아닌 편집 방향 이미지로만 표시"
+    },
+    "assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png": {
+      "credit": "Project Curse Great Black Forest witness brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "대흑림 성채 귀환자 증언 기반 분석 재구성",
+      "handling": "특정 성채 또는 순례단의 원본 장면으로 표시 금지"
+    },
+    "assets/resources/derived/checkpoint-07-five-thermal-concept-v1.png": {
+      "credit": "Project Curse Checkpoint 07 incident brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "검문소 07 열상 기록·심사 증언 기반 분석 재구성",
+      "handling": "다섯 번째 신호의 신원과 적대 여부를 확정하지 않음"
+    },
+    "assets/resources/derived/broken-crown-erased-commander-concept-v1.png": {
+      "credit": "Project Curse Broken Crown operation brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "부서진 왕관 상충 명령 브리프 기반 분석 재구성",
+      "handling": "지휘관 외형이나 처형 명령의 진위 증거로 표시 금지"
+    },
+    "assets/resources/derived/first-apostle-three-traces-reconstruction-concept-v1.png": {
+      "credit": "Project Curse First Apostle dossier brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "첫 번째 사도 상충 증언·세 권능 흔적 기반 분석 재구성",
+      "handling": "대상의 외형·신원·단일 개체 여부를 확정하지 않음"
+    },
+    "assets/resources/derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png": {
+      "credit": "Project Curse 2006 aftermath record brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2006년 연말 인원표·회수물 불일치 기반 분석 재구성",
+      "handling": "실제 단체사진이나 열한 번째 인원의 존재 증거로 표시 금지"
+    },
+    "assets/resources/derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png": {
+      "credit": "Project Curse N.H.C forward-base personnel brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "N.H.C 전진기지 생활기록·인원 명부 기반 분석 재구성",
+      "handling": "실제 단체사진, 개인 외형, 부대 편제나 소매 표식의 증거로 표시 금지"
     }
   }
 }

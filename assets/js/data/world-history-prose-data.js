@@ -324,16 +324,63 @@
     }
   };
 
-  Object.values(records).forEach(record=>{
+  const recordLimits={
+    '1975-09-12-amarion':'법인 등록일과 신고 목적만 확정한다. 실제 실험 범위와 정부 측 승인자는 공개 장부에서 빠져 있다.',
+    '1975-distortion-system':'실험 직후 신고가 늘었다는 시간 관계만 남긴다. 실험이 원인이었는지 기존 현상을 건드린 것인지는 판정하지 않는다.',
+    '1982-03-22-fhc':'법인 승계와 시설 접근권 계약은 확인됐다. 아마리온 연구가 어느 수준까지 계속됐는지는 계약서만으로 알 수 없다.',
+    '1982-uac-watch':'비인가 예산과 감시 인력의 흔적은 있으나 정식 창설 문서는 없다. 레스작 개인의 권능과 기억 개입은 증언 단계다.',
+    '1986-07-25-immortality':'회수 순서와 현장 기록은 보존됐지만 호수의 기원과 실종 인원의 최종 상태는 확인되지 않았다.',
+    '1989-08-23-tokyo':'교재·실종·목격 시점의 중첩까지만 확인한다. 본사 지시와 도쿄 지부의 독자 행동은 분리할 수 없다.',
+    '1993-11-02-uac':'공개 전환일과 협력권은 확정한다. 창설 직전 표결 변경과 레스작의 접촉 여부는 조사되지 않았다.',
+    '1993-syndicate':'공통 자금·운송망은 확인됐지만 단일 지휘부는 입증되지 않았다. 협력 관계를 교단 소속으로 확대하지 않는다.',
+    '1995-03-20-tokyo-subway':'시설 침투와 인명 손실은 확정한다. 현장 개체의 종파와 명령 계통은 회수 영상만으로 판정할 수 없다.',
+    '1997-01-27-classification':'분류 체계의 채택일을 기록한다. 등급은 대응 우선순위이며 존재의 기원이나 종을 확정하는 표가 아니다.',
+    '1999-07-12-ubermensch':'실험 승인과 수용자 이동은 확인됐다. 능력 발현 수치와 생존자 명단은 서로 다른 사본에서 일치하지 않는다.',
+    '2001-07-21-independence':'독립 편제와 지휘권 이전은 확정한다. 현장 부대의 비인가 정화 명령까지 중앙이 승인했다는 뜻은 아니다.',
+    '2002-02-20-ground-forces':'지상군 창설과 초기 배치는 확인됐다. 교전 보고의 적 수와 민간 피해는 사후 축소됐을 가능성을 남긴다.',
+    '2003-02-05-city-barrier':'방벽 가동과 초기 효과는 확인됐다. 장기 생존율과 방벽 밖 이주민의 피해는 이 문서가 집계하지 않았다.',
+    '2005-01-21-ash-crew':'애쉬크루의 공식 출범과 회수 임무는 확인됐다. 비공개 선발 기준과 소모 인원은 공개 명부에 없다.',
+    '2005-09-01-red-wolf':'이탈과 추적 명령은 여러 기록에서 일치한다. 레드울프 전원이 같은 이유로 이탈했다는 결론은 유보한다.',
+    '2006-08-20-ubermensch-raid':'시설 급습과 수용구역 붕괴는 확정한다. 누가 먼저 봉인을 해제했는지와 생존 개체의 행방은 상충한다.',
+    '2006-12-31-aftermath':'연말 피해 집계와 조직 개편안만 승인본이다. 누락된 실험체와 비인가 이송 규모는 현재 수치에 포함되지 않는다.',
+    '2007-03-11-continuity-withdrawal':'북아메리카 행정 철수와 귀환선 폐쇄는 확인됐다. 대륙 내부의 통제 주체를 하나로 가정하지 않는다.',
+    '2008-09-06-dead-zone-designation':'데드존 명칭과 외부 항법 중단은 확정한다. 지도상의 빈 공간은 무인 지역이나 단일 점령지를 뜻하지 않는다.',
+    '2010-04-12-returner-compact':'귀환자 심사 협약과 72시간 관찰 절차는 확인됐다. 생환이 오염 부재나 신원 연속성을 보장하지 않는다.',
+    '2012-11-19-great-black-forest-survey':'해안 접촉과 복수 성채 관측은 확인됐다. 숲 내부 거리와 권역 경계는 항법 자료로 승인되지 않았다.',
+    '2014-06-08-castle-asylum-right':'피난권을 인정한 사례는 남아 있지만 모든 성채에 적용되는 법은 아니다. 거부·대가·결투 조건은 별도 기록으로 본다.',
+    '2016-02-21-blood-cult-atlantic-schism':'공개 결별과 상충 명령은 확인됐다. 문양과 의례의 공통점만으로 이전·현재 지휘권을 확정하지 않는다.',
+    '2018-09-12-northern-front':'북부 전선의 확대와 일본 동맹권 배치는 확인됐다. 짐승의 길 전체 병력과 남부권 의도는 추정치다.',
+    '2021-05-04-fhc-submassacres':'F.H.C 내부 충돌과 시설 손실은 확정한다. 우시노다 잔존 인원의 소속과 제거 규모는 서로 다른 보고가 충돌한다.',
+    '2024-03-17-ushinoda-fabrication':'영상 일부의 합성은 감식으로 확인됐다. 조작된 장면이 교단과 등장 개체의 존재 전체를 부정하지는 않는다.',
+    '2026-08-20-northern-reversal':'북부 전선의 국지적 우세와 보급선 회복을 기록한다. 전쟁 종결이나 짐승의 길의 전면 패배로 확대하지 않는다.',
+    '2027-11-02-southern-allegiance':'충성 서약문과 공통 일정표는 회수됐다. 서명한 모든 집단이 같은 신앙과 명령권을 공유한다고 보지 않는다.',
+    '2028-07-25-mass-summoning-rehearsal':'복수 도시의 동시 반응과 대응시간 측정 흔적은 확인됐다. 실제 소환 규모와 다음 목표 도시는 승인되지 않았다.',
+    '2029-04-12-checkpoint-07':'귀환자 네 명과 열 신호 다섯 개의 불일치를 보존한다. 추가 신호를 즉시 적대 개체나 동행자로 판정하지 않는다.',
+    '2030-01-17-broken-crown':'작전 개시·도시 소환·처형 명령 회수까지만 중앙 연표에 고정한다. 지휘관의 운명과 쿠데타 결과는 현장 사본이다.'
+  };
+
+  const recordVisuals={
+    '2006-12-31-aftermath':{
+      src:'assets/resources/derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'합동 대응반 열 명과 비어 있는 열한 번째 의자가 회수 상자 앞에 배치된 분석 재구성 스케치',
+      label:'INTERPRETIVE RECONSTRUCTION / UNLISTED ELEVENTH GROUP',
+      caption:'연말 인원표·회수 상자 수·사진 속 빈 자리의 불일치를 한 화면에 겹친 분석 재구성이다. 실제 단체사진이나 열한 번째 인원의 존재 증거가 아니다.'
+    }
+  };
+
+  Object.entries(records).forEach(([id,record])=>{
     const type=documentTypes[record.documentType]||documentTypes.analysis;
     record.documentLabel=type.label;
     record.documentCode=type.code;
+    record.archiveLimit=recordLimits[id]||'작성 시점에 회수·승인된 자료만 반영했다. 이후의 결과를 이 문서가 미리 알고 있었다고 해석하지 않는다.';
+    if(recordVisuals[id]) record.visual=recordVisuals[id];
     record.paragraphs=record.fragments.map(fragment=>fragment.text);
   });
 
   root.ProjectCurseWorldHistoryProse=freeze({
-    version:root.ProjectCurseBuild?.version||'5.48.3',
-    documentTypes,records,
+    version:root.ProjectCurseBuild?.version||'5.49.0',
+    documentTypes,recordLimits,recordVisuals,records,
     getRecord:id=>records[id]||null,
     getDocumentType:id=>documentTypes[id]||documentTypes.analysis
   });

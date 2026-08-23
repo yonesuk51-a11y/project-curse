@@ -4,7 +4,7 @@ import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.48.3';
+const VERSION='5.49.0';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -36,6 +36,8 @@ const required=[
   'assets/js/pages/shared-declutter.js',
   'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/archive-document.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','assets/js/pages/media-clearance.js','ASSET_POLICY.md','MEDIA_CREDITS.md','WORLD_CANON_LEDGER.md','WRITING_STYLE_GUIDE.md','assets/resources/ASSET_REGISTRY.md','assets/resources/MEDIA_PROVENANCE_OVERRIDES.json','tools/build-media-provenance.mjs',
   'assets/resources/derived/great-black-forest_reconstructed-v1.png','assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',
+  'assets/resources/derived/project-curse-world-keyart-concept-v1.png','assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png','assets/resources/derived/checkpoint-07-five-thermal-concept-v1.png','assets/resources/derived/broken-crown-erased-commander-concept-v1.png','assets/resources/derived/first-apostle-three-traces-reconstruction-concept-v1.png','assets/resources/derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png',
+  'assets/resources/derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png',
   'assets/faction_marks/uac.svg','assets/faction_marks/nhc.svg','assets/faction_marks/sid.svg','assets/faction_marks/fhc.svg','assets/faction_marks/syndicate.svg','assets/faction_marks/ushinoda.svg','assets/faction_marks/haimun.svg','assets/faction_marks/ashcrew.svg','assets/faction_marks/arf.svg','assets/faction_marks/cpd.svg','assets/faction_marks/amarion.svg','assets/faction_marks/corruption-cult.svg','assets/faction_marks/blood-cult.svg','assets/faction_marks/shadow-cult.svg','assets/faction_marks/first-apostle.svg','assets/faction_marks/southern-blood.svg','assets/faction_marks/deadzone-blood.svg',
   'assets/audio/pc5152am_immortality_scp087_theme.mp3',
   'assets/audio/pc5152y_cults_banalities_radio_static_bgm.mp3',
@@ -341,7 +343,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v41',structureData?.schema==='project-curse-v41'&&context.window.ProjectCurseBuild?.schema==='project-curse-v41');
+add('manifest-runtime-schema-v42',structureData?.schema==='project-curse-v42'&&context.window.ProjectCurseBuild?.schema==='project-curse-v42');
 add('manifest-japan-technology-owner',structureData?.owners?.japanTechnologyData==='assets/js/data/japan-technology-data.js');
 add('manifest-lineage-owner',structureData?.owners?.factionLineage==='assets/js/data/faction-lineage-data.js');
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);
@@ -391,17 +393,19 @@ add('visual-evidence-mobile-and-accessible',visualEvidenceCss.includes('@media(m
 add('visual-evidence-cinematic-handoff',main.includes('pc-cinematic-evidence-control')&&main.includes('openEvidenceAsset?.(page.image')&&main.includes("document.body.classList.contains('pc-evidence-open')")&&visualEvidenceCss.includes('.pc-cinematic-evidence-control'));
 add('visual-evidence-standalone-documents',['Zone_870815','Unknown_Record1_860204','Unknown_Record2_860205','Unknown_Record3_920711','Unknown_Record4_930314'].every(id=>{const source=read(`docs/${id}/index.html`);return source.includes('visual-evidence.css')&&source.includes('visual-evidence-data.js')&&source.indexOf('visual-evidence-data.js')<source.indexOf('archive-document.js');}));
 const provenanceAssets=mediaProvenance?.assets||[];
-const repositoryMedia=mediaTree(ROOT+'assets/').sort();
+const internalOnlyMedia=new Set(JSON.parse(read('assets/resources/MEDIA_PROVENANCE_OVERRIDES.json')).internalOnly||[]);
+const repositoryMedia=mediaTree(ROOT+'assets/').filter(relative=>!internalOnlyMedia.has(relative)).sort();
 const provenancePaths=provenanceAssets.map(asset=>asset.path).sort();
 const forbiddenReferenceNames=new Set(['지옥.zip','Pictures.zip','Pictures2.zip']);
 const exposedReferenceFiles=fileTree(ROOT).filter(relative=>forbiddenReferenceNames.has(relative.split('/').at(-1)));
 add('media-provenance-owner',structureData?.owners?.mediaProvenance==='assets/js/data/media-provenance-data.js'&&mediaProvenance?.version==='1.1.0');
-add('media-provenance-all-174-assets',provenanceAssets.length===174&&repositoryMedia.join('|')===provenancePaths.join('|'),`${provenanceAssets.length} registered / ${repositoryMedia.length} files`);
+add('media-provenance-all-183-assets',provenanceAssets.length===183&&repositoryMedia.join('|')===provenancePaths.join('|'),`${provenanceAssets.length} registered / ${repositoryMedia.length} files`);
 add('media-provenance-hash-and-size',provenanceAssets.every(asset=>existsSync(path(asset.path))&&statSync(path(asset.path)).size===asset.bytes&&hash(readFileSync(path(asset.path)))===asset.sha256));
-add('media-provenance-kind-counts',mediaProvenance?.stats?.byKind?.image===144&&mediaProvenance?.stats?.byKind?.audio===23&&mediaProvenance?.stats?.byKind?.video===7);
-add('media-provenance-honest-review',provenanceAssets.filter(asset=>asset.kind==='audio'||asset.kind==='video').every(asset=>asset.release==='LICENSE_REVIEW')&&mediaProvenance?.stats?.review===150&&mediaProvenance?.stats?.managed===24);
+add('media-provenance-kind-counts',mediaProvenance?.stats?.byKind?.image===153&&mediaProvenance?.stats?.byKind?.audio===23&&mediaProvenance?.stats?.byKind?.video===7);
+add('media-provenance-honest-review',provenanceAssets.filter(asset=>asset.kind==='audio'||asset.kind==='video').every(asset=>asset.release==='LICENSE_REVIEW')&&mediaProvenance?.stats?.review===150&&mediaProvenance?.stats?.managed===33);
+add('media-provenance-internal-keyart-excluded',internalOnlyMedia.has('assets/resources/derived/project-curse-world-keyart-concept-v2.png')&&!provenancePaths.includes('assets/resources/derived/project-curse-world-keyart-concept-v2.png'));
 add('media-provenance-reference-boundary',mediaProvenance?.referenceOnly?.map(item=>item.name).join('|')==='지옥.zip|Pictures.zip|Pictures2.zip'&&mediaProvenance?.stats?.referenceExposure===exposedReferenceFiles.length&&exposedReferenceFiles.length===0);
-add('media-provenance-delivery-lineage',provenanceAssets.filter(asset=>asset.provenance==='DELIVERY_DERIVATIVE').length===40&&provenanceAssets.filter(asset=>asset.provenance==='DELIVERY_DERIVATIVE').every(asset=>asset.derivedFrom&&provenancePaths.includes(asset.derivedFrom)));
+add('media-provenance-delivery-lineage',provenanceAssets.filter(asset=>asset.provenance==='DELIVERY_DERIVATIVE').length===42&&provenanceAssets.filter(asset=>asset.provenance==='DELIVERY_DERIVATIVE').every(asset=>asset.derivedFrom&&provenancePaths.includes(asset.derivedFrom)));
 add('media-provenance-root-order',index.includes(`assets/js/data/media-provenance-data.js?v=${VERSION}`)&&index.indexOf('media-manifest.js')<index.indexOf('media-provenance-data.js')&&index.indexOf('media-provenance-data.js')<index.indexOf('archive-consolidation.js'));
 add('media-provenance-public-audit-ui',archiveRuntime.includes('function provenanceAuditMarkup()')&&archiveRuntime.includes('data-pc-media-audit')&&archiveRuntime.includes('PUBLIC RELEASE NOT YET CLEARED')&&read('assets/css/archive-consolidation.css').includes('.pc-media-audit-telemetry'));
 add('media-clearance-priority-30',mediaProvenance?.priorityQueue?.length===30&&mediaProvenance?.stats?.priorityAudio===23&&mediaProvenance?.stats?.priorityVideo===7&&mediaProvenance.priorityQueue.every((asset,index)=>asset.rank===index+1&&['audio','video'].includes(asset.kind)&&asset.priorityReason));
@@ -412,7 +416,7 @@ add('media-clearance-responsive-accessible',mediaClearanceCss.includes('@media(m
 const responsiveAssets=Object.values(mediaManifest?.assets||{});
 const responsiveVariants=responsiveAssets.flatMap(asset=>asset.variants||[]);
 add('adaptive-media-owner',structureData?.owners?.mediaManifest==='assets/js/data/media-manifest.js'&&structureData?.owners?.adaptiveMediaRuntime==='assets/js/core/adaptive-media.js'&&structureData?.owners?.adaptiveMediaCSS==='assets/css/adaptive-media.css');
-add('adaptive-media-twenty-sources',mediaManifest?.version==='1.0.0'&&responsiveAssets.length===20&&responsiveVariants.length===40,`${responsiveAssets.length} sources / ${responsiveVariants.length} variants`);
+add('adaptive-media-twenty-one-sources',mediaManifest?.version==='1.0.0'&&responsiveAssets.length===21&&responsiveVariants.length===42,`${responsiveAssets.length} sources / ${responsiveVariants.length} variants`);
 add('adaptive-media-variant-files',responsiveVariants.every(variant=>existsSync(path(variant.src))&&statSync(path(variant.src)).size>500));
 add('adaptive-media-originals-preserved',responsiveAssets.every(asset=>existsSync(path(asset.source))&&asset.variants.every(variant=>statSync(path(variant.src)).size<statSync(path(asset.source)).size)));
 add('adaptive-media-runtime',adaptiveMediaRuntime.includes("image.srcset=variants.map")&&adaptiveMediaRuntime.includes("mode==='original'")&&adaptiveMediaRuntime.includes('function prepareRoute(route')&&adaptiveMediaRuntime.includes('function getDiagnostics()'));
@@ -595,14 +599,30 @@ add('history-prose-canon-id-parity',Object.keys(worldHistoryProse?.records||{}).
 add('history-eight-document-voices',Object.keys(worldHistoryProse?.documentTypes||{}).length===8&&proseTypes.size===8);
 add('history-variable-fragment-structure',fragmentCounts.size>=3&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='log'))&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='quote')));
 add('history-prose-pattern-audit',!/~의 계기가|결국 .*이어졌다|단순한 .*아니었다|진실은 확인되지|라고 판단했다|에 가까웠다|이때부터|두 번째 이유/.test(proseText));
+const pre2031ProseIds=Object.keys(worldHistoryProse?.records||{}).filter(id=>/^\d{4}/.test(id)&&Number(id.slice(0,4))<=2030);
+add('history-1975-2030-explicit-record-limits',pre2031ProseIds.length===32&&pre2031ProseIds.every(id=>worldHistoryProse.recordLimits?.[id]&&worldHistoryProse.records[id].archiveLimit===worldHistoryProse.recordLimits[id]));
+add('history-limit-and-map-link-runtime',worldHistory.includes('data-history-record-limit')&&worldHistory.includes('ARCHIVE LIMIT')&&worldHistory.includes('관측 좌표')&&worldHistory.includes('작전 레이어')&&worldHistoryCss.includes('.pc-world-history-limit'));
+add('history-2006-reconstruction-boundary',worldHistoryProse?.records?.['2006-12-31-aftermath']?.visual?.src?.includes('joint-response-unit-unlisted-eleventh-group')&&worldHistoryProse.records['2006-12-31-aftermath'].visual.caption.includes('실제 단체사진')&&worldHistory.includes('pc-world-history-visual'));
 const aftermathProse=['2031-02-03-branch-seal','2032-08-14-three-bells-compact','2034-04-22-inland-beacon-31','2036-12-12-central-callsign-loss','2038-06-29-sixth-northern-line','2042-10-31-three-night-silence'].map(id=>worldHistoryProse.records[id]);
 add('history-aftermath-distinct-working-voices',aftermathProse.every(record=>record?.author&&record?.recipient&&record?.purpose&&record.fragments?.length>=3)&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='봉인실 메모'))&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='정비반 음성'))&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='신호장교 구두보고')));
 add('faction-three-distinct-field-profiles',['uac','ushinoda','blood-cult'].every(key=>factionAnalysis?.factions?.[key]?.profile?.items?.length===3)&&new Set(['uac','ushinoda','blood-cult'].map(key=>factionAnalysis.factions[key].profile.code)).size===3&&factionAnalysisRuntime.includes('function factionProfile'));
+const factionAssessmentFields=['status','lineage','misconception','past','unresolved'];
+add('faction-thirteen-five-layer-assessments',factionAnalysis?.order?.length===13&&factionAnalysis.order.every(key=>factionAssessmentFields.every(field=>factionAnalysis.factions[key]?.assessment?.[field]))&&factionAnalysisRuntime.includes('function factionAssessment')&&factionAnalysisRuntime.includes('오해하기 쉬운 점'));
+add('faction-first-apostle-visual-boundary',factionAnalysis?.factions?.['first-apostle']?.visual?.className==='RECONSTRUCTED'&&factionAnalysis.factions['first-apostle'].visual.caption.includes('단일 개체 여부')&&factionAnalysisRuntime.includes('function factionVisual'));
+add('faction-nhc-personnel-visual-boundary',factionAnalysis?.factions?.nhc?.visual?.className==='RECONSTRUCTED'&&factionAnalysis.factions.nhc.visual.caption.includes('실제 단체사진')&&factionAnalysis.factions.nhc.visual.caption.includes('소매 표식'));
 add('visual-evidence-readable-status-badges',visualEvidence?.version==='1.1.0'&&visualEvidence.classes.ORIGINAL.label==='원본 보존'&&visualEvidence.classes.RECONSTRUCTED.label==='복원 추정'&&visualEvidence.classes.UNVERIFIED.label==='출처 대조 대기'&&read('assets/js/pages/archive-document.js').includes('archive-evidence-badge')&&visualEvidenceCss.includes('.archive-evidence-badge'));
 add('visual-qa-channel-heading-focus',channelIdentityCss.includes('[data-screen-heading]:focus{outline:0}')&&channelIdentityCss.includes('[data-screen-heading]:focus-visible{box-shadow:inset 0 -1px rgba(var(--pc-channel-rgb),.72)}'));
 add('visual-qa-mobile-evidence-filter-grid',visualEvidenceCss.includes('.archive-evidence-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}')&&visualEvidenceCss.includes('.archive-evidence-filters button:first-child{grid-column:1/-1}'));
 add('history-1995-public-record-boundary',worldHistoryProse?.records?.['1995-03-20-tokyo-subway']?.fragments?.some(fragment=>fragment.text.includes('도쿄 지하철 공격의 실행 주체와 피해 사실은 공개 수사·재판 기록을 따른다'))&&worldHistoryProse.records['1995-03-20-tokyo-subway'].fragments.some(fragment=>fragment.text.includes('직접적인 인과관계는 등록하지 않는다')));
 add('history-writing-standard',read('WRITING_STYLE_GUIDE.md').includes('기록 작성 전 확인')&&read('WRITING_STYLE_GUIDE.md').includes('기관별 목소리')&&read('WRITING_STYLE_GUIDE.md').includes('실제 역사'));
+const publicIndexCopy=index.replace(article(index,'Cults_871104'),'').replace(article(index,'Immortality_860201'),'');
+const publicCopy=[publicIndexCopy,worldHistoryDataSource,worldHistoryProseSource,factionAnalysisSource,fieldDossierData,homeIntelligenceData,read('assets/js/data/pilgrimage-scenario-data.js'),read('assets/js/data/verdict-archive-data.js')].join('\n');
+const forbiddenPublicCopy=['정사','캐논','플레이어','독자 선택','시나리오 모드','메인 스토리','AI 이미지','생성 이미지'].filter(term=>publicCopy.includes(term));
+add('public-copy-no-meta-language',forbiddenPublicCopy.length===0,forbiddenPublicCopy.join('|'));
+add('terminal-nine-step-reading-path',count(index,'class="pc-terminal-reading-path"')===1&&count(article(index,'__none__'),'data-uac-route=')===0&&count(index.slice(index.indexOf('<details class="pc-terminal-reading-path"'),index.indexOf('</details>',index.indexOf('<details class="pc-terminal-reading-path"'))),'data-uac-route=')===9&&foundationCss.includes('.pc-terminal-reading-path'));
+const publicConceptAssets=['project-curse-world-keyart-concept-v1.png','great-black-forest-unlit-fortress-bell-concept-v1.png','checkpoint-07-five-thermal-concept-v1.png','broken-crown-erased-commander-concept-v1.png','first-apostle-three-traces-reconstruction-concept-v1.png','joint-response-unit-unlisted-eleventh-group-concept-v1.png','nhc-young-soldiers-forward-base-group-photo-concept-v1.png'];
+const publicConceptSources=[index,fieldDossierData,factionAnalysisSource,worldHistoryProseSource,visualEvidenceData].join('\n');
+add('seven-concept-images-selectively-integrated',publicConceptAssets.every(name=>publicConceptSources.includes(name))&&!publicConceptSources.includes('project-curse-world-keyart-concept-v2.png'));
 add('history-era-filter-runtime',worldHistory.includes('historyEraFilter')&&worldHistory.includes('function renderIndex')&&worldHistory.includes('pc-world-history-record-state')&&worldHistory.includes('ProjectCurseWorldHistoryData'));
 add('history-provenance-runtime',worldHistory.includes('ProjectCurseWorldHistoryProse')&&worldHistory.includes('data-history-record-author')&&worldHistory.includes('pc-world-history-fragment')&&worldHistory.includes("fragment.kind==='log'")&&worldHistory.includes("fragment.kind==='quote'"));
 add('history-japan-technology-runtime',worldHistory.includes('ProjectCurseJapanTechnology')&&worldHistory.includes('pc-japan-tech-trace')&&worldHistory.includes('is-japan-technology')&&worldHistoryCss.includes('.pc-japan-tech-track')&&worldHistoryCss.includes('[data-japan-technology-record]'));
