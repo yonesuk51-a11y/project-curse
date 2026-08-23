@@ -4,7 +4,7 @@ import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.48.1';
+const VERSION='5.48.2';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -599,6 +599,8 @@ const aftermathProse=['2031-02-03-branch-seal','2032-08-14-three-bells-compact',
 add('history-aftermath-distinct-working-voices',aftermathProse.every(record=>record?.author&&record?.recipient&&record?.purpose&&record.fragments?.length>=3)&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='봉인실 메모'))&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='정비반 음성'))&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='신호장교 구두보고')));
 add('faction-three-distinct-field-profiles',['uac','ushinoda','blood-cult'].every(key=>factionAnalysis?.factions?.[key]?.profile?.items?.length===3)&&new Set(['uac','ushinoda','blood-cult'].map(key=>factionAnalysis.factions[key].profile.code)).size===3&&factionAnalysisRuntime.includes('function factionProfile'));
 add('visual-evidence-readable-status-badges',visualEvidence?.version==='1.1.0'&&visualEvidence.classes.ORIGINAL.label==='원본 보존'&&visualEvidence.classes.RECONSTRUCTED.label==='복원 추정'&&visualEvidence.classes.UNVERIFIED.label==='출처 대조 대기'&&read('assets/js/pages/archive-document.js').includes('archive-evidence-badge')&&visualEvidenceCss.includes('.archive-evidence-badge'));
+add('visual-qa-channel-heading-focus',channelIdentityCss.includes('[data-screen-heading]:focus{outline:0}')&&channelIdentityCss.includes('[data-screen-heading]:focus-visible{box-shadow:inset 0 -1px rgba(var(--pc-channel-rgb),.72)}'));
+add('visual-qa-mobile-evidence-filter-grid',visualEvidenceCss.includes('.archive-evidence-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}')&&visualEvidenceCss.includes('.archive-evidence-filters button:first-child{grid-column:1/-1}'));
 add('history-1995-public-record-boundary',worldHistoryProse?.records?.['1995-03-20-tokyo-subway']?.fragments?.some(fragment=>fragment.text.includes('실제 공격의 실행 주체와 피해 사실은 공개 수사·재판 기록을 따른다'))&&worldHistoryProse.records['1995-03-20-tokyo-subway'].fragments.some(fragment=>fragment.text.includes('직접적인 인과관계는 등록하지 않는다')));
 add('history-writing-standard',read('WRITING_STYLE_GUIDE.md').includes('기록 작성 전 확인')&&read('WRITING_STYLE_GUIDE.md').includes('기관별 목소리')&&read('WRITING_STYLE_GUIDE.md').includes('실제 역사'));
 add('history-era-filter-runtime',worldHistory.includes('historyEraFilter')&&worldHistory.includes('function renderIndex')&&worldHistory.includes('pc-world-history-record-state')&&worldHistory.includes('ProjectCurseWorldHistoryData'));

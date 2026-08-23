@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.48.1';
+const VERSION='5.48.2';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -95,6 +95,8 @@ check('faction:internal-state',faction.includes('let selected=null')&&faction.in
 check('faction:three-field-profiles',faction.includes('factionProfile(faction)')&&['AUTHORITY DESK / RELEASE 17-C','RITUAL LINEAGE / DO NOT MERGE','BLOOD MEDIUM / COMMAND UNKNOWN'].every(marker=>factionData.includes(marker)));
 check('history:distinct-working-voices',['봉인실 메모','정비반 음성','신호장교 구두보고'].every(marker=>historyProse.includes(marker)));
 check('evidence:korean-first-status',documentViewer.includes('archive-evidence-badge')&&['원본 보존','열람 보정','복원 추정','출처 대조 대기'].every(label=>documentViewer.includes(label))&&visualEvidenceCss.includes('.archive-evidence-badge'));
+check('visual-qa:channel-heading-focus',channelIdentityCss.includes('[data-screen-heading]:focus{outline:0}')&&channelIdentityCss.includes('[data-screen-heading]:focus-visible{box-shadow:inset 0 -1px rgba(var(--pc-channel-rgb),.72)}'));
+check('visual-qa:mobile-evidence-filter-grid',visualEvidenceCss.includes('.archive-evidence-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}')&&visualEvidenceCss.includes('.archive-evidence-filters button:first-child{grid-column:1/-1}'));
 
 const documents=context.window.ProjectCurseArchive?.publicRecords?.filter(record=>record.format==='document')||[];
 check('archive:nine-documents',documents.length===9,documents.length);

@@ -1,4 +1,4 @@
-// Project Curse 5.48.1 — writing and readability pass build manifest.
+// Project Curse 5.48.2 — visual QA polish build manifest.
 (function(root){
   'use strict';
 
@@ -9,10 +9,10 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.48.1',
-    codename:'Writing & Readability',
+    version:'5.48.2',
+    codename:'Visual QA Polish',
     schema:'project-curse-v41',
-    released:'2026-08-21',
+    released:'2026-08-23',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},
       {id:'map-room',index:'01',label:'상황 관제',shortLabel:'관제'},
