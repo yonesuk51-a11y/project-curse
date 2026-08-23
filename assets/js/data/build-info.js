@@ -1,4 +1,4 @@
-// Project Curse 5.48.2 — visual QA polish build manifest.
+// Project Curse 5.48.3 — diegetic language pass build manifest.
 (function(root){
   'use strict';
 
@@ -9,8 +9,8 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.48.2',
-    codename:'Visual QA Polish',
+    version:'5.48.3',
+    codename:'Diegetic Language Pass',
     schema:'project-curse-v41',
     released:'2026-08-23',
     screens:[

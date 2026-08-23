@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.48.2';
+const VERSION='5.48.3';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -115,7 +115,7 @@ check('document:source-layer-context',documentViewer.includes('function appendRe
 const authoredFieldDocuments=['Great_Black_Forest_Region','Dead_Zone_Pilgrimage','Pilgrim_Rules_GBF'].map(id=>context.window.ProjectCurseArchiveDocuments?.documents?.[id]);
 const authoredFieldSections=authoredFieldDocuments.flatMap(document=>document?.sections||[]);
 check('document:fifteen-authored-field-sections',authoredFieldSections.length===15&&authoredFieldSections.every(section=>section.record?.author&&section.record?.recipient&&section.record?.evidence&&section.record?.limit),authoredFieldSections.length);
-check('document:scenario-canon-boundary',pilgrimageData.includes("version:'2.2.0'")&&pilgrimageData.includes('canonBoundary:')&&pilgrimageRuntime.includes('PLAYER VERDICT / NON-CANON BRANCH')&&pilgrimageCss.includes('.pc-pilgrimage-canon-boundary'));
+check('document:scenario-record-authority',pilgrimageData.includes("version:'2.2.0'")&&pilgrimageData.includes('canonBoundary:')&&pilgrimageRuntime.includes('FIELD VERDICT / CENTRAL ARCHIVE UNAPPROVED')&&pilgrimageCss.includes('.pc-pilgrimage-canon-boundary'));
 check('evidence:root-loaded',index.includes(`assets/css/visual-evidence.css?v=${VERSION}`)&&index.includes(`assets/js/data/visual-evidence-data.js?v=${VERSION}`)&&index.indexOf('visual-evidence-data.js')<index.indexOf('field-dossier-data.js'));
 check('evidence:provenance-classes',['ORIGINAL','STABILIZED','RECONSTRUCTED','UNVERIFIED'].every(key=>context.window.ProjectCurseVisualEvidence?.classes?.[key]));
 check('evidence:document-console',documentViewer.includes('function evidenceConsole(items)')&&documentViewer.includes('archive-evidence-card')&&documentViewer.includes('function openEvidence(index,trigger)'));
@@ -145,7 +145,7 @@ check('audio:route-profile-sync',audioController.includes('projectcurse:screen-c
 check('audio:regional-document-profile',documentViewer.includes('setProfile?.(doc.theme')&&documentViewer.includes("'great-black-forest':'region.forest'")&&documentViewer.includes("'dead-zone':'region.deadzone'"));
 check('operation:persistent-owner',operationState.includes('ProjectCurseOperationState')&&operationState.includes('localStorage.setItem')&&operationState.includes('visitBranch')&&operationState.includes('chooseVerdict'));
 check('operation:four-outcomes',['execute','detain','cooperate','defer'].every(id=>operationState.includes(`${id}:{`)));
-check('operation:canon-boundary',operationState.includes('COMMON CANON UNCHANGED')&&operationState.includes('fixedFacts:Object.freeze([')&&operationState.includes('pendingFacts:Object.freeze([')&&count(operationState,"canonEffect:'none'")===4);
+check('operation:record-authority',operationState.includes('CENTRAL RECORD UNCHANGED')&&operationState.includes('fixedFacts:Object.freeze([')&&operationState.includes('pendingFacts:Object.freeze([')&&count(operationState,"canonEffect:'none'")===4);
 check('operation:document-report',documentViewer.includes('archive-scenario-report')&&documentViewer.includes('data-scenario-verdict')&&documentViewer.includes('data-scenario-reset'));
 check('operation:document-boundary-ui',documentViewer.includes('archive-scenario-canon-boundary')&&documentViewer.includes('archive-scenario-report-layers')&&documentCss.includes('.archive-scenario-lineage-guard'));
 check('operation:root-loaded',index.includes(`assets/js/core/operation-state.js?v=${VERSION}`)&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
@@ -154,7 +154,7 @@ check('map:drilldown-root-loaded',index.includes(`assets/js/data/regional-drilld
 check('map:six-drilldowns',drilldowns.length===6&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=38,`${drilldowns.length} districts`);
 check('map:four-level-navigation',mapRoomRuntime.includes('data-map-open-detail')&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('pc-map-breadcrumb'));
 check('map:verdict-site-sync',mapRoomRuntime.includes('resolveDetailSite')&&drilldowns.filter(detail=>detail.sites.some(site=>site.verdictStates)).length>=2);
-check('map:local-operation-boundary',mapRoomRuntime.includes('LOCAL OPERATION LAYER')&&mapRoomRuntime.includes('COMMON CANON UNCHANGED')&&mapRoomRuntime.includes('pc-op-canon-boundary'));
+check('map:field-operation-boundary',mapRoomRuntime.includes('FIELD OPERATION COPY')&&mapRoomRuntime.includes('CENTRAL RECORD UNCHANGED')&&mapRoomRuntime.includes('pc-op-canon-boundary'));
 const detailRoutes=drilldowns.flatMap(detail=>detail.routes.map(route=>({detail,route})));
 check('map:nineteen-route-traces',detailRoutes.length===19&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
 check('map:route-focus-and-layers',mapRoomRuntime.includes('routesForSite')&&mapRoomRuntime.includes('renderDetailOverlays')&&mapRoomRuntime.includes('data-map-detail-layer')&&mapRoomRuntime.includes('data-map-route-step'));

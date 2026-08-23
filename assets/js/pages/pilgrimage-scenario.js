@@ -65,7 +65,7 @@
         <h1 id="pcPilgrimageTitle">${escapeHTML(current.title)}</h1><p>${escapeHTML(current.summary)}</p>
         <dl><div><dt>권역</dt><dd>${escapeHTML(current.region)}</dd></div><div><dt>연결 사건</dt><dd>${escapeHTML(current.incident.toUpperCase())}</dd></div><div><dt>현재 상태</dt><dd>${resume?escapeHTML(summary.status.toUpperCase()):'NOT STARTED'}</dd></div><div><dt>진행도</dt><dd>${summary.progress}%</dd></div></dl>
         <div class="pc-pilgrimage-directive"><b>${escapeHTML(current.directiveLabel)}</b><p>${escapeHTML(current.directive)}</p></div>
-        <section class="pc-pilgrimage-canon-boundary" aria-label="고정 정사와 선택 분기 경계"><header><small>CANON BOUNDARY</small><b>확정된 관측과 단말 판정을 분리한다</b></header><ul>${(current.fixedFacts||[]).map(fact=>`<li>${escapeHTML(fact)}</li>`).join('')}</ul><p>${escapeHTML(current.canonBoundary)}</p></section>
+        <section class="pc-pilgrimage-canon-boundary" aria-label="중앙 기록과 현장 판정의 승인 범위"><header><small>RECORD AUTHORITY</small><b>확정된 관측과 단말 판정을 분리한다</b></header><ul>${(current.fixedFacts||[]).map(fact=>`<li>${escapeHTML(fact)}</li>`).join('')}</ul><p>${escapeHTML(current.canonBoundary)}</p></section>
         <div class="pc-pilgrimage-intro-actions"><button type="button" data-pilgrimage-start>${resume?'현장 기록 이어 보기':current.theme==='deadzone'?'귀환자 검문 시작':current.theme==='recovery'?'전진 회수 작전 시작':'순례 시작'}</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.guideRecord)}">관련 기록 먼저 확인</button></div>
       </article>`;
     }
@@ -103,7 +103,7 @@
       const metricStats=current.metrics.map(metric=>`<div><dt>${escapeHTML(metric.label)}</dt><dd>${summary.metrics[metric.key]}%</dd></div>`).join('');
       return `<article class="pc-pilgrimage-ending is-${escapeHTML(ending.tone)}">
         <small>${escapeHTML(ending.code)}</small><h1 id="pcPilgrimageTitle">${escapeHTML(ending.title)}</h1><b>${escapeHTML(ending.status)}</b><p>${escapeHTML(ending.summary)}</p>
-        <div class="pc-pilgrimage-ending-consequence"><span>관제 결과</span><p>${escapeHTML(ending.consequence)}</p></div><aside class="pc-pilgrimage-ending-boundary"><small>PLAYER VERDICT / NON-CANON BRANCH</small><p>${escapeHTML(current.canonBoundary)}</p></aside><dl>${metricStats}</dl>
+        <div class="pc-pilgrimage-ending-consequence"><span>관제 결과</span><p>${escapeHTML(ending.consequence)}</p></div><aside class="pc-pilgrimage-ending-boundary"><small>FIELD VERDICT / CENTRAL ARCHIVE UNAPPROVED</small><p>${escapeHTML(current.canonBoundary)}</p></aside><dl>${metricStats}</dl>
         <div class="pc-pilgrimage-ending-actions">${verdict?`<button type="button" data-pilgrimage-open-verdict="${escapeHTML(verdict.id)}">복호화된 판정 기록 열기</button>`:''}<button type="button" data-pilgrimage-open-map>관제도에서 결과 확인</button><button type="button" data-pilgrimage-open-record="${escapeHTML(current.primaryRecord)}">관련 지역 기록 열기</button><button type="button" class="is-reset" data-pilgrimage-reset>${current.theme==='deadzone'?'현재 검문 진행 초기화':current.theme==='recovery'?'현재 회수 작전 초기화':'현재 순례 진행 초기화'}</button></div>
       </article>`;
     }

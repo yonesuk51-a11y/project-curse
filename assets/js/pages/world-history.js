@@ -9,16 +9,16 @@
   root.classList.add('pc-world-history');
   root.innerHTML = `
     <header class="pc-world-history-head">
-      <div class="label">세계 기록 / 정사 복구 연표</div>
+      <div class="label">세계 기록 / 중앙 연표 복구본</div>
       <h2>세계 사건 연표</h2>
-      <p>1975년의 공간 개척 실험부터 2042년 삼야 무응답까지 남은 기록을 시대와 근거 수준으로 분리한다. 2030년 작전의 로컬 결말은 공통 연표와 분리하고, 이후 확인된 생존 규칙과 신호만 등록한다.</p>
+      <p>1975년의 공간 개척 실험부터 2042년 삼야 무응답까지 남은 기록을 시대와 근거 수준으로 분리한다. 2030년 작전의 현장 결과는 중앙 연표와 분리하고, 이후 확인된 생존 규칙과 신호만 등록한다.</p>
     </header>
     <div class="pc-world-history-range">1975–2042 / ACTIVE ARCHIVE</div>
     <section class="pc-world-history-overview" aria-label="연표 복구 현황">
       <div><b data-history-total>0</b><span>복구 사건</span></div>
       <div><b data-history-era-total>0</b><span>시대 구획</span></div>
       <div><b data-history-confirmed>0</b><span>확정 기록</span></div>
-      <div><b data-history-unresolved>0</b><span>정사 공백</span></div>
+      <div><b data-history-unresolved>0</b><span>기록 공백</span></div>
     </section>
     <section class="pc-japan-tech-trace" data-japan-tech-trace aria-label="일본 기술 도약 계보"></section>
     <section class="pc-world-history-controls" aria-label="세계 사건 연표 필터">
@@ -288,7 +288,7 @@
     const publicBasis=document.createElement('details');
     publicBasis.className='pc-japan-tech-public';
     const summary=document.createElement('summary');
-    summary.textContent='PUBLIC HISTORY BASIS / 실제 역사와 가상 기록의 경계';
+    summary.textContent='PUBLIC RECORD BASIS / 공개 역사와 U.A.C 제한 기록의 경계';
     const grid=document.createElement('div');
     japanTechnology.publicAnchors.forEach(anchor=>{
       const article=document.createElement('article');
@@ -423,7 +423,7 @@
     </header>
     <section class="pc-world-history-record-state" aria-label="기록 판정">
       <div><span>시대 구획</span><b data-history-record-era></b></div>
-      <div><span>정사 판정</span><b data-history-record-evidence></b></div>
+      <div><span>기록 판정</span><b data-history-record-evidence></b></div>
       <div><span>문서 성격</span><b data-history-record-document></b></div>
       <div><span>자료 상태</span><b data-history-record-source></b></div>
       <p data-history-record-basis></p>

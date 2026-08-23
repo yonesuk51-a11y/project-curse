@@ -9,7 +9,7 @@
   }
 
   const states={
-    confirmed:{label:'정사 확정',tone:'confirmed',line:'solid'},
+    confirmed:{label:'계보 확정',tone:'confirmed',line:'solid'},
     disputed:{label:'계승 주장 / 미확정',tone:'disputed',line:'dashed'},
     split:{label:'지휘 이탈 확인',tone:'split',line:'broken'},
     exception:{label:'예외개체',tone:'exception',line:'double'}

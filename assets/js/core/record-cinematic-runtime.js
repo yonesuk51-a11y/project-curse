@@ -1403,7 +1403,7 @@
         if(source) source.textContent=cfg.sourceLabel||'F.H.C / RECOVERED SOURCE';
         const fig=el.querySelector('[data-seq-figure]');
         if(fig) fig.hidden=true;
-        el.querySelector('[data-seq-status]').textContent='F.H.C ENDING MARKER';
+        el.querySelector('[data-seq-status]').textContent='F.H.C FINAL RECORD MARKER';
         let ended=false;
         const complete=()=>{
           if(ended) return;

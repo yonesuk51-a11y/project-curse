@@ -99,8 +99,8 @@
         id:'Operation_Broken_Crown', code:'OP-BROKEN-CROWN', access:'open', format:'document',
         category:'operation', categoryLabel:'작전', date:'PENDING', risk:'CRITICAL', provenance:'UNVERIFIED',
         tags:['남방','쿠데타','집단 소환'],
-        title:'부서진 왕관 작전 시나리오',
-        summary:'남방 집단 소환을 차단하며 처형 명령의 진위를 판별하는 상호작용형 정보 기록.'
+        title:'부서진 왕관 작전 판정 기록',
+        summary:'남방 집단 소환을 차단하며 처형 명령의 진위를 판별하는 대리 지휘 정보 기록.'
       }
     ]
   });

@@ -1,12 +1,15 @@
 # Future Patch Pointer
 
-Current baseline: `5.48.2 Visual QA Polish`
+Current baseline: `5.48.3 Diegetic Language Pass`
 
 Completed in this baseline:
-`2 Visual QA Fixes / 6 Aftermath Records Revoiced / 3 Faction Profiles / 0 Canon Changes`
+`Diegetic UI Language / Central Record Authority / 0 Event Changes`
 
 Primary scope:
 
+- 세계사·세력·작전·순례 화면에서 창작자 관점의 `정사·플레이어·엔딩·해금` 표현 제거
+- 작전 선택과 중앙 연표의 경계를 `현장 판정 사본·중앙 기록 미승인` 체계로 통일
+- 실제 웹 저장 동작을 `현재 단말 보존`으로 표현하고 운영자 인식형 호러 문구는 유지
 - 채널 전환 뒤 프로그램 방식으로 이동한 제목의 기본 포커스 사각형을 채널색 밑줄로 정리
 - 모바일 시각 증거 필터를 `전체 + 2×2` 격자로 재배치해 가로 스크롤 제거
 - 390px 폭에서 세계사 상세·세력 프로필·출처 배지의 가로 넘침 재확인

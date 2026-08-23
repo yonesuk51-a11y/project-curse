@@ -65,11 +65,11 @@
       return `<section class="pc-verdict-subgroup" data-verdict-scenario="${esc(scenarioId)}"><header><span>${esc(code)}</span><h5>${esc(title)}</h5></header><div class="pc-archive-row-list">${rows}</div></section>`;
     };
     return `<section class="pc-verdict-archive" aria-label="현장 판정 기록">
-      <header class="pc-verdict-head"><div><span>FIELD VERDICT ARCHIVE</span><h4>현장 판정 기록</h4><p>직접 확인한 결말만 열린다. 결말이 확정된 순간의 선택과 측정값은 원본 기록과 분리한 판정 사본으로 보존된다.</p></div><dl><div><dt>열린 기록</dt><dd>${summary.unlocked} / ${summary.total}</dd></div><div><dt>읽지 않음</dt><dd>${summary.unread}</dd></div></dl></header>
+      <header class="pc-verdict-head"><div><span>FIELD VERDICT ARCHIVE</span><h4>현장 판정 기록</h4><p>직접 확인한 결과만 열린다. 최종 판정 순간의 선택과 측정값은 원본 기록과 분리한 판정 사본으로 보존된다.</p></div><dl><div><dt>열린 기록</dt><dd>${summary.unlocked} / ${summary.total}</dd></div><div><dt>읽지 않음</dt><dd>${summary.unread}</dd></div></dl></header>
       ${group('unlit-fortress','GBF / WESTERN PILGRIMAGE','대흑림 서부 순례 판정')}
       ${group('deadzone-return','DZ / RETURN SCREENING','데드존 귀환 검문 판정')}
       ${group('deadzone-recovery','DZ / OUTBOUND RECOVERY','데드존 전진 회수 판정')}
-      <details class="pc-verdict-manage"><summary>판정 기록 관리</summary><div><p>시나리오의 현재 진행을 초기화해도 여기 보존된 판정 기록은 남는다. 아래 작업은 판정 보관소에만 적용된다.</p><button type="button" data-verdict-reset="read">모든 기록을 읽지 않음으로 표시</button><button type="button" data-verdict-reset="unlit-fortress">대흑림 판정 기록 삭제</button><button type="button" data-verdict-reset="deadzone-return">데드존 귀환 판정 삭제</button><button type="button" data-verdict-reset="deadzone-recovery">전진 회수 판정 삭제</button><button type="button" class="is-danger" data-verdict-reset="all">모든 판정 기록 삭제</button></div></details>
+      <details class="pc-verdict-manage"><summary>판정 기록 관리</summary><div><p>현재 작전 진행을 초기화해도 여기 보존된 판정 기록은 남는다. 아래 작업은 판정 보관소에만 적용된다.</p><button type="button" data-verdict-reset="read">모든 기록을 읽지 않음으로 표시</button><button type="button" data-verdict-reset="unlit-fortress">대흑림 판정 기록 삭제</button><button type="button" data-verdict-reset="deadzone-return">데드존 귀환 판정 삭제</button><button type="button" data-verdict-reset="deadzone-recovery">전진 회수 판정 삭제</button><button type="button" class="is-danger" data-verdict-reset="all">모든 판정 기록 삭제</button></div></details>
     </section>`;
   }
 
@@ -82,7 +82,7 @@
     const references=(mediaAudit.referenceOnly||[]).map(item=>`<li><code>${esc(item.name)}</code><span>${esc(item.role)}</span><b>${esc(item.rule)}</b></li>`).join('');
     const reviewTone=stats.referenceExposure>0?'blocked':stats.review>0?'review':'cleared';
     return `<section class="pc-media-audit" data-pc-media-audit="1" data-audit-status="${reviewTone}" aria-label="미디어 출처와 공개 검토 상태">
-      <header class="pc-media-audit-head"><div><span>MEDIA PROVENANCE / RELEASE AUDIT</span><h4>공개 미디어 감식 대장</h4><p>사이트에 게시되는 이미지·음원·영상의 파일 상태와 출처 확인 단계를 분리한다. <strong>등록은 사용 허가를 의미하지 않는다.</strong></p></div><aside><em>${stats.review>0?'REVIEW OPEN':'RELEASE CLEARED'}</em><a data-uac-route="media-audit" href="#media-audit">전체 감사 대장 열기&nbsp;›</a></aside></header>
+      <header class="pc-media-audit-head"><div><span>MEDIA PROVENANCE / RELEASE AUDIT</span><h4>공개 미디어 감식 대장</h4><p>공개 열람망에 등록된 이미지·음원·영상의 파일 상태와 출처 확인 단계를 분리한다. <strong>등록은 사용 허가를 의미하지 않는다.</strong></p></div><aside><em>${stats.review>0?'REVIEW OPEN':'RELEASE CLEARED'}</em><a data-uac-route="media-audit" href="#media-audit">전체 감사 대장 열기&nbsp;›</a></aside></header>
       <dl class="pc-media-audit-telemetry">
         <div><dt>등록 자산</dt><dd>${stats.registered}<small>FILES</small></dd></div>
         <div><dt>프로젝트 관리</dt><dd>${stats.managed}<small>KNOWN</small></dd></div>

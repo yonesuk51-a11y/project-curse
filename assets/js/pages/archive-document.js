@@ -282,9 +282,9 @@
       decisionHead.append(el('small','','LOCAL COMMAND VERDICT'),el('h3','','현장 작전 사본 판정'),decisionStatus);
       const boundaryShell=el('aside','archive-scenario-canon-boundary');
       const boundaryHead=el('header');
-      boundaryHead.append(el('small','',boundary.status),el('b','','정사 승인 경계'),rich('p','',boundary.scope));
+      boundaryHead.append(el('small','',boundary.status),el('b','','중앙 기록 승인 범위'),rich('p','',boundary.scope));
       const boundaryColumns=el('div','archive-scenario-canon-columns');
-      [['FIXED CANON','2030년에 확정된 사실',boundary.fixedFacts],['PENDING REVIEW','후대 승인 대기',boundary.pendingFacts]].forEach(([code,title,items])=>{
+      [['CONFIRMED RECORD','2030년에 확정된 사실',boundary.fixedFacts],['PENDING REVIEW','후대 승인 대기',boundary.pendingFacts]].forEach(([code,title,items])=>{
         const column=el('section');
         column.append(el('small','',code),el('h4','',title));
         const list=el('ul');
@@ -326,8 +326,8 @@
       [
         ['회수 정보',`${state.visited.length} / ${entries.length}`],
         ['현재 작전 단계',`${state.mapStep+1} / 6`],
-        ['로컬 판정',decision.status],
-        ['공통 정사',boundary.status],
+        ['현장 판정',decision.status],
+        ['중앙 기록',boundary.status],
         ['최종 갱신',state.updatedAt?new Date(state.updatedAt).toLocaleString('ko-KR'):'기록 없음']
       ].forEach(([term,value])=>{
         const row=el('div');row.append(el('dt','',term),el('dd','',value));facts.append(row);
@@ -336,9 +336,9 @@
       const layers=el('div','archive-scenario-report-layers');
       [
         ['현장 관측',decision.observed],
-        ['로컬 지도 효과',decision.immediate],
+        ['지도 사본 반영',decision.immediate],
         ['승인 대기',decision.unresolved],
-        ['정사 효력','없음. 이 판정은 공통 연표와 혈교 지휘 계보를 변경하지 않는다.']
+        ['중앙 기록 반영','없음. 이 판정은 중앙 연표와 혈교 지휘 계보를 변경하지 않는다.']
       ].forEach(([label,value])=>{
         const item=el('div');item.append(el('b','',label),rich('p','',value));layers.append(item);
       });
@@ -362,8 +362,8 @@
       complete.classList.toggle('is-visible',ready);
       if(operation){
         decisionStatus.textContent=state.verdict
-          ? `${operation.getDecision(state.verdict).status} / 로컬 사본에만 저장됨 · 공통 정사 변화 없음.`
-          : ready?'모든 정보가 복구됐다. 공통 정사를 바꾸지 않는 현장 판정을 선택하라.':'세 정보 경로를 모두 회수해야 로컬 지휘 판정을 기록할 수 있다.';
+          ? `${operation.getDecision(state.verdict).status} / 현재 단말 사본에만 저장됨 · 중앙 기록 변화 없음.`
+          : ready?'모든 정보가 복구됐다. 중앙 기록을 바꾸지 않는 현장 판정을 선택하라.':'세 정보 경로를 모두 회수해야 현장 지휘 판정을 기록할 수 있다.';
         Array.from(decisionGrid.children).forEach(button=>{
           button.disabled=!ready;
           button.classList.toggle('is-selected',button.dataset.scenarioVerdict===state.verdict);
@@ -497,7 +497,7 @@
       if(verdictDocument){
         if(doc.unlockScenario){
           const unlockScenario=doc.unlockScenario;
-          const unlockButton=el('button','is-recovery-unlock','해금된 전진 회수 작전 시작');
+          const unlockButton=el('button','is-recovery-unlock','접근 승인된 전진 회수 작전 시작');
           unlockButton.type='button';
           unlockButton.addEventListener('click',()=>{
             close({restoreFocus:false});

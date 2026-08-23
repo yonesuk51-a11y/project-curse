@@ -82,7 +82,7 @@
     '1995-03-20-tokyo-subway':{
       documentType:'analysis',author:'S.I.D 도쿄 사후검토반',recipient:'도시권 사건 재분류위원회',purpose:'공개 역사와 별도 비공개 작전의 경계 확인',
       fragments:[
-        {label:'공개 기록과의 경계',kind:'document',text:'1995년 3월 20일 도쿄 지하철에서 발생한 실제 공격의 실행 주체와 피해 사실은 공개 수사·재판 기록을 따른다. 해당 사건을 리버스나 우시노다교가 일으켰다는 근거는 Project Curse 기록에 없다.'},
+        {label:'공개 기록과의 경계',kind:'document',text:'1995년 3월 20일 도쿄 지하철 공격의 실행 주체와 피해 사실은 공개 수사·재판 기록을 따른다. 해당 사건을 리버스나 우시노다교가 일으켰다는 근거는 현재 U.A.C 보존 기록에 없다.'},
         {label:'비공개 작전',kind:'field',text:'같은 날 N.H.C 도쿄 지부는 본사역과 떨어진 폐쇄 환기구역에서 이상 신호를 추적했다. 현장에서는 S.O.N 인원과 짧은 교전이 있었으나 의식 흔적은 발견되지 않았다. 투입 명령에 적힌 최초 신고자는 존재하지 않는 신분이었다.'},
         {label:'후대 검토',kind:'annotation',text:'검토반은 실제 공격으로 생긴 혼란을 이용해 대응 인력을 다른 구역으로 유인했을 가능성을 제시했다. 두 사건 사이에 확인된 것은 시간의 중첩뿐이다. 직접적인 인과관계는 등록하지 않는다.'}
       ]
@@ -225,7 +225,7 @@
       fragments:[
         {label:'감식 소견',kind:'finding',text:'지도부 연설로 알려진 장면의 입 모양과 음성이 맞지 않는다. 배경 종소리는 서로 다른 지역에서 채록된 두 음원을 겹친 것이며, 화면 오른쪽 인물은 다른 필름에도 같은 자세로 나타난다.'},
         {label:'판정 범위',kind:'analysis',text:'영상이 조작됐다는 사실만 확인한다. 우시노다교가 존재하지 않았다는 결론은 내릴 수 없다. 타락교·혈교·그림자교와 지역 잔존 세력이 어느 시점에 하나의 중앙교단을 공유했는지도 이 자료로는 판단하지 않는다.'},
-        {label:'재분류',kind:'directive',text:'해당 영상은 역사 원본이 아니라 선전·유도 자료로 등록한다. 영상에만 근거한 설립 연도와 지도자 계보는 정사 대장에서 해제한다.'}
+        {label:'재분류',kind:'directive',text:'해당 영상은 역사 원본이 아니라 선전·유도 자료로 등록한다. 영상에만 근거한 설립 연도와 지도자 계보는 중앙 승인 대장에서 해제한다.'}
       ]
     },
     '2026-08-20-northern-reversal':{
@@ -258,7 +258,7 @@
       fragments:[
         {label:'초기 스캔',kind:'log',text:'귀환 인원  4\n제출된 이름  4\n확인된 심박  5\n출입요청 음성  5명분\n다섯 번째 이름  귀환자 전원 기억 없음'},
         {label:'면담 발췌',kind:'quote',text:'담당관: 마지막 야영지에서 불침번은 누가 섰습니까?\n귀환자 2: 제가 첫 순서였습니다. 다음은— 잠깐만요.\n담당관: 다음은 누구였습니까?\n귀환자 2: 네 명이었다면 순서가 맞지 않습니다.'},
-        {label:'현장 판정',kind:'analysis',text:'네 사람의 기억은 다섯 번째 자리를 비워 두었을 때만 하나의 경로로 이어졌다. 신호를 귀환자로 인정한 기록에서는 검문소 아래에서 구조 요청이 돌아왔다. 거부한 기록에서는 귀환자 한 명의 과거 자료가 조회되지 않는다. 어느 결과가 원본인지는 시나리오 판정에 남긴다.'}
+        {label:'현장 판정',kind:'analysis',text:'네 사람의 기억은 다섯 번째 자리를 비워 두었을 때만 하나의 경로로 이어졌다. 신호를 귀환자로 인정한 기록에서는 검문소 아래에서 구조 요청이 돌아왔다. 거부한 기록에서는 귀환자 한 명의 과거 자료가 조회되지 않는다. 어느 결과가 원본인지는 검문소 판정 사본에 남긴다.'}
       ]
     },
     '2030-01-17-broken-crown':{
@@ -270,7 +270,7 @@
       ]
     },
     '2031-02-03-branch-seal':{
-      documentType:'review',author:'U.A.C 기록무결성위원회',recipient:'중앙기록고·N.H.C·S.I.D 기록책임자',purpose:'OP-BROKEN-CROWN 결과철의 정사 효력 제한',
+      documentType:'review',author:'U.A.C 기록무결성위원회',recipient:'중앙기록고·N.H.C·S.I.D 기록책임자',purpose:'OP-BROKEN-CROWN 결과철의 중앙 기록 반영 제한',
       fragments:[
         {label:'인계대장',kind:'log',text:'02.03 08:40  결과철 BC-EX 인계\n02.03 08:40  결과철 BC-CP 인계\n02.03 08:40  결과철 BC-CO 인계\n02.03 08:40  결과철 BC-HL 인계\n공통 봉인번호  17-BCR-0\n본문 해시  전부 불일치'},
         {label:'보존 명령',kind:'directive',text:'네 결과철 가운데 하나를 원본으로 승격하지 않는다. 작전 개시 시각, 소환 반응과 침투 흔적만 공통 연표에 등록한다. 지휘관 신원·처분·협력과 쿠데타 종결 여부는 결과철별 지역 판정으로 격리한다.'},
@@ -332,7 +332,7 @@
   });
 
   root.ProjectCurseWorldHistoryProse=freeze({
-    version:root.ProjectCurseBuild?.version||'5.48.2',
+    version:root.ProjectCurseBuild?.version||'5.48.3',
     documentTypes,records,
     getRecord:id=>records[id]||null,
     getDocumentType:id=>documentTypes[id]||documentTypes.analysis
