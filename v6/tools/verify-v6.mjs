@@ -69,7 +69,7 @@ for(const match of dataText.matchAll(/(?:cover|original|image):'([^']+)'/g)){
 
 const data=await import(`${pathToFileURL(dataPath).href}?verify=${Date.now()}`);
 const mapData=await import(`${pathToFileURL(mapDataPath).href}?verify=${Date.now()}`);
-assert(data.V6_BUILD.version==='6.0.0-alpha.2','V6 build is alpha.2');
+assert(data.V6_BUILD.version==='6.0.0-alpha.3','V6 build is alpha.3');
 assert(data.FACTION_MARKS.length===17,'all 17 faction form studies are registered');
 assert(new Set(data.FACTION_MARKS.map(item=>item.id)).size===17,'faction mark IDs are unique');
 assert(data.FACTION_MARKS.every(item=>cssText.includes(`[data-mark="${item.id}"]`)),'all 17 faction marks have code-native silhouettes');
@@ -124,19 +124,32 @@ const signalClaims=item=>mapData.MAP_CLAIMS.signals[item.id]||(item.operationId=
 assert(mapData.MAP_SIGNALS.every(item=>claimAxes.every(axis=>signalClaims(item)?.[axis])),'all fifteen map signals resolve six-axis evidence claims');
 assert(mapData.MAP_OPERATIONS.every(item=>claimAxes.every(axis=>mapData.MAP_CLAIMS.operations[item.id]?.[axis])),'all five evidence copies expose six-axis claims');
 assert(mapData.MAP_OPERATIONS.every(item=>item.presentation&&item.openLabel&&item.lossLabel&&item.factionLabel),'every evidence copy separates presentation, open, loss, and faction labels');
+assert(mapData.MAP_OPERATIONS.every(item=>item.schematic?.coordinateType==='DISPLAY_PLOT'&&item.schematic.geo===null&&item.schematic.navigation==='PROHIBITED'),'all five local schematics prohibit geographic navigation');
+assert(mapData.MAP_OPERATIONS.every(item=>item.schematic.nodes.length>0&&new Set(item.schematic.nodes.map(node=>node.id)).size===item.schematic.nodes.length),'every local schematic has unique evidence nodes');
+assert(mapData.MAP_OPERATIONS.every(item=>item.schematic.nodes.every(node=>Number.isFinite(node.x)&&node.x>=0&&node.x<=100&&Number.isFinite(node.y)&&node.y>=0&&node.y<=100&&Number.isInteger(node.step)&&node.step>=0&&node.step<item.steps.length)),'every schematic node has a valid display plot and record step');
+assert(mapData.MAP_OPERATIONS.every(item=>{const ids=new Set(item.schematic.nodes.map(node=>node.id));return item.schematic.links.every(link=>ids.has(link.from)&&ids.has(link.to)&&link.kind&&link.label);}), 'every schematic link resolves two local evidence nodes');
+assert(mapData.MAP_OPERATIONS.reduce((sum,item)=>sum+item.schematic.nodes.length,0)===28,'five local schematics expose twenty-eight selectable evidence nodes');
+assert(mapThreeNight?.schematic.nodes.length===10&&mapThreeNight?.schematic.links.length===0&&mapThreeNight?.schematic.zones.length===2,'Three Night keeps ten nodes in two unlinked clusters');
+assert(mapThreeNight?.schematic.nodes.filter(node=>node.group==='gbf').length===6&&mapThreeNight?.schematic.nodes.filter(node=>node.group==='dz').length===4,'Three Night preserves the six plus four observation split');
 assert(mapImmortality?.date.includes('1986.02.01')&&mapImmortality?.date.includes('07.25'),'Blood Lake date conflict remains visible');
 assert(mapImmortality?.steps.map(item=>item.time).join(' ').includes('18:06')&&mapImmortality?.steps.map(item=>item.time).join(' ').includes('18:44'),'operation copy retains protected-record critical times');
+assert(['16:10','17:02','17:41','18:06','18:42','18:44–19:00'].every(time=>mapImmortality?.schematic.nodes.some(node=>node.code===time)),'Blood Lake schematic uses only the six protected-record time anchors');
 const bloodLakeSignal=mapData.MAP_SIGNALS.find(item=>item.id==='blood-lake');
 assert(bloodLakeSignal?.factions.length===0,'Blood Lake does not assign a later N.H.C organization mark');
 assert(bloodLakeSignal?.summary.includes('후대 편집 라벨 가설')&&mapImmortality?.confidence.includes('N.H.C 표기 성격'),'Blood Lake keeps the 1986 N.H.C label hypotheses unresolved');
 assert(mapThreeNight?.date==='2042.10.28–10.31'&&mapThreeNight?.code.includes('61:01'),'Three Night date window and duration are explicit');
 assert(mapThreeNight?.steps.some(item=>item.time==='WITHIN WINDOW / ORDER UNRESOLVED')&&!mapThreeNight?.steps.some(item=>/^T\+\d{1,2}:\d{2}$/.test(item.time)),'Three Night avoids invented precise intra-window times');
 assert(!mapData.MAP_OPERATIONS.find(item=>item.id==='broken-crown')?.lossLabel.includes('RECORDED'),'hostile plan is not presented as a recorded loss');
+const brokenCrown=mapData.MAP_OPERATIONS.find(item=>item.id==='broken-crown');
+assert(brokenCrown?.schematic.links.every(link=>link.kind==='hostile-claim')&&brokenCrown?.schematic.label.includes('EXECUTION UNCONFIRMED'),'hostile-plan links remain claims with execution unconfirmed');
 assert(!mapDataText.includes('[9.2,55.5]')&&!mapDataText.includes('9.2,55.5'),'unsupported legacy Blood Lake coordinates are absent');
 assert(!mapDataText.includes('북해권'),'Blood Lake map does not promote the legacy North Sea claim');
 assert(runtimeText.includes('TEMPORAL CORRELATION ONLY / NO ROUTE'),'map labels synchrony as non-route correlation');
 assert(runtimeText.includes('15개 관측점 목록 열기'),'all map signals have a non-plot contact index');
 assert(runtimeText.includes('data-evidence=')&&runtimeText.includes('data-location='),'map markers expose occurrence and location evidence states');
+assert(runtimeText.includes('LOCAL EVIDENCE SCHEMATIC')&&runtimeText.includes('data-operation-plot-node'),'local schematic nodes are rendered as interactive evidence controls');
+assert(runtimeText.includes('pc-v6-operation-plot-scroll')&&runtimeText.includes('aria-pressed'),'local schematic provides scroll-region and selection semantics');
+assert(cssText.includes('.pc-v6-operation-node')&&cssText.includes('.pc-v6-operation-link.is-hostile-claim')&&cssText.includes('.pc-v6-operation-plot__no-route'),'local schematic visual grammars exist in CSS');
 assert(runtimeText.includes('state.pending')&&runtimeText.includes('pc-v6-route-error'),'route requests queue during transitions and failures have a recovery surface');
 assert(runtimeText.includes('seen&&!forced?2600:6200'),'repeat-session boot still has a deliberate loading interval');
 

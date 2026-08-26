@@ -40,6 +40,17 @@ const lineStyle=({from,to})=>{
   return `left:${from[0]}%;top:${from[1]}%;width:${length}%;transform:rotate(${angle}deg)`;
 };
 
+const operationLinkStyle=(link,nodes)=>{
+  const from=nodes.get(link.from);
+  const to=nodes.get(link.to);
+  if(!from||!to) return '';
+  const dx=to.x-from.x;
+  const dy=(to.y-from.y)*.5;
+  const length=Math.sqrt(dx*dx+dy*dy);
+  const angle=Math.atan2(dy,dx)*180/Math.PI;
+  return `left:${from.x}%;top:${from.y}%;width:${length}%;transform:rotate(${angle}deg)`;
+};
+
 const regionCard=item=>`<button type="button" data-map-region="${esc(item.id)}">
   <span>${esc(item.code)} / ${esc(item.basis)}</span><b>${esc(item.name)}</b><small>${esc(item.status)}</small>
 </button>`;
@@ -77,6 +88,31 @@ const regionInfo=item=>`<div class="pc-v6-map-intel__code"><span>${esc(item.code
   <p>${esc(item.copy)}</p>
   <div class="pc-v6-map-intel__warning">거리·방위·도착 시간 산출 금지</div>`;
 
+const operationSchematic=operation=>{
+  const schematic=operation.schematic;
+  if(!schematic) return '';
+  const nodes=new Map(schematic.nodes.map(node=>[node.id,node]));
+  return `<section class="pc-v6-operation-schematic" aria-labelledby="operationPlotTitle-${esc(operation.id)}">
+    <header>
+      <div><span>LOCAL EVIDENCE SCHEMATIC</span><h3 id="operationPlotTitle-${esc(operation.id)}">${esc(schematic.label)}</h3></div>
+      <dl aria-label="도면 좌표 규칙"><div><dt>COORDINATE</dt><dd>${esc(schematic.coordinateType)}</dd></div><div><dt>NAVIGATION</dt><dd>${esc(schematic.navigation)}</dd></div><div><dt>GEOGRAPHY</dt><dd>${schematic.geo===null?'NULL':'WITHHELD'}</dd></div></dl>
+    </header>
+    <p class="pc-v6-operation-schematic__warning">${esc(schematic.warning)}</p>
+    <div class="pc-v6-operation-plot-scroll" tabindex="0" role="region" aria-label="${esc(operation.title)} 국소 증거 도면. 가로로 스크롤할 수 있습니다.">
+      <div class="pc-v6-operation-plot is-${esc(operation.id)}">
+        <div class="pc-v6-operation-plot__grid" aria-hidden="true"></div>
+        ${schematic.zones.map(zone=>`<span class="pc-v6-operation-zone is-${esc(zone.kind)}" style="left:${zone.x}%;top:${zone.y}%;width:${zone.w}%;height:${zone.h}%" aria-hidden="true"><b>${esc(zone.label)}</b></span>`).join('')}
+        ${schematic.links.map(link=>`<span class="pc-v6-operation-link is-${esc(link.kind)}" style="${operationLinkStyle(link,nodes)}" title="${esc(link.label)}" aria-hidden="true"><i></i></span>`).join('')}
+        ${schematic.nodes.map((node,index)=>`<button type="button" class="pc-v6-operation-node${node.step===0?' is-selected':''}" data-operation-plot-node="${esc(node.id)}" data-operation-plot-step="${node.step}" data-evidence="${esc(claimToken(node.evidence))}" style="left:${node.x}%;top:${node.y}%" aria-pressed="${node.step===0?'true':'false'}" aria-label="${esc(node.code)} ${esc(node.label)}. ${esc(node.evidence)}. ${String(node.step+1).padStart(2,'0')}단계 열기">
+          <i aria-hidden="true"><span>${String(index+1).padStart(2,'0')}</span></i><b>${esc(node.code)}</b><small>${esc(node.label)}</small><em>${esc(node.evidence)}</em>
+        </button>`).join('')}
+        ${operation.id==='three-night'?'<span class="pc-v6-operation-plot__no-route" aria-hidden="true">NO LINK<br>NO ROUTE<br>NO COMMON CAUSE</span>':''}
+      </div>
+    </div>
+    <footer><span>NODE SELECT</span><p>도면의 표식을 누르면 대응하는 기록 단계가 열린다. 표식 사이의 화면상 간격은 거리나 소요 시간이 아니다.</p></footer>
+  </section>`;
+};
+
 const operationPanel=operation=>`<article class="pc-v6-operation-copy" data-operation-copy="${esc(operation.id)}">
   <header>
     <div><span>${esc(operation.code)}</span><small>${esc(operation.date)}</small></div>
@@ -87,6 +123,7 @@ const operationPanel=operation=>`<article class="pc-v6-operation-copy" data-oper
     <div class="pc-v6-operation-copy__stamp">NON-NAV<br>DISPLAY</div>
   </div>
   ${claimGrid(MAP_CLAIMS.operations[operation.id],'pc-v6-operation-claims')}
+  ${operationSchematic(operation)}
   <div class="pc-v6-operation-copy__grid">
     <div class="pc-v6-operation-track" aria-label="${esc(operation.title)} 단계">
       <ol>${operation.steps.map((step,index)=>`<li>
@@ -250,6 +287,11 @@ export function mount(root,{detail='' }={}){
       panel.querySelectorAll('[data-operation-step]').forEach(button=>{
         if(Number(button.dataset.operationStep)===stepIndex) button.setAttribute('aria-current','step'); else button.removeAttribute('aria-current');
       });
+      panel.querySelectorAll('[data-operation-plot-node]').forEach(button=>{
+        const selected=Number(button.dataset.operationPlotStep)===stepIndex;
+        button.setAttribute('aria-pressed',String(selected));
+        button.classList.toggle('is-selected',selected);
+      });
       panel.querySelector('[data-operation-time]').textContent=step.time;
       panel.querySelector('[data-operation-title]').textContent=step.title;
       panel.querySelector('[data-operation-copy-text]').textContent=step.copy;
@@ -260,6 +302,7 @@ export function mount(root,{detail='' }={}){
       announce(`${operation.title} ${step.time}, ${step.title}. ${step.copy}`);
     };
     panel.querySelectorAll('[data-operation-step]').forEach(button=>button.addEventListener('click',()=>applyStep(Number(button.dataset.operationStep))));
+    panel.querySelectorAll('[data-operation-plot-node]').forEach(button=>button.addEventListener('click',()=>applyStep(Number(button.dataset.operationPlotStep))));
     panel.querySelector('[data-operation-prev]')?.addEventListener('click',()=>applyStep(stepIndex-1));
     panel.querySelector('[data-operation-next]')?.addEventListener('click',()=>applyStep(stepIndex+1));
   };

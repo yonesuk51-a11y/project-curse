@@ -68,6 +68,20 @@ export const MAP_CONNECTIONS=Object.freeze([
 export const MAP_OPERATIONS=Object.freeze([
   {
     id:'immortality',code:'OP-IMMORTALITY / 860201',title:'피의 호수 투입 기록',presentation:'OPERATION COPY',openLabel:'보호 기록 작전 사본 열기',date:'1986.02.01 / 1986.07.25',state:'PROTECTED-SOURCE ALIGNED / DATE DISPUTED',basis:'Immortality_860201 보호 원문 / N.H.C.-86 표기 판정 보류',confidence:'시간 기록 직접 확인 / 날짜 관계·위치·N.H.C 표기 성격·조직 관여 미확정',theatre:'독일 본토 [검열] 지역',lossLabel:'RECORD GAP',loss:'생환·구조 결과가 기록되지 않은 채 COMPLETE 처리',factionLabel:'RELATED MARKS / NONE CONFIRMED',warning:'기호 위치와 단계 간격은 실제 거리나 이동 시간을 뜻하지 않는다.',factions:[],
+    schematic:{coordinateType:'DISPLAY_PLOT',geo:null,navigation:'PROHIBITED',label:'RECORD ORDER ONLY',warning:'보호 원문에 남은 기록 순서만 표시한다. 거리·방향·이동 경로는 복원하지 않는다.',zones:[{id:'redacted-field',label:'LOCATION / REDACTED',x:8,y:18,w:84,h:64,kind:'redacted'}],nodes:[
+      {id:'imm-deploy',code:'16:10',label:'투입 기록',x:14,y:69,step:0,evidence:'DIRECT RECORD'},
+      {id:'imm-tent',code:'17:02',label:'텐트 흔적',x:31,y:47,step:1,evidence:'DIRECT RECORD'},
+      {id:'imm-river',code:'17:41',label:'붉은 수역',x:47,y:62,step:1,evidence:'DIRECT RECORD'},
+      {id:'imm-ipd',code:'18:06',label:'예거트 이상',x:61,y:36,step:2,evidence:'DIRECT RECORD'},
+      {id:'imm-unit4',code:'18:42',label:'유닛4 두절',x:76,y:49,step:2,evidence:'DIRECT RECORD'},
+      {id:'imm-last',code:'18:44–19:00',label:'마지막 송신',x:88,y:28,step:3,evidence:'DIRECT RECORD'}
+    ],links:[
+      {from:'imm-deploy',to:'imm-tent',kind:'record-order',label:'기록 순서'},
+      {from:'imm-tent',to:'imm-river',kind:'record-order',label:'기록 순서'},
+      {from:'imm-river',to:'imm-ipd',kind:'record-order',label:'기록 순서'},
+      {from:'imm-ipd',to:'imm-unit4',kind:'record-order',label:'기록 순서'},
+      {from:'imm-unit4',to:'imm-last',kind:'record-order',label:'기록 순서'}
+    ]},
     steps:[
       {time:'16:10–16:46',title:'투입과 전진',copy:'3일치 보급, 지원팀 대기, 안개·입자·미확인 물체 보고.',basis:'직접 기록'},
       {time:'17:02–17:58',title:'텐트와 붉은 수역',copy:'민간 흔적과 혈액성 수역을 확인했지만 철수 명령은 남지 않았다.',basis:'직접 기록'},
@@ -77,6 +91,21 @@ export const MAP_OPERATIONS=Object.freeze([
   },
   {
     id:'three-night',code:'OBS-2042 / 61:01',title:'삼야 무응답 동시 관측',presentation:'SYNCHRONY EVIDENCE COPY',openLabel:'동시성 증거 대조 열기',date:'2042.10.28–10.31',state:'SIMULTANEOUS / CAUSE UNRESOLVED',basis:'대흑림 성채 6·데드 존 검문 4 현장 관측',confidence:'동시성 확인 / 시간대 보정·연결 관계 미확정',theatre:'대흑림·데드 존 독립 관측 군집',lossLabel:'RECOVERY STATUS',loss:'후속대 귀환 기록 없음 / 실종과 사망 판정 보류',factionLabel:'RELATED MARKS / NONE CONFIRMED',warning:'열 점 사이에 물리 경로·포털·단일 주체가 있었다고 해석하지 않는다.',factions:[],
+    schematic:{coordinateType:'DISPLAY_PLOT',geo:null,navigation:'PROHIBITED',label:'TEMPORAL CLUSTERS / NO ROUTE',warning:'두 군집은 같은 시간창의 관측 묶음일 뿐이다. 군집 내부와 대륙 사이 모두 연결 관계를 확정하지 않는다.',zones:[
+      {id:'gbf-cluster',label:'GREAT BLACK FOREST / 06',x:6,y:15,w:41,h:70,kind:'forest'},
+      {id:'dz-cluster',label:'DEAD ZONE / 04',x:55,y:15,w:39,h:70,kind:'deadzone'}
+    ],nodes:[
+      {id:'tn-gbf-01',code:'GBF-F01',label:'성채 관측 01',x:14,y:35,step:0,evidence:'OBSERVED',group:'gbf'},
+      {id:'tn-gbf-02',code:'GBF-F02',label:'성채 관측 02',x:27,y:27,step:0,evidence:'OBSERVED',group:'gbf'},
+      {id:'tn-gbf-03',code:'GBF-F03',label:'성채 관측 03',x:39,y:40,step:1,evidence:'OBSERVED',group:'gbf'},
+      {id:'tn-gbf-04',code:'GBF-F04',label:'성채 관측 04',x:15,y:61,step:2,evidence:'NO RETURN RECORD',group:'gbf'},
+      {id:'tn-gbf-05',code:'GBF-F05',label:'성채 관측 05',x:29,y:71,step:2,evidence:'NO RETURN RECORD',group:'gbf'},
+      {id:'tn-gbf-06',code:'GBF-F06',label:'성채 관측 06',x:41,y:61,step:3,evidence:'LATER CLASSIFICATION',group:'gbf'},
+      {id:'tn-dz-01',code:'DZ-P01',label:'검문 관측 01',x:63,y:32,step:0,evidence:'OBSERVED',group:'dz'},
+      {id:'tn-dz-02',code:'DZ-P02',label:'검문 관측 02',x:80,y:28,step:1,evidence:'OBSERVED',group:'dz'},
+      {id:'tn-dz-03',code:'DZ-P03',label:'검문 관측 03',x:70,y:65,step:2,evidence:'NO RETURN RECORD',group:'dz'},
+      {id:'tn-dz-04',code:'DZ-P04',label:'검문 관측 04',x:87,y:59,step:3,evidence:'LATER CLASSIFICATION',group:'dz'}
+    ],links:[]},
     steps:[
       {time:'START / TZ UNRESOLVED',title:'독립 신호 손실',copy:'서로 먼 열 관측점이 같은 시간창 안에서 응답을 멈춘다.',basis:'현장 관측'},
       {time:'WITHIN WINDOW / ORDER UNRESOLVED',title:'지역 규칙 충돌',copy:'성채와 검문소의 시계·호출명이 서로 다르게 남는다.',basis:'복수 기록'},
@@ -86,6 +115,16 @@ export const MAP_OPERATIONS=Object.freeze([
   },
   {
     id:'sixth-line',code:'NF-06 / LINE STATE',title:'북부 제6차 차단선',presentation:'FRONTLINE ANALYSIS COPY',openLabel:'전선 분석 사본 열기',date:'2026–2042',state:'ACTIVE FRONT / RECOVERY UNPROVEN',basis:'복수 감청과 전선 보고의 재구성',confidence:'교전 추세 중간 / 점유지 상태 낮음',theatre:'북부전선·일본 계측권',lossLabel:'OPERATING COST / RECONSTRUCTED',loss:'회복 불가능 구역을 유지하기 위해 손실 인원 집계를 중단',factionLabel:'ANALYTICALLY ASSOCIATED MARKS',warning:'전진은 영토 회복이나 민간 생환을 뜻하지 않는다.',factions:[{id:'nhc',relation:'FIELD-ATTESTED'},{id:'uac',relation:'COMPACT SUPPORT'},{id:'sid',relation:'SIGNAL ASSESSMENT'}],
+    schematic:{coordinateType:'DISPLAY_PLOT',geo:null,navigation:'PROHIBITED',label:'ANALYTIC CHAIN / NOT A FRONT MAP',warning:'기관별 작동 순서를 분석한 도식이다. 전선의 위치·폭·전진 방향을 나타내지 않는다.',zones:[{id:'attrition-band',label:'ATTRITION THRESHOLD / UNKNOWN',x:8,y:22,w:84,h:56,kind:'front'}],nodes:[
+      {id:'l6-measure',code:'MEASURE',label:'계측',x:15,y:49,step:0,evidence:'INSTITUTIONAL DOCTRINE'},
+      {id:'l6-hold',code:'HOLD',label:'차단',x:38,y:34,step:1,evidence:'FRONT REPORT'},
+      {id:'l6-seal',code:'SEAL',label:'봉쇄',x:62,y:58,step:2,evidence:'COMPACT PROCEDURE'},
+      {id:'l6-abandon',code:'ABANDON',label:'철수',x:86,y:38,step:3,evidence:'RECONSTRUCTED'}
+    ],links:[
+      {from:'l6-measure',to:'l6-hold',kind:'analysis',label:'분석 순서'},
+      {from:'l6-hold',to:'l6-seal',kind:'analysis',label:'분석 순서'},
+      {from:'l6-seal',to:'l6-abandon',kind:'analysis',label:'분석 순서'}
+    ]},
     steps:[
       {time:'MEASURE',title:'계측',copy:'S.I.D가 경로·신호 정합성을 판정한다.',basis:'기관 교리'},
       {time:'HOLD',title:'차단',copy:'N.H.C가 짧은 회수 회랑을 열고 병력을 소모한다.',basis:'전선 보고'},
@@ -95,6 +134,16 @@ export const MAP_OPERATIONS=Object.freeze([
   },
   {
     id:'broken-crown',code:'SC-B / BROKEN CROWN',title:'남부 동원 문서',presentation:'HOSTILE DOCUMENT RECONSTRUCTION',openLabel:'적대 문서 재구성 열기',date:'시점 미확정',state:'HOSTILE INTELLIGENCE',basis:'남부 세력 내부 문서로 주장되는 파편',confidence:'낮음 / 실행 증거 부족',theatre:'대흑림 해안·복수 도시 주장',lossLabel:'CLAIMED OBJECTIVE / PROJECTED LOSS',loss:'도시 교란으로 적 전력과 구조 자원을 분산시키려는 계획',factionLabel:'MARKS NAMED IN HOSTILE DOCUMENT',warning:'계획의 존재·규모·지휘권 모두 V6 정사 확정 사항이 아니다.',factions:[{id:'southern-blood',relation:'NAMED'},{id:'blood',relation:'RELATION UNRESOLVED'},{id:'ushinoda',relation:'RELATION UNRESOLVED'}],
+    schematic:{coordinateType:'DISPLAY_PLOT',geo:null,navigation:'PROHIBITED',label:'HOSTILE CLAIM / EXECUTION UNCONFIRMED',warning:'적대 문서가 주장하는 실행 논리를 옮긴 것이다. 실제 발생·규모·지휘권은 확인되지 않았다.',zones:[{id:'hostile-sheet',label:'INTERCEPTED FRAGMENT / AUTHENTICITY LOW',x:7,y:18,w:86,h:64,kind:'hostile'}],nodes:[
+      {id:'bc-cell',code:'CELL',label:'침투 주장',x:15,y:58,step:0,evidence:'HOSTILE CLAIM'},
+      {id:'bc-signal',code:'SIGNAL',label:'소환 주장',x:39,y:34,step:1,evidence:'HOSTILE CLAIM'},
+      {id:'bc-divert',code:'DIVERT',label:'분산 추정',x:64,y:58,step:2,evidence:'ANALYTIC INFERENCE'},
+      {id:'bc-purge',code:'PURGE',label:'처형 주장',x:87,y:31,step:3,evidence:'HOSTILE CLAIM'}
+    ],links:[
+      {from:'bc-cell',to:'bc-signal',kind:'hostile-claim',label:'문서 주장'},
+      {from:'bc-signal',to:'bc-divert',kind:'hostile-claim',label:'문서 주장'},
+      {from:'bc-divert',to:'bc-purge',kind:'hostile-claim',label:'문서 주장'}
+    ]},
     steps:[
       {time:'CELL',title:'특수부대 침투',copy:'성직자·경비 조직에 공작원이 들어간다는 주장.',basis:'적대 세력 정보'},
       {time:'SIGNAL',title:'소환 신호',copy:'복수 도시에서 비슷한 의식 신호를 동시에 발생시킨다는 계획.',basis:'적대 세력 정보'},
@@ -103,7 +152,17 @@ export const MAP_OPERATIONS=Object.freeze([
     ]
   },
   {
-    id:'deadzone-return',code:'DZ-R / RETURN LEDGER',title:'데드 존 귀환 대조',presentation:'TESTIMONY COMPARISON',openLabel:'귀환 증언 대조 열기',date:'2008–2042',state:'TESTIMONY-BASED ROUTE',basis:'검문 기록·귀환자 증언·혈교 지부 문서',confidence:'귀환 사례 확인 / 동일성 판정 불가',theatre:'데드 존 검문 군집',lossLabel:'RETURN COST / TESTIMONY',loss:'귀환자는 피·관계 기록·장기 채무를 남기고도 같은 사람임을 보증받지 못함',factionLabel:'ASSOCIATED MARKS / MIXED EVIDENCE',warning:'화면의 연결은 증언 대조 순서이며 실제 순례길이 아니다.',factions:[{id:'deadzone-blood',relation:'FIELD-ATTESTED'},{id:'cpd',relation:'ANALYTICAL'}],
+    id:'deadzone-return',code:'DZ-R / RETURN LEDGER',title:'데드 존 귀환 대조',presentation:'TESTIMONY COMPARISON',openLabel:'귀환 증언 대조 열기',date:'2008–2042',state:'TESTIMONY COMPARISON / ROUTE UNVERIFIED',basis:'검문 기록·귀환자 증언·혈교 지부 문서',confidence:'귀환 사례 확인 / 동일성 판정 불가',theatre:'데드 존 검문 군집',lossLabel:'RETURN COST / TESTIMONY',loss:'귀환자는 피·관계 기록·장기 채무를 남기고도 같은 사람임을 보증받지 못함',factionLabel:'ASSOCIATED MARKS / MIXED EVIDENCE',warning:'화면의 연결은 증언 대조 순서이며 실제 순례길이 아니다.',factions:[{id:'deadzone-blood',relation:'FIELD-ATTESTED'},{id:'cpd',relation:'ANALYTICAL'}],
+    schematic:{coordinateType:'DISPLAY_PLOT',geo:null,navigation:'PROHIBITED',label:'TESTIMONY ORDER / NOT A PILGRIMAGE ROUTE',warning:'검문 장부와 증언을 비교하는 순서다. 실제 진입로·귀환로·안전 경로를 제공하지 않는다.',zones:[{id:'identity-gate',label:'IDENTITY VERIFICATION / FAILED BY DEFAULT',x:8,y:18,w:84,h:64,kind:'testimony'}],nodes:[
+      {id:'dz-entry',code:'ENTRY',label:'출발 등록',x:14,y:43,step:0,evidence:'CHECKPOINT LEDGER'},
+      {id:'dz-silence',code:'SILENCE',label:'기록 공백',x:39,y:63,step:1,evidence:'ABSENCE OF RECORD'},
+      {id:'dz-return-node',code:'RETURN',label:'귀환 신호',x:64,y:34,step:2,evidence:'TESTIMONY'},
+      {id:'dz-judgment',code:'JUDGMENT',label:'동일성 판정',x:87,y:57,step:3,evidence:'CHECKPOINT LEDGER'}
+    ],links:[
+      {from:'dz-entry',to:'dz-silence',kind:'testimony',label:'대조 순서'},
+      {from:'dz-silence',to:'dz-return-node',kind:'testimony',label:'대조 순서'},
+      {from:'dz-return-node',to:'dz-judgment',kind:'testimony',label:'대조 순서'}
+    ]},
     steps:[
       {time:'ENTRY',title:'출발 등록',copy:'출발 시각과 동행 관계를 여러 장부에 중복 기록한다.',basis:'검문 절차'},
       {time:'SILENCE',title:'대륙 내 무응답',copy:'내부 이동은 관측되지 않고 서로 다른 시간 기록만 돌아온다.',basis:'기록 공백'},

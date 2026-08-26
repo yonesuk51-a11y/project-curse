@@ -1,6 +1,6 @@
 # Project Curse V6 — Recovered Network Alpha
 
-상태: `6.0.0-alpha.2 / DRAFT / REFOUNDATION`
+상태: `6.0.0-alpha.3 / DRAFT / REFOUNDATION`
 
 이 폴더는 기존 공개 루트 5.52를 교체하지 않고 세계관·정보 구조·기록 연출을 다시 설계하는 독립 시제품이다. V6의 목적은 기존 설정을 자동으로 정사 승계하는 것이 아니라, 구판 자료를 출처가 붙은 레거시 자료로 봉인한 뒤 새 정사가 선택적으로 채택하도록 만드는 데 있다.
 
@@ -8,10 +8,10 @@
 
 - `#/briefing` — 2042년 현재와 손실 교리
 - `#/world` — 핵심 용어, 지역 붕괴, 능력 접속, 1975–2042 여섯 시대
-- `#/map` — 비항법 세계 상황도, 여섯 증거 레이어, 15개 접촉 목록, 다섯 사건·작전 증거 사본
+- `#/map` — 비항법 세계 상황도, 여섯 증거 레이어, 15개 접촉 목록, 다섯 사건·작전 증거 사본과 28개 상호작용 증거 표식
 - `#/map/signal:blood-lake` — 실제 좌표를 복원하지 않는 1986 피의 호수 관측점
-- `#/map/operation:immortality` — 보호 기록 시간에 정렬된 작전 사본
-- `#/map/operation:three-night` — 대륙 간 경로를 그리지 않는 삼야 무응답 동시성 대조
+- `#/map/operation:immortality` — 보호 기록 시간에 정렬된 기록 순서 도면
+- `#/map/operation:three-night` — 대륙 간 경로를 그리지 않는 6+4 독립 관측 군집 도면
 - `#/archive` — 보호 원문과 V6 재구성의 분리 게이트
 - `#/archive/Cults_871104` — 자동 재생 없는 조사형 기록 시제품
 - `#/archive/Immortality_860201` — 보호 원문 시간에 맞춘 4막 사건 재구성
