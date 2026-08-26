@@ -10,7 +10,7 @@ export function render(){
       <header><span>${esc(entry.year)}</span><small>${esc(entry.code)}</small></header>
       <h3>${esc(entry.title)}</h3>
       <p>${esc(entry.copy)}</p>
-      <footer><em>${esc(entry.state)}</em><button type="button" data-v6-intent="${esc(entry.route)}"${entry.record?` data-v6-record="${esc(entry.record)}"`:''}>기록 경로 확인</button></footer>
+      <footer><em>${esc(entry.state)}</em><button type="button" data-v6-intent="${esc(entry.route)}"${entry.record?` data-v6-record="${esc(entry.record)}"`:''}${entry.detail?` data-v6-detail="${esc(entry.detail)}"`:''}>기록 경로 확인</button></footer>
     </article>`).join('');
   const limits=WORLD_FOUNDATION.limits.map((item,index)=>`<li><span>0${index+1}</span>${esc(item)}</li>`).join('');
   const losses=WORLD_FOUNDATION.lossDoctrine.map((item,index)=>`
@@ -29,6 +29,7 @@ export function render(){
           <p>${esc(WORLD_FOUNDATION.statement)}</p>
           <div class="pc-v6-hero__actions">
             <button type="button" class="is-primary" data-v6-intent="world">새 세계의 구조</button>
+            <button type="button" data-v6-intent="map">세계 관제 열기</button>
             <button type="button" data-v6-intent="archive">보호 기록 진입</button>
           </div>
         </div>
@@ -60,6 +61,6 @@ export function render(){
 
 export function mount(root,{navigate}){
   root.querySelectorAll('[data-v6-intent]').forEach(control=>{
-    control.addEventListener('click',()=>navigate(control.dataset.v6Intent||'briefing',control.dataset.v6Record||''));
+    control.addEventListener('click',()=>navigate(control.dataset.v6Intent||'briefing',control.dataset.v6Detail||control.dataset.v6Record||''));
   });
 }

@@ -12,7 +12,7 @@ export function render(){
       </div>
     </article>`).join('');
   return `<section class="pc-v6-archive" aria-labelledby="v6ArchiveTitle">
-    <header class="pc-v6-pagehead"><div><span>ARCHIVE 02 / SOURCE GATE</span><small>ORIGINAL ≠ STAGED PLAYBACK</small></div><p>원문과 연출본을 같은 자료처럼 표시하지 않는다.</p></header>
+    <header class="pc-v6-pagehead"><div><span>ARCHIVE 03 / SOURCE GATE</span><small>ORIGINAL ≠ STAGED PLAYBACK</small></div><p>원문과 연출본을 같은 자료처럼 표시하지 않는다.</p></header>
     <div class="pc-v6-archive-intro"><span class="pc-v6-eyebrow">DOUBLE ENTRY</span><h1 id="v6ArchiveTitle">죽은 사람의 기록부터 구분한다.</h1><p>원문은 즉시 열리고, 연출은 별도의 재구성 계층에서 시작한다. 출처가 불명인 자료도 지우지는 않지만, 원본이라는 이름으로 위장하지 않는다.</p></div>
     <div class="pc-v6-record-grid">${records}</div>
     <aside class="pc-v6-source-rule"><span>SOURCE BOUNDARY</span><p>두 보호 기록의 현재 이미지·오디오·영상 자산은 출처 대조 및 라이선스 검토 상태다. V6 시제품은 기존 공개 이미지만 제한적으로 참조하며 오디오와 영상을 자동 재생하지 않는다.</p></aside>

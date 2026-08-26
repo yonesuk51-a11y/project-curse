@@ -1,6 +1,6 @@
 # Project Curse V6 세력 표식 체계
 
-문서 상태: `FORM STUDY A01 / NOT FINAL EMBLEMS`
+문서 상태: `CONTEXT STUDY A02 / 17 SYSTEMS / 51 VARIANTS / NOT FINAL EMBLEMS`
 
 ## 1. 이번 리메이크의 목표
 
@@ -8,7 +8,24 @@
 
 V6는 로고를 모두 같은 원 안에 넣는 방식이 아니라, 세력의 임무·금기·손실 방식을 하나의 중심 실루엣으로 압축한다.
 
-현재 `/v6/#/marks`의 CSS 표식 17개는 정보 구조와 실루엣을 검증하기 위한 코드 기반 형태 연구다. 최종 마스터는 정사 명칭과 교리가 확정된 뒤 별도 벡터 자산으로 제작한다.
+현재 `/v6/#/marks`의 CSS 표식 17개는 정보 구조와 실루엣을 검증하기 위한 코드 기반 형태 연구다. A02부터 각 중심형을 `seal / badge / map` 세 문맥으로 동시에 제시하고, 공식·현장 확인·감식 재구성·분석 기호를 표식 바깥 프레임으로 구분한다. 최종 마스터는 정사 명칭과 교리가 승인된 뒤 별도 벡터 자산으로 제작한다.
+
+## 1.1 A02 명칭 판정
+
+| 약어 | V6 명칭안 | 명칭 계층 |
+|---|---|---|
+| U.A.C | Unified Anomaly Compact / 통합 이상현상 협약체 | 공식 명칭안 |
+| N.H.C | Nonlinear Hazard Command / 비선형 위난사령부 | 공식 명칭안 |
+| S.I.D | Signal Integrity Directorate / 신호무결성국 | 공식 명칭안 |
+| F.H.C | Frontier Habitat Consortium / 개척거주권 컨소시엄 | 공식 명칭안 |
+| S.O.N | Severed Order Network / 단절명령망 | A02 채택 현장명 / V6 초안 |
+| P.O.H | Persons on Hold / 인계보류망 | A02 채택 분석관 지정명 / V6 초안 |
+| A.R.F | Asset Recovery Force / 자산회수대 | 애시 크루 산하 공식 초안 |
+| C.P.D | Civilian Processing Division / 민간인 선별처리부 | 애시 크루 산하 내부 공식 초안 |
+
+약어가 조직보다 먼저 등장하는 경우에는 후대 조직의 창설일을 소급하지 않는다. 1984–1986년 N.H.C는 장비 규격·소규모 현장대 호출명·후대 편집 라벨 가설을 모두 `DISPUTED`로 유지하며, `Nonlinear Hazard Classification`은 분석상 임시 풀이일 뿐이다. 1989–2004년 C.P.D는 `Civilian Protection Directive` 현장 지침으로 분리한다.
+
+명칭 상태와 표식 상태도 합치지 않는다. 예를 들어 S.O.N의 명칭은 복수 현장에서 확인됐지만 현재 중심 표식은 여전히 `FIELD-ATTESTED DRAFT`다. P.O.H의 표식은 압수 송장에서 확인된 범죄 스텐실이지만 `Persons on Hold`라는 풀네임은 분석관 지정명이다.
 
 ## 2. 마스터 규격
 
@@ -26,9 +43,9 @@ V6는 로고를 모두 같은 원 안에 넣는 방식이 아니라, 세력의 �
 
 | 변형 | 크기 | 사용처 |
 |---|---:|---|
-| `seal` | 72–128px | 문서 인장, 세력 상세 |
-| `badge` | 28–40px | 목록, 관계망, 인물 소속 |
-| `map` | 16–20px | 지도, 작전선, 군집 기호 |
+| `seal` | 72–128px | 문서 인장, 세력 상세. 내부 형태와 상태 프레임 전체 표시 |
+| `badge` | 28–40px | 목록, 관계망, 인물 소속. 제작 라벨과 미세 장식 제거 |
+| `map` | 16–20px | 지도, 작전선, 군집 기호. 중심 실루엣과 외부 판정만 유지 |
 
 ## 3. 형태 계열
 
@@ -84,14 +101,14 @@ V6는 로고를 모두 같은 원 안에 넣는 방식이 아니라, 세력의 �
 | S.O.N | 끊어진 통제환과 세 이탈로 | 열린 원+외향선 | 현장 확인 초안 |
 | P.O.H | 빈 화물칸과 절취선 | 상자+대각 절단 | 범죄 스텐실 |
 | Ash Crew | 인식표와 잔불 | 태그+불꽃 | 현장 패치 |
-| A.R.F | 삼점 회수틀과 견인점 | 삼각+상부 고리 | 명칭 미확정 |
-| C.P.D | 열린 방패와 세 분기 | 방패+통로 | 소속 미확정 |
+| A.R.F | 삼점 회수틀과 견인점 | 삼각+상부 고리 | 애시 크루 산하 공식 초안 |
+| C.P.D | 열린 방패와 세 분기 | 방패+통로 | 애시 크루 산하 내부 공식 초안 |
 | 우시노다 | 빈 중심을 공유하는 세 획 | 삼방향 회전축 | 감식 재구성 |
 | 타락교 | 비대칭 생체 가지와 성장점 | 가지+세 포자 | 감식 재구성 |
 | 혈교 | 닫힌 혈액핵과 유입축 | 방울+수평축 | 감식 재구성 |
 | 그림자교 | 어긋난 이중 그림자와 끊긴 환 | 겹친 타원 | 감식 재구성 |
 | 제1사도 | 삼권능 중첩과 선행점 | 삼중 원 | 분석 기호 |
-| 남부 혈교 | 전시 왕관과 폐쇄 혈액핵 | 왕관+방울 | 현장 확인 초안 |
+| 남부 혈교 | 뒤집힌 전시 왕관과 폐쇄 혈액핵 | 왕관+방울 | 현장 확인 초안 |
 | 데드 존 혈교 | 열린 방울과 관통 순례로 | 열린 방울+사선 | 현장 확인 초안 |
 
 ## 5. 공식 여부는 표식 밖에서 표시
@@ -155,13 +172,20 @@ V6는 로고를 모두 같은 원 안에 넣는 방식이 아니라, 세력의 �
 {
   id,
   name,
+  fullName,
   family,
   doctrineVersion,
   status: 'official | field-attested | reconstructed | analyst',
+  nameStatus,
+  markStatus,
   confidence,
   source,
   motif,
-  variants: { seal, badge, map },
+  variants: ['seal', 'badge', 'map'],
+  nameLedger: [{ name, role }],
+  earlyLabel,
+  precursor,
+  publicName,
   monochrome,
   accessibleName,
   supersedes,

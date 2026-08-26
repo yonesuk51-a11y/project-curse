@@ -1,7 +1,7 @@
 export const V6_BUILD=Object.freeze({
-  version:'6.0.0-alpha.1',
+  version:'6.0.0-alpha.2',
   label:'Recovered World',
-  date:'2026-08-26',
+  date:'2026-08-27',
   canonState:'DRAFT / REFOUNDATION'
 });
 
@@ -11,18 +11,18 @@ export const WORLD_FOUNDATION=Object.freeze({
   entrances:[
     {
       year:'1986',code:'BLOOD LAKE / FIRST EXPOSURE',title:'불멸을 향해',
-      copy:'북해권 현장팀이 붉은 호수로 향했다. 구조대는 대기했지만 투입되지 않았고, 시스템은 생환자 없이 작전을 완료로 기록했다.',
+      copy:'독일 본토의 [검열] 지역에 투입된 현장팀이 붉은 호수로 향했다. 공개 좌표와 구조 투입 기록은 남아 있지 않으며, 시스템은 생환 확인 없이 작전을 완료로 기록했다.',
       route:'archive',record:'Immortality_860201',state:'보호 원문 / 현장 관측'
     },
     {
       year:'2008',code:'CONTINENTAL SILENCE',title:'대륙 무응답 선언',
       copy:'북아메리카의 연속정부는 구조 정원을 채우기도 전에 철수했다. 남은 지도와 귀환자의 시간은 서로 다른 사망자 명단을 기록했다.',
-      route:'world',state:'복수 기록 일치 / 원인 미확정'
+      route:'map',detail:'operation:deadzone-return',state:'복수 기록 일치 / 원인 미확정'
     },
     {
       year:'2042',code:'THREE NIGHT SILENCE',title:'삼야 무응답',
       copy:'대흑림 성채 여섯 곳과 데드 존 검문소 네 곳이 61시간 1분 동안 동시에 침묵했다. 실종자를 찾으러 간 후속대도 돌아오지 않았다.',
-      route:'world',state:'현장 관측 / 연결 관계 미확정'
+      route:'map',detail:'operation:three-night',state:'현장 관측 / 연결 관계 미확정'
     }
   ],
   limits:[
@@ -129,21 +129,51 @@ export const IMMORTALITY_ACTS=Object.freeze([
 ]);
 
 export const FACTION_MARKS=Object.freeze([
-  {id:'uac',group:'기관',code:'U.A.C',name:'초국가 봉쇄 조정망',motif:'이중 격리환과 네 접근축',state:'V6 명칭 검토'},
-  {id:'nhc',group:'기관',code:'N.H.C',name:'고위험 현장 대응조직',motif:'방어축과 열린 철수 회랑',state:'V6 역할 재정립'},
-  {id:'sid',group:'기관',code:'S.I.D',name:'특수 조사·감청 조직',motif:'어긋난 이중 렌즈와 증거점',state:'영문명 결정 대기'},
-  {id:'fhc',group:'기업',code:'F.H.C',name:'연구·기술 복합기업',motif:'육각 공정틀과 소유의 렌즈',state:'V6 교리 재작성'},
-  {id:'amarion',group:'기업',code:'AMARION',name:'초기 공간 연구기업',motif:'세 좌표와 어긋난 중심축',state:'역사 계층'},
-  {id:'son',group:'이탈',code:'S.O.N',name:'분산형 반통제 연합',motif:'파손된 환과 외향 절단선',state:'호출명 검토'},
-  {id:'poh',group:'이탈',code:'P.O.H',name:'도시 물류·구금 범죄망',motif:'빈 화물칸과 절취선',state:'공식 휘장 아님'},
-  {id:'ashcrew',group:'현장',code:'ASH',name:'리버스 사후 대응조직',motif:'인식표와 꺼지지 않은 잔불',state:'현장 패치'},
-  {id:'arf',group:'현장',code:'A.R.F',name:'오염물 회수조직',motif:'삼각 회수틀과 견인점',state:'영문명 결정 대기'},
-  {id:'cpd',group:'현장',code:'C.P.D',name:'민간 분리·대피조직',motif:'열린 방패와 세 분기',state:'법적 소속 미확정'},
-  {id:'ushinoda',group:'교단',code:'USHINODA',name:'우시노다 세 파벌',motif:'빈 중심을 둘러싼 세 권능',state:'감식 재구성'},
-  {id:'corruption',group:'교단',code:'CORRUPTION',name:'타락교',motif:'비대칭 생체 가지와 성장점',state:'지역 변형 다수'},
-  {id:'blood',group:'교단',code:'BLOOD',name:'혈교 중앙 계통',motif:'닫힌 혈액핵과 유입축',state:'계보 결정 대기'},
-  {id:'shadow',group:'교단',code:'SHADOW',name:'그림자교',motif:'어긋난 두 축과 끊긴 관측환',state:'오인 표식 다수'},
-  {id:'apostle',group:'예외',code:'APOSTLE I',name:'첫 번째 사도 분석표상',motif:'삼권능 중첩과 선행점',state:'공식 문양 아님'},
-  {id:'southern-blood',group:'지역',code:'SOUTH BLOOD',name:'남부 혈교',motif:'뒤집힌 왕관과 폐쇄 혈액핵',state:'우시노다 계승 미확정'},
-  {id:'deadzone-blood',group:'지역',code:'DZ BLOOD',name:'데드 존 혈교',motif:'열린 혈액 방울과 관통 순례로',state:'2016년 결별 이후'}
+  {id:'uac',group:'기관',family:'institution',code:'U.A.C',fullName:'Unified Anomaly Compact',name:'통합 이상현상 협약체',nameStatus:'A02 ADOPTED NAME / V6 DRAFT',motif:'이중 격리환과 네 접근문',status:'official',markStatus:'OFFICIAL DRAFT',confidence:'1993 공개 협약명',doctrine:'공통 기록 형식과 접근권을 지키기 위해 등록 밖의 사람을 버린다.',cost:'회랑 밖 민간인과 승인되지 않은 귀환자',nameLedger:[{name:'United Nations Anomaly Containment',role:'DEPRECATED'},{name:'Urban Anomaly Containment',role:'LEGACY SEARCH TERM'},{name:'Urban Anomaly 봉쇄',role:'LEGACY SEARCH TERM'}],variants:['seal','badge','map']},
+  {id:'nhc',group:'기관',family:'institution',code:'N.H.C',fullName:'Nonlinear Hazard Command',name:'비선형 위난사령부',nameStatus:'A02 ADOPTED NAME / V6 DRAFT',motif:'수직 방어축과 열린 철수 회랑',status:'official',markStatus:'OFFICIAL DRAFT',confidence:'1993 정식화 / 2001 독립',doctrine:'차단선 뒤의 인구와 작전 병력을 지키기 위해 회수 비용이 큰 팀을 포기한다.',cost:'현장대와 등록되지 않은 잔류민',earlyLabel:{fullName:'Nonlinear Hazard Classification',name:'비선형 위난 분류규격',period:'1984–1986',kind:'PROVISIONAL EXPANSION / EQUIPMENT STANDARD OR LATER EDITORIAL LABEL',confidence:'DISPUTED'},nameLedger:[{name:'National Hazard Control',role:'LEGACY / DEPRECATED'}],variants:['seal','badge','map']},
+  {id:'sid',group:'기관',family:'institution',code:'S.I.D',fullName:'Signal Integrity Directorate',name:'신호무결성국',nameStatus:'A02 ADOPTED NAME / V6 DRAFT',motif:'어긋난 이중 렌즈와 단일 증거점',status:'official',markStatus:'OFFICIAL DRAFT',confidence:'1993 설치 / 2001 독립',doctrine:'도시 기록의 정합성을 지키기 위해 기억과 관계가 어긋난 시민을 조사한다.',cost:'오탐지 대상과 내부 정보원',nameLedger:[{name:'Special Investigation Department',role:'1993–2001 HISTORICAL OR REGIONAL COVER'}],variants:['seal','badge','map']},
+  {id:'fhc',group:'기업',family:'institution',code:'F.H.C',fullName:'Frontier Habitat Consortium',name:'개척거주권 컨소시엄',nameStatus:'A02 ADOPTED NAME / V6 DRAFT',motif:'육각 공정틀과 표본 조리개',status:'official',markStatus:'OFFICIAL DRAFT',confidence:'1982 아마리온 계보 승계',doctrine:'생존 가능한 거주 규격을 독점하기 위해 접속자와 시설도시를 소유한다.',cost:'실험체·하청 현장대·시설 주변 주민',nameLedger:[{name:'Foremost Hitech Cooperation',role:'LEGACY PROMOTIONAL TRANSLATION'}],variants:['seal','badge','map']},
+  {id:'amarion',group:'기업',family:'network',code:'AMARION',fullName:'Amarion',name:'아마리온',nameStatus:'FIELD-ATTESTED NAME / LEGAL NAME UNRESOLVED',motif:'불가능 삼각 좌표와 어긋난 중심축',status:'reconstructed',markStatus:'HISTORICAL RECONSTRUCTION',confidence:'1975–1982 파편 기록',doctrine:'불가능 좌표를 산업 규격으로 만들었고 책임 자료보다 연구 계보를 오래 남겼다.',cost:'초기 시설 인원과 후대 연구자',descriptor:'초기 공간 연구기업',nameLedger:[],variants:['seal','badge','map']},
+  {id:'son',group:'이탈',family:'network',code:'S.O.N',fullName:'Severed Order Network',name:'단절명령망',nameStatus:'FIELD-ATTESTED NAME / V6 DRAFT',motif:'끊어진 통제환과 세 이탈로',status:'field-attested',markStatus:'FIELD-ATTESTED DRAFT',confidence:'복수 현장 호출 일치',doctrine:'중앙 명령에서 탈주한 경로를 지키지만 말단 보호 의무는 보장하지 않는다.',cost:'은닉망 말단과 정보가 팔린 피난민',nameLedger:[{name:'Syndicate',role:'FIELD CALLSIGN'},{name:'Shadow Of Nemesis',role:'LEGACY PROPAGANDA NAME'}],variants:['seal','badge','map']},
+  {id:'poh',group:'이탈',family:'network',code:'P.O.H',fullName:'Persons on Hold',name:'인계보류망',nameStatus:'ANALYST-ASSIGNED NAME / V6 DRAFT',motif:'빈 화물칸과 절취선',status:'field-attested',markStatus:'CRIMINAL STENCIL / FIELD-ATTESTED',confidence:'압수 송장 표식 반복 확인 / 명칭은 분석관 지정',doctrine:'사람과 오염물을 인계 전 상태로 묶어 이름 대신 화물번호로 거래한다.',cost:'피난민·납치자·채무 현장대',nameLedger:[{name:'Power Of Haimun',role:'DISPUTED LEGACY EXPANSION'}],variants:['seal','badge','map']},
+  {id:'ashcrew',group:'현장',family:'field',code:'ASH',fullName:'Ash Crew',name:'애시 크루',nameStatus:'FIELD-ATTESTED NAME',motif:'인식표와 꺼지지 않은 잔불',status:'field-attested',markStatus:'FIELD PATCH',confidence:'반복 회수 패치 확인',doctrine:'죽은 사람의 이름과 다음 작전의 증거를 회수한다.',cost:'회수대와 신원 확인을 기다리는 유족',nameLedger:[{name:'리버스 사후 대응조직',role:'LEGACY DESCRIPTOR'}],variants:['seal','badge','map']},
+  {id:'arf',group:'현장',family:'field',code:'A.R.F',fullName:'Asset Recovery Force',name:'자산회수대',nameStatus:'A02 ADOPTED SUBUNIT NAME / V6 DRAFT',motif:'삼점 회수틀과 상부 견인점',status:'official',markStatus:'OFFICIAL SUBUNIT DRAFT',confidence:'2005 애시 크루 산하 편제',doctrine:'희귀 표본과 장비를 사람보다 먼저 회수한다.',cost:'견인대와 회수 경로 주민',nameLedger:[{name:'Anomaly Recovery Force',role:'LEGACY ROLE TRANSLATION'}],variants:['seal','badge','map']},
+  {id:'cpd',group:'현장',family:'field',code:'C.P.D',fullName:'Civilian Processing Division',name:'민간인 선별처리부',nameStatus:'A02 ADOPTED INTERNAL NAME / V6 DRAFT',motif:'열린 방패와 세 분기',status:'official',markStatus:'OFFICIAL INTERNAL DRAFT',confidence:'2005 애시 크루 산하 편제',doctrine:'제한된 피난 정원을 유지하기 위해 가족과 동행자를 승인·격리·인계로 나눈다.',cost:'분리된 가족과 검문 인력',publicName:{fullName:'Civilian Protection Division',name:'민간 보호부',role:'PUBLIC COVER'},precursor:{fullName:'Civilian Protection Directive',name:'민간 보호·분리 지침',period:'1989–2004',kind:'FIELD PROCEDURE / NOT AN ORGANIZATION'},nameLedger:[],variants:['seal','badge','map']},
+  {id:'ushinoda',group:'교단',family:'cult',code:'USHINODA',fullName:'Ushinoda Common Lineage',fullNameStatus:'ANALYST TRANSLATION',name:'우시노다 공통계통',nameStatus:'RECONSTRUCTED COLLECTIVE NAME',motif:'빈 중심을 공유하는 세 획',status:'reconstructed',markStatus:'RECONSTRUCTED',confidence:'종파 존재 확정 / 중앙지휘 미확정',doctrine:'타락·혈액·그림자 의식을 서로 호환되는 구원으로 가르친다.',cost:'신자의 몸·이름·관계',nameLedger:[{name:'우시노다교',role:'LEGACY COLLECTIVE NAME'}],variants:['seal','badge','map']},
+  {id:'corruption',group:'교단',family:'cult',code:'CORRUPTION',fullName:'Corruption Path',fullNameStatus:'ANALYST TRANSLATION',name:'타락교',nameStatus:'FIELD-RECONSTRUCTED NAME',motif:'비대칭 생체 가지와 성장점',status:'reconstructed',markStatus:'FIELD RECONSTRUCTION',confidence:'지역 변형 다수',doctrine:'고정된 몸과 자아를 결함으로 보고 계속 덮어쓴다.',cost:'원래 몸과 행동의 자율성',nameLedger:[{name:'Corruption Cult',role:'LEGACY TRANSLATION'}],variants:['seal','badge','map']},
+  {id:'blood',group:'교단',family:'cult',code:'BLOOD',fullName:'Blood Lineage',fullNameStatus:'ANALYST TRANSLATION',name:'혈교 중앙 계통',nameStatus:'RECONSTRUCTED COLLECTIVE NAME',motif:'닫힌 혈액핵과 유입축',status:'reconstructed',markStatus:'RECONSTRUCTED',confidence:'중앙 계보 판정 대기',doctrine:'피를 기억·통로·소유를 저장하는 그릇으로 운용한다.',cost:'몸의 소유권과 혈연 기억',nameLedger:[{name:'Blood Cult',role:'LEGACY TRANSLATION'}],variants:['seal','badge','map']},
+  {id:'shadow',group:'교단',family:'cult',code:'SHADOW',fullName:'Shadow Path',fullNameStatus:'ANALYST TRANSLATION',name:'그림자교',nameStatus:'RECONSTRUCTED COLLECTIVE NAME',motif:'어긋난 이중 그림자와 끊긴 관측환',status:'reconstructed',markStatus:'RECONSTRUCTED',confidence:'오인 표식 다수',doctrine:'관측되지 않은 빈자리를 침투와 생존의 통로로 만든다.',cost:'기억에서의 자리와 인격 경계',nameLedger:[{name:'Shadow Cult',role:'LEGACY TRANSLATION'}],variants:['seal','badge','map']},
+  {id:'apostle',group:'예외',family:'analysis',code:'APOSTLE I',fullName:'First Apostle Analysis Glyph',fullNameStatus:'ANALYST TRANSLATION',name:'제1사도 분석 표상',nameStatus:'ANALYST-ASSIGNED GLYPH',motif:'삼권능 중첩과 선행점',status:'analyst',markStatus:'ANALYST GLYPH',confidence:'세력 아님 / 공식 문양 아님',doctrine:'세 권능 흔적이 한 개체에 겹친 사례를 표시하는 분석 기호다.',cost:'세력 통제권 표기로 사용 금지',nameLedger:[{name:'첫 번째 사도',role:'LEGACY SUBJECT LABEL'}],variants:['seal','badge','map']},
+  {id:'southern-blood',group:'지역',family:'cult',code:'SOUTH BLOOD',fullName:'Southern Blood Lineage',fullNameStatus:'ANALYST TRANSLATION',name:'남부 혈교',nameStatus:'FIELD-ATTESTED REGIONAL NAME',motif:'뒤집힌 전시 왕관과 폐쇄 혈액핵',status:'field-attested',markStatus:'FIELD-ATTESTED DRAFT',confidence:'계승·동맹·도용 판정 대기',doctrine:'해안 이동과 전시 소환망으로 성채의 자율성을 흡수한다.',cost:'피난민의 몸과 성채의 충성',nameLedger:[{name:'Southern Blood Cult',role:'LEGACY TRANSLATION'}],variants:['seal','badge','map']},
+  {id:'deadzone-blood',group:'지역',family:'cult',code:'DZ BLOOD',fullName:'Dead Zone Blood Lineage',fullNameStatus:'ANALYST TRANSLATION',name:'데드 존 혈교',nameStatus:'FIELD-ATTESTED REGIONAL NAME',motif:'열린 혈액 방울과 관통 순례로',status:'field-attested',markStatus:'FIELD-ATTESTED DRAFT',confidence:'2016 공개 결별 / 실제 단절 미확정',doctrine:'귀환 좌표를 유지하는 대가로 피와 관계 기록을 장기 채무로 묶는다.',cost:'귀환자의 피·관계 기록·소유권',nameLedger:[{name:'Dead Zone Blood Cult',role:'LEGACY TRANSLATION'}],variants:['seal','badge','map']}
+]);
+
+export const FACTION_BRANCHES=Object.freeze([
+  {id:'fhc-union',parentId:'fhc',code:'F.H.C-UNION',name:'유니온 지부',cartouche:'UNION',commandStatus:'DISPUTED',note:'독립 세력이 아니라 F.H.C 부모 표식의 카르투슈 변형이다.'},
+  {id:'fhc-ark',parentId:'fhc',code:'F.H.C-ARK',name:'아크 지부',cartouche:'ARK',commandStatus:'DISPUTED',note:'2021년 이후 실제 명령권은 판정 보류 상태다.'},
+  {id:'tad',parentId:'fhc',code:'T.A.D',name:'T.A.D 지부',cartouche:'T.A.D',commandStatus:'DISPUTED',note:'별도 독립 마크를 부여하지 않고 F.H.C 계보 아래 둔다.'}
+]);
+
+export const FACTION_ENTITIES=Object.freeze([
+  {id:'nhc-early-label',entityType:'DISPUTED EARLY LABEL',name:'N.H.C 초기 표기',hasMark:false},
+  {id:'redwolf',entityType:'FIELD UNIT',name:'레드울프',hasMark:false},
+  {id:'haimun-cell',entityType:'DISPUTED CELL',name:'하이먼 세포',hasMark:false}
+]);
+
+export const FACTION_LINEAGE=Object.freeze([
+  {from:'amarion',fromName:'아마리온',to:'fhc',toName:'개척거주권 컨소시엄',relationType:'SUCCESSION',direction:'forward',label:'연구·자산 계보 승계',period:'1982.03.22',confidence:'CONFIRMED'},
+  {from:'nhc-early-label',fromName:'N.H.C 초기 표기',to:'nhc',toName:'비선형 위난사령부',relationType:'DISPUTED ACRONYM REFERENCE',direction:'none',label:'장비 규격·현장대 호출명·후대 편집 라벨 가설 / 조직 연속성 미확정',period:'1984 기록 / 1993 사령부',confidence:'DISPUTED'},
+  {from:'uac',fromName:'통합 이상현상 협약체',to:'nhc',toName:'비선형 위난사령부',relationType:'FORMER COMMAND',direction:'forward',label:'2001년 별도 지휘권 확보 전 조정체계',period:'1993–2001',confidence:'CONFIRMED'},
+  {from:'uac',fromName:'통합 이상현상 협약체',to:'nhc',toName:'비선형 위난사령부',relationType:'COMPACT SUPPORT',direction:'bidirectional',label:'상급·하급이 아닌 접근권·현장지원 협약',period:'2001–',confidence:'CONFIRMED'},
+  {from:'uac',fromName:'통합 이상현상 협약체',to:'sid',toName:'신호무결성국',relationType:'FORMER DEPARTMENT',direction:'forward',label:'2001년 별도 지휘권 확보 전 조사부 편제',period:'1993–2001',confidence:'CONFIRMED'},
+  {from:'uac',fromName:'통합 이상현상 협약체',to:'sid',toName:'신호무결성국',relationType:'COOPERATION',direction:'bidirectional',label:'증거 판정과 접근기록 교환',period:'2001–',confidence:'CONFIRMED'},
+  {from:'nhc',fromName:'비선형 위난사령부',to:'ashcrew',toName:'애시 크루',relationType:'FORMER COMMAND / SPLIT',direction:'forward',label:'사후처리 갈등 뒤 이탈한 현장팀 계보',period:'–2005',confidence:'CORROBORATED'},
+  {from:'nhc',fromName:'비선형 위난사령부',to:'redwolf',toName:'레드울프',relationType:'FORMER COMMAND / SPLIT',direction:'forward',label:'실험체 운용 갈등 뒤 이탈한 현장팀 계보',period:'–2005',confidence:'CORROBORATED'},
+  {from:'redwolf',fromName:'레드울프',to:'son',toName:'단절명령망',relationType:'DEFECTION / JOINING',direction:'forward',label:'이탈 인력 일부가 기존 단절명령망에 합류 / 조직 전체 승계 아님',period:'2005–',confidence:'CORROBORATED'},
+  {from:'ashcrew',fromName:'애시 크루',to:'arf',toName:'자산회수대',relationType:'COMMAND',direction:'forward',label:'회수 편제',period:'2005.01.21–',confidence:'CONFIRMED'},
+  {from:'ashcrew',fromName:'애시 크루',to:'cpd',toName:'민간인 선별처리부',relationType:'COMMAND',direction:'forward',label:'민간 처리 편제',period:'2005.01.21–',confidence:'CONFIRMED'},
+  {from:'fhc',fromName:'개척거주권 컨소시엄',to:'son',toName:'단절명령망',relationType:'TRANSACTION',direction:'bidirectional',label:'지원·운송·임시 거래이며 계보가 아님',period:'복수 시기',confidence:'CORROBORATED'},
+  {from:'fhc',fromName:'개척거주권 컨소시엄',to:'poh',toName:'인계보류망',relationType:'TRADE',direction:'bidirectional',label:'사람·표본·시설 통행 거래',period:'복수 시기',confidence:'CORROBORATED'},
+  {from:'ushinoda',fromName:'우시노다 공통계통',to:'poh',toName:'인계보류망',relationType:'BROKERAGE',direction:'bidirectional',label:'의식 대상·은신처·운송 경로 중개',period:'복수 시기',confidence:'CORROBORATED'},
+  {from:'poh',fromName:'인계보류망',to:'haimun-cell',toName:'하이먼 세포',relationType:'DISPUTED ROUTE USE',direction:'none',label:'같은 운송로 사용 주장만 남음 / 두 조직을 합치지 않음',period:'미확정',confidence:'DISPUTED'}
 ]);

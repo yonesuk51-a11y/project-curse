@@ -8,11 +8,11 @@
   <meta property="og:title" content="Project Curse 6.0 — Recovered World">
   <meta property="og:description" content="세계관 재창설과 새 기록 열람 경험을 함께 검증하는 독립 시제품.">
   <title>Project Curse 6.0 — Recovered World</title>
-  <link rel="stylesheet" href="assets/css/foundation.css?v=6.0.0-a1">
+  <link rel="stylesheet" href="assets/css/foundation.css?v=6.0.0-a2">
 </head>
 <body>
-  <a class="pc-v6-skip" href="#pcV6View">본문으로 건너뛰기</a>
-  <div class="pc-v6-boot" id="pcV6Boot" role="status" aria-live="polite" aria-label="폐쇄 기록망 접속 중">
+  <a class="pc-v6-skip" href="#/briefing" data-v6-content-skip>접속 연출을 건너뛰고 본문으로 이동</a>
+  <div class="pc-v6-boot" id="pcV6Boot" aria-label="폐쇄 기록망 접속 중">
     <div class="pc-v6-boot__grain" aria-hidden="true"></div>
     <div class="pc-v6-boot__frame">
       <div class="pc-v6-boot__identity">
@@ -30,12 +30,12 @@
           <li data-boot-stage="3"><span>04</span><b>열람 세션 개방</b><em>WAIT</em></li>
         </ol>
       </div>
-      <div class="pc-v6-boot__meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-boot-meter>
+      <div class="pc-v6-boot__meter" role="progressbar" aria-label="폐쇄 기록망 접속 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-boot-meter>
         <i data-boot-progress></i>
         <span data-boot-percent>000%</span>
       </div>
       <div class="pc-v6-boot__footer">
-        <span>BUILD 6.0.0-alpha.1</span>
+        <span>BUILD 6.0.0-alpha.2</span>
         <button type="button" data-boot-skip disabled>접속 연출 건너뛰기</button>
       </div>
     </div>
@@ -62,7 +62,7 @@
     <aside class="pc-v6-rail" aria-label="V6 기록 채널">
       <div class="pc-v6-rail__index">
         <span>V6</span>
-        <small>ALPHA 01</small>
+        <small>ALPHA 02</small>
       </div>
       <nav class="pc-v6-nav">
         <a href="#/briefing" data-route="briefing" aria-current="page">
@@ -71,11 +71,14 @@
         <a href="#/world" data-route="world">
           <span>01</span><b>세계 구조</b><small>WORLD</small>
         </a>
+        <a href="#/map" data-route="map">
+          <span>02</span><b>세계 관제</b><small>MAP</small>
+        </a>
         <a href="#/archive" data-route="archive">
-          <span>02</span><b>보호 기록</b><small>ARCHIVE</small>
+          <span>03</span><b>보호 기록</b><small>ARCHIVE</small>
         </a>
         <a href="#/marks" data-route="marks">
-          <span>03</span><b>세력 표식</b><small>MARKS</small>
+          <span>04</span><b>세력 표식</b><small>MARKS</small>
         </a>
       </nav>
       <div class="pc-v6-rail__notice">
@@ -105,6 +108,6 @@
   </div>
 
   <noscript>이 V6 시제품은 기록 채널을 구성하기 위해 JavaScript가 필요합니다.</noscript>
-  <script type="module" src="assets/js/app.js?v=6.0.0-a1"></script>
+  <script type="module" src="assets/js/app.js?v=6.0.0-a2"></script>
 </body>
 </html>
