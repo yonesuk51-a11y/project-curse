@@ -227,6 +227,7 @@
       const pilgrimage=routeControl.dataset.uacPilgrimage;
       const archiveRecord=routeControl.dataset.uacArchiveRecord;
       const historyRecord=routeControl.dataset.uacHistoryRecord;
+      const personRecord=routeControl.dataset.uacPersonRecord;
       navigate(routeControl.dataset.uacRoute,{replace:false,historyMode:'push'}).then(target=>{
         if(target==='map-room'){
           if(operation) window.ProjectCurseMapRoomRuntime?.showOperation?.(operation);
@@ -234,6 +235,7 @@
           if(pilgrimage) window.ProjectCursePilgrimageRuntime?.open?.(pilgrimage);
         }else if(target==='archive-entry'&&archiveRecord) window.ProjectCurseRuntimeModules?.archiveIndex?.open?.(archiveRecord,routeControl);
         else if(target==='history'&&historyRecord) window.ProjectCurseWorldHistoryRuntime?.open?.(historyRecord);
+        else if(target==='personnel'&&personRecord) window.ProjectCursePersonnelRuntime?.open?.(personRecord,{focus:true,resetFilters:true});
       });
     },true);
 

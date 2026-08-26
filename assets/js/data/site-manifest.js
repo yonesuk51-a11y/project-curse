@@ -1,4 +1,4 @@
-// Project Curse 5.49.0 — terminal hub manifest and runtime ownership map
+// Project Curse 5.50.0 — terminal hub manifest and runtime ownership map
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseStructure=freeze({
-    version:root.ProjectCurseBuild?.version||'5.49.0',
+    version:root.ProjectCurseBuild?.version||'5.50.0',
     schema:root.ProjectCurseBuild?.schema||'project-curse-v42',
     screens:root.ProjectCurseBuild?.screens||[
       {id:'terminal-home',label:'단말 상태',index:'00'},
@@ -17,7 +17,8 @@
       {id:'history',label:'세계 기록',index:'02'},
       {id:'faction-info',label:'정보 분석',index:'03'},
       {id:'archive-entry',label:'기록보관소',index:'04'},
-      {id:'media-audit',label:'미디어 감사',index:'05'}
+      {id:'media-audit',label:'미디어 감사',index:'05'},
+      {id:'personnel',label:'인물 기록',index:'06'}
     ],
     lockedRecords:[
       {id:'Cults_871104',title:'종교'},
@@ -56,6 +57,9 @@
       canon:'assets/js/data/canon-registry.js',
       factionMarks:'assets/js/data/faction-mark-registry.js',
       factionLineage:'assets/js/data/faction-lineage-data.js',
+      personnelData:'assets/js/data/personnel-data.js',
+      personnelRuntime:'assets/js/pages/personnel-archive.js',
+      personnelCSS:'assets/css/personnel-archive.css',
       incidentRegistry:'assets/js/data/incident-registry.js',
       archiveRegistry:'assets/js/data/archive-registry.js',
       visualEvidenceData:'assets/js/data/visual-evidence-data.js',

@@ -1,4 +1,4 @@
-// Project Curse 5.49.0 — archive orientation and evidence pass build manifest.
+// Project Curse 5.50.0 — world-first personnel register build manifest.
 (function(root){
   'use strict';
 
@@ -9,17 +9,18 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.49.0',
-    codename:'Archive Orientation & Evidence Pass',
+    version:'5.50.0',
+    codename:'World-First Personnel Register',
     schema:'project-curse-v42',
-    released:'2026-08-23',
+    released:'2026-08-26',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},
       {id:'map-room',index:'01',label:'상황 관제',shortLabel:'관제'},
       {id:'history',index:'02',label:'세계 기록',shortLabel:'연표'},
       {id:'faction-info',index:'03',label:'정보 분석',shortLabel:'분석'},
       {id:'archive-entry',index:'04',label:'기록보관소',shortLabel:'기록'},
-      {id:'media-audit',index:'05',label:'미디어 감사',shortLabel:'감사'}
+      {id:'media-audit',index:'05',label:'미디어 감사',shortLabel:'감사'},
+      {id:'personnel',index:'06',label:'인물 기록',shortLabel:'인물'}
     ]
   });
 })(window);

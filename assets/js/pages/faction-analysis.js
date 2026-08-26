@@ -7,6 +7,7 @@
   const markRegistry=window.ProjectCurseFactionMarks;
   const lineage=window.ProjectCurseFactionLineage;
   const historyData=window.ProjectCurseWorldHistoryData;
+  const personnel=window.ProjectCursePersonnel;
   if(!source?.factions) return;
 
   const q=(selector,root=document)=>root.querySelector(selector);
@@ -98,6 +99,16 @@
     </figure>`;
   }
 
+  function personnelLinks(key){
+    const ids=personnel?.factionIndex?.[key]||[];
+    if(!ids.length) return '';
+    const visible=ids.slice(0,8).map(id=>personnel.byId[id]).filter(Boolean);
+    return `<section class="pc-faction-personnel"><header><div><small>LINKED PERSONNEL / PARTIAL REGISTER</small><h4 class="pc-faction-section-title">연결 인물</h4></div><span>${esc(ids.length)} FILES</span></header>
+      <div>${visible.map(record=>`<button data-uac-person-record="${esc(record.id)}" data-uac-route="personnel" type="button"><span><b>${esc(record.name)}</b><small>${esc(record.role)}</small></span><i aria-hidden="true">›</i></button>`).join('')}</div>
+      <footer><p>소속 표기는 인물의 현재 충성·생존·지휘 관계를 자동으로 확정하지 않는다.</p><button data-uac-route="personnel" type="button">인물 명부 전체 열기&nbsp;↗</button></footer>
+    </section>`;
+  }
+
   function markAuthentication(key){
     const data=markData(key);
     const symbols=(data.symbols||[]).map(item=>`<li><strong>${esc(item.label)}</strong><span>${esc(item.text)}</span></li>`).join('');
@@ -181,6 +192,7 @@
       <section class="pc-faction-chronology"><h4 class="pc-faction-section-title">조직 연혁</h4>
         <ol>${faction.chronology.map(([date,text])=>`<li><time>${esc(date)}</time><span>${esc(text)}</span></li>`).join('')}</ol>
       </section>
+      ${personnelLinks(key)}
       <section class="pc-faction-relations"><h4 class="pc-faction-section-title">직접 관계</h4>
         <div class="pc-faction-relation-list">${faction.relations.map(relationButton).join('')}</div>
       </section>

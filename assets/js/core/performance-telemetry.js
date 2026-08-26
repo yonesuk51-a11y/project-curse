@@ -62,11 +62,12 @@
     const records=root.ProjectCurseArchive?.publicRecords?.length||0;
     const incidents=root.ProjectCurseIncidentNetwork?.incidentList?.length||0;
     const dossiers=root.ProjectCurseFactionAnalysis?.order?.length||0;
+    const personnel=root.ProjectCursePersonnel?.records?.length||0;
     const signals=root.ProjectCurseHomeIntelligence?.signals?.length||0;
     const activePilgrimages=pilgrimages.filter(item=>item.status==='active').length;
     const completePilgrimages=pilgrimages.filter(item=>item.status==='complete').length;
     const operationActive=operation&&!['resolved'].includes(operation.status)?1:0;
-    return {operation,pilgrimages,verdicts,records,incidents,dossiers,signals,activePilgrimages,completePilgrimages,activeOperations:operationActive+activePilgrimages};
+    return {operation,pilgrimages,verdicts,records,incidents,dossiers,personnel,signals,activePilgrimages,completePilgrimages,activeOperations:operationActive+activePilgrimages};
   }
 
   function getChannelStatus(id){
@@ -86,6 +87,7 @@
       const review=Number(root.ProjectCurseMediaProvenance?.stats?.review||0);
       return Object.freeze({value:String(review),label:'REVIEW',tone:review?'warning':'stable',description:`출처·권리 검토 ${review}건`});
     }
+    if(id==='personnel') return Object.freeze({value:String(state.personnel),label:'FILES',tone:'indexed',description:`등록 인물 ${state.personnel}명`});
     return Object.freeze({value:'--',label:'LOCAL',tone:'stable',description:'로컬 채널'});
   }
 

@@ -1,6 +1,6 @@
 # Future Patch Pointer
 
-Current baseline: `5.48.3 Diegetic Language Pass`
+Current baseline: `5.50.0 World-First Personnel Register`
 
 Completed in this baseline:
 `Diegetic UI Language / Central Record Authority / 0 Event Changes`
@@ -13,7 +13,7 @@ Primary scope:
 - 채널 전환 뒤 프로그램 방식으로 이동한 제목의 기본 포커스 사각형을 채널색 밑줄로 정리
 - 모바일 시각 증거 필터를 `전체 + 2×2` 격자로 재배치해 가로 스크롤 제거
 - 390px 폭에서 세계사 상세·세력 프로필·출처 배지의 가로 넘침 재확인
-- 기존 홈·여섯 채널·로딩·음향·지도 배치 보존
+- 기존 홈·일곱 채널·로딩·음향·지도 배치 보존
 - 2031–2042 여섯 사건의 문서 조각을 작성 주체별 목소리로 보강
 - U.A.C·우시노다교·혈교에 서로 다른 현장 판독 블록 시범 적용
 - 시각 증거의 한국어 상태 배지와 기술 코드 표시 순서 정리

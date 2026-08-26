@@ -1,4 +1,4 @@
-// Project Curse 5.48.0 — channel identity and transition presets.
+// Project Curse 5.50.0 — channel identity and transition presets.
 (function(root){
   'use strict';
 
@@ -44,6 +44,12 @@
       enter:'evidence-index',exit:'review-seal',
       request:'CLEARANCE LEDGER REQUESTED',status:'EVIDENCE QUEUE MOUNTED',sound:'channel.archive',
       symbol:'05',signal:'RELEASE CONTROL LEDGER',phases:['REVIEW SEAL','EVIDENCE CHECK','LEDGER MOUNT']
+    },
+    personnel:{
+      code:'PERSONNEL',label:'인물 기록',accent:'#aa8f68',theme:'personnel',
+      enter:'register-index',exit:'identity-seal',
+      request:'PERSONNEL REGISTER REQUESTED',status:'PARTIAL IDENTITIES INDEXED',sound:'channel.intelligence',
+      symbol:'06',signal:'PERSONNEL RELATION GRID',phases:['IDENTITY SEAL','RELATION CROSS-CHECK','DOSSIER INDEX']
     }
   };
 

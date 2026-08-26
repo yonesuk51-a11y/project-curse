@@ -1,4 +1,4 @@
-// Project Curse 5.48.0 — visual identity and adaptive density policy for the six terminal channels.
+// Project Curse 5.50.0 — visual identity and adaptive density policy for the seven terminal channels.
 (function(root){
   'use strict';
 
@@ -43,6 +43,11 @@
         id:'media-audit',index:'05',code:'RELEASE CLEARANCE',label:'미디어 감사',shortLabel:'감사',theme:'clearance',glyph:'RC',
         description:'게시 자산의 파일 등록, 원본 계보와 공개 허가 증빙을 서로 분리해 점검한다.',
         telemetry:[['ASSETS','183'],['PRIORITY','30'],['REVIEW','150 OPEN']]
+      },
+      {
+        id:'personnel',index:'06',code:'PERSONNEL REGISTER',label:'인물 기록',shortLabel:'인물',theme:'personnel',glyph:'PR',
+        description:'기관·교단·가문과 개인 관계자를 중심인물 지정 없이 교차 대조한다.',
+        telemetry:[['REGISTER','PARTIAL'],['GROUPS','10'],['STATUS','PARTIAL']]
       }
     ],
     preferences:{

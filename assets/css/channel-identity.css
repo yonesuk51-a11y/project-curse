@@ -11,8 +11,9 @@
 :root[data-pc-channel-theme="intelligence"]{--pc-channel:#72a4c6;--pc-channel-rgb:114,164,198;--pc-channel-soft:#45677f}
 :root[data-pc-channel-theme="archive"]{--pc-channel:#d45c65;--pc-channel-rgb:212,92,101;--pc-channel-soft:#83383f}
 :root[data-pc-channel-theme="clearance"]{--pc-channel:#65aaa3;--pc-channel-rgb:101,170,163;--pc-channel-soft:#3d706b}
+:root[data-pc-channel-theme="personnel"]{--pc-channel:#aa8f68;--pc-channel-rgb:170,143,104;--pc-channel-soft:#6c5b43}
 
-/* Six-channel navigation */
+/* Seven-channel navigation */
 .uac-shell-quick{min-width:0}
 .uac-shell-quick a[data-channel-route]{
   position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;
@@ -27,6 +28,7 @@
 .uac-shell-quick a[data-channel-theme="intelligence"]{--nav-accent:#72a4c6}
 .uac-shell-quick a[data-channel-theme="archive"]{--nav-accent:#d45c65}
 .uac-shell-quick a[data-channel-theme="clearance"]{--nav-accent:#65aaa3}
+.uac-shell-quick a[data-channel-theme="personnel"]{--nav-accent:#aa8f68}
 .uac-shell-quick a[data-channel-route]>i{color:var(--nav-accent,#b84249);font-size:8px}
 .uac-shell-quick a[data-channel-route]>span{display:grid;gap:3px;min-width:0}
 .uac-shell-quick a[data-channel-route] b{overflow:hidden;color:#d7dcda;font:700 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap}
@@ -124,6 +126,12 @@
 #faction-info .pc-channel-sigil>span,#faction-info .pc-channel-sigil>b{transform:rotate(-45deg)}
 #faction-info .pc-faction-card:hover,#faction-info .pc-faction-card:focus-visible{border-color:rgba(114,164,198,.58)}
 #faction-info .pc-faction-relation{border-left-color:rgba(114,164,198,.35)}
+
+#personnel[data-channel-identity]{background:linear-gradient(90deg,rgba(94,73,44,.055),transparent 30%),linear-gradient(rgba(170,143,104,.018) 1px,transparent 1px);background-size:auto,100% 48px}
+#personnel>.pc-channel-identity{border-left:0;border-top:3px solid var(--pc-channel);border-bottom:1px double rgba(170,143,104,.32);background:linear-gradient(118deg,rgba(66,51,31,.24),rgba(7,10,10,.98) 57%)}
+#personnel>.pc-channel-identity::before{background:repeating-linear-gradient(90deg,transparent 0 119px,rgba(170,143,104,.08) 120px,transparent 121px);background-size:auto}
+#personnel .pc-channel-sigil{border-radius:2px;transform:rotate(45deg) scale(.72)}
+#personnel .pc-channel-sigil>span,#personnel .pc-channel-sigil>b{transform:rotate(-45deg)}
 
 #archive-entry[data-channel-identity]{background:linear-gradient(180deg,rgba(72,13,18,.065),transparent 320px)}
 #archive-entry>.pc-channel-identity{border:1px double rgba(212,92,101,.38);border-left-width:4px;background:linear-gradient(102deg,rgba(56,13,18,.34),rgba(6,8,9,.98) 57%)}

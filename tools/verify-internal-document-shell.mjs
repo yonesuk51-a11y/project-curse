@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.49.0';
+const VERSION='5.50.0';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -56,11 +56,13 @@ const channelIdentityData=read('assets/js/data/channel-identity-data.js');
 const channelIdentityRuntime=read('assets/js/core/channel-identity.js');
 const channelIdentityCss=read('assets/css/channel-identity.css');
 const performanceTelemetry=read('assets/js/core/performance-telemetry.js');
+const personnelRuntime=read('assets/js/pages/personnel-archive.js');
+const personnelCss=read('assets/css/personnel-archive.css');
 
 const context={window:{}};
 vm.createContext(context);
 for(const file of [
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/personnel-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
   'assets/js/data/immortality-storyboard.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js',
   'assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js'
@@ -75,7 +77,7 @@ check('shell:home-owned-outside-pages',index.indexOf('class="uac-shell-home"')<i
 check('shell:route-events',shell.includes('projectcurse:route-will-change')&&shell.includes('projectcurse:screen-committed'));
 check('shell:decrypt-effect',read('assets/js/core/transition-controller.js').includes('pc-screen-entering')&&read('assets/css/transition-system.css').includes('@keyframes pc-screen-enter'));
 check('shell:button-feedback',shellCss.includes('@keyframes uac-control-scan')&&shellCss.includes('@keyframes uac-control-pulse'));
-check('shell:six-channel-identity',context.window.ProjectCurseChannelData?.channels?.length===6&&channelIdentityRuntime.includes('ensureIdentity(item.id)'));
+check('shell:seven-channel-identity',context.window.ProjectCurseChannelData?.channels?.length===7&&channelIdentityRuntime.includes('ensureIdentity(item.id)'));
 check('shell:identity-preferences',channelIdentityData.includes('project_curse_preferences_v1')&&channelIdentityRuntime.includes('openPreferences')&&channelIdentityCss.includes('.pc-preference-dialog'));
 check('shell:identity-root-order',index.indexOf('channel-identity-data.js')>index.indexOf('transition-manifest.js')&&index.indexOf('channel-identity.js')>index.indexOf('terminal-home.js'));
 check('shell:live-status-telemetry',performanceTelemetry.includes('ProjectCurseTelemetry=Object.freeze')&&channelIdentityRuntime.includes('pc-channel-live')&&channelIdentityCss.includes('.pc-live-diagnostics'));
@@ -93,6 +95,8 @@ check('faction:no-detail-route',!faction.includes('#faction-info/')&&!faction.in
 check('faction:no-history-listeners',!faction.includes('hashchange')&&!faction.includes('popstate'));
 check('faction:internal-state',faction.includes('let selected=null')&&faction.includes('renderIndex()')&&faction.includes('renderDossier'));
 check('faction:three-field-profiles',faction.includes('factionProfile(faction)')&&['AUTHORITY DESK / RELEASE 17-C','RITUAL LINEAGE / DO NOT MERGE','BLOOD MEDIUM / COMMAND UNKNOWN'].every(marker=>factionData.includes(marker)));
+check('personnel:world-first-register',context.window.ProjectCursePersonnel?.records?.length===57&&context.window.ProjectCursePersonnel?.editorialRule?.includes('세계관 우선')&&personnelRuntime.includes('ProjectCursePersonnelRuntime=Object.freeze'));
+check('personnel:responsive-and-linked',index.includes('id="personnel"')&&personnelCss.includes('@media(max-width:600px)')&&faction.includes('data-uac-person-record'));
 check('history:distinct-working-voices',['봉인실 메모','정비반 음성','신호장교 구두보고'].every(marker=>historyProse.includes(marker)));
 check('evidence:korean-first-status',documentViewer.includes('archive-evidence-badge')&&['원본 보존','열람 보정','복원 추정','출처 대조 대기'].every(label=>documentViewer.includes(label))&&visualEvidenceCss.includes('.archive-evidence-badge'));
 check('visual-qa:channel-heading-focus',channelIdentityCss.includes('[data-screen-heading]:focus{outline:0}')&&channelIdentityCss.includes('[data-screen-heading]:focus-visible{box-shadow:inset 0 -1px rgba(var(--pc-channel-rgb),.72)}'));
