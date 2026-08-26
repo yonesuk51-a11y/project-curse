@@ -1,12 +1,18 @@
 # Future Patch Pointer
 
-Current baseline: `5.51.0 Supplemental Identity Dossiers`
+Current baseline: `5.52.0 Story Entry & Personnel Navigation`
 
 Completed in this baseline:
-`56 Independent Files / 29 Name Completions / 0 Protected Record Changes`
+`3 Incident Entries / 6 Lore Channels + 1 Utility / 56 Direct Dossier Links / 0 Protected Record Changes`
 
 Primary scope:
 
+- 홈에 최초 노출·세계의 붕괴·현재 기록의 사건 중심 세 갈래 진입점 추가
+- 단말 상태·상황 관제·세계 기록·세력 분석·기록보관소·인물 기록을 이야기 채널로 묶고 미디어 감사를 `U1` 도구로 분리
+- 연표 전환 표시를 실제 범위인 1975–2042와 아홉 시대로 정정
+- 인물 명부·상태·나이의 기준연도를 2006년으로 고정하고 2042년 현재 상태와 구분
+- 선택 전 명부 요약과 상태별 판독, 모바일 색인 복귀·이전·다음 제공
+- 새 세션에서도 열리는 `#personnel/<id>` 직접 링크와 복사 조작 제공
 - 프레이를 활성 인물 명부와 공개 인물 화면에서 제거
 - 남은 56명을 특정 주인공의 관계인이 아닌 독립 인물 파일로 재구성
 - 전원에게 성별·출생·기록 당시 나이·출신·국적 또는 신분·소속 요약 추가
@@ -16,12 +22,12 @@ Primary scope:
 - 원 명부와 `SUPPLEMENTAL IDENTITY / 잠정 보완`을 데이터와 화면에서 분리 표시
 - 이름·출신·나이·소속·경력·능력·성향을 함께 찾는 통합 검색 제공
 - 데스크톱·모바일 카드와 상세 기록의 신원·경력·성향 레이아웃 확장
-- 기존 홈·일곱 채널·로딩·음향·지도 배치와 미디어 자산 보존
+- 기존 로딩·음향·지도 배치와 미디어 자산 보존
 - 정사 사건, 보호 기록과 기존 세력 관계 변경 없음
 
 Release-clearance scope retained from 5.48.0:
 
-- 여섯 번째 단말 채널 `미디어 감사`와 독립적인 청록·황동 계열 UI 추가
+- 도구 채널 `미디어 감사`와 독립적인 청록·황동 계열 UI 유지
 - 실제 공개 자산 174개의 파일 등록·원본 계보·공개 허가 판정을 분리
 - 음원 23개와 영상 7개를 최우선 검토 30개로 고정하고 근거·사용처 표시
 - 전체 자산의 파일명·사용 화면·출처 상태 검색과 종류·검토 상태 필터 제공

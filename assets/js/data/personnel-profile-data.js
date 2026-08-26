@@ -1,4 +1,4 @@
-// Project Curse 5.51.0 — supplemental identity and background dossiers.
+// Project Curse 5.52.0 — supplemental identity and background dossiers.
 (function(root){
   'use strict';
 
@@ -572,7 +572,7 @@
   };
 
   root.ProjectCursePersonnelProfiles=freeze({
-    version:'5.51.0',schema:'project-curse-personnel-profile-v1',
+    version:'5.52.0',schema:'project-curse-personnel-profile-v1',
     status:'SUPPLEMENTAL IDENTITY / PROVISIONAL',
     boundary:'원 명부의 이름·능력 표기와 보완된 신원·경력을 분리해 판독한다.',
     profiles

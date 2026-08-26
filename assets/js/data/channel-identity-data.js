@@ -1,4 +1,4 @@
-// Project Curse 5.51.0 — visual identity and adaptive density policy for the seven terminal channels.
+// Project Curse 5.52.0 — six lore channels, one utility channel and adaptive density policy.
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseChannelData=freeze({
-    version:'1.0.0',
+    version:'1.1.0',
     storageKey:'project_curse_preferences_v1',
     density:{storageKey:'project_curse_channel_density_v1',autoCompactMs:1800,excluded:['terminal-home']},
     defaults:{quality:'auto',effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on'},
@@ -27,10 +27,10 @@
       {
         id:'history',index:'02',code:'CHRONOLOGY',label:'세계 기록',shortLabel:'연대기',theme:'chronology',glyph:'CH',
         description:'분절된 사건 기록을 시간축에 재배열해 세계의 변곡점을 추적한다.',
-        telemetry:[['SPAN','1975–2042'],['INDEX','43 RECORDS'],['EVENTS','9']]
+        telemetry:[['SPAN','1975–2042'],['INDEX','43 RECORDS'],['ERAS','9']]
       },
       {
-        id:'faction-info',index:'03',code:'INTELLIGENCE',label:'정보 분석',shortLabel:'분석',theme:'intelligence',glyph:'IA',
+        id:'faction-info',index:'03',code:'INTELLIGENCE',label:'세력 분석',shortLabel:'세력',theme:'intelligence',glyph:'IA',
         description:'기관·교단·독립 세력의 관계와 충돌 가능성을 분석한다.',
         telemetry:[['DOSSIERS','ACTIVE'],['TRUST','VARIABLE'],['NETWORK','CONTESTED']]
       },
@@ -40,14 +40,14 @@
         telemetry:[['VAULT','MOUNTED'],['RECOVERY','PARTIAL'],['ACCESS','LIMITED']]
       },
       {
-        id:'media-audit',index:'05',code:'RELEASE CLEARANCE',label:'미디어 감사',shortLabel:'감사',theme:'clearance',glyph:'RC',
-        description:'게시 자산의 파일 등록, 원본 계보와 공개 허가 증빙을 서로 분리해 점검한다.',
-        telemetry:[['ASSETS','183'],['PRIORITY','30'],['REVIEW','150 OPEN']]
+        id:'personnel',index:'05',code:'PERSONNEL REGISTER',label:'인물 기록',shortLabel:'인물',theme:'personnel',glyph:'PR',
+        description:'2006년을 기준으로 정리된 56명의 보완 신원·나이·출신·소속·경력을 독립 파일로 교차 대조한다.',
+        telemetry:[['BASIS','2006'],['REGISTER','56 FILES'],['STATUS','HISTORICAL']]
       },
       {
-        id:'personnel',index:'06',code:'PERSONNEL REGISTER',label:'인물 기록',shortLabel:'인물',theme:'personnel',glyph:'PR',
-        description:'56명의 보완 신원·기록 당시 나이·출신·소속·경력을 독립 파일로 교차 대조한다.',
-        telemetry:[['REGISTER','SUPPLEMENTAL'],['GROUPS','10'],['HISTORY','INDEXED']]
+        id:'media-audit',index:'U1',code:'RELEASE CLEARANCE',label:'미디어 감사',shortLabel:'감사',theme:'clearance',glyph:'RC',navTier:'utility',
+        description:'게시 자산의 파일 등록, 원본 계보와 공개 허가 증빙을 세계관 기록과 분리해 점검한다.',
+        telemetry:[['ASSETS','183'],['PRIORITY','30'],['REVIEW','150 OPEN']]
       }
     ],
     preferences:{

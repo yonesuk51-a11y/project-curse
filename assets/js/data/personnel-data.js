@@ -1,4 +1,4 @@
-// Project Curse 5.51.0 — world-first personnel registry with supplemental identity dossiers.
+// Project Curse 5.52.0 — world-first personnel registry with supplemental identity dossiers.
 (function(root){
   'use strict';
 
@@ -393,7 +393,7 @@
   };
 
   root.ProjectCursePersonnel=freeze({
-    version:'5.51.0',schema:'project-curse-personnel-v2',sourceClass:'LEGACY REGISTER + SUPPLEMENTAL IDENTITY',
+    version:'5.52.0',schema:'project-curse-personnel-v2',sourceClass:'LEGACY REGISTER + SUPPLEMENTAL IDENTITY',
     editorialRule:'세계 기록과 조직 구조를 우선하고 각 인물의 신원·경력은 독립 파일로 판독한다.',
     groups,statuses,certainties,records,byId,groupById,factionIndex,stats
   });

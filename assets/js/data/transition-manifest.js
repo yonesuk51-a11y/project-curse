@@ -1,4 +1,4 @@
-// Project Curse 5.51.0 — channel identity and transition presets.
+// Project Curse 5.52.0 — channel identity and transition presets.
 (function(root){
   'use strict';
 
@@ -24,11 +24,11 @@
     history:{
       code:'CHRONOLOGY',label:'세계 기록',accent:'#b29a68',theme:'chronology',
       enter:'chronology-rewind',exit:'timeline-park',
-      request:'CHRONOLOGY INDEX REQUESTED',status:'DATE RANGE 1980–2030',sound:'channel.chronology',
+      request:'CHRONOLOGY INDEX REQUESTED',status:'DATE RANGE 1975–2042',sound:'channel.chronology',
       symbol:'02',signal:'CHRONOLOGY INDEX',phases:['TIMELINE PARK','INDEX REWIND','DATE RANGE LOCK']
     },
     'faction-info':{
-      code:'INTELLIGENCE',label:'정보 분석',accent:'#7393a0',theme:'intelligence',
+      code:'INTELLIGENCE',label:'세력 분석',accent:'#7393a0',theme:'intelligence',
       enter:'dossier-assemble',exit:'file-seal',
       request:'INTELLIGENCE NODE REQUESTED',status:'CROSS-REFERENCE ACTIVE',sound:'channel.intelligence',
       symbol:'03',signal:'INTELLIGENCE MESH',phases:['FILE SEAL','NODE CROSS-CHECK','DOSSIER ASSEMBLY']
@@ -43,13 +43,13 @@
       code:'CLEARANCE',label:'미디어 감사',accent:'#65aaa3',theme:'clearance',
       enter:'evidence-index',exit:'review-seal',
       request:'CLEARANCE LEDGER REQUESTED',status:'EVIDENCE QUEUE MOUNTED',sound:'channel.archive',
-      symbol:'05',signal:'RELEASE CONTROL LEDGER',phases:['REVIEW SEAL','EVIDENCE CHECK','LEDGER MOUNT']
+      symbol:'U1',signal:'RELEASE CONTROL LEDGER',phases:['REVIEW SEAL','EVIDENCE CHECK','LEDGER MOUNT']
     },
     personnel:{
       code:'PERSONNEL',label:'인물 기록',accent:'#aa8f68',theme:'personnel',
       enter:'register-index',exit:'identity-seal',
       request:'PERSONNEL REGISTER REQUESTED',status:'PARTIAL IDENTITIES INDEXED',sound:'channel.intelligence',
-      symbol:'06',signal:'PERSONNEL RELATION GRID',phases:['IDENTITY SEAL','RELATION CROSS-CHECK','DOSSIER INDEX']
+      symbol:'05',signal:'PERSONNEL RELATION GRID',phases:['IDENTITY SEAL','RELATION CROSS-CHECK','DOSSIER INDEX']
     }
   };
 

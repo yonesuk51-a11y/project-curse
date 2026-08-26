@@ -1,4 +1,4 @@
-// Project Curse 5.51.0 — searchable identity and background dossier archive.
+// Project Curse 5.52.0 — 2006 personnel snapshot, triage summary and direct dossier navigation.
 (function(){
   'use strict';
 
@@ -17,6 +17,15 @@
 
   function groupOf(id){return source.groupById[id]||{label:id,short:id,code:'PER',tone:'unknown'};}
   function statusOf(id){return source.statuses[id]||source.statuses.unknown;}
+  function displayStatusOf(id){
+    const status=statusOf(id);
+    const labels={
+      active:'2006년 활동 확인',
+      deceased:'2006년 사망 기재',
+      unknown:'2006년 이후 미확인'
+    };
+    return {...status,label:labels[id]||status.label};
+  }
   function certaintyOf(id){return source.certainties[id]||source.certainties.unresolved;}
   function recordCode(record){
     const position=source.records.indexOf(record)+1;
@@ -57,7 +66,7 @@
   }
 
   function statusFilters(){
-    const items=[['all','전체'],...Object.entries(source.statuses).map(([id,item])=>[id,item.label])];
+    const items=[['all','전체'],...Object.keys(source.statuses).map(id=>[id,displayStatusOf(id).label])];
     return items.map(([id,label],index)=>`<button class="${index===0?'is-active':''}" data-pc-person-status="${esc(id)}" type="button">${esc(label)}</button>`).join('');
   }
 
@@ -65,21 +74,21 @@
     return `<div class="pc-personnel-archive" data-pc-personnel-owner="1">
       <header class="pc-personnel-intro">
         <div>
-          <small>U.A.C PERSONNEL REGISTER / SUPPLEMENTAL IDENTITY</small>
+          <small>U.A.C PERSONNEL REGISTER / 2006 SNAPSHOT</small>
           <h2>인물 기록</h2>
-          <p>56명의 이름·출신·기록 당시 나이·소속·성향·과거 이력을 세계 기록 아래에서 독립적으로 대조한다.</p>
+          <p>이 명부는 2006년에 확인되거나 추정된 56명의 신원·소속·성향·과거 이력을 정리한 역사 자료다. 활동 표시는 2042년 현재의 생존이나 재직을 뜻하지 않는다.</p>
         </div>
         <dl aria-label="인물 명부 상태">
           <div><dt>등록 인물</dt><dd>${source.stats.total}</dd></div>
+          <div><dt>기록 기준</dt><dd>2006</dd></div>
           <div><dt>신원 보완</dt><dd>${source.stats.profiled}</dd></div>
           <div><dt>이름 정리</dt><dd>${source.stats.renamed}</dd></div>
-          <div><dt>사망 기재</dt><dd>${source.stats.deceased}</dd></div>
         </dl>
       </header>
       <aside class="pc-personnel-boundary">
-        <b>SUPPLEMENTAL IDENTITY</b>
-        <p>원 명부의 이름·능력 표기와 보완된 출생·소속·경력은 구분해 판독한다. 보완 이름은 기존 명부명으로도 검색된다.</p>
-        <span>56 INDEPENDENT FILES</span>
+        <b>HISTORICAL REGISTER</b>
+        <p>상태와 나이는 모두 2006년 기록을 기준으로 읽는다. 원 명부의 이름·능력 표기와 보완된 출생·소속·경력은 구분하며, 보완 이름은 기존 명부명으로도 검색된다.</p>
+        <span>BASIS / 2006</span>
       </aside>
       <section class="pc-personnel-controls" aria-label="인물 기록 검색과 필터">
         <label class="pc-personnel-search"><span>인물 검색</span><input autocomplete="off" data-pc-person-search placeholder="이름 / 출신 / 나이 / 소속 / 경력 / 능력" type="search"><i aria-hidden="true">⌕</i></label>
@@ -94,9 +103,31 @@
           <header><div><small>INDEX RESULTS</small><b data-pc-person-result-label>전체 인물</b></div><span data-pc-person-count>${source.stats.total}건</span></header>
           <div class="pc-personnel-list" data-pc-person-list></div>
         </section>
-        <section class="pc-personnel-detail" data-pc-person-detail aria-live="polite">${emptyDetailMarkup()}</section>
+        <section class="pc-personnel-detail" data-pc-person-detail aria-live="polite">${summaryDetailMarkup(source.records)}</section>
       </div>
     </div>`;
+  }
+
+  function summaryDetailMarkup(records){
+    const counts=Object.keys(source.statuses).reduce((result,id)=>{
+      result[id]=source.records.filter(record=>record.status===id).length;
+      return result;
+    },{});
+    const statusButtons=['active','deceased','unknown'].map(id=>{
+      const status=displayStatusOf(id);
+      return `<button data-pc-person-summary-status="${esc(id)}" type="button"><span data-person-status="${esc(status.tone)}">${esc(status.label)}</span><b>${counts[id]||0}</b><i aria-hidden="true">›</i></button>`;
+    }).join('');
+    return `<article class="pc-personnel-summary">
+      <header><div><small>REGISTER SNAPSHOT / BASIS 2006</small><h3>선택 전 명부 판독</h3><p>이 화면은 현재 인물의 생존 명단이 아니라, 2006년 당시 확보된 관계와 신원 기록의 색인이다.</p></div><span>HISTORICAL</span></header>
+      <dl aria-label="인물 명부 요약">
+        <div><dt>전체 파일</dt><dd>${source.stats.total}</dd></div>
+        <div><dt>현재 조건</dt><dd>${records.length}</dd></div>
+        <div><dt>사망 기재</dt><dd>${counts.deceased||0}</dd></div>
+        <div><dt>기준연도</dt><dd>2006</dd></div>
+      </dl>
+      <section><header><small>STATUS TRIAGE</small><h4>기록 상태로 좁혀 보기</h4></header><div>${statusButtons}</div></section>
+      <aside><b>판독 주의</b><ul><li><strong>활동 확인</strong>은 2006년 당시의 활동 흔적을 뜻한다.</li><li><strong>사망 기재</strong>는 원 명부에 사망 표기가 있는 경우만 집계한다.</li><li><strong>이후 미확인</strong>은 2006년 이후의 행적을 현재 자료로 확정할 수 없다는 뜻이다.</li></ul><p>왼쪽 색인에서 인물을 선택하면 직접 링크가 주소에 기록된다.</p></aside>
+    </article>`;
   }
 
   function emptyDetailMarkup(empty=false){
@@ -110,7 +141,7 @@
 
   function cardMarkup(record){
     const group=groupOf(record.group);
-    const status=statusOf(record.status);
+    const status=displayStatusOf(record.status);
     const aliases=(record.aliases||[]).filter(alias=>alias!==record.sourceName);
     const sourceName=record.sourceName?`<small class="pc-personnel-source-name">구 명부명 ${esc(record.sourceName)}</small>`:'';
     const aliasLine=aliases.length?`<small>${esc(aliases.join(' / '))}</small>`:'';
@@ -201,24 +232,40 @@
     return `<aside class="pc-personnel-limits"><header><small>ARCHIVE LIMIT</small><b>이 기록으로 확정할 수 없는 것</b></header><ul>${limits.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></aside>`;
   }
 
+  function detailNavigationMarkup(record){
+    const records=filteredRecords();
+    const index=records.findIndex(item=>item.id===record.id);
+    const previous=index>0?records[index-1]:null;
+    const next=index>=0&&index<records.length-1?records[index+1]:null;
+    return `<nav class="pc-personnel-detail-nav" aria-label="인물 파일 이동">
+      <button data-pc-person-back type="button"><span aria-hidden="true">←</span><b>인물 색인</b></button>
+      <div>
+        <button aria-label="${previous?`이전 인물, ${esc(previous.name)}`:'이전 인물 없음'}" data-pc-person-prev type="button"${previous?'':' disabled'}><span aria-hidden="true">‹</span><b>이전</b></button>
+        <button aria-label="${next?`다음 인물, ${esc(next.name)}`:'다음 인물 없음'}" data-pc-person-next type="button"${next?'':' disabled'}><b>다음</b><span aria-hidden="true">›</span></button>
+        <button data-pc-person-copy-link type="button"><span aria-hidden="true">⌁</span><b>직접 링크</b></button>
+      </div>
+    </nav>`;
+  }
+
   function detailMarkup(record){
     const group=groupOf(record.group);
-    const status=statusOf(record.status);
+    const status=displayStatusOf(record.status);
     const certainty=certaintyOf(record.certainty);
     const aliases=(record.aliases||[]).filter(alias=>alias!==record.sourceName);
     const sourceName=record.sourceName?`<p class="pc-personnel-source">구 명부명 <b>${esc(record.sourceName)}</b></p>`:'';
     const aliasLine=aliases.length?`<p class="pc-personnel-alias">호칭·별칭 <b>${esc(aliases.join(' / '))}</b></p>`:'';
     return `<article class="pc-personnel-dossier" data-person-tone="${esc(group.tone)}" data-pc-person-selected="${esc(record.id)}">
+      ${detailNavigationMarkup(record)}
       <header class="pc-personnel-dossier-head">
         <div class="pc-personnel-code"><small>${esc(recordCode(record))}</small><i aria-hidden="true">${esc(group.code)}</i></div>
-        <div><small>SUPPLEMENTAL PERSONNEL DOSSIER / ${esc(certainty.label)}</small><h3 tabindex="-1">${esc(record.name)}</h3>${sourceName}${aliasLine}<p>${esc(record.role)}</p></div>
+        <div><small>PERSONNEL DOSSIER / BASIS 2006 / ${esc(certainty.label)}</small><h3 tabindex="-1">${esc(record.name)}</h3>${sourceName}${aliasLine}<p>${esc(record.role)}</p></div>
         <span data-person-status="${esc(status.tone)}">${esc(status.label)}</span>
       </header>
       <dl class="pc-personnel-meta">
         <div><dt>주 분류</dt><dd>${esc(group.label)}</dd></div>
         <div><dt>기록 신뢰</dt><dd data-certainty="${esc(certainty.tone)}">${esc(certainty.label)}</dd></div>
         <div><dt>직책·관계</dt><dd>${esc(record.role)}</dd></div>
-        <div><dt>자료 상태</dt><dd>원 명부 + 보완 신원</dd></div>
+        <div><dt>자료 상태</dt><dd>2006 명부 + 보완 신원</dd></div>
       </dl>
       ${identityMarkup(record)}
       <section class="pc-personnel-overview"><small>IDENTIFICATION SUMMARY</small><p>${esc(record.overview)}</p></section>
@@ -238,7 +285,7 @@
 
   function resultLabel(records){
     const group=state.group==='all'?'전체 인물':groupOf(state.group).label;
-    const status=state.status==='all'?'':` · ${statusOf(state.status).label}`;
+    const status=state.status==='all'?'':` · ${displayStatusOf(state.status).label}`;
     const query=state.query.trim()?` · “${state.query.trim()}”`:'';
     return `${group}${status}${query}`;
   }
@@ -255,11 +302,12 @@
     if(label) label.textContent=resultLabel(records);
 
     if(state.selected&&!records.some(record=>record.id===state.selected)) state.selected=null;
+    const selectedRecord=state.selected?source.byId[state.selected]:null;
+    root.classList.toggle('pc-personnel-has-selection',Boolean(selectedRecord));
     if(list) list.innerHTML=records.length?records.map(cardMarkup).join(''):`<div class="pc-personnel-no-results"><b>NO RECORDS</b><span>조건에 맞는 인물 파일이 없습니다.</span></div>`;
     if(detail){
-      const selected=state.selected?source.byId[state.selected]:null;
-      detail.innerHTML=selected?detailMarkup(selected):emptyDetailMarkup(!records.length);
-      if(focusDetail&&selected){
+      detail.innerHTML=selectedRecord?detailMarkup(selectedRecord):(records.length?summaryDetailMarkup(records):emptyDetailMarkup(true));
+      if(focusDetail&&selectedRecord){
         const heading=q('h3',detail);
         try{heading?.focus({preventScroll:true});}catch(_error){heading?.focus();}
         if(matchMedia('(max-width: 900px)').matches) detail.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
@@ -286,25 +334,89 @@
     return true;
   }
 
-  function openRecord(id,{focus=true,resetFilters=false}={}){
+  function personnelHash(id=''){
+    return id?`#personnel/${encodeURIComponent(id)}`:'#personnel';
+  }
+
+  function writePersonnelLocation(id,mode='replace'){
+    if(mode==='none') return;
+    const hash=personnelHash(id);
+    if(location.hash===hash) return;
+    try{
+      const method=mode==='push'?'pushState':'replaceState';
+      history[method]({route:'personnel',personnelId:id||null},'',hash);
+    }catch(_error){}
+  }
+
+  function directRecordId(){
+    const request=window.ProjectCurseShell?.getLocation?.();
+    if(request?.route==='personnel') return request.personnelId||'';
+    let raw='';
+    try{raw=decodeURIComponent(location.hash.replace(/^#/,''));}
+    catch(_error){raw=location.hash.replace(/^#/,'');}
+    return raw.startsWith('personnel/')?raw.slice('personnel/'.length):'';
+  }
+
+  function openRecord(id,{focus=true,resetFilters=false,historyMode='push'}={}){
     const record=source.byId[id];
     if(!record) return false;
-    const show=()=>{
+    const show=(resolvedHistoryMode=historyMode)=>{
       prepare();
       if(resetFilters){state.query='';state.group='all';state.status='all';}
+      if(state.query&&!searchText(record).includes(normalize(state.query))) state.query='';
       state.selected=id;
       if(state.group!=='all'&&!recordGroups(record).includes(state.group)) state.group='all';
       if(state.status!=='all'&&record.status!==state.status) state.status='all';
       syncControls();
       renderResults({focusDetail:focus});
+      writePersonnelLocation(id,resolvedHistoryMode);
       document.dispatchEvent(new CustomEvent('projectcurse:personnel-selected',{detail:{id}}));
       return true;
     };
     if(window.ProjectCurseShell?.getRoute()!=='personnel'){
-      window.ProjectCurseShell?.navigate('personnel',{replace:false,historyMode:'push'}).then(show);
+      window.ProjectCurseShell?.navigate('personnel',{replace:false,historyMode:'push'}).then(()=>show(historyMode==='none'?'none':'replace'));
       return true;
     }
     return show();
+  }
+
+  function clearSelection({focus=false,historyMode='replace'}={}){
+    prepare();
+    state.selected=null;
+    syncControls();
+    renderResults();
+    writePersonnelLocation('',historyMode);
+    if(focus){
+      const index=q('.pc-personnel-index',q('#personnel'));
+      if(matchMedia('(max-width: 900px)').matches) index?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+      const search=q('[data-pc-person-search]',q('#personnel'));
+      try{search?.focus({preventScroll:true});}catch(_error){search?.focus();}
+    }
+    return true;
+  }
+
+  function adjacentRecord(offset){
+    const records=filteredRecords();
+    const index=records.findIndex(record=>record.id===state.selected);
+    return index<0?null:records[index+offset]||null;
+  }
+
+  async function copyDirectLink(button){
+    if(!state.selected) return false;
+    const url=new URL(location.href);
+    url.hash=personnelHash(state.selected).slice(1);
+    let copied=false;
+    try{await navigator.clipboard.writeText(url.href);copied=true;}
+    catch(_error){
+      const input=document.createElement('textarea');
+      input.value=url.href;input.setAttribute('readonly','');input.style.position='fixed';input.style.opacity='0';
+      document.body.appendChild(input);input.select();
+      try{copied=document.execCommand('copy');}catch(__error){copied=false;}
+      input.remove();
+    }
+    const label=button?.querySelector('b');
+    if(label){const original=label.textContent;label.textContent=copied?'링크 복사됨':'주소에서 복사';setTimeout(()=>{label.textContent=original;},1600);}
+    return copied;
   }
 
   function openFaction(key){
@@ -330,6 +442,7 @@
       if(!input) return;
       state.query=input.value;
       state.selected=null;
+      writePersonnelLocation('','replace');
       renderResults();
     });
     document.addEventListener('click',event=>{
@@ -337,6 +450,7 @@
       if(group){
         event.preventDefault();event.stopImmediatePropagation();
         state.group=group.dataset.pcPersonGroup;state.selected=null;
+        writePersonnelLocation('','replace');
         window.ProjectCurseAudioControl?.play?.('filter.change');
         syncControls();renderResults();return;
       }
@@ -344,9 +458,32 @@
       if(status){
         event.preventDefault();event.stopImmediatePropagation();
         state.status=status.dataset.pcPersonStatus;state.selected=null;
+        writePersonnelLocation('','replace');
         window.ProjectCurseAudioControl?.play?.('filter.change');
         syncControls();renderResults();return;
       }
+      const summaryStatus=event.target.closest?.('[data-pc-person-summary-status]');
+      if(summaryStatus){
+        event.preventDefault();event.stopImmediatePropagation();
+        state.status=summaryStatus.dataset.pcPersonSummaryStatus;state.selected=null;
+        writePersonnelLocation('','replace');
+        window.ProjectCurseAudioControl?.play?.('filter.change');
+        syncControls();renderResults();return;
+      }
+      const back=event.target.closest?.('[data-pc-person-back]');
+      if(back){event.preventDefault();event.stopImmediatePropagation();clearSelection({focus:true,historyMode:'push'});return;}
+      const previous=event.target.closest?.('[data-pc-person-prev]');
+      if(previous){
+        event.preventDefault();event.stopImmediatePropagation();
+        const record=adjacentRecord(-1);if(record) openRecord(record.id,{focus:true,historyMode:'replace'});return;
+      }
+      const next=event.target.closest?.('[data-pc-person-next]');
+      if(next){
+        event.preventDefault();event.stopImmediatePropagation();
+        const record=adjacentRecord(1);if(record) openRecord(record.id,{focus:true,historyMode:'replace'});return;
+      }
+      const copy=event.target.closest?.('[data-pc-person-copy-link]');
+      if(copy){event.preventDefault();event.stopImmediatePropagation();copyDirectLink(copy);return;}
       const faction=event.target.closest?.('[data-pc-person-faction]');
       if(faction){
         event.preventDefault();event.stopImmediatePropagation();
@@ -358,13 +495,19 @@
       if(person){
         event.preventDefault();event.stopImmediatePropagation();
         window.ProjectCurseAudioControl?.play?.('faction.open');
-        openRecord(person.dataset.pcPersonOpen,{focus:true});
+        openRecord(person.dataset.pcPersonOpen,{focus:true,historyMode:'push'});
       }
     },true);
 
     window.ProjectCursePersonnelRuntime=Object.freeze({
-      open:openRecord,openFaction,render:prepare,getSelected:()=>state.selected,
+      open:openRecord,clear:clearSelection,openFaction,render:prepare,getSelected:()=>state.selected,
       getFiltered:()=>filteredRecords().map(record=>record.id),owner:'assets/js/pages/personnel-archive.js'
     });
+
+    if(window.ProjectCurseShell?.getRoute()==='personnel'){
+      const directId=directRecordId();
+      if(directId&&source.byId[directId]) openRecord(directId,{focus:false,resetFilters:true,historyMode:'none'});
+      else if(directId) clearSelection({historyMode:'replace'});
+    }
   });
 })();

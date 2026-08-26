@@ -1,4 +1,4 @@
-// Project Curse 5.45.0 — readable settings, adaptive channel density, and local preferences.
+// Project Curse 5.52.0 — hierarchical channel navigation, readable settings and local preferences.
 (function(root){
   'use strict';
 
@@ -121,23 +121,30 @@
 
     function navMarkup(channel){
       const status=liveStatus(channel.id);
+      if(channel.navTier==='utility'){
+        return `<i aria-hidden="true">◇</i><span><b>도구</b><small>${channel.label}</small></span><em class="pc-channel-live pc-channel-live--${status.tone}" aria-label="${status.description}"><b>${status.value}</b><small>${status.label}</small></em>`;
+      }
       return `<i>${channel.index}</i><span><b>${channel.label}</b><small>${channel.code}</small></span><em class="pc-channel-live pc-channel-live--${status.tone}" aria-label="${status.description}"><b>${status.value}</b><small>${status.label}</small></em>`;
     }
 
     function enhanceNavigation(){
       if(!quickNav) return;
-      channels.forEach((channel,index)=>{
+      const ordered=[...channels.filter(channel=>channel.navTier!=='utility'),...channels.filter(channel=>channel.navTier==='utility')];
+      ordered.forEach(channel=>{
         let link=quickNav.querySelector(`[data-uac-route="${channel.id}"]`);
         if(!link){
           link=document.createElement('a');
           link.href=`#${channel.id}`;
           link.dataset.uacRoute=channel.id;
-          quickNav.insertBefore(link,quickNav.children[index]||null);
         }
         link.dataset.channelRoute=channel.id;
         link.dataset.channelTheme=channel.theme;
-        link.setAttribute('aria-label',`${channel.index} ${channel.label}, ${channel.code}`);
+        link.dataset.channelTier=channel.navTier||'lore';
+        link.classList.toggle('pc-shell-utility-route',channel.navTier==='utility');
+        link.setAttribute('aria-label',channel.navTier==='utility'?`도구, ${channel.label}, ${channel.code}`:`${channel.index} ${channel.label}, ${channel.code}`);
+        link.title=channel.navTier==='utility'?`도구 · ${channel.label}`:'';
         link.innerHTML=navMarkup(channel);
+        quickNav.appendChild(link);
       });
       if(!quickNav.querySelector('.pc-mobile-preference-link')){
         const settings=document.createElement('button');

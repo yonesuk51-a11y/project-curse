@@ -1,6 +1,6 @@
 # Personnel Source Notes
 
-Status: `5.51.0 / supplemental identity dossiers / provisional canon`
+Status: `5.52.0 / 2006 register snapshot / supplemental identity dossiers / provisional canon`
 
 ## 적용 범위
 
@@ -18,6 +18,7 @@ Status: `5.51.0 / supplemental identity dossiers / provisional canon`
 - 보완 이름 사용: 29명
 - 사망 기재: 야나미 신카, 두카 바실리예프, 아마미야 레이키 3명
 - 연령은 현재 나이가 아니라 각 파일에 적힌 기록연도 기준이다. 대다수는 2006년, 사망자는 사망연도, 일부 사도는 외형 또는 추정 기록으로 표기한다.
+- 공개 화면의 `2006년 활동 확인`, `2006년 사망 기재`, `2006년 이후 미확인`은 원 명부 상태를 시간축에 맞게 풀어 쓴 표시어다. 2042년 현재의 생존·사망·재직 상태를 새로 확정하지 않는다.
 - 출생기록이 봉인·상충·무의미한 개체는 임의의 숫자로 채우지 않고 `기록 봉인`, `기록 상충`, `해당 없음`으로 남긴다.
 
 ## 이름 보완 원칙

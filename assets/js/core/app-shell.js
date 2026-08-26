@@ -1,4 +1,4 @@
-// Project Curse 5.34.0 — route handoff input parity and accessible shell navigation.
+// Project Curse 5.52.0 — route handoff, accessible shell navigation and direct personnel links.
 (function(){
   'use strict';
 
@@ -48,6 +48,34 @@
       if(target==='faction-relation') return 'faction-info';
       if(target==='region-map'||target==='zone-map'||target==='operation-map') return 'map-room';
       return screenIds.has(target)?target:'terminal-home';
+    }
+
+    function decodeHash(){
+      const encoded=location.hash.replace(/^#/,'');
+      try{return decodeURIComponent(encoded);}
+      catch(_error){return encoded;}
+    }
+
+    function readLocation(){
+      const raw=decodeHash();
+      const [routeToken,...detailParts]=raw.split('/');
+      const route=normalize(routeToken||'terminal-home');
+      return {
+        raw,
+        route,
+        personnelId:route==='personnel'&&routeToken==='personnel'?detailParts.join('/'):''
+      };
+    }
+
+    function applyLocationDetail(request,{focus=false}={}){
+      if(request.route!=='personnel') return false;
+      const runtime=window.ProjectCursePersonnelRuntime;
+      if(!runtime) return false;
+      if(request.personnelId){
+        const opened=runtime.open?.(request.personnelId,{focus,resetFilters:true,historyMode:'none'});
+        return opened===false?runtime.clear?.({focus,historyMode:'replace'}):opened;
+      }
+      return runtime.clear?.({focus,historyMode:'none'});
     }
 
     function screenLabel(target){
@@ -235,7 +263,8 @@
           if(pilgrimage) window.ProjectCursePilgrimageRuntime?.open?.(pilgrimage);
         }else if(target==='archive-entry'&&archiveRecord) window.ProjectCurseRuntimeModules?.archiveIndex?.open?.(archiveRecord,routeControl);
         else if(target==='history'&&historyRecord) window.ProjectCurseWorldHistoryRuntime?.open?.(historyRecord);
-        else if(target==='personnel'&&personRecord) window.ProjectCursePersonnelRuntime?.open?.(personRecord,{focus:true,resetFilters:true});
+        else if(target==='personnel'&&personRecord) window.ProjectCursePersonnelRuntime?.open?.(personRecord,{focus:true,resetFilters:true,historyMode:'replace'});
+        else if(target==='personnel') window.ProjectCursePersonnelRuntime?.clear?.({focus:true,historyMode:'push'});
       });
     },true);
 
@@ -276,26 +305,30 @@
       if(control) pulse(control);
     },{capture:true,passive:true});
 
+    let locationTimer=0;
     const followLocation=()=>{
-      const hash=decodeURIComponent(location.hash.replace(/^#/,''));
-      navigate(hash||'terminal-home',{historyMode:'none',replace:false,focus:true});
+      const request=readLocation();
+      navigate(request.route,{historyMode:'none',replace:false,focus:!request.personnelId})
+        .then(()=>applyLocationDetail(request,{focus:false}));
     };
-    window.addEventListener('popstate',followLocation);
-    window.addEventListener('hashchange',()=>{
-      const hash=normalize(decodeURIComponent(location.hash.replace(/^#/,''))||'terminal-home');
-      if(hash!==currentRoute&&!transitioning) followLocation();
-    });
+    const scheduleLocationFollow=()=>{
+      clearTimeout(locationTimer);
+      locationTimer=setTimeout(followLocation,0);
+    };
+    window.addEventListener('popstate',scheduleLocationFollow);
+    window.addEventListener('hashchange',scheduleLocationFollow);
 
-    const initialHash=decodeURIComponent(location.hash.replace(/^#/,''));
-    const initialRoute=normalize(initialHash||'terminal-home');
+    const initialLocation=readLocation();
+    const initialRoute=initialLocation.route;
     currentRoute=initialRoute;
-    commitRoute(initialRoute,initialRoute,'replace');
+    commitRoute(initialRoute,initialRoute,initialLocation.personnelId?'none':'replace');
     document.documentElement.dataset.channelTheme=window.ProjectCurseTransition?.getPreset?.(initialRoute)?.theme||'command';
 
     window.showPage=(target)=>navigate(target,{replace:false,historyMode:'push'});
     window.ProjectCurseShell=Object.freeze({
       navigate,
       getRoute:()=>currentRoute,
+      getLocation:readLocation,
       getScrollRoot:()=>content,
       isTransitioning:()=>transitioning
     });
