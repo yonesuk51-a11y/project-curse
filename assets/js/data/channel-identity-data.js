@@ -1,4 +1,4 @@
-// Project Curse 5.50.0 — visual identity and adaptive density policy for the seven terminal channels.
+// Project Curse 5.51.0 — visual identity and adaptive density policy for the seven terminal channels.
 (function(root){
   'use strict';
 
@@ -46,8 +46,8 @@
       },
       {
         id:'personnel',index:'06',code:'PERSONNEL REGISTER',label:'인물 기록',shortLabel:'인물',theme:'personnel',glyph:'PR',
-        description:'기관·교단·가문과 개인 관계자를 중심인물 지정 없이 교차 대조한다.',
-        telemetry:[['REGISTER','PARTIAL'],['GROUPS','10'],['STATUS','PARTIAL']]
+        description:'56명의 보완 신원·기록 당시 나이·출신·소속·경력을 독립 파일로 교차 대조한다.',
+        telemetry:[['REGISTER','SUPPLEMENTAL'],['GROUPS','10'],['HISTORY','INDEXED']]
       }
     ],
     preferences:{

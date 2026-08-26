@@ -1,6 +1,8 @@
-// Project Curse 5.50.0 — world-first personnel registry reconstructed from the legacy character list.
+// Project Curse 5.51.0 — world-first personnel registry with supplemental identity dossiers.
 (function(root){
   'use strict';
+
+  const profileSource=root.ProjectCursePersonnelProfiles;
 
   function freeze(value){
     if(!value||typeof value!=='object'||Object.isFrozen(value)) return value;
@@ -24,8 +26,7 @@
   const statuses={
     active:{label:'활동 기록',tone:'active'},
     deceased:{label:'사망 기재',tone:'deceased'},
-    unknown:{label:'상태 미확인',tone:'unknown'},
-    reference:{label:'관계 참조',tone:'reference'}
+    unknown:{label:'상태 미확인',tone:'unknown'}
   };
 
   const certainties={
@@ -34,40 +35,24 @@
     unresolved:{label:'해석 보류',tone:'unresolved'}
   };
 
-  const records=[
+  const legacyRecords=[
     {
-      id:'frey',name:'프레이',group:'personal',role:'관계 참조 인물',status:'reference',certainty:'partial',
-      overview:'초기 인물 명부에서 여러 가족·교우·사제 관계를 연결하는 참조 인물이다. 현재 세계 기록에서 중심인물로 지정되지는 않으며, 독립적인 소속·능력·현재 상태는 이번 명부만으로 확정할 수 없다.',
-      relationships:[
-        {target:'tanaka-chihiro',relation:'배우자 표기 추정',certainty:'unresolved'},
-        {target:'tanaka-yui',relation:'자녀 표기 추정',certainty:'unresolved'},
-        {target:'maya',relation:'친구',certainty:'listed'},
-        {target:'yesel-gregory',relation:'스승',certainty:'listed'},
-        {target:'alma-bennett',relation:'여동생',certainty:'listed'},
-        {target:'alma-griffon',relation:'남동생',certainty:'listed'},
-        {target:'alma-wade',relation:'어머니',certainty:'listed'},
-        {target:'alma-kara',relation:'할머니',certainty:'listed'},
-        {target:'alma-koenig',relation:'오빠',certainty:'listed'}
-      ],
-      limits:['프레이의 전체 이름, 소속, 능력과 현재 상태는 제공된 명부에 없다.','관계가 많다는 사실만으로 세계관 전체의 중심인물로 분류하지 않는다.']
+      id:'tanaka-chihiro',name:'타나카 치히로',group:'personal',role:'시립 기록 복원관',status:'active',certainty:'partial',
+      overview:'타나카 가문의 기록을 보존해 온 문서 기술자다.',
+      relationships:[{target:'tanaka-yui',relation:'어머니',certainty:'partial'}],
+      limits:['모녀 관계와 세부 경력은 보완 신원 기록에서 잠정 재구성됐다.']
     },
     {
-      id:'tanaka-chihiro',name:'타나카 치히로',group:'personal',role:'개인 관계자',status:'unknown',certainty:'unresolved',
-      overview:'초기 명부 첫머리에 이름과 “아내” 표기가 이어져 있다. 구두점이 소실된 구간이므로 누구의 배우자인지는 재확인 전까지 확정하지 않는다.',
-      relationships:[{target:'frey',relation:'아내 표기 추정',certainty:'unresolved'},{target:'tanaka-yui',relation:'가족 관계 추정',certainty:'unresolved'}],
-      limits:['배우자와 자녀 관계의 정확한 방향을 확인해야 한다.']
+      id:'tanaka-yui',name:'타나카 유이',group:'personal',role:'재난통신 정비사',status:'active',certainty:'partial',
+      overview:'비상방송 장비를 수리하고 미등록 호출부호를 추적하는 기술자다.',
+      relationships:[{target:'tanaka-chihiro',relation:'딸',certainty:'partial'},{target:'maya',relation:'현장 기록 협조',certainty:'partial'}],
+      limits:['모녀 관계와 마야와의 협조 이력은 보완 신원 기록의 잠정 배치다.']
     },
     {
-      id:'tanaka-yui',name:'타나카 유이',group:'personal',role:'개인 관계자',status:'unknown',certainty:'unresolved',
-      overview:'초기 명부에서 타나카 치히로 다음에 “딸” 표기와 함께 기록된 인물이다. 가족관계의 기준 인물은 현재 문장만으로 확정하기 어렵다.',
-      relationships:[{target:'frey',relation:'딸 표기 추정',certainty:'unresolved'},{target:'tanaka-chihiro',relation:'가족 관계 추정',certainty:'unresolved'}],
-      limits:['누구의 딸인지와 현재 연령·상태가 확인되지 않았다.']
-    },
-    {
-      id:'maya',name:'마야',group:'personal',role:'프레이의 친구',status:'unknown',certainty:'listed',
-      overview:'프레이의 친구로 기재된 개인 관계자다. 이름이 압축된 명단 구간에서 다시 나타나는 것처럼 보여 동일 인물 여부를 함께 보류한다.',
-      relationships:[{target:'frey',relation:'친구',certainty:'listed'}],
-      limits:['소속, 능력, 현재 상태가 제공되지 않았다.','명단 후반의 “마야” 표기가 동일 인물을 뜻하는지 확인이 필요하다.']
+      id:'maya',name:'마야',group:'personal',role:'현장사진 기록원',status:'active',certainty:'partial',
+      overview:'통제선 외곽의 첫 장면과 삭제 전 원본을 보존하는 독립 기록원이다.',
+      relationships:[{target:'tanaka-yui',relation:'현장 기록 협조',certainty:'partial'}],
+      limits:['전체 이름과 경력은 보완 신원 기록에서 확장됐다.']
     },
     {
       id:'jeong-ria',name:'정리아',group:'personal',role:'개인 관계자',status:'unknown',certainty:'partial',
@@ -81,59 +66,59 @@
       relationships:[{target:'jeong-ria',relation:'남매 표기',certainty:'partial'}],
       limits:['관계의 정확한 범위와 소속·능력은 확인되지 않았다.']
     },
-    {id:'sato-hajime',name:'사토 하지메',group:'personal',role:'개인 관계자',status:'unknown',certainty:'listed',overview:'이름만 남아 있는 초기 개인 관계자다.',limits:['소속, 관계, 능력과 현재 상태가 제공되지 않았다.']},
-    {id:'sasaki',name:'사사키',group:'personal',role:'개인 관계자',status:'unknown',certainty:'partial',overview:'성 또는 단독 이름만 남아 있는 초기 개인 관계자다.',limits:['전체 이름과 다른 인물과의 관계가 확인되지 않았다.']},
+    {id:'sato-hajime',name:'사토 하지메',group:'personal',role:'전직 화재조사관',status:'active',certainty:'partial',overview:'비정상 화재와 의식 흔적을 감식하는 퇴직 조사관이다.',limits:['세부 경력은 보완 신원 기록에서 잠정 확장됐다.']},
+    {id:'sasaki',name:'사사키',group:'personal',role:'의료표본 운송원',status:'active',certainty:'partial',overview:'봉인된 의료표본을 분석실로 운송하는 민간 계약자다.',limits:['전체 이름과 경력은 보완 신원 기록에서 잠정 확장됐다.']},
     {
-      id:'nina-gregory',name:'니나 그레고리',group:'personal',role:'예셀 그레고리의 어머니',status:'unknown',certainty:'listed',
+      id:'nina-gregory',name:'니나 그레고리',group:'personal',role:'기생생물학 고문',status:'active',certainty:'listed',
       overview:'예셀 그레고리의 어머니로 기재된 인물이다.',
       relationships:[{target:'yesel-gregory',relation:'어머니',certainty:'listed'}],
       limits:['소속, 능력과 현재 상태가 제공되지 않았다.']
     },
     {
-      id:'yesel-gregory',name:'예셀 그레고리',group:'personal',role:'프레이의 스승',status:'unknown',certainty:'listed',
-      overview:'프레이의 스승으로 기재된 인물이다.',
-      relationships:[{target:'nina-gregory',relation:'자녀',certainty:'listed'},{target:'frey',relation:'스승',certainty:'listed'}],
-      limits:['가르친 분야와 소속, 능력 및 현재 상태가 제공되지 않았다.']
+      id:'yesel-gregory',name:'예셀 그레고리',group:'personal',role:'이상언어학 연구자',status:'active',certainty:'listed',
+      overview:'니나 그레고리의 딸이며 의식문과 숙주 언어를 연구한다.',
+      relationships:[{target:'nina-gregory',relation:'딸',certainty:'listed'}],
+      limits:['연구 경력과 활동 이력은 보완 신원 기록에서 확장됐다.']
     },
-    {id:'alma-damian',name:'알마 데미안',group:'alma',role:'알마 가문 관계자',status:'unknown',certainty:'partial',overview:'알마 가문 인물군에 이름이 남아 있으나 프레이와의 구체적인 관계는 적혀 있지 않다.',limits:['가족관계, 소속, 능력과 현재 상태를 확인해야 한다.']},
+    {id:'alma-damian',name:'알마 데미안',group:'alma',role:'가문 기록·재정 감사관',status:'active',certainty:'partial',overview:'알마 가문의 계약과 자금 이동을 추적하는 감사관이다.',relationships:[{target:'alma-wade',relation:'아들',certainty:'partial'},{target:'alma-koenig',relation:'형제',certainty:'partial'},{target:'alma-bennett',relation:'형제',certainty:'partial'},{target:'alma-griffon',relation:'형제',certainty:'partial'}],limits:['가족 구조와 직책은 보완 신원 기록에서 잠정 재구성됐다.']},
     {
-      id:'alma-bennett',name:'알마 베넷',group:'alma',role:'프레이의 여동생',status:'unknown',certainty:'listed',
-      overview:'프레이의 여동생으로 기재된 알마 가문 인물이다.',
-      relationships:[{target:'frey',relation:'여동생',certainty:'listed'}],
-      limits:['F.H.C 소속 여부와 능력·현재 상태는 제공되지 않았다.']
-    },
-    {
-      id:'alma-griffon',name:'알마 그리폰',group:'alma',role:'프레이의 남동생',status:'unknown',certainty:'listed',
-      overview:'프레이의 남동생으로 기재된 알마 가문 인물이다.',
-      relationships:[{target:'frey',relation:'남동생',certainty:'listed'}],
-      limits:['F.H.C 소속 여부와 능력·현재 상태는 제공되지 않았다.']
+      id:'alma-bennett',name:'알마 베넷',group:'alma',role:'격리구역 외상간호사',status:'active',certainty:'partial',
+      overview:'격리구역에서 오염 상처를 치료하는 알마 가문의 의료인이다.',
+      relationships:[{target:'alma-wade',relation:'딸',certainty:'partial'},{target:'alma-koenig',relation:'남매',certainty:'partial'},{target:'alma-damian',relation:'남매',certainty:'partial'},{target:'alma-griffon',relation:'남매',certainty:'partial'}],
+      limits:['가족 구조와 의료 경력은 보완 신원 기록에서 잠정 재구성됐다.']
     },
     {
-      id:'alma-wade',name:'알마 웨이드',group:'alma',role:'프레이의 어머니',status:'unknown',certainty:'listed',
-      overview:'프레이의 어머니로 기재된 알마 가문 인물이다.',
-      relationships:[{target:'frey',relation:'어머니',certainty:'listed'}],
-      limits:['F.H.C 소속 여부와 능력·현재 상태는 제공되지 않았다.']
+      id:'alma-griffon',name:'알마 그리폰',group:'alma',role:'격리설비 기술자',status:'active',certainty:'partial',
+      overview:'격리문과 음압설비를 수리하는 알마 가문의 기술자다.',
+      relationships:[{target:'alma-wade',relation:'아들',certainty:'partial'},{target:'alma-koenig',relation:'형제',certainty:'partial'},{target:'alma-damian',relation:'형제',certainty:'partial'},{target:'alma-bennett',relation:'남매',certainty:'partial'}],
+      limits:['가족 구조와 기술 경력은 보완 신원 기록에서 잠정 재구성됐다.']
     },
     {
-      id:'alma-kara',name:'알마 카라',group:'fhc-union',secondaryGroups:['alma'],role:'프레이의 할머니',status:'unknown',certainty:'listed',
-      overview:'F.H.C-유니온 구간에 기재된 알마 가문 인물이며 프레이의 할머니로 기록되어 있다.',
+      id:'alma-wade',name:'알마 웨이드',group:'alma',role:'가문 의료관리자',status:'active',certainty:'partial',
+      overview:'알마 가문의 의료기록과 노출 이력을 관리하는 의사다.',
+      relationships:[{target:'alma-kara',relation:'딸',certainty:'partial'},{target:'alma-koenig',relation:'어머니',certainty:'partial'},{target:'alma-damian',relation:'어머니',certainty:'partial'},{target:'alma-bennett',relation:'어머니',certainty:'partial'},{target:'alma-griffon',relation:'어머니',certainty:'partial'}],
+      limits:['가족 구조와 과거 계약은 보완 신원 기록에서 잠정 재구성됐다.']
+    },
+    {
+      id:'alma-kara',name:'알마 카라',group:'fhc-union',secondaryGroups:['alma'],role:'유니온 원로고문',status:'active',certainty:'partial',
+      overview:'F.H.C-유니온 초기 계약구조를 설계한 알마 가문의 원로다.',
       affiliations:[{key:'fhc',label:'F.H.C-유니온',role:'소속 인물',certainty:'listed'}],
-      relationships:[{target:'frey',relation:'할머니',certainty:'listed'},{target:'jake',relation:'경호 대상 추정',certainty:'unresolved'}],
-      limits:['유니온 내 직책과 제이크의 정확한 경호 대상은 확인되지 않았다.']
+      relationships:[{target:'alma-wade',relation:'어머니',certainty:'partial'},{target:'jake',relation:'경호 대상',certainty:'partial'}],
+      limits:['가족 구조와 제이크의 전속계약은 보완 신원 기록에서 잠정 재구성됐다.']
     },
     {
       id:'jake',name:'제이크',group:'fhc-union',role:'경호원',status:'unknown',certainty:'listed',
       overview:'F.H.C-유니온 인물군에 경호원으로 기재된 인물이다.',
       affiliations:[{key:'fhc',label:'F.H.C-유니온',role:'경호원',certainty:'listed'}],
-      relationships:[{target:'alma-kara',relation:'경호 대상 추정',certainty:'unresolved'}],
-      limits:['전체 이름과 정확한 경호 대상, 전투 능력이 제공되지 않았다.']
+      relationships:[{target:'alma-kara',relation:'전담 경호',certainty:'partial'}],
+      limits:['전체 이름과 경호 이력은 보완 신원 기록에서 확장됐다.']
     },
     {
       id:'alma-koenig',name:'알마 코니그',group:'fhc-union',secondaryGroups:['alma'],role:'본부장',status:'active',certainty:'listed',
-      overview:'F.H.C-유니온 본부장이자 프레이의 오빠로 기재된 알마 가문 인물이다.',
+      overview:'F.H.C-유니온 본부장이자 알마 가문의 장남으로 재정리된 인물이다.',
       affiliations:[{key:'fhc',label:'F.H.C-유니온',role:'본부장',certainty:'listed'}],
-      relationships:[{target:'frey',relation:'오빠',certainty:'listed'}],
-      limits:['담당 본부의 범위와 능력, 현시점 재임 여부는 확인되지 않았다.']
+      relationships:[{target:'alma-wade',relation:'아들',certainty:'partial'},{target:'alma-kara',relation:'손자',certainty:'partial'},{target:'alma-damian',relation:'형제',certainty:'partial'},{target:'alma-bennett',relation:'남매',certainty:'partial'},{target:'alma-griffon',relation:'형제',certainty:'partial'}],
+      limits:['가족 구조와 현시점 재임 여부는 보완 신원 기록에서 잠정 재구성됐다.']
     },
     {
       id:'ezekiel-kalp',name:'에제키엘 칼프',group:'fhc-ark',role:'아크의 보스',status:'active',certainty:'listed',
@@ -371,6 +356,19 @@
     }
   ];
 
+  const profiles=profileSource?.profiles||{};
+  const records=legacyRecords.map(record=>{
+    const profile=profiles[record.id]||{};
+    const renamed=profile.name&&profile.name!==record.name;
+    const aliases=new Set([...(record.aliases||[]),...(profile.aliases||[])]);
+    if(renamed) aliases.add(record.name);
+    return {
+      ...record,...profile,
+      sourceName:renamed?record.name:record.sourceName,
+      aliases:Array.from(aliases)
+    };
+  });
+
   const byId=Object.fromEntries(records.map(record=>[record.id,record]));
   const groupById=Object.fromEntries(groups.map(group=>[group.id,group]));
   const factionIndex={};
@@ -389,12 +387,14 @@
     groups:groups.length,
     deceased:records.filter(record=>record.status==='deceased').length,
     unresolved:records.filter(record=>record.certainty!=='listed'||record.limits?.length).length,
-    abilityUsers:records.filter(record=>record.capabilities?.length&&record.capabilities.some(item=>item!=='미확인')).length
+    abilityUsers:records.filter(record=>record.capabilities?.length&&record.capabilities.some(item=>item!=='미확인')).length,
+    profiled:records.filter(record=>record.identity&&record.history?.length).length,
+    renamed:records.filter(record=>record.sourceName).length
   };
 
   root.ProjectCursePersonnel=freeze({
-    version:'5.50.0',schema:'project-curse-personnel-v1',sourceClass:'LEGACY PERSONNEL REGISTER',
-    editorialRule:'세계관 우선. 관계가 많은 인물을 자동으로 중심인물로 지정하지 않는다.',
+    version:'5.51.0',schema:'project-curse-personnel-v2',sourceClass:'LEGACY REGISTER + SUPPLEMENTAL IDENTITY',
+    editorialRule:'세계 기록과 조직 구조를 우선하고 각 인물의 신원·경력은 독립 파일로 판독한다.',
     groups,statuses,certainties,records,byId,groupById,factionIndex,stats
   });
 })(window);

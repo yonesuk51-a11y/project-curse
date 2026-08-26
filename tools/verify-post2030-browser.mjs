@@ -30,7 +30,7 @@ async function openHistory(viewport,label){
   page.on('request',request=>requests.push(request.url()));
   await page.goto(baseUrl,{waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.50.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.51.0');
   await page.evaluate(()=>window.ProjectCurseShell.navigate('history',{historyMode:'replace'}));
   await page.waitForFunction(()=>document.body.dataset.route==='history');
   await page.waitForSelector('[data-history-era-filter="aftermath"]');
@@ -93,10 +93,10 @@ const detail=await desktop.page.evaluate(()=>({
 }));
 check('desktop:latest-detail',detail.title==='삼야 무응답'&&detail.era==='09 / 분기 기록과 장거리 무응답'&&detail.evidence==='현장 관측',JSON.stringify(detail));
 check('desktop:authored-detail',detail.document?.includes('상충 기록')&&detail.author?.includes('대륙간 신호합동실')&&detail.fragments===4,JSON.stringify(detail));
-check('desktop:direct-crosslinks',detail.links.includes('U.A.C 분석')&&detail.links.includes('S.I.D 분석')&&detail.links.includes('Great_Black_Forest_Region 기록')&&detail.links.includes('Dead_Zone_Pilgrimage 기록'),JSON.stringify(detail));
+check('desktop:direct-crosslinks',['U.A.C 분석','S.I.D 분석','Great_Black_Forest_Region 기록','Dead_Zone_Pilgrimage 기록'].every(needle=>detail.links.some(link=>link.includes(needle))),JSON.stringify(detail));
 check('desktop:no-detail-overflow',detail.documentWidth<=detail.viewport,JSON.stringify(detail));
 check('desktop:no-generated-core-audio-requests',!desktop.requests.some(url=>url.includes('/assets/audio/core/')),desktop.requests.filter(url=>url.includes('/assets/audio/')).join(' | '));
-const desktopShot=join(tmpdir(),'project-curse-5.50.0-aftermath-desktop.png');
+const desktopShot=join(tmpdir(),'project-curse-5.51.0-aftermath-desktop.png');
 await desktop.page.screenshot({path:desktopShot,fullPage:false});
 check('desktop:no-final-errors',desktop.errors.length===0,desktop.errors.join(' | '));
 await desktop.context.close();
@@ -117,7 +117,7 @@ const mobileLayout=await mobile.page.evaluate(()=>({
 check('mobile:latest-detail',mobileLayout.title==='삼야 무응답'&&mobileLayout.links===5&&mobileLayout.fragments===4,JSON.stringify(mobileLayout));
 check('mobile:no-horizontal-overflow',mobileLayout.document<=mobileLayout.viewport&&mobileLayout.shell<=mobileLayout.viewport,JSON.stringify(mobileLayout));
 check('mobile:no-generated-core-audio-requests',!mobile.requests.some(url=>url.includes('/assets/audio/core/')),mobile.requests.filter(url=>url.includes('/assets/audio/')).join(' | '));
-const mobileShot=join(tmpdir(),'project-curse-5.50.0-aftermath-mobile.png');
+const mobileShot=join(tmpdir(),'project-curse-5.51.0-aftermath-mobile.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-final-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();

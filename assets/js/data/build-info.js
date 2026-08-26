@@ -1,4 +1,4 @@
-// Project Curse 5.50.0 — world-first personnel register build manifest.
+// Project Curse 5.51.0 — supplemental identity dossier build manifest.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.50.0',
-    codename:'World-First Personnel Register',
-    schema:'project-curse-v42',
+    version:'5.51.0',
+    codename:'Supplemental Identity Dossiers',
+    schema:'project-curse-v43',
     released:'2026-08-26',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

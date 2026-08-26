@@ -1,6 +1,6 @@
 # Project Curse Writing Style Guide
 
-Status: `5.50.0 / archive prose and orientation standard`
+Status: `5.51.0 / archive prose and orientation standard`
 
 이 문서는 공개 설정글, 세계사, 현장 보고와 시나리오 문구를 작성할 때 적용하는 편집 기준이다. 목적은 문장을 인위적으로 거칠게 만드는 것이 아니라, 기록마다 작성자·독자·작성 목적과 정보 한계를 부여하는 데 있다.
 

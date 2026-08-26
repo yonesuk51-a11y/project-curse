@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
-const VERSION='5.50.0';
+const VERSION='5.51.0';
 const ARCHIVE_VERSION='5.35.0';
 const read=(relative)=>readFileSync(ROOT+relative,'utf8');
 const hash=(value)=>createHash('sha256').update(value).digest('hex');
@@ -62,7 +62,7 @@ const personnelCss=read('assets/css/personnel-archive.css');
 const context={window:{}};
 vm.createContext(context);
 for(const file of [
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/personnel-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/personnel-profile-data.js','assets/js/data/personnel-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/map-room-data.js',
   'assets/js/data/immortality-storyboard.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js',
   'assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js'
@@ -95,8 +95,9 @@ check('faction:no-detail-route',!faction.includes('#faction-info/')&&!faction.in
 check('faction:no-history-listeners',!faction.includes('hashchange')&&!faction.includes('popstate'));
 check('faction:internal-state',faction.includes('let selected=null')&&faction.includes('renderIndex()')&&faction.includes('renderDossier'));
 check('faction:three-field-profiles',faction.includes('factionProfile(faction)')&&['AUTHORITY DESK / RELEASE 17-C','RITUAL LINEAGE / DO NOT MERGE','BLOOD MEDIUM / COMMAND UNKNOWN'].every(marker=>factionData.includes(marker)));
-check('personnel:world-first-register',context.window.ProjectCursePersonnel?.records?.length===57&&context.window.ProjectCursePersonnel?.editorialRule?.includes('세계관 우선')&&personnelRuntime.includes('ProjectCursePersonnelRuntime=Object.freeze'));
-check('personnel:responsive-and-linked',index.includes('id="personnel"')&&personnelCss.includes('@media(max-width:600px)')&&faction.includes('data-uac-person-record'));
+check('personnel:independent-dossiers',context.window.ProjectCursePersonnel?.records?.length===56&&context.window.ProjectCursePersonnel?.stats?.profiled===56&&!context.window.ProjectCursePersonnel?.byId?.frey&&context.window.ProjectCursePersonnel?.editorialRule?.includes('독립 파일')&&personnelRuntime.includes('ProjectCursePersonnelRuntime=Object.freeze'));
+check('personnel:complete-identity-history',context.window.ProjectCursePersonnel?.records?.every(record=>record.identity?.sex&&record.identity?.birth&&record.identity?.age&&record.identity?.origin&&record.affiliationSummary&&record.background?.length>=2&&record.history?.length>=3&&record.personality?.fear&&record.fieldNotes?.length));
+check('personnel:responsive-and-linked',index.includes('id="personnel"')&&personnelCss.includes('@media(max-width:600px)')&&personnelCss.includes('.pc-personnel-identity')&&personnelRuntime.includes('function backgroundMarkup')&&faction.includes('data-uac-person-record'));
 check('history:distinct-working-voices',['봉인실 메모','정비반 음성','신호장교 구두보고'].every(marker=>historyProse.includes(marker)));
 check('evidence:korean-first-status',documentViewer.includes('archive-evidence-badge')&&['원본 보존','열람 보정','복원 추정','출처 대조 대기'].every(label=>documentViewer.includes(label))&&visualEvidenceCss.includes('.archive-evidence-badge'));
 check('visual-qa:channel-heading-focus',channelIdentityCss.includes('[data-screen-heading]:focus{outline:0}')&&channelIdentityCss.includes('[data-screen-heading]:focus-visible{box-shadow:inset 0 -1px rgba(var(--pc-channel-rgb),.72)}'));
