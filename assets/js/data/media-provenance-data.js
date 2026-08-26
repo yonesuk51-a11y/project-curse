@@ -1037,8 +1037,7 @@
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "docs/Immortality_860201/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1073,8 +1072,7 @@
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "docs/Immortality_860201/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1125,8 +1123,7 @@
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
         "docs/Cults_871104/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1281,8 +1278,7 @@
         "assets/js/main.js",
         "assets/resources/ASSET_REGISTRY.md",
         "docs/Cults_871104/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1300,8 +1296,7 @@
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
         "docs/Cults_871104/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1374,8 +1369,7 @@
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "docs/Immortality_860201/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
@@ -2033,8 +2027,7 @@
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "docs/Immortality_860201/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
@@ -2438,8 +2431,7 @@
         "assets/js/data/media-manifest.js",
         "assets/js/main.js",
         "docs/Cults_871104/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
@@ -2458,8 +2450,7 @@
         "assets/js/data/media-manifest.js",
         "assets/js/main.js",
         "docs/Cults_871104/index.html",
-        "index.html",
-        "v6/assets/js/data.js"
+        "index.html"
       ],
       "referenced": true,
       "protectedScope": true
