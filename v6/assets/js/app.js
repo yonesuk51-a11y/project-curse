@@ -5,7 +5,8 @@ const ROUTES=Object.freeze({
   world:{label:'세계 구조',code:'WORLD 01',load:()=>import('./routes/world.js')},
   map:{label:'세계 관제',code:'MAP 02',load:()=>import('./routes/map.js')},
   archive:{label:'보호 기록',code:'ARCHIVE 03',load:()=>import('./routes/archive.js')},
-  marks:{label:'세력 표식',code:'MARKS 04',load:()=>import('./routes/marks.js')}
+  marks:{label:'세력 표식',code:'MARKS 04',load:()=>import('./routes/marks.js')},
+  people:{label:'인물 기록',code:'PEOPLE 05',load:()=>import('./routes/people.js')}
 });
 
 const state={route:'briefing',detail:'',booted:false,transitioning:false,pending:null};

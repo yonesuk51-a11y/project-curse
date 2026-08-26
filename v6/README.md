@@ -1,6 +1,6 @@
 # Project Curse V6 — Recovered Network Alpha
 
-상태: `6.0.0-alpha.3 / DRAFT / REFOUNDATION`
+상태: `6.0.0-alpha.4 / DRAFT / REFOUNDATION`
 
 이 폴더는 기존 공개 루트 5.52를 교체하지 않고 세계관·정보 구조·기록 연출을 다시 설계하는 독립 시제품이다. V6의 목적은 기존 설정을 자동으로 정사 승계하는 것이 아니라, 구판 자료를 출처가 붙은 레거시 자료로 봉인한 뒤 새 정사가 선택적으로 채택하도록 만드는 데 있다.
 
@@ -16,6 +16,8 @@
 - `#/archive/Cults_871104` — 자동 재생 없는 조사형 기록 시제품
 - `#/archive/Immortality_860201` — 보호 원문 시간에 맞춘 4막 사건 재구성
 - `#/marks` — 17개 세력 체계, 51개 `seal / badge / map` 문맥, 계보·거래 분리 대장
+- `#/people` — 프레이를 제외한 56명 구 명부 인물의 원 기록·잠정 신원·2042 상태 분리 열람
+- `#/people/person:sakuma-yuta` — 사쿠마 유타·레드 마우스의 동일인 표기를 보존하되 V6 사건 연결은 보류한 인물 파일
 
 ## 설계 경계
 
@@ -26,6 +28,7 @@
 5. 음향과 영상은 자동 재생하지 않는다.
 6. 출처·공개 권리 검토 중인 후보 이미지는 V6에 넣지 않는다.
 7. V6의 브라우저 상태는 `pc_v6_*` 네임스페이스만 사용한다.
+8. 56명 인물 스냅샷은 구판 원 명부와 잠정 보완 파일에서 생성하지만 모든 인물의 V6 채택 상태는 `UNREVIEWED`, 2042 현재 상태는 `UNRESOLVED`로 시작한다.
 
 ## 세계관 문서
 
@@ -36,6 +39,7 @@
 - [FACTIONS_V6.md](world/FACTIONS_V6.md)
 - [FACTION_MARK_SYSTEM_V6.md](world/FACTION_MARK_SYSTEM_V6.md)
 - [MAP_PROTOCOL_V6.md](world/MAP_PROTOCOL_V6.md)
+- [PEOPLE_PROTOCOL_V6.md](world/PEOPLE_PROTOCOL_V6.md)
 - [LEGACY_MIGRATION_V6.md](world/LEGACY_MIGRATION_V6.md)
 
 ## 로컬 열람

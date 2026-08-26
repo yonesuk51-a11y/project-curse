@@ -1,5 +1,5 @@
 export const V6_BUILD=Object.freeze({
-  version:'6.0.0-alpha.3',
+  version:'6.0.0-alpha.4',
   label:'Recovered World',
   date:'2026-08-27',
   canonState:'DRAFT / REFOUNDATION'

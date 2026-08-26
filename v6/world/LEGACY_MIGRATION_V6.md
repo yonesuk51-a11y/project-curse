@@ -100,6 +100,8 @@ Immortality_860201 standalone
 
 원 명부, 후대 보완 초안과 V6 확정 정보를 섞지 않는다.
 
+`6.0.0-alpha.4`의 인물 채널은 56명 자료를 명시적 스냅샷으로 동결한 `LEGACY INTAKE` 단계다. 각 파일은 `v6Adoption:'UNREVIEWED'`, `current2042:'UNRESOLVED'`, `v6IncidentLinks:[]`로 시작한다. 이는 자동 import나 정사 승계가 아니라 이후 인물별 채택 심사를 위한 입력 대장이다.
+
 ### 지도·시나리오
 
 - `map-room-data.js`
