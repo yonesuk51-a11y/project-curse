@@ -1,4 +1,4 @@
-// Project Curse 5.48.1 — intelligence dossier, faction-specific field profile, cult lineage and incident owner.
+// Project Curse 5.54.0 — reader-first faction profiles with optional archive depth.
 (function(){
   'use strict';
 
@@ -37,20 +37,34 @@
     return accent?` style="--pc-faction-mark-accent:${esc(accent)}"`:'';
   }
 
+  function firstSentence(value){
+    const text=String(value||'').trim();
+    const match=text.match(/^.*?[.!?。](?:\s|$)/);
+    return match?match[0].trim():text;
+  }
+
+  function groupLabel(label){
+    return ({
+      'PRIMARY INSTITUTIONS':'주요 기관',
+      'EXTERNAL POWERS':'독립 세력',
+      'CULT LINEAGE / COMMAND STATUS':'우시노다 계통'
+    })[label]||label;
+  }
+
   function factionCard(key){
     const faction=source.factions[key];
-    const lineageNode=lineage?.nodes?.[key];
+    const status=firstSentence(faction.assessment?.status);
     return `<button class="pc-faction-card" data-pc-faction-open="${esc(key)}" type="button"${markStyle(key)}>
       ${markImage(key)}
-      <b>${esc(faction.name)}</b>
-      ${lineageNode?`<small data-pc-lineage-state="${esc(lineageNode.state)}">${esc(lineageNode.kind)}</small>`:''}
+      <span><b>${esc(faction.name)}</b><p>${esc(faction.lead)}</p>${status?`<small>${esc(status)}</small>`:''}</span>
+      <i aria-hidden="true">›</i>
     </button>`;
   }
 
   function factionGroups(){
     const groups=source.groups||[{label:'PRIMARY ORGANIZATIONS',keys:source.order}];
     return groups.map((group)=>`<section class="pc-faction-index-group">
-      <h3>${esc(group.label)}</h3>
+      <h3>${esc(groupLabel(group.label))}</h3>
       <div class="pc-faction-index-grid">${group.keys.map(factionCard).join('')}</div>
     </section>`).join('');
   }
@@ -68,7 +82,7 @@
     const profile=faction.profile;
     if(!profile?.items?.length) return '';
     return `<section class="pc-faction-profile" aria-label="${esc(profile.label)}">
-      <header><small>${esc(profile.code)}</small><h4>${esc(profile.label)}</h4></header>
+      <header><h4>${esc(profile.label)}</h4></header>
       <p>${esc(profile.note)}</p>
       <dl>${profile.items.map(([term,text])=>`<div><dt>${esc(term)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>
     </section>`;
@@ -78,14 +92,14 @@
     const assessment=faction.assessment;
     if(!assessment) return '';
     const rows=[
-      ['현재 상태',assessment.status,'current'],
-      ['지휘·계보',assessment.lineage,'lineage'],
-      ['오해하기 쉬운 점',assessment.misconception,'misread'],
-      ['남은 과거',assessment.past,'past'],
-      ['미해결',assessment.unresolved,'unresolved']
+      ['현재',assessment.status,'current'],
+      ['형성 과정',assessment.lineage,'lineage'],
+      ['주의할 점',assessment.misconception,'misread'],
+      ['남겨진 문제',assessment.past,'past'],
+      ['아직 모르는 것',assessment.unresolved,'unresolved']
     ];
-    return `<section class="pc-faction-assessment" aria-label="현재 판정 요약">
-      <header><small>CURRENT ASSESSMENT / FIVE-LAYER READ</small><h4>현재 판정 요약</h4></header>
+    return `<section class="pc-faction-assessment" aria-label="세력 이해에 필요한 배경">
+      <header><small>CONTEXT</small><h4>이해에 필요한 배경</h4></header>
       <dl>${rows.map(([term,text,tone])=>`<div data-assessment-layer="${tone}"><dt>${esc(term)}</dt><dd>${esc(text)}</dd></div>`).join('')}</dl>
     </section>`;
   }
@@ -103,9 +117,9 @@
     const ids=personnel?.factionIndex?.[key]||[];
     if(!ids.length) return '';
     const visible=ids.slice(0,8).map(id=>personnel.byId[id]).filter(Boolean);
-    return `<section class="pc-faction-personnel"><header><div><small>LINKED PERSONNEL / PARTIAL REGISTER</small><h4 class="pc-faction-section-title">연결 인물</h4></div><span>${esc(ids.length)} FILES</span></header>
+    return `<section class="pc-faction-personnel"><header><div><small>PERSONNEL</small><h4 class="pc-faction-section-title">관련 인물</h4></div></header>
       <div>${visible.map(record=>`<button data-uac-person-record="${esc(record.id)}" data-uac-route="personnel" type="button"><span><b>${esc(record.name)}</b><small>${esc(record.role)}</small></span><i aria-hidden="true">›</i></button>`).join('')}</div>
-      <footer><p>소속 표기는 인물의 현재 충성·생존·지휘 관계를 자동으로 확정하지 않는다.</p><button data-uac-route="personnel" type="button">인물 명부 전체 열기&nbsp;↗</button></footer>
+      <footer><button data-uac-route="personnel" type="button">인물 기록 열기&nbsp;↗</button></footer>
     </section>`;
   }
 
@@ -114,24 +128,21 @@
     const symbols=(data.symbols||[]).map(item=>`<li><strong>${esc(item.label)}</strong><span>${esc(item.text)}</span></li>`).join('');
     return `<section class="pc-faction-mark-analysis" aria-labelledby="pc-faction-mark-title"${markStyle(key)}>
       <header>
-        <small>MARK AUTHENTICATION / SIGIL RECORD</small>
-        <h4 id="pc-faction-mark-title">문양 감식</h4>
+        <small>INSIGNIA</small>
+        <h4 id="pc-faction-mark-title">문양</h4>
       </header>
       <div class="pc-faction-mark-grid">
         <figure>
           ${markImage(key,'pc-faction-mark-master')}
-          <figcaption>${esc(data.assetState)}</figcaption>
         </figure>
         <dl>
-          <div><dt>분류</dt><dd>${esc(data.type)}</dd></div>
-          <div><dt>근거</dt><dd>${esc(data.source)}</dd></div>
-          <div><dt>최초 확인</dt><dd>${esc(data.firstSeen)}</dd></div>
-          <div><dt>신뢰도</dt><dd data-pc-mark-confidence="${esc(data.confidence)}">${esc(data.confidence)}</dd></div>
-          <div><dt>주요 사용처</dt><dd>${esc(data.usage)}</dd></div>
+          <div><dt>종류</dt><dd>${esc(data.type)}</dd></div>
+          <div><dt>처음 확인</dt><dd>${esc(data.firstSeen)}</dd></div>
+          <div><dt>사용 방식</dt><dd>${esc(data.usage)}</dd></div>
         </dl>
       </div>
       ${symbols?`<ol class="pc-faction-mark-symbols">${symbols}</ol>`:''}
-      ${data.note?`<p class="pc-faction-mark-note"><b>분석 주석</b>${esc(data.note)}</p>`:''}
+      ${data.note?`<p class="pc-faction-mark-note"><b>주의</b>${esc(data.note)}</p>`:''}
     </section>`;
   }
 
@@ -157,46 +168,57 @@
       return {id,date:record?.date||meta?.date||'DATE PARTIAL',title:record?.title||meta?.title||id};
     }).filter(Boolean);
     return `<section class="pc-faction-lineage" aria-labelledby="pc-lineage-title">
-      <header><div><small>CULT LINEAGE / COMMAND STATUS</small><h4 id="pc-lineage-title">교단 계보 감식</h4></div><span data-lineage-state="${esc(active.state)}">${esc(state?.label||active.state)}</span></header>
+      <header><div><small>LINEAGE</small><h4 id="pc-lineage-title">교단 계통</h4></div><span data-lineage-state="${esc(active.state)}">${esc(state?.label||active.state)}</span></header>
       <div class="pc-lineage-current"><strong>${esc(active.kind)}</strong><span>${esc(active.command)}</span><p>${esc(active.summary)}</p></div>
       <div class="pc-lineage-atlas" aria-label="우시노다 계보 노드">${nodes}</div>
       <ol class="pc-lineage-edges">${edges}</ol>
-      <aside class="pc-lineage-warning"><b>판정 유보</b><span>${esc(lineage.unresolved.map(item=>item.text).join(' '))}</span></aside>
+      <aside class="pc-lineage-warning"><b>확인되지 않음</b><span>${esc(lineage.unresolved.map(item=>item.text).join(' '))}</span></aside>
       ${history.length?`<div class="pc-lineage-history"><h5>연결 세계 기록</h5>${history.map(record=>`<button type="button" data-pc-faction-history="${esc(record.id)}"><time>${esc(record.date)}</time><span>${esc(record.title)}</span><i aria-hidden="true">↗</i></button>`).join('')}</div>`:''}
     </section>`;
+  }
+
+  function factionReaderSummary(faction,incidents){
+    const assessment=faction.assessment||{};
+    const relation=faction.relations?.[0];
+    const target=relation?source.factions[relation.target]:null;
+    const incident=incidents[0];
+    return `<section class="pc-faction-reader-summary" aria-label="${esc(faction.name)} 핵심 정보">
+      <div><small>현재</small><p>${esc(assessment.status||faction.lead)}</p></div>
+      ${faction.operations?.length?`<div><small>주요 행동</small><p>${esc(faction.operations[0])}</p></div>`:''}
+      ${relation&&target?`<button type="button" data-pc-faction-open="${esc(relation.target)}"><small>주요 관계</small><b>${esc(target.name)}</b><span>${esc(relation.label)}</span><i aria-hidden="true">›</i></button>`:''}
+      ${incident?`<button type="button" data-pc-faction-incident="${esc(incident.id)}"><small>대표 사건</small><b>${esc(incident.title)}</b><span>${esc(incident.date)}</span><i aria-hidden="true">↗</i></button>`:''}
+    </section>`;
+  }
+
+  function moreRecord(label,title,body){
+    if(!body) return '';
+    return `<details class="pc-faction-more"><summary><span><small>${esc(label)}</small><b>${esc(title)}</b></span><em>펼쳐 보기&nbsp;＋</em></summary><div>${body}</div></details>`;
   }
 
   function dossier(key){
     const faction=source.factions[key]||source.factions.uac;
     const incidents=(incidentNetwork?.incidentList||[]).filter(item=>item.factions.includes(key));
+    const organization=`<section class="pc-faction-copy" aria-label="조직 개요">${faction.overview.map((paragraph)=>`<p>${esc(paragraph)}</p>`).join('')}</section>
+      ${factionProfile(faction)}
+      <div class="pc-faction-brief-grid"><section class="pc-faction-operations"><h4 class="pc-faction-section-title">주요 활동</h4><ul>${faction.operations.map((item)=>`<li>${esc(item)}</li>`).join('')}</ul></section><section class="pc-faction-fault"><h4 class="pc-faction-section-title">내부 문제</h4><p>${esc(faction.fault)}</p></section></div>
+      ${factionAssessment(faction)}`;
+    const history=`<section class="pc-faction-chronology"><h4 class="pc-faction-section-title">주요 연혁</h4><ol>${faction.chronology.map(([date,text])=>`<li><time>${esc(date)}</time><span>${esc(text)}</span></li>`).join('')}</ol></section>
+      ${incidents.length?`<section class="pc-faction-incidents"><h4 class="pc-faction-section-title">연결 사건</h4><div>${incidents.map(incident=>`<button type="button" data-pc-faction-incident="${esc(incident.id)}"><time>${esc(incident.date)}</time><strong>${esc(incident.title)}</strong><small>${esc(incident.status)}</small></button>`).join('')}</div></section>`:''}`;
+    const connections=`${personnelLinks(key)}<section class="pc-faction-relations"><h4 class="pc-faction-section-title">다른 세력과의 관계</h4><div class="pc-faction-relation-list">${faction.relations.map(relationButton).join('')}</div></section>`;
+    const evidence=`${factionVisual(faction)}${markAuthentication(key)}${lineageAtlas(key)}`;
     return `<article class="pc-faction-dossier" data-pc-faction-dossier="${esc(key)}" aria-live="polite"${markStyle(key)}>
       <header class="pc-faction-dossier-head">
         ${markImage(key)}
-        <div><span>FACTION DOSSIER / CONFIRMED HISTORY</span><h3>${esc(faction.name)}</h3></div>
+        <div><span>FACTION</span><h3>${esc(faction.name)}</h3></div>
       </header>
       <p class="pc-faction-lead">${esc(faction.lead)}</p>
-      ${factionAssessment(faction)}
-      ${factionVisual(faction)}
-      ${markAuthentication(key)}
-      ${lineageAtlas(key)}
-      <section class="pc-faction-copy" aria-label="조직 개요">
-        ${faction.overview.map((paragraph)=>`<p>${esc(paragraph)}</p>`).join('')}
-      </section>
-      ${factionProfile(faction)}
-      <div class="pc-faction-brief-grid">
-        <section class="pc-faction-operations"><h4 class="pc-faction-section-title">확인된 활동</h4>
-          <ul>${faction.operations.map((item)=>`<li>${esc(item)}</li>`).join('')}</ul>
-        </section>
-        <section class="pc-faction-fault"><h4 class="pc-faction-section-title">내부 문제와 모순</h4><p>${esc(faction.fault)}</p></section>
+      ${factionReaderSummary(faction,incidents)}
+      <div class="pc-faction-more-stack">
+        ${moreRecord('ORGANIZATION','조직과 활동',organization)}
+        ${moreRecord('HISTORY','역사와 사건',history)}
+        ${moreRecord('CONNECTIONS','관계와 인물',connections)}
+        ${moreRecord('INSIGNIA / LINEAGE','문양과 계통',evidence)}
       </div>
-      <section class="pc-faction-chronology"><h4 class="pc-faction-section-title">조직 연혁</h4>
-        <ol>${faction.chronology.map(([date,text])=>`<li><time>${esc(date)}</time><span>${esc(text)}</span></li>`).join('')}</ol>
-      </section>
-      ${personnelLinks(key)}
-      <section class="pc-faction-relations"><h4 class="pc-faction-section-title">직접 관계</h4>
-        <div class="pc-faction-relation-list">${faction.relations.map(relationButton).join('')}</div>
-      </section>
-      ${incidents.length?`<section class="pc-faction-incidents"><h4 class="pc-faction-section-title">연결 사건</h4><div>${incidents.map(incident=>`<button type="button" data-pc-faction-incident="${esc(incident.id)}"><time>${esc(incident.date)}</time><strong>${esc(incident.title)}</strong><small>${esc(incident.status)}</small></button>`).join('')}</div></section>`:''}
     </article>`;
   }
 
@@ -239,7 +261,7 @@
     selected=null;
     section.innerHTML=`<div class="pc-faction-analysis" data-pc-faction-owner="1">
       <header class="pc-faction-analysis-intro"><small>U.A.C CLOSED ARCHIVE / INTELLIGENCE ANALYSIS</small>
-        <h2>세력 분석</h2><p>열람할 세력 마크를 선택하십시오.</p>
+        <h2>세력 분석</h2><p>기관과 교단, 독립 세력이 무엇을 원하고 누구와 충돌하는지 정리했다.</p>
       </header>
       <div class="pc-faction-index" aria-label="분석 대상 세력">${factionGroups()}</div>
     </div>`;

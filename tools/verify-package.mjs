@@ -78,6 +78,7 @@ const mediaClearanceCss=read('assets/css/media-clearance.css');
 const factionAnalysisSource=read('assets/js/data/faction-analysis-data.js');
 const factionMarkSource=read('assets/js/data/faction-mark-registry.js');
 const factionAnalysisRuntime=read('assets/js/pages/faction-analysis.js');
+const factionAnalysisCss=read('assets/css/faction-analysis.css');
 const personnelProfileSource=read('assets/js/data/personnel-profile-data.js');
 const personnelRemakeSource=read('assets/js/data/personnel-remake-data.js');
 const personnelDataSource=read('assets/js/data/personnel-data.js');
@@ -594,8 +595,8 @@ add('faction-lineage-schema',factionLineage?.version===VERSION&&factionLineage?.
 add('faction-lineage-rank-boundary',factionLineage?.rules?.some(rule=>rule.includes('교리상 로드좌 1석과 사도석 4석'))&&factionLineage.rules.some(rule=>rule.includes('센티넬은 계급이 아니라'))&&factionLineage.nodes?.['first-apostle']?.kind.includes('세력 아님'));
 add('faction-lineage-command-states',factionLineage?.edges?.some(edge=>edge.from==='blood-cult'&&edge.to==='southern-blood'&&edge.state==='disputed')&&factionLineage.edges.some(edge=>edge.from==='southern-blood'&&edge.to==='deadzone-blood'&&edge.state==='split'));
 add('faction-lineage-history-links',Object.values(factionLineage?.nodes||{}).every(node=>node.history.every(id=>worldHistoryData?.records?.[id])));
-add('faction-mark-auth-runtime',factionAnalysisRuntime.includes('ProjectCurseFactionMarks')&&factionAnalysisRuntime.includes('MARK AUTHENTICATION / SIGIL RECORD')&&factionAnalysisRuntime.includes('bindMarkFallbacks'));
-add('faction-lineage-runtime',factionAnalysisRuntime.includes('ProjectCurseFactionLineage')&&factionAnalysisRuntime.includes('CULT LINEAGE / COMMAND STATUS')&&factionAnalysisRuntime.includes('data-pc-faction-history')&&factionAnalysisRuntime.includes('ProjectCurseWorldHistoryRuntime'));
+add('faction-mark-reader-runtime',factionAnalysisRuntime.includes('ProjectCurseFactionMarks')&&factionAnalysisRuntime.includes('<small>INSIGNIA</small>')&&factionAnalysisRuntime.includes('문양과 계통')&&factionAnalysisRuntime.includes('bindMarkFallbacks')&&!factionAnalysisRuntime.includes('MARK AUTHENTICATION / SIGIL RECORD'));
+add('faction-lineage-runtime',factionAnalysisRuntime.includes('ProjectCurseFactionLineage')&&factionAnalysisRuntime.includes('<small>LINEAGE</small>')&&factionAnalysisRuntime.includes('data-pc-faction-history')&&factionAnalysisRuntime.includes('ProjectCurseWorldHistoryRuntime'));
 add('faction-single-menu',count(index,'data-uac-route="faction-info"')>=2&&count(index,'data-uac-route="faction-relation"')===0&&index.includes('<b>세력 분석</b>'));
 add('faction-unified-runtime',factionAnalysisRuntime.includes('data-pc-faction-owner')&&factionAnalysisRuntime.includes('pc-faction-relation-list'));
 add('faction-mark-name-index',factionAnalysisRuntime.includes('pc-faction-card')&&factionAnalysis?.order?.every(key=>!('subtitle' in factionAnalysis.factions[key])));
@@ -664,7 +665,8 @@ const aftermathProse=['2031-02-03-branch-seal','2032-08-14-three-bells-compact',
 add('history-aftermath-distinct-working-voices',aftermathProse.every(record=>record?.author&&record?.recipient&&record?.purpose&&record.fragments?.length>=3)&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='봉인실 메모'))&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='정비반 음성'))&&aftermathProse.some(record=>record.fragments.some(fragment=>fragment.label==='신호장교 구두보고')));
 add('faction-three-distinct-field-profiles',['uac','ushinoda','blood-cult'].every(key=>factionAnalysis?.factions?.[key]?.profile?.items?.length===3)&&new Set(['uac','ushinoda','blood-cult'].map(key=>factionAnalysis.factions[key].profile.code)).size===3&&factionAnalysisRuntime.includes('function factionProfile'));
 const factionAssessmentFields=['status','lineage','misconception','past','unresolved'];
-add('faction-thirteen-five-layer-assessments',factionAnalysis?.order?.length===13&&factionAnalysis.order.every(key=>factionAssessmentFields.every(field=>factionAnalysis.factions[key]?.assessment?.[field]))&&factionAnalysisRuntime.includes('function factionAssessment')&&factionAnalysisRuntime.includes('오해하기 쉬운 점'));
+add('faction-thirteen-context-assessments',factionAnalysis?.order?.length===13&&factionAnalysis.order.every(key=>factionAssessmentFields.every(field=>factionAnalysis.factions[key]?.assessment?.[field]))&&factionAnalysisRuntime.includes('function factionAssessment')&&factionAnalysisRuntime.includes('주의할 점'));
+add('faction-reader-first-hierarchy',factionAnalysisRuntime.includes('function factionReaderSummary')&&factionAnalysisRuntime.includes('function moreRecord')&&['조직과 활동','역사와 사건','관계와 인물','문양과 계통'].every(label=>factionAnalysisRuntime.includes(label))&&factionAnalysisCss.includes('.pc-faction-reader-summary')&&factionAnalysisCss.includes('.pc-faction-more'));
 add('faction-first-apostle-visual-boundary',factionAnalysis?.factions?.['first-apostle']?.visual?.className==='RECONSTRUCTED'&&factionAnalysis.factions['first-apostle'].visual.caption.includes('단일 개체 여부')&&factionAnalysisRuntime.includes('function factionVisual'));
 add('faction-nhc-personnel-visual-boundary',factionAnalysis?.factions?.nhc?.visual?.className==='RECONSTRUCTED'&&factionAnalysis.factions.nhc.visual.caption.includes('실제 단체사진')&&factionAnalysis.factions.nhc.visual.caption.includes('소매 표식'));
 add('visual-evidence-readable-status-badges',visualEvidence?.version==='1.1.0'&&visualEvidence.classes.ORIGINAL.label==='원본 보존'&&visualEvidence.classes.RECONSTRUCTED.label==='복원 추정'&&visualEvidence.classes.UNVERIFIED.label==='출처 대조 대기'&&read('assets/js/pages/archive-document.js').includes('archive-evidence-badge')&&visualEvidenceCss.includes('.archive-evidence-badge'));
