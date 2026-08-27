@@ -1,4 +1,4 @@
-// Project Curse 5.43.1 — chronology eras, evidence grades and post-2030 common canon.
+// Project Curse 5.54.0 — deep chronology, world laws, evidence grades and post-2030 common canon.
 (function(root){
   'use strict';
 
@@ -18,6 +18,7 @@
   };
 
   const eras=[
+    {id:'deep',index:'00',range:'기원 불명–1974',title:'기관 이전의 균열',summary:'성채, 봉인선과 은닉 연구가 현대 기관보다 먼저 존재했음을 보여 주는 불완전한 전사.'},
     {id:'origin',index:'01',range:'1975–1985',title:'공간 개척과 계측 도약',summary:'아마리온의 공간 연구가 F.H.C로 승계되고 일본의 제6계측계획이 비정합 경로를 측정하기 시작한 시기.'},
     {id:'exposure',index:'02',range:'1986–1992',title:'교단 노출과 분산 계측',summary:'교단 침투가 드러나는 동안 일본의 계측 규격이 도시 설비로 퍼지고 중앙계획 해산 뒤 분산 보존된 시기.'},
     {id:'institution',index:'03',range:'1993–1999',title:'공식 대응 체계와 모방',summary:'U.A.C가 공개되고 분류·봉쇄 체계가 만들어졌지만 대응기관도 적의 방식을 모방하기 시작한 시기.'},
@@ -27,6 +28,42 @@
     {id:'frontiers',index:'07',range:'2014–2021',title:'성채권과 북부전선',summary:'대흑림 성채가 피난권을 확보하고 혈교가 분열한 뒤 북부전선과 F.H.C 내부전이 확대된 시기.'},
     {id:'mobilization',index:'08',range:'2024–2030',title:'기록 조작과 남부 동원',summary:'우시노다 기록의 조작이 드러나고 북부전선의 역전이 남부권의 대규모 동원과 쿠데타로 이어진 시기.'},
     {id:'aftermath',index:'09',range:'2031–2042',title:'분기 기록과 장거리 무응답',summary:'부서진 왕관의 결말이 봉인된 뒤 성채·검문소·전선이 중앙의 단일 명령 없이 생존 규칙과 기록망을 다시 세운 시기.'}
+  ];
+
+  const worldFramework={
+    thesis:'기관이 세계를 만든 것이 아니다. 오래전부터 금이 가 있던 세계를 설명하고, 독점하고, 견디기 위해 기관이 생겼다.',
+    publicBaseline:'2006년 이후 리버스와 괴이의 존재는 완전히 은폐되지 않는다. 시민은 경보색, 대피 회랑, 오염 검문과 실종자 공고를 일상 재난문법으로 배운다. 다만 발생 원인과 기관 책임, 능력자의 대가는 계속 검열된다.',
+    ontology:[
+      {code:'EVENT',name:'리버스',text:'공간·생체·정신의 규칙이 다시 쓰이는 사건. 생물이나 세력의 이름이 아니다.'},
+      {code:'ENTITY',name:'괴이',text:'리버스에서 출현하거나 그 틈을 통해 유입된 비인간 존재.'},
+      {code:'PERSON',name:'타락자',text:'인간이었던 기억과 신원을 일부 유지한 채 변질된 사람. 괴이와 같은 말로 처리하지 않는다.'},
+      {code:'WIELDER',name:'능력자',text:'선천 생기, 계약, 이식, 기생체, 유물, 실험 또는 생환을 통해 변칙을 사용하는 인간.'}
+    ],
+    abilitySources:[
+      {name:'선천 생기',cost:'장기·감각·수명 소모'},
+      {name:'교단 계약',cost:'기억·이름·의지의 종속'},
+      {name:'의식 이식',cost:'비가역 신체변형'},
+      {name:'기생체 공생',cost:'신체 주도권 공유'},
+      {name:'유물 계승',cost:'사용 규칙과 소유권에 구속'},
+      {name:'기관 실험',cost:'후유증·추적표식·명령 트리거'},
+      {name:'리버스 생환',cost:'현실감·신원 연속성 손상'}
+    ],
+    civilianSystems:[
+      {name:'식량·전력',text:'성채와 도시권은 배급표보다 발전기 연료, 냉장 의약품과 정수 필터를 먼저 계산한다.'},
+      {name:'통신',text:'공식 방송, 성채 종, 단파 호출과 순례자 구전이 겹친다. 같은 소식도 권역마다 날짜가 다르다.'},
+      {name:'교육',text:'아이들은 괴이 이름보다 경보색, 창문 봉인, 가족 기억 대조문과 대피번호를 먼저 배운다.'},
+      {name:'통행',text:'여권보다 노출기록, 동행자 서명, 귀환 경로와 마지막 수면 시각이 중요한 지역이 늘었다.'},
+      {name:'장례·실종',text:'시신이 없거나 돌아온 사람이 동일인인지 불명인 경우가 많아 이름, 물건, 음성기록을 따로 장례 치른다.'}
+    ]
+  };
+
+  const deepHistoryRecords=[
+    {id:'deep-first-breach',sort:1,date:'기원 불명',title:'최초 균열 전승',summary:'문이 열렸다는 기록보다 닫는 법을 잊었다는 전승이 먼저 남아 있다.',era:'deep',evidence:'disputed',basis:'대흑림 성채 서판, 데드 존 지하문과 유라시아 봉인문이 서로 다른 언어로 같은 금기 세 가지를 반복한다.',sourceState:'서판 탁본 / 구술 / 연대측정 상충',paragraphs:['현대 기관은 이 사건을 하나의 역사적 재난으로 확정하지 않는다. 서로 교류한 흔적이 없는 지역에서 검은 강, 이름 없는 문, 돌아온 사람의 기억을 대조하라는 규칙이 반복될 뿐이다.','최초 균열이라는 명칭은 후대 편집자의 편의상 붙인 것이다. 하나의 사건인지, 시대마다 되풀이된 여러 사건인지 판정할 수 없다.']},
+    {id:'deep-citadel-charters',sort:2,date:'4–9세기 추정',title:'성채 피난헌장',summary:'왕국보다 오래된 성채들이 혈통과 신앙을 묻지 않는 야간 피난권을 기록했다.',era:'deep',evidence:'testimony',basis:'남방 성채 여섯 곳의 문지기 구술과 서로 다른 석문 파편에서 유사한 조항이 확인된다.',sourceState:'현지 구술 / 석문 파편 / 연대 추정',paragraphs:['헌장은 국가법이 아니라 밤에 문을 두드린 사람을 한 차례 들여보내야 한다는 생존관습에 가깝다. 이 관습은 훗날 대흑림의 성채가 교단, 난민과 무소속 순례자를 동시에 받아들이는 근거가 됐다.','성채 건립자를 특정할 수 없으며 오늘날의 소왕국들이 그 법통을 온전히 이었다는 증거도 없다.']},
+    {id:'deep-plague-copies',sort:3,date:'14세기 사본',title:'검은 장부의 재필사',summary:'유럽의 대역병기 수도원 장부 여백에서 봉인 절차와 기억 대조문이 발견됐다.',era:'deep',evidence:'corroborated',basis:'세 지역 사본의 필체와 종이 연대는 다르지만 여백 기호와 절차 순서가 일치한다.',sourceState:'역사 사본 / 원본 소실',paragraphs:['당시의 실제 역병을 초자연 현상이 일으켰다는 증거는 없다. 다만 피난과 매장 행렬 속에 섞여 이동한 소규모 결사들이 별개의 변칙 사건을 감추기 위해 동일한 장부를 재필사한 정황이 남는다.','후대 혈교는 이 사본을 자신들의 계보로 주장했지만 사용된 의식 문법은 현대 혈교와 여러 항목에서 다르다.']},
+    {id:'deep-sealing-wars',sort:4,date:'1618–1648',title:'봉인선의 전쟁기 이동',summary:'삼십년전쟁의 난민·용병·보급망을 따라 봉인 기술과 금지 유물이 국경을 넘었다.',era:'deep',evidence:'observed',basis:'군수장부에 없는 납 상자, 수도원 피난명부와 후대 봉인고의 표식이 연결된다.',sourceState:'공개 전쟁사와 비공개 물류기록 대조',paragraphs:['전쟁의 원인과 대규모 희생을 오컬트 세력의 탓으로 돌리지 않는다. 확인되는 것은 혼란을 이용해 별개의 유물과 의식자가 이동했고, 일부 도시가 전쟁이 끝난 뒤에도 밤 통행금지와 지하실 봉인을 유지했다는 사실이다.','현대 U.A.C는 이 시기의 이동선을 초기 국제 봉쇄망으로 보지만 중앙 지휘조직의 존재는 인정하지 않는다.']},
+    {id:'deep-industrial-occult',sort:5,date:'1883–1913',title:'산업 계측과 의식의 결합',summary:'전신·사진·전력망이 보이지 않던 현상을 반복 기록 가능한 신호로 바꾸기 시작했다.',era:'deep',evidence:'corroborated',basis:'민간 발명가의 실험노트와 군 통신학교의 압수목록에 같은 파형과 유리판 손상이 남아 있다.',sourceState:'기술사료 / 압수목록 / 일부 위조 의심',paragraphs:['도시의 전력망은 괴이를 만든 장치가 아니라 이전에는 목격담으로 끝나던 현상을 여러 사람이 동시에 기록하게 한 매체였다. 이때부터 정부와 기업은 신앙보다 재현성과 군사적 이용 가능성에 관심을 보였다.','훗날 아마리온과 일본 계측계획은 이 시대 장비를 직접 승계했다고 주장하지 않지만, 파형 표기와 실패 분류가 놀랄 만큼 유사하다.']},
+    {id:'deep-cold-war-programs',sort:6,date:'1947–1974',title:'냉전기 비인가 대응계획',summary:'정보기관과 군 연구소가 변칙 현상을 적국 기술·심리전·생물학 위협으로 각각 오인하며 분산 연구했다.',era:'deep',evidence:'corroborated',basis:'폐기된 심리전 문서, 방공훈련 기록과 1975년 아마리온 채용명부의 인력이 겹친다.',sourceState:'부분 해제 문서 / 인사기록 대조',paragraphs:['실제 냉전사의 정치적 갈등을 초자연 현상으로 설명하지 않는다. 다만 경쟁적 비밀주의가 서로 같은 현상을 연구하던 기관들의 정보 공유를 막았고, 실패한 실험 인력과 자료가 민간기업으로 이동할 여지를 만들었다.','1975년 아마리온은 무에서 시작한 기업이 아니었다. 전쟁과 냉전 동안 흩어진 계측 기술, 봉인 관습과 이용 욕망을 하나의 사업으로 결합한 첫 공개적 시도에 가까웠다.']}
   ];
 
   const post2006Records=[
@@ -299,6 +336,7 @@
     '2006-12-31-aftermath':{era:'fracture',evidence:'corroborated',basis:'시설 폐쇄 목록과 소각 명령, 북미 대응망의 권한 충돌 기록이 같은 순서로 이어진다.',sourceState:'사후 감사 / 명령 원본 일부 삭제'}
   };
 
+  deepHistoryRecords.forEach(record=>{ records[record.id]=record; });
   post2006Records.forEach(record=>{ records[record.id]=record; });
 
   const unresolved=[
@@ -309,7 +347,7 @@
 
   root.ProjectCurseWorldHistoryData=freeze({
     version:root.ProjectCurseBuild?.version||'5.43.1',
-    eras,evidenceLevels,records,unresolved,post2006Records,
+    eras,evidenceLevels,records,unresolved,worldFramework,deepHistoryRecords,post2006Records,
     getEra:id=>eras.find(era=>era.id===id)||null,
     getRecord:id=>records[id]||null,
     getEvidence:id=>evidenceLevels[id]||evidenceLevels.estimated

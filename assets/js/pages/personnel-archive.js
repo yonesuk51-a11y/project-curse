@@ -1,4 +1,4 @@
-// Project Curse 5.53.0 — 2006 personnel snapshot, triage summary and direct dossier navigation.
+// Project Curse 5.54.0 — 2006 personnel snapshot with canon names, operational cells and ability costs.
 (function(){
   'use strict';
 
@@ -43,6 +43,7 @@
       ...(record.relationships||[]).flatMap(item=>[targetName(item.target),item.relation]),
       ...Object.values(record.identity||{}),...Object.values(record.personality||{}),
       ...(record.background||[]),...(record.history||[]).flat(),...(record.fieldNotes||[]),
+      record.unit,record.recordFunction,record.incident,record.abilitySource,record.abilityCost,
       ...(record.notes||[]),...(record.limits||[])
     ].join(' '));
   }
@@ -76,7 +77,7 @@
         <div>
           <small>U.A.C PERSONNEL REGISTER / 2006 SNAPSHOT</small>
           <h2>인물 기록</h2>
-          <p>이 명부는 2006년에 확인되거나 추정된 56명의 신원·소속·성향·과거 이력을 정리한 역사 자료다. 활동 표시는 2042년 현재의 생존이나 재직을 뜻하지 않는다.</p>
+          <p>이 명부는 2006년에 확인되거나 추정된 56명을 세계 사건 속 역할로 다시 배열한 역사 자료다. 개편 정본명과 구 명부명을 함께 보존하며, 활동 표시는 2042년 현재의 생존이나 재직을 뜻하지 않는다.</p>
         </div>
         <dl aria-label="인물 명부 상태">
           <div><dt>등록 인물</dt><dd>${source.stats.total}</dd></div>
@@ -87,7 +88,7 @@
       </header>
       <aside class="pc-personnel-boundary">
         <b>HISTORICAL REGISTER</b>
-        <p>상태와 나이는 모두 2006년 기록을 기준으로 읽는다. 원 명부의 이름·능력 표기와 보완된 출생·소속·경력은 구분하며, 보완 이름은 기존 명부명으로도 검색된다.</p>
+        <p>상태와 나이는 모두 2006년 기록을 기준으로 읽는다. 새 이름은 중앙 색인이 채택한 판독명이며 원본에 남은 이름은 구 명부명으로 보존된다. 사도 번호는 확정 계급이 아니라 서로 경쟁하는 좌석 주장으로 읽는다.</p>
         <span>BASIS / 2006</span>
       </aside>
       <section class="pc-personnel-controls" aria-label="인물 기록 검색과 필터">
@@ -206,11 +207,21 @@
     const capabilities=record.capabilities||[];
     const equipment=record.equipment||[];
     if(!capabilities.length&&!equipment.length) return '';
-    return `<section class="pc-personnel-section pc-personnel-capabilities"><header><small>CAPABILITY / EQUIPMENT</small><h4>능력과 장비</h4></header>
+    return `<section class="pc-personnel-section pc-personnel-capabilities"><header><small>CAPABILITY / SOURCE / COST</small><h4>능력과 대가</h4></header>
       ${capabilities.length?`<div><b>기재 능력</b><ul>${capabilities.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:''}
       ${equipment.length?`<div><b>기재 장비</b><ul>${equipment.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:''}
-      <p>목록에 적힌 명칭은 보유 사실을 넘어 위력·범위·숙련도를 확정하지 않는다.</p>
+      ${record.abilitySource?`<dl class="pc-personnel-ability-ledger"><div><dt>발현 경로</dt><dd>${esc(record.abilitySource)}</dd></div><div><dt>확인된 대가</dt><dd>${esc(record.abilityCost||'대가 기록 미확인')}</dd></div></dl>`:''}
+      <p>능력은 승리 조건이 아니다. 사용 뒤 남는 손상·기억 결손·의식 종속까지 전력으로 계산한다.</p>
     </section>`;
+  }
+
+  function canonTraceMarkup(record){
+    if(!record.unit&&!record.recordFunction&&!record.incident) return '';
+    return `<section class="pc-personnel-canon-trace"><header><small>WORLD FUNCTION / OPERATIONAL TRACE</small><h4>세계 안에서의 위치</h4></header><dl>
+      ${record.unit?`<div><dt>작전 분류</dt><dd>${esc(record.unit)}</dd></div>`:''}
+      ${record.recordFunction?`<div><dt>서사 기능</dt><dd>${esc(record.recordFunction)}</dd></div>`:''}
+      ${record.incident?`<div><dt>사건 연결</dt><dd>${esc(record.incident)}</dd></div>`:''}
+    </dl></section>`;
   }
 
   function relationshipsMarkup(record){
@@ -269,6 +280,7 @@
       </dl>
       ${identityMarkup(record)}
       <section class="pc-personnel-overview"><small>IDENTIFICATION SUMMARY</small><p>${esc(record.overview)}</p></section>
+      ${canonTraceMarkup(record)}
       ${backgroundMarkup(record)}
       <div class="pc-personnel-dossier-grid">
         ${affiliationMarkup(record)}
@@ -279,7 +291,7 @@
         ${notesMarkup(record)}
       </div>
       ${limitsMarkup(record)}
-      <footer><span>보완 신원은 원 명부와 분리 판독</span><b>${esc(source.editorialRule)}</b></footer>
+      <footer><span>개편 정본명과 원 명부명 병기</span><b>${esc(source.editorialRule)}</b></footer>
     </article>`;
   }
 

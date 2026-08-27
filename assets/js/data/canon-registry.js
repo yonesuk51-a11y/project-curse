@@ -1,4 +1,4 @@
-// MapPatch 5.15.2ce — canonical organization registry
+// Project Curse 5.54.0 — canonical organization registry and failure-state model.
 // This is the sole authoritative source for the active faction dossier and relation graph.
 (function(root){
   'use strict';
@@ -33,11 +33,11 @@
       event:'1993년 각국 특수 수사 본부로 설치되었고, 2001년 7월 21일 N.H.C와 동시에 독립기관으로 개편되었다.'
     },
     fhc:{
-      name:'F.H.C',sub:'정부 계약 기반 연구·기술 복합기업',cat:'기업',status:'가동 / 독자 권역',zone:'교육·설비·연구·대리작전권',risk:'기술 독점 / 비인가 실험',
-      summary:'아마리온의 공간 연구와 사업 기반을 승계해 1982년 3월 22일 설립됐다. 정부 계약과 합법 사업을 확장하는 한편 우시노다의 힘을 연구하고 TAD·S.O.N·P.O.H를 통해 비공개 영향망을 유지한다.',
-      roles:['이상현상 기술·표본 선점','교육·설비·연구기관 운영','TAD 무력부대 운용','회수 자료 분석·봉인과 비인가 실험'],
+      name:'F.H.C',sub:'분열된 연구·기술 복합기업권',cat:'기업',status:'법인 존속 / 중앙 지휘 상실',zone:'시설별 상충 통제권',risk:'기술 독점 / 비인가 실험 / 명령 위조',
+      summary:'아마리온의 공간 연구와 사업 기반을 승계해 1982년 설립됐다. 2021년 서브매서커 이후 법인은 존속하지만 중앙 지휘는 사실상 상실됐고, 유니온·아크·TAD·연구시설은 구조소, 용병기지, 독립 연구소 또는 교단 점거지로 서로 다르게 움직인다.',
+      roles:['이상현상 기술·표본 선점','시설별 독립 생존·연구','TAD 명칭을 공유하는 상충 부대 운용','회수 자료 분석·봉인과 비인가 실험'],
       links:['U.A.C','N.H.C','S.I.D','S.O.N','P.O.H','우시노다교'],records:['Cults_871104','Unknown_Record1_860204'],
-      event:'1986년 피의 호수 조사에 개입했으며 1993년 이후 의혹 회피와 대외 대응을 위해 TAD를 전면에 내세웠다.'
+      event:'1986년 피의 호수 조사에 개입했고 1993년 이후 TAD를 전면에 내세웠다. 2021년 내부 학살 이후에는 같은 F.H.C 표식을 단 시설끼리도 통제권과 임무가 충돌한다.'
     },
     amarion:{
       name:'아마리온',sub:'F.H.C의 전신 기업',cat:'기업',status:'역사 기록 / 활동 종료',zone:'초기 공간 연구 사업권',risk:'왜곡 실험 / 자료 승계',
@@ -54,11 +54,11 @@
       event:'초기 국가 지원망에서 출발해 현재의 분산형 반 U.A.C 연합으로 확대되었다.'
     },
     ushinoda:{
-      name:'우시노다교',sub:'타락교·혈교·그림자교',cat:'교단',status:'적대 / 세 파벌',zone:'의식 확산권·평행세계 누출권',risk:'의식 오염 / 현실 중첩',
-      summary:'타락교, 혈교, 그림자교의 정확히 세 파벌로 구성된다. 파벌마다 로드 1명과 사도 4명이 존재하며, 센티널은 계급이 아니라 각 로드에게 귀속된 호위·전투·처형 자산이다.',
+      name:'우시노다교',sub:'타락교·혈교·그림자교',cat:'교단',status:'적대 / 좌석 계보 분열',zone:'의식 확산권·평행세계 누출권',risk:'의식 오염 / 현실 중첩 / 계보 사칭',
+      summary:'타락교, 혈교, 그림자교는 각각 하나의 로드좌와 네 사도석을 교리상 주장한다. 이는 언제나 15명이 실재한다는 뜻이 아니다. 공석, 복수 주장자와 죽은 자의 이름을 계승한 사례가 있어 현장에서는 번호보다 권능·의식 문법·계승 증거를 우선한다.',
       roles:['세 파벌의 의식 거점 운용','평행세계 누출과 Black Zone 확대','타락·혈액·그림자 권능 집행','민간 조직과 범죄망을 통한 침투'],
       links:['U.A.C','F.H.C','P.O.H','S.O.N'],records:['Cults_871104','Sakuma_Tape_991028'],
-      event:'제1사도는 교단 창설 전부터 존재했으며 세 권능을 모두 사용하는 유일 사도로 남아 있다.'
+      event:'제1사도는 창설 이전 기록에도 나타나지만 동일 인물, 반복 현상, 계승 좌석 가운데 무엇인지 확정되지 않았다.'
     },
     haimun:{
       name:'P.O.H',sub:'Power Of Haimun',cat:'이탈',status:'감시 / 범죄망',zone:'도심 물류·은신·구금망',risk:'납치 / 밀거래 / 의식 지원',
@@ -91,10 +91,10 @@
     uac:{name:'U.A.C',sub:'초국가 집행',type:'institution',x:50,y:50,status:'가동 / 중앙 조율',summary:factions.uac.summary,records:factions.uac.records},
     nhc:{name:'N.H.C',sub:'독립 현장 대응',type:'field',x:31,y:47,status:'특수 자율권',summary:factions.nhc.summary,records:factions.nhc.records},
     sid:{name:'S.I.D',sub:'조사·감청',type:'institution',x:69,y:47,status:'가동 / 조사권',summary:factions.sid.summary,records:factions.sid.records},
-    fhc:{name:'F.H.C',sub:'연구·기술 복합기업',type:'institution',x:58,y:24,status:'정부 계약 / 비공개 영향망',summary:factions.fhc.summary,records:factions.fhc.records},
+    fhc:{name:'F.H.C',sub:'분열 기업권',type:'institution',x:58,y:24,status:'법인 존속 / 중앙 지휘 상실',summary:factions.fhc.summary,records:factions.fhc.records},
     amarion:{name:'아마리온',sub:'F.H.C 전신 기업',type:'unstable',x:40,y:13,status:'역사 기록 / 승계',summary:factions.amarion.summary,records:factions.amarion.records},
     syndicate:{name:'S.O.N',sub:'Shadow Of Nemesis',type:'unstable',x:18,y:29,status:'적대 / 분산 연합',summary:factions.syndicate.summary,records:factions.syndicate.records},
-    ushinoda:{name:'우시노다교',sub:'세 파벌 교단',type:'cult',x:84,y:31,status:'적대 / 의식 근원',summary:factions.ushinoda.summary,records:factions.ushinoda.records},
+    ushinoda:{name:'우시노다교',sub:'세 파벌·좌석 계보',type:'cult',x:84,y:31,status:'적대 / 계보 분열',summary:factions.ushinoda.summary,records:factions.ushinoda.records},
     haimun:{name:'P.O.H',sub:'Power Of Haimun',type:'unstable',x:84,y:70,status:'감시 / 범죄망',summary:factions.haimun.summary,records:factions.haimun.records},
     ashcrew:{name:'Ash Crew',sub:'N.H.C 산하',type:'field',x:18,y:69,status:'가동 / 사후 처리',summary:factions.ashcrew.summary,records:factions.ashcrew.records},
     arf:{name:'A.R.F',sub:'Ash Crew 산하 회수',type:'field',x:40,y:82,status:'가동 / 회수',summary:factions.arf.summary,records:factions.arf.records},
@@ -129,15 +129,17 @@
   };
 
   root.ProjectCurseCanon=freeze({
-    version:'5.15.2cf',
+    version:'5.54.0',
     official:{uacEnglish:'United Nations Anomaly Containment',syndicateEnglish:'Shadow Of Nemesis',haimunEnglish:'Power Of Haimun'},
     ushinodaHierarchy:{
       factions:['타락교','혈교','그림자교'],
       lordsPerFaction:1,
       apostlesPerFaction:4,
       apostlesTotal:12,
-      firstApostle:'교단 창설 이전부터 존재하며 세 권능을 모두 사용하는 유일 사도',
-      sentinel:'계급이 아니라 각 로드에게 귀속된 호위·전투·처형 자산'
+      doctrinalSeats:{lordsPerFaction:1,apostlesPerFaction:4,apostlesTotal:12},
+      occupancy:'정원은 교리상 좌석 수다. 공석·복수 주장·계승명 중복 때문에 실제 인원수와 일치하지 않을 수 있다.',
+      firstApostle:'창설 이전 기록에도 나타나지만 동일 인물·반복 현상·계승 좌석 여부는 미확정',
+      sentinel:'계급이 아니라 로드좌 주장자에게 귀속되는 호위·전투·처형 자산'
     },
     factions,
     relationNodes,

@@ -1,8 +1,8 @@
-// Project Curse 5.53.0 — cinematic cold boot with fast repeat-session handoffs.
+// Project Curse 5.54.0 — cinematic cold boot with fast repeat-session handoffs.
 (function(root){
   'use strict';
 
-  const BUILD=()=>root.ProjectCurseBuild?.version||'5.53.0';
+  const BUILD=()=>root.ProjectCurseBuild?.version||'5.54.0';
   const SESSION_KEY=()=>`pc_terminal_boot_${BUILD().replace(/[^a-z0-9]+/gi,'_')}`;
   const MIN_VISIBLE_MS=900;
   const MODES={

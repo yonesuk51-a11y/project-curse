@@ -4,7 +4,7 @@ import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 
-const VERSION='5.53.0';
+const VERSION='5.54.0';
 const DATA_VERSION='5.33.0';
 const ARCHIVE_VERSION='5.35.0';
 const ROOT=fileURLToPath(new URL('../',import.meta.url));
@@ -30,7 +30,7 @@ function article(source,id){
 
 const required=[
   'index.html','assets/favicon.svg','assets/css/style.css','assets/css/stabilization.css','assets/css/archive-consolidation.css','assets/css/archive-document.css','assets/css/visual-evidence.css','assets/css/adaptive-media.css','assets/css/quality-policy.css','assets/css/verdict-archive.css','assets/css/record-cinematic.css','assets/css/world-history.css','assets/css/faction-analysis.css','assets/css/map-room.css','assets/css/pilgrimage-scenario.css','assets/css/app-shell.css','assets/css/terminal-foundation.css','assets/css/transition-system.css','assets/css/channel-identity.css','assets/css/media-clearance.css','assets/css/personnel-archive.css',
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/faction-mark-registry.js','assets/js/data/world-history-data.js','assets/js/data/japan-technology-data.js','assets/js/data/faction-lineage-data.js','assets/js/data/world-history-prose-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/personnel-profile-data.js','assets/js/data/personnel-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/map-signal-index-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/adaptive-media.js','assets/js/core/quality-policy.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/core/channel-identity.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/faction-mark-registry.js','assets/js/data/world-history-data.js','assets/js/data/japan-technology-data.js','assets/js/data/faction-lineage-data.js','assets/js/data/world-history-prose-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/personnel-profile-data.js','assets/js/data/personnel-remake-data.js','assets/js/data/personnel-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/map-signal-index-data.js','assets/js/data/home-intelligence-data.js','assets/js/main.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/adaptive-media.js','assets/js/core/quality-policy.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/transition-controller.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/app-shell.js','assets/js/core/channel-identity.js',
   'assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js',
   'assets/js/pages/shared-declutter.js',
@@ -79,6 +79,7 @@ const factionAnalysisSource=read('assets/js/data/faction-analysis-data.js');
 const factionMarkSource=read('assets/js/data/faction-mark-registry.js');
 const factionAnalysisRuntime=read('assets/js/pages/faction-analysis.js');
 const personnelProfileSource=read('assets/js/data/personnel-profile-data.js');
+const personnelRemakeSource=read('assets/js/data/personnel-remake-data.js');
 const personnelDataSource=read('assets/js/data/personnel-data.js');
 const personnelRuntime=read('assets/js/pages/personnel-archive.js');
 const personnelCss=read('assets/css/personnel-archive.css');
@@ -138,6 +139,7 @@ vm.runInContext(worldHistoryProseSource,context,{filename:'world-history-prose-d
 vm.runInContext(incidentRegistrySource,context,{filename:'incident-registry.js'});
 vm.runInContext(factionAnalysisSource,context,{filename:'faction-analysis-data.js'});
 vm.runInContext(personnelProfileSource,context,{filename:'personnel-profile-data.js'});
+vm.runInContext(personnelRemakeSource,context,{filename:'personnel-remake-data.js'});
 vm.runInContext(personnelDataSource,context,{filename:'personnel-data.js'});
 vm.runInContext(archiveRegistry,context,{filename:'archive-registry.js'});
 vm.runInContext(read('assets/js/data/archive-document-data.js'),context,{filename:'archive-document-data.js'});
@@ -179,7 +181,7 @@ const mediaProvenance=context.window.ProjectCurseMediaProvenance;
 const channelIdentityData=context.window.ProjectCurseChannelData;
 const mapSignalIndex=context.window.ProjectCurseMapSignalIndex;
 const ordered=[
-  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/faction-mark-registry.js','assets/js/data/world-history-data.js','assets/js/data/japan-technology-data.js','assets/js/data/faction-lineage-data.js','assets/js/data/world-history-prose-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/personnel-profile-data.js','assets/js/data/personnel-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
+  'assets/js/data/build-info.js','assets/js/data/site-manifest.js','assets/js/data/audio-manifest.js','assets/js/data/transition-manifest.js','assets/js/data/channel-identity-data.js','assets/js/data/canon-registry.js','assets/js/data/faction-mark-registry.js','assets/js/data/world-history-data.js','assets/js/data/japan-technology-data.js','assets/js/data/faction-lineage-data.js','assets/js/data/world-history-prose-data.js','assets/js/data/incident-registry.js','assets/js/data/faction-analysis-data.js','assets/js/data/personnel-profile-data.js','assets/js/data/personnel-remake-data.js','assets/js/data/personnel-data.js','assets/js/data/archive-registry.js','assets/js/data/archive-document-data.js','assets/js/data/visual-evidence-data.js','assets/js/data/media-manifest.js','assets/js/data/media-provenance-data.js','assets/js/data/field-dossier-data.js','assets/js/data/regional-drilldown-data.js','assets/js/data/pilgrimage-scenario-data.js','assets/js/data/verdict-archive-data.js','assets/js/data/map-room-data.js','assets/js/data/home-intelligence-data.js','assets/js/data/feral-cinematic-data.js','assets/js/data/sakuma-cinematic-data.js',
   'assets/js/core/record-cinematic-registry.js','assets/js/pages/cinematic-cults.js','assets/js/pages/cinematic-immortality.js','assets/js/pages/cinematic-ferals.js','assets/js/pages/cinematic-sakuma.js','assets/js/core/loading-sequence.js','assets/js/core/base-runtime.js','assets/js/core/audio-controller.js','assets/js/core/operation-state.js','assets/js/core/pilgrimage-state.js','assets/js/core/verdict-archive-state.js','assets/js/core/performance-telemetry.js','assets/js/core/quality-policy.js','assets/js/core/adaptive-media.js','assets/js/core/record-cinematic-runtime.js','assets/js/core/transition-controller.js','assets/js/core/app-shell.js','assets/js/pages/shared-declutter.js',
   'assets/js/pages/canon-reconciliation.js','assets/js/pages/archive-consolidation.js','assets/js/pages/world-history.js','assets/js/pages/faction-analysis.js','assets/js/pages/personnel-archive.js','assets/js/pages/map-room.js','assets/js/pages/pilgrimage-scenario.js','assets/js/pages/terminal-home.js','assets/js/pages/media-clearance.js','assets/js/core/channel-identity.js'
 ];
@@ -197,7 +199,7 @@ add('channel-identity-css-link',count(index,'href="assets/css/channel-identity.c
 add('personnel-css-link',count(index,'href="assets/css/personnel-archive.css?')===1);
 add('channel-identity-six-lore-one-utility',channelIdentityData?.channels?.length===7&&channelIdentityData.channels.map(channel=>channel.id).join('|')==='terminal-home|map-room|history|faction-info|archive-entry|personnel|media-audit'&&channelIdentityData.channels.find(channel=>channel.id==='media-audit')?.navTier==='utility');
 add('channel-identity-distinct-themes',new Set(channelIdentityData?.channels?.map(channel=>channel.theme)).size===7&&['command','cartography','chronology','intelligence','archive','clearance','personnel'].every(theme=>channelIdentityCss.includes(`[data-pc-channel-theme="${theme}"]`)||channelIdentityCss.includes(`[data-channel-theme="${theme}"]`)));
-add('channel-history-current-telemetry',channelIdentityData?.channels?.find(channel=>channel.id==='history')?.telemetry?.flat().join('|')==='SPAN|1975–2042|INDEX|43 RECORDS|ERAS|9');
+add('channel-history-current-telemetry',channelIdentityData?.channels?.find(channel=>channel.id==='history')?.telemetry?.flat().join('|')==='SPAN|ORIGIN?–2042|INDEX|49 RECORDS|ERAS|10');
 add('channel-identity-runtime-api',channelIdentityRuntime.includes('ProjectCurseChannelIdentity=Object.freeze')&&channelIdentityRuntime.includes('function ensureIdentity')&&channelIdentityRuntime.includes('projectcurse:screen-committed')&&channelIdentityRuntime.includes("control.setAttribute('aria-current','page')"));
 add('channel-preference-persistence',channelIdentityData?.storageKey==='project_curse_preferences_v1'&&channelIdentityRuntime.includes('localStorage.setItem')&&channelIdentityRuntime.includes('data-pc-preference'));
 add('channel-adaptive-quality-preference',channelIdentityData?.defaults?.quality==='auto'&&channelIdentityData?.preferences?.quality?.options?.length===3&&channelIdentityRuntime.includes('ProjectCurseQuality?.setPreference'));
@@ -355,7 +357,7 @@ add('retired-root-runtimes-not-loaded',!index.includes('assets/js/main.js')&&!in
 ].forEach(relative=>add(`retired-media-removed:${relative}`,!existsSync(path(relative))));
 add('cinematic-shell-controls-hidden',recordCinematicCss.includes('body.pc5152h-sequence-open .pc5152an-systembar')&&main.includes("document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open')"));
 add('manifest-runtime-version',structureData?.version===VERSION);
-add('manifest-runtime-schema-v43',structureData?.schema==='project-curse-v43'&&context.window.ProjectCurseBuild?.schema==='project-curse-v43');
+add('manifest-runtime-schema-v44',structureData?.schema==='project-curse-v44'&&context.window.ProjectCurseBuild?.schema==='project-curse-v44');
 add('manifest-japan-technology-owner',structureData?.owners?.japanTechnologyData==='assets/js/data/japan-technology-data.js');
 add('manifest-lineage-owner',structureData?.owners?.factionLineage==='assets/js/data/faction-lineage-data.js');
 add('archive-registry-version',archiveData?.version===ARCHIVE_VERSION);
@@ -412,7 +414,15 @@ const unselectedCandidateMedia=new Set([
   'assets/resources/derived/nhc-squad-group-photo-candidate-a-hell.png',
   'assets/resources/derived/nhc-squad-group-photo-candidate-b-pictures.png',
   'assets/resources/derived/nhc-squad-group-photo-candidate-c-cinematic.png',
-  'assets/resources/derived/nhc-squad-group-photo-candidate-d-archive.png'
+  'assets/resources/derived/nhc-squad-group-photo-candidate-d-archive.png',
+  'assets/resources/derived/project-curse-unnamed-swordsman-candidate-a-refined-v1.png',
+  'assets/resources/derived/project-curse-unnamed-swordsman-candidate-b-field-operator-v1.png',
+  'assets/resources/derived/project-curse-unnamed-swordsman-candidate-c-hell-v1.png',
+  'assets/resources/derived/project-curse-unnamed-swordsman-candidate-d-recovered-v1.png',
+  'assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-a-recon-v1.png',
+  'assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-b-direct-action-v1.png',
+  'assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-c-hell-response-v1.png',
+  'assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-d-blacksite-v1.png'
 ]);
 const repositoryMedia=mediaTree(ROOT+'assets/').filter(relative=>!internalOnlyMedia.has(relative)&&!unselectedCandidateMedia.has(relative)).sort();
 const provenancePaths=provenanceAssets.map(asset=>asset.path).sort();
@@ -581,7 +591,7 @@ add('faction-mark-eleven-vector-masters',factionMarks?.redesigned?.join('|')==='
 add('faction-lineage-six-vector-masters',factionMarks?.lineageMarks?.join('|')==='corruption-cult|blood-cult|shadow-cult|first-apostle|southern-blood|deadzone-blood'&&factionMarks.lineageMarks.every(key=>factionMarks.marks[key]?.asset?.endsWith('.svg')&&factionMarks.marks[key]?.symbols?.length>=3));
 add('faction-mark-assets',Object.values(factionMarks?.marks||{}).every(mark=>existsSync(path(mark.asset))&&(!mark.legacyAsset||existsSync(path(mark.legacyAsset)))));
 add('faction-lineage-schema',factionLineage?.version===VERSION&&factionLineage?.schema==='project-curse-faction-lineage-v1'&&factionLineage?.order?.length===7&&factionLineage?.sects?.join('|')==='corruption-cult|blood-cult|shadow-cult');
-add('faction-lineage-rank-boundary',factionLineage?.rules?.some(rule=>rule.includes('로드 1명과 사도 4명'))&&factionLineage.rules.some(rule=>rule.includes('센티넬은 계급이 아니라'))&&factionLineage.nodes?.['first-apostle']?.kind.includes('세력 아님'));
+add('faction-lineage-rank-boundary',factionLineage?.rules?.some(rule=>rule.includes('교리상 로드좌 1석과 사도석 4석'))&&factionLineage.rules.some(rule=>rule.includes('센티넬은 계급이 아니라'))&&factionLineage.nodes?.['first-apostle']?.kind.includes('세력 아님'));
 add('faction-lineage-command-states',factionLineage?.edges?.some(edge=>edge.from==='blood-cult'&&edge.to==='southern-blood'&&edge.state==='disputed')&&factionLineage.edges.some(edge=>edge.from==='southern-blood'&&edge.to==='deadzone-blood'&&edge.state==='split'));
 add('faction-lineage-history-links',Object.values(factionLineage?.nodes||{}).every(node=>node.history.every(id=>worldHistoryData?.records?.[id])));
 add('faction-mark-auth-runtime',factionAnalysisRuntime.includes('ProjectCurseFactionMarks')&&factionAnalysisRuntime.includes('MARK AUTHENTICATION / SIGIL RECORD')&&factionAnalysisRuntime.includes('bindMarkFallbacks'));
@@ -591,13 +601,16 @@ add('faction-unified-runtime',factionAnalysisRuntime.includes('data-pc-faction-o
 add('faction-mark-name-index',factionAnalysisRuntime.includes('pc-faction-card')&&factionAnalysis?.order?.every(key=>!('subtitle' in factionAnalysis.factions[key])));
 add('faction-auxiliary-page',factionAnalysisRuntime.includes('pc-faction-back')&&factionAnalysisRuntime.includes('openDossier')&&factionAnalysisRuntime.includes('renderDossier')&&factionAnalysisRuntime.includes("navigate('faction-info')"));
 add('personnel-profile-schema',personnelProfiles?.version===VERSION&&personnelProfiles?.schema==='project-curse-personnel-profile-v1'&&personnelProfiles?.status==='SUPPLEMENTAL IDENTITY / PROVISIONAL'&&Object.keys(personnelProfiles.profiles||{}).length===56);
-add('personnel-registry-schema',personnelData?.version===VERSION&&personnelData?.schema==='project-curse-personnel-v2'&&personnelData.records.length===56&&personnelData.groups.length===10,`${personnelData?.records?.length||0} records / ${personnelData?.groups?.length||0} groups`);
+const personnelRemake=context.window.ProjectCursePersonnelRemake;
+add('personnel-remake-schema',personnelRemake?.version===VERSION&&personnelRemake?.schema==='project-curse-personnel-remake-v1'&&Object.keys(personnelRemake.records||{}).length===56&&Object.keys(personnelRemake.groupOverrides||{}).length===10);
+add('personnel-registry-schema',personnelData?.version===VERSION&&personnelData?.schema==='project-curse-personnel-v3'&&personnelData.records.length===56&&personnelData.groups.length===10,`${personnelData?.records?.length||0} records / ${personnelData?.groups?.length||0} groups`);
 add('personnel-registry-unique-ids',new Set(personnelData?.records?.map(record=>record.id)).size===56);
-add('personnel-independent-boundary',!personnelData.byId?.frey&&!/프레이|frey/i.test(index+personnelProfileSource+personnelDataSource+personnelRuntime)&&personnelData?.editorialRule?.includes('독립 파일')&&personnelRuntime.includes('2006년에 확인되거나 추정된 56명의 신원'));
+add('personnel-independent-boundary',!personnelData.byId?.frey&&!/프레이|frey/i.test(index+personnelProfileSource+personnelRemakeSource+personnelDataSource+personnelRuntime)&&personnelData?.editorialRule?.includes('개편 정본명')&&personnelRuntime.includes('2006년에 확인되거나 추정된 56명'));
 add('personnel-complete-supplemental-dossiers',personnelData?.stats?.profiled===56&&personnelData.records.every(record=>record.identity?.sex&&record.identity?.birth&&record.identity?.age&&record.identity?.origin&&record.identity?.nationality&&record.affiliationSummary&&record.personality?.temperament&&record.personality?.drive&&record.personality?.fear&&record.background?.length>=2&&record.history?.length>=3&&record.fieldNotes?.length),personnelData?.stats?.profiled||0);
 add('personnel-record-year-age-basis',personnelData.records.every(record=>/기록|추정|외형|육체별/.test(record.identity.age)&&!/현재\s*나이/.test(record.identity.age)));
-add('personnel-renamed-alias-preservation',personnelData?.stats?.renamed===29&&personnelData.records.filter(record=>record.sourceName).every(record=>record.aliases?.includes(record.sourceName))&&personnelData.byId?.maya?.name==='마야 이시카와'&&personnelData.byId?.sasaki?.name==='사사키 렌'&&personnelData.byId?.baranto?.name==='발렌토 오르테가'&&personnelData.byId?.baranto?.aliases?.includes('바란토'));
-add('personnel-distinct-aarons',personnelData.byId?.['aaron-uac']?.name==='아론 벡'&&personnelData.byId?.['aaron-syndicate']?.name==='아론 케이지'&&personnelData.byId['aaron-uac'].sourceName==='아론'&&personnelData.byId['aaron-syndicate'].sourceName==='아론');
+add('personnel-renamed-alias-preservation',personnelData?.stats?.renamed>=35&&personnelData.records.filter(record=>record.sourceName).every(record=>record.aliases?.includes(record.sourceName))&&personnelData.byId?.maya?.name==='이시카와 마야'&&personnelData.byId?.sasaki?.name==='사사키 토오루'&&personnelData.byId?.baranto?.name==='마테오 오르테가'&&personnelData.byId?.baranto?.aliases?.includes('바란토'));
+add('personnel-distinct-aarons',personnelData.byId?.['aaron-uac']?.name==='에런 벡'&&personnelData.byId?.['aaron-syndicate']?.name==='이드리스 케이지'&&personnelData.byId['aaron-uac'].sourceName==='아론'&&personnelData.byId['aaron-syndicate'].sourceName==='아론');
+add('personnel-world-functions',personnelData.records.every(record=>record.unit&&record.recordFunction&&record.incident)&&personnelData.records.filter(record=>record.abilitySource).every(record=>record.abilityCost));
 add('personnel-legacy-status-boundary',personnelData?.stats?.deceased===3&&personnelData.records.filter(record=>record.status==='deceased').map(record=>record.id).join('|')==='yanami-shinka|duka|reiki'&&personnelData.byId?.dennis?.limits?.some(item=>item.includes('원문이 누락')));
 add('personnel-duplicate-identity-safety',personnelData.byId?.['aaron-uac']?.relationships?.some(item=>item.target==='aaron-syndicate'&&item.certainty==='unresolved')&&personnelData.byId?.['aaron-syndicate']?.relationships?.some(item=>item.target==='aaron-uac'&&item.certainty==='unresolved')&&personnelData.byId?.['brian-alberoz']?.limits?.some(item=>item.includes('관계를 확정하지 않는다')));
 add('personnel-sakuma-cross-affiliation',personnelData.byId?.['sakuma-yuta']?.aliases?.includes('레드 마우스')&&personnelData.byId['sakuma-yuta'].affiliations.map(item=>item.key).join('|')==='uac|fhc|haimun');
@@ -611,16 +624,17 @@ add('personnel-dossier-presentation',personnelRuntime.includes('function identit
 add('personnel-responsive-presentation',personnelCss.includes('@media(max-width:900px)')&&personnelCss.includes('@media(max-width:600px)')&&personnelCss.includes('@media(prefers-reduced-motion:reduce)')&&personnelCss.includes('.pc-personnel-identity')&&personnelCss.includes('.pc-personnel-background'));
 add('personnel-mobile-filter-grids',personnelCss.includes('.pc-personnel-statuses{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-columns:auto;grid-auto-flow:row;overflow:visible')&&personnelCss.includes('.pc-personnel-groups>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible'));
 add('personnel-faction-crosslinks',factionAnalysisRuntime.includes('function personnelLinks(key)')&&factionAnalysisRuntime.includes('data-uac-person-record')&&appShell.includes('dataset.uacPersonRecord')&&appShell.includes('resetFilters:true')&&personnelRuntime.includes('resetFilters=false'));
-add('personnel-manifest-ownership',structureData?.owners?.personnelProfiles==='assets/js/data/personnel-profile-data.js'&&structureData?.owners?.personnelData==='assets/js/data/personnel-data.js'&&structureData?.owners?.personnelRuntime==='assets/js/pages/personnel-archive.js'&&structureData?.owners?.personnelCSS==='assets/css/personnel-archive.css');
+add('personnel-manifest-ownership',structureData?.owners?.personnelProfiles==='assets/js/data/personnel-profile-data.js'&&structureData?.owners?.personnelRemake==='assets/js/data/personnel-remake-data.js'&&structureData?.owners?.personnelData==='assets/js/data/personnel-data.js'&&structureData?.owners?.personnelRuntime==='assets/js/pages/personnel-archive.js'&&structureData?.owners?.personnelCSS==='assets/css/personnel-archive.css');
 add('history-faction-renames',worldHistory.includes('S.O.N')&&worldHistory.includes('P.O.H')&&!/신디케이트|하이문/.test(worldHistory));
 add('uac-independent-in-history',worldHistory.includes('UN 산하기관은 아니며')&&factionAnalysisSource.includes('UN 산하기관은 아니며'));
-add('history-nine-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===9&&worldHistoryData.eras.map(era=>era.id).join('|')==='origin|exposure|institution|separation|fracture|silence|frontiers|mobilization|aftermath');
-add('history-base-thirty-eight-evidence-records',Object.keys(worldHistoryData?.records||{}).length===38&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
+add('history-ten-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===10&&worldHistoryData.eras.map(era=>era.id).join('|')==='deep|origin|exposure|institution|separation|fracture|silence|frontiers|mobilization|aftermath');
+add('history-base-forty-four-evidence-records',Object.keys(worldHistoryData?.records||{}).length===44&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
+add('history-deep-world-framework',worldHistoryData?.deepHistoryRecords?.length===6&&worldHistoryData?.worldFramework?.ontology?.length===4&&worldHistoryData.worldFramework.abilitySources?.length===7&&worldHistoryData.worldFramework.civilianSystems?.length===5&&worldHistory.includes('renderWorldFramework'));
 const japanTechRecords=japanTechnology?.records||[];
 const japanTechIds=japanTechRecords.map(record=>record.id).join('|');
 const expectedJapanTechIds='1982-04-06-sixth-instrumentation|1985-09-18-optical-return-test|1987-11-04-jid87-standard|1990-04-12-municipal-mesh-pilot|1992-10-30-sixth-program-dispersal';
 add('history-japan-technology-schema',japanTechnology?.version===VERSION&&japanTechnology?.schema==='project-curse-japan-technology-v1'&&japanTechRecords.length===5&&japanTechnology?.technologies?.length===7&&japanTechnology?.edges?.length===6);
-add('history-forty-three-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===43);
+add('history-forty-nine-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===49);
 add('history-japan-technology-record-depth',japanTechRecords.every(record=>record.id&&record.date&&record.title&&record.summary&&record.author&&record.recipient&&record.purpose&&record.basis&&record.sourceState&&record.fragments?.length>=3&&worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
 add('history-japan-technology-chronology',japanTechIds===expectedJapanTechIds,japanTechIds);
 add('history-japan-public-boundaries',japanTechnology?.publicAnchors?.length===4&&japanTechnology.publicAnchors.map(anchor=>anchor.id).join('|')==='fgcs|optical-network|tron|bubble'&&japanTechnology.publicAnchors.every(anchor=>anchor.fact&&anchor.boundary&&anchor.source&&anchor.url.startsWith('https://')));
@@ -637,7 +651,7 @@ const proseRecords=Object.values(worldHistoryProse?.records||{});
 const proseText=proseRecords.flatMap(record=>record.fragments||[]).map(fragment=>fragment.text).join('\n');
 const proseTypes=new Set(proseRecords.map(record=>record.documentType));
 const fragmentCounts=new Set(proseRecords.map(record=>record.fragments?.length||0));
-add('history-authored-prose-forty-three',worldHistoryProse?.version===VERSION&&proseRecords.length===38&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
+add('history-authored-prose-forty-nine',worldHistoryProse?.version===VERSION&&proseRecords.length===44&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
 add('history-prose-canon-id-parity',Object.keys(worldHistoryProse?.records||{}).sort().join('|')===Object.keys(worldHistoryData?.records||{}).sort().join('|')&&structureData?.owners?.worldHistoryProse==='assets/js/data/world-history-prose-data.js');
 add('history-eight-document-voices',Object.keys(worldHistoryProse?.documentTypes||{}).length===8&&proseTypes.size===8);
 add('history-variable-fragment-structure',fragmentCounts.size>=3&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='log'))&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='quote')));
@@ -664,7 +678,7 @@ const forbiddenPublicCopy=['정사','캐논','플레이어','독자 선택','시
 add('public-copy-no-meta-language',forbiddenPublicCopy.length===0,forbiddenPublicCopy.join('|'));
 const readingPath=index.slice(index.indexOf('<details class="pc-terminal-reading-path"'),index.indexOf('</details>',index.indexOf('<details class="pc-terminal-reading-path"')));
 add('terminal-six-step-reading-path',count(index,'class="pc-terminal-reading-path"')===1&&count(readingPath,'data-uac-route=')===6&&readingPath.includes('여섯 기록선')&&foundationCss.includes('.pc-terminal-reading-path'));
-add('terminal-era-continuity',index.includes('1975–2042 사건 흐름')&&index.includes('2030년 12월 / 중앙 색인 동결')&&index.includes('별도 수신층에 2042년까지 누적')&&!index.includes('1980-2030 사건 흐름')&&!index.includes('폐쇄 서버 최종 동결'));
+add('terminal-era-continuity',index.includes('기원 불명–2042 사건 흐름')&&index.includes('2030년 12월 / 중앙 색인 동결')&&index.includes('별도 수신층에 2042년까지 누적')&&!index.includes('1980-2030 사건 흐름')&&!index.includes('폐쇄 서버 최종 동결'));
 add('social-share-metadata',index.includes('name="description"')&&index.includes('rel="canonical"')&&index.includes('property="og:title"')&&index.includes('property="og:image"')&&index.includes('name="twitter:card"')&&index.includes('project-curse-world-keyart-concept-v1.png'));
 const publicConceptAssets=['project-curse-world-keyart-concept-v1.png','great-black-forest-unlit-fortress-bell-concept-v1.png','checkpoint-07-five-thermal-concept-v1.png','broken-crown-erased-commander-concept-v1.png','first-apostle-three-traces-reconstruction-concept-v1.png','joint-response-unit-unlisted-eleventh-group-concept-v1.png','nhc-young-soldiers-forward-base-group-photo-concept-v1.png'];
 const publicConceptSources=[index,fieldDossierData,factionAnalysisSource,worldHistoryProseSource,visualEvidenceData].join('\n');

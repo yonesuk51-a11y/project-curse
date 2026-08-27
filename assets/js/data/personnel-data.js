@@ -1,8 +1,9 @@
-// Project Curse 5.53.0 — world-first personnel registry with supplemental identity dossiers.
+// Project Curse 5.54.0 — world-first personnel registry with canon-facing revision overlays.
 (function(root){
   'use strict';
 
   const profileSource=root.ProjectCursePersonnelProfiles;
+  const remakeSource=root.ProjectCursePersonnelRemake;
 
   function freeze(value){
     if(!value||typeof value!=='object'||Object.isFrozen(value)) return value;
@@ -10,7 +11,7 @@
     return Object.freeze(value);
   }
 
-  const groups=[
+  const legacyGroups=[
     {id:'personal',label:'개인·민간 관계자',short:'개인',code:'CIV',tone:'civilian',factionKeys:[]},
     {id:'alma',label:'알마 가문',short:'알마',code:'ALM',tone:'family',factionKeys:[]},
     {id:'fhc-union',label:'F.H.C-유니온',short:'유니온',code:'FUN',tone:'corporate',factionKeys:['fhc']},
@@ -22,6 +23,7 @@
     {id:'ushinoda',label:'우시노다교',short:'우시노다',code:'USH',tone:'cult',factionKeys:['ushinoda']},
     {id:'haiman',label:'하이먼',short:'하이먼',code:'HYM',tone:'rogue',factionKeys:['haimun']}
   ];
+  const groups=legacyGroups.map(group=>({...group,...(remakeSource?.groupOverrides?.[group.id]||{})}));
 
   const statuses={
     active:{label:'활동 기록',tone:'active'},
@@ -359,11 +361,15 @@
   const profiles=profileSource?.profiles||{};
   const records=legacyRecords.map(record=>{
     const profile=profiles[record.id]||{};
-    const renamed=profile.name&&profile.name!==record.name;
+    const revision=remakeSource?.records?.[record.id]||{};
+    const resolvedName=revision.name||profile.name||record.name;
+    const renamed=resolvedName!==record.name;
     const aliases=new Set([...(record.aliases||[]),...(profile.aliases||[])]);
+    if(profile.name&&profile.name!==resolvedName) aliases.add(profile.name);
     if(renamed) aliases.add(record.name);
     return {
-      ...record,...profile,
+      ...record,...profile,...revision,
+      affiliationSummary:revision.affiliationSummary||revision.unit||profile.affiliationSummary||record.affiliationSummary,
       sourceName:renamed?record.name:record.sourceName,
       aliases:Array.from(aliases)
     };
@@ -393,8 +399,8 @@
   };
 
   root.ProjectCursePersonnel=freeze({
-    version:'5.53.0',schema:'project-curse-personnel-v2',sourceClass:'LEGACY REGISTER + SUPPLEMENTAL IDENTITY',
-    editorialRule:'세계 기록과 조직 구조를 우선하고 각 인물의 신원·경력은 독립 파일로 판독한다.',
+    version:'5.54.0',schema:'project-curse-personnel-v3',sourceClass:'LEGACY REGISTER + SUPPLEMENTAL IDENTITY + CANON REVISION',
+    editorialRule:'개편 정본명·작전 분류와 2006년 원 명부명을 함께 보존하며, 능력은 발현 경로와 대가를 분리해 판독한다.',
     groups,statuses,certainties,records,byId,groupById,factionIndex,stats
   });
 })(window);

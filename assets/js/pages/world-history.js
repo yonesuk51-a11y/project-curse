@@ -1,4 +1,4 @@
-// Project Curse 5.46.0 — authored archive fragments with evidence-gated chronology-to-map handoff.
+// Project Curse 5.54.0 — deep history, world laws and evidence-gated chronology-to-map handoff.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
@@ -11,15 +11,16 @@
     <header class="pc-world-history-head">
       <div class="label">세계 기록 / 중앙 연표 복구본</div>
       <h2>세계 사건 연표</h2>
-      <p>1975년의 공간 개척 실험부터 2042년 삼야 무응답까지 남은 기록을 시대와 근거 수준으로 분리한다. 2030년 작전의 현장 결과는 중앙 연표와 분리하고, 이후 확인된 생존 규칙과 신호만 등록한다.</p>
+      <p>기관보다 오래된 성채 전승부터 2042년 삼야 무응답까지 남은 기록을 시대와 근거 수준으로 분리한다. 실제 역사적 비극은 초자연 현상의 원인으로 바꾸지 않으며, 그 혼란 속에서 은닉 조직과 금지 기술이 이동한 정황만 기록한다.</p>
     </header>
-    <div class="pc-world-history-range">1975–2042 / ACTIVE ARCHIVE</div>
+    <div class="pc-world-history-range">ORIGIN UNKNOWN–2042 / ACTIVE ARCHIVE</div>
     <section class="pc-world-history-overview" aria-label="연표 복구 현황">
       <div><b data-history-total>0</b><span>복구 사건</span></div>
       <div><b data-history-era-total>0</b><span>시대 구획</span></div>
       <div><b data-history-confirmed>0</b><span>확정 기록</span></div>
       <div><b data-history-unresolved>0</b><span>기록 공백</span></div>
     </section>
+    <section class="pc-world-framework" data-world-framework aria-label="세계 기본법"></section>
     <section class="pc-japan-tech-trace" data-japan-tech-trace aria-label="일본 기술 도약 계보"></section>
     <section class="pc-world-history-controls" aria-label="세계 사건 연표 필터">
       <div class="pc-world-history-filter-head"><b>ERA INDEX</b><span data-history-filter-status aria-live="polite"></span></div>
@@ -201,6 +202,7 @@
     '2005-09-01-red-wolf', '2006-08-20-ubermensch-raid', '2006-12-31-aftermath'
   ];
   const records = [
+    ...((chronology?.deepHistoryRecords || []).map(record => ({...record}))),
     ...entries.map((entry, index) => {
       const id=recordIds[index];
       const proseRecord=prose?.getRecord?.(id);
@@ -250,6 +252,17 @@
   root.querySelector('[data-history-era-total]').textContent = String(chronology?.eras?.length || 1);
   root.querySelector('[data-history-confirmed]').textContent = String(records.filter(record => record.evidence === 'confirmed').length);
   root.querySelector('[data-history-unresolved]').textContent = String(chronology?.unresolved?.length || 0);
+
+  function renderWorldFramework(){
+    const host=root.querySelector('[data-world-framework]');
+    const framework=chronology?.worldFramework;
+    if(!host||!framework) return;
+    host.innerHTML=`<header><div><small>WORLD CONDITION / CANON LAW</small><h3>먼저 세계의 규칙을 판독하십시오</h3><p>${framework.thesis}</p></div><span>기관은 원인이 아니라 후발 대응체계다.</span></header>
+      <div class="pc-world-ontology">${framework.ontology.map(item=>`<article><small>${item.code}</small><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div>
+      <details><summary>능력의 일곱 발현 경로와 대가</summary><div class="pc-world-ability-sources">${framework.abilitySources.map(item=>`<p><b>${item.name}</b><span>${item.cost}</span></p>`).join('')}</div></details>
+      <details><summary>괴이 재난 속 민간인의 일상</summary><p class="pc-world-public-baseline">${framework.publicBaseline}</p><div class="pc-world-civilian-systems">${framework.civilianSystems.map(item=>`<article><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div></details>`;
+  }
+  renderWorldFramework();
 
   function renderTechnologyTrace(){
     if(!technologyTrace||!japanTechnology) return;

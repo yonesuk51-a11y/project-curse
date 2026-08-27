@@ -1,4 +1,4 @@
-// Project Curse 5.48.1 — authored archive fragments with distinct institutional and field voices.
+// Project Curse 5.54.0 — authored archive fragments with deep-history and distinct institutional voices.
 (function(root){
   'use strict';
 
@@ -20,6 +20,48 @@
   };
 
   const records={
+    'deep-first-breach':{
+      documentType:'contested',author:'U.A.C 비교신화 감식반',recipient:'중앙 연표 복구실',purpose:'대륙별 최초 균열 전승의 공통문법 대조',
+      fragments:[
+        {label:'대조표 01',kind:'analysis',text:'대흑림 성채 서판은 검은 강을 건너지 말라고 적는다. 데드 존 지하문은 돌아온 자의 이름을 세 번 확인하라고 적는다. 유라시아 봉인문은 문밖에서 들린 목소리에 답하지 말라고 적는다. 세 기록이 같은 사건을 가리킨다는 증거는 없다.'},
+        {label:'편찬자 메모',kind:'annotation',text:'최초 균열은 사건명이 아니라 묶음표시다. 한 시대의 재난으로 단정하면 서로 다른 장소의 금기를 억지로 하나의 기원에 종속시키게 된다.'}
+      ]
+    },
+    'deep-citadel-charters':{
+      documentType:'interview',author:'남방 성채 구술채록반',recipient:'대흑림 외곽 연락소',purpose:'야간 피난권의 지역별 문구 보존',
+      fragments:[
+        {label:'서부 성채 문지기',kind:'quote',text:'“누구를 믿느냐고 묻기 전에 손이 몇 개인지, 그림자가 어디 붙었는지 본다. 밤을 넘긴 뒤에는 떠날지 남을지 그 사람이 정한다. 문을 연 대가는 우리가 치른다.”'},
+        {label:'채록 주석',kind:'annotation',text:'여섯 성채가 같은 법에 복종한다는 뜻은 아니다. 다만 혈통과 신앙을 묻기 전에 한 차례 피난을 허용한다는 문장이 돌문 파편과 현재 구술에서 반복됐다.'}
+      ]
+    },
+    'deep-plague-copies':{
+      documentType:'forensic',author:'유럽 고문서 합동감식실',recipient:'U.A.C 역사오염 심사관',purpose:'14세기 장부 여백의 봉인문과 후대 혈교 주장 분리',
+      fragments:[
+        {label:'재료 감식',kind:'finding',text:'세 사본은 서로 다른 지역과 시기에 제작됐다. 여백에 적힌 기억 대조 순서와 네 개의 혈점 기호는 일치하지만, 본문은 당시의 세금·매장·배급 기록이다.'},
+        {label:'역사 경계',kind:'annotation',text:'당시 역병의 발생과 희생을 의식 탓으로 돌릴 근거는 없다. 사본이 보여 주는 것은 대규모 이동 속에 숨어 별개의 변칙사건을 처리한 소규모 결사의 흔적뿐이다.'}
+      ]
+    },
+    'deep-sealing-wars':{
+      documentType:'review',author:'비인가 군수로 추적반',recipient:'유럽권 봉인고 감사위원회',purpose:'1618–1648년 납 상자와 피난명부 이동선 재검토',
+      fragments:[
+        {label:'군수장부 대조',kind:'log',text:'1622  납 상자 7 / 내용물 공란\n1631  수도원 피난대에 상자 4 재등장\n1648  종전 재고 2 / 봉인고 인계 서명 없음'},
+        {label:'검토 결론',kind:'annotation',text:'전쟁의 원인은 공개 역사에 따른다. 확인 대상은 혼란을 이용해 국경을 넘은 금지 유물과 그 뒤에도 야간 봉쇄를 유지한 도시들의 행정 흔적이다.'}
+      ]
+    },
+    'deep-industrial-occult':{
+      documentType:'forensic',author:'산업계측 유산 감식실',recipient:'제6계측계획 계보 조사관',purpose:'전신·사진·전력 실험에 남은 비정합 신호 비교',
+      fragments:[
+        {label:'유리판 18-C',kind:'finding',text:'노출되지 않은 사진 유리판 열두 장 가운데 아홉 장에 같은 세로 손상이 있다. 손상 시각은 전신국의 무발신 전류 기록과 0.8초 안에서 겹친다.'},
+        {label:'기술사 주석',kind:'annotation',text:'전력망이 현상을 만들었다고 볼 수 없다. 이전에는 한 사람의 목격담으로 끝났을 일을 서로 떨어진 계기와 사진판이 함께 기록했다는 점이 달라졌다.'}
+      ]
+    },
+    'deep-cold-war-programs':{
+      documentType:'analysis',author:'냉전기 비인가계획 해제심사반',recipient:'아마리온 승계 감사실',purpose:'1947–1974년 분산 연구와 1975년 채용명부 연결 검토',
+      fragments:[
+        {label:'인사 대조',kind:'analysis',text:'심리전 부서, 방공연구소와 생물학 대응반은 같은 현상을 서로 다른 위협으로 분류했다. 세 조직에서 퇴직·실종 처리된 기술자 열한 명이 1975년 아마리온 채용명부에 다시 나타난다.'},
+        {label:'판독 제한',kind:'annotation',text:'냉전의 정치적 갈등을 변칙현상으로 설명하지 않는다. 경쟁적 비밀주의가 정보 공유를 막았고, 흩어진 기술과 인력이 민간기업으로 이동할 조건을 만들었다는 인사기록만 채택한다.'}
+      ]
+    },
     '1975-09-12-amarion':{
       documentType:'official',author:'아마리온 법인기록실',recipient:'미국 연방 계약심사국',purpose:'법인 설립 및 연구 목적 등록',
       fragments:[

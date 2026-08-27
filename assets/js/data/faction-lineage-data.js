@@ -22,17 +22,17 @@
       history:['1986-07-25-immortality','1989-08-23-tokyo','2024-03-17-ushinoda-fabrication']
     },
     'corruption-cult':{
-      name:'타락교',short:'신체 계통',kind:'정식 종파',state:'confirmed',command:'로드 1 / 사도 4',
+      name:'타락교',short:'신체 계통',kind:'정식 종파',state:'confirmed',command:'교리상 로드좌 1 / 사도석 4',
       summary:'신체와 생체 구조의 타락을 권능과 의식의 중심에 두는 우시노다의 정식 종파.',
       history:['1989-08-23-tokyo','2024-03-17-ushinoda-fabrication']
     },
     'blood-cult':{
-      name:'혈교',short:'혈액 계통',kind:'정식 종파',state:'confirmed',command:'로드 1 / 사도 4',
+      name:'혈교',short:'혈액 계통',kind:'정식 종파',state:'confirmed',command:'교리상 로드좌 1 / 사도석 4',
       summary:'혈액·희생·생명 매개를 중심으로 움직이는 우시노다의 정식 종파. 남부권의 계승 주장은 별도 판정 대상이다.',
       history:['1986-07-25-immortality','2024-03-17-ushinoda-fabrication']
     },
     'shadow-cult':{
-      name:'그림자교',short:'빙의 계통',kind:'정식 종파',state:'confirmed',command:'로드 1 / 사도 4',
+      name:'그림자교',short:'빙의 계통',kind:'정식 종파',state:'confirmed',command:'교리상 로드좌 1 / 사도석 4',
       summary:'그림자·빙의·인간 위장형 개체를 권능과 잠복 수단으로 사용하는 우시노다의 정식 종파.',
       history:['1989-08-23-tokyo','2024-03-17-ushinoda-fabrication']
     },
@@ -77,7 +77,8 @@
     states,nodes,edges,historyMeta,
     rules:[
       '우시노다의 정식 종파는 타락교·혈교·그림자교 세 곳뿐이다.',
-      '각 종파는 로드 1명과 사도 4명을 둔다. 센티넬은 계급이 아니라 로드 귀속 자산이다.',
+      '각 종파는 교리상 로드좌 1석과 사도석 4석을 주장한다. 공석과 복수 주장 때문에 실제 인원수와 같지 않을 수 있다.',
+      '센티넬은 계급이 아니라 로드좌 주장자에게 귀속되는 호위·전투·처형 자산이다.',
       '첫 번째 사도는 교단 창설 이전 예외개체이며 세 권능을 모두 사용한다.',
       '남부 혈교의 우시노다 혈교 계승 주장은 미확정이다. 데드존 혈교는 2016년 이후 남부 지휘와 분리한다.'
     ],

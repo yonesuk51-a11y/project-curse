@@ -1,4 +1,4 @@
-// Project Curse 5.53.0 — archive continuity and repeat-navigation build manifest.
+// Project Curse 5.54.0 — deep-world and personnel revision build manifest.
 (function(root){
   'use strict';
 
@@ -9,9 +9,9 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.53.0',
-    codename:'Archive Continuity & Navigation',
-    schema:'project-curse-v43',
+    version:'5.54.0',
+    codename:'The World Before Institutions',
+    schema:'project-curse-v44',
     released:'2026-08-27',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},

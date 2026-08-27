@@ -1,4 +1,4 @@
-// Project Curse 5.53.0 — channel identity and compact repeat-navigation transitions.
+// Project Curse 5.54.0 — channel identity and compact repeat-navigation transitions.
 (function(root){
   'use strict';
 
@@ -24,7 +24,7 @@
     history:{
       code:'CHRONOLOGY',label:'세계 기록',accent:'#b29a68',theme:'chronology',
       enter:'chronology-rewind',exit:'timeline-park',
-      request:'CHRONOLOGY INDEX REQUESTED',status:'DATE RANGE 1975–2042',sound:'channel.chronology',
+      request:'CHRONOLOGY INDEX REQUESTED',status:'DATE RANGE ORIGIN?–2042',sound:'channel.chronology',
       symbol:'02',signal:'CHRONOLOGY INDEX',phases:['TIMELINE PARK','INDEX REWIND','DATE RANGE LOCK']
     },
     'faction-info':{

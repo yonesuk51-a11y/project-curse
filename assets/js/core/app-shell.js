@@ -1,4 +1,4 @@
-// Project Curse 5.53.0 — route handoff, accessible shell navigation and direct personnel links.
+// Project Curse 5.54.0 — route handoff, accessible shell navigation and direct personnel links.
 (function(){
   'use strict';
 

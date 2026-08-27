@@ -1,4 +1,4 @@
-// Project Curse 5.53.0 — six lore channels, one utility channel and adaptive density policy.
+// Project Curse 5.54.0 — six lore channels, one utility channel and adaptive density policy.
 (function(root){
   'use strict';
 
@@ -27,7 +27,7 @@
       {
         id:'history',index:'02',code:'CHRONOLOGY',label:'세계 기록',shortLabel:'연대기',theme:'chronology',glyph:'CH',
         description:'분절된 사건 기록을 시간축에 재배열해 세계의 변곡점을 추적한다.',
-        telemetry:[['SPAN','1975–2042'],['INDEX','43 RECORDS'],['ERAS','9']]
+        telemetry:[['SPAN','ORIGIN?–2042'],['INDEX','49 RECORDS'],['ERAS','10']]
       },
       {
         id:'faction-info',index:'03',code:'INTELLIGENCE',label:'세력 분석',shortLabel:'세력',theme:'intelligence',glyph:'IA',
