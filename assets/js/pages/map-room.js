@@ -15,6 +15,7 @@
 
   const confidenceLabels={
     confirmed:'확인 자료',
+    corroborated:'교차 확인 자료',
     observed:'관측 자료',
     estimated:'추정 좌표',
     disputed:'상충 진술',
@@ -77,7 +78,7 @@
         id:'north',number:'01',eyebrow:'NORTHERN FRONT',title:'북부전선',
         status:'전선 신호 증가',confidence:'관측 신뢰도 78%',tone:'front',
         summary:'도쿄 감시권과 란저우 레드존 너머에서 일본 동맹권과 짐승의 길이 맞부딪친다.',
-        note:'도시 감시 · 북부 전쟁 · 내륙 오염권',target:{kind:'region',id:'eastasia'}
+        note:'도시 감시 · 복제 구조신호 · 연속 차단선',target:{kind:'detail',id:'eastasia-northern-front'}
       },
       {
         id:'forest',number:'02',eyebrow:'GREAT BLACK FOREST',title:'대흑림',
@@ -95,7 +96,7 @@
         id:'south',number:'04',eyebrow:'OPERATION BROKEN CROWN',title:'남부 쿠데타',
         status:'CRITICAL / PARTIAL',confidence:'부분 감청',tone:'coup',
         summary:'남부 해안의 집단 소환과 성위대 침투가 한 작전으로 수렴한다. 지휘 계통은 이미 오염됐다.',
-        note:'특수부대 · 도시 소환 · 남방 해안 동원',target:{kind:'operation',id:'op-southern-coup'}
+        note:'특수부대 · 도시 소환 · 남방 해안 동원',target:{kind:'detail',id:'gbf-coastal-belt'}
       }
     ];
     function restoreMapSession(){
@@ -151,6 +152,7 @@
     };
     const detailForMarker=marker=>{
       const map={
+        'tokyo':'eastasia-northern-front','lanzhou':'eastasia-northern-front','northern-front':'eastasia-northern-front',
         'gbf-core':'gbf-inner-refuges','monsur-church':'gbf-western-marches','unlit-fortress':'gbf-western-marches','black-river':'gbf-western-marches','southern-coast':'gbf-coastal-belt',
         'dead-interior':'deadzone-return-corridor','returned-coast':'deadzone-return-corridor','former-us-branch':'deadzone-kingdom-graves'
       };
@@ -411,6 +413,10 @@
     }
 
     function detailTerrain(detail){
+      if(detail.terrain==='front') return `
+        <path class="pc-detail-terrain pc-detail-terrain--front" d="M0 84 C142 38 238 104 365 62 S614 98 728 47 884 76 1000 32 L1000 540 0 540 Z"></path>
+        <g class="pc-detail-front-grid"><path d="M40 463 L198 381 344 408 501 334 646 286 788 183 958 84"></path><path d="M119 510 L263 420 431 449 566 366 731 321 903 202"></path><path d="M176 78 V475 M356 42 V458 M538 68 V407 M716 31 V338 M875 56 V246"></path></g>
+        <path class="pc-detail-front-barrier" d="M598 430 C666 365 702 297 764 248 S858 161 954 104"></path>`;
       if(detail.terrain==='coast') return `
         <path class="pc-detail-terrain pc-detail-terrain--forest" d="M0 40 C165 102 253 38 393 92 S664 72 1000 128 L1000 540 0 540 Z"></path>
         <path class="pc-detail-terrain pc-detail-terrain--water" d="M0 454 C146 404 244 470 365 419 S590 392 712 326 863 292 1000 226 L1000 540 0 540 Z"></path>
@@ -512,6 +518,7 @@
 
       const resolved=resolveDetailSite(site);
       const incident=incidentById(site.incident);
+      const historyId=site.history||incident?.history;
       const records=[...new Set([...(site.records||[]),...(incident?.records||[])])];
       const connectedRoutes=routesForSite(detail,site.id);
       const threat=threatForSite(site);
@@ -525,7 +532,7 @@
         ${incident?`<div class="pc-map-incident-summary"><b>${escapeHTML(incident.date)}</b><p>${escapeHTML(incident.summary)}</p></div>`:''}
         ${records.length?`<div class="pc-map-crosslinks"><b>연결 기록</b>${records.map(record=>`<button type="button" data-map-open-record="${escapeHTML(record)}">${escapeHTML(record)}<i>ARCHIVE →</i></button>`).join('')}</div>`:''}
         <div class="pc-map-intel-actions">
-          ${incident?.history?`<button type="button" data-map-open-history="${escapeHTML(incident.history)}">세계 기록에서 사건 열기</button>`:''}
+          ${historyId?`<button type="button" data-map-open-history="${escapeHTML(historyId)}">세계 기록에서 사건 열기</button>`:''}
           ${site.operation?`<button type="button" data-map-open-operation="${escapeHTML(site.operation)}">연결 작전지도 열기</button>`:''}
           ${site.id==='gbf-unlit-fortress'?`<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="unlit-fortress">${pilgrimageOutcome('unlit-fortress')?.status==='idle'?'이 지점에서 순례 개시':'순례 기록 재개'}</button>`:''}
           ${site.id==='dead-checkpoint-07'?`<button type="button" class="pc-map-pilgrimage-entry" data-map-open-pilgrimage="deadzone-return">${pilgrimageOutcome('deadzone-return')?.status==='idle'?'검문소 07 귀환 심사 개시':pilgrimageOutcome('deadzone-return')?.status==='complete'?'저장된 귀환 판정 열기':'귀환자 검문 재개'}</button>`:''}
@@ -839,6 +846,7 @@
         state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;
         if(control.dataset.mapTheater==='world'){state.mode='region';state.region='world';}
         else if(theater?.target.kind==='operation'){state.mode='operation';state.operation=theater.target.id;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=false;}
+        else if(theater?.target.kind==='detail'){state.mode='detail';state.detail=theater.target.id;state.detailSite=null;state.intelCollapsed=true;}
         else if(theater?.target.kind==='region'){state.mode='region';state.region=theater.target.id;}
         else return;
         root.ProjectCurseAudioControl?.play?.('map.signal');render();return;

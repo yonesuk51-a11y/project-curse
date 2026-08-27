@@ -812,12 +812,16 @@
 .pc-map-detail-stage,.pc-map-detail-stage .pc-map-svg{min-height:500px}
 .pc-map-detail-stage.has-focus.pc-map-detail-stage--forest,.pc-map-detail-stage.has-focus.pc-map-detail-stage--deep-forest,.pc-map-detail-stage.has-focus.pc-map-detail-stage--coast{box-shadow:inset 0 0 90px rgba(36,76,52,.28),0 0 0 1px rgba(95,137,103,.08)}
 .pc-map-detail-stage.has-focus.pc-map-detail-stage--dead,.pc-map-detail-stage.has-focus.pc-map-detail-stage--ruins,.pc-map-detail-stage.has-focus.pc-map-detail-stage--silent{box-shadow:inset 0 0 100px rgba(78,23,29,.32),0 0 0 1px rgba(153,58,67,.09)}
+.pc-map-detail-stage.has-focus.pc-map-detail-stage--front{box-shadow:inset 0 0 100px rgba(36,57,78,.3),0 0 0 1px rgba(101,136,164,.1)}
 .pc-detail-grid{fill:url(#pc-detail-grid);pointer-events:none}
 .pc-detail-terrain{stroke:rgba(161,173,169,.18);stroke-width:1;vector-effect:non-scaling-stroke}
-.pc-detail-terrain,.pc-detail-river,.pc-detail-canopy,.pc-detail-ruins,.pc-detail-silence,.pc-detail-routes,.pc-detail-overlays{pointer-events:none}
+.pc-detail-terrain,.pc-detail-river,.pc-detail-canopy,.pc-detail-ruins,.pc-detail-silence,.pc-detail-front-grid,.pc-detail-front-barrier,.pc-detail-routes,.pc-detail-overlays{pointer-events:none}
 .pc-detail-terrain--forest{fill:rgba(39,59,43,.42)}
 .pc-detail-terrain--water{fill:rgba(30,42,48,.62);stroke:rgba(93,121,126,.28)}
 .pc-detail-terrain--dead{fill:rgba(50,49,48,.34)}
+.pc-detail-terrain--front{fill:rgba(32,43,52,.48);stroke:rgba(112,140,158,.24)}
+.pc-detail-front-grid{fill:none;stroke:rgba(101,130,149,.14);stroke-width:1;stroke-dasharray:5 8}
+.pc-detail-front-barrier{fill:none;stroke:rgba(126,157,179,.43);stroke-width:10;stroke-dasharray:2 8;filter:url(#pc-detail-glow)}
 .pc-detail-river{fill:none;stroke:rgba(42,55,60,.92);stroke-width:18;vector-effect:non-scaling-stroke}
 .pc-detail-canopy{fill:none;stroke:rgba(95,121,88,.25);stroke-width:48;stroke-dasharray:2 13;vector-effect:non-scaling-stroke}
 .pc-detail-ruins path{fill:rgba(67,65,61,.23);stroke:rgba(152,150,142,.2);stroke-width:2;stroke-dasharray:8 5;vector-effect:non-scaling-stroke}

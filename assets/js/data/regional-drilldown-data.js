@@ -1,4 +1,4 @@
-// Project Curse 5.33.0 — regional drilldown districts, route focus, and recovery intelligence.
+// Project Curse 5.54.0 — northern-front theater, regional drilldown districts, route focus, and recovery intelligence.
 (function(root){
   'use strict';
 
@@ -9,8 +9,30 @@
   }
 
   root.ProjectCurseRegionalDrilldown=freeze({
-    version:'regional-drilldown-v2',
+    version:'regional-drilldown-v3',
     districts:[
+      {
+        id:'eastasia-northern-front',region:'eastasia',terrain:'front',
+        label:'북부 연속 차단선',code:'NORTH / CONTINUOUS BARRIER',status:'ADVANTAGE / WAR ACTIVE',confidence:'78%',
+        description:'2018년 개전 당시 붕괴한 감시선, 2026년 탈환선과 2038년 분산 감시망을 겹쳐 복원한 북동아시아 전구. 선의 번호가 높아져도 전쟁이 끝났다는 뜻은 아니다.',
+        warning:'구조 요청자의 목소리나 호출명만으로 예비대를 이동시키지 말 것. 서로 떨어진 두 계측 노드의 반환 지문이 일치해야 한다.',
+        routes:[
+          {id:'northern-urban-watch',className:'historical',label:'URBAN WATCH / JID LEGACY',risk:'medium',signal:'corroborated',rule:'도시 감시 기록과 전선 교전 승인을 같은 권한으로 해석하지 말 것',siteIds:['north-tokyo-branch','north-joint-command','north-distributed-nodes','north-lanzhou-perimeter'],points:[[78,438],[225,368],[384,397],[520,338]]},
+          {id:'northern-false-rescue',className:'hostile',label:'DUPLICATED RESCUE SIGNAL',risk:'critical',signal:'spoofed',rule:'목소리가 아니라 두 노드에 남은 경로 지문을 대조할 것',siteIds:['north-beast-corridor','north-third-line','north-false-rescue-origin','north-joint-command'],points:[[922,92],[784,177],[574,438],[225,368]]},
+          {id:'northern-counteroffensive',className:'front',label:'ALLIED COUNTEROFFENSIVE',risk:'high',signal:'corroborated',rule:'제한적 우세를 전쟁 종료 또는 적 전력 소멸로 보고하지 말 것',siteIds:['north-joint-command','north-distributed-nodes','north-reclaimed-sites','north-third-line','north-sixth-line','north-beast-corridor'],points:[[225,368],[384,397],[641,279],[784,177],[868,132],[922,92]]}
+        ],
+        sites:[
+          {id:'north-tokyo-branch',x:78,y:438,type:'facility',label:'S.I.D 도쿄 지부',meta:'도시 침투 세포·교육기관 기록 추적',status:'도시 감시 유지',confidence:'observed',records:['Sakuma_Tape_991028','Cults_871104'],incident:'evt-tokyo-record'},
+          {id:'north-joint-command',x:225,y:368,type:'facility',label:'일본 북부 공동지휘소',meta:'S.I.D 도시 추적·N.H.C 전선 봉쇄 공동 조정',status:'연합 지휘 유지',confidence:'confirmed',history:'2018-09-12-northern-front'},
+          {id:'north-distributed-nodes',x:384,y:397,type:'signal',label:'분산 계측 노드군',meta:'JID-87 기록 형식·C.I. 반환 지문 대조',status:'다중 노드 합의',confidence:'corroborated',history:'2026-08-20-northern-reversal'},
+          {id:'north-lanzhou-perimeter',x:520,y:338,type:'zone',label:'란저우 레드존 외곽',meta:'도시 차단망과 내륙 오염권 경계',status:'외곽 봉쇄',confidence:'observed',records:['Zone_870815']},
+          {id:'north-false-rescue-origin',x:574,y:438,type:'anomaly',label:'복제 구조신호 발생권',meta:'사망한 통신병의 음성·호출명 반복',status:'응답 금지',confidence:'confirmed',history:'2018-09-12-northern-front'},
+          {id:'north-reclaimed-sites',x:641,y:279,type:'incident',label:'탈환 의식 거점군',meta:'48시간 동안 의식 거점 3곳·보급 회랑 2곳 탈환',status:'제한적 확보',confidence:'corroborated',history:'2026-08-20-northern-reversal'},
+          {id:'north-third-line',x:784,y:177,type:'line',label:'제3 차단선',meta:'2026년 짐승의 길 주력 후퇴 확인선',status:'ADVANTAGE / CONTESTED',confidence:'corroborated',incident:'evt-northern-front'},
+          {id:'north-sixth-line',x:868,y:132,type:'line',label:'제6차 분산 감시선',meta:'철도·방재망·독립시계 노드 17개 잔류',status:'전쟁 종료 미선포',confidence:'corroborated',history:'2038-06-29-sixth-northern-line'},
+          {id:'north-beast-corridor',x:922,y:92,type:'unknown',label:'짐승의 길 잔존 회랑',meta:'작은 의식대·단독 복제 신호 계속 관측',status:'전력 총량 미확인',confidence:'estimated',history:'2038-06-29-sixth-northern-line'}
+        ]
+      },
       {
         id:'gbf-western-marches',region:'southamerica',terrain:'forest',
         label:'서부 순례 회랑',code:'GBF / WESTERN MARCHES',status:'ROUTE OVERLAP',confidence:'31%',
