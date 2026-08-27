@@ -1,4 +1,4 @@
-// Project Curse 5.54.0 — deep history, world laws and evidence-gated chronology-to-map handoff.
+// Project Curse 5.54.0 — reader-first history, era landmarks and optional archive evidence.
 (() => {
   const root = document.getElementById('history');
   if (!root) return;
@@ -11,22 +11,35 @@
     <header class="pc-world-history-head">
       <div class="label">세계 기록 / 중앙 연표 복구본</div>
       <h2>세계 사건 연표</h2>
-      <p>기관보다 오래된 성채 전승부터 2042년 삼야 무응답까지 남은 기록을 시대와 근거 수준으로 분리한다. 실제 역사적 비극은 초자연 현상의 원인으로 바꾸지 않으며, 그 혼란 속에서 은닉 조직과 금지 기술이 이동한 정황만 기록한다.</p>
+      <p>세계는 어느 날 한꺼번에 무너지지 않았다. 오래된 금기, 산업화된 계측, 대응기관의 모방과 대륙의 침묵이 수십 년에 걸쳐 겹쳤다. 먼저 네 전환점으로 흐름을 잡고, 필요한 시대와 사건 기록을 열 수 있다.</p>
     </header>
     <div class="pc-world-history-range">ORIGIN UNKNOWN–2042 / ACTIVE ARCHIVE</div>
-    <section class="pc-world-history-overview" aria-label="연표 복구 현황">
-      <div><b data-history-total>0</b><span>복구 사건</span></div>
-      <div><b data-history-era-total>0</b><span>시대 구획</span></div>
-      <div><b data-history-confirmed>0</b><span>확정 기록</span></div>
-      <div><b data-history-unresolved>0</b><span>기록 공백</span></div>
+    <section class="pc-world-history-overview" aria-labelledby="pc-history-path-title">
+      <header><small>READING PATH</small><h3 id="pc-history-path-title">먼저 볼 네 전환점</h3></header>
+      <div class="pc-world-history-turns">
+        <button type="button" data-history-reader-record="deep-citadel-charters"><time>기원 불명–1974</time><b>문보다 오래된 금기</b><p>성채의 피난권과 봉인 관습은 현대 기관보다 먼저 존재했다.</p><span>대표 기록 열기&nbsp;›</span></button>
+        <button type="button" data-history-reader-record="1975-09-12-amarion"><time>1975–1992</time><b>기술이 금기를 계측하다</b><p>아마리온과 일본의 계측 계획이 오래된 현상을 산업과 도시 설비의 언어로 바꿨다.</p><span>대표 기록 열기&nbsp;›</span></button>
+        <button type="button" data-history-reader-record="1999-07-12-ubermensch"><time>1993–2006</time><b>대응기관이 적을 닮다</b><p>공식 대응 체계는 확장됐지만, 살아남기 위해 교단의 방식을 모방하기 시작했다.</p><span>대표 기록 열기&nbsp;›</span></button>
+        <button type="button" data-history-reader-record="2008-09-06-dead-zone-designation"><time>2007–2042</time><b>중앙이 사라진 뒤</b><p>대륙 침묵 이후 성채와 검문소, 전선은 하나의 명령 없이 각자의 생존법을 만들었다.</p><span>대표 기록 열기&nbsp;›</span></button>
+      </div>
     </section>
-    <section class="pc-world-framework" data-world-framework aria-label="세계 기본법"></section>
-    <section class="pc-japan-tech-trace" data-japan-tech-trace aria-label="일본 기술 도약 계보"></section>
+    <div class="pc-world-history-reference-stack" data-history-reference-stack>
+      <details class="pc-world-history-reference">
+        <summary><span><small>WORLD RULES</small><b>세계의 기본 규칙</b></span><em>괴이·능력·민간 생존 체계&nbsp;＋</em></summary>
+        <div><section class="pc-world-framework" data-world-framework aria-label="세계 기본법"></section></div>
+      </details>
+      <details class="pc-world-history-reference">
+        <summary><span><small>TECHNOLOGY TRACE</small><b>일본 기술 도약의 계보</b></span><em>1982–1992 계측 계획&nbsp;＋</em></summary>
+        <div><section class="pc-japan-tech-trace" data-japan-tech-trace aria-label="일본 기술 도약 계보"></section></div>
+      </details>
+    </div>
     <section class="pc-world-history-controls" aria-label="세계 사건 연표 필터">
-      <div class="pc-world-history-filter-head"><b>ERA INDEX</b><span data-history-filter-status aria-live="polite"></span></div>
-      <div class="pc-world-history-filters" data-history-filters></div>
+      <details class="pc-world-history-era-filter">
+        <summary><span>특정 시대만 골라 보기</span><b data-history-filter-status aria-live="polite"></b></summary>
+        <div class="pc-world-history-filters" data-history-filters></div>
+      </details>
       <details class="pc-world-history-canon-key">
-        <summary>기록 판정 기준과 결정 대기 항목</summary>
+        <summary>기록의 확실성과 아직 결정되지 않은 설정</summary>
         <div class="pc-world-history-canon-grid" data-history-canon-key></div>
         <div class="pc-world-history-unresolved" data-history-unresolved-list></div>
       </details>
@@ -240,6 +253,7 @@
   const head = root.querySelector('.pc-world-history-head');
   const range = root.querySelector('.pc-world-history-range');
   const overview = root.querySelector('.pc-world-history-overview');
+  const referenceStack = root.querySelector('[data-history-reference-stack]');
   const technologyTrace = root.querySelector('[data-japan-tech-trace]');
   const controls = root.querySelector('.pc-world-history-controls');
   const filterHost = root.querySelector('[data-history-filters]');
@@ -248,16 +262,11 @@
   indexView.classList.add('pc-world-history-index');
   indexView.replaceChildren();
 
-  root.querySelector('[data-history-total]').textContent = String(records.length);
-  root.querySelector('[data-history-era-total]').textContent = String(chronology?.eras?.length || 1);
-  root.querySelector('[data-history-confirmed]').textContent = String(records.filter(record => record.evidence === 'confirmed').length);
-  root.querySelector('[data-history-unresolved]').textContent = String(chronology?.unresolved?.length || 0);
-
   function renderWorldFramework(){
     const host=root.querySelector('[data-world-framework]');
     const framework=chronology?.worldFramework;
     if(!host||!framework) return;
-    host.innerHTML=`<header><div><small>WORLD CONDITION / CANON LAW</small><h3>먼저 세계의 규칙을 판독하십시오</h3><p>${framework.thesis}</p></div><span>기관은 원인이 아니라 후발 대응체계다.</span></header>
+    host.innerHTML=`<header><div><small>WORLD CONDITION</small><h3>세계의 기본 규칙</h3><p>${framework.thesis}</p></div><span>기관은 원인이 아니라 후발 대응체계다.</span></header>
       <div class="pc-world-ontology">${framework.ontology.map(item=>`<article><small>${item.code}</small><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div>
       <details><summary>능력의 일곱 발현 경로와 대가</summary><div class="pc-world-ability-sources">${framework.abilitySources.map(item=>`<p><b>${item.name}</b><span>${item.cost}</span></p>`).join('')}</div></details>
       <details><summary>괴이 재난 속 민간인의 일상</summary><p class="pc-world-public-baseline">${framework.publicBaseline}</p><div class="pc-world-civilian-systems">${framework.civilianSystems.map(item=>`<article><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div></details>`;
@@ -301,7 +310,7 @@
     const publicBasis=document.createElement('details');
     publicBasis.className='pc-japan-tech-public';
     const summary=document.createElement('summary');
-    summary.textContent='PUBLIC RECORD BASIS / 공개 역사와 U.A.C 제한 기록의 경계';
+    summary.textContent='공개 역사와 U.A.C 제한 기록의 경계';
     const grid=document.createElement('div');
     japanTechnology.publicAnchors.forEach(anchor=>{
       const article=document.createElement('article');
@@ -315,7 +324,7 @@
     publicBasis.append(summary,grid);
 
     const warning=document.createElement('aside');
-    warning.innerHTML=`<b>OPEN QUESTIONS</b><span>${japanTechnology.openQuestions.join(' ')}</span>`;
+    warning.innerHTML=`<b>아직 확인되지 않은 점</b><span>${japanTechnology.openQuestions.join(' ')}</span>`;
     technologyTrace.append(header,track,outcomes,publicBasis,warning);
   }
   renderTechnologyTrace();
@@ -385,12 +394,16 @@
       const eraRecords = records.filter(record => record.era === era.id);
       if (!eraRecords.length) return;
       visibleCount += eraRecords.length;
-      const group = document.createElement('section');
+      const group = document.createElement('details');
       group.className = 'pc-world-history-era';
       group.dataset.historyEraGroup = era.id;
-      const eraHead = document.createElement('header');
+      group.open = activeEra !== 'all';
+      const eraHead = document.createElement('summary');
       eraHead.className = 'pc-world-history-era-head';
-      eraHead.innerHTML = `<span>${era.index}</span><div><b>${era.title}</b><small>${era.range} / ${era.summary}</small></div><i>${String(eraRecords.length).padStart(2, '0')} RECORDS</i>`;
+      const firstRecord=eraRecords[0];
+      const lastRecord=eraRecords[eraRecords.length-1];
+      const landmark=firstRecord===lastRecord?`${firstRecord.date} · ${firstRecord.title}`:`${firstRecord.date} · ${firstRecord.title} → ${lastRecord.date} · ${lastRecord.title}`;
+      eraHead.innerHTML = `<span>${era.index}</span><div><b>${era.title}</b><small>${era.range} / ${era.summary}</small><em>${landmark}</em></div><i><b>${String(eraRecords.length).padStart(2, '0')}건</b><small>펼쳐 보기&nbsp;＋</small></i>`;
       const rows = document.createElement('div');
       rows.className = 'pc-world-history-era-records';
       eraRecords.forEach(record => rows.appendChild(buildRecordButton(record)));
@@ -423,6 +436,15 @@
   });
   setEraFilter('all');
 
+  root.querySelectorAll('[data-history-reader-record]').forEach(button=>{
+    button.addEventListener('click',()=>{
+      const index=records.findIndex(record=>record.id===button.dataset.historyReaderRecord);
+      if(index<0) return;
+      window.ProjectCurseAudioControl?.play?.('history.open');
+      openRecord(index,'push');
+    });
+  });
+
   const detailView = document.createElement('article');
   detailView.className = 'pc-world-history-detail';
   detailView.hidden = true;
@@ -434,25 +456,30 @@
       <h2 data-history-record-title></h2>
       <p data-history-record-summary></p>
     </header>
-    <section class="pc-world-history-record-state" aria-label="기록 판정">
-      <div><span>시대 구획</span><b data-history-record-era></b></div>
-      <div><span>기록 판정</span><b data-history-record-evidence></b></div>
-      <div><span>문서 성격</span><b data-history-record-document></b></div>
-      <div><span>자료 상태</span><b data-history-record-source></b></div>
-      <p data-history-record-basis></p>
-    </section>
-    <section class="pc-world-history-provenance" aria-label="문서 생산 정보">
-      <div><span>작성</span><b data-history-record-author></b></div>
-      <div><span>수신</span><b data-history-record-recipient></b></div>
-      <div><span>목적</span><b data-history-record-purpose></b></div>
-    </section>
-    <aside class="pc-world-history-limit" aria-label="기록의 한계">
-      <span>ARCHIVE LIMIT / 이 기록으로 확정할 수 없는 것</span>
-      <p data-history-record-limit></p>
-    </aside>
+    <details class="pc-world-history-record-context">
+      <summary><span>기록 근거와 한계</span><small>출처·작성 경위·확정할 수 없는 내용&nbsp;＋</small></summary>
+      <div>
+        <section class="pc-world-history-record-state" aria-label="기록 판정">
+          <div><span>시대 구획</span><b data-history-record-era></b></div>
+          <div><span>기록 판정</span><b data-history-record-evidence></b></div>
+          <div><span>문서 성격</span><b data-history-record-document></b></div>
+          <div><span>자료 상태</span><b data-history-record-source></b></div>
+          <p data-history-record-basis></p>
+        </section>
+        <section class="pc-world-history-provenance" aria-label="문서 생산 정보">
+          <div><span>작성</span><b data-history-record-author></b></div>
+          <div><span>수신</span><b data-history-record-recipient></b></div>
+          <div><span>목적</span><b data-history-record-purpose></b></div>
+        </section>
+        <aside class="pc-world-history-limit" aria-label="기록의 한계">
+          <span>이 기록으로 확정할 수 없는 것</span>
+          <p data-history-record-limit></p>
+        </aside>
+      </div>
+    </details>
     <div class="pc-world-history-detail-body" data-history-record-body></div>
     <section class="pc-world-history-links" data-history-record-links hidden>
-      <b>CONNECTED INTELLIGENCE</b><div></div>
+      <b>관련 기록</b><div></div>
     </section>
     <nav class="pc-world-history-detail-nav" aria-label="사건 기록 이동">
       <button type="button" data-history-prev>← 이전 사건</button>
@@ -477,7 +504,7 @@
     if (head) head.hidden = false;
     if (range) range.hidden = false;
     if (overview) overview.hidden = false;
-    if (technologyTrace) technologyTrace.hidden = false;
+    if (referenceStack) referenceStack.hidden = false;
     if (controls) controls.hidden = false;
     indexView.hidden = false;
     detailView.hidden = true;
@@ -494,13 +521,13 @@
     if (head) head.hidden = true;
     if (range) range.hidden = true;
     if (overview) overview.hidden = true;
-    if (technologyTrace) technologyTrace.hidden = true;
+    if (referenceStack) referenceStack.hidden = true;
     if (controls) controls.hidden = true;
     indexView.hidden = true;
     detailView.hidden = false;
 
     detailView.querySelector('[data-history-record-label]').textContent =
-      `EVENT RECORD / ${String(index + 1).padStart(2, '0')}`;
+      `사건 기록 / ${String(index + 1).padStart(2, '0')}`;
     detailView.querySelector('[data-history-record-date]').textContent = record.date;
     detailView.querySelector('[data-history-record-title]').textContent = record.title;
     detailView.querySelector('[data-history-record-summary]').textContent = record.summary;
