@@ -262,7 +262,9 @@
 
 .pc-map-workspace-head button i { width: 7px; height: 7px; border-bottom: 1px solid #b65960; border-left: 1px solid #b65960; transform: rotate(45deg); }
 .pc-map-workspace-head button:hover,.pc-map-workspace-head button:focus-visible { border-color: rgba(190, 71, 80, .46); color: #fff; outline: 0; }
-.pc-map-workspace-head p { margin: 0; color: rgba(205, 211, 209, .28); font-size: 9px; }
+.pc-map-workspace-head p { flex:1;margin:0;color:rgba(205,211,209,.28);font-size:9px;text-align:center; }
+.pc-map-workspace-head .pc-map-copy-link{gap:8px;margin-left:auto;border-color:rgba(91,143,159,.22);color:rgba(179,207,216,.56);background:rgba(10,24,29,.34)}
+.pc-map-copy-link small{padding:3px 5px;border:1px solid rgba(93,153,173,.24);color:#72a7b8;font:700 6px/1 ui-monospace,Consolas,monospace;letter-spacing:.1em}.pc-map-copy-link.is-copied{border-color:rgba(90,158,121,.46)!important;color:#a9d0ba!important;background:rgba(25,73,48,.18)!important}.pc-map-copy-link.is-copied small{border-color:rgba(90,158,121,.42);color:#80b99a}
 
 .pc-map-mode-switch {
   display: grid;

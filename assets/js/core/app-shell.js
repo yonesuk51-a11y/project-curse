@@ -63,11 +63,19 @@
       return {
         raw,
         route,
-        personnelId:route==='personnel'&&routeToken==='personnel'?detailParts.join('/'):''
+        detailParts,
+        personnelId:route==='personnel'&&routeToken==='personnel'?detailParts.join('/'):'',
+        mapRoomPath:route==='map-room'&&routeToken==='map-room'?detailParts:[]
       };
     }
 
     function applyLocationDetail(request,{focus=false}={}){
+      if(request.route==='map-room'){
+        const runtime=window.ProjectCurseMapRoomRuntime;
+        if(!runtime) return false;
+        const opened=runtime.openLocation?.(request.mapRoomPath,{focus,historyMode:'none'});
+        return opened===false?runtime.openLocation?.([],{focus,historyMode:'replace'}):opened;
+      }
       if(request.route!=='personnel') return false;
       const runtime=window.ProjectCursePersonnelRuntime;
       if(!runtime) return false;
@@ -308,7 +316,7 @@
     let locationTimer=0;
     const followLocation=()=>{
       const request=readLocation();
-      navigate(request.route,{historyMode:'none',replace:false,focus:!request.personnelId})
+      navigate(request.route,{historyMode:'none',replace:false,focus:!request.personnelId&&!request.mapRoomPath.length})
         .then(()=>applyLocationDetail(request,{focus:false}));
     };
     const scheduleLocationFollow=()=>{
@@ -321,7 +329,8 @@
     const initialLocation=readLocation();
     const initialRoute=initialLocation.route;
     currentRoute=initialRoute;
-    commitRoute(initialRoute,initialRoute,initialLocation.personnelId?'none':'replace');
+    const preserveInitialDetail=Boolean(initialLocation.personnelId||initialLocation.mapRoomPath.length);
+    commitRoute(initialRoute,initialRoute,preserveInitialDetail?'none':'replace');
     document.documentElement.dataset.channelTheme=window.ProjectCurseTransition?.getPreset?.(initialRoute)?.theme||'command';
 
     window.showPage=(target)=>navigate(target,{replace:false,historyMode:'push'});

@@ -87,6 +87,32 @@
         label:'서부 순례 회랑',code:'GBF / WESTERN MARCHES',status:'ROUTE OVERLAP',confidence:'31%',
         description:'순례자 증언과 몬수르 교회의 종 운반 기록을 겹쳐 복원한 서부 진입로. 같은 길이 서로 다른 목적지로 이어진다.',
         warning:'비현실감이 발생하면 기존 경로를 역행하지 말 것. 검은 강의 강둑은 지도상 안전지대가 아니다.',
+        visual:{
+          src:'assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png',history:'2032-08-14-three-bells-compact',assetId:'VEA-GBF-BELL-01',
+          label:'해석 재구성 / 특정 성채 원본 아님',title:'무등화 성채 종 운반 재구성',
+          alt:'등불 하나에 의지한 세 순례자가 덮개를 씌운 종을 수레에 싣고 불빛 없는 숲속 성채로 옮기는 장면을 담은 분석 재구성',
+          caption:'서로 다른 귀환자 증언에 반복된 종 운반, 성채 접근로와 무등화 정문을 한 장면에 겹쳤다. 실제 순례단이나 특정 성채의 원본 장면은 아니다.',
+          siteIds:['gbf-monsur-chapel','gbf-derealization','gbf-unlit-fortress']
+        },
+        signalBrief:{
+          label:'BELL ROUTE COMPARISON',title:'같은 타종 / 다른 목적지',
+          summary:'서부 교회가 기록한 운반 요청과 귀환자 장부는 같은 타종 순서를 남겼지만 마지막 목적지를 서로 다르게 적었다.',
+          siteIds:['gbf-monsur-chapel','gbf-derealization','gbf-unlit-fortress'],
+          lanes:[
+            {code:'LEDGER A',state:'BELL ORDER MATCH',fingerprint:'FORTRESS ROUTE',pattern:[2,7,3,8,2,5,7,3,8,4,6,2]},
+            {code:'LEDGER B',state:'BELL ORDER MATCH',fingerprint:'RETURNED TO CHAPEL',pattern:[2,7,3,8,2,5,7,3,8,4,6,2]}
+          ],
+          checks:[
+            {label:'타종 순서',value:'일치',tone:'match'},
+            {label:'최종 목적지',value:'상충',tone:'conflict'},
+            {label:'현장 명령',value:'성문 대기',tone:'hold'}
+          ],
+          log:[
+            {time:'T+00:00',text:'몬수르 서부 교회 운반 요청 장부 대조'},
+            {time:'T+18:40',text:'동일 타종 기록 · 목적지 표기 분기 확인'},
+            {time:'T+21:12',text:'무등화 정문 진입 보류 · 등화 확인 절차 전환'}
+          ]
+        },
         routes:[
           {id:'western-pilgrim',className:'pilgrimage',label:'WESTERN PILGRIM TRACE',risk:'high',signal:'intermittent',rule:'공포를 느낀 상태에서 교전하지 말 것',siteIds:['gbf-west-observation','gbf-monsur-chapel','gbf-duel-ground','gbf-derealization','gbf-black-river','gbf-blood-lake','gbf-unlit-fortress'],points:[[70,438],[235,350],[400,289],[520,329],[610,353],[744,250],[908,124]]},
           {id:'derealized-return',className:'broken',label:'DEREALIZED RETURN',risk:'critical',signal:'duplicated',rule:'자신의 것이 아닌 생각이 들면 즉시 경로 변경',siteIds:['gbf-derealization','gbf-duel-ground','gbf-monsur-chapel'],points:[[520,329],[402,289],[239,352]]},
@@ -108,6 +134,32 @@
         description:'남부 특수부대의 집결, 도시 집단 소환, 성위대 침투 신호를 하나의 전선으로 재구성한 해안 작전권.',
         warning:'표시 상태는 OP-BROKEN-CROWN 최종 판단에 따라 갱신된다. 판단 전 좌표는 적대·우호가 확정되지 않는다.',
         operation:'op-southern-coup',
+        visual:{
+          src:'assets/resources/derived/broken-crown-erased-commander-concept-v1.png',history:'2030-01-17-broken-crown',assetId:'VEA-BC-CMD-01',
+          label:'해석 재구성 / 명령 진위 미확정',title:'지워진 지휘관 상충 명령 재구성',
+          alt:'얼굴 일부가 검게 지워진 지휘관이 봉인된 명령서를 든 채 네 개의 감시 화면 앞에 서 있는 분석 재구성',
+          caption:'성위대 지휘관 신원 공백과 서로 다른 발신 계통의 명령 사본을 상징적으로 겹쳤다. 실제 인물 외형이나 어느 명령의 진위를 입증하지 않는다.',
+          siteIds:['coast-listening-post','coast-guard-command','coast-summon-a','coast-summon-b']
+        },
+        signalBrief:{
+          label:'COMMAND SIGNATURE SPLIT',title:'동일 서명 / 분리 발신',
+          summary:'공작원 식별 보고와 생존 시 처형 명령은 같은 지휘 서명을 사용했지만 서로 다른 승인망에서 도착했다.',
+          siteIds:['coast-listening-post','coast-guard-command','coast-summon-a','coast-summon-b'],
+          lanes:[
+            {code:'ORDER COPY A',state:'SIGNATURE MATCH',fingerprint:'IDENTIFY OPERATIVE',pattern:[6,3,7,2,8,4,6,3,7,5,2,8]},
+            {code:'ORDER COPY B',state:'SIGNATURE MATCH',fingerprint:'EXECUTE IF ALIVE',pattern:[6,3,7,2,8,4,6,3,7,5,2,8]}
+          ],
+          checks:[
+            {label:'명령 서명',value:'일치',tone:'match'},
+            {label:'승인 계통',value:'불일치',tone:'conflict'},
+            {label:'현장 명령',value:'신원 분리',tone:'hold'}
+          ],
+          log:[
+            {time:'T-00:17',text:'성위대 지휘 서명과 남부 암호키 중첩 확인'},
+            {time:'T-00:08',text:'처형 명령 사본 · 별도 발신 계통에서 수신'},
+            {time:'T+00:00',text:'단일 명령으로 병합 금지 · 현장 판정 분기 개방'}
+          ]
+        },
         routes:[
           {id:'coastal-infiltration',className:'hostile',label:'COASTAL INFILTRATION',risk:'critical',signal:'tracked',rule:'특수부대 지휘권을 확인하기 전 교신 금지',siteIds:['coast-listening-post','coast-muster','coast-summon-a','coast-guard-command','coast-summon-b','coast-northern-line'],points:[[86,430],[250,365],[418,294],[590,250],[750,179],[920,104]]},
           {id:'northern-diversion',className:'front',label:'NORTHERN DIVERSION',risk:'high',signal:'spoofed',rule:'북부 전선 발신자 식별값을 신뢰하지 말 것',siteIds:['coast-guard-command','coast-summon-b','coast-northern-line'],points:[[590,250],[686,169],[796,207],[920,104]]},
@@ -127,6 +179,32 @@
         label:'내부 피난 성채권',code:'GBF / INNER REFUGES',status:'NO CENTRAL AUTHORITY',confidence:'18%',
         description:'국가 대신 성채, 촌락, 교회가 서로의 피난처 역할을 하는 내부 정착권. 지도상의 거리는 도보 기록과 일치하지 않는다.',
         warning:'성채 자체가 하나의 교단일 수 있다. 불빛이 없는 성채와 오래된 전장은 우회할 것.',
+        visual:{
+          src:'assets/resources/derived/great-black-forest_reconstructed-v1.png',history:'2032-08-14-three-bells-compact',assetId:'VEA-GBF-R01',
+          label:'복원 추정 / 항법 사진 아님',title:'피난 성채권 거리 측정 재구성',
+          alt:'거대한 나무 사이의 젖은 숲길에 측량 장비가 세워져 있고 멀리 작은 불빛과 성채가 보이는 복원 추정 이미지',
+          caption:'성채권 도보 기록과 반복 측량 실패를 설명하기 위한 편집 재구성이다. 보이는 숲길과 성채의 실제 거리나 위치를 증명하지 않는다.',
+          siteIds:['inner-sanctuary-castle','inner-distance-fork','inner-old-citadel']
+        },
+        signalBrief:{
+          label:'LANDMARK TRIANGULATION',title:'같은 성채 / 세 거리값',
+          summary:'세 측량조가 같은 문양의 성채를 관측했지만 도보 시간과 방위각은 하나의 위치로 수렴하지 않았다.',
+          siteIds:['inner-sanctuary-castle','inner-distance-fork','inner-old-citadel'],
+          lanes:[
+            {code:'SURVEY A',state:'CREST MATCH',fingerprint:'42 MINUTES EAST',pattern:[3,4,6,8,5,3,7,2,6,4,8,3]},
+            {code:'SURVEY B',state:'CREST MATCH',fingerprint:'11 MINUTES WEST',pattern:[3,4,6,8,5,3,7,2,6,4,8,3]}
+          ],
+          checks:[
+            {label:'성벽 문양',value:'일치',tone:'match'},
+            {label:'거리·방위',value:'수렴 실패',tone:'conflict'},
+            {label:'현장 명령',value:'좌표 파기',tone:'hold'}
+          ],
+          log:[
+            {time:'T+00:00',text:'피난 성채 아벨 문양 기준 삼각 측량 개시'},
+            {time:'T+42:00',text:'세 번째 관측조가 출발 지점 뒤편에서 동일 성벽 확인'},
+            {time:'T+43:10',text:'지도 좌표 폐기 · 종 신호와 등화만 유지'}
+          ]
+        },
         routes:[
           {id:'refuge-chain',className:'pilgrimage',label:'SANCTUARY CHAIN',risk:'medium',signal:'testimony',rule:'불빛이 확인된 피난 성채만 이용할 것',siteIds:['inner-village-seven','inner-sanctuary-castle','inner-forest-circle','inner-distance-fork','inner-feral-front','inner-old-citadel'],points:[[87,421],[245,344],[423,381],[568,276],[746,318],[907,201]]},
           {id:'feral-front',className:'hazard',label:'FERAL HUNTING FRONT',risk:'critical',signal:'biological',rule:'같은 종끼리의 교전도 안전 신호로 판단하지 말 것',siteIds:['inner-feral-front','inner-old-citadel'],points:[[150,125],[298,195],[455,151],[620,208],[808,126],[960,163]]},
@@ -146,6 +224,32 @@
         label:'서부 귀환 회랑',code:'DEAD ZONE / RETURN CORRIDOR',status:'QUARANTINE ACTIVE',confidence:'22%',
         description:'귀환한 순례자 일곱 명의 진술이 유일하게 겹치는 서부 경로. 왕복 경로 중 귀환 구간만 지도에 남아 있다.',
         warning:'전진 경로를 역산하지 말 것. 무전에서 자신의 목소리를 들으면 현재 진행 방향을 즉시 변경할 것.',
+        visual:{
+          src:'assets/resources/derived/checkpoint-07-five-thermal-concept-v1.png',history:'2029-04-12-checkpoint-07',assetId:'VEA-DZ-CP07-01',
+          label:'해석 재구성 / 다섯 번째 신호 미확정',title:'검문소 07 열 신호 불일치 재구성',
+          alt:'폐허가 된 검문소에 네 명의 귀환자가 서 있고 휴대 열상 화면에는 다섯 개의 사람 형태 신호가 표시된 분석 재구성',
+          caption:'귀환자 네 명과 독립된 다섯 번째 생체 반응의 불일치를 시각화했다. 추가 신호의 신원과 적대 여부는 확정하지 않는다.',
+          siteIds:['dead-checkpoint-07','dead-quarantine-ring','dead-sublevel-08']
+        },
+        signalBrief:{
+          label:'RETURNER COUNT MISMATCH',title:'가시 인원 4 / 생체 반응 5',
+          summary:'명단·장비·기억 기록은 네 명과 일치했지만 검문 스캐너는 대열 안에서 독립된 다섯 번째 반응을 분리했다.',
+          siteIds:['dead-checkpoint-07','dead-quarantine-ring','dead-sublevel-08'],
+          lanes:[
+            {code:'VISUAL GATE',state:'FOUR RETURNERS',fingerprint:'MANIFEST 04',pattern:[2,5,2,5,2,5,2,5,2,5,2,5]},
+            {code:'THERMAL GATE',state:'FIVE RESPONSES',fingerprint:'BIO TRACE 05',pattern:[2,5,2,5,8,5,2,5,2,5,2,5]}
+          ],
+          checks:[
+            {label:'명단·장비',value:'4명 일치',tone:'match'},
+            {label:'생체 반응',value:'5개 검출',tone:'conflict'},
+            {label:'현장 명령',value:'분리 격리',tone:'hold'}
+          ],
+          log:[
+            {time:'T+00:00',text:'귀환자 네 명 검문선 진입 · 명단 대조 완료'},
+            {time:'T+00:07',text:'독립 심박·체온 반응 하나 추가 분리'},
+            {time:'T+00:19',text:'출입 승인 중지 · 검문소 07 분리 격리 개시'}
+          ]
+        },
         routes:[
           {id:'return-only',className:'pilgrimage',label:'RETURN TESTIMONY ONLY',risk:'high',signal:'testimony',rule:'귀환 증언을 전진 항법에 사용하지 말 것',siteIds:['dead-return-shore','dead-checkpoint-07','dead-quarantine-ring','dead-last-overlap','dead-inland-silence'],points:[[92,430],[245,366],[382,292],[520,232],[682,171],[893,112]]},
           {id:'lost-outbound',className:'broken',label:'OUTBOUND DATA LOST',risk:'critical',signal:'lost',rule:'소실된 출발 경로를 역산하지 말 것',siteIds:['dead-quarantine-ring','dead-last-overlap','dead-inland-silence'],points:[[382,292],[486,351],[622,326]]},
@@ -171,6 +275,32 @@
         label:'고대 왕국 묘역',code:'DEAD ZONE / KINGDOM GRAVES',status:'HISTORICAL SIGNALS',confidence:'14%',
         description:'멸망한 왕국과 버려진 요새가 겹쳐 있는 묘역. 일부 성채는 이름과 주인이 사라진 뒤에도 순례자를 받아들인다.',
         warning:'불빛 없는 요새에 응답하지 말 것. 고유 무기는 봉인 주체가 확인되기 전까지 회수 금지다.',
+        visual:{
+          src:'assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',history:'2034-04-22-inland-beacon-31',assetId:'VEA-DZ-R01',
+          label:'복원 추정 / 현존 원본 아님',title:'왕국 묘역 진입로 복원 추정',
+          alt:'붕괴한 고속도로와 폐허 지대를 지나 멀리 거대한 고대 성채로 이어지는 데드 존 순례 경로의 복원 추정 이미지',
+          caption:'귀환 증언과 내륙 중계기 좌표를 조합한 편집 재구성이다. 도로와 성채의 실제 위치, 거리 또는 현재 점유 세력을 증명하지 않는다.',
+          siteIds:['grave-throne','grave-refuge','grave-unlit','grave-last-kingdom']
+        },
+        signalBrief:{
+          label:'INLAND BEACON OVERLAP',title:'서른한 호출 / 하나의 중첩 좌표',
+          summary:'폐쇄된 해안 중계기에 돌아온 호출부호들은 서로 다른 폐허를 가리켰지만 계산 좌표는 왕국 묘역 한 점에 겹쳤다.',
+          siteIds:['grave-throne','grave-refuge','grave-unlit','grave-last-kingdom'],
+          lanes:[
+            {code:'BEACON PASS 01',state:'94 SECOND LOOP',fingerprint:'OLD RESCUE CODES',pattern:[7,2,6,3,8,4,7,2,6,3,8,4]},
+            {code:'BEACON PASS 02',state:'94 SECOND LOOP',fingerprint:'UNREGISTERED CODES',pattern:[7,2,6,3,8,4,7,2,6,3,8,4]}
+          ],
+          checks:[
+            {label:'반복 파형',value:'일치',tone:'match'},
+            {label:'발신지 좌표',value:'중첩·상충',tone:'conflict'},
+            {label:'현장 명령',value:'파형만 보존',tone:'hold'}
+          ],
+          log:[
+            {time:'T+00:00',text:'폐쇄 중계기 시험 · 내륙 호출부호 31개 응답'},
+            {time:'T+01:34',text:'폐허 도시·왕국 묘역·검문소 좌표가 한 점에 중첩'},
+            {time:'T+03:08',text:'구조 요청 등록 보류 · 중계기 재폐쇄'}
+          ]
+        },
         routes:[
           {id:'grave-road',className:'historical',label:'KINGDOM GRAVE ROAD',risk:'high',signal:'historical',rule:'왕국 표식과 현재 성채의 소속을 동일시하지 말 것',siteIds:['grave-throne','grave-refuge','grave-weapon-field','grave-unlit','grave-memorial','grave-last-kingdom'],points:[[90,438],[250,367],[421,309],[575,232],[742,279],[915,161]]},
           {id:'refuge-route',className:'pilgrimage',label:'REFUGE CASTLE TRACE',risk:'medium',signal:'testimony',rule:'불빛과 내부 열원이 함께 확인된 성채만 피난처로 판정',siteIds:['grave-throne','grave-refuge','grave-weapon-field'],points:[[250,367],[366,437],[524,398]]},

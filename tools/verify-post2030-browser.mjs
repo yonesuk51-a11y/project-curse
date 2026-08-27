@@ -30,9 +30,10 @@ async function openHistory(viewport,label){
   page.on('request',request=>requests.push(request.url()));
   await page.goto(baseUrl,{waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.53.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.54.0');
   await page.evaluate(()=>window.ProjectCurseShell.navigate('history',{historyMode:'replace'}));
   await page.waitForFunction(()=>document.body.dataset.route==='history');
+  await page.locator('.pc-world-history-era-filter>summary').click();
   await page.waitForSelector('[data-history-era-filter="aftermath"]');
   check(`${label}:no-initial-errors`,errors.length===0,errors.join(' | '));
   return {context,page,errors,requests};
@@ -50,17 +51,15 @@ const expectedTitles=[
 const desktop=await openHistory({width:1440,height:1000},'desktop');
 const desktopOverview=await desktop.page.evaluate(()=>({
   range:document.querySelector('.pc-world-history-range')?.textContent?.trim(),
-  total:document.querySelector('[data-history-total]')?.textContent?.trim(),
-  eras:document.querySelector('[data-history-era-total]')?.textContent?.trim(),
   filters:document.querySelectorAll('[data-history-era-filter]').length,
   viewport:innerWidth,
   document:document.documentElement.scrollWidth,
   telemetry:[...document.querySelectorAll('#history>.pc-channel-identity dl>div')].map(node=>[node.querySelector('dt')?.textContent.trim(),node.querySelector('dd')?.textContent.trim()])
 }));
-check('desktop:range-2042',desktopOverview.range==='1975–2042 / ACTIVE ARCHIVE',JSON.stringify(desktopOverview));
-check('desktop:forty-three-records',desktopOverview.total==='43',JSON.stringify(desktopOverview));
-check('desktop:nine-eras',desktopOverview.eras==='9'&&desktopOverview.filters===10,JSON.stringify(desktopOverview));
-check('desktop:current-channel-telemetry',desktopOverview.telemetry.flat().join('|')==='SPAN|1975–2042|INDEX|43 RECORDS|EVENTS|9',JSON.stringify(desktopOverview));
+check('desktop:range-2042',desktopOverview.range==='ORIGIN UNKNOWN–2042 / ACTIVE ARCHIVE',JSON.stringify(desktopOverview));
+check('desktop:forty-nine-records',desktopOverview.telemetry[1]?.join('|')==='INDEX|49 RECORDS',JSON.stringify(desktopOverview));
+check('desktop:ten-eras',desktopOverview.filters===11,JSON.stringify(desktopOverview));
+check('desktop:current-channel-telemetry',desktopOverview.telemetry.flat().join('|')==='SPAN|ORIGIN?–2042|INDEX|49 RECORDS|EVENTS|9',JSON.stringify(desktopOverview));
 check('desktop:no-index-overflow',desktopOverview.document<=desktopOverview.viewport,JSON.stringify(desktopOverview));
 
 await desktop.page.locator('[data-history-era-filter="aftermath"]').click();
@@ -96,7 +95,7 @@ check('desktop:authored-detail',detail.document?.includes('상충 기록')&&deta
 check('desktop:direct-crosslinks',['U.A.C 분석','S.I.D 분석','Great_Black_Forest_Region 기록','Dead_Zone_Pilgrimage 기록'].every(needle=>detail.links.some(link=>link.includes(needle))),JSON.stringify(detail));
 check('desktop:no-detail-overflow',detail.documentWidth<=detail.viewport,JSON.stringify(detail));
 check('desktop:no-generated-core-audio-requests',!desktop.requests.some(url=>url.includes('/assets/audio/core/')),desktop.requests.filter(url=>url.includes('/assets/audio/')).join(' | '));
-const desktopShot=join(tmpdir(),'project-curse-5.53.0-aftermath-desktop.png');
+const desktopShot=join(tmpdir(),'project-curse-5.54.0-aftermath-desktop.png');
 await desktop.page.screenshot({path:desktopShot,fullPage:false});
 check('desktop:no-final-errors',desktop.errors.length===0,desktop.errors.join(' | '));
 await desktop.context.close();
@@ -117,7 +116,7 @@ const mobileLayout=await mobile.page.evaluate(()=>({
 check('mobile:latest-detail',mobileLayout.title==='삼야 무응답'&&mobileLayout.links===5&&mobileLayout.fragments===4,JSON.stringify(mobileLayout));
 check('mobile:no-horizontal-overflow',mobileLayout.document<=mobileLayout.viewport&&mobileLayout.shell<=mobileLayout.viewport,JSON.stringify(mobileLayout));
 check('mobile:no-generated-core-audio-requests',!mobile.requests.some(url=>url.includes('/assets/audio/core/')),mobile.requests.filter(url=>url.includes('/assets/audio/')).join(' | '));
-const mobileShot=join(tmpdir(),'project-curse-5.53.0-aftermath-mobile.png');
+const mobileShot=join(tmpdir(),'project-curse-5.54.0-aftermath-mobile.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-final-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();

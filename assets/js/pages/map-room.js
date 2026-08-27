@@ -1,4 +1,4 @@
-// Project Curse 5.48.0 — reader-first theater entry, searchable signal index, and evidence-gated cartographic intelligence.
+// Project Curse 5.54.0 — reader-first theater entry, shareable map locations, and evidence-gated cartographic intelligence.
 (function(root){
   'use strict';
 
@@ -54,6 +54,9 @@
       layers:{confirmed:true,estimated:true,zones:true,routes:true,synchrony:true}
     };
 
+    const exactRegionById=id=>data.regions.find(region=>region.id===id)||null;
+    const exactDetailById=id=>(data.drilldowns||[]).find(detail=>detail.id===id)||null;
+    const exactOperationById=id=>data.operations.find(operation=>operation.id===id)||null;
     const regionById=id=>data.regions.find(region=>region.id===id)||data.regions[0];
     const markerById=id=>data.markers.find(marker=>marker.id===id)||null;
     const synchronyEvents=data.synchronyEvents||[];
@@ -73,6 +76,75 @@
     const operationScenarioId=operation=>operation?.scenario||({'op-unlit-fortress':'unlit-fortress','op-deadzone-return':'deadzone-return','op-deadzone-recovery':'deadzone-recovery'}[operation?.id]||null);
     const operationStep=operation=>{const id=operationScenarioId(operation);if(!id) return operation?.id===operationStore?.operationId?operationStore.get().mapStep:0;const summary=pilgrimageOutcome(id);return summary?.status==='complete'?(operation.steps.length-1):summary?.status==='active'?summary.step:0;};
     const recoveryUnlocked=()=>Boolean(verdictStore?.isUnlocked?.('DZ-VR-04'));
+    function mapLocationParts(){
+      if(state.mode==='landing') return [];
+      if(state.mode==='detail') return ['detail',state.detail,...(state.detailSite?[state.detailSite]:[])];
+      if(state.mode==='operation') return ['operation',state.operation];
+      const selection=state.marker?['marker',state.marker]:state.synchronyPoint?['synchrony',state.synchronyPoint]:[];
+      return ['region',state.region,...selection];
+    }
+    function mapLocationHash(){
+      const suffix=mapLocationParts().map(part=>encodeURIComponent(part)).join('/');
+      return `#map-room${suffix?`/${suffix}`:''}`;
+    }
+    function writeMapLocation(historyMode='replace'){
+      if(historyMode==='none'||root.ProjectCurseShell?.getRoute?.()!=='map-room') return false;
+      const nextHash=mapLocationHash();
+      if(location.hash===nextHash) return true;
+      try{
+        const method=historyMode==='push'?'pushState':'replaceState';
+        history[method]({route:'map-room',map:mapLocationParts()},'',nextHash);
+        return true;
+      }catch(_error){return false;}
+    }
+    function readInitialMapLocationPath(){
+      const request=root.ProjectCurseShell?.getLocation?.();
+      if(request?.route==='map-room'&&Array.isArray(request.mapRoomPath)) return request.mapRoomPath;
+      const raw=location.hash.replace(/^#/,'');
+      let decoded=raw;
+      try{decoded=decodeURIComponent(raw);}catch(_error){}
+      const [route,...parts]=decoded.split('/');
+      return route==='map-room'?parts:null;
+    }
+    function applyMapLocationPath(path,{shouldRender=true,focus=false,historyMode='none'}={}){
+      if(!Array.isArray(path)) return false;
+      state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;
+      if(!path.length){
+        state.mode='landing';state.intelCollapsed=true;
+      }else if(path[0]==='region'){
+        const region=exactRegionById(path[1]);
+        if(!region) return false;
+        state.mode='region';state.region=region.id;state.intelCollapsed=true;
+        if(path[2]==='marker'){
+          const marker=markerById(path[3]);
+          const valid=marker&&(marker.region===region.id||(region.id==='world'&&marker.overview));
+          if(!valid) return false;
+          state.marker=marker.id;state.intelCollapsed=false;
+          state.layers[['estimated','testimony','disputed'].includes(marker.confidence)?'estimated':'confirmed']=true;
+        }else if(path[2]==='synchrony'){
+          const signal=synchronyPointById(path[3]);
+          const valid=signal&&(signal.point.region===region.id||region.id==='world');
+          if(!valid) return false;
+          state.synchronyPoint=signal.point.id;state.layers.synchrony=true;state.intelCollapsed=false;
+        }else if(path.length>2) return false;
+      }else if(path[0]==='detail'){
+        const detail=exactDetailById(path[1]);
+        if(!detail) return false;
+        const site=path[2]?detail.sites.find(item=>item.id===path[2]):null;
+        if(path[2]&&!site) return false;
+        if(path.length>3) return false;
+        state.mode='detail';state.detail=detail.id;state.region=detail.region;state.detailSite=site?.id||null;state.intelCollapsed=!site;
+      }else if(path[0]==='operation'){
+        const operation=exactOperationById(path[1]);
+        if(!operation||path.length>2) return false;
+        state.mode='operation';state.operation=operation.id;state.step=operationStep(operation);state.indexSelection=`operation:${operation.id}`;state.intelCollapsed=false;
+      }else return false;
+      if(shouldRender){
+        render({historyMode});
+        if(focus&&state.mode==='detail'&&state.detailSite) focusDetailIntelAfterRender();
+      }
+      return true;
+    }
     const theaters=[
       {
         id:'north',number:'01',eyebrow:'NORTHERN FRONT',title:'북부전선',
@@ -133,6 +205,14 @@
       }catch(_error){}
     }
     restoreMapSession();
+    const initialMapLocationPath=readInitialMapLocationPath();
+    if(initialMapLocationPath?.length){
+      const matchesRestoredLocation=JSON.stringify(mapLocationParts())===JSON.stringify(initialMapLocationPath);
+      const restoredTransientState={intelCollapsed:state.intelCollapsed,indexOpen:state.indexOpen,indexSelection:state.indexSelection};
+      if(!applyMapLocationPath(initialMapLocationPath,{shouldRender:false})){
+        state.mode='landing';state.intelCollapsed=true;writeMapLocation('replace');
+      }else if(matchesRestoredLocation) Object.assign(state,restoredTransientState);
+    }
     const scenarioButton=(scenarioId,labels)=>{
       const summary=pilgrimageOutcome(scenarioId);
       if(scenarioId==='deadzone-recovery'&&!recoveryUnlocked()) return `<button type="button" class="pc-map-pilgrimage-entry is-locked" data-map-open-pilgrimage="deadzone-return">DZ-VR-04 역방향 순례 판정 후 접근 승인</button>`;
@@ -265,7 +345,7 @@
       }
       if(item.target.kind!=='withheld'&&isMobileIndex()) state.indexOpen=false;
       root.ProjectCurseAudioControl?.play?.(item.target.kind==='withheld'?'map.layer':'map.signal');
-      render();
+      render({historyMode:'push'});
     }
 
     function renderGraticule(region){
@@ -664,7 +744,7 @@
       const parent=regionById(detail.region);
       return `
         <div class="pc-map-detail-tabs" role="tablist" aria-label="세부 권역">
-          ${(data.drilldowns||[]).map(item=>`<button type="button" role="tab" aria-selected="${item.id===detail.id}" class="${item.id===detail.id?'is-active':''}" data-map-detail="${escapeHTML(item.id)}"><small>${escapeHTML(regionById(item.region).label)} · ${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
+          ${(data.drilldowns||[]).map(item=>`<button type="button" role="tab" aria-selected="${item.id===detail.id}" tabindex="${item.id===detail.id?'0':'-1'}" class="${item.id===detail.id?'is-active':''}" data-map-detail="${escapeHTML(item.id)}"><small>${escapeHTML(regionById(item.region).label)} · ${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
         </div>
         <div class="pc-map-breadcrumb"><button type="button" data-map-return-region="world">세계</button><i>›</i><button type="button" data-map-return-region="${escapeHTML(parent.id)}">${escapeHTML(parent.label)}</button><i>›</i><b>${escapeHTML(detail.label)}</b></div>
         <div class="pc-detail-layerbar" role="group" aria-label="세부 지도 레이어">
@@ -708,7 +788,7 @@
 
       return `
         <div class="pc-map-region-tabs" role="tablist" aria-label="관제 권역">
-          ${data.regions.map(item=>`<button type="button" role="tab" aria-selected="${item.id===region.id}" class="${item.id===region.id?'is-active':''}" data-map-region="${escapeHTML(item.id)}"><small>${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
+          ${data.regions.map(item=>`<button type="button" role="tab" aria-selected="${item.id===region.id}" tabindex="${item.id===region.id?'0':'-1'}" class="${item.id===region.id?'is-active':''}" data-map-region="${escapeHTML(item.id)}"><small>${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
         </div>
         <div class="pc-map-mobile-layerbar" role="group" aria-label="지도 레이어 빠른 제어">
           <span>LAYERS</span>
@@ -821,7 +901,7 @@
 
       return `
         <div class="pc-map-operation-tabs" role="tablist" aria-label="작전 기록">
-          ${data.operations.map(item=>`<button type="button" role="tab" aria-selected="${item.id===operation.id}" class="${item.id===operation.id?'is-active':''}" data-map-operation="${escapeHTML(item.id)}"><small>${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
+          ${data.operations.map(item=>`<button type="button" role="tab" aria-selected="${item.id===operation.id}" tabindex="${item.id===operation.id?'0':'-1'}" class="${item.id===operation.id?'is-active':''}" data-map-operation="${escapeHTML(item.id)}"><small>${escapeHTML(item.code)}</small>${escapeHTML(item.label)}</button>`).join('')}
         </div>
         <div class="pc-map-operation-grid${decision?` has-verdict is-${escapeHTML(decision.tone)}`:scenarioEnding?` has-verdict is-${escapeHTML(scenarioEnding.tone)}`:''}${operation.id==='op-deadzone-recovery'&&!recoveryUnlocked()?' is-scenario-locked':''}"${persistent?` data-operation-persistence="active" data-operation-verdict="${escapeHTML(persistent.verdict||'pending')}"`:''}>
           <section class="pc-map-stage pc-map-operation-stage" aria-label="${escapeHTML(operation.label)} 작전 경로">
@@ -905,17 +985,18 @@
       return `<div class="pc-map-workspace-head">
           <button type="button" data-map-landing><i aria-hidden="true"></i><span>작전권 선택으로</span></button>
           <p>${state.mode==='operation'?'선택한 작전의 시간대와 현장 경로':state.mode==='detail'?'선택한 권역의 세부 경로와 관측점':'확인 좌표와 관측 신호를 겹쳐 표시'}</p>
+          <button type="button" class="pc-map-copy-link" data-map-copy-link aria-label="현재 지도 좌표 링크 복사"><small>LINK</small><span>좌표 링크 복사</span></button>
         </div>
         <div class="pc-map-mode-switch" role="tablist" aria-label="지도 모드">
-          <button type="button" role="tab" aria-selected="${state.mode==='region'}" class="${state.mode==='region'?'is-active':''}" data-map-mode="region"><small>01</small>지역 상황도</button>
-          <button type="button" role="tab" aria-selected="${state.mode==='detail'}" class="${state.mode==='detail'?'is-active':''}" data-map-mode="detail"><small>02</small>세부 권역</button>
-          <button type="button" role="tab" aria-selected="${state.mode==='operation'}" class="${state.mode==='operation'?'is-active':''}" data-map-mode="operation"><small>03</small>작전지도</button>
+          <button type="button" role="tab" aria-selected="${state.mode==='region'}" tabindex="${state.mode==='region'?'0':'-1'}" class="${state.mode==='region'?'is-active':''}" data-map-mode="region"><small>01</small>지역 상황도</button>
+          <button type="button" role="tab" aria-selected="${state.mode==='detail'}" tabindex="${state.mode==='detail'?'0':'-1'}" class="${state.mode==='detail'?'is-active':''}" data-map-mode="detail"><small>02</small>세부 권역</button>
+          <button type="button" role="tab" aria-selected="${state.mode==='operation'}" tabindex="${state.mode==='operation'?'0':'-1'}" class="${state.mode==='operation'?'is-active':''}" data-map-mode="operation"><small>03</small>작전지도</button>
         </div>
         ${renderSignalIndex()}
         <div class="pc-map-view">${state.mode==='region'?renderRegion():state.mode==='detail'?renderDetail():renderOperation()}</div>`;
     }
 
-    function render(){
+    function render({historyMode='none'}={}){
       mount.innerHTML=`
         <div class="pc-map-room">
           <header class="pc-map-room-head">
@@ -926,6 +1007,7 @@
         </div>`;
       root.ProjectCurseMedia?.enhance?.(mount,{mode:'thumbnail'});
       saveMapSession();
+      writeMapLocation(historyMode);
     }
 
     async function openHistory(recordId){
@@ -943,9 +1025,48 @@
       root.ProjectCurseRuntimeModules?.archiveIndex?.open?.(recordId);
     }
 
+    function fallbackCopy(value){
+      const field=document.createElement('textarea');
+      field.value=value;field.setAttribute('readonly','');field.style.position='fixed';field.style.opacity='0';
+      document.body.appendChild(field);field.select();
+      let copied=false;
+      try{copied=document.execCommand('copy');}catch(_error){}
+      field.remove();return copied;
+    }
+
+    async function copyCurrentMapLink(control){
+      writeMapLocation('replace');
+      let copied=false;
+      try{await navigator.clipboard.writeText(location.href);copied=true;}
+      catch(_error){copied=fallbackCopy(location.href);}
+      const label=control.querySelector('span');
+      if(label) label.textContent=copied?'좌표 링크 복사됨':'링크 복사 실패';
+      control.classList.toggle('is-copied',copied);
+      control.setAttribute('aria-label',copied?'현재 지도 좌표 링크가 복사됨':'현재 지도 좌표 링크 복사 실패');
+      root.ProjectCurseAudioControl?.play?.(copied?'menu.select':'menu.close');
+      root.setTimeout(()=>{
+        if(!control.isConnected) return;
+        if(label) label.textContent='좌표 링크 복사';
+        control.classList.remove('is-copied');control.setAttribute('aria-label','현재 지도 좌표 링크 복사');
+      },1800);
+    }
+
+    function tabIdentity(tab){
+      return ['mapMode','mapRegion','mapDetail','mapOperation'].map(key=>[key,tab.dataset[key]]).find(([,value])=>value!==undefined)||null;
+    }
+
+    function focusRenderedTab(identity){
+      if(!identity) return;
+      root.requestAnimationFrame(()=>{
+        const [key,value]=identity;
+        [...mount.querySelectorAll('[role="tab"]')].find(tab=>tab.dataset[key]===value)?.focus();
+      });
+    }
+
     mount.addEventListener('click',event=>{
       const control=event.target.closest('button,[data-map-marker],[data-map-synchrony-point],[data-map-detail-site]');
       if(!control) return;
+      if(control.dataset.mapCopyLink!==undefined){copyCurrentMapLink(control);return;}
       if(control.dataset.mapTheater){
         const theater=theaters.find(item=>item.id===control.dataset.mapTheater);
         state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;
@@ -954,10 +1075,10 @@
         else if(theater?.target.kind==='detail'){state.mode='detail';state.detail=theater.target.id;state.detailSite=null;state.intelCollapsed=true;}
         else if(theater?.target.kind==='region'){state.mode='region';state.region=theater.target.id;}
         else return;
-        root.ProjectCurseAudioControl?.play?.('map.signal');render();return;
+        root.ProjectCurseAudioControl?.play?.('map.signal');render({historyMode:'push'});return;
       }
-      if(control.dataset.mapLanding!==undefined){state.mode='landing';state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('menu.close');render();return;}
-      if(control.dataset.mapOpenIndex!==undefined){state.mode='region';state.region='world';state.indexOpen=true;state.indexSelection=null;render();mount.querySelector('[data-map-index-search]')?.focus();root.ProjectCurseAudioControl?.play?.('menu.open');return;}
+      if(control.dataset.mapLanding!==undefined){state.mode='landing';state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('menu.close');render({historyMode:'push'});return;}
+      if(control.dataset.mapOpenIndex!==undefined){state.mode='region';state.region='world';state.indexOpen=true;state.indexSelection=null;render({historyMode:'push'});mount.querySelector('[data-map-index-search]')?.focus();root.ProjectCurseAudioControl?.play?.('menu.open');return;}
       if(control.dataset.mapIndexToggle!==undefined){
         state.indexOpen=!state.indexOpen;render();
         mount.querySelector(state.indexOpen?'[data-map-index-search]':'[data-map-index-toggle]')?.focus();
@@ -972,8 +1093,8 @@
       if(control.dataset.mapIndexFilter){state.indexFilter=control.dataset.mapIndexFilter;updateSignalIndex();root.ProjectCurseAudioControl?.play?.('archive.filter');return;}
       if(control.dataset.mapIndexItem){selectIndexItem(indexItemById(control.dataset.mapIndexItem));return;}
       if(control.dataset.mapIntelToggle!==undefined){state.intelCollapsed=!state.intelCollapsed;const panel=control.closest('.pc-map-intel-panel');panel?.classList.toggle('is-collapsed',state.intelCollapsed);control.setAttribute('aria-expanded',String(!state.intelCollapsed));control.setAttribute('aria-label',state.intelCollapsed?'지도 선택 정보 펼치기':'지도 선택 정보 접기');root.ProjectCurseAudioControl?.play?.(state.intelCollapsed?'menu.close':'menu.open');saveMapSession();return;}
-      if(control.dataset.mapMode){state.mode=control.dataset.mapMode;state.indexSelection=state.mode==='operation'?`operation:${state.operation}`:null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
-      if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapMode){state.mode=control.dataset.mapMode;state.indexSelection=state.mode==='operation'?`operation:${state.operation}`:null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render({historyMode:'push'});return;}
+      if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render({historyMode:'push'});return;}
       if(control.dataset.mapLayer){state.layers[control.dataset.mapLayer]=!state.layers[control.dataset.mapLayer];state.marker=null;if(control.dataset.mapLayer==='synchrony') state.synchronyPoint=null;state.indexSelection=state.synchronyPoint?`synchrony:${state.synchronyPoint}`:null;root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
       if(control.dataset.mapOpenHistory){root.ProjectCurseAudioControl?.play?.('incident.link');openHistory(control.dataset.mapOpenHistory);return;}
       if(control.dataset.mapOpenFaction){root.ProjectCurseAudioControl?.play?.('incident.link');openFaction(control.dataset.mapOpenFaction);return;}
@@ -987,7 +1108,7 @@
         state.intelCollapsed=!state.marker;
         if(marker?.overview&&state.marker===marker.id) state.region='world';
         root.ProjectCurseAudioControl?.play?.('map.signal');
-        render();return;
+        render({historyMode:'push'});return;
       }
       if(control.dataset.mapSynchronyPoint){
         const signal=synchronyPointById(control.dataset.mapSynchronyPoint);
@@ -997,18 +1118,18 @@
         state.indexSelection=state.synchronyPoint?`synchrony:${state.synchronyPoint}`:null;
         state.intelCollapsed=!state.synchronyPoint;
         root.ProjectCurseAudioControl?.play?.('map.signal');
-        render();return;
+        render({historyMode:'push'});return;
       }
-      if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
-      if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('incident.link');render({historyMode:'push'});return;}
+      if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render({historyMode:'push'});return;}
       if(control.dataset.mapDetailLayer){const layer=control.dataset.mapDetailLayer;state.detailLayers[layer]=!state.detailLayers[layer];root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
-      if(control.dataset.mapDetailBrief){state.detailSite=control.dataset.mapDetailBrief;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('map.brief');render();focusDetailIntelAfterRender();return;}
-      if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.(detailCueForSite(state.detailSite,'operation.step'));render();return;}
-      if(control.dataset.mapDetailSite){const fromList=control.dataset.mapDetailSource==='list';state.detailSite=fromList?control.dataset.mapDetailSite:(state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite);state.intelCollapsed=!state.detailSite;root.ProjectCurseAudioControl?.play?.(state.detailSite?detailCueForSite(state.detailSite):'map.signal');render();if(fromList&&state.detailSite) focusDetailIntelAfterRender();return;}
-      if(control.dataset.mapDetailClear){state.detailSite=null;state.intelCollapsed=true;render();return;}
-      if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;render();return;}
-      if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
-      if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapDetailBrief){state.detailSite=control.dataset.mapDetailBrief;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('map.brief');render({historyMode:'push'});focusDetailIntelAfterRender();return;}
+      if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.(detailCueForSite(state.detailSite,'operation.step'));render({historyMode:'push'});return;}
+      if(control.dataset.mapDetailSite){const fromList=control.dataset.mapDetailSource==='list';state.detailSite=fromList?control.dataset.mapDetailSite:(state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite);state.intelCollapsed=!state.detailSite;root.ProjectCurseAudioControl?.play?.(state.detailSite?detailCueForSite(state.detailSite):'map.signal');render({historyMode:'push'});if(fromList&&state.detailSite) focusDetailIntelAfterRender();return;}
+      if(control.dataset.mapDetailClear){state.detailSite=null;state.intelCollapsed=true;render({historyMode:'push'});return;}
+      if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;render({historyMode:'push'});return;}
+      if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('incident.link');render({historyMode:'push'});return;}
+      if(control.dataset.mapOperation){state.operation=control.dataset.mapOperation;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render({historyMode:'push'});return;}
       if(control.dataset.mapStep!==undefined){
         state.step=Number(control.dataset.mapStep)||0;
         state.intelCollapsed=false;
@@ -1017,7 +1138,7 @@
         else render();
         return;
       }
-      if(control.dataset.mapReturnRegion){state.mode='region';state.region=control.dataset.mapReturnRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;render();}
+      if(control.dataset.mapReturnRegion){state.mode='region';state.region=control.dataset.mapReturnRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;render({historyMode:'push'});}
     });
 
     mount.addEventListener('input',event=>{
@@ -1038,6 +1159,19 @@
     });
 
     mount.addEventListener('keydown',event=>{
+      const tab=event.target.closest('[role="tab"]');
+      const tablist=tab?.closest('[role="tablist"]');
+      const tabKeys=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
+      if(tab&&tablist&&tabKeys.includes(event.key)){
+        const tabs=[...tablist.querySelectorAll('[role="tab"]')].filter(item=>!item.disabled&&item.offsetParent!==null);
+        const index=tabs.indexOf(tab);
+        if(index>=0&&tabs.length){
+          event.preventDefault();
+          const nextIndex=event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowRight'||event.key==='ArrowDown'?1:-1)+tabs.length)%tabs.length;
+          const next=tabs[nextIndex];const identity=tabIdentity(next);
+          next.click();focusRenderedTab(identity);return;
+        }
+      }
       const marker=event.target.closest('[data-map-marker],[data-map-synchrony-point],[data-map-detail-site]');
       if(!marker||(event.key!=='Enter'&&event.key!==' ')) return;
       event.preventDefault();
@@ -1054,12 +1188,14 @@
 
     render();
     root.ProjectCurseMapRoomRuntime=Object.freeze({
-      showRegion(id){if(regionById(id).id!==id) return false;state.indexOpen=false;state.indexSelection=null;state.mode='region';state.region=id;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render();return true;},
-      showDetail(id,siteId){const detail=detailById(id);if(!detail||detail.id!==id) return false;state.indexOpen=false;state.indexSelection=null;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;state.intelCollapsed=!state.detailSite;render();return true;},
-      showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.indexOpen=false;state.indexSelection=`operation:${id}`;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));state.intelCollapsed=false;render();return true;},
-      showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.indexOpen=false;state.indexSelection=`marker:${marker.id}`;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;state.intelCollapsed=false;render();return true;},
-      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.indexOpen=false;state.indexSelection=point?`synchrony:${point.id}`:null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;state.intelCollapsed=!point;render();return true;},
-      openSignalIndex(query=''){if(state.mode==='landing'){state.mode='region';state.region='world';}state.indexQuery=String(query).slice(0,80);state.indexOpen=true;render();return true;},
+      openLocation(path,options={}){return applyMapLocationPath(path,{shouldRender:true,focus:Boolean(options.focus),historyMode:options.historyMode||'none'});},
+      showRegion(id){if(!exactRegionById(id)) return false;state.indexOpen=false;state.indexSelection=null;state.mode='region';state.region=id;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;render({historyMode:'replace'});return true;},
+      showDetail(id,siteId){const detail=exactDetailById(id);if(!detail) return false;state.indexOpen=false;state.indexSelection=null;state.mode='detail';state.detail=id;state.detailSite=detail.sites.some(site=>site.id===siteId)?siteId:null;state.intelCollapsed=!state.detailSite;render({historyMode:'replace'});return true;},
+      showOperation(id){if(!exactOperationById(id)) return false;state.indexOpen=false;state.indexSelection=`operation:${id}`;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));state.intelCollapsed=false;render({historyMode:'replace'});return true;},
+      showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.indexOpen=false;state.indexSelection=`marker:${marker.id}`;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;state.intelCollapsed=false;render({historyMode:'replace'});return true;},
+      showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.indexOpen=false;state.indexSelection=point?`synchrony:${point.id}`:null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;state.intelCollapsed=!point;render({historyMode:'replace'});return true;},
+      openSignalIndex(query=''){if(state.mode==='landing'){state.mode='region';state.region='world';}state.indexQuery=String(query).slice(0,80);state.indexOpen=true;render({historyMode:'replace'});return true;},
+      getShareUrl:()=>new URL(mapLocationHash(),location.href).href,
       getState:()=>({...state,layers:{...state.layers},detailLayers:{...state.detailLayers}})
     });
   });
