@@ -1,4 +1,4 @@
-// Project Curse 5.47.0 — searchable signal index and evidence-gated cartographic intelligence.
+// Project Curse 5.48.0 — reader-first theater entry, searchable signal index, and evidence-gated cartographic intelligence.
 (function(root){
   'use strict';
 
@@ -33,9 +33,10 @@
     if(!mount||!data) return;
 
     const sessionKey='project_curse_map_session_v1';
+    const sessionVersion=2;
 
     const state={
-      mode:'region',
+      mode:'landing',
       region:'world',
       marker:null,
       synchronyPoint:null,
@@ -71,11 +72,37 @@
     const operationScenarioId=operation=>operation?.scenario||({'op-unlit-fortress':'unlit-fortress','op-deadzone-return':'deadzone-return','op-deadzone-recovery':'deadzone-recovery'}[operation?.id]||null);
     const operationStep=operation=>{const id=operationScenarioId(operation);if(!id) return operation?.id===operationStore?.operationId?operationStore.get().mapStep:0;const summary=pilgrimageOutcome(id);return summary?.status==='complete'?(operation.steps.length-1):summary?.status==='active'?summary.step:0;};
     const recoveryUnlocked=()=>Boolean(verdictStore?.isUnlocked?.('DZ-VR-04'));
+    const theaters=[
+      {
+        id:'north',number:'01',eyebrow:'NORTHERN FRONT',title:'북부전선',
+        status:'전선 신호 증가',confidence:'관측 신뢰도 78%',tone:'front',
+        summary:'도쿄 감시권과 란저우 레드존 너머에서 일본 동맹권과 짐승의 길이 맞부딪친다.',
+        note:'도시 감시 · 북부 전쟁 · 내륙 오염권',target:{kind:'region',id:'eastasia'}
+      },
+      {
+        id:'forest',number:'02',eyebrow:'GREAT BLACK FOREST',title:'대흑림',
+        status:'공간 측량 불가',confidence:'지도 신뢰도 31%',tone:'forest',
+        summary:'성채와 마을은 남아 있지만 길의 거리와 정착지 좌표가 관측할 때마다 달라진다.',
+        note:'순례 경로 · 검은 강 · 불빛 없는 성채',target:{kind:'region',id:'southamerica'}
+      },
+      {
+        id:'deadzone',number:'03',eyebrow:'THE DEAD ZONE',title:'데드 존',
+        status:'내륙 응답 없음',confidence:'지도 신뢰도 22%',tone:'dead',
+        summary:'과거의 국가 지도와 현재의 귀환 기록이 일치하지 않는다. 돌아온 사람도 증거가 되지 못한다.',
+        note:'귀환 검문 · 사라진 내륙 · 봉쇄된 구조 신호',target:{kind:'region',id:'northamerica'}
+      },
+      {
+        id:'south',number:'04',eyebrow:'OPERATION BROKEN CROWN',title:'남부 쿠데타',
+        status:'CRITICAL / PARTIAL',confidence:'부분 감청',tone:'coup',
+        summary:'남부 해안의 집단 소환과 성위대 침투가 한 작전으로 수렴한다. 지휘 계통은 이미 오염됐다.',
+        note:'특수부대 · 도시 소환 · 남방 해안 동원',target:{kind:'operation',id:'op-southern-coup'}
+      }
+    ];
     function restoreMapSession(){
       let saved;
       try{saved=JSON.parse(sessionStorage.getItem(sessionKey)||'null');}catch(_error){return;}
       if(!saved||typeof saved!=='object') return;
-      if(['region','detail','operation'].includes(saved.mode)) state.mode=saved.mode;
+      if(saved.entryVersion===sessionVersion&&['landing','region','detail','operation'].includes(saved.mode)) state.mode=saved.mode;
       if(data.regions.some(region=>region.id===saved.region)) state.region=saved.region;
       if(data.markers.some(marker=>marker.id===saved.marker)) state.marker=saved.marker;
       if(synchronyPointById(saved.synchronyPoint)) state.synchronyPoint=saved.synchronyPoint;
@@ -95,6 +122,7 @@
     function saveMapSession(){
       try{
         sessionStorage.setItem(sessionKey,JSON.stringify({
+          entryVersion:sessionVersion,
           mode:state.mode,region:state.region,marker:state.marker,synchronyPoint:state.synchronyPoint,
           detail:state.detail,detailSite:state.detailSite,detailLayers:{...state.detailLayers},
           operation:state.operation,step:state.step,intelCollapsed:state.intelCollapsed,
@@ -735,20 +763,55 @@
         </div>`;
     }
 
+    function renderTheaterIndex(){
+      return `<section class="pc-map-theater-index" aria-labelledby="pcMapTheaterTitle">
+        <div class="pc-map-theater-intro">
+          <div><span>SELECT OPERATIONAL THEATER</span><h3 id="pcMapTheaterTitle">먼저, 사건이 벌어진 곳을 선택하십시오.</h3></div>
+          <p>지도는 세계를 설명하지 않는다. 남아 있는 신호와 돌아오지 못한 사람들의 경로만 표시한다.</p>
+        </div>
+        <div class="pc-map-theater-grid">
+          ${theaters.map(theater=>`<button type="button" class="pc-map-theater-card pc-map-theater-card--${escapeHTML(theater.tone)}" data-map-theater="${escapeHTML(theater.id)}" aria-label="${escapeHTML(theater.title)} 관제 자료 열기">
+            <span class="pc-map-theater-number">${escapeHTML(theater.number)}</span>
+            <span class="pc-map-theater-copy">
+              <small>${escapeHTML(theater.eyebrow)}</small>
+              <strong>${escapeHTML(theater.title)}</strong>
+              <em>${escapeHTML(theater.status)}</em>
+              <p>${escapeHTML(theater.summary)}</p>
+              <b>${escapeHTML(theater.note)}</b>
+            </span>
+            <span class="pc-map-theater-confidence">${escapeHTML(theater.confidence)}</span>
+            <i aria-hidden="true"></i>
+          </button>`).join('')}
+        </div>
+        <div class="pc-map-theater-utilities">
+          <button type="button" data-map-theater="world"><small>00</small><span>전체 세계 지도</span><b>확인된 권역 신호를 한 화면에서 본다</b></button>
+          <button type="button" data-map-open-index><small>29</small><span>신호 색인</span><b>사건·장소·작전·동기화 기록을 검색한다</b></button>
+        </div>
+      </section>`;
+    }
+
+    function renderWorkspace(){
+      return `<div class="pc-map-workspace-head">
+          <button type="button" data-map-landing><i aria-hidden="true"></i><span>작전권 선택으로</span></button>
+          <p>${state.mode==='operation'?'선택한 작전의 시간대와 현장 경로':state.mode==='detail'?'선택한 권역의 세부 경로와 관측점':'확인 좌표와 관측 신호를 겹쳐 표시'}</p>
+        </div>
+        <div class="pc-map-mode-switch" role="tablist" aria-label="지도 모드">
+          <button type="button" role="tab" aria-selected="${state.mode==='region'}" class="${state.mode==='region'?'is-active':''}" data-map-mode="region"><small>01</small>지역 상황도</button>
+          <button type="button" role="tab" aria-selected="${state.mode==='detail'}" class="${state.mode==='detail'?'is-active':''}" data-map-mode="detail"><small>02</small>세부 권역</button>
+          <button type="button" role="tab" aria-selected="${state.mode==='operation'}" class="${state.mode==='operation'?'is-active':''}" data-map-mode="operation"><small>03</small>작전지도</button>
+        </div>
+        ${renderSignalIndex()}
+        <div class="pc-map-view">${state.mode==='region'?renderRegion():state.mode==='detail'?renderDetail():renderOperation()}</div>`;
+    }
+
     function render(){
       mount.innerHTML=`
         <div class="pc-map-room">
           <header class="pc-map-room-head">
-            <div><span>U.A.C CARTOGRAPHIC INTELLIGENCE</span><h2>권역 관제도</h2><p>확인 좌표, 현장 진술, 손상된 작전 신호를 겹쳐 표시한다.</p></div>
+            <div><span>U.A.C CARTOGRAPHIC INTELLIGENCE</span><h2>권역 관제도</h2><p>${state.mode==='landing'?'네 개 전구에서 회수된 불완전한 관측 기록.':'확인 좌표, 현장 진술, 손상된 작전 신호를 겹쳐 표시한다.'}</p></div>
             <div class="pc-map-live"><i></i><span>PARTIAL UPLINK</span><b>${escapeHTML(data.version)}</b></div>
           </header>
-          <div class="pc-map-mode-switch" role="tablist" aria-label="지도 모드">
-            <button type="button" role="tab" aria-selected="${state.mode==='region'}" class="${state.mode==='region'?'is-active':''}" data-map-mode="region"><small>01</small>지역 상황도</button>
-            <button type="button" role="tab" aria-selected="${state.mode==='detail'}" class="${state.mode==='detail'?'is-active':''}" data-map-mode="detail"><small>02</small>세부 권역</button>
-            <button type="button" role="tab" aria-selected="${state.mode==='operation'}" class="${state.mode==='operation'?'is-active':''}" data-map-mode="operation"><small>03</small>작전지도</button>
-          </div>
-          ${renderSignalIndex()}
-          <div class="pc-map-view">${state.mode==='region'?renderRegion():state.mode==='detail'?renderDetail():renderOperation()}</div>
+          ${state.mode==='landing'?renderTheaterIndex():renderWorkspace()}
         </div>`;
       saveMapSession();
     }
@@ -771,6 +834,17 @@
     mount.addEventListener('click',event=>{
       const control=event.target.closest('button,[data-map-marker],[data-map-synchrony-point],[data-map-detail-site]');
       if(!control) return;
+      if(control.dataset.mapTheater){
+        const theater=theaters.find(item=>item.id===control.dataset.mapTheater);
+        state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;
+        if(control.dataset.mapTheater==='world'){state.mode='region';state.region='world';}
+        else if(theater?.target.kind==='operation'){state.mode='operation';state.operation=theater.target.id;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=false;}
+        else if(theater?.target.kind==='region'){state.mode='region';state.region=theater.target.id;}
+        else return;
+        root.ProjectCurseAudioControl?.play?.('map.signal');render();return;
+      }
+      if(control.dataset.mapLanding!==undefined){state.mode='landing';state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});render();return;}
+      if(control.dataset.mapOpenIndex!==undefined){state.mode='region';state.region='world';state.indexOpen=true;state.indexSelection=null;render();mount.querySelector('[data-map-index-search]')?.focus();root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});return;}
       if(control.dataset.mapIndexToggle!==undefined){
         state.indexOpen=!state.indexOpen;render();
         mount.querySelector(state.indexOpen?'[data-map-index-search]':'[data-map-index-toggle]')?.focus();
@@ -871,7 +945,7 @@
       showOperation(id){if(!data.operations.some(operation=>operation.id===id)) return false;state.indexOpen=false;state.indexSelection=`operation:${id}`;state.mode='operation';state.operation=id;state.step=operationStep(operationById(id));state.intelCollapsed=false;render();return true;},
       showIncident(id){const marker=data.markers.find(item=>item.incident===id);if(!marker) return false;state.indexOpen=false;state.indexSelection=`marker:${marker.id}`;state.mode='region';state.region=marker.region;state.marker=marker.id;state.synchronyPoint=null;state.intelCollapsed=false;render();return true;},
       showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.indexOpen=false;state.indexSelection=point?`synchrony:${point.id}`:null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;state.intelCollapsed=!point;render();return true;},
-      openSignalIndex(query=''){state.indexQuery=String(query).slice(0,80);state.indexOpen=true;render();return true;},
+      openSignalIndex(query=''){if(state.mode==='landing'){state.mode='region';state.region='world';}state.indexQuery=String(query).slice(0,80);state.indexOpen=true;render();return true;},
       getState:()=>({...state,layers:{...state.layers},detailLayers:{...state.detailLayers}})
     });
   });

@@ -1,4 +1,4 @@
-/* Project Curse 5.47.0 — searchable signal index, evidence-gated map links, and mobile intelligence panels */
+/* Project Curse 5.48.0 — reader-first theater entry, searchable signal index, and mobile intelligence panels */
 #map-room {
   padding: 0;
   border: 0;
@@ -87,6 +87,182 @@
 
 .pc-map-live span { color: #d26b72; }
 .pc-map-live b { color: rgba(207, 212, 211, .4); font-weight: 500; }
+
+.pc-map-theater-index {
+  padding: clamp(24px, 4vw, 52px) clamp(18px, 4vw, 52px) clamp(30px, 5vw, 64px);
+}
+
+.pc-map-theater-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
+  align-items: end;
+  gap: 30px;
+  max-width: 1180px;
+  margin: 0 auto 28px;
+}
+
+.pc-map-theater-intro span {
+  color: rgba(202, 96, 103, .7);
+  font: 700 9px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .16em;
+}
+
+.pc-map-theater-intro h3 {
+  max-width: 680px;
+  margin: 8px 0 0;
+  color: #eff1f0;
+  font-size: clamp(23px, 3.2vw, 42px);
+  line-height: 1.16;
+  letter-spacing: -.04em;
+}
+
+.pc-map-theater-intro p {
+  max-width: 470px;
+  margin: 0 0 3px;
+  color: rgba(211, 217, 215, .48);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.pc-map-theater-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.pc-map-theater-card {
+  --theater-accent: #b64a53;
+  --theater-glow: rgba(182, 74, 83, .16);
+  position: relative;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  grid-template-rows: minmax(188px, auto) auto;
+  gap: 0 18px;
+  min-height: 245px;
+  padding: 24px 24px 20px;
+  overflow: hidden;
+  border: 1px solid rgba(194, 200, 198, .12);
+  color: #dfe3e1;
+  background:
+    linear-gradient(135deg, var(--theater-glow), transparent 48%),
+    linear-gradient(180deg, rgba(17, 21, 22, .94), rgba(7, 9, 10, .98));
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .3s ease, transform .3s cubic-bezier(.16, 1, .3, 1), background .3s ease;
+}
+
+.pc-map-theater-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--theater-accent);
+  opacity: .54;
+}
+
+.pc-map-theater-card::after {
+  content: '';
+  position: absolute;
+  right: -46px;
+  bottom: -70px;
+  width: 180px;
+  height: 180px;
+  border: 1px solid var(--theater-accent);
+  border-radius: 50%;
+  opacity: .08;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1), opacity .3s ease;
+}
+
+.pc-map-theater-card--front { --theater-accent: #a9545c; --theater-glow: rgba(139, 39, 48, .18); }
+.pc-map-theater-card--forest { --theater-accent: #75815b; --theater-glow: rgba(72, 85, 52, .18); }
+.pc-map-theater-card--dead { --theater-accent: #7a8588; --theater-glow: rgba(76, 89, 93, .17); }
+.pc-map-theater-card--coup { --theater-accent: #c2434d; --theater-glow: rgba(154, 29, 39, .22); }
+
+.pc-map-theater-card:hover,
+.pc-map-theater-card:focus-visible {
+  border-color: color-mix(in srgb, var(--theater-accent) 58%, transparent);
+  outline: 0;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--theater-glow) 135%, transparent), transparent 54%),
+    linear-gradient(180deg, rgba(21, 25, 26, .98), rgba(8, 10, 11, 1));
+  transform: translateY(-3px);
+}
+
+.pc-map-theater-card:hover::after,
+.pc-map-theater-card:focus-visible::after { opacity: .2; transform: scale(1.18); }
+
+.pc-map-theater-number {
+  color: var(--theater-accent);
+  font: 700 11px/1 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.pc-map-theater-copy { display: block; min-width: 0; }
+.pc-map-theater-copy small { display: block; color: rgba(204, 210, 208, .35); font: 700 8px/1 ui-monospace, Consolas, monospace; letter-spacing: .15em; }
+.pc-map-theater-copy strong { display: block; margin-top: 11px; color: #f1f3f2; font-size: clamp(22px, 2.4vw, 32px); line-height: 1.05; letter-spacing: -.035em; }
+.pc-map-theater-copy em { display: block; margin-top: 9px; color: var(--theater-accent); font: normal 700 9px/1.2 ui-monospace, Consolas, monospace; letter-spacing: .07em; }
+.pc-map-theater-copy p { max-width: 480px; margin: 20px 0 0; color: rgba(214, 220, 218, .57); font-size: 12px; line-height: 1.75; }
+.pc-map-theater-copy b { display: block; margin-top: 17px; color: rgba(203, 210, 208, .32); font-size: 9px; font-weight: 600; }
+.pc-map-theater-confidence { align-self: start; color: rgba(205, 211, 209, .32); font: 700 8px/1 ui-monospace, Consolas, monospace; white-space: nowrap; }
+.pc-map-theater-card > i { position: relative; grid-column: 2 / 4; align-self: end; width: 100%; height: 1px; background: rgba(195, 201, 199, .1); }
+.pc-map-theater-card > i::after { content: ''; position: absolute; top: -3px; right: 0; width: 7px; height: 7px; border-top: 1px solid var(--theater-accent); border-right: 1px solid var(--theater-accent); transform: rotate(45deg); }
+
+.pc-map-theater-utilities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 1180px;
+  margin: 12px auto 0;
+}
+
+.pc-map-theater-utilities button {
+  display: grid;
+  grid-template-columns: 32px auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 10px 15px;
+  border: 1px solid rgba(194, 200, 198, .1);
+  color: rgba(215, 220, 218, .62);
+  background: rgba(4, 6, 7, .62);
+  cursor: pointer;
+  text-align: left;
+}
+
+.pc-map-theater-utilities small { color: #a84a52; font: 700 9px/1 ui-monospace, Consolas, monospace; }
+.pc-map-theater-utilities span { color: #dfe2e1; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.pc-map-theater-utilities b { color: rgba(204, 210, 208, .3); font-size: 9px; font-weight: 500; text-align: right; }
+.pc-map-theater-utilities button:hover,.pc-map-theater-utilities button:focus-visible { border-color: rgba(190, 71, 80, .46); color: #fff; outline: 0; background: rgba(91, 24, 30, .2); }
+
+.pc-map-workspace-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 9px 26px;
+  border-bottom: 1px solid var(--map-line);
+  background: rgba(2, 3, 4, .72);
+}
+
+.pc-map-workspace-head button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(192, 198, 196, .11);
+  color: rgba(211, 216, 214, .54);
+  background: rgba(12, 15, 16, .72);
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.pc-map-workspace-head button i { width: 7px; height: 7px; border-bottom: 1px solid #b65960; border-left: 1px solid #b65960; transform: rotate(45deg); }
+.pc-map-workspace-head button:hover,.pc-map-workspace-head button:focus-visible { border-color: rgba(190, 71, 80, .46); color: #fff; outline: 0; }
+.pc-map-workspace-head p { margin: 0; color: rgba(205, 211, 209, .28); font-size: 9px; }
 
 .pc-map-mode-switch {
   display: grid;
@@ -754,6 +930,12 @@
   .pc-map-room { min-height: auto; }
   .pc-map-room-head { align-items: flex-start; padding: 19px; }
   .pc-map-live { min-width: 0; }
+  .pc-map-theater-index { padding: 24px 18px 36px; }
+  .pc-map-theater-intro { grid-template-columns: 1fr; gap: 14px; margin-bottom: 22px; }
+  .pc-map-theater-intro p { max-width: 620px; }
+  .pc-map-theater-grid { grid-template-columns: 1fr; }
+  .pc-map-theater-card { min-height: 220px; }
+  .pc-map-workspace-head { padding-right: 18px; padding-left: 18px; }
   .pc-map-mode-switch { grid-template-columns: repeat(3, 1fr); padding: 0 18px; }
   .pc-map-index-bar { padding: 8px 12px 0; }
   .pc-map-index-toggle { grid-template-columns:auto auto minmax(0,1fr) 12px;min-height:44px;padding-right:11px;padding-left:11px; }
@@ -820,6 +1002,18 @@
   .pc-map-room-head { display: block; }
   .pc-map-room-head p { max-width: 270px; }
   .pc-map-live { display: none; }
+  .pc-map-theater-index { padding: 21px 12px 30px; }
+  .pc-map-theater-intro h3 { font-size: 25px; }
+  .pc-map-theater-card { grid-template-columns: 28px minmax(0, 1fr); grid-template-rows: auto auto; gap: 0 10px; min-height: 228px; padding: 20px 17px 17px; }
+  .pc-map-theater-confidence { display: none; }
+  .pc-map-theater-card > i { grid-column: 2; }
+  .pc-map-theater-copy strong { font-size: 24px; }
+  .pc-map-theater-copy p { margin-top: 17px; }
+  .pc-map-theater-utilities { grid-template-columns: 1fr; }
+  .pc-map-theater-utilities button { grid-template-columns: 28px auto minmax(0, 1fr); }
+  .pc-map-theater-utilities b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pc-map-workspace-head { padding: 8px 12px; }
+  .pc-map-workspace-head p { display: none; }
   .pc-map-mode-switch { padding: 0; }
   .pc-map-mode-switch button { justify-content: center; min-height: 45px; padding: 0 8px; }
   .pc-map-index-toggle { grid-template-columns:auto auto 12px;gap:8px; }
@@ -880,4 +1074,5 @@
   .pc-detail-distortion.is-active,
   .pc-map-scan { animation: none; }
   .pc-map-signal-index,.pc-map-index-scrim,.pc-map-index-toggle>em { transition:none; }
+  .pc-map-theater-card,.pc-map-theater-card::after { transition:none; }
 }
