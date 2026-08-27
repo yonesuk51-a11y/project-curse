@@ -31,7 +31,7 @@ async function openSite(viewport,label){
   });
   await page.reload({waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
-  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.53.0');
+  check(`${label}:build`,await page.evaluate(()=>window.ProjectCurseBuild?.version)==='5.54.0');
   return {context,page,errors,requests};
 }
 
@@ -72,6 +72,7 @@ await desktop.context.close();
 const mobile=await openSite({width:390,height:844},'mobile');
 await mobile.page.evaluate(()=>window.ProjectCurseShell.navigate('map-room',{historyMode:'replace'}));
 await mobile.page.waitForFunction(()=>document.body.dataset.route==='map-room');
+await mobile.page.locator('[data-map-theater="world"]').click();
 await mobile.page.waitForSelector('.pc-map-intel-toggle');
 const initial=await mobile.page.evaluate(()=>{
   const panel=document.querySelector('.pc-map-intel-panel');
@@ -101,9 +102,44 @@ check('mobile:marker-auto-expands',markerOpen.title==='동아시아 감시권'&&
 await mobile.page.locator('[data-map-mode="detail"]').click();
 await mobile.page.waitForSelector('.pc-map-detail-intel.is-collapsed');
 check('mobile:detail-overview-collapsed',await mobile.page.locator('.pc-map-detail-intel [data-map-intel-toggle][aria-expanded="false"]').count()===1);
-await mobile.page.locator('[data-map-detail-site]').first().click();
+const detailDirectory=await mobile.page.evaluate(()=>(
+  {
+    briefDisplay:getComputedStyle(document.querySelector('.pc-map-mobile-brief-entry')).display,
+    directoryDisplay:getComputedStyle(document.querySelector('.pc-map-mobile-site-index')).display,
+    buttons:[...document.querySelectorAll('.pc-map-mobile-site')].map(button=>button.getBoundingClientRect().height),
+    viewport:innerWidth,
+    documentWidth:document.documentElement.scrollWidth
+  }
+));
+check('mobile:detail-brief-entry-visible',detailDirectory.briefDisplay!=='none',JSON.stringify(detailDirectory));
+check('mobile:detail-directory-visible',detailDirectory.directoryDisplay!=='none'&&detailDirectory.buttons.length===9&&detailDirectory.buttons.every(height=>height>=44),JSON.stringify(detailDirectory));
+check('mobile:detail-directory-no-overflow',detailDirectory.documentWidth<=detailDirectory.viewport,JSON.stringify(detailDirectory));
+const detailDirectoryShot=join(tmpdir(),'project-curse-5.54.0-mobile-detail-directory.png');
+await mobile.page.locator('.pc-map-mobile-site-index').screenshot({path:detailDirectoryShot});
+const detailBriefShot=join(tmpdir(),'project-curse-5.54.0-mobile-detail-brief.png');
+await mobile.page.locator('.pc-map-mobile-brief-entry').screenshot({path:detailBriefShot});
+await mobile.page.locator('[data-map-detail-brief]').click();
 await mobile.page.waitForSelector('.pc-map-detail-intel:not(.is-collapsed)');
-check('mobile:detail-site-auto-expands',await mobile.page.locator('.pc-map-detail-intel [data-map-intel-toggle][aria-expanded="true"]').count()===1);
+const briefOpen=await mobile.page.evaluate(()=>(
+  {
+    selected:window.ProjectCurseMapRoomRuntime.getState().detailSite,
+    expanded:document.querySelector('.pc-map-detail-intel [data-map-intel-toggle]')?.getAttribute('aria-expanded'),
+    visualHeight:document.querySelector('.pc-map-visual-brief')?.getBoundingClientRect().height||0,
+    signalHeight:document.querySelector('.pc-map-signal-brief')?.getBoundingClientRect().height||0,
+    focused:document.activeElement?.hasAttribute('data-map-detail-intel-heading')||false
+  }
+));
+check('mobile:brief-entry-opens-intel',briefOpen.selected==='north-distributed-nodes'&&briefOpen.expanded==='true'&&briefOpen.visualHeight>0&&briefOpen.signalHeight>0&&briefOpen.focused,JSON.stringify(briefOpen));
+await mobile.page.locator('.pc-map-mobile-site').first().click();
+await mobile.page.waitForSelector('.pc-map-detail-intel:not(.is-collapsed)');
+const siteOpen=await mobile.page.evaluate(()=>(
+  {
+    selected:window.ProjectCurseMapRoomRuntime.getState().detailSite,
+    expanded:document.querySelector('.pc-map-detail-intel [data-map-intel-toggle]')?.getAttribute('aria-expanded'),
+    focused:document.activeElement?.hasAttribute('data-map-detail-intel-heading')||false
+  }
+));
+check('mobile:detail-site-auto-expands',siteOpen.selected==='north-tokyo-branch'&&siteOpen.expanded==='true'&&siteOpen.focused,JSON.stringify(siteOpen));
 
 await mobile.page.locator('[data-map-mode="operation"]').click();
 await mobile.page.waitForSelector('.pc-map-operation-intel.is-collapsed');
@@ -119,7 +155,7 @@ const finalMobile=await mobile.page.evaluate(()=>({
 check('mobile:operation-step-auto-expands',finalMobile.expanded==='true'&&finalMobile.title?.includes('T-'),JSON.stringify(finalMobile));
 check('mobile:no-overflow',finalMobile.documentWidth<=finalMobile.viewport,JSON.stringify(finalMobile));
 check('mobile:no-new-core-audio',!mobile.requests.some(url=>url.includes('/assets/audio/core/')));
-const mobileShot=join(tmpdir(),'project-curse-5.53.0-mobile-map-intel.png');
+const mobileShot=join(tmpdir(),'project-curse-5.54.0-mobile-map-intel.png');
 await mobile.page.screenshot({path:mobileShot,fullPage:false});
 check('mobile:no-errors',mobile.errors.length===0,mobile.errors.join(' | '));
 await mobile.context.close();
@@ -128,5 +164,7 @@ await browser.close();
 results.forEach(result=>console.log(`${result.pass?'PASS':'FAIL'}  ${result.name}${result.detail?`  ${result.detail}`:''}`));
 const failed=results.filter(result=>!result.pass);
 console.log(`\n${results.length-failed.length}/${results.length} browser checks passed`);
+console.log(`MOBILE_DETAIL_SCREENSHOT ${detailDirectoryShot}`);
+console.log(`MOBILE_BRIEF_SCREENSHOT ${detailBriefShot}`);
 console.log(`MOBILE_SCREENSHOT ${mobileShot}`);
 if(failed.length) process.exitCode=1;

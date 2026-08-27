@@ -558,10 +558,58 @@
       return `${renderDetailVisual(detail,site)}${renderDetailSignalBrief(detail,site)}`;
     }
 
+    function detailBriefTarget(detail,selected){
+      const siteIds=[...new Set([...(detail.visual?.siteIds||[]),...(detail.signalBrief?.siteIds||[])])];
+      if(selected&&siteIds.includes(selected.id)) return selected;
+      return detail.sites.find(site=>siteIds.includes(site.id))||null;
+    }
+
+    function renderMobileDetailBriefEntry(detail,selected){
+      const target=detailBriefTarget(detail,selected);
+      if(!target) return '';
+      const counts=[];
+      if(detail.visual) counts.push('복원 자료 1건');
+      if(detail.signalBrief) counts.push('신호 대조 1건');
+      const title=detail.visual?.title||detail.signalBrief?.title||detail.label;
+      const summary=detail.signalBrief?.summary||detail.visual?.caption||detail.description;
+      const expanded=!state.intelCollapsed&&state.detailSite===target.id;
+      return `<section class="pc-map-mobile-brief-entry" aria-label="${escapeHTML(detail.label)} 복원 브리핑">
+        <button type="button" data-map-detail-brief="${escapeHTML(target.id)}" aria-expanded="${expanded}" aria-controls="pcMapDetailIntelBody">
+          <span><small>RECOVERED BRIEFING</small><b>${escapeHTML(counts.join(' · '))}</b></span>
+          <strong>${escapeHTML(title)}</strong><p>${escapeHTML(summary)}</p><em aria-hidden="true">OPEN BRIEF →</em>
+        </button>
+      </section>`;
+    }
+
+    function renderMobileDetailSiteIndex(detail,selected){
+      return `<section class="pc-map-mobile-site-index" aria-labelledby="pcMapMobileSiteIndexTitle">
+        <header><div><small>SIGNAL DIRECTORY</small><h3 id="pcMapMobileSiteIndexTitle">지점 판독 목록</h3></div><span>${detail.sites.length} SIGNALS</span></header>
+        <p>작은 지도 표식 대신 목록에서 지점을 선택할 수 있습니다. 선택하면 현장 정보와 연결 경로가 바로 펼쳐집니다.</p>
+        <div>${detail.sites.map((site,index)=>{
+          const resolved=resolveDetailSite(site);
+          const risk=threatForSite(site);
+          const active=selected?.id===site.id;
+          return `<button type="button" class="pc-map-mobile-site${active?' is-active':''}" data-map-detail-site="${escapeHTML(site.id)}" data-map-detail-source="list" aria-pressed="${active}"><i>${String(index+1).padStart(2,'0')}</i><span><b>${escapeHTML(site.label)}</b><small>${escapeHTML(resolved.status)}</small></span><em class="is-${escapeHTML(risk)}">${escapeHTML(riskLabels[risk])}</em></button>`;
+        }).join('')}</div>
+      </section>`;
+    }
+
+    function focusDetailIntelAfterRender(){
+      root.requestAnimationFrame(()=>{
+        const heading=mount.querySelector('[data-map-detail-intel-heading]');
+        if(!heading) return;
+        if(isMobileIndex()){
+          const reduceMotion=root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+          heading.closest('.pc-map-detail-intel')?.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+        }
+        heading.focus({preventScroll:true});
+      });
+    }
+
     function renderDetailIntel(detail,site){
       if(!site) return `
         <div class="pc-map-intel-kicker">REGIONAL DRILLDOWN</div>
-        <h3>${escapeHTML(detail.label)}</h3>
+        <h3 tabindex="-1" data-map-detail-intel-heading>${escapeHTML(detail.label)}</h3>
         <p>${escapeHTML(detail.description)}</p>
         ${renderDetailBriefing(detail,null)}
         <dl class="pc-map-facts"><div><dt>상태</dt><dd>${escapeHTML(detail.status)}</dd></div><div><dt>복원 신뢰도</dt><dd>${escapeHTML(detail.confidence)}</dd></div><div><dt>사건 지점</dt><dd>${detail.sites.length} SIGNALS</dd></div></dl>
@@ -578,7 +626,7 @@
       const communication=communicationForSite(site);
       return `
         <div class="pc-map-intel-kicker">SELECTED SITE / ${escapeHTML(confidenceLabels[site.confidence]||site.confidence)}</div>
-        <h3>${escapeHTML(site.label)}</h3>
+        <h3 tabindex="-1" data-map-detail-intel-heading>${escapeHTML(site.label)}</h3>
         <p>${escapeHTML(site.meta)}</p>
         ${renderDetailBriefing(detail,site)}
         <dl class="pc-map-facts"><div><dt>현재 상태</dt><dd class="pc-detail-state${resolved.tone?` is-${escapeHTML(resolved.tone)}`:''}">${escapeHTML(resolved.status)}</dd></div><div><dt>위험도</dt><dd class="pc-detail-risk is-${escapeHTML(threat)}">${escapeHTML(riskLabels[threat])}</dd></div><div><dt>통신</dt><dd>${escapeHTML(communication.toUpperCase())}</dd></div><div><dt>연결 경로</dt><dd>${connectedRoutes.length} TRACE${connectedRoutes.length>1?'S':''}</dd></div><div><dt>판정</dt><dd>${escapeHTML(confidenceLabels[site.confidence]||site.confidence)}</dd></div>${incident?`<div><dt>사건 코드</dt><dd>${escapeHTML(incident.code)}</dd></div>`:''}</dl>
@@ -639,6 +687,8 @@
             </svg>
             <div class="pc-map-scan" aria-hidden="true"></div><div class="pc-map-coordinates">LOCAL TRACE · NOT FOR NAVIGATION · ${escapeHTML(detail.confidence)} INTEGRITY</div>
           </section>
+          ${renderMobileDetailBriefEntry(detail,selected)}
+          ${renderMobileDetailSiteIndex(detail,selected)}
           <aside class="pc-map-sidebar pc-map-detail-intel ${intelPanelClass()}">${renderIntelPanel('detail',selected?.label||detail.label,renderDetailIntel(detail,selected))}</aside>
         </div>`;
     }
@@ -906,22 +956,22 @@
         else return;
         root.ProjectCurseAudioControl?.play?.('map.signal');render();return;
       }
-      if(control.dataset.mapLanding!==undefined){state.mode='landing';state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});render();return;}
-      if(control.dataset.mapOpenIndex!==undefined){state.mode='region';state.region='world';state.indexOpen=true;state.indexSelection=null;render();mount.querySelector('[data-map-index-search]')?.focus();root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});return;}
+      if(control.dataset.mapLanding!==undefined){state.mode='landing';state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('menu.close');render();return;}
+      if(control.dataset.mapOpenIndex!==undefined){state.mode='region';state.region='world';state.indexOpen=true;state.indexSelection=null;render();mount.querySelector('[data-map-index-search]')?.focus();root.ProjectCurseAudioControl?.play?.('menu.open');return;}
       if(control.dataset.mapIndexToggle!==undefined){
         state.indexOpen=!state.indexOpen;render();
         mount.querySelector(state.indexOpen?'[data-map-index-search]':'[data-map-index-toggle]')?.focus();
-        root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});return;
+        root.ProjectCurseAudioControl?.play?.(state.indexOpen?'menu.open':'menu.close');return;
       }
       if(control.dataset.mapIndexClose!==undefined){
-        state.indexOpen=false;render();mount.querySelector('[data-map-index-toggle]')?.focus();return;
+        state.indexOpen=false;render();mount.querySelector('[data-map-index-toggle]')?.focus();root.ProjectCurseAudioControl?.play?.('menu.close');return;
       }
       if(control.dataset.mapIndexClear!==undefined){
         state.indexQuery='';const input=mount.querySelector('[data-map-index-search]');if(input) input.value='';updateSignalIndex();input?.focus();return;
       }
-      if(control.dataset.mapIndexFilter){state.indexFilter=control.dataset.mapIndexFilter;updateSignalIndex();return;}
+      if(control.dataset.mapIndexFilter){state.indexFilter=control.dataset.mapIndexFilter;updateSignalIndex();root.ProjectCurseAudioControl?.play?.('archive.filter');return;}
       if(control.dataset.mapIndexItem){selectIndexItem(indexItemById(control.dataset.mapIndexItem));return;}
-      if(control.dataset.mapIntelToggle!==undefined){state.intelCollapsed=!state.intelCollapsed;const panel=control.closest('.pc-map-intel-panel');panel?.classList.toggle('is-collapsed',state.intelCollapsed);control.setAttribute('aria-expanded',String(!state.intelCollapsed));control.setAttribute('aria-label',state.intelCollapsed?'지도 선택 정보 펼치기':'지도 선택 정보 접기');root.ProjectCurseAudioControl?.play?.('contact',{volume:.28});saveMapSession();return;}
+      if(control.dataset.mapIntelToggle!==undefined){state.intelCollapsed=!state.intelCollapsed;const panel=control.closest('.pc-map-intel-panel');panel?.classList.toggle('is-collapsed',state.intelCollapsed);control.setAttribute('aria-expanded',String(!state.intelCollapsed));control.setAttribute('aria-label',state.intelCollapsed?'지도 선택 정보 펼치기':'지도 선택 정보 접기');root.ProjectCurseAudioControl?.play?.(state.intelCollapsed?'menu.close':'menu.open');saveMapSession();return;}
       if(control.dataset.mapMode){state.mode=control.dataset.mapMode;state.indexSelection=state.mode==='operation'?`operation:${state.operation}`:null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapRegion){state.region=control.dataset.mapRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapLayer){state.layers[control.dataset.mapLayer]=!state.layers[control.dataset.mapLayer];state.marker=null;if(control.dataset.mapLayer==='synchrony') state.synchronyPoint=null;state.indexSelection=state.synchronyPoint?`synchrony:${state.synchronyPoint}`:null;root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
@@ -952,8 +1002,9 @@
       if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
       if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapDetailLayer){const layer=control.dataset.mapDetailLayer;state.detailLayers[layer]=!state.detailLayers[layer];root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
+      if(control.dataset.mapDetailBrief){state.detailSite=control.dataset.mapDetailBrief;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('map.brief');render();focusDetailIntelAfterRender();return;}
       if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.(detailCueForSite(state.detailSite,'operation.step'));render();return;}
-      if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;state.intelCollapsed=!state.detailSite;root.ProjectCurseAudioControl?.play?.(state.detailSite?detailCueForSite(state.detailSite):'map.signal');render();return;}
+      if(control.dataset.mapDetailSite){const fromList=control.dataset.mapDetailSource==='list';state.detailSite=fromList?control.dataset.mapDetailSite:(state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite);state.intelCollapsed=!state.detailSite;root.ProjectCurseAudioControl?.play?.(state.detailSite?detailCueForSite(state.detailSite):'map.signal');render();if(fromList&&state.detailSite) focusDetailIntelAfterRender();return;}
       if(control.dataset.mapDetailClear){state.detailSite=null;state.intelCollapsed=true;render();return;}
       if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;render();return;}
       if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}

@@ -111,7 +111,7 @@
       preferences=Object.assign({},preferences,{[key]:value});
       applyPreferences({persist:true});
       renderOverview();
-      root.ProjectCurseAudioControl?.play?.('contact',{volume:.55});
+      root.ProjectCurseAudioControl?.play?.('menu.select');
       return true;
     }
 
@@ -400,7 +400,7 @@
       renderOverview();
       requestAnimationFrame(()=>panel.classList.add('is-open'));
       requestAnimationFrame(()=>{focusInitialPreference();});
-      root.ProjectCurseAudioControl?.play?.('open',{volume:.55});
+      root.ProjectCurseAudioControl?.play?.('menu.open');
     }
 
     function closePreferences(){
@@ -441,7 +441,7 @@
       if(!page) return;
       clearTimeout(densityTimer);
       setChannelCompact(page.id,!page.classList.contains('pc-channel-compact'));
-      root.ProjectCurseAudioControl?.play?.('contact',{volume:.34});
+      root.ProjectCurseAudioControl?.play?.('menu.select');
     });
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!panel?.hidden) closePreferences();

@@ -419,7 +419,7 @@
         event.preventDefault();event.stopImmediatePropagation();
         state.group=group.dataset.pcPersonGroup;state.selected=null;
         writePersonnelLocation('','replace');
-        window.ProjectCurseAudioControl?.play?.('filter.change');
+        window.ProjectCurseAudioControl?.play?.('archive.filter');
         syncControls();renderResults();return;
       }
       const status=event.target.closest?.('[data-pc-person-status]');
@@ -427,7 +427,7 @@
         event.preventDefault();event.stopImmediatePropagation();
         state.status=status.dataset.pcPersonStatus;state.selected=null;
         writePersonnelLocation('','replace');
-        window.ProjectCurseAudioControl?.play?.('filter.change');
+        window.ProjectCurseAudioControl?.play?.('archive.filter');
         syncControls();renderResults();return;
       }
       const summaryStatus=event.target.closest?.('[data-pc-person-summary-status]');
@@ -435,7 +435,7 @@
         event.preventDefault();event.stopImmediatePropagation();
         state.status=summaryStatus.dataset.pcPersonSummaryStatus;state.selected=null;
         writePersonnelLocation('','replace');
-        window.ProjectCurseAudioControl?.play?.('filter.change');
+        window.ProjectCurseAudioControl?.play?.('archive.filter');
         syncControls();renderResults();return;
       }
       const back=event.target.closest?.('[data-pc-person-back]');
