@@ -1,4 +1,4 @@
-// Project Curse 5.53.0 — hierarchical channel navigation, readable settings and local preferences.
+// Project Curse 5.54.0 — reader-facing channel navigation and local preferences.
 (function(root){
   'use strict';
 
@@ -121,15 +121,12 @@
 
     function navMarkup(channel){
       const status=liveStatus(channel.id);
-      if(channel.navTier==='utility'){
-        return `<i aria-hidden="true">◇</i><span><b>도구</b><small>${channel.label}</small></span><em class="pc-channel-live pc-channel-live--${status.tone}" aria-label="${status.description}"><b>${status.value}</b><small>${status.label}</small></em>`;
-      }
       return `<i>${channel.index}</i><span><b>${channel.label}</b><small>${channel.code}</small></span><em class="pc-channel-live pc-channel-live--${status.tone}" aria-label="${status.description}"><b>${status.value}</b><small>${status.label}</small></em>`;
     }
 
     function enhanceNavigation(){
       if(!quickNav) return;
-      const ordered=[...channels.filter(channel=>channel.navTier!=='utility'),...channels.filter(channel=>channel.navTier==='utility')];
+      const ordered=channels.filter(channel=>channel.navTier!=='utility');
       ordered.forEach(channel=>{
         let link=quickNav.querySelector(`[data-uac-route="${channel.id}"]`);
         if(!link){
@@ -139,22 +136,13 @@
         }
         link.dataset.channelRoute=channel.id;
         link.dataset.channelTheme=channel.theme;
-        link.dataset.channelTier=channel.navTier||'lore';
-        link.classList.toggle('pc-shell-utility-route',channel.navTier==='utility');
-        link.setAttribute('aria-label',channel.navTier==='utility'?`도구, ${channel.label}, ${channel.code}`:`${channel.index} ${channel.label}, ${channel.code}`);
-        link.title=channel.navTier==='utility'?`도구 · ${channel.label}`:'';
+        link.dataset.channelTier='lore';
+        link.classList.remove('pc-shell-utility-route');
+        link.setAttribute('aria-label',`${channel.index} ${channel.label}, ${channel.code}`);
+        link.removeAttribute('title');
         link.innerHTML=navMarkup(channel);
         quickNav.appendChild(link);
       });
-      if(!quickNav.querySelector('.pc-mobile-preference-link')){
-        const settings=document.createElement('button');
-        settings.type='button';
-        settings.className='pc-mobile-preference-link';
-        settings.dataset.pcPreferencesOpen='';
-        settings.setAttribute('aria-haspopup','dialog');
-        settings.innerHTML='<i aria-hidden="true">◇</i><span><b>표시·음향 설정</b><small>DISPLAY / FX</small></span><em data-pc-mobile-quality aria-hidden="true">AUTO</em>';
-        quickNav.appendChild(settings);
-      }
     }
 
     function identityMarkup(channel){

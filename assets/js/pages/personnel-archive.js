@@ -1,4 +1,4 @@
-// Project Curse 5.54.0 — 2006 personnel snapshot with canon names, operational cells and ability costs.
+// Project Curse 5.54.0 — reader-first personnel files with optional secondary records.
 (function(){
   'use strict';
 
@@ -27,10 +27,6 @@
     return {...status,label:labels[id]||status.label};
   }
   function certaintyOf(id){return source.certainties[id]||source.certainties.unresolved;}
-  function recordCode(record){
-    const position=source.records.indexOf(record)+1;
-    return `${groupOf(record.group).code}-${String(position).padStart(3,'0')}`;
-  }
   function recordGroups(record){return [record.group,...(record.secondaryGroups||[])];}
   function targetName(id){return source.byId[id]?.name||id;}
 
@@ -75,24 +71,14 @@
     return `<div class="pc-personnel-archive" data-pc-personnel-owner="1">
       <header class="pc-personnel-intro">
         <div>
-          <small>U.A.C PERSONNEL REGISTER / 2006 SNAPSHOT</small>
+          <small>PERSONNEL FILES / 2006</small>
           <h2>인물 기록</h2>
-          <p>이 명부는 2006년에 확인되거나 추정된 56명을 세계 사건 속 역할로 다시 배열한 역사 자료다. 개편 정본명과 구 명부명을 함께 보존하며, 활동 표시는 2042년 현재의 생존이나 재직을 뜻하지 않는다.</p>
+          <p>2006년까지 확인된 인물과 그들이 남긴 사건을 모았다. 이름을 선택하면 핵심 기록부터 읽을 수 있다.</p>
         </div>
-        <dl aria-label="인물 명부 상태">
-          <div><dt>등록 인물</dt><dd>${source.stats.total}</dd></div>
-          <div><dt>기록 기준</dt><dd>2006</dd></div>
-          <div><dt>신원 보완</dt><dd>${source.stats.profiled}</dd></div>
-          <div><dt>이름 정리</dt><dd>${source.stats.renamed}</dd></div>
-        </dl>
+        <span>${source.stats.total}명</span>
       </header>
-      <aside class="pc-personnel-boundary">
-        <b>HISTORICAL REGISTER</b>
-        <p>상태와 나이는 모두 2006년 기록을 기준으로 읽는다. 새 이름은 중앙 색인이 채택한 판독명이며 원본에 남은 이름은 구 명부명으로 보존된다. 사도 번호는 확정 계급이 아니라 서로 경쟁하는 좌석 주장으로 읽는다.</p>
-        <span>BASIS / 2006</span>
-      </aside>
       <section class="pc-personnel-controls" aria-label="인물 기록 검색과 필터">
-        <label class="pc-personnel-search"><span>인물 검색</span><input autocomplete="off" data-pc-person-search placeholder="이름 / 출신 / 나이 / 소속 / 경력 / 능력" type="search"><i aria-hidden="true">⌕</i></label>
+        <label class="pc-personnel-search"><span>인물 검색</span><input autocomplete="off" data-pc-person-search placeholder="이름 / 소속 / 역할" type="search"><i aria-hidden="true">⌕</i></label>
         <div class="pc-personnel-statuses" role="group" aria-label="상태 필터">${statusFilters()}</div>
       </section>
       <div class="pc-personnel-workspace">
@@ -110,24 +96,8 @@
   }
 
   function summaryDetailMarkup(records){
-    const counts=Object.keys(source.statuses).reduce((result,id)=>{
-      result[id]=source.records.filter(record=>record.status===id).length;
-      return result;
-    },{});
-    const statusButtons=['active','deceased','unknown'].map(id=>{
-      const status=displayStatusOf(id);
-      return `<button data-pc-person-summary-status="${esc(id)}" type="button"><span data-person-status="${esc(status.tone)}">${esc(status.label)}</span><b>${counts[id]||0}</b><i aria-hidden="true">›</i></button>`;
-    }).join('');
     return `<article class="pc-personnel-summary">
-      <header><div><small>REGISTER SNAPSHOT / BASIS 2006</small><h3>선택 전 명부 판독</h3><p>이 화면은 현재 인물의 생존 명단이 아니라, 2006년 당시 확보된 관계와 신원 기록의 색인이다.</p></div><span>HISTORICAL</span></header>
-      <dl aria-label="인물 명부 요약">
-        <div><dt>전체 파일</dt><dd>${source.stats.total}</dd></div>
-        <div><dt>현재 조건</dt><dd>${records.length}</dd></div>
-        <div><dt>사망 기재</dt><dd>${counts.deceased||0}</dd></div>
-        <div><dt>기준연도</dt><dd>2006</dd></div>
-      </dl>
-      <section><header><small>STATUS TRIAGE</small><h4>기록 상태로 좁혀 보기</h4></header><div>${statusButtons}</div></section>
-      <aside><b>판독 주의</b><ul><li><strong>활동 확인</strong>은 2006년 당시의 활동 흔적을 뜻한다.</li><li><strong>사망 기재</strong>는 원 명부에 사망 표기가 있는 경우만 집계한다.</li><li><strong>이후 미확인</strong>은 2006년 이후의 행적을 현재 자료로 확정할 수 없다는 뜻이다.</li></ul><p>왼쪽 색인에서 인물을 선택하면 직접 링크가 주소에 기록된다.</p></aside>
+      <header><div><small>${records.length} FILES FOUND</small><h3>인물을 선택하십시오</h3><p>목록에서 이름을 선택하면 소속, 사건과 능력부터 표시됩니다. 과거와 관계는 필요한 경우에만 펼쳐볼 수 있습니다.</p></div></header>
     </article>`;
   }
 
@@ -136,20 +106,16 @@
       <i aria-hidden="true"><span></span></i>
       <small>${empty?'NO MATCHING PERSONNEL':'PERSONNEL FILE STANDBY'}</small>
       <h3>${empty?'조건에 맞는 인물이 없습니다':'인물 파일을 선택하십시오'}</h3>
-      <p>${empty?'검색어나 상태·소속 필터를 조정하십시오.':'왼쪽 색인에서 인물을 선택하면 신원, 소속, 경력, 관계, 능력과 기록 한계를 한 화면에서 대조할 수 있습니다.'}</p>
+      <p>${empty?'검색어나 상태·소속 필터를 조정하십시오.':'왼쪽 색인에서 인물을 선택하면 핵심 기록을 확인할 수 있습니다.'}</p>
     </div>`;
   }
 
   function cardMarkup(record){
     const group=groupOf(record.group);
     const status=displayStatusOf(record.status);
-    const aliases=(record.aliases||[]).filter(alias=>alias!==record.sourceName);
-    const sourceName=record.sourceName?`<small class="pc-personnel-source-name">구 명부명 ${esc(record.sourceName)}</small>`:'';
-    const aliasLine=aliases.length?`<small>${esc(aliases.join(' / '))}</small>`:'';
-    const identity=record.identity?`<small class="pc-personnel-card-identity">${esc(record.identity.sex)} · ${esc(record.identity.age)}</small>`:'';
     return `<button class="pc-personnel-card${state.selected===record.id?' is-selected':''}" data-pc-person-open="${esc(record.id)}" data-person-tone="${esc(group.tone)}" type="button">
       <i aria-hidden="true">${esc(group.code)}</i>
-      <span><small>${esc(recordCode(record))} · ${esc(group.short)}</small><b>${esc(record.name)}</b>${sourceName}${aliasLine}<em>${esc(record.role)}</em>${identity}</span>
+      <span><small>${esc(group.short)}</small><b>${esc(record.name)}</b><em>${esc(record.role)}</em></span>
       <strong data-person-status="${esc(status.tone)}">${esc(status.label)}</strong>
     </button>`;
   }
@@ -158,14 +124,14 @@
     if(!record.identity) return '';
     const identity=record.identity;
     return `<section class="pc-personnel-identity" aria-label="${esc(record.name)} 신원 정보">
-      <header><small>IDENTITY / RECORD BASIS</small><h4>신원과 기록 기준</h4></header>
+      <header><small>IDENTITY</small><h4>신원</h4></header>
       <dl>
         <div><dt>성별</dt><dd>${esc(identity.sex)}</dd></div>
         <div><dt>출생</dt><dd>${esc(identity.birth)}</dd></div>
-        <div><dt>기록 당시 나이</dt><dd>${esc(identity.age)}</dd></div>
+        <div><dt>2006년 당시 나이</dt><dd>${esc(identity.age)}</dd></div>
         <div><dt>출신</dt><dd>${esc(identity.origin)}</dd></div>
         <div><dt>국적·신분</dt><dd>${esc(identity.nationality)}</dd></div>
-        <div><dt>소속 요약</dt><dd>${esc(record.affiliationSummary||groupOf(record.group).label)}</dd></div>
+        <div><dt>소속</dt><dd>${esc(record.affiliationSummary||groupOf(record.group).label)}</dd></div>
       </dl>
     </section>`;
   }
@@ -175,7 +141,7 @@
     const history=record.history||[];
     if(!background.length&&!history.length) return '';
     return `<section class="pc-personnel-background">
-      <header><small>BACKGROUND / CAREER TRACE</small><h4>과거 이력</h4></header>
+      <header><small>BACKGROUND</small><h4>과거</h4></header>
       ${background.length?`<div class="pc-personnel-background-copy">${background.map(item=>`<p>${esc(item)}</p>`).join('')}</div>`:''}
       ${history.length?`<ol>${history.map(item=>`<li><time>${esc(item[0])}</time><span>${esc(item[1])}</span></li>`).join('')}</ol>`:''}
     </section>`;
@@ -183,7 +149,7 @@
 
   function psychologyMarkup(record){
     if(!record.personality) return '';
-    return `<section class="pc-personnel-section pc-personnel-psychology"><header><small>DISPOSITION / MOTIVE</small><h4>성향과 동기</h4></header><dl>
+    return `<section class="pc-personnel-section pc-personnel-psychology"><header><small>DISPOSITION</small><h4>성향</h4></header><dl>
       <div><dt>성향</dt><dd>${esc(record.personality.temperament)}</dd></div>
       <div><dt>목표</dt><dd>${esc(record.personality.drive)}</dd></div>
       <div><dt>두려움</dt><dd>${esc(record.personality.fear)}</dd></div>
@@ -192,12 +158,12 @@
 
   function fieldNotesMarkup(record){
     if(!record.fieldNotes?.length) return '';
-    return `<section class="pc-personnel-section pc-personnel-field-notes"><header><small>FIELD HABIT / TELL</small><h4>현장 습관</h4></header><ul>${record.fieldNotes.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></section>`;
+    return `<section class="pc-personnel-section pc-personnel-field-notes"><header><small>FIELD NOTES</small><h4>현장 기록</h4></header><ul>${record.fieldNotes.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></section>`;
   }
 
   function affiliationMarkup(record){
     if(!record.affiliations?.length) return '';
-    return `<section class="pc-personnel-section pc-personnel-affiliations"><header><small>AFFILIATION</small><h4>소속 기록</h4></header><div>${record.affiliations.map(item=>{
+    return `<section class="pc-personnel-section pc-personnel-affiliations"><header><small>AFFILIATION</small><h4>소속</h4></header><div>${record.affiliations.map(item=>{
       const certainty=certaintyOf(item.certainty);
       return `<button type="button" data-pc-person-faction="${esc(item.key)}"><span><b>${esc(item.label)}</b><small>${esc(item.role)}</small></span><em data-certainty="${esc(certainty.tone)}">${esc(certainty.label)}</em><i aria-hidden="true">↗</i></button>`;
     }).join('')}</div></section>`;
@@ -207,26 +173,24 @@
     const capabilities=record.capabilities||[];
     const equipment=record.equipment||[];
     if(!capabilities.length&&!equipment.length) return '';
-    return `<section class="pc-personnel-section pc-personnel-capabilities"><header><small>CAPABILITY / SOURCE / COST</small><h4>능력과 대가</h4></header>
-      ${capabilities.length?`<div><b>기재 능력</b><ul>${capabilities.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:''}
-      ${equipment.length?`<div><b>기재 장비</b><ul>${equipment.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:''}
+    return `<section class="pc-personnel-section pc-personnel-capabilities"><header><small>CAPABILITY / COST</small><h4>능력과 대가</h4></header>
+      ${capabilities.length?`<div><b>능력</b><ul>${capabilities.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:''}
+      ${equipment.length?`<div><b>장비</b><ul>${equipment.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:''}
       ${record.abilitySource?`<dl class="pc-personnel-ability-ledger"><div><dt>발현 경로</dt><dd>${esc(record.abilitySource)}</dd></div><div><dt>확인된 대가</dt><dd>${esc(record.abilityCost||'대가 기록 미확인')}</dd></div></dl>`:''}
-      <p>능력은 승리 조건이 아니다. 사용 뒤 남는 손상·기억 결손·의식 종속까지 전력으로 계산한다.</p>
     </section>`;
   }
 
   function canonTraceMarkup(record){
-    if(!record.unit&&!record.recordFunction&&!record.incident) return '';
-    return `<section class="pc-personnel-canon-trace"><header><small>WORLD FUNCTION / OPERATIONAL TRACE</small><h4>세계 안에서의 위치</h4></header><dl>
-      ${record.unit?`<div><dt>작전 분류</dt><dd>${esc(record.unit)}</dd></div>`:''}
-      ${record.recordFunction?`<div><dt>서사 기능</dt><dd>${esc(record.recordFunction)}</dd></div>`:''}
-      ${record.incident?`<div><dt>사건 연결</dt><dd>${esc(record.incident)}</dd></div>`:''}
+    if(!record.unit&&!record.incident) return '';
+    return `<section class="pc-personnel-canon-trace"><header><small>KEY RECORD</small><h4>주요 기록</h4></header><dl>
+      ${record.unit?`<div><dt>소속</dt><dd>${esc(record.unit)}</dd></div>`:''}
+      ${record.incident?`<div><dt>연결 사건</dt><dd>${esc(record.incident)}</dd></div>`:''}
     </dl></section>`;
   }
 
   function relationshipsMarkup(record){
     if(!record.relationships?.length) return '';
-    return `<section class="pc-personnel-section pc-personnel-relations"><header><small>RELATION INDEX</small><h4>직접 관계</h4></header><div>${record.relationships.map(item=>{
+    return `<section class="pc-personnel-section pc-personnel-relations"><header><small>RELATIONS</small><h4>관계</h4></header><div>${record.relationships.map(item=>{
       const target=source.byId[item.target];
       const certainty=certaintyOf(item.certainty);
       return `<button type="button"${target?` data-pc-person-open="${esc(target.id)}"`:''}><span><b>${esc(target?.name||item.target)}</b><small>${esc(item.relation)}</small></span><em data-certainty="${esc(certainty.tone)}">${esc(certainty.label)}</em>${target?'<i aria-hidden="true">›</i>':''}</button>`;
@@ -235,12 +199,12 @@
 
   function notesMarkup(record){
     if(!record.notes?.length) return '';
-    return `<section class="pc-personnel-section pc-personnel-notes"><header><small>LISTED NOTES</small><h4>남은 메모</h4></header><ul>${record.notes.map(note=>`<li>${esc(note)}</li>`).join('')}</ul></section>`;
+    return `<section class="pc-personnel-section pc-personnel-notes"><header><small>NOTES</small><h4>추가 기록</h4></header><ul>${record.notes.map(note=>`<li>${esc(note)}</li>`).join('')}</ul></section>`;
   }
 
   function limitsMarkup(record){
     const limits=record.limits?.length?record.limits:['이 인물의 세부 활동과 현재 상태는 추가 기록이 필요하다.'];
-    return `<aside class="pc-personnel-limits"><header><small>ARCHIVE LIMIT</small><b>이 기록으로 확정할 수 없는 것</b></header><ul>${limits.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></aside>`;
+    return `<aside class="pc-personnel-limits"><header><small>UNKNOWN</small><b>확인되지 않은 부분</b></header><ul>${limits.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></aside>`;
   }
 
   function detailNavigationMarkup(record){
@@ -261,37 +225,29 @@
   function detailMarkup(record){
     const group=groupOf(record.group);
     const status=displayStatusOf(record.status);
-    const certainty=certaintyOf(record.certainty);
-    const aliases=(record.aliases||[]).filter(alias=>alias!==record.sourceName);
-    const sourceName=record.sourceName?`<p class="pc-personnel-source">구 명부명 <b>${esc(record.sourceName)}</b></p>`:'';
-    const aliasLine=aliases.length?`<p class="pc-personnel-alias">호칭·별칭 <b>${esc(aliases.join(' / '))}</b></p>`:'';
+    const origin=record.identity?.origin||'출신 미확인';
     return `<article class="pc-personnel-dossier" data-person-tone="${esc(group.tone)}" data-pc-person-selected="${esc(record.id)}">
       ${detailNavigationMarkup(record)}
       <header class="pc-personnel-dossier-head">
-        <div class="pc-personnel-code"><small>${esc(recordCode(record))}</small><i aria-hidden="true">${esc(group.code)}</i></div>
-        <div><small>PERSONNEL DOSSIER / BASIS 2006 / ${esc(certainty.label)}</small><h3 tabindex="-1">${esc(record.name)}</h3>${sourceName}${aliasLine}<p>${esc(record.role)}</p></div>
+        <div><small>PERSONNEL FILE / 2006</small><h3 tabindex="-1">${esc(record.name)}</h3><p>${esc(record.role)}</p></div>
         <span data-person-status="${esc(status.tone)}">${esc(status.label)}</span>
       </header>
       <dl class="pc-personnel-meta">
-        <div><dt>주 분류</dt><dd>${esc(group.label)}</dd></div>
-        <div><dt>기록 신뢰</dt><dd data-certainty="${esc(certainty.tone)}">${esc(certainty.label)}</dd></div>
-        <div><dt>직책·관계</dt><dd>${esc(record.role)}</dd></div>
-        <div><dt>자료 상태</dt><dd>2006 명부 + 보완 신원</dd></div>
+        <div><dt>소속</dt><dd>${esc(group.label)}</dd></div>
+        <div><dt>출신</dt><dd>${esc(origin)}</dd></div>
       </dl>
-      ${identityMarkup(record)}
-      <section class="pc-personnel-overview"><small>IDENTIFICATION SUMMARY</small><p>${esc(record.overview)}</p></section>
+      <section class="pc-personnel-overview"><small>PROFILE</small><p>${esc(record.overview)}</p></section>
       ${canonTraceMarkup(record)}
-      ${backgroundMarkup(record)}
-      <div class="pc-personnel-dossier-grid">
-        ${affiliationMarkup(record)}
-        ${capabilityMarkup(record)}
-        ${relationshipsMarkup(record)}
-        ${psychologyMarkup(record)}
-        ${fieldNotesMarkup(record)}
-        ${notesMarkup(record)}
-      </div>
-      ${limitsMarkup(record)}
-      <footer><span>개편 정본명과 원 명부명 병기</span><b>${esc(source.editorialRule)}</b></footer>
+      ${capabilityMarkup(record)}
+      <details class="pc-personnel-more">
+        <summary><span><small>BACKGROUND</small><b>신원과 과거</b></span><em>펼쳐 보기&nbsp;＋</em></summary>
+        <div>${identityMarkup(record)}${backgroundMarkup(record)}</div>
+      </details>
+      <details class="pc-personnel-more">
+        <summary><span><small>RELATIONS / NOTES</small><b>관계와 추가 기록</b></span><em>펼쳐 보기&nbsp;＋</em></summary>
+        <div class="pc-personnel-dossier-grid">${affiliationMarkup(record)}${relationshipsMarkup(record)}${psychologyMarkup(record)}${fieldNotesMarkup(record)}${notesMarkup(record)}</div>
+        ${limitsMarkup(record)}
+      </details>
     </article>`;
   }
 

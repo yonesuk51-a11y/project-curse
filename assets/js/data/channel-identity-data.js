@@ -1,4 +1,4 @@
-// Project Curse 5.54.0 — six lore channels, one utility channel and adaptive density policy.
+// Project Curse 5.54.0 — six reader-facing lore channels and adaptive density policy.
 (function(root){
   'use strict';
 
@@ -41,13 +41,8 @@
       },
       {
         id:'personnel',index:'05',code:'PERSONNEL REGISTER',label:'인물 기록',shortLabel:'인물',theme:'personnel',glyph:'PR',
-        description:'2006년을 기준으로 정리된 56명의 보완 신원·나이·출신·소속·경력을 독립 파일로 교차 대조한다.',
+        description:'2006년까지 확인된 56명의 소속과 사건을 인물별로 따라간다.',
         telemetry:[['BASIS','2006'],['REGISTER','56 FILES'],['STATUS','HISTORICAL']]
-      },
-      {
-        id:'media-audit',index:'U1',code:'RELEASE CLEARANCE',label:'미디어 감사',shortLabel:'감사',theme:'clearance',glyph:'RC',navTier:'utility',
-        description:'게시 자산의 파일 등록, 원본 계보와 공개 허가 증빙을 세계관 기록과 분리해 점검한다.',
-        telemetry:[['ASSETS','183'],['PRIORITY','30'],['REVIEW','150 OPEN']]
       }
     ],
     preferences:{

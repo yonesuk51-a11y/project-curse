@@ -77,7 +77,7 @@ check('shell:home-owned-outside-pages',index.indexOf('class="uac-shell-home"')<i
 check('shell:route-events',shell.includes('projectcurse:route-will-change')&&shell.includes('projectcurse:screen-committed'));
 check('shell:decrypt-effect',read('assets/js/core/transition-controller.js').includes('pc-screen-entering')&&read('assets/css/transition-system.css').includes('@keyframes pc-screen-enter'));
 check('shell:button-feedback',shellCss.includes('@keyframes uac-control-scan')&&shellCss.includes('@keyframes uac-control-pulse'));
-check('shell:seven-channel-identity',context.window.ProjectCurseChannelData?.channels?.length===7&&channelIdentityRuntime.includes('ensureIdentity(item.id)'));
+check('shell:six-reader-channel-identity',context.window.ProjectCurseChannelData?.channels?.length===6&&!context.window.ProjectCurseChannelData.channels.some(channel=>channel.navTier==='utility')&&channelIdentityRuntime.includes('ensureIdentity(item.id)'));
 check('shell:identity-preferences',channelIdentityData.includes('project_curse_preferences_v1')&&channelIdentityRuntime.includes('openPreferences')&&channelIdentityCss.includes('.pc-preference-dialog'));
 check('shell:identity-root-order',index.indexOf('channel-identity-data.js')>index.indexOf('transition-manifest.js')&&index.indexOf('channel-identity.js')>index.indexOf('terminal-home.js'));
 check('shell:live-status-telemetry',performanceTelemetry.includes('ProjectCurseTelemetry=Object.freeze')&&channelIdentityRuntime.includes('pc-channel-live')&&channelIdentityCss.includes('.pc-live-diagnostics'));
