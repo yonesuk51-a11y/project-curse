@@ -1,4 +1,4 @@
-// Project Curse 5.35.0 — classified archive signal library and conditional verdict index owner.
+// Project Curse 5.54.0 — reader-first archive chapters and conditional verdict index owner.
 (function(){
   'use strict';
   const archive=window.ProjectCurseArchive;
@@ -14,6 +14,13 @@
   const categoryOrder=['all','video','incident','region','guide','operation','entity','cult'];
   const categoryLabels={all:'전체',video:'영상',incident:'사건·회수',region:'권역',guide:'규정·안내',operation:'작전',entity:'개체',cult:'교단·오염'};
   const provenanceLabels={ORIGINAL:'원본 보존',STABILIZED:'열람 보정본',RECONSTRUCTED:'복원 추정본',UNVERIFIED:'출처 대조 대기'};
+  const storyChapters=[
+    {index:'01',range:'아마리온–피의 호수',title:'금기를 사업으로 바꾸다',summary:'공간 개척 사업과 피의 호수 작전은 현상을 막기보다 이용할 수 있는 자원으로 보려 했던 시기를 남겼다.',ids:['Unknown_Record1_860204','Immortality_860201','Unknown_Record2_860205']},
+    {index:'02',range:'괴이–구역–교단',title:'위협에 이름을 붙이다',summary:'괴이와 위험 구역, 교단의 의식을 분류하면서 흩어진 피해가 하나의 세계적 위협으로 묶이기 시작했다.',ids:['Ferals_860722','Zone_870815','Cults_871104']},
+    {index:'03',range:'이탈–유통–실종',title:'기관이 서로를 배신하다',summary:'레드울프의 이탈, 비인가 병기 유통과 사쿠마의 실종은 대응기관 내부의 균열이 이미 진행 중이었음을 보여준다.',ids:['Unknown_Record3_920711','Unknown_Record4_930314','Sakuma_Tape_991028']},
+    {index:'04',range:'대흑림–데드 존',title:'국가 이후의 생존',summary:'대흑림과 데드 존에서는 국가 대신 성채, 검문소와 순례자의 불완전한 규칙이 사람을 살려 두었다.',ids:['Great_Black_Forest_Region','Pilgrim_Rules_GBF','Dead_Zone_Pilgrimage']},
+    {index:'05',range:'남부 작전',title:'남부 전쟁이 모이다',summary:'분열된 교단과 특수부대, 집단 소환 계획이 하나의 쿠데타 작전으로 수렴한다.',ids:['Operation_Broken_Crown']}
+  ];
   let observer=null;
   let normalizing=false;
   let queued=false;
@@ -35,18 +42,29 @@
 
   function cardMarkup(record,index){
     const provenance=provenanceLabels[record.provenance]||provenanceLabels.UNVERIFIED;
-    const action=record.format==='video'?'영상 기록 재생':'문서 기록 열람';
-    const tags=(record.tags||[]).slice(0,3).map(tag=>`<li>${esc(tag)}</li>`).join('');
+    const action=record.format==='video'?'영상 기록 재생':'문서 기록 열기';
     return `<button type="button" class="pc-archive-card" data-pc-public-record="1" data-pc-archive-open="${esc(record.id)}" data-pc-archive-format="${esc(record.format)}" data-pc-archive-category="${esc(record.category)}" data-pc-archive-search="${esc(recordSearchText(record))}" style="--archive-order:${index}">
-      <span class="pc-archive-card-visual" data-provenance="${esc(record.provenance)}">${coverMarkup(record)}<span class="pc-archive-format-mark">${record.format==='video'?'▶ SEQUENCE':'▤ DOSSIER'}</span><span class="pc-archive-risk" data-risk="${esc(record.risk)}">${esc(record.risk)}</span></span>
+      <span class="pc-archive-card-visual" data-provenance="${esc(record.provenance)}">${coverMarkup(record)}<span class="pc-archive-format-mark">${record.format==='video'?'▶ 영상 기록':'▤ 문서 기록'}</span></span>
       <span class="pc-archive-card-body">
-        <span class="pc-archive-card-meta"><code>${esc(record.code||record.id)}</code><time>${esc(record.date)}</time></span>
+        <span class="pc-archive-card-meta"><span>${esc(record.categoryLabel)}</span><time>${esc(record.date)}</time></span>
         <span class="pc-archive-card-title">${esc(record.title)}</span>
         <span class="pc-archive-card-summary">${esc(record.summary)}</span>
-        <ul class="pc-archive-tags" aria-label="관련 표식">${tags}</ul>
         <span class="pc-archive-card-foot"><span class="pc-archive-provenance" data-provenance="${esc(record.provenance)}">${esc(provenance)}</span><i>${action}<b aria-hidden="true">→</b></i></span>
       </span>
     </button>`;
+  }
+
+  function chapterMarkup(chapter,index){
+    const records=chapter.ids.map(id=>archive.publicRecords.find(record=>record.id===id)).filter(Boolean);
+    return `<details class="pc-archive-chapter" data-pc-archive-chapter="${esc(chapter.index)}" ${index===0?'open':''}>
+      <summary><span>${esc(chapter.index)}</span><div><small>${esc(chapter.range)}</small><b>${esc(chapter.title)}</b><p>${esc(chapter.summary)}</p></div><i><b>${records.length}개 기록</b><small>펼쳐 보기&nbsp;＋</small></i></summary>
+      <div class="pc-archive-card-grid">${records.map(record=>cardMarkup(record,archive.publicRecords.indexOf(record))).join('')}</div>
+    </details>`;
+  }
+
+  function archiveMore(code,title,body){
+    if(!body) return '';
+    return `<details class="pc-archive-more"><summary><span><small>${esc(code)}</small><b>${esc(title)}</b></span><em>펼쳐 보기&nbsp;＋</em></summary><div>${body}</div></details>`;
   }
 
   function verdictMarkup(){
@@ -76,56 +94,31 @@
   function provenanceAuditMarkup(){
     if(!mediaAudit?.stats) return '';
     const stats=mediaAudit.stats;
-    const releaseLabels={CLEARED:'프로젝트 관리',PROJECT_GENERATED:'생성형 재구성',SOURCE_REVIEW:'원본 사용 범위 확인',LICENSE_REVIEW:'라이선스 확인'};
-    const kindLabels={image:'IMAGE',audio:'AUDIO',video:'VIDEO'};
-    const queue=(mediaAudit.reviewQueue||[]).map(item=>`<li data-media-kind="${esc(item.kind)}" data-media-release="${esc(item.release)}"><span>${esc(kindLabels[item.kind]||item.kind)}</span><code>${esc(item.path.replace(/^assets\//,''))}</code><b>${esc(releaseLabels[item.release]||item.release)}</b></li>`).join('');
-    const references=(mediaAudit.referenceOnly||[]).map(item=>`<li><code>${esc(item.name)}</code><span>${esc(item.role)}</span><b>${esc(item.rule)}</b></li>`).join('');
-    const reviewTone=stats.referenceExposure>0?'blocked':stats.review>0?'review':'cleared';
-    return `<section class="pc-media-audit" data-pc-media-audit="1" data-audit-status="${reviewTone}" aria-label="미디어 출처와 공개 검토 상태">
-      <header class="pc-media-audit-head"><div><span>MEDIA PROVENANCE / RELEASE AUDIT</span><h4>공개 미디어 감식 대장</h4><p>공개 열람망에 등록된 이미지·음원·영상의 파일 상태와 출처 확인 단계를 분리한다. <strong>등록은 사용 허가를 의미하지 않는다.</strong></p></div><aside><em>${stats.review>0?'REVIEW OPEN':'RELEASE CLEARED'}</em><a data-uac-route="media-audit" href="#media-audit">전체 감사 대장 열기&nbsp;›</a></aside></header>
-      <dl class="pc-media-audit-telemetry">
-        <div><dt>등록 자산</dt><dd>${stats.registered}<small>FILES</small></dd></div>
-        <div><dt>프로젝트 관리</dt><dd>${stats.managed}<small>KNOWN</small></dd></div>
-        <div><dt>출처·권리 검토</dt><dd>${stats.review}<small>OPEN · PRIORITY ${stats.priority||0}</small></dd></div>
-        <div><dt>미등록·참고 노출</dt><dd>0<small>BLOCK</small></dd></div>
-      </dl>
-      <div class="pc-media-audit-kinds">
-        <div><span>IMAGE</span><b>${stats.byKind.image}</b><small>${stats.byProvenance.RECONSTRUCTED||0} RECONSTRUCTED · ${stats.byProvenance.DELIVERY_DERIVATIVE||0} DELIVERY DERIVATIVES</small></div>
-        <div><span>AUDIO</span><b>${stats.byKind.audio}</b><small>${stats.byRelease.LICENSE_REVIEW?`${stats.byKind.audio} FILES REQUIRE SOURCE REVIEW`:'SOURCE REGISTERED'}</small></div>
-        <div><span>VIDEO</span><b>${stats.byKind.video}</b><small>${stats.byKind.video} FILES REQUIRE SOURCE REVIEW</small></div>
-      </div>
-      <details class="pc-media-audit-details"><summary><span>우선 검토 대기열</span><b>${stats.byRelease.LICENSE_REVIEW||0} LICENSE · ${stats.byRelease.SOURCE_REVIEW||0} SOURCE</b></summary><div><p>배경음·효과음·내장 음향 영상부터 제작자, 원출처와 공개 허가 범위를 확인한다. 아래 항목은 삭제 명령이 아니라 우선 확인 목록이다.</p><ol>${queue}</ol></div></details>
-      <details class="pc-media-audit-details is-reference"><summary><span>참고 전용 자료 경계</span><b>${stats.referenceOnly} REGISTERED · ${stats.referenceExposure} EXPOSED</b></summary><div><p>다음 자료는 분위기와 과거 시각화 분석에만 사용하며, 별도 승인 없이 공개 자산이나 공식 설정 증거로 편입하지 않는다.</p><ul>${references}</ul></div></details>
-      <footer><span>PROJECT MANAGED ${stats.managed}</span><span>RELEASE REVIEW ${stats.review}</span><span>UNREGISTERED 0</span><b>PUBLIC RELEASE NOT YET CLEARED</b></footer>
-    </section>`;
+    return `<aside class="pc-archive-audit-link" data-pc-media-audit="1" aria-label="자료 출처 검토 안내"><div><small>자료 출처</small><b>${stats.review>0?'일부 이미지·음원·영상은 출처와 공개 범위를 확인 중이다.':'공개 자료의 출처 등록이 완료됐다.'}</b><p>설정 기록과 자산 사용 가능 여부는 서로 다른 항목으로 관리한다.</p></div><a data-uac-route="media-audit" href="#media-audit">출처 검토 기록 열기&nbsp;›</a></aside>`;
   }
 
   function indexMarkup(){
-    const videoCount=categoryCount('video');
-    const reconstructed=archive.publicRecords.filter(record=>record.provenance==='RECONSTRUCTED').length;
-    const unverified=archive.publicRecords.filter(record=>record.provenance==='UNVERIFIED').length;
     const filterButtons=categoryOrder.map(category=>`<button type="button" data-pc-archive-filter="${category}" aria-pressed="${category===filter?'true':'false'}"><span>${categoryLabels[category]}</span><b>${categoryCount(category)}</b></button>`).join('');
-    const cards=archive.publicRecords.map(cardMarkup).join('');
+    const chapters=storyChapters.map(chapterMarkup).join('');
+    const sourceLegend=`<aside class="pc-archive-source-legend" aria-label="이미지 출처 상태 안내"><span>SOURCE STATE</span><dl><div data-provenance="ORIGINAL"><dt>원본 보존</dt><dd>원본 출처 계열에서 회수된 자료</dd></div><div data-provenance="RECONSTRUCTED"><dt>복원 추정본</dt><dd>설정·증언을 근거로 재구성한 장면</dd></div><div data-provenance="UNVERIFIED"><dt>출처 대조 대기</dt><dd>기존 자산이나 원본 계보 확인 전인 자료</dd></div></dl></aside>`;
     return `<section class="pc-archive-index" data-pc-archive-owner="1" aria-label="복구 기록 신호 라이브러리">
       <header class="pc-archive-index-head">
-        <div class="pc-archive-heading"><span>U.A.C / RECOVERED SIGNAL LIBRARY</span><h3>기록보관소</h3><p>영상·문서·권역 보고서를 한 색인에서 교차 열람한다. 각 이미지에는 <strong>원본 계보와 복원 상태</strong>를 함께 표시한다.</p></div>
-        <dl class="pc-archive-telemetry" aria-label="보관소 상태">
-          <div><dt>공개 기록</dt><dd>${archive.publicRecords.length}<small>FILES</small></dd></div>
-          <div><dt>영상 시퀀스</dt><dd>${videoCount}<small>RUN</small></dd></div>
-          <div><dt>복원 추정</dt><dd>${reconstructed}<small>EST.</small></dd></div>
-          <div><dt>대조 대기</dt><dd>${unverified}<small>WAIT</small></dd></div>
-        </dl>
+        <div class="pc-archive-heading"><span>U.A.C / RECOVERED RECORDS</span><h3>기록보관소</h3><p>처음에는 한 사건처럼 보였던 기록들이 시간이 지나며 같은 붕괴의 일부로 이어졌다. 위에서 아래로 읽으면 금지 기술의 실험부터 남부 전쟁까지의 흐름을 따라갈 수 있다.</p></div>
       </header>
-      <div class="pc-archive-console">
-        <div class="pc-archive-console-head"><div><span>CLASSIFICATION MATRIX</span><b>기록 분류</b></div><label><span>색인 검색</span><input type="search" data-pc-archive-search-input autocomplete="off" spellcheck="false" value="${esc(search)}" placeholder="ID · 제목 · 키워드"></label></div>
-        <div class="pc-archive-filters" role="group" aria-label="기록 분류 필터">${filterButtons}</div>
-      </div>
-      <div class="pc-archive-result-line"><span aria-live="polite" data-pc-archive-result>전체 ${archive.publicRecords.length}건 표시</span><i>원본 보존 / 복원 추정 / 출처 대조 대기를 구분하여 표시</i></div>
-      <div class="pc-archive-card-grid">${cards}</div>
+      <details class="pc-archive-tools">
+        <summary><span><small>SEARCH / FILTER</small><b>기록 검색 및 분류</b></span><em aria-live="polite" data-pc-archive-result>전체 ${archive.publicRecords.length}건 표시</em></summary>
+        <div class="pc-archive-console">
+          <div class="pc-archive-console-head"><div><span>RECORD FINDER</span><b>제목이나 키워드로 찾기</b></div><label><span>검색</span><input type="search" data-pc-archive-search-input autocomplete="off" spellcheck="false" value="${esc(search)}" placeholder="제목 · 사건 · 지역"></label></div>
+          <div class="pc-archive-filters" role="group" aria-label="기록 분류 필터">${filterButtons}</div>
+        </div>
+      </details>
+      <div class="pc-archive-chapters" aria-label="서사 순서별 기록">${chapters}</div>
       <div class="pc-archive-empty" hidden data-pc-archive-empty><span>NO MATCHING SIGNAL</span><b>일치하는 기록이 없습니다.</b><button type="button" data-pc-archive-reset>분류 초기화</button></div>
-      <aside class="pc-archive-source-legend" aria-label="이미지 출처 상태 안내"><span>SOURCE STATE</span><dl><div data-provenance="ORIGINAL"><dt>원본 보존</dt><dd>원본 출처 계열에서 회수된 자료</dd></div><div data-provenance="RECONSTRUCTED"><dt>복원 추정본</dt><dd>설정·증언을 근거로 재구성한 장면</dd></div><div data-provenance="UNVERIFIED"><dt>출처 대조 대기</dt><dd>기존 자산이나 원본 계보 확인 전인 자료</dd></div></dl></aside>
-      ${provenanceAuditMarkup()}
-      ${verdictMarkup()}
+      <div class="pc-archive-more-stack">
+        ${archiveMore('SOURCE STATE','자료 출처 표시',sourceLegend)}
+        ${archiveMore('MEDIA REVIEW','미디어 출처 검토',provenanceAuditMarkup())}
+        ${archiveMore('FIELD VERDICTS','현장 판정 기록',verdictMarkup())}
+      </div>
     </section>`;
   }
 
@@ -141,6 +134,11 @@
       card.hidden=!show;
       card.setAttribute('aria-hidden',show?'false':'true');
       if(show) visible++;
+    });
+    qa('[data-pc-archive-chapter]',host).forEach(chapter=>{
+      const hasVisible=qa('.pc-archive-card[data-pc-public-record]',chapter).some(card=>!card.hidden);
+      chapter.hidden=!hasVisible;
+      if((filter!=='all'||query)&&hasVisible) chapter.open=true;
     });
     qa('[data-pc-archive-filter]',host).forEach(button=>button.setAttribute('aria-pressed',button.dataset.pcArchiveFilter===filter?'true':'false'));
     const result=q('[data-pc-archive-result]',host);
@@ -202,11 +200,11 @@
 
   function check(){
     const cards=qa('.pc-archive-index-host > [data-pc-archive-owner="1"] .pc-archive-card[data-pc-public-record]');
-    const ids=cards.map(card=>card.dataset.pcArchiveOpen).join('|');
-    const expectedIds=archive.publicRecords.map(record=>record.id).join('|');
+    const ids=cards.map(card=>card.dataset.pcArchiveOpen).sort().join('|');
+    const expectedIds=archive.publicRecords.map(record=>record.id).sort().join('|');
     const verdictRows=qa('.pc-verdict-row');
     const audit=q('[data-pc-media-audit="1"]');
-    return {name:'archiveIndex',patch:'5.42.0',ok:ids===expectedIds&&cards.every(card=>card.dataset.pcArchiveCategory)&&(!verdicts||verdictRows.length===verdicts.getSummary().total)&&(!mediaAudit||!!audit),records:cards.length,verdicts:verdictRows.length,media:mediaAudit?.stats?.registered||0,issues:ids===expectedIds?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]};
+    return {name:'archiveIndex',patch:'5.54.0',ok:ids===expectedIds&&cards.every(card=>card.dataset.pcArchiveCategory)&&(!verdicts||verdictRows.length===verdicts.getSummary().total)&&(!mediaAudit||!!audit),records:cards.length,verdicts:verdictRows.length,media:mediaAudit?.stats?.registered||0,issues:ids===expectedIds?[]:[{level:'error',code:'PUBLIC_INDEX_MISMATCH',message:ids}]};
   }
 
   function openRecord(id,trigger){
