@@ -512,11 +512,58 @@
       }).join('')}</div>`;
     }
 
+    function detailBriefVisible(brief,site){
+      return Boolean(brief&&(!site||!brief.siteIds?.length||brief.siteIds.includes(site.id)));
+    }
+
+    function detailCueForSite(siteId,fallback='map.signal'){
+      const detail=detailById(state.detail);
+      const site=detail?.sites?.find(item=>item.id===siteId);
+      if(!site) return fallback;
+      return detailBriefVisible(detail.visual,site)||detailBriefVisible(detail.signalBrief,site)?'map.brief':fallback;
+    }
+
+    function renderDetailVisual(detail,site){
+      const visual=detail.visual;
+      if(!detailBriefVisible(visual,site)) return '';
+      const historyId=visual.history||site?.history;
+      const fallback=root.ProjectCurseMedia?'':` src="${escapeHTML(visual.src)}"`;
+      return `<figure class="pc-map-visual-brief" data-map-visual-brief>
+        <button type="button" class="pc-map-visual-open"${historyId?` data-map-open-history="${escapeHTML(historyId)}"`:''} aria-label="${escapeHTML(visual.title)} 확대 및 세계 기록 열기">
+          <span class="pc-map-visual-frame" data-pc-media-frame>
+            <img data-pc-source="${escapeHTML(visual.src)}" data-pc-media-mode="thumbnail"${fallback} alt="${escapeHTML(visual.alt||'')}"/>
+            <span class="pc-map-visual-state">RECONSTRUCTED</span><i aria-hidden="true"></i>
+          </span>
+        </button>
+        <figcaption><small>${escapeHTML(visual.label||'복원 추정')}</small><b>${escapeHTML(visual.title)}</b><p>${escapeHTML(visual.caption||'')}</p>${historyId?`<button type="button" data-map-open-history="${escapeHTML(historyId)}">확대·세계 기록 열기 <i>→</i></button>`:''}<span>${escapeHTML(visual.assetId||'VISUAL EVIDENCE')}</span></figcaption>
+      </figure>`;
+    }
+
+    function renderDetailSignalBrief(detail,site){
+      const brief=detail.signalBrief;
+      if(!detailBriefVisible(brief,site)) return '';
+      const lanes=(brief.lanes||[]).map(lane=>{
+        const bars=(lane.pattern||[]).map(level=>`<i style="--pc-signal-level:${Math.max(1,Math.min(9,Number(level)||1))*10}%"></i>`).join('');
+        return `<div class="pc-map-signal-lane"><header><b>${escapeHTML(lane.code)}</b><span>${escapeHTML(lane.state)}</span></header><div class="pc-map-signal-wave" aria-hidden="true">${bars}</div><small>${escapeHTML(lane.fingerprint)}</small></div>`;
+      }).join('');
+      const checks=(brief.checks||[]).map(check=>`<div class="is-${escapeHTML(check.tone||'neutral')}"><dt>${escapeHTML(check.label)}</dt><dd>${escapeHTML(check.value)}</dd></div>`).join('');
+      const log=(brief.log||[]).map(entry=>`<li><time>${escapeHTML(entry.time)}</time><span>${escapeHTML(entry.text)}</span></li>`).join('');
+      return `<section class="pc-map-signal-brief" aria-label="${escapeHTML(brief.title)}">
+        <header><small>${escapeHTML(brief.label||'SIGNAL COMPARISON')}</small><b>${escapeHTML(brief.title)}</b><p>${escapeHTML(brief.summary||'')}</p></header>
+        <div class="pc-map-signal-lanes">${lanes}</div><dl class="pc-map-signal-checks">${checks}</dl><ol class="pc-map-signal-log">${log}</ol>
+      </section>`;
+    }
+
+    function renderDetailBriefing(detail,site){
+      return `${renderDetailVisual(detail,site)}${renderDetailSignalBrief(detail,site)}`;
+    }
+
     function renderDetailIntel(detail,site){
       if(!site) return `
         <div class="pc-map-intel-kicker">REGIONAL DRILLDOWN</div>
         <h3>${escapeHTML(detail.label)}</h3>
         <p>${escapeHTML(detail.description)}</p>
+        ${renderDetailBriefing(detail,null)}
         <dl class="pc-map-facts"><div><dt>상태</dt><dd>${escapeHTML(detail.status)}</dd></div><div><dt>복원 신뢰도</dt><dd>${escapeHTML(detail.confidence)}</dd></div><div><dt>사건 지점</dt><dd>${detail.sites.length} SIGNALS</dd></div></dl>
         <div class="pc-map-warning">${escapeHTML(detail.warning)}</div>
         ${detail.operation?`<button class="pc-map-region-return" type="button" data-map-open-operation="${escapeHTML(detail.operation)}">연결 작전지도 열기</button>`:''}
@@ -533,6 +580,7 @@
         <div class="pc-map-intel-kicker">SELECTED SITE / ${escapeHTML(confidenceLabels[site.confidence]||site.confidence)}</div>
         <h3>${escapeHTML(site.label)}</h3>
         <p>${escapeHTML(site.meta)}</p>
+        ${renderDetailBriefing(detail,site)}
         <dl class="pc-map-facts"><div><dt>현재 상태</dt><dd class="pc-detail-state${resolved.tone?` is-${escapeHTML(resolved.tone)}`:''}">${escapeHTML(resolved.status)}</dd></div><div><dt>위험도</dt><dd class="pc-detail-risk is-${escapeHTML(threat)}">${escapeHTML(riskLabels[threat])}</dd></div><div><dt>통신</dt><dd>${escapeHTML(communication.toUpperCase())}</dd></div><div><dt>연결 경로</dt><dd>${connectedRoutes.length} TRACE${connectedRoutes.length>1?'S':''}</dd></div><div><dt>판정</dt><dd>${escapeHTML(confidenceLabels[site.confidence]||site.confidence)}</dd></div>${incident?`<div><dt>사건 코드</dt><dd>${escapeHTML(incident.code)}</dd></div>`:''}</dl>
         ${site.verdictStates?`<div class="pc-detail-verdict-note"><b>FIELD OPERATION COPY</b><span>${operationStore?.get?.().verdict?`현장 판정에 따라 이 지도 사본만 갱신됨 · 중앙 기록 변화 없음`:'판정을 저장하면 이 지도 사본의 지점 상태만 변경됨'}</span></div>`:''}
         ${incident?`<div class="pc-map-incident-summary"><b>${escapeHTML(incident.date)}</b><p>${escapeHTML(incident.summary)}</p></div>`:''}
@@ -826,6 +874,7 @@
           </header>
           ${state.mode==='landing'?renderTheaterIndex():renderWorkspace()}
         </div>`;
+      root.ProjectCurseMedia?.enhance?.(mount,{mode:'thumbnail'});
       saveMapSession();
     }
 
@@ -903,8 +952,8 @@
       if(control.dataset.mapOpenDetail){state.mode='detail';state.detail=control.dataset.mapOpenDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}
       if(control.dataset.mapDetail){state.mode='detail';state.detail=control.dataset.mapDetail;state.detailSite=null;state.indexSelection=null;state.intelCollapsed=true;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
       if(control.dataset.mapDetailLayer){const layer=control.dataset.mapDetailLayer;state.detailLayers[layer]=!state.detailLayers[layer];root.ProjectCurseAudioControl?.play?.('map.layer');render();return;}
-      if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('operation.step');render();return;}
-      if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;state.intelCollapsed=!state.detailSite;root.ProjectCurseAudioControl?.play?.('map.signal');render();return;}
+      if(control.dataset.mapRouteStep){state.detailSite=control.dataset.mapRouteStep;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.(detailCueForSite(state.detailSite,'operation.step'));render();return;}
+      if(control.dataset.mapDetailSite){state.detailSite=state.detailSite===control.dataset.mapDetailSite?null:control.dataset.mapDetailSite;state.intelCollapsed=!state.detailSite;root.ProjectCurseAudioControl?.play?.(state.detailSite?detailCueForSite(state.detailSite):'map.signal');render();return;}
       if(control.dataset.mapDetailClear){state.detailSite=null;state.intelCollapsed=true;render();return;}
       if(control.dataset.mapEnterRegion){state.region=control.dataset.mapEnterRegion;state.marker=null;state.synchronyPoint=null;state.indexSelection=null;state.intelCollapsed=true;render();return;}
       if(control.dataset.mapOpenOperation){state.mode='operation';state.operation=control.dataset.mapOpenOperation;state.step=operationStep(operationById(state.operation));state.indexSelection=`operation:${state.operation}`;state.intelCollapsed=false;root.ProjectCurseAudioControl?.play?.('incident.link');render();return;}

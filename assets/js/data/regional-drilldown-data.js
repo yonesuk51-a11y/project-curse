@@ -16,6 +16,32 @@
         label:'북부 연속 차단선',code:'NORTH / CONTINUOUS BARRIER',status:'ADVANTAGE / WAR ACTIVE',confidence:'78%',
         description:'2018년 개전 당시 붕괴한 감시선, 2026년 탈환선과 2038년 분산 감시망을 겹쳐 복원한 북동아시아 전구. 선의 번호가 높아져도 전쟁이 끝났다는 뜻은 아니다.',
         warning:'구조 요청자의 목소리나 호출명만으로 예비대를 이동시키지 말 것. 서로 떨어진 두 계측 노드의 반환 지문이 일치해야 한다.',
+        visual:{
+          src:'assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png',history:'2026-08-20-northern-reversal',assetId:'VEA-NF-DUP-01',
+          label:'복원 추정 / 실제 전황 사진 아님',title:'복제 구조신호 분석 재구성',
+          alt:'폐허가 된 북부 산업도시의 콘크리트 차단선 뒤 대응조와 멀리 떨어진 두 지점에서 같은 자세로 반복되는 인물 형상을 담은 분석 재구성',
+          caption:'복제 구조신호, 분산 계측 노드와 제3 차단선의 관계를 겹친 분석 자료다. 대원 외형과 구조 요청자의 신원은 확정하지 않는다.',
+          siteIds:['north-distributed-nodes','north-false-rescue-origin','north-reclaimed-sites','north-third-line']
+        },
+        signalBrief:{
+          label:'DUAL NODE VERIFICATION',title:'동일 음성 / 상충 경로',
+          summary:'두 노드는 같은 구조 요청을 기록했지만 신호가 통과한 공간의 반환 지문은 서로 달랐다.',
+          siteIds:['north-distributed-nodes','north-false-rescue-origin','north-reclaimed-sites'],
+          lanes:[
+            {code:'NODE A',state:'VOICE MATCH',fingerprint:'PATH FINGERPRINT A',pattern:[3,6,4,8,5,2,7,4,6,3,8,5]},
+            {code:'NODE B',state:'VOICE MATCH',fingerprint:'PATH FINGERPRINT B',pattern:[3,6,4,8,5,2,7,4,6,3,8,5]}
+          ],
+          checks:[
+            {label:'음성 대조',value:'동일 판정',tone:'match'},
+            {label:'경로 지문',value:'불일치',tone:'conflict'},
+            {label:'현장 명령',value:'이동 보류',tone:'hold'}
+          ],
+          log:[
+            {time:'T+00:00',text:'분리된 두 노드에서 같은 호출명 수신'},
+            {time:'T+00:11',text:'반환 지문 상충 확인 · 발신자 판정 중지'},
+            {time:'T+02:40',text:'예비대 이동 취소 · 교차검증 절차 전환'}
+          ]
+        },
         routes:[
           {id:'northern-urban-watch',className:'historical',label:'URBAN WATCH / JID LEGACY',risk:'medium',signal:'corroborated',rule:'도시 감시 기록과 전선 교전 승인을 같은 권한으로 해석하지 말 것',siteIds:['north-tokyo-branch','north-joint-command','north-distributed-nodes','north-lanzhou-perimeter'],points:[[78,438],[225,368],[384,397],[520,338]]},
           {id:'northern-false-rescue',className:'hostile',label:'DUPLICATED RESCUE SIGNAL',risk:'critical',signal:'spoofed',rule:'목소리가 아니라 두 노드에 남은 경로 지문을 대조할 것',siteIds:['north-beast-corridor','north-third-line','north-false-rescue-origin','north-joint-command'],points:[[922,92],[784,177],[574,438],[225,368]]},

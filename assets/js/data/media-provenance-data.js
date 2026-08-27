@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 184,
-    "referenced": 184,
+    "registered": 186,
+    "referenced": 186,
     "unreferenced": 0,
     "review": 150,
-    "managed": 34,
+    "managed": 36,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,17 +37,17 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 154,
+      "image": 156,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 16,
+      "PROJECT_GENERATED": 18,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 42,
+      "DELIVERY_DERIVATIVE": 44,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
       "RECONSTRUCTED": 10,
@@ -2322,6 +2322,8 @@
       "bytes": 1868076,
       "sha256": "a45da85eaed704a22dadd6b00c706b33401aadc7a4a6a215e8d59747c3981f05",
       "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -3049,6 +3051,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/great-black-forest_reconstructed-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/northern-front-duplicate-signal-reconstruction-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5522,
+      "sha256": "2d655f37571d8633f87943db89a7cf0243d435b7d850725b5ab77beed4175520",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/northern-front-duplicate-signal-reconstruction-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 19304,
+      "sha256": "80e991a3f6ef4689b8a05d46ae3c0fc1d83dce1f4bb9fe460683e0ea2e248b4b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

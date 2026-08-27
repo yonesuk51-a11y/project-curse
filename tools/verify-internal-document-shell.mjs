@@ -126,9 +126,9 @@ check('evidence:provenance-classes',['ORIGINAL','STABILIZED','RECONSTRUCTED','UN
 check('evidence:document-console',documentViewer.includes('function evidenceConsole(items)')&&documentViewer.includes('archive-evidence-card')&&documentViewer.includes('function openEvidence(index,trigger)'));
 check('evidence:comparison-viewer',documentViewer.includes("range.type='range'")&&documentViewer.includes('openEvidenceAsset(src,context={},trigger=null)')&&visualEvidenceCss.includes('.pc-evidence-compare'));
 check('evidence:cinematic-handoff',read('assets/js/core/record-cinematic-runtime.js').includes('pc-cinematic-evidence-control')&&read('assets/js/core/record-cinematic-runtime.js').includes("document.body.classList.contains('pc-evidence-open')"));
-check('media:manifest-twenty-one-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===21);
-check('media:provenance-all-assets',context.window.ProjectCurseMediaProvenance?.stats?.registered===184&&context.window.ProjectCurseMediaProvenance?.assets?.length===184);
-check('media:provenance-honest-review',context.window.ProjectCurseMediaProvenance?.stats?.review===150&&context.window.ProjectCurseMediaProvenance?.stats?.managed===34&&context.window.ProjectCurseMediaProvenance?.stats?.referenceExposure===0);
+check('media:manifest-twenty-two-sources',context.window.ProjectCurseMediaManifest?.version==='1.0.0'&&Object.keys(context.window.ProjectCurseMediaManifest?.assets||{}).length===22);
+check('media:provenance-all-assets',context.window.ProjectCurseMediaProvenance?.stats?.registered===186&&context.window.ProjectCurseMediaProvenance?.assets?.length===186);
+check('media:provenance-honest-review',context.window.ProjectCurseMediaProvenance?.stats?.review===150&&context.window.ProjectCurseMediaProvenance?.stats?.managed===36&&context.window.ProjectCurseMediaProvenance?.stats?.referenceExposure===0);
 check('media:provenance-audit-ui',archive.includes('function provenanceAuditMarkup()')&&archive.includes('출처 검토 기록 열기')&&read('assets/css/archive-consolidation.css').includes('.pc-archive-audit-link'));
 check('media:clearance-priority-queue',context.window.ProjectCurseMediaProvenance?.priorityQueue?.length===30&&context.window.ProjectCurseMediaProvenance?.stats?.priorityAudio===23&&context.window.ProjectCurseMediaProvenance?.stats?.priorityVideo===7);
 check('media:clearance-screen',index.includes('id="media-audit"')&&index.includes(`assets/css/media-clearance.css?v=${VERSION}`)&&index.includes(`assets/js/pages/media-clearance.js?v=${VERSION}`));
@@ -144,7 +144,8 @@ check('audio:persistent-context',audio.includes("setContext('document')")||docum
 check('audio:no-ambient-rewind',!audio.includes('audio.ambient.currentTime=0'));
 check('audio:visibility-resume',audio.includes("else if(ambientAllowed&&audioContext!=='cinematic') startAmbient()"));
 check('audio:cinematic-compatibility',audio.includes('stopMenuAmbient')&&audio.includes('resumeMenuAmbient')&&audio.includes('syncAudioState'));
-check('audio:semantic-profile-manifest',audioManifest.includes("version:'2.3.0'")&&audioManifest.includes("'archive.filter'")&&audioManifest.includes("'great-black-forest'")&&audioManifest.includes("'dead-zone'")&&audioManifest.includes("'scenario.arm'")&&audioManifest.includes("'recovery-scenario'"));
+check('audio:semantic-profile-manifest',audioManifest.includes("version:'2.3.1'")&&audioManifest.includes("'archive.filter'")&&audioManifest.includes("'great-black-forest'")&&audioManifest.includes("'dead-zone'")&&audioManifest.includes("'scenario.arm'")&&audioManifest.includes("'recovery-scenario'"));
+check('audio:northern-brief-cue',audioManifest.includes("'map.brief':Object.freeze({cue:'scan',bus:'interface',cooldown:700,gain:.42")&&mapRoomRuntime.includes('detailCueForSite(state.detailSite'));
 check('audio:ducking-and-bus-limit',audioController.includes('function duckAmbient')&&audioController.includes('function stopBus')&&audioController.includes('activeByBus'));
 check('audio:route-profile-sync',audioController.includes('projectcurse:screen-committed')&&audioController.includes('setProfile'));
 check('audio:regional-document-profile',documentViewer.includes('setProfile?.(doc.theme')&&documentViewer.includes("'great-black-forest':'region.forest'")&&documentViewer.includes("'dead-zone':'region.deadzone'"));
@@ -157,6 +158,7 @@ check('operation:root-loaded',index.includes(`assets/js/core/operation-state.js?
 const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
 check('map:drilldown-root-loaded',index.includes(`assets/js/data/regional-drilldown-data.js?v=${VERSION}`)&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
 check('map:eight-drilldowns',drilldowns.length===8&&drilldowns.some(detail=>detail.id==='eastasia-northern-front')&&drilldowns.some(detail=>detail.id==='europe-north-sea-blockade')&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=56,`${drilldowns.length} districts`);
+check('map:northern-front-mixed-media-brief',drilldowns.find(detail=>detail.id==='eastasia-northern-front')?.visual?.assetId==='VEA-NF-DUP-01'&&drilldowns.find(detail=>detail.id==='eastasia-northern-front')?.signalBrief?.lanes?.length===2&&mapRoomRuntime.includes('renderDetailBriefing')&&mapRoomRuntime.includes('pc-map-signal-wave'));
 check('map:four-level-navigation',mapRoomRuntime.includes('data-map-open-detail')&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('pc-map-breadcrumb'));
 check('map:verdict-site-sync',mapRoomRuntime.includes('resolveDetailSite')&&drilldowns.filter(detail=>detail.sites.some(site=>site.verdictStates)).length>=2);
 check('map:field-operation-boundary',mapRoomRuntime.includes('FIELD OPERATION COPY')&&mapRoomRuntime.includes('CENTRAL RECORD UNCHANGED')&&mapRoomRuntime.includes('pc-op-canon-boundary'));

@@ -3,7 +3,7 @@
   'use strict';
 
   root.ProjectCurseAudioManifest=Object.freeze({
-    version:'2.3.0',
+    version:'2.3.1',
     storageKey:'pc_audio_settings_v1',
     buses:Object.freeze({master:1,ambient:1,interface:1,record:1,alert:1}),
     profiles:Object.freeze({
@@ -41,6 +41,7 @@
       'menu.select':Object.freeze({cue:'confirm',bus:'interface',cooldown:220,gain:.44,duck:.7,duckMs:220,exclusive:false}),
       'map.layer':Object.freeze({cue:'analog',bus:'interface',cooldown:160,gain:.58,exclusive:true}),
       'map.signal':Object.freeze({cue:'marker',bus:'interface',cooldown:220,gain:.7,duck:.8,duckMs:200,exclusive:true}),
+      'map.brief':Object.freeze({cue:'scan',bus:'interface',cooldown:700,gain:.42,duck:.86,duckMs:220,exclusive:true}),
       'operation.step':Object.freeze({cue:'confirm',bus:'interface',cooldown:160,gain:.62,duck:.84,duckMs:160,exclusive:true}),
       'history.open':Object.freeze({cue:'page',bus:'record',cooldown:260,gain:.68,duck:.76,duckMs:300,exclusive:true}),
       'history.step':Object.freeze({cue:'confirm',bus:'interface',cooldown:180,gain:.56,exclusive:true}),

@@ -6,6 +6,7 @@
     'assets/resources/derived/great-black-forest_reconstructed-v1.png':{width:1536,height:1024,widths:[480,960]},
     'assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png':{width:1538,height:1023,widths:[480,960]},
     'assets/resources/derived/project-curse-world-keyart-concept-v1.png':{width:1672,height:941,widths:[480,960]},
+    'assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png':{width:1672,height:941,widths:[480,960]},
     'assets/resources/archive-enex/feral-classification/video-1092c1f2-shadow-victim.png':{width:1383,height:1137,widths:[480,960]},
     'assets/resources/archive-enex/feral-classification/image-241hs-angel-presence.png':{width:810,height:748,widths:[480,810]},
     'assets/resources/archive-enex/feral-classification/image-782cf-underground-occult-club.png':{width:819,height:748,widths:[480,819]},

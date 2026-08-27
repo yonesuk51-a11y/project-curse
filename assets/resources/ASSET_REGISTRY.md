@@ -67,6 +67,6 @@ Design and authentication metadata are owned by `assets/js/data/faction-mark-reg
 
 ## Responsive delivery derivatives
 
-`responsive/` contains 42 WebP delivery copies generated from 21 high-cost PNG or JPEG files. Each source has a 480px candidate and either a 960px candidate or a no-upscale candidate at its native width. The 2026-08-23 additions include 480px and 960px delivery copies for the terminal orientation key art; the preserved PNG remains the source.
+`responsive/` contains 44 WebP delivery copies generated from 22 high-cost PNG or JPEG files. Each source has a 480px candidate and either a 960px candidate or a no-upscale candidate at its native width. The 2026-08-28 additions include 480px and 960px delivery copies for the Northern Front reconstruction; the preserved PNG remains the source used for full inspection.
 
 These files do not replace, reclassify, or authorize removal of their sources. `assets/js/data/media-manifest.js` is the delivery relationship registry. Archive cards, document figures, and cinematic frames may use these candidates; the Visual Evidence Archive requests the preserved source file for original inspection and comparison.
