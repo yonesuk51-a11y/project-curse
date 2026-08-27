@@ -1,4 +1,4 @@
-// Project Curse 5.52.0 — hierarchical channel navigation, readable settings and local preferences.
+// Project Curse 5.53.0 — hierarchical channel navigation, readable settings and local preferences.
 (function(root){
   'use strict';
 

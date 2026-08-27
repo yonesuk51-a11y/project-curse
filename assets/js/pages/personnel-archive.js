@@ -1,4 +1,4 @@
-// Project Curse 5.52.0 — 2006 personnel snapshot, triage summary and direct dossier navigation.
+// Project Curse 5.53.0 — 2006 personnel snapshot, triage summary and direct dossier navigation.
 (function(){
   'use strict';
 

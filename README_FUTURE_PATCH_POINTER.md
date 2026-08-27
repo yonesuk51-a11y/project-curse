@@ -1,6 +1,6 @@
 # Future Patch Pointer
 
-Current baseline: `5.52.0 Story Entry & Personnel Navigation`
+Current baseline: `5.53.0 Archive Continuity & Navigation`
 
 Completed in this baseline:
 `3 Incident Entries / 6 Lore Channels + 1 Utility / 56 Direct Dossier Links / 0 Protected Record Changes`
@@ -8,6 +8,10 @@ Completed in this baseline:
 Primary scope:
 
 - 홈에 최초 노출·세계의 붕괴·현재 기록의 사건 중심 세 갈래 진입점 추가
+- 10단계 초심자 동선을 여섯 기록선으로 축약하고 유지보수 도구를 접힌 보조 채널로 이동
+- 2030년을 중앙 색인 동결로 정의하고 1975–2042 외곽 수신 기록과의 시간 경계 통일
+- 최초 기동 연출은 유지하면서 세션 복원·원기록 복귀·동작 감소 모드 대기 시간 단축
+- 사이트 설명·공유 대표 이미지·Open Graph·X 카드 메타데이터 추가
 - 단말 상태·상황 관제·세계 기록·세력 분석·기록보관소·인물 기록을 이야기 채널로 묶고 미디어 감사를 `U1` 도구로 분리
 - 연표 전환 표시를 실제 범위인 1975–2042와 아홉 시대로 정정
 - 인물 명부·상태·나이의 기준연도를 2006년으로 고정하고 2042년 현재 상태와 구분

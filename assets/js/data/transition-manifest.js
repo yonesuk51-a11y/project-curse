@@ -1,4 +1,4 @@
-// Project Curse 5.52.0 — channel identity and transition presets.
+// Project Curse 5.53.0 — channel identity and compact repeat-navigation transitions.
 (function(root){
   'use strict';
 
@@ -54,11 +54,11 @@
   };
 
   root.ProjectCurseTransitions=freeze({
-    version:'1.2.0',
+    version:'1.3.0',
     timings:{
-      desktop:{exit:360,cover:320,settle:190,enter:780},
-      mobile:{exit:300,cover:280,settle:150,enter:650},
-      reduced:{exit:0,cover:70,settle:40,enter:150}
+      desktop:{exit:220,cover:210,settle:90,enter:480},
+      mobile:{exit:180,cover:180,settle:70,enter:400},
+      reduced:{exit:0,cover:20,settle:0,enter:60}
     },
     screens,
     get(id){return screens[id]||screens['terminal-home'];}

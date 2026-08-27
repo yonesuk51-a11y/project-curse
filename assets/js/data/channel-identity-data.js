@@ -1,4 +1,4 @@
-// Project Curse 5.52.0 — six lore channels, one utility channel and adaptive density policy.
+// Project Curse 5.53.0 — six lore channels, one utility channel and adaptive density policy.
 (function(root){
   'use strict';
 

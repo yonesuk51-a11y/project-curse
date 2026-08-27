@@ -46,7 +46,7 @@
         <span><small>UNRESOLVED</small><b>${unresolved} SIGNALS</b></span>`;
 
       const primary=home.querySelector('.pc-terminal-primary p');
-      if(primary) primary.textContent=`${regions}개 관제 권역과 ${operations}개 특수 작전, ${records}개 공개 기록을 하나의 사건망에서 확인할 수 있다.`;
+      if(primary) primary.textContent=`현재 ${regions}개 권역에서 ${operations}개 작전 채널이 응답 중이다. 중앙 색인이 열어 둔 공개 기록은 ${records}건이다.`;
 
       const alertTitle=unreadVerdict?'새 현장 판정 기록':decision?.title||feed.alert.title;
       const alertPriority=unreadVerdict?'NEW RECORD DECRYPTED':decision?(operation.status==='deferred'?'LOCAL DECISION DEFERRED':'LOCAL VERDICT SAVED'):feed.alert.priority;

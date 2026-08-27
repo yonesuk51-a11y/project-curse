@@ -1,6 +1,6 @@
 # Personnel Source Notes
 
-Status: `5.52.0 / 2006 register snapshot / supplemental identity dossiers / provisional canon`
+Status: `5.53.0 / 2006 register snapshot / supplemental identity dossiers / provisional canon`
 
 ## 적용 범위
 

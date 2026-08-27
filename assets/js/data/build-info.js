@@ -1,4 +1,4 @@
-// Project Curse 5.52.0 — story entry and personnel navigation build manifest.
+// Project Curse 5.53.0 — archive continuity and repeat-navigation build manifest.
 (function(root){
   'use strict';
 
@@ -9,10 +9,10 @@
   }
 
   root.ProjectCurseBuild=freeze({
-    version:'5.52.0',
-    codename:'Story Entry & Personnel Navigation',
+    version:'5.53.0',
+    codename:'Archive Continuity & Navigation',
     schema:'project-curse-v43',
-    released:'2026-08-26',
+    released:'2026-08-27',
     screens:[
       {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},
       {id:'map-room',index:'01',label:'상황 관제',shortLabel:'관제'},
