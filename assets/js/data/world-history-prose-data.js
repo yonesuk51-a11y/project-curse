@@ -408,6 +408,13 @@
       alt:'합동 대응반 열 명과 비어 있는 열한 번째 의자가 회수 상자 앞에 배치된 분석 재구성 스케치',
       label:'INTERPRETIVE RECONSTRUCTION / UNLISTED ELEVENTH GROUP',
       caption:'연말 인원표·회수 상자 수·사진 속 빈 자리의 불일치를 한 화면에 겹친 분석 재구성이다. 실제 단체사진이나 열한 번째 인원의 존재 증거가 아니다.'
+    },
+    '2026-08-20-northern-reversal':{
+      src:'assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'폐허가 된 북부 산업도시의 콘크리트 차단선 뒤 대응조와 멀리 떨어진 두 지점에서 같은 자세로 반복되는 인물 형상을 담은 분석 재구성',
+      label:'INTERPRETIVE RECONSTRUCTION / DUPLICATED RESCUE SIGNAL',
+      caption:'복제 구조신호, 분산 계측 노드와 제3 차단선을 한 장면에 겹친 분석 재구성이다. 실제 전황 사진이나 대원 외형, 구조 요청자의 신원을 입증하지 않는다.'
     }
   };
 

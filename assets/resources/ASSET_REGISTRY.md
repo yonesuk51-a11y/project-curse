@@ -19,8 +19,9 @@ Evidence provenance and release permission are separate. An `ORIGINAL` Archive E
 | `derived/first-apostle-three-traces-reconstruction-concept-v1.png` | RECONSTRUCTED | First Apostle dossier | Three reported power traces composited into one analytical figure. It does not establish appearance, identity or a single entity. | `분석 재구성 / 대상 미확정` |
 | `derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png` | RECONSTRUCTED | `2006-12-31-aftermath` | Visualizes the discrepancy between ten listed personnel, recovery cases and an unlisted eleventh place. It is not a recovered group photograph. | `분석 재구성 / 실제 단체사진 아님` |
 | `derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png` | RECONSTRUCTED | N.H.C faction dossier | Combines separate forward-base personnel and daily-life records into one analytical scene. It does not establish faces, unit composition or sleeve insignia. | `인원 재구성 / 실제 단체사진 아님` |
+| `derived/northern-front-duplicate-signal-reconstruction-concept-v1.png` | RECONSTRUCTED | `2026-08-20-northern-reversal` | Generated from the Northern Front review and duplicated-rescue-signal brief. The `지옥` folder informed only low-light mood, scale and texture; no reference file, character, sign or exact composition was copied into the public asset. | `분석 재구성 / 실제 전황 사진 아님` |
 
-Generation mode: built-in image generation. Creation dates: 2026-08-16 and 2026-08-23. The images intentionally contain no logos, watermarks, readable text, or direct depictions of protected archive originals.
+Generation mode: built-in image generation. Creation dates: 2026-08-16, 2026-08-23 and 2026-08-28. The images intentionally contain no logos, watermarks, readable text, or direct depictions of protected archive originals.
 
 Originals under `assets/resources/` and `assets/resources/archive-enex/` retain their existing provenance. Do not infer RECONSTRUCTED status for those files from this registry.
 
@@ -37,6 +38,7 @@ Originals under `assets/resources/` and `assets/resources/archive-enex/` retain 
 | `VEA-AP1-TRACE-01` | `derived/first-apostle-three-traces-reconstruction-concept-v1.png` | RECONSTRUCTED | Not registered | Subject identity and single-entity status remain unresolved |
 | `VEA-JRU-11-01` | `derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png` | RECONSTRUCTED | Not registered | Personnel-count discrepancy only; no original group photo |
 | `VEA-NHC-FB-01` | `derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png` | RECONSTRUCTED | Not registered | Personnel identities, unit roster and insignia remain unresolved |
+| `VEA-NF-DUP-01` | `derived/northern-front-duplicate-signal-reconstruction-concept-v1.png` | RECONSTRUCTED | Not registered | Duplicated-signal relationship only; personnel and caller identities remain unresolved |
 | `VEA-FER-CLS-A` | `8bb53a89c3baf48d8e3ac2b180f80d0b.webp` | UNVERIFIED | `archive-enex/feral-classification/114223e8cf8c8ea96c6d4ffca6cae2ce.webp` | Duplicate source check |
 | `VEA-FER-CLS-B` | `archive-enex/feral-classification/114223e8cf8c8ea96c6d4ffca6cae2ce.webp` | ORIGINAL | `8bb53a89c3baf48d8e3ac2b180f80d0b.webp` | Duplicate source check |
 | `VEA-FER-241HS` | `archive-enex/feral-classification/image-241hs-angel-presence.png` | ORIGINAL | `83d311da1ab7310a567c6023f6151e6c.webp` | Source frame to protected legacy crop |

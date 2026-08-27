@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 183,
-    "referenced": 183,
+    "registered": 184,
+    "referenced": 184,
     "unreferenced": 0,
     "review": 150,
-    "managed": 33,
+    "managed": 34,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 153,
+      "image": 154,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 15,
+      "PROJECT_GENERATED": 16,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
       "DELIVERY_DERIVATIVE": 42,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 9,
+      "RECONSTRUCTED": 10,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2303,6 +2303,27 @@
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2026년 북부전선 전황검토·복제 구조신호 보고 기반 분석 재구성",
+      "handling": "실제 전황 사진, 대원 외형이나 구조 요청자의 신원 증거로 표시 금지",
+      "credit": "Project Curse Northern Front duplicated rescue signal brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1868076,
+      "sha256": "a45da85eaed704a22dadd6b00c706b33401aadc7a4a6a215e8d59747c3981f05",
+      "usedBy": [
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-package.mjs"

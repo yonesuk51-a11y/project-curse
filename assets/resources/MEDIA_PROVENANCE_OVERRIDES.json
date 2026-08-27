@@ -24,7 +24,15 @@
     "assets/resources/derived/nhc-squad-group-photo-candidate-a-hell.png",
     "assets/resources/derived/nhc-squad-group-photo-candidate-b-pictures.png",
     "assets/resources/derived/nhc-squad-group-photo-candidate-c-cinematic.png",
-    "assets/resources/derived/nhc-squad-group-photo-candidate-d-archive.png"
+    "assets/resources/derived/nhc-squad-group-photo-candidate-d-archive.png",
+    "assets/resources/derived/project-curse-unnamed-swordsman-candidate-a-refined-v1.png",
+    "assets/resources/derived/project-curse-unnamed-swordsman-candidate-b-field-operator-v1.png",
+    "assets/resources/derived/project-curse-unnamed-swordsman-candidate-c-hell-v1.png",
+    "assets/resources/derived/project-curse-unnamed-swordsman-candidate-d-recovered-v1.png",
+    "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-a-recon-v1.png",
+    "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-b-direct-action-v1.png",
+    "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-c-hell-response-v1.png",
+    "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-d-blacksite-v1.png"
   ],
   "assets": {
     "assets/resources/derived/great-black-forest_reconstructed-v1.png": {
@@ -90,6 +98,14 @@
       "release": "PROJECT_GENERATED",
       "source": "N.H.C 전진기지 생활기록·인원 명부 기반 분석 재구성",
       "handling": "실제 단체사진, 개인 외형, 부대 편제나 소매 표식의 증거로 표시 금지"
+    },
+    "assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png": {
+      "credit": "Project Curse Northern Front duplicated rescue signal brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2026년 북부전선 전황검토·복제 구조신호 보고 기반 분석 재구성",
+      "handling": "실제 전황 사진, 대원 외형이나 구조 요청자의 신원 증거로 표시 금지"
     }
   }
 }
