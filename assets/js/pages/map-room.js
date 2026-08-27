@@ -153,6 +153,7 @@
     const detailForMarker=marker=>{
       const map={
         'tokyo':'eastasia-northern-front','lanzhou':'eastasia-northern-front','northern-front':'eastasia-northern-front',
+        'blood-lake-site':'europe-north-sea-blockade','fhc-europe':'europe-north-sea-blockade',
         'gbf-core':'gbf-inner-refuges','monsur-church':'gbf-western-marches','unlit-fortress':'gbf-western-marches','black-river':'gbf-western-marches','southern-coast':'gbf-coastal-belt',
         'dead-interior':'deadzone-return-corridor','returned-coast':'deadzone-return-corridor','former-us-branch':'deadzone-kingdom-graves'
       };
@@ -417,6 +418,11 @@
         <path class="pc-detail-terrain pc-detail-terrain--front" d="M0 84 C142 38 238 104 365 62 S614 98 728 47 884 76 1000 32 L1000 540 0 540 Z"></path>
         <g class="pc-detail-front-grid"><path d="M40 463 L198 381 344 408 501 334 646 286 788 183 958 84"></path><path d="M119 510 L263 420 431 449 566 366 731 321 903 202"></path><path d="M176 78 V475 M356 42 V458 M538 68 V407 M716 31 V338 M875 56 V246"></path></g>
         <path class="pc-detail-front-barrier" d="M598 430 C666 365 702 297 764 248 S858 161 954 104"></path>`;
+      if(detail.terrain==='northsea') return `
+        <path class="pc-detail-terrain pc-detail-terrain--northsea" d="M0 0 H1000 V540 H0 Z"></path>
+        <path class="pc-detail-northsea-coast" d="M0 438 C128 391 213 417 316 354 S503 322 609 253 824 224 1000 128 L1000 540 0 540 Z"></path>
+        <g class="pc-detail-northsea-current"><path d="M41 104 C196 52 289 143 432 97 S702 75 954 31"></path><path d="M32 214 C194 168 304 232 452 189 S737 173 972 92"></path><path d="M167 312 C302 260 397 311 536 270 S778 252 955 181"></path></g>
+        <path class="pc-detail-northsea-blockade" d="M526 83 C626 45 765 62 856 126 S917 277 847 349"></path>`;
       if(detail.terrain==='coast') return `
         <path class="pc-detail-terrain pc-detail-terrain--forest" d="M0 40 C165 102 253 38 393 92 S664 72 1000 128 L1000 540 0 540 Z"></path>
         <path class="pc-detail-terrain pc-detail-terrain--water" d="M0 454 C146 404 244 470 365 419 S590 392 712 326 863 292 1000 226 L1000 540 0 540 Z"></path>

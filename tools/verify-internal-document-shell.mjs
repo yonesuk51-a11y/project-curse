@@ -156,12 +156,12 @@ check('operation:document-boundary-ui',documentViewer.includes('archive-scenario
 check('operation:root-loaded',index.includes(`assets/js/core/operation-state.js?v=${VERSION}`)&&index.indexOf('assets/js/core/operation-state.js')>index.indexOf('assets/js/core/audio-controller.js')&&index.indexOf('assets/js/core/operation-state.js')<index.indexOf('assets/js/core/record-cinematic-runtime.js'));
 const drilldowns=context.window.ProjectCurseRegionalDrilldown?.districts||[];
 check('map:drilldown-root-loaded',index.includes(`assets/js/data/regional-drilldown-data.js?v=${VERSION}`)&&index.indexOf('assets/js/data/regional-drilldown-data.js')<index.indexOf('assets/js/data/map-room-data.js'));
-check('map:seven-drilldowns',drilldowns.length===7&&drilldowns.some(detail=>detail.id==='eastasia-northern-front')&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=47,`${drilldowns.length} districts`);
+check('map:eight-drilldowns',drilldowns.length===8&&drilldowns.some(detail=>detail.id==='eastasia-northern-front')&&drilldowns.some(detail=>detail.id==='europe-north-sea-blockade')&&drilldowns.reduce((total,detail)=>total+detail.sites.length,0)>=56,`${drilldowns.length} districts`);
 check('map:four-level-navigation',mapRoomRuntime.includes('data-map-open-detail')&&mapRoomRuntime.includes('data-map-detail-site')&&mapRoomRuntime.includes('pc-map-breadcrumb'));
 check('map:verdict-site-sync',mapRoomRuntime.includes('resolveDetailSite')&&drilldowns.filter(detail=>detail.sites.some(site=>site.verdictStates)).length>=2);
 check('map:field-operation-boundary',mapRoomRuntime.includes('FIELD OPERATION COPY')&&mapRoomRuntime.includes('CENTRAL RECORD UNCHANGED')&&mapRoomRuntime.includes('pc-op-canon-boundary'));
 const detailRoutes=drilldowns.flatMap(detail=>detail.routes.map(route=>({detail,route})));
-check('map:twenty-two-route-traces',detailRoutes.length===22&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
+check('map:twenty-five-route-traces',detailRoutes.length===25&&detailRoutes.every(({route})=>route.siteIds?.length>=2&&route.risk&&route.signal&&route.rule),detailRoutes.length);
 check('map:route-focus-and-layers',mapRoomRuntime.includes('routesForSite')&&mapRoomRuntime.includes('renderDetailOverlays')&&mapRoomRuntime.includes('data-map-detail-layer')&&mapRoomRuntime.includes('data-map-route-step'));
 check('scenario:reactive-consequence-resolver',pilgrimageData.includes('variants:')&&pilgrimageState.includes('function matchesCondition(condition,state)')&&pilgrimageState.includes('function resolveEnding(')&&verdictState.includes('resolveEnding?.(entry.scenarioId,entry.endingId,snapshot)'));
 check('scenario:sealed-choice-feedback',pilgrimageRuntime.includes('function renderFeedback()')&&pilgrimageRuntime.includes('pendingFeedback')&&pilgrimageCss.includes('.pc-pilgrimage-feedback'));

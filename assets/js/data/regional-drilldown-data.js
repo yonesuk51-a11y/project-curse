@@ -34,6 +34,29 @@
         ]
       },
       {
+        id:'europe-north-sea-blockade',region:'europe',terrain:'northsea',
+        label:'북해 피의 호수 봉쇄축',code:'EUROPE / BLOOD LAKE BLOCKADE',status:'RESIDUAL / BLOCKADE ACTIVE',confidence:'84%',
+        description:'1986년 유닛2의 진입 경로와 F.H.C 회수 기록, 후대 북해 봉쇄선을 겹쳐 놓은 사건권. 현장 위치 일부가 검열돼 있으므로 지점 간 거리는 항법값이 아니다.',
+        warning:'호수의 기원과 실종 인원의 최종 상태는 확인되지 않았다. 잔류 반응이 있다는 사실을 호수가 이동하거나 증식했다는 결론으로 확대하지 말 것.',
+        operation:'op-immortality',
+        routes:[
+          {id:'immortality-unit-two',className:'hostile',label:'UNIT 2 / LAST TRANSMISSION',risk:'critical',signal:'recovered',rule:'복원된 시간 순서는 확인 경로이며 안전한 재진입 경로가 아니다',siteIds:['europe-entry-s','europe-abandoned-tent','europe-river-reaction','europe-blood-lake','europe-ipd-split','europe-last-signal'],points:[[76,433],[239,365],[407,302],[596,229],[742,286],[850,351]]},
+          {id:'fhc-recovery-priority',className:'broken',label:'F.H.C RECOVERY PRIORITY',risk:'critical',signal:'partial',rule:'회수 순서는 생존자 구조보다 표본과 의식 잔류물을 우선한 기관 기록이다',siteIds:['europe-seventh-line','europe-last-signal','europe-blood-lake','europe-analysis-zone'],points:[[890,424],[850,351],[596,229],[904,151]]},
+          {id:'north-sea-blockade',className:'front',label:'NORTH SEA BLOCKADE AXIS',risk:'high',signal:'observed',rule:'봉쇄 유지가 사건 종결이나 현상 위치의 고정을 뜻하지 않는다',siteIds:['europe-analysis-zone','europe-blockade-line','europe-blood-lake'],points:[[904,151],[742,92],[596,229]]}
+        ],
+        sites:[
+          {id:'europe-entry-s',x:76,y:433,type:'facility',label:'유닛2 S지점',meta:'16:10 / 마렌 예거트·요나스 밀로 진입',status:'진입 기록 확인',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality',history:'1986-07-25-immortality'},
+          {id:'europe-abandoned-tent',x:239,y:365,type:'incident',label:'버려진 텐트',meta:'빈 내부·혈흔·변형된 영상 문장',status:'현장 의미 미확인',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality'},
+          {id:'europe-river-reaction',x:407,y:302,type:'anomaly',label:'강변 응고 반응점',meta:'혈액과 유사한 점도·응고 반응 관측',status:'접촉 금지',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality'},
+          {id:'europe-blood-lake',x:596,y:229,type:'incident',label:'피의 호수 사건권',meta:'혈액성 수면·대형 실루엣·인식표 회수',status:'RESIDUAL',confidence:'confirmed',records:['Immortality_860201','Unknown_Record2_860205'],operation:'op-immortality',incident:'evt-blood-lake'},
+          {id:'europe-ipd-split',x:742,y:286,type:'signal',label:'I.P.D 분리 신호권',meta:'밀로의 장치가 복수 좌표에서 활성화',status:'신원 연속성 불명',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality'},
+          {id:'europe-last-signal',x:850,y:351,type:'unknown',label:'마지막 영상 신호',meta:'18:56 마지막 전송·19:00 임무 완료 처리',status:'인원 상태 미확인',confidence:'disputed',records:['Immortality_860201'],operation:'op-immortality'},
+          {id:'europe-seventh-line',x:890,y:424,type:'line',label:'7분대 회수 접근선',meta:'18:51 이동 기록·세부 좌표 삭제',status:'경로 부분 복원',confidence:'estimated',records:['Immortality_860201'],operation:'op-immortality'},
+          {id:'europe-analysis-zone',x:904,y:151,type:'facility',label:'F.H.C 유럽 분석권',meta:'BL-088 표본·회수 사체·생체연구 보관계통',status:'부분 가동',confidence:'observed',records:['Unknown_Record2_860205'],history:'1986-07-25-immortality'},
+          {id:'europe-blockade-line',x:742,y:92,type:'line',label:'북해 봉쇄 감시선',meta:'피의 호수 잔류 반응 관측축',status:'봉쇄 유지',confidence:'confirmed',history:'1986-07-25-immortality'}
+        ]
+      },
+      {
         id:'gbf-western-marches',region:'southamerica',terrain:'forest',
         label:'서부 순례 회랑',code:'GBF / WESTERN MARCHES',status:'ROUTE OVERLAP',confidence:'31%',
         description:'순례자 증언과 몬수르 교회의 종 운반 기록을 겹쳐 복원한 서부 진입로. 같은 길이 서로 다른 목적지로 이어진다.',
