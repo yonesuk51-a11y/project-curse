@@ -51,7 +51,7 @@ const dataState=await desktop.page.evaluate(()=>(
     ranks:window.ProjectCurseMediaProvenance?.priorityQueue?.map(item=>item.rank).join('|')
   }
 ));
-check('desktop:data-ledger',dataState.registered===188&&dataState.review===150&&dataState.managed===38,JSON.stringify(dataState));
+check('desktop:data-ledger',dataState.registered===192&&dataState.review===150&&dataState.managed===42,JSON.stringify(dataState));
 check('desktop:priority-thirty',dataState.priority===30&&dataState.priorityAudio===23&&dataState.priorityVideo===7&&dataState.ranks.startsWith('1|2|3')&&dataState.ranks.endsWith('|30'),JSON.stringify(dataState));
 check('desktop:reference-boundary',dataState.exposure===0,JSON.stringify(dataState));
 
@@ -76,14 +76,14 @@ await desktop.page.locator('[data-media-search]').fill('pc5152am_menu_old_comput
 check('desktop:priority-search',await desktop.page.locator('[data-media-path]').count()===1);
 await desktop.page.locator('[data-media-scope="all"]').click();
 await desktop.page.locator('[data-media-search]').fill('');
-check('desktop:all-assets',await desktop.page.locator('[data-media-path]').count()===188);
+check('desktop:all-assets',await desktop.page.locator('[data-media-path]').count()===192);
 await desktop.page.locator('[data-media-kind="image"]').click();
-check('desktop:image-filter',await desktop.page.locator('[data-media-path]').count()===158);
+check('desktop:image-filter',await desktop.page.locator('[data-media-path]').count()===162);
 await desktop.page.locator('[data-media-kind="all"]').click();
 await desktop.page.locator('[data-media-release="review"]').click();
 check('desktop:review-filter',await desktop.page.locator('[data-media-path]').count()===150);
 await desktop.page.locator('[data-media-release="managed"]').click();
-check('desktop:managed-filter',await desktop.page.locator('[data-media-path]').count()===38);
+check('desktop:managed-filter',await desktop.page.locator('[data-media-path]').count()===42);
 
 await desktop.page.locator('[data-media-scope="reference"]').click();
 const reference=await desktop.page.evaluate(()=>(

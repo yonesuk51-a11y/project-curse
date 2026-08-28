@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 188,
-    "referenced": 188,
+    "registered": 192,
+    "referenced": 192,
     "unreferenced": 0,
     "review": 150,
-    "managed": 38,
+    "managed": 42,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,17 +37,17 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 158,
+      "image": 162,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 20,
+      "PROJECT_GENERATED": 24,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 44,
+      "DELIVERY_DERIVATIVE": 48,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
       "RECONSTRUCTED": 12,
@@ -2218,10 +2218,12 @@
       "bytes": 1954036,
       "sha256": "c98fdfa8ae59ad086e1f7aae951aa99169819d355219636a0d8465d74b5b243c",
       "usedBy": [
+        "assets/js/data/media-manifest.js",
         "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-internal-document-shell.mjs",
         "tools/verify-package.mjs"
       ],
       "referenced": true,
@@ -2348,10 +2350,12 @@
       "bytes": 2180694,
       "sha256": "f1854c3d8d1102129caa1c5270794158b745eba5abd711749e6ae5137947cb24",
       "usedBy": [
+        "assets/js/data/media-manifest.js",
         "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-internal-document-shell.mjs",
         "tools/verify-package.mjs"
       ],
       "referenced": true,
@@ -3070,6 +3074,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/dead-zone-silent-interior-map-termination-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10440,
+      "sha256": "19004c219a54759c3e38f0389722573e6408e7bdd11d75e7b8d292e9e25bb39d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/dead-zone-silent-interior-map-termination-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 35030,
+      "sha256": "b437aadf2af07bd138c74e8764dd0139552802849f9676a4b8ba81ee12d41841",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/great-black-forest_reconstructed-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -3098,6 +3134,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/great-black-forest_reconstructed-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12226,
+      "sha256": "defda4cae6e35635b487c6e6995221b227428fed5b00ca9da244a66c85521d20",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 44056,
+      "sha256": "939e00fcc4980baa3a23bdf293407ca883056e53171ba2b5428a7b471c2545de",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

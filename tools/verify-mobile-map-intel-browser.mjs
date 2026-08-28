@@ -246,6 +246,8 @@ await deepLink.page.locator('.pc-map-detail-intel').screenshot({path:deepLinkSho
     {
       hash:location.hash,
       source:document.querySelector('.pc-map-visual-brief img')?.dataset.pcMediaSource,
+      currentSrc:document.querySelector('.pc-map-visual-brief img')?.currentSrc,
+      sourceSet:document.querySelector('.pc-map-visual-brief img')?.srcset,
       title:document.querySelector('.pc-map-visual-brief figcaption b')?.textContent.trim(),
       signal:document.querySelector('.pc-map-signal-brief h4')?.textContent.trim(),
       loaded:document.querySelector('.pc-map-visual-brief img')?.naturalWidth>0,
@@ -253,7 +255,7 @@ await deepLink.page.locator('.pc-map-detail-intel').screenshot({path:deepLinkSho
       overflow:document.documentElement.scrollWidth-innerWidth
     }
   ));
-  check('deep-link:north-sea-recovered-briefing',northSeaBrief.hash==='#map-room/detail/europe-north-sea-blockade/europe-blood-lake'&&northSeaBrief.source?.includes('north-sea-blood-lake-blockade')&&northSeaBrief.title==='북해 피의 호수 봉쇄선 재구성'&&northSeaBrief.signal==='회수 접근 / 마지막 신호 역전'&&northSeaBrief.loaded&&northSeaBrief.label?.includes('현장 원본 아님'),JSON.stringify(northSeaBrief));
+  check('deep-link:north-sea-recovered-briefing',northSeaBrief.hash==='#map-room/detail/europe-north-sea-blockade/europe-blood-lake'&&northSeaBrief.source?.includes('north-sea-blood-lake-blockade')&&northSeaBrief.currentSrc?.includes('/responsive/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1-w480.webp')&&northSeaBrief.sourceSet?.includes('-w480.webp 480w')&&northSeaBrief.title==='북해 피의 호수 봉쇄선 재구성'&&northSeaBrief.signal==='회수 접근 / 마지막 신호 역전'&&northSeaBrief.loaded&&northSeaBrief.label?.includes('현장 원본 아님'),JSON.stringify(northSeaBrief));
   check('deep-link:north-sea-no-overflow',northSeaBrief.overflow<=0,JSON.stringify(northSeaBrief));
 
   await deepLink.page.goto(urlForHash('map-room/detail/deadzone-silent-interior/silent-force-boundary'),{waitUntil:'networkidle'});
@@ -263,6 +265,8 @@ await deepLink.page.locator('.pc-map-detail-intel').screenshot({path:deepLinkSho
     {
       hash:location.hash,
       source:document.querySelector('.pc-map-visual-brief img')?.dataset.pcMediaSource,
+      currentSrc:document.querySelector('.pc-map-visual-brief img')?.currentSrc,
+      sourceSet:document.querySelector('.pc-map-visual-brief img')?.srcset,
       title:document.querySelector('.pc-map-visual-brief figcaption b')?.textContent.trim(),
       signal:document.querySelector('.pc-map-signal-brief h4')?.textContent.trim(),
       loaded:document.querySelector('.pc-map-visual-brief img')?.naturalWidth>0,
@@ -270,7 +274,7 @@ await deepLink.page.locator('.pc-map-detail-intel').screenshot({path:deepLinkSho
       overflow:document.documentElement.scrollWidth-innerWidth
     }
   ));
-  check('deep-link:silent-interior-recovered-briefing',silentBrief.hash==='#map-room/detail/deadzone-silent-interior/silent-force-boundary'&&silentBrief.source?.includes('dead-zone-silent-interior-map-termination')&&silentBrief.title==='내륙 지도 종결선 재구성'&&silentBrief.signal==='자기 목소리 / 좌표가 된 통신 시각'&&silentBrief.loaded&&silentBrief.label?.includes('항법 자료 아님'),JSON.stringify(silentBrief));
+  check('deep-link:silent-interior-recovered-briefing',silentBrief.hash==='#map-room/detail/deadzone-silent-interior/silent-force-boundary'&&silentBrief.source?.includes('dead-zone-silent-interior-map-termination')&&silentBrief.currentSrc?.includes('/responsive/derived/dead-zone-silent-interior-map-termination-concept-v1-w480.webp')&&silentBrief.sourceSet?.includes('-w480.webp 480w')&&silentBrief.title==='내륙 지도 종결선 재구성'&&silentBrief.signal==='자기 목소리 / 좌표가 된 통신 시각'&&silentBrief.loaded&&silentBrief.label?.includes('항법 자료 아님'),JSON.stringify(silentBrief));
   check('deep-link:silent-interior-no-overflow',silentBrief.overflow<=0,JSON.stringify(silentBrief));
 
   await deepLink.page.locator('[data-map-landing]').click();
