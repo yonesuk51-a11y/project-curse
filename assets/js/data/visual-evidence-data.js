@@ -41,6 +41,12 @@
     'assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png':Object.freeze({
       assetId:'VEA-NF-DUP-01',className:'RECONSTRUCTED',source:'2026년 북부전선 전황검토·복제 구조신호 보고 기반 분석 재구성',date:'2026-08-28',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'복제 구조신호, 분산 계측 노드와 제3 차단선의 관계를 한 장면에 합성했다. 실제 전황 사진, 대원 외형이나 구조 요청자의 신원을 확정하지 않는다.'
     }),
+    'assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png':Object.freeze({
+      assetId:'VEA-NS-BL-01',className:'RECONSTRUCTED',source:'북해 피의 호수 사건·후대 봉쇄 감시 기록 기반 분석 재구성',date:'2026-08-28',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'유닛2 원기록과 후대 봉쇄 감시선을 한 장면에 합성했다. 실제 현장 사진, 인원 외형이나 호수의 기원을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png':Object.freeze({
+      assetId:'VEA-DZ-SI-01',className:'RECONSTRUCTED',source:'데드존 최후 지도국·검은 고속도로·지도 종결선 진술 기반 분석 재구성',date:'2026-08-28',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'서로 다른 무응답 내륙 진술을 한 시야에 합성했다. 실제 항법 사진, 유효 경로 또는 내륙 세력의 위치로 사용하지 않는다.'
+    }),
     'assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp':Object.freeze({
       assetId:'VEA-FER-CLS-A',className:'UNVERIFIED',source:'기존 공개 기록 자산 묶음',date:'UNKNOWN',integrity:'LEGACY COPY',originalState:'available',handling:'동일한 분류 도식의 Archive ENEX 사본과 픽셀 구성을 대조할 수 있다.',comparison:Object.freeze({src:'assets/resources/archive-enex/feral-classification/114223e8cf8c8ea96c6d4ffca6cae2ce.webp',label:'ARCHIVE ENEX SOURCE',className:'ORIGINAL',relationship:'DUPLICATE SOURCE CHECK'})
     }),

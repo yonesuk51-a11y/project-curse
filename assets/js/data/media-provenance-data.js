@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 186,
-    "referenced": 186,
+    "registered": 188,
+    "referenced": 188,
     "unreferenced": 0,
     "review": 150,
-    "managed": 36,
+    "managed": 38,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 156,
+      "image": 158,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 18,
+      "PROJECT_GENERATED": 20,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
       "DELIVERY_DERIVATIVE": 44,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 10,
+      "RECONSTRUCTED": 12,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2151,6 +2151,7 @@
       "sha256": "274c906226a985dc5e5ea698abe974dc8d76cdb56edcf63acad968e7da7dfb87",
       "usedBy": [
         "assets/js/data/field-dossier-data.js",
+        "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
@@ -2172,6 +2173,7 @@
       "sha256": "8d2f4e1fc13ac4f9e09f4caaf280203092ac5cc1d1102d5bfd5d8a01df96ee9e",
       "usedBy": [
         "assets/js/data/field-dossier-data.js",
+        "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
@@ -2195,6 +2197,28 @@
         "assets/js/data/archive-registry.js",
         "assets/js/data/field-dossier-data.js",
         "assets/js/data/media-manifest.js",
+        "assets/js/data/regional-drilldown-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "데드존 최후 지도국·검은 고속도로·지도 종결선 진술 기반 분석 재구성",
+      "handling": "실제 항법 사진, 유효 경로 또는 내륙 세력 위치 증거로 표시 금지",
+      "credit": "Project Curse Dead Zone silent-interior map-termination brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1954036,
+      "sha256": "c98fdfa8ae59ad086e1f7aae951aa99169819d355219636a0d8465d74b5b243c",
+      "usedBy": [
+        "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
@@ -2239,6 +2263,7 @@
         "assets/js/data/archive-registry.js",
         "assets/js/data/field-dossier-data.js",
         "assets/js/data/media-manifest.js",
+        "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
@@ -2260,6 +2285,7 @@
       "sha256": "b70f7e97a07a2dd46c21cc344538efbad017510471670de62bda0c4fd1f7b2f1",
       "usedBy": [
         "assets/js/data/field-dossier-data.js",
+        "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
@@ -2302,6 +2328,27 @@
       "sha256": "d17bfc89c540eb57aeea0e0d40b80f4adb247502730049945cc64bd357233cef",
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "북해 피의 호수 사건·후대 봉쇄 감시 기록 기반 분석 재구성",
+      "handling": "실제 현장 사진, 인원 외형이나 호수의 기원 증거로 표시 금지",
+      "credit": "Project Curse North Sea blood-lake blockade brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2180694,
+      "sha256": "f1854c3d8d1102129caa1c5270794158b745eba5abd711749e6ae5137947cb24",
+      "usedBy": [
+        "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",

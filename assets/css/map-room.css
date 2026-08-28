@@ -237,6 +237,41 @@
 .pc-map-theater-utilities b { color: rgba(204, 210, 208, .3); font-size: 9px; font-weight: 500; text-align: right; }
 .pc-map-theater-utilities button:hover,.pc-map-theater-utilities button:focus-visible { border-color: rgba(190, 71, 80, .46); color: #fff; outline: 0; background: rgba(91, 24, 30, .2); }
 
+.pc-map-recent {
+  max-width: 1180px;
+  margin: 18px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(192, 199, 197, .09);
+}
+
+.pc-map-recent > header { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 9px; }
+.pc-map-recent > header span { display: block; color: rgba(100, 158, 174, .7); font: 700 7px/1 ui-monospace, Consolas, monospace; letter-spacing: .16em; }
+.pc-map-recent > header h4 { margin: 5px 0 0; color: rgba(225, 230, 228, .78); font-size: 13px; line-height: 1.2; }
+.pc-map-recent > header p { margin: 0; color: rgba(201, 208, 206, .28); font-size: 8px; }
+
+.pc-map-recent-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+.pc-map-recent-list button {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 64px;
+  padding: 10px 11px;
+  overflow: hidden;
+  border: 1px solid rgba(117, 151, 158, .12);
+  color: rgba(211, 218, 216, .66);
+  background: linear-gradient(135deg, rgba(25, 43, 47, .32), rgba(7, 10, 11, .82));
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .22s ease, color .22s ease, background .22s ease, transform .22s ease;
+}
+.pc-map-recent-list button > small { color: rgba(104, 164, 180, .66); font: 700 7px/1 ui-monospace, Consolas, monospace; }
+.pc-map-recent-list button > span { min-width: 0; }
+.pc-map-recent-list button b { display: block; overflow: hidden; color: #d9dedd; font-size: 10px; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+.pc-map-recent-list button em { display: block; margin-top: 5px; overflow: hidden; color: rgba(197, 205, 203, .3); font: normal 600 7px/1.35 ui-monospace, Consolas, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.pc-map-recent-list button > i { color: rgba(105, 166, 181, .48); font: normal 700 6px/1 ui-monospace, Consolas, monospace; letter-spacing: .08em; white-space: nowrap; }
+.pc-map-recent-list button:hover,.pc-map-recent-list button:focus-visible { border-color: rgba(92, 154, 171, .42); color: #fff; outline: 0; background: linear-gradient(135deg, rgba(29, 67, 76, .38), rgba(8, 12, 13, .94)); transform: translateY(-2px); }
+
 .pc-map-workspace-head {
   display: flex;
   align-items: center;
@@ -981,6 +1016,7 @@
   .pc-map-theater-intro p { max-width: 620px; }
   .pc-map-theater-grid { grid-template-columns: 1fr; }
   .pc-map-theater-card { min-height: 220px; }
+  .pc-map-recent-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pc-map-workspace-head { padding-right: 18px; padding-left: 18px; }
   .pc-map-mode-switch { grid-template-columns: repeat(3, 1fr); padding: 0 18px; }
   .pc-map-index-bar { padding: 8px 12px 0; }
@@ -1062,6 +1098,11 @@
   .pc-map-theater-utilities { grid-template-columns: 1fr; }
   .pc-map-theater-utilities button { grid-template-columns: 28px auto minmax(0, 1fr); }
   .pc-map-theater-utilities b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pc-map-recent { margin-top: 15px; padding-top: 13px; }
+  .pc-map-recent > header { align-items: start; }
+  .pc-map-recent > header p { max-width: 110px; text-align: right; }
+  .pc-map-recent-list { grid-template-columns: 1fr; }
+  .pc-map-recent-list button { min-height: 58px; }
   .pc-map-workspace-head { padding: 8px 12px; }
   .pc-map-workspace-head p { display: none; }
   .pc-map-mode-switch { padding: 0; }
@@ -1130,5 +1171,6 @@
   .pc-map-visual-frame>i { animation: none; }
   .pc-map-signal-index,.pc-map-index-scrim,.pc-map-index-toggle>em { transition:none; }
   .pc-map-theater-card,.pc-map-theater-card::after { transition:none; }
+  .pc-map-recent-list button { transition:none; }
   .pc-map-visual-open:hover .pc-map-visual-frame.pc-media-ready>img,.pc-map-visual-open:focus-visible .pc-map-visual-frame.pc-media-ready>img{transform:none}
 }

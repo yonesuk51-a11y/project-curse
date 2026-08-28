@@ -106,6 +106,22 @@
       "release": "PROJECT_GENERATED",
       "source": "2026년 북부전선 전황검토·복제 구조신호 보고 기반 분석 재구성",
       "handling": "실제 전황 사진, 대원 외형이나 구조 요청자의 신원 증거로 표시 금지"
+    },
+    "assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png": {
+      "credit": "Project Curse North Sea blood-lake blockade brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "북해 피의 호수 사건·후대 봉쇄 감시 기록 기반 분석 재구성",
+      "handling": "실제 현장 사진, 인원 외형이나 호수의 기원 증거로 표시 금지"
+    },
+    "assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png": {
+      "credit": "Project Curse Dead Zone silent-interior map-termination brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "데드존 최후 지도국·검은 고속도로·지도 종결선 진술 기반 분석 재구성",
+      "handling": "실제 항법 사진, 유효 경로 또는 내륙 세력 위치 증거로 표시 금지"
     }
   }
 }

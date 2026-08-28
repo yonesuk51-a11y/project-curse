@@ -35,6 +35,9 @@
 
     const sessionKey='project_curse_map_session_v1';
     const sessionVersion=2;
+    const recentKey='project_curse_map_recent_v1';
+    const recentLimit=4;
+    let recentLocations=[];
 
     const state={
       mode:'landing',
@@ -83,6 +86,61 @@
       const selection=state.marker?['marker',state.marker]:state.synchronyPoint?['synchrony',state.synchronyPoint]:[];
       return ['region',state.region,...selection];
     }
+    const mapLocationKey=path=>path.map(part=>encodeURIComponent(part)).join('/');
+    function mapLocationDescriptor(path){
+      if(!Array.isArray(path)||!path.length) return null;
+      if(path[0]==='detail'){
+        const detail=exactDetailById(path[1]);
+        const site=detail&&path[2]?detail.sites.find(item=>item.id===path[2]):null;
+        if(!detail||path.length>3||(path[2]&&!site)) return null;
+        return {path:['detail',detail.id,...(site?[site.id]:[])],eyebrow:`세부 권역 · ${regionById(detail.region).label}`,title:site?.label||detail.label,meta:site?detail.label:detail.code};
+      }
+      if(path[0]==='operation'){
+        const operation=exactOperationById(path[1]);
+        if(!operation||path.length>2) return null;
+        return {path:['operation',operation.id],eyebrow:'작전지도',title:operation.label,meta:operation.code};
+      }
+      if(path[0]==='region'){
+        const region=exactRegionById(path[1]);
+        if(!region||path.length>4) return null;
+        if(!path[2]) return path.length===2?{path:['region',region.id],eyebrow:'지역 상황도',title:region.label,meta:region.code}:null;
+        if(path[2]==='marker'){
+          const marker=markerById(path[3]);
+          const valid=marker&&(marker.region===region.id||(region.id==='world'&&marker.overview));
+          return valid?{path:['region',region.id,'marker',marker.id],eyebrow:`지역 상황도 · ${region.label}`,title:marker.title,meta:marker.meta}:null;
+        }
+        if(path[2]==='synchrony'){
+          const signal=synchronyPointById(path[3]);
+          const valid=signal&&(signal.point.region===region.id||region.id==='world');
+          return valid?{path:['region',region.id,'synchrony',signal.point.id],eyebrow:`동시 무응답 · ${region.label}`,title:signal.point.label,meta:signal.event.title}:null;
+        }
+      }
+      return null;
+    }
+    function restoreRecentLocations(){
+      let saved;
+      try{saved=JSON.parse(sessionStorage.getItem(recentKey)||'[]');}catch(_error){return;}
+      if(!Array.isArray(saved)) return;
+      const seen=new Set();
+      recentLocations=saved.slice(0,12).map(item=>mapLocationDescriptor(Array.isArray(item)?item:item?.path)).filter(item=>{
+        if(!item) return false;
+        const key=mapLocationKey(item.path);
+        if(seen.has(key)) return false;
+        seen.add(key);return true;
+      }).slice(0,recentLimit).map(item=>item.path);
+    }
+    function saveRecentLocations(){
+      try{sessionStorage.setItem(recentKey,JSON.stringify(recentLocations));}catch(_error){}
+    }
+    function rememberMapLocation(path=mapLocationParts()){
+      const descriptor=mapLocationDescriptor(path);
+      if(!descriptor) return false;
+      const key=mapLocationKey(descriptor.path);
+      if(mapLocationKey(recentLocations[0]||[])===key) return true;
+      recentLocations=[descriptor.path,...recentLocations.filter(item=>mapLocationKey(item)!==key)].slice(0,recentLimit);
+      saveRecentLocations();return true;
+    }
+    const recentMapLocations=()=>recentLocations.map(mapLocationDescriptor).filter(Boolean);
     function mapLocationHash(){
       const suffix=mapLocationParts().map(part=>encodeURIComponent(part)).join('/');
       return `#map-room${suffix?`/${suffix}`:''}`;
@@ -204,6 +262,7 @@
         }));
       }catch(_error){}
     }
+    restoreRecentLocations();
     restoreMapSession();
     const initialMapLocationPath=readInitialMapLocationPath();
     if(initialMapLocationPath?.length){
@@ -955,6 +1014,7 @@
     }
 
     function renderTheaterIndex(){
+      const recent=recentMapLocations();
       return `<section class="pc-map-theater-index" aria-labelledby="pcMapTheaterTitle">
         <div class="pc-map-theater-intro">
           <div><span>SELECT OPERATIONAL THEATER</span><h3 id="pcMapTheaterTitle">먼저, 사건이 벌어진 곳을 선택하십시오.</h3></div>
@@ -978,6 +1038,12 @@
           <button type="button" data-map-theater="world"><small>00</small><span>전체 세계 지도</span><b>확인된 권역 신호를 한 화면에서 본다</b></button>
           <button type="button" data-map-open-index><small>29</small><span>신호 색인</span><b>사건·장소·작전·동기화 기록을 검색한다</b></button>
         </div>
+        ${recent.length?`<section class="pc-map-recent" aria-labelledby="pcMapRecentTitle">
+          <header><div><span>RECENT COORDINATES</span><h4 id="pcMapRecentTitle">최근 열람한 좌표</h4></div><p>이 세션에서 확인한 마지막 ${recent.length}개 지점</p></header>
+          <div class="pc-map-recent-list">
+            ${recent.map((item,index)=>`<button type="button" data-map-recent="${index}" aria-label="${escapeHTML(item.title)} 다시 열기"><small>${String(index+1).padStart(2,'0')}</small><span><b>${escapeHTML(item.title)}</b><em>${escapeHTML(item.eyebrow)} · ${escapeHTML(item.meta)}</em></span><i>REOPEN →</i></button>`).join('')}
+          </div>
+        </section>`:''}
       </section>`;
     }
 
@@ -997,6 +1063,7 @@
     }
 
     function render({historyMode='none'}={}){
+      if(state.mode!=='landing') rememberMapLocation();
       mount.innerHTML=`
         <div class="pc-map-room">
           <header class="pc-map-room-head">
@@ -1067,6 +1134,11 @@
       const control=event.target.closest('button,[data-map-marker],[data-map-synchrony-point],[data-map-detail-site]');
       if(!control) return;
       if(control.dataset.mapCopyLink!==undefined){copyCurrentMapLink(control);return;}
+      if(control.dataset.mapRecent!==undefined){
+        const path=recentLocations[Number(control.dataset.mapRecent)];
+        if(path&&applyMapLocationPath(path,{historyMode:'push'})) root.ProjectCurseAudioControl?.play?.('map.signal');
+        return;
+      }
       if(control.dataset.mapTheater){
         const theater=theaters.find(item=>item.id===control.dataset.mapTheater);
         state.indexOpen=false;state.indexSelection=null;state.marker=null;state.synchronyPoint=null;state.intelCollapsed=true;
@@ -1196,6 +1268,7 @@
       showSynchrony(eventId='three-night-silence',pointId){const event=synchronyEvents.find(item=>item.id===eventId);if(!event) return false;const point=event.points.find(item=>item.id===pointId)||null;state.indexOpen=false;state.indexSelection=point?`synchrony:${point.id}`:null;state.mode='region';state.region=point?.region||'world';state.marker=null;state.synchronyPoint=point?.id||null;state.layers.synchrony=true;state.intelCollapsed=!point;render({historyMode:'replace'});return true;},
       openSignalIndex(query=''){if(state.mode==='landing'){state.mode='region';state.region='world';}state.indexQuery=String(query).slice(0,80);state.indexOpen=true;render({historyMode:'replace'});return true;},
       getShareUrl:()=>new URL(mapLocationHash(),location.href).href,
+      getRecentLocations:()=>recentLocations.map(path=>[...path]),
       getState:()=>({...state,layers:{...state.layers},detailLayers:{...state.detailLayers}})
     });
   });

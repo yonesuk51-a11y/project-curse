@@ -29,6 +29,7 @@ async function openSite(viewport,label){
   await page.evaluate(()=>{
     sessionStorage.removeItem('project_curse_channel_density_v1');
     sessionStorage.removeItem('project_curse_map_session_v1');
+    sessionStorage.removeItem('project_curse_map_recent_v1');
   });
   await page.reload({waitUntil:'networkidle'});
   await page.waitForSelector('#app.ready',{timeout:12000});
@@ -233,11 +234,73 @@ check('deep-link:gbf-recovered-briefing-visible',deepLinkState.visualHeight>0&&d
 check('deep-link:no-mobile-overflow',deepLinkState.overflow<=0,JSON.stringify(deepLinkState));
 const deepLinkShot=join(tmpdir(),'project-curse-5.54.0-mobile-gbf-deep-link.png');
 await deepLink.page.locator('.pc-map-detail-intel').screenshot({path:deepLinkShot});
-await deepLink.page.goto(urlForHash('map-room/region/southamerica'),{waitUntil:'networkidle'});
-await deepLink.page.waitForFunction(()=>document.body.dataset.route==='map-room'&&window.ProjectCurseMapRoomRuntime?.getState().region==='southamerica');
-const directRegion=await deepLink.page.evaluate(()=>({mode:window.ProjectCurseMapRoomRuntime.getState().mode,region:window.ProjectCurseMapRoomRuntime.getState().region,hash:location.hash}));
-check('deep-link:region-restored',directRegion.mode==='region'&&directRegion.region==='southamerica'&&directRegion.hash==='#map-room/region/southamerica',JSON.stringify(directRegion));
-await deepLink.page.evaluate(()=>{location.hash='map-room/detail/not-a-real-sector';});
+  await deepLink.page.goto(urlForHash('map-room/region/southamerica'),{waitUntil:'networkidle'});
+  await deepLink.page.waitForFunction(()=>document.body.dataset.route==='map-room'&&window.ProjectCurseMapRoomRuntime?.getState().region==='southamerica');
+  const directRegion=await deepLink.page.evaluate(()=>({mode:window.ProjectCurseMapRoomRuntime.getState().mode,region:window.ProjectCurseMapRoomRuntime.getState().region,hash:location.hash}));
+  check('deep-link:region-restored',directRegion.mode==='region'&&directRegion.region==='southamerica'&&directRegion.hash==='#map-room/region/southamerica',JSON.stringify(directRegion));
+
+  await deepLink.page.goto(urlForHash('map-room/detail/europe-north-sea-blockade/europe-blood-lake'),{waitUntil:'networkidle'});
+  await deepLink.page.waitForFunction(()=>window.ProjectCurseMapRoomRuntime?.getState().detailSite==='europe-blood-lake');
+  await deepLink.page.waitForFunction(()=>document.querySelector('.pc-map-visual-brief img')?.naturalWidth>0);
+  const northSeaBrief=await deepLink.page.evaluate(()=>(
+    {
+      hash:location.hash,
+      source:document.querySelector('.pc-map-visual-brief img')?.dataset.pcMediaSource,
+      title:document.querySelector('.pc-map-visual-brief figcaption b')?.textContent.trim(),
+      signal:document.querySelector('.pc-map-signal-brief h4')?.textContent.trim(),
+      loaded:document.querySelector('.pc-map-visual-brief img')?.naturalWidth>0,
+      label:document.querySelector('.pc-map-visual-brief figcaption small')?.textContent.trim(),
+      overflow:document.documentElement.scrollWidth-innerWidth
+    }
+  ));
+  check('deep-link:north-sea-recovered-briefing',northSeaBrief.hash==='#map-room/detail/europe-north-sea-blockade/europe-blood-lake'&&northSeaBrief.source?.includes('north-sea-blood-lake-blockade')&&northSeaBrief.title==='북해 피의 호수 봉쇄선 재구성'&&northSeaBrief.signal==='회수 접근 / 마지막 신호 역전'&&northSeaBrief.loaded&&northSeaBrief.label?.includes('현장 원본 아님'),JSON.stringify(northSeaBrief));
+  check('deep-link:north-sea-no-overflow',northSeaBrief.overflow<=0,JSON.stringify(northSeaBrief));
+
+  await deepLink.page.goto(urlForHash('map-room/detail/deadzone-silent-interior/silent-force-boundary'),{waitUntil:'networkidle'});
+  await deepLink.page.waitForFunction(()=>window.ProjectCurseMapRoomRuntime?.getState().detailSite==='silent-force-boundary');
+  await deepLink.page.waitForFunction(()=>document.querySelector('.pc-map-visual-brief img')?.naturalWidth>0);
+  const silentBrief=await deepLink.page.evaluate(()=>(
+    {
+      hash:location.hash,
+      source:document.querySelector('.pc-map-visual-brief img')?.dataset.pcMediaSource,
+      title:document.querySelector('.pc-map-visual-brief figcaption b')?.textContent.trim(),
+      signal:document.querySelector('.pc-map-signal-brief h4')?.textContent.trim(),
+      loaded:document.querySelector('.pc-map-visual-brief img')?.naturalWidth>0,
+      label:document.querySelector('.pc-map-visual-brief figcaption small')?.textContent.trim(),
+      overflow:document.documentElement.scrollWidth-innerWidth
+    }
+  ));
+  check('deep-link:silent-interior-recovered-briefing',silentBrief.hash==='#map-room/detail/deadzone-silent-interior/silent-force-boundary'&&silentBrief.source?.includes('dead-zone-silent-interior-map-termination')&&silentBrief.title==='내륙 지도 종결선 재구성'&&silentBrief.signal==='자기 목소리 / 좌표가 된 통신 시각'&&silentBrief.loaded&&silentBrief.label?.includes('항법 자료 아님'),JSON.stringify(silentBrief));
+  check('deep-link:silent-interior-no-overflow',silentBrief.overflow<=0,JSON.stringify(silentBrief));
+
+  await deepLink.page.locator('[data-map-landing]').click();
+  await deepLink.page.waitForSelector('.pc-map-recent-list');
+  const recentLanding=await deepLink.page.evaluate(()=>(
+    {
+      mode:window.ProjectCurseMapRoomRuntime.getState().mode,
+      history:window.ProjectCurseMapRoomRuntime.getRecentLocations(),
+      buttons:[...document.querySelectorAll('[data-map-recent]')].map(button=>button.textContent.replace(/\s+/g,' ').trim()),
+      viewport:innerWidth,
+      documentWidth:document.documentElement.scrollWidth
+    }
+  ));
+  check('deep-link:recent-coordinates-four-canonical',recentLanding.mode==='landing'&&recentLanding.history.length===4&&recentLanding.history[0].join('/')==='detail/deadzone-silent-interior/silent-force-boundary'&&recentLanding.history[1].join('/')==='detail/europe-north-sea-blockade/europe-blood-lake'&&recentLanding.buttons.length===4,JSON.stringify(recentLanding));
+  check('deep-link:recent-coordinates-no-mobile-overflow',recentLanding.documentWidth<=recentLanding.viewport,JSON.stringify(recentLanding));
+  await deepLink.page.reload({waitUntil:'networkidle'});
+  await deepLink.page.waitForSelector('.pc-map-recent-list');
+  check('deep-link:recent-coordinates-session-persist',await deepLink.page.locator('[data-map-recent]').count()===4);
+  await deepLink.page.locator('[data-map-recent="1"]').click();
+  await deepLink.page.waitForFunction(()=>window.ProjectCurseMapRoomRuntime.getState().detailSite==='europe-blood-lake');
+  const reopenedRecent=await deepLink.page.evaluate(()=>(
+    {
+      hash:location.hash,
+      history:window.ProjectCurseMapRoomRuntime.getRecentLocations(),
+      duplicates:window.ProjectCurseMapRoomRuntime.getRecentLocations().filter(path=>path.join('/')==='detail/europe-north-sea-blockade/europe-blood-lake').length
+    }
+  ));
+  check('deep-link:recent-coordinate-reopens-and-dedupes',reopenedRecent.hash==='#map-room/detail/europe-north-sea-blockade/europe-blood-lake'&&reopenedRecent.history.length===4&&reopenedRecent.history[0].join('/')==='detail/europe-north-sea-blockade/europe-blood-lake'&&reopenedRecent.duplicates===1,JSON.stringify(reopenedRecent));
+
+  await deepLink.page.evaluate(()=>{location.hash='map-room/detail/not-a-real-sector';});
 await deepLink.page.waitForFunction(()=>location.hash==='#map-room'&&window.ProjectCurseMapRoomRuntime?.getState().mode==='landing');
 check('deep-link:invalid-location-canonicalized',await deepLink.page.evaluate(()=>location.hash==='#map-room'&&window.ProjectCurseMapRoomRuntime.getState().mode==='landing'));
 check('deep-link:no-errors',deepLink.errors.length===0,deepLink.errors.join(' | '));

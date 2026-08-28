@@ -65,6 +65,32 @@
         description:'1986년 유닛2의 진입 경로와 F.H.C 회수 기록, 후대 북해 봉쇄선을 겹쳐 놓은 사건권. 현장 위치 일부가 검열돼 있으므로 지점 간 거리는 항법값이 아니다.',
         warning:'호수의 기원과 실종 인원의 최종 상태는 확인되지 않았다. 잔류 반응이 있다는 사실을 호수가 이동하거나 증식했다는 결론으로 확대하지 말 것.',
         operation:'op-immortality',
+        visual:{
+          src:'assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png',history:'1986-07-25-immortality',assetId:'VEA-NS-BL-01',
+          label:'분석 재구성 / 현장 원본 아님',title:'북해 피의 호수 봉쇄선 재구성',
+          alt:'폭우가 내리는 북해 연안에서 사슬 봉쇄선과 투광등 너머 검붉은 수면을 감시하는 두 명의 익명 현장 인원을 담은 분석 재구성',
+          caption:'1986년 유닛2 원기록과 후대 봉쇄 감시 기록을 한 장면에 겹쳤다. 실제 현장 사진, 대원 외형 또는 호수의 기원을 확정하지 않는다.',
+          siteIds:['europe-abandoned-tent','europe-river-reaction','europe-blood-lake','europe-blockade-line']
+        },
+        signalBrief:{
+          label:'RECOVERY TIMELINE SPLIT',title:'회수 접근 / 마지막 신호 역전',
+          summary:'7분대의 회수 접근은 유닛2 마지막 영상보다 먼저 시작됐고, 임무 완료 처리는 인원 상태가 확인되지 않은 채 뒤따랐다.',
+          siteIds:['europe-ipd-split','europe-last-signal','europe-seventh-line','europe-blood-lake'],
+          lanes:[
+            {code:'UNIT 2',state:'LAST VIDEO 18:56',fingerprint:'PERSONNEL STATUS UNKNOWN',pattern:[3,6,4,7,5,8,2,6,4,7,3,5]},
+            {code:'RECOVERY 7',state:'MOVEMENT 18:51',fingerprint:'COORDINATES REDACTED',pattern:[3,6,4,7,5,2,8,3,6,4,7,2]}
+          ],
+          checks:[
+            {label:'사건권',value:'동일',tone:'match'},
+            {label:'시간 순서',value:'회수 5분 선행',tone:'conflict'},
+            {label:'현장 명령',value:'재진입 금지',tone:'hold'}
+          ],
+          log:[
+            {time:'T-00:05',text:'7분대 회수 접근 기록 시작 · 세부 좌표 삭제'},
+            {time:'T+00:00',text:'유닛2 마지막 영상 신호 수신 · 인원 상태 미확인'},
+            {time:'T+00:04',text:'임무 완료 처리 · 시간 순서만 보존'}
+          ]
+        },
         routes:[
           {id:'immortality-unit-two',className:'hostile',label:'UNIT 2 / LAST TRANSMISSION',risk:'critical',signal:'recovered',rule:'복원된 시간 순서는 확인 경로이며 안전한 재진입 경로가 아니다',siteIds:['europe-entry-s','europe-abandoned-tent','europe-river-reaction','europe-blood-lake','europe-ipd-split','europe-last-signal'],points:[[76,433],[239,365],[407,302],[596,229],[742,286],[850,351]]},
           {id:'fhc-recovery-priority',className:'broken',label:'F.H.C RECOVERY PRIORITY',risk:'critical',signal:'partial',rule:'회수 순서는 생존자 구조보다 표본과 의식 잔류물을 우선한 기관 기록이다',siteIds:['europe-seventh-line','europe-last-signal','europe-blood-lake','europe-analysis-zone'],points:[[890,424],[850,351],[596,229],[904,151]]},
@@ -320,6 +346,32 @@
         label:'내륙 무응답권',code:'DEAD ZONE / SILENT INTERIOR',status:'MAP TERMINATES HERE',confidence:'7%',
         description:'지도, 위성, 순례자 진술이 모두 끊기는 내륙. 표식 대부분은 위치가 아니라 마지막 통신 시각을 지리 좌표처럼 환산한 것이다.',
         warning:'이 지도는 경로 안내가 아니다. 자신이 보내지 않은 구조 신호와 개인 식별 신호에 응답하지 말 것.',
+        visual:{
+          src:'assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png',history:'2042-10-31-three-night-silence',assetId:'VEA-DZ-SI-01',
+          label:'분석 재구성 / 항법 자료 아님',title:'내륙 지도 종결선 재구성',
+          alt:'폐쇄된 종이 지도국 옆에서 표식 없는 검은 고속도로와 멀리 반복되는 붉은 중계등이 무응답 내륙으로 이어지는 분석 재구성',
+          caption:'최후 지도국, 검은 고속도로와 지도 종결선 진술을 하나의 시야에 겹쳤다. 실제 항법 사진이나 내륙 세력의 위치를 입증하지 않는다.',
+          siteIds:['silent-last-station','silent-black-highway','silent-force-boundary','silent-no-return']
+        },
+        signalBrief:{
+          label:'PERSONAL ECHO COMPARISON',title:'자기 목소리 / 좌표가 된 통신 시각',
+          summary:'개인 식별 반향은 실종자의 호출 지문을 되돌렸지만, 지도 종결선 너머의 좌표 필드는 장소 대신 마지막 통신 시각을 반환했다.',
+          siteIds:['silent-personal-echo','silent-black-highway','silent-force-boundary','silent-false-rescue','silent-no-return'],
+          lanes:[
+            {code:'PERSONAL ECHO',state:'CALLSIGN MATCH',fingerprint:'SELF DISTRESS SIGNAL',pattern:[6,3,7,4,8,2,6,3,7,4,8,2]},
+            {code:'FALSE RESCUE',state:'FOUR VOICES OVERLAP',fingerprint:'TIME VALUE AS COORDINATE',pattern:[6,3,7,4,8,2,5,8,3,6,2,7]}
+          ],
+          checks:[
+            {label:'호출 지문',value:'개인 일치',tone:'match'},
+            {label:'좌표 형식',value:'시간값 반환',tone:'conflict'},
+            {label:'현장 명령',value:'응답 금지',tone:'hold'}
+          ],
+          log:[
+            {time:'T+00:00',text:'최후 지도국 외곽에서 개인 식별 반향 수신'},
+            {time:'T+00:17',text:'검은 고속도로 표식이 과거 지명으로 회귀'},
+            {time:'T+00:41',text:'좌표 필드가 마지막 통신 시각으로 치환 · 수신 중단'}
+          ]
+        },
         routes:[
           {id:'last-map-line',className:'broken',label:'LAST CARTOGRAPHIC LINE',risk:'critical',signal:'terminating',rule:'지도 종결선 이후의 좌표값을 위치로 해석하지 말 것',siteIds:['silent-last-station','silent-personal-echo','silent-black-highway','silent-force-boundary'],points:[[84,431],[245,366],[397,303],[548,248]]},
           {id:'black-highway',className:'hazard',label:'BLACK HIGHWAY',risk:'critical',signal:'looping',rule:'과거 지명이 반복되면 즉시 도로에서 이탈할 것',siteIds:['silent-black-highway','silent-force-boundary','silent-no-return'],points:[[160,133],[330,182],[504,119],[688,169],[908,96]]},
