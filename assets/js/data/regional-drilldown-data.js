@@ -1,4 +1,4 @@
-// Project Curse 5.54.0 — northern-front theater, regional drilldown districts, route focus, and recovery intelligence.
+// Project Curse 5.54.0 — regional theaters, name-authority boundaries, route focus, and recovery intelligence.
 (function(root){
   'use strict';
 
@@ -9,7 +9,7 @@
   }
 
   root.ProjectCurseRegionalDrilldown=freeze({
-    version:'regional-drilldown-v3',
+    version:'regional-drilldown-v4',
     districts:[
       {
         id:'eastasia-northern-front',region:'eastasia',terrain:'front',
@@ -112,7 +112,7 @@
         id:'gbf-western-marches',region:'southamerica',terrain:'forest',
         label:'서부 순례 회랑',code:'GBF / WESTERN MARCHES',status:'ROUTE OVERLAP',confidence:'31%',
         description:'순례자 증언과 몬수르 교회의 종 운반 기록을 겹쳐 복원한 서부 진입로. 같은 길이 서로 다른 목적지로 이어진다.',
-        warning:'비현실감이 발생하면 기존 경로를 역행하지 말 것. 검은 강의 강둑은 지도상 안전지대가 아니다.',
+        warning:'비현실감이 발생하면 기존 경로를 역행하지 말 것. 검은 강의 강둑은 지도상 안전지대가 아니다. 이 회랑의 피의 호수 흔적을 북해 사건과 연결하지 말 것.',
         visual:{
           src:'assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png',history:'2032-08-14-three-bells-compact',assetId:'VEA-GBF-BELL-01',
           label:'해석 재구성 / 특정 성채 원본 아님',title:'무등화 성채 종 운반 재구성',
@@ -150,15 +150,15 @@
           {id:'gbf-duel-ground',x:400,y:289,type:'incident',label:'귀환자의 결투 지점',meta:'영상마다 참가 인원 변동',status:'상충 진술',confidence:'disputed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
           {id:'gbf-derealization',x:520,y:329,type:'anomaly',label:'비현실감 중첩권',meta:'회랑이 교회와 강 양쪽으로 이어짐',status:'경로 이중화',confidence:'estimated',operation:'op-unlit-fortress'},
           {id:'gbf-black-river',x:610,y:353,type:'anomaly',label:'검은 강 제4관측점',meta:'동일 일련번호 장비 회수',status:'접근 금지',confidence:'observed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
-          {id:'gbf-blood-lake',x:744,y:250,type:'incident',label:'피의 호수',meta:'북부 전사자·남방 표식 동시 발견',status:'의식 반응 잔류',confidence:'observed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
+          {id:'gbf-blood-lake',x:744,y:250,type:'incident',label:'피의 호수 흔적 05',meta:'복수 순례 보고 중 한 곳 / 북부 전사자·남부 특수부대 표식',status:'북해 사건과 연결 미확인',confidence:'observed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
           {id:'gbf-unlit-fortress',x:908,y:124,type:'fortress',label:'불빛 없는 성채',meta:'외부 폐허 / 내부 거주 진술',status:'좌표 중첩',confidence:'disputed',records:['Great_Black_Forest_Region'],operation:'op-unlit-fortress',incident:'evt-gbf-unlit'}
         ]
       },
       {
         id:'gbf-coastal-belt',region:'southamerica',terrain:'coast',
-        label:'남방 해안 동원권',code:'GBF / COASTAL MOBILIZATION',status:'ACTIVE OPERATION',confidence:'46%',
-        description:'남부 특수부대의 집결, 도시 집단 소환, 성위대 침투 신호를 하나의 전선으로 재구성한 해안 작전권.',
-        warning:'표시 상태는 OP-BROKEN-CROWN 최종 판단에 따라 갱신된다. 판단 전 좌표는 적대·우호가 확정되지 않는다.',
+        label:'남방권 해안 동원선',code:'SOUTHERN THEATER / COASTAL MOBILIZATION',status:'ACTIVE OPERATION',confidence:'46%',
+        description:'남부 특수부대의 집결, 도시 집단 소환과 성위대 침투 신호가 만나는 해안 작전망. 남방권은 국가나 자연지리가 아니라 동원·통신 범위를 뜻한다.',
+        warning:'표시 상태는 OP-BROKEN-CROWN 최종 판단에 따라 갱신된다. 남부 혈교, 해안 세력과 협력 성채를 하나의 지휘조직으로 묶어 판정하지 말 것.',
         operation:'op-southern-coup',
         visual:{
           src:'assets/resources/derived/broken-crown-erased-commander-concept-v1.png',history:'2030-01-17-broken-crown',assetId:'VEA-BC-CMD-01',
@@ -286,7 +286,7 @@
           {id:'dead-return-shore',x:92,y:430,type:'returned',label:'서부 귀환 지점',meta:'귀환 기록 7건 / 출발 기록 불명',status:'격리선 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
           {id:'dead-checkpoint-07',x:245,y:366,type:'facility',label:'검문소 07',meta:'장비 봉인·귀환자 신원 분리',status:'부분 가동',confidence:'observed',records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return',incident:'evt-deadzone-return'},
           {id:'dead-neutral-camp',x:344,y:435,type:'settlement',label:'중립 순례자 지원소',meta:'데드존 혈교 분파가 운영',status:'피난 지원',confidence:'testimony',records:['Dead_Zone_Pilgrimage','Operation_Broken_Crown']},
-          {id:'dead-exchange',x:475,y:421,type:'signal',label:'남북 교신 교환점',meta:'평화 공존 분파와 남방 채널 연결',status:'암호화 대기',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',verdictStates:{execute:{status:'교신 채널 소실',tone:'failed'},detain:{status:'증언 검증 채널',tone:'contained'},cooperate:{status:'교환 채널 개방',tone:'allied'},defer:{status:'암호화 대기',tone:'unknown'}}},
+          {id:'dead-exchange',x:475,y:421,type:'signal',label:'대서양 교신 교환점',meta:'데드존 혈교와 남방 발신망의 제한 교신',status:'암호화 대기',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',verdictStates:{execute:{status:'교신 채널 소실',tone:'failed'},detain:{status:'증언 검증 채널',tone:'contained'},cooperate:{status:'교환 채널 개방',tone:'allied'},defer:{status:'암호화 대기',tone:'unknown'}}},
           {id:'dead-quarantine-ring',x:382,y:292,type:'zone',label:'귀환자 격리환',meta:'비인간 반응 3건 기록',status:'봉쇄 유지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
           {id:'dead-last-overlap',x:520,y:232,type:'anomaly',label:'마지막 좌표 중첩점',meta:'7개 진술이 이 지점 이후 분기',status:'전진 금지',confidence:'disputed',records:['Dead_Zone_Pilgrimage']},
           {id:'dead-inland-silence',x:893,y:112,type:'unknown',label:'내륙 무응답 경계',meta:'도시·국가·위성 신호 동시 소실',status:'NO RESPONSE',confidence:'disputed',records:['Dead_Zone_Pilgrimage']},
@@ -304,7 +304,7 @@
         visual:{
           src:'assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',history:'2034-04-22-inland-beacon-31',assetId:'VEA-DZ-R01',
           label:'복원 추정 / 현존 원본 아님',title:'왕국 묘역 진입로 복원 추정',
-          alt:'붕괴한 고속도로와 폐허 지대를 지나 멀리 거대한 고대 성채로 이어지는 데드 존 순례 경로의 복원 추정 이미지',
+          alt:'붕괴한 고속도로와 폐허 지대를 지나 멀리 거대한 고대 성채로 이어지는 데드존 순례 경로의 복원 추정 이미지',
           caption:'귀환 증언과 내륙 중계기 좌표를 조합한 편집 재구성이다. 도로와 성채의 실제 위치, 거리 또는 현재 점유 세력을 증명하지 않는다.',
           siteIds:['grave-throne','grave-refuge','grave-unlit','grave-last-kingdom']
         },
@@ -337,7 +337,7 @@
           {id:'grave-refuge',x:250,y:367,type:'fortress',label:'귀환 성채',meta:'집을 잃은 순례자 임시 수용',status:'불빛 확인',confidence:'testimony',records:['Dead_Zone_Pilgrimage']},
           {id:'grave-weapon-field',x:421,y:309,type:'anomaly',label:'봉인 무기 묘지',meta:'개체 결박 반응 다수',status:'회수 금지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
           {id:'grave-unlit',x:575,y:232,type:'fortress',label:'무등화 요새',meta:'내부 열원 없음 / 문 개방',status:'접근 금지',confidence:'disputed',records:['Dead_Zone_Pilgrimage']},
-          {id:'grave-memorial',x:742,y:279,type:'incident',label:'순례자 추모호',meta:'피의 수면 아래 장비 신호',status:'헌정 흔적',confidence:'testimony',records:['Dead_Zone_Pilgrimage']},
+          {id:'grave-memorial',x:742,y:279,type:'incident',label:'순례자 추모호',meta:'피의 수면 아래 장비 신호 / 타 권역 혈성 수면과 연결 미확인',status:'헌정 흔적',confidence:'testimony',records:['Dead_Zone_Pilgrimage']},
           {id:'grave-last-kingdom',x:915,y:161,type:'ruin',label:'마지막 왕국 잔해',meta:'국가 이전 연대의 방벽',status:'미확인 수호 반응',confidence:'historical',records:['Dead_Zone_Pilgrimage']}
         ]
       },

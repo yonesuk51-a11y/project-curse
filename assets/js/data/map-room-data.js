@@ -1,4 +1,4 @@
-// Project Curse 5.44.0 — geographic control map, isolated synchrony signals, drilldowns, and shared incident traces.
+// Project Curse 5.54.0 — geographic control map, regional name authority, isolated synchrony signals, drilldowns, and shared incident traces.
 (function(root){
   'use strict';
 
@@ -9,9 +9,10 @@
   }
 
   const network=root.ProjectCurseIncidentNetwork;
+  const geography=root.ProjectCurseCanon?.geography||{};
 
   root.ProjectCurseMapRoom=freeze({
-    version:'map-room-v10',
+    version:'map-room-v11',
     viewBox:'0 0 1200 620',
     geography:[
       {id:'greenland',d:'M319 53 L360 39 394 70 378 121 341 132 311 95 Z'},
@@ -45,12 +46,14 @@
       {
         id:'northamerica',label:'북미 데드존',code:'DEAD ZONE / NORTH',viewBox:'15 35 520 290',
         status:'내륙 응답 없음',confidence:'지도 신뢰도 22%',
-        description:'과거 국가 지도와 현재 순례자 귀환 기록이 일치하지 않는 대륙.'
+        description:'북아메리카 내륙에서 과거 국가 지도와 현재 순례자 귀환 기록이 일치하지 않는 무응답권.',
+        nomenclature:geography.deadZone
       },
       {
-        id:'southamerica',label:'남미 대흑림',code:'GREAT BLACK FOREST',viewBox:'190 275 570 320',
+        id:'southamerica',label:'대흑림',code:'GREAT BLACK FOREST / SOUTH AMERICA',viewBox:'190 275 570 320',
         status:'공간 측량 불가',confidence:'지도 신뢰도 31%',
-        description:'외부 해안선은 유지되지만 내부 거리와 정착지 좌표가 반복적으로 어긋나는 권역.'
+        description:'남아메리카의 외부 해안선과 달리 내부 거리와 정착지 좌표가 반복적으로 어긋나는 내륙 이상권.',
+        nomenclature:geography.greatBlackForest
       }
     ],
     zones:[
@@ -63,14 +66,14 @@
       {id:'deadzone-pilgrimage',region:'northamerica',className:'pilgrimage',points:[[151,226],[177,202],[203,181],[236,164],[273,151]],label:'RETURN PATH / TESTIMONY ONLY'},
       {id:'deadzone-recovery-outbound',region:'northamerica',className:'hostile',points:[[151,226],[170,214],[189,201],[211,184],[236,164]],label:'DZ-R05 / VERDICT LOCKED'},
       {id:'gbf-western',region:'southamerica',className:'pilgrimage',points:[[425,397],[391,414],[351,442],[371,477],[408,489]],label:'WESTERN PILGRIM TRACE'},
-      {id:'southern-mobilization',region:'southamerica',className:'hostile',points:[[427,398],[406,372],[379,354],[350,340]],label:'COASTAL MOBILIZATION'},
+      {id:'southern-mobilization',region:'southamerica',className:'hostile',points:[[427,398],[406,372],[379,354],[350,340]],label:'SOUTHERN THEATER MOBILIZATION'},
       {id:'northern-pressure',region:'eastasia',className:'front',points:[[841,197],[887,166],[934,120],[980,148]],label:'NORTHERN FRONT'}
     ],
     synchronyEvents:[
       {
         id:'three-night-silence',code:'SYNC-2042-1031',date:'2042.10.31',title:'삼야 무응답',duration:'61H 01M',
         status:'OBSERVED / CAUSE UNRESOLVED',confidence:'observed',history:'2042-10-31-three-night-silence',connection:'UNRESOLVED',route:null,
-        summary:'대흑림 성채 여섯 곳과 데드 존 검문소 네 곳이 61시간 1분 동안 외부 교신을 잃었다. 복구 장부에는 상대 권역의 호출 부호가 남았지만, 중계 경로는 확인되지 않았다.',
+        summary:'대흑림 성채 여섯 곳과 데드존 검문소 네 곳이 61시간 1분 동안 외부 교신을 잃었다. 복구 장부에는 상대 권역의 호출 부호가 남았지만, 중계 경로는 확인되지 않았다.',
         boundary:'열 개 표식은 같은 시간대의 독립 관측점이다. 대륙 사이의 통로·항로·지리적 연결을 뜻하지 않는다.',
         points:[
           {id:'gbf-bell-01',region:'southamerica',x:338,y:362,code:'G01',kind:'castle',label:'성채 종 장부 01',site:'대흑림 북서 성채권',callsign:'DZ-GATE-07',log:'검문소 호출 부호 1회 기록'},
@@ -79,10 +82,10 @@
           {id:'gbf-bell-04',region:'southamerica',x:342,y:422,code:'G04',kind:'castle',label:'성채 종 장부 04',site:'대흑림 서부 성채권',callsign:'DZ-CHECK-11',log:'미등록 검문 호출 1회 기록'},
           {id:'gbf-bell-05',region:'southamerica',x:394,y:453,code:'G05',kind:'castle',label:'성채 종 장부 05',site:'대흑림 내측 성채권',callsign:'DZ-GATE-07',log:'동일 호출의 역순 재생 기록'},
           {id:'gbf-bell-06',region:'southamerica',x:371,y:501,code:'G06',kind:'castle',label:'성채 종 장부 06',site:'대흑림 남서 성채권',callsign:'DZ-WHITE-ASH',log:'폐쇄 확인문 일부 기록'},
-          {id:'dz-check-a',region:'northamerica',x:142,y:183,code:'D01',kind:'checkpoint',label:'검문소 무응답 기록 A',site:'데드 존 서부 검문권',callsign:'GBF-BELL-01',log:'성채 종지기 호출 2회 기록'},
-          {id:'dz-check-b',region:'northamerica',x:184,y:214,code:'D02',kind:'checkpoint',label:'검문소 무응답 기록 B',site:'데드 존 남서 검문권',callsign:'GBF-BELL-04',log:'서부 성채 응답문 1회 기록'},
+          {id:'dz-check-a',region:'northamerica',x:142,y:183,code:'D01',kind:'checkpoint',label:'검문소 무응답 기록 A',site:'데드존 서부 검문권',callsign:'GBF-BELL-01',log:'성채 종지기 호출 2회 기록'},
+          {id:'dz-check-b',region:'northamerica',x:184,y:214,code:'D02',kind:'checkpoint',label:'검문소 무응답 기록 B',site:'데드존 남서 검문권',callsign:'GBF-BELL-04',log:'서부 성채 응답문 1회 기록'},
           {id:'dz-check-c',region:'northamerica',x:235,y:164,code:'D03',kind:'checkpoint',label:'검문소 무응답 기록 C',site:'검문소 07 인접 관측권',callsign:'GBF-BELL-06',log:'남서 성채 종 장부 문구 기록'},
-          {id:'dz-check-d',region:'northamerica',x:292,y:196,code:'D04',kind:'checkpoint',label:'검문소 무응답 기록 D',site:'데드 존 동부 검문권',callsign:'GBF-BELL-02',log:'북부 성채 폐쇄 확인문 기록'}
+          {id:'dz-check-d',region:'northamerica',x:292,y:196,code:'D04',kind:'checkpoint',label:'검문소 무응답 기록 D',site:'데드존 동부 검문권',callsign:'GBF-BELL-02',log:'북부 성채 폐쇄 확인문 기록'}
         ]
       }
     ],
@@ -107,7 +110,7 @@
       {id:'monsur-church',region:'southamerica',x:351,y:442,labelX:-13,labelAnchor:'end',type:'cult',title:'몬수르 서부 교회',meta:'순례자 보호·종 운반 요청',status:'불완전 교신',confidence:'testimony',operation:'op-unlit-fortress'},
       {id:'unlit-fortress',region:'southamerica',x:408,y:489,type:'fortress',title:'불빛 없는 성채',meta:'외부 폐허 / 내부 거주 진술',status:'좌표 중첩',confidence:'disputed',operation:'op-unlit-fortress',incident:'evt-gbf-unlit'},
       {id:'black-river',region:'southamerica',x:371,y:517,labelX:-13,labelAnchor:'end',type:'anomaly',title:'검은 강 제4관측점',meta:'관측 시각마다 위치 변경',status:'접근 금지',confidence:'observed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
-      {id:'southern-coast',region:'southamerica',x:425,y:397,type:'line',title:'남방 해안 동원 신호',meta:'집단 소환·성위대 침투 징후',status:'CRITICAL / PARTIAL',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',incident:'evt-southern-mobilization'}
+      {id:'southern-coast',region:'southamerica',x:425,y:397,type:'line',title:'남방권 해안 동원 신호',meta:'집단 소환·성위대 침투 징후',status:'CRITICAL / PARTIAL',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',incident:'evt-southern-mobilization'}
     ],
     drilldowns:root.ProjectCurseRegionalDrilldown?.districts||[],
     operations:[
@@ -156,14 +159,14 @@
         ]
       },
       {
-        id:'op-unlit-fortress',label:'불빛 없는 성채',code:'GBF-WESTERN-ROUTE',region:'남미 대흑림',
+        id:'op-unlit-fortress',label:'불빛 없는 성채',code:'GBF-WESTERN-ROUTE',region:'대흑림 · 서부 순례 회랑',
         summary:'S.I.D 기록 담당자와 귀환 순례자가 몬수르 교회의 부탁을 받아 불빛 없는 성채로 향한 경로.',
         sites:[
           {x:88,y:420,label:'외곽 관측소',kind:'facility'},
           {x:248,y:337,label:'몬수르 교회',kind:'cult'},
           {x:409,y:278,label:'결투 지점',kind:'incident'},
           {x:575,y:344,label:'검은 강',kind:'anomaly'},
-          {x:716,y:244,label:'피의 호수',kind:'incident'},
+          {x:716,y:244,label:'피의 호수 흔적',kind:'incident'},
           {x:876,y:132,label:'불빛 없는 성채',kind:'fortress'}
         ],
         steps:[
@@ -172,7 +175,7 @@
           {time:'17:18',title:'귀환자의 결투',note:'결투 영상 프레임마다 참가 인원이 달라진다.',route:[[88,420],[248,337],[409,278]],units:[{id:'T-01',x:409,y:278,status:'unstable'},{id:'R-02',x:431,y:264,status:'normal'}]},
           {time:'17:41',title:'비현실감 구역',note:'같은 경로가 교회와 검은 강 양쪽으로 이어진다.',route:[[88,420],[248,337],[409,278],[505,318]],alternate:[[409,278],[248,337]],units:[{id:'T-01',x:505,y:318,status:'unstable'},{id:'X-05',x:486,y:301,status:'unknown'}]},
           {time:'18:06',title:'검은 강',note:'현재 조사팀과 동일한 일련번호의 장비가 강둑에서 회수됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344]],units:[{id:'T-01',x:575,y:344,status:'unstable'},{id:'X-05',x:596,y:331,status:'unknown'}]},
-          {time:'18:29',title:'피의 호수',note:'북부 전쟁 사망자 장비와 남방 특수부대 표식이 함께 발견됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244]],units:[{id:'T-01',x:716,y:244,status:'unstable'}]},
+          {time:'18:29',title:'피의 호수 흔적',note:'순례로의 복수 보고 중 한 곳에서 북부 전쟁 사망자 장비와 남부 특수부대 표식이 함께 발견됐다. 북해 사건과의 연결은 확인되지 않았다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244]],units:[{id:'T-01',x:716,y:244,status:'unstable'}]},
           {time:'18:51',title:'성채 진입',note:'외부에서는 불이 꺼졌으나 내부 주민들은 정상적으로 생활하고 있었다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244],[876,132]],units:[{id:'T-01',x:876,y:132,status:'split'},{id:'X-05',x:854,y:149,status:'unknown'}]},
           {time:'19:00',title:'처형 명령',note:'철수 경로가 사라지고 등록 인원은 4명에서 5명으로 변경됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244],[876,132]],alternate:[[876,132],[575,344],[248,337]],units:[{id:'T-01',x:876,y:132,status:'split'},{id:'X-05',x:876,y:132,status:'unknown'}]}
         ]

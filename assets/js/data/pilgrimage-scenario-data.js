@@ -12,7 +12,7 @@
     version:'2.2.0',
     scenarios:{
       'unlit-fortress':{
-        id:'unlit-fortress',code:'PILGRIMAGE / GBF-07',title:'불빛 없는 성채',region:'남미 대흑림 · 서부 순례 회랑',
+        id:'unlit-fortress',code:'PILGRIMAGE / GBF-07',title:'불빛 없는 성채',region:'대흑림 · 서부 순례 회랑',
         summary:'몬수르 서부 교회가 맡긴 작은 종을 운반하고, 불빛 없는 성채의 구조 신호가 실제 생존자에게서 나온 것인지 확인한다.',
         directive:'현상과의 접촉을 최소화하되, 도움 요청에는 성채 바깥에서 응답한다.',
         decisionStandard:'규칙을 맹신하지 않는다. 현재 관측으로 설명할 수 있는 행동 의도와 접촉 범위를 먼저 기록한다.',
@@ -23,7 +23,7 @@
         outcomeLabels:{kept:'RULE KEPT',broken:'RULE BROKEN'},negativeOutcomes:['broken'],
         primaryRecord:'Great_Black_Forest_Region',guideRecord:'Pilgrim_Rules_GBF',mapTarget:{detail:'gbf-western-marches',site:'gbf-unlit-fortress'},
         records:['Great_Black_Forest_Region','Pilgrim_Rules_GBF'],operation:'op-unlit-fortress',incident:'evt-gbf-unlit',
-        map:{viewBox:'0 0 900 420',points:[[66,346],[205,282],[347,219],[477,267],[603,188],[742,118]],labels:['외곽 관측소','몬수르 교회','결투 지점','검은 강','피의 호수','불빛 없는 성채']},
+        map:{viewBox:'0 0 900 420',points:[[66,346],[205,282],[347,219],[477,267],[603,188],[742,118]],labels:['외곽 관측소','몬수르 교회','결투 지점','검은 강','피의 호수 흔적','불빛 없는 성채']},
         stages:[
           {
             id:'observation',code:'TRACE 01',time:'16:10',title:'서부 외곽 관측소',location:'경계선 03 / 정상 거리',
@@ -64,8 +64,8 @@
             ]
           },
           {
-            id:'blood-lake',code:'TRACE 05',time:'18:29',title:'피의 호수',location:'북부 전사자 장비 신호 / 시간 불명',
-            narrative:'호수 주변에는 서로 다른 시대와 전선의 장비가 놓여 있다. 남방 특수부대 표식 사이에서 아직 켜진 송신기가 전사자들의 호출 부호를 반복한다.',
+            id:'blood-lake',code:'TRACE 05',time:'18:29',title:'피의 호수 흔적',location:'복수 순례 보고 중 한 곳 / 시간 불명',
+            narrative:'순례자들이 모두 피의 호수라고 부르는 수면 주변에 서로 다른 시대와 전선의 장비가 놓여 있다. 남부 특수부대 표식 사이에서 아직 켜진 송신기가 전사자들의 호출 부호를 반복한다. 북해 사건과 같은 장소거나 같은 현상이라는 증거는 없다.',
             signal:'MEMORIAL RESPONSE / HOSTILE TRACE NEARBY',rule:{code:'RULE 06',text:'피의 호수를 만나면 쓰러진 자들에게 예를 표하라.'},
             choices:[
               {id:'pay-respect',label:'무기를 내리고 전사자의 호출 부호를 읽는다',description:'종을 한 번 울리고 장비를 원래 위치에 둔다.',tone:'safe',deltas:{fear:-2,corruption:-4,signal:9},ruleOutcome:'kept'},
@@ -77,7 +77,7 @@
             narrative:'성채에는 불빛이 없지만 안쪽에서 식기와 발걸음 소리가 들린다. 구조 요청은 문 안이 아니라 조사팀의 무전기에서 나온다. 종은 아직 울리지 않았는데 성문이 조금씩 열린다.',
             signal:'NO LIGHT / OCCUPIED INTERIOR / ROUTE CLOSING',rule:{code:'RULE 07',text:'불빛 없는 전장과 성채는 피하라. 도움 요청에는 밖에서 응답하라.'},
             variants:[
-              {when:{choice:'take-transmitter'},narrative:'성채 안의 생활 소음 사이로 피의 호수에서 가져온 송신기가 먼저 응답한다. 송신기에는 조사팀이 아직 보내지 않은 구조 요청이 저장돼 있고, 성문은 그 재생 속도에 맞춰 조금씩 열린다.',signal:'RECOVERED TRANSMITTER ACTIVE / FUTURE DISTRESS LOOP',choicePatches:{'enter-fortress':{description:'송신기가 가리키는 방과 아직 보내지 않은 구조 요청의 발신자를 직접 확인한다.'}}},
+              {when:{choice:'take-transmitter'},narrative:'성채 안의 생활 소음 사이로 피의 호수 흔적에서 가져온 송신기가 먼저 응답한다. 송신기에는 조사팀이 아직 보내지 않은 구조 요청이 저장돼 있고, 성문은 그 재생 속도에 맞춰 조금씩 열린다.',signal:'RECOVERED TRANSMITTER ACTIVE / FUTURE DISTRESS LOOP',choicePatches:{'enter-fortress':{description:'송신기가 가리키는 방과 아직 보내지 않은 구조 요청의 발신자를 직접 확인한다.'}}},
               {when:{all:['refuse-bell','evade-duel']},narrative:'성채에는 불빛도 생활 소음도 없다. 뒤따라온 귀환자가 성문 앞에 서서 조사팀 대신 보이지 않는 종을 세 번 울린다. 구조 요청은 이제 단말 사용자의 목소리로 철수를 막는다.',signal:'NO COVENANT / RETURNED PILGRIM AT GATE / OPERATOR VOICE'}
             ],
             choices:[

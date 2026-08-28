@@ -1,5 +1,5 @@
-// Project Curse 5.54.0 — canonical organization registry and failure-state model.
-// This is the sole authoritative source for the active faction dossier and relation graph.
+// Project Curse 5.54.0 — canonical organization, geography, and failure-state registry.
+// This is the sole authoritative source for active faction relations and regional name authority.
 (function(root){
   'use strict';
 
@@ -8,6 +8,50 @@
     Object.values(value).forEach(freeze);
     return Object.freeze(value);
   }
+
+  const geography={
+    greatBlackForest:{
+      id:'great-black-forest',primary:'대흑림',english:'Great Black Forest',short:'GBF',
+      scope:'남아메리카 내륙 이상권',mapLabel:'대흑림',
+      aliases:[
+        {label:'자유의 땅',authority:'현지 관습명',meaning:'의식·주술 지식의 중앙 금지 부재와 성채 피난 관습을 함께 가리킨다.'},
+        {label:'악몽의 숲',authority:'귀환자 구어',meaning:'생환자의 체험을 가리키는 말이며 지도 경계나 행정권을 뜻하지 않는다.'}
+      ],
+      legacy:[
+        {label:'남방 데드존',authority:'폐기된 외부 분류',meaning:'2012년 측량 소실 전후 문서에만 남긴다. 현재 지도 표제나 데드존의 동의어로 사용하지 않는다.'}
+      ],
+      boundary:'해안 현실권과 내륙 이상권의 정확한 선은 측량할 수 없다. 대흑림은 남아메리카 전체가 문자 그대로 숲이라는 뜻이 아니다.'
+    },
+    deadZone:{
+      id:'dead-zone',primary:'북미 데드존',english:'North American Dead Zone',short:'DZ',
+      scope:'북아메리카 내륙 무응답권',mapLabel:'북미 데드존',
+      aliases:[
+        {label:'잊힌 땅',authority:'순례자 구어',meaning:'귀환 보장과 공통 행정기록이 사라진 상태를 가리킨다.'},
+        {label:'지옥',authority:'생환자 속칭',meaning:'체험을 압축한 표현이며 위협등급이나 단일 지배세력의 명칭이 아니다.'}
+      ],
+      legacy:[],
+      boundary:'현재 기록에서 데드존 또는 DEAD ZONE을 단독으로 쓰면 북미 내륙 무응답권을 뜻한다. 해안 격리선과 영유권 주장의 존속을 부정하지 않는다.'
+    },
+    southernTheater:{
+      id:'southern-theater',primary:'남방권',english:'Southern Theater',short:'SOUTH',
+      scope:'대흑림 외연·남아메리카 대서양 해안에 걸친 동원망',mapLabel:'남방권',
+      aliases:[
+        {label:'남방 작전권',authority:'기관 작전어',meaning:'병력·보급·의식 신호가 묶이는 범위를 가리킨다.'}
+      ],
+      legacy:[],
+      boundary:'국가·대륙·단일 교단의 영토명이 아니다. 남부 혈교, 해안 세력과 협력 성채가 모두 같은 지휘를 따른다는 뜻도 아니다.'
+    }
+  };
+
+  const geographyRules={
+    koreanDeadZone:'현재 한국어 표기는 데드존으로 붙여 쓴다. 인용문과 보호 원문은 원래 표기를 보존한다.',
+    southernTerms:'남부 혈교는 세력명, 남방권은 작전망, 남방 발신망은 감청된 통신 계통으로 구분한다.',
+    bloodSurfaces:{
+      northSea:{label:'북해 피의 호수 사건',kind:'단일 사건명',relation:'1986년 북해권 사건과 후대 봉쇄 기록만 가리킨다.'},
+      greatBlackForest:{label:'대흑림 피의 호수 흔적',kind:'복수 현장의 구전명',relation:'순례로에서 반복 보고된 현장들이다. 북해 사건과의 공통 기원은 확인되지 않았다.'},
+      deadZone:{label:'데드존 추모호·혈성 수면',kind:'개별 증언명',relation:'왕국 묘역과 귀환 증언의 현장명이다. 다른 두 기록과의 연결은 확인되지 않았다.'}
+    }
+  };
 
   const factions={
     uac:{
@@ -131,6 +175,8 @@
   root.ProjectCurseCanon=freeze({
     version:'5.54.0',
     official:{uacEnglish:'United Nations Anomaly Containment',syndicateEnglish:'Shadow Of Nemesis',haimunEnglish:'Power Of Haimun'},
+    geography,
+    geographyRules,
     ushinodaHierarchy:{
       factions:['타락교','혈교','그림자교'],
       lordsPerFaction:1,

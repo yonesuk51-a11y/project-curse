@@ -52,41 +52,41 @@
     },
     'evt-southern-mobilization':{
       id:'evt-southern-mobilization',code:'EVT-2030-0117',date:'2030.01.17',status:'CRITICAL / PARTIAL',confidence:'observed',
-      title:'남부 집단 소환·쿠데타 전조',
-      summary:'남부 해안 분파의 특수부대 집결, 도시권 집단 소환과 성위대 지휘부 침투 정황이 동시에 포착됐다.',
+      title:'남방권 집단 소환·쿠데타 전조',
+      summary:'남부 혈교 특수부대와 남방권 해안 세력의 집결, 도시권 집단 소환과 성위대 지휘부 침투 정황이 동시에 포착됐다.',
       region:'southamerica',coordinates:[-46,-23],history:'2030-01-17-broken-crown',factions:['sid','nhc','ushinoda','southern-blood'],records:['Cults_871104'],operation:'op-southern-coup',
-      participants:['피의 종교 남부권','남부 해안 분파','성위대 내부 공작망','몬수르 교회 일부','우시노다 잔존 인원'],
+      participants:['남부 혈교 전시망','남방권 해안 세력','성위대 내부 공작망','몬수르 교회 일부','우시노다 잔존 인원'],
       intelligence:[
-        '남부 특수부대는 적 전력을 분산시키기 위한 동시다발 소환을 준비 중이다.',
+        '남부 혈교 특수부대는 적 전력을 분산시키기 위한 동시다발 소환을 준비 중이다.',
         '성위대 지휘관 한 명이 특수부대 공작원으로 지목됐으나 명령 출처가 상충한다.',
-        '남부권은 북부 전선에서 일본 동맹권이 우세해지는 상황을 위협으로 판단한다.',
-        '데드존 분파의 순례자 지원·평화 노선이 남부 지휘부와 충돌하고 있다.',
-        '우시노다 잔존망은 F.H.C 내부 분쟁을 통제하지 못하며 일부 인원만 남부권에 흡수될 것으로 추정된다.'
+        '남부 혈교 지휘부는 북부 전선에서 일본 동맹권이 우세해지는 상황을 위협으로 본다.',
+        '데드존 분파의 순례자 지원·평화 노선이 남부 혈교 지휘부와 충돌하고 있다.',
+        '우시노다 잔존망은 F.H.C 내부 분쟁을 통제하지 못하며 일부 인원만 남방권 전시망에 편입될 것으로 추정된다.'
       ]
     }
   };
 
   const operation={
-    id:'op-southern-coup',incident:'evt-southern-mobilization',label:'남부 집단 소환 차단',code:'OP-BROKEN-CROWN',region:'남미 대흑림 / 남부 해안권',
+    id:'op-southern-coup',incident:'evt-southern-mobilization',label:'남방권 집단 소환 차단',code:'OP-BROKEN-CROWN',region:'남방권 / 대서양 해안·대흑림 외연',
     classification:'BLACK / COMMAND CONTESTED',status:'ACTIVE INTELLIGENCE',
     summary:'도시권 집단 소환과 성위대 지휘부 침투를 분리 확인하고, 남부 특수부대의 전력 분산 계획을 추적하는 진행 중 작전.',
     directive:'성위대 지휘관에 대한 처형 명령은 발신 계통 검증 전 집행 금지. 생존 여부와 공작 신분을 분리 확인할 것.',
     objectives:['도시별 소환 앵커 식별','해안 특수부대 이동 경로 차단','성위대 명령 계통 검증','북부 전선 교란 신호 분리','민간 정착지 철수 회랑 확보'],
     sites:[
       {x:94,y:426,label:'해안 감청소',kind:'facility'},
-      {x:246,y:374,label:'남부 집결지',kind:'hostile'},
+      {x:246,y:374,label:'남방권 집결지',kind:'hostile'},
       {x:414,y:292,label:'도시 소환권 A',kind:'incident'},
       {x:568,y:228,label:'성위대 지휘부',kind:'unknown'},
       {x:735,y:170,label:'도시 소환권 B',kind:'incident'},
       {x:880,y:118,label:'북부 교란선',kind:'line'}
     ],
     steps:[
-      {time:'T-06:00',title:'해안 분파 집결',note:'서로 적대하던 남부 소규모 교단의 통신 식별자가 하나의 지휘망 아래 묶였다.',route:[[94,426],[246,374]],units:[{id:'SIG-A',x:246,y:374,status:'unstable'}]},
+      {time:'T-06:00',title:'해안 세력 집결',note:'서로 적대하던 남방권 소규모 교단과 무장세력의 통신 식별자가 하나의 지휘망 아래 묶였다.',route:[[94,426],[246,374]],units:[{id:'SIG-A',x:246,y:374,status:'unstable'}]},
       {time:'T-04:20',title:'소환 앵커 운반',note:'의식 장비로 추정되는 화물이 두 도시와 성위대 보급선으로 분산됐다.',route:[[94,426],[246,374],[414,292],[568,228]],alternate:[[246,374],[735,170]],units:[{id:'CELL-3',x:414,y:292,status:'unstable'},{id:'CELL-7',x:735,y:170,status:'unknown'}]},
       {time:'T-02:10',title:'지휘부 신원 상충',note:'성위대 지휘관의 명령 서명과 남부 특수부대 암호키가 일치한다. 생존 시 처형하라는 별도 명령은 발신처가 확인되지 않았다.',route:[[94,426],[246,374],[414,292],[568,228]],units:[{id:'HG-01',x:568,y:228,status:'split'}]},
       {time:'T-00:40',title:'도시권 동시 소환',note:'두 도시에서 대규모 소환 전조가 발생했다. 현장 전력이 분리되면 북부 교란선이 열릴 가능성이 높다.',route:[[94,426],[246,374],[414,292],[568,228],[735,170]],alternate:[[568,228],[880,118]],units:[{id:'SID-4',x:414,y:292,status:'normal'},{id:'NHC-2',x:735,y:170,status:'unstable'}]},
-      {time:'T+00:00',title:'전력 분산 개시',note:'북부 전선과 남부 도시권에서 같은 시각의 위조 구조 신호가 송출됐다.',route:[[94,426],[246,374],[414,292],[568,228],[735,170],[880,118]],units:[{id:'NHC-2',x:880,y:118,status:'split'},{id:'HG-01',x:568,y:228,status:'unknown'}]},
-      {time:'T+00:18',title:'지휘 계통 단절',note:'남부 해안권 통신이 끊겼다. 작전 결과와 성위대 지휘관의 생존 여부는 확인되지 않았다.',route:[[94,426],[246,374],[414,292],[568,228],[735,170]],alternate:[[735,170],[414,292],[94,426]],units:[{id:'SID-4',x:414,y:292,status:'lost'},{id:'HG-01',x:568,y:228,status:'unknown'}]}
+      {time:'T+00:00',title:'전력 분산 개시',note:'북부 전선과 남방권 도시에서 같은 시각의 위조 구조 신호가 송출됐다.',route:[[94,426],[246,374],[414,292],[568,228],[735,170],[880,118]],units:[{id:'NHC-2',x:880,y:118,status:'split'},{id:'HG-01',x:568,y:228,status:'unknown'}]},
+      {time:'T+00:18',title:'지휘 계통 단절',note:'남방권 해안 통신이 끊겼다. 작전 결과와 성위대 지휘관의 생존 여부는 확인되지 않았다.',route:[[94,426],[246,374],[414,292],[568,228],[735,170]],alternate:[[735,170],[414,292],[94,426]],units:[{id:'SID-4',x:414,y:292,status:'lost'},{id:'HG-01',x:568,y:228,status:'unknown'}]}
     ]
   };
 

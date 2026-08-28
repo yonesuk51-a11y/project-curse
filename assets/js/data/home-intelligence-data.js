@@ -12,7 +12,7 @@
     version:'5.54.0',
     alert:{
       incident:'evt-southern-mobilization',
-      title:'남부 집단 소환·쿠데타 전조',
+      title:'남방권 집단 소환·쿠데타 전조',
       priority:'PRIORITY 01',
       confidence:'추정·교차 확인',
       threat:'CRITICAL',

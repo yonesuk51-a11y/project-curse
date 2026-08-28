@@ -217,7 +217,7 @@
         note:'순례 경로 · 검은 강 · 불빛 없는 성채',target:{kind:'region',id:'southamerica'}
       },
       {
-        id:'deadzone',number:'03',eyebrow:'THE DEAD ZONE',title:'데드 존',
+        id:'deadzone',number:'03',eyebrow:'THE DEAD ZONE',title:'데드존',
         status:'내륙 응답 없음',confidence:'지도 신뢰도 22%',tone:'dead',
         summary:'과거의 국가 지도와 현재의 귀환 기록이 일치하지 않는다. 돌아온 사람도 증거가 되지 못한다.',
         note:'귀환 검문 · 사라진 내륙 · 봉쇄된 구조 신호',target:{kind:'region',id:'northamerica'}
@@ -480,7 +480,7 @@
 
     function renderSynchronyIntel(event,point){
       const regionCount=event.points.filter(item=>item.region===point.region).length;
-      const regionLabel=point.region==='southamerica'?'대흑림 성채':'데드 존 검문소';
+      const regionLabel=point.region==='southamerica'?'대흑림 성채':'데드존 검문소';
       return `
         <div class="pc-map-intel-kicker">SYNCHRONY EVENT / ${escapeHTML(confidenceLabels[event.confidence]||event.confidence)}</div>
         <h3>${escapeHTML(event.title)}</h3>
@@ -508,15 +508,22 @@
       if(synchronySignal) return renderSynchronyIntel(synchronySignal.event,synchronySignal.point);
       const regionalDetails=(data.drilldowns||[]).filter(detail=>detail.region===region.id);
       if(!marker){
+        const naming=region.nomenclature;
+        const aliases=naming?.aliases?.map(item=>item.label).join(' · ');
+        const legacy=naming?.legacy?.map(item=>item.label).join(' · ');
         return `
           <div class="pc-map-intel-kicker">SELECTED REGION</div>
           <h3>${escapeHTML(region.label)}</h3>
           <p>${escapeHTML(region.description)}</p>
           <dl class="pc-map-facts">
+            ${naming?`<div><dt>기록 표제</dt><dd>${escapeHTML(naming.primary)} / ${escapeHTML(naming.short)}</dd></div>
+            <div><dt>지리 범위</dt><dd>${escapeHTML(naming.scope)}</dd></div>
+            ${aliases?`<div><dt>현지·구어</dt><dd>${escapeHTML(aliases)}</dd></div>`:''}
+            ${legacy?`<div><dt>폐기 표기</dt><dd>${escapeHTML(legacy)}</dd></div>`:''}`:''}
             <div><dt>관제 상태</dt><dd>${escapeHTML(region.status)}</dd></div>
             <div><dt>자료 상태</dt><dd>${escapeHTML(region.confidence)}</dd></div>
           </dl>
-          <div class="pc-map-warning">표시 좌표는 항법용이 아니다. 신뢰도와 상충 기록을 함께 판독할 것.</div>
+          <div class="pc-map-warning">${escapeHTML(naming?.boundary||'표시 좌표는 항법용이 아니다. 신뢰도와 상충 기록을 함께 판독할 것.')}</div>
           ${regionalDetails.length?`<div class="pc-map-crosslinks pc-map-detail-entry"><b>세부 권역</b>${regionalDetails.map(detail=>`<button type="button" data-map-open-detail="${escapeHTML(detail.id)}">${escapeHTML(detail.label)}<i>${escapeHTML(detail.confidence)} →</i></button>`).join('')}</div>`:''}`;
       }
 
