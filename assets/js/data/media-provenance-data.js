@@ -3,7 +3,7 @@
   'use strict';
   const data={
   "version": "1.1.0",
-  "generated": "2026-08-21",
+  "generated": "2026-08-31",
   "policy": "MEDIA PROVENANCE / RELEASE AUDIT",
   "overridesVersion": "1.0.0",
   "referenceOnly": [
@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 192,
-    "referenced": 192,
+    "registered": 204,
+    "referenced": 204,
     "unreferenced": 0,
     "review": 150,
-    "managed": 42,
+    "managed": 54,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 162,
+      "image": 174,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 24,
+      "PROJECT_GENERATED": 36,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 48,
+      "DELIVERY_DERIVATIVE": 56,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 12,
+      "RECONSTRUCTED": 16,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2139,6 +2139,98 @@
       "protectedScope": true
     },
     {
+      "path": "assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2005년 애시 크루 편제·첫 임무 인계 기록 기반 분석 재구성",
+      "handling": "실제 출동 장면, 인원 외형·소매 표식 또는 특정 사상자 신원의 증거로 표시 금지",
+      "credit": "Project Curse Ash Crew formation and first-mission handoff brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2228665,
+      "sha256": "247708e27d6faf1c35fddd20f91c24d7e80b445812c408374e95ba69fe0418db",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-internal-document-shell.mjs",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/2036-12-12-central-callsign-loss_001_reconstructed.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2036년 우시노다 중앙호출명 소실 감청 기록 기반 분석 재구성",
+      "handling": "우시노다교 전체 제거, 지휘부 사망 또는 특정 발신자 신원의 증거로 표시 금지",
+      "credit": "Project Curse 2036 central callsign loss intercept brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1475942,
+      "sha256": "947d3155628b1bd37d3c1322c72cbecc713751dda800df8b4fe92b35714985af",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-internal-document-shell.mjs",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/2038-06-29-sixth-northern-line_001_reconstructed.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2038년 북부 제6차 차단선 전황검토·감시노드 기록 기반 분석 재구성",
+      "handling": "정확한 전선 위치, 대원 외형, 적 전력 총량 또는 전쟁 종료의 증거로 표시 금지",
+      "credit": "Project Curse 2038 Sixth Northern Line review brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2007189,
+      "sha256": "4de981e124cf2d33076b689195884534e409f11b90681d5dc0a19f1d0e75ca84",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-internal-document-shell.mjs",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "삼야 무응답 독립시계·종 장부·검문소 자동기록 기반 분석 재구성",
+      "handling": "권역 간 통로·중계망·동일 공간 또는 호출 발신자 신원의 증거로 표시 금지",
+      "credit": "Project Curse Three-Night Silence independent-record comparison brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1986510,
+      "sha256": "0406f87ac6229d490609d0d4bdfe4c753aeefc220547962a2d36b8529c72ad8c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-internal-document-shell.mjs",
+        "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/broken-crown-erased-commander-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3038,6 +3130,134 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/archive-enex/source-records/daa52fcde14e129a569b7c1703bf0c5c.jpg",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/2005-01-21-ash-crew_001_reconstructed-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10168,
+      "sha256": "9dbad12f0f5085037ff40ba3f8c5ae5c2be90c150eb8d260072c8974626273c9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/2005-01-21-ash-crew_001_reconstructed-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 42528,
+      "sha256": "820043e6f47b0b28fbebc38a4f71a1dce6dd797869fcb94d9c862b474e1d65ef",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/2036-12-12-central-callsign-loss_001_reconstructed-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/2036-12-12-central-callsign-loss_001_reconstructed.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 2826,
+      "sha256": "533bfbf5d38671941db12f872578d510c8578ccffbea58433a10fb320278708d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/2036-12-12-central-callsign-loss_001_reconstructed.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/2036-12-12-central-callsign-loss_001_reconstructed-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/2036-12-12-central-callsign-loss_001_reconstructed.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9454,
+      "sha256": "86ca77cb31e71edef538b8e95e529dd5064fe386f6d947bdd354901c2c693b5d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/2036-12-12-central-callsign-loss_001_reconstructed.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/2038-06-29-sixth-northern-line_001_reconstructed-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/2038-06-29-sixth-northern-line_001_reconstructed.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10314,
+      "sha256": "b40ce6d3b93538f69d51c159781abc2aae6df10b02582099d8a3071ad3002959",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/2038-06-29-sixth-northern-line_001_reconstructed.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/2038-06-29-sixth-northern-line_001_reconstructed-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/2038-06-29-sixth-northern-line_001_reconstructed.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 36656,
+      "sha256": "cc9896b1896316a81ea97787c63dd481c51050344fc1598dd04c8f69485ba0f1",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/2038-06-29-sixth-northern-line_001_reconstructed.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/2042-10-31-three-night-silence_001_reconstructed-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 4742,
+      "sha256": "64a9e37016210ccc327109c6f14c3e565a725b246259417eae160f3d2a964ad0",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/2042-10-31-three-night-silence_001_reconstructed-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 18842,
+      "sha256": "8fa2b6781c9299a7b9958f3189fb2fdaaf88f098c6bf6d5859f9db0bb6dcaa5d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png",
       "referenced": true,
       "protectedScope": false
     },

@@ -38,6 +38,18 @@
     'assets/resources/derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png':Object.freeze({
       assetId:'VEA-NHC-FB-01',className:'RECONSTRUCTED',source:'N.H.C 전진기지 생활기록·인원 명부 기반 분석 재구성',date:'2026-08-23',integrity:'UNVERIFIED PERSONNEL COMPOSITE',originalState:'missing',handling:'서로 다른 시점의 인원 기록을 한 장면으로 병합했다. 실제 단체사진, 개인 외형, 부대 편제와 소매 표식을 확정하지 않는다.'
     }),
+    'assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png':Object.freeze({
+      assetId:'VEA-AC-HANDOFF-01',className:'RECONSTRUCTED',source:'2005년 애시 크루 편제·첫 임무 인계 기록 기반 분석 재구성',date:'2026-08-31',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'생존자 대피와 봉인 회수물 인계를 분리해 시각화했다. 실제 출동 장면, 인원 외형·소매 표식 또는 특정 사상자의 신원을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/2036-12-12-central-callsign-loss_001_reconstructed.png':Object.freeze({
+      assetId:'VEA-UCS-CALL-01',className:'RECONSTRUCTED',source:'2036년 우시노다 중앙호출명 소실 감청 기록 기반 분석 재구성',date:'2026-08-31',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'아홉 중계지의 무응답과 분리 재개된 두 수신을 시각화했다. 우시노다교 전체 제거, 지휘부 사망 또는 발신자의 신원을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/2038-06-29-sixth-northern-line_001_reconstructed.png':Object.freeze({
+      assetId:'VEA-NF-NODE-01',className:'RECONSTRUCTED',source:'2038년 북부 제6차 차단선 전황검토·감시노드 기록 기반 분석 재구성',date:'2026-08-31',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'폐쇄역의 분산 감시노드 운용을 재구성했다. 정확한 전선 위치, 대원 외형, 적 전력 총량 또는 전쟁 종료를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png':Object.freeze({
+      assetId:'VEA-SYNC-10-01',className:'RECONSTRUCTED',source:'삼야 무응답 독립시계·종 장부·검문소 자동기록 기반 분석 재구성',date:'2026-08-31',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'성채 여섯 곳과 검문소 네 곳의 독립 기록을 한 대조 화면에 배치했다. 권역 간 통로·중계망·동일 공간 또는 발신자의 신원을 확정하지 않는다.'
+    }),
     'assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png':Object.freeze({
       assetId:'VEA-NF-DUP-01',className:'RECONSTRUCTED',source:'2026년 북부전선 전황검토·복제 구조신호 보고 기반 분석 재구성',date:'2026-08-28',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'복제 구조신호, 분산 계측 노드와 제3 차단선의 관계를 한 장면에 합성했다. 실제 전황 사진, 대원 외형이나 구조 요청자의 신원을 확정하지 않는다.'
     }),

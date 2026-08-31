@@ -558,7 +558,7 @@
       image.loading='lazy';image.decoding='async';
       image.dataset.pcSource=record.visual.src;
       image.dataset.pcMediaMode='display';
-      if(root.ProjectCurseMedia) root.ProjectCurseMedia.apply(image,record.visual.src,{mode:'display',sizes:'(max-width: 760px) 94vw, 960px'});
+      if(window.ProjectCurseMedia) window.ProjectCurseMedia.apply(image,record.visual.src,{mode:'display',sizes:'(max-width: 760px) 94vw, 960px'});
       else image.src=record.visual.src;
       const caption=document.createElement('figcaption');
       caption.innerHTML=`<b>${record.visual.label||'INTERPRETIVE RECONSTRUCTION'}</b><span>${record.visual.caption||''}</span>`;

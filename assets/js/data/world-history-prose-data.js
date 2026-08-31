@@ -402,6 +402,13 @@
   };
 
   const recordVisuals={
+    '2005-01-21-ash-crew':{
+      src:'assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png',
+      className:'RECONSTRUCTED',
+      alt:'붕괴한 도시 통로에서 익명의 현장 인원들이 살아 있는 구조 대상과 봉인 회수 상자를 서로 다른 처리선으로 인계하는 분석 재구성',
+      label:'INTERPRETIVE RECONSTRUCTION / RECOVERY AND EVACUATION HANDOFF',
+      caption:'2005년 편입 기록과 현장지원국의 첫 임무 인계를 바탕으로 생존자·회수물·처리선을 한 장면에 분리해 나타냈다. 실제 출동 장면, 인원 외형·소매 표식 또는 특정 사상자의 신원을 입증하지 않는다.'
+    },
     '2006-12-31-aftermath':{
       src:'assets/resources/derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png',
       className:'RECONSTRUCTED',
@@ -415,6 +422,27 @@
       alt:'폐허가 된 북부 산업도시의 콘크리트 차단선 뒤 대응조와 멀리 떨어진 두 지점에서 같은 자세로 반복되는 인물 형상을 담은 분석 재구성',
       label:'INTERPRETIVE RECONSTRUCTION / DUPLICATED RESCUE SIGNAL',
       caption:'복제 구조신호, 분산 계측 노드와 제3 차단선을 한 장면에 겹친 분석 재구성이다. 실제 전황 사진이나 대원 외형, 구조 요청자의 신원을 입증하지 않는다.'
+    },
+    '2036-12-12-central-callsign-loss':{
+      src:'assets/resources/derived/2036-12-12-central-callsign-loss_001_reconstructed.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 감청실에서 익명의 분석원이 아홉 개의 꺼진 단말과 서로 떨어진 두 수신기를 마주한 분석 재구성',
+      label:'INTERPRETIVE RECONSTRUCTION / CENTRAL CALLSIGN LOSS',
+      caption:'2036년 아홉 중계지의 동시 무응답과 이후 분리 재개된 감청 신호를 한 장면에 겹쳤다. 중앙호출명의 소실만 나타내며 우시노다교 전체 제거, 지휘부 사망 또는 특정 발신자의 신원을 입증하지 않는다.'
+    },
+    '2038-06-29-sixth-northern-line':{
+      src:'assets/resources/derived/2038-06-29-sixth-northern-line_001_reconstructed.png',
+      className:'RECONSTRUCTED',
+      alt:'폭풍우가 치는 폐쇄 철도 변전소에서 네 명의 익명 현장 인원이 서로 떨어진 감시 노드를 재가동하는 분석 재구성',
+      label:'INTERPRETIVE RECONSTRUCTION / DISTRIBUTED NODE RESET',
+      caption:'2038년 전황검토와 폐쇄역에 남은 감시노드 기록을 바탕으로 철도 변전소·독립시계 노드 운용을 재구성했다. 정확한 전선 위치, 대원 외형, 적 전력 총량 또는 전쟁 종료를 입증하지 않는다.'
+    },
+    '2042-10-31-three-night-silence':{
+      src:'assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 대조실에서 서로 분리된 열 개의 관측창이 여섯 성채와 네 검문소의 무응답 상태를 따로 표시하는 분석 재구성',
+      label:'INTERPRETIVE RECONSTRUCTION / TEN INDEPENDENT RECORDS',
+      caption:'2042년 61시간 1분 동안 기록된 성채 여섯 곳과 검문소 네 곳의 동시 무응답을 열 개의 독립 관측창으로 재구성했다. 두 권역 사이의 통로·중계망·동일 공간 또는 호출의 실제 발신자를 입증하지 않는다.'
     }
   };
 

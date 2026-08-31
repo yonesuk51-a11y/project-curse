@@ -32,7 +32,17 @@
     "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-a-recon-v1.png",
     "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-b-direct-action-v1.png",
     "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-c-hell-response-v1.png",
-    "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-d-blacksite-v1.png"
+    "assets/resources/derived/project-curse-unnamed-swordsman-operator-candidate-d-blacksite-v1.png",
+    "assets/resources/derived/project-curse-hell-portrait-violet-haze-v1.png",
+    "assets/resources/derived/project-curse-hell-portrait-violet-haze-v2.png",
+    "assets/resources/derived/project-curse-hell-red-threshold-encounter-v1.png",
+    "assets/resources/derived/project-curse-hell-red-threshold-encounter-v2.png",
+    "assets/resources/derived/project-curse-hell-tactical-swordsman-profile-avatar-v1.png",
+    "assets/resources/derived/project-curse-hell-tactical-swordsman-violet-corridor-v1.png",
+    "assets/resources/derived/project-curse-terminal-investigation-scene-candidate-a-hell-raw-v1.png",
+    "assets/resources/derived/project-curse-terminal-investigation-scene-candidate-b-archive-v1.png",
+    "assets/resources/derived/project-curse-terminal-investigation-scene-candidate-c-violet-noir-v1.png",
+    "assets/resources/derived/project-curse-terminal-investigation-scene-candidate-d-analog-record-v1.png"
   ],
   "assets": {
     "assets/resources/derived/great-black-forest_reconstructed-v1.png": {
@@ -122,6 +132,38 @@
       "release": "PROJECT_GENERATED",
       "source": "데드존 최후 지도국·검은 고속도로·지도 종결선 진술 기반 분석 재구성",
       "handling": "실제 항법 사진, 유효 경로 또는 내륙 세력 위치 증거로 표시 금지"
+    },
+    "assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png": {
+      "credit": "Project Curse Ash Crew formation and first-mission handoff brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2005년 애시 크루 편제·첫 임무 인계 기록 기반 분석 재구성",
+      "handling": "실제 출동 장면, 인원 외형·소매 표식 또는 특정 사상자 신원의 증거로 표시 금지"
+    },
+    "assets/resources/derived/2036-12-12-central-callsign-loss_001_reconstructed.png": {
+      "credit": "Project Curse 2036 central callsign loss intercept brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2036년 우시노다 중앙호출명 소실 감청 기록 기반 분석 재구성",
+      "handling": "우시노다교 전체 제거, 지휘부 사망 또는 특정 발신자 신원의 증거로 표시 금지"
+    },
+    "assets/resources/derived/2038-06-29-sixth-northern-line_001_reconstructed.png": {
+      "credit": "Project Curse 2038 Sixth Northern Line review brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "2038년 북부 제6차 차단선 전황검토·감시노드 기록 기반 분석 재구성",
+      "handling": "정확한 전선 위치, 대원 외형, 적 전력 총량 또는 전쟁 종료의 증거로 표시 금지"
+    },
+    "assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png": {
+      "credit": "Project Curse Three-Night Silence independent-record comparison brief / built-in image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "삼야 무응답 독립시계·종 장부·검문소 자동기록 기반 분석 재구성",
+      "handling": "권역 간 통로·중계망·동일 공간 또는 호출 발신자 신원의 증거로 표시 금지"
     }
   }
 }
