@@ -7569,14 +7569,26 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     ['FIELD COMMAND','현장 지휘'],['SURVEILLANCE','감시'],['SEALED RECORDS','봉인 기록'],['RECOVERY','회수'],['CIVIL LINE','민간선'],['DISPOSAL','사후 처리'],['RITUAL SOURCE','의식 근원'],['URBAN INFILTRATION','도심 침투'],['BLACK SITE WATCH','블랙 사이트 감시'],['ROGUE SUPPLY','이탈 보급'],
     ['COMMAND','지휘'],['SEALED DATA','봉인 자료'],['POST-ACTION','사후 처리'],['FIELD HANDOFF','현장 인계'],['EVAC TRANSFER','피난 이관'],['EVIDENCE','증거'],['URBAN TRACE','도심 흔적'],['SEALED CULT','봉인 교단'],['SUBROUTE','하위 경로'],['HOSTILE','적대'],['RESTRICTED SAMPLE','제한 샘플'],['BLACK SUPPLY','암시장 보급'],['INFORMANT TRACE','정보원 흔적']
   ]);
+  const TEXT_PATTERNS=new Map();
+  // 토큰 단위로만 치환한다. 부분 문자열로 바꾸면 Classification 같은 단어가 깨진다.
+  function textPattern(en){
+    let re=TEXT_PATTERNS.get(en);
+    if(!re){
+      const body=String(en).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+      re=new RegExp("(^|[^A-Za-z])"+body+"(?![A-Za-z])","g");
+      TEXT_PATTERNS.set(en,re);
+    }
+    re.lastIndex=0;
+    return re;
+  }
   function swapTextNode(node){
     let t=node.nodeValue, next=t;
-    textMap.forEach((ko,en)=>{ next=next.split(en).join(ko); });
+    textMap.forEach((ko,en)=>{ next=next.replace(textPattern(en),(m,pre)=>pre+ko); });
     if(next!==t) node.nodeValue=next;
   }
   function localize(root=document){
     document.body.classList.add('pc5152br-korean-readability');
-    qa('[data-status]').forEach(el=>{ let v=el.getAttribute('data-status')||''; textMap.forEach((ko,en)=>{v=v.split(en).join(ko);}); el.setAttribute('data-status',v); });
+    qa('[data-status]').forEach(el=>{ let v=el.getAttribute('data-status')||''; textMap.forEach((ko,en)=>{v=v.replace(textPattern(en),(m,pre)=>pre+ko);}); el.setAttribute('data-status',v); });
     const walker=document.createTreeWalker(root.body||root,NodeFilter.SHOW_TEXT,{acceptNode(n){
       if(!n.nodeValue || !/[A-Z]{3,}|Status|Zone|Risk|Class|Direct Links/.test(n.nodeValue)) return NodeFilter.FILTER_REJECT;
       const p=n.parentElement; if(!p || ['SCRIPT','STYLE','TEXTAREA'].includes(p.tagName)) return NodeFilter.FILTER_REJECT;
