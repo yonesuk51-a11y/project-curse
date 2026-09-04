@@ -62,7 +62,7 @@
         <div class="pc-world-history-entry-copy"><p>아이반 레스작은 F.H.C와 우시노다교의 연결을 감시하기 위해 U.A.C 전신 조직을 세웠다. 그의 비인가 작전과 기억 소실 의혹, 작전지 인근의 검은 타르 목격담은 미확인 기록으로 남았다.</p><p>초기 조직의 목적은 구조나 봉쇄가 아니라 감시와 기록이었다. 구성원, 자금 출처, 작전 권한은 대부분 확인되지 않았고, 레스작 자신과 접촉했던 인물들조차 그의 존재를 정확히 기억하지 못했다.</p></div>
       </details>
       <details class="pc-world-history-entry">
-        <summary><time>1986.07.25</time><strong>「불멸을 향하여」 작전</strong><small>피의 호수에 대한 F.H.C의 본격 개입.</small></summary>
+        <summary><time>1986.02.01</time><strong>「불멸을 향하여」 작전</strong><small>피의 호수에 대한 F.H.C의 본격 개입.</small></summary>
         <div class="pc-world-history-entry-copy"><p>F.H.C는 독일 본토 ██ 지역의 피의 호수에 개입해 잔류물과 조사원의 사체까지 연구 대상으로 삼았다. U.A.C는 이 사건을 통해 F.H.C가 교단의 힘을 활용 가능한 자원으로 본다고 확신했다.</p><p>이후 N.H.C 전신 인원은 F.H.C 시설과 교단 거점을 비인가 방식으로 저지하기 시작했지만, 우시노다교의 침투는 이미 여러 국가와 기관으로 퍼지고 있었다.</p></div>
       </details>
       <details class="pc-world-history-entry">
@@ -207,7 +207,7 @@
 
   const recordIds = [
     '1975-09-12-amarion', '1975-distortion-system', '1982-03-22-fhc',
-    '1982-uac-watch', '1986-07-25-immortality', '1989-08-23-tokyo',
+    '1982-uac-watch', '1986-02-01-immortality', '1989-08-23-tokyo',
     '1993-11-02-uac', '1993-syndicate', '1995-03-20-tokyo-subway',
     '1997-01-27-classification', '1999-07-12-ubermensch',
     '2001-07-21-independence', '2002-02-20-ground-forces',
@@ -269,7 +269,7 @@
     host.innerHTML=`<header><div><small>WORLD CONDITION</small><h3>세계의 기본 규칙</h3><p>${framework.thesis}</p></div><span>기관은 원인이 아니라 후발 대응체계다.</span></header>
       <div class="pc-world-ontology">${framework.ontology.map(item=>`<article><small>${item.code}</small><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div>
       <details><summary>능력의 일곱 발현 경로와 대가</summary><div class="pc-world-ability-sources">${framework.abilitySources.map(item=>`<p><b>${item.name}</b><span>${item.cost}</span></p>`).join('')}</div></details>
-      <details><summary>괴이 재난 속 민간인의 일상</summary><p class="pc-world-public-baseline">${framework.publicBaseline}</p><div class="pc-world-civilian-systems">${framework.civilianSystems.map(item=>`<article><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div></details>`;
+      <details><summary>괴이 재난 속 민간인의 일상</summary><p class="pc-world-public-baseline">${framework.publicBaseline}</p><div class="pc-world-civilian-systems">${framework.civilianSystems.map(item=>`<article><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div></details>${framework.observerDivergence?`<details class="pc-world-history-canon-key"><summary>${framework.observerDivergence.label} — ${framework.observerDivergence.status}</summary><p class="pc-world-public-baseline">${framework.observerDivergence.rule}</p><div class="pc-world-civilian-systems">${framework.observerDivergence.cases.map(item=>`<article><button type="button" data-uac-route="history" data-uac-history-record="${item.record}">${item.label}</button><p>${item.note}</p></article>`).join('')}</div><p class="pc-world-public-baseline">${framework.observerDivergence.caution}</p></details>`:''}${framework.containmentDrift?`<details class="pc-world-history-canon-key"><summary>${framework.containmentDrift.label} — ${framework.containmentDrift.status}</summary><p class="pc-world-public-baseline">${framework.containmentDrift.rule}</p><div class="pc-world-civilian-systems">${framework.containmentDrift.cases.map(item=>`<article><button type="button" data-uac-route="history" data-uac-history-record="${item.record}">${item.label}</button><p>${item.note}</p></article>`).join('')}</div><p class="pc-world-public-baseline">${framework.containmentDrift.caution}</p></details>`:''}${framework.wielderCeiling?`<details class="pc-world-history-canon-key"><summary>${framework.wielderCeiling.label} — ${framework.wielderCeiling.status}</summary><p class="pc-world-public-baseline">${framework.wielderCeiling.rule}</p><p class="pc-world-public-baseline">${framework.wielderCeiling.consequence}</p><div class="pc-world-civilian-systems">${framework.wielderCeiling.cases.map(item=>`<article><button type="button" data-uac-route="history" data-uac-history-record="${item.record}">${item.label}</button><p>${item.note}</p></article>`).join('')}</div><p class="pc-world-public-baseline">${framework.wielderCeiling.caution}</p></details>`:''}`;
   }
   renderWorldFramework();
 

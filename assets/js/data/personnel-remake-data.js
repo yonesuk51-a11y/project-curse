@@ -18,7 +18,7 @@
     'sid-us':{label:'S.I.D 서부 귀환선',short:'서부 귀환선',code:'SWR',tone:'institution'},
     syndicate:{label:'S.O.N 레드울프망',short:'레드울프망',code:'RWN',tone:'rogue'},
     ushinoda:{label:'우시노다 사도석 주장자',short:'사도석',code:'USH',tone:'cult'},
-    haiman:{label:'P.O.H 하이먼 회랑',short:'하이먼 회랑',code:'HYM',tone:'rogue'}
+    haiman:{label:'P.O.H 하이문 회랑',short:'하이문 회랑',code:'HYM',tone:'rogue'}
   };
 
   const records={
@@ -41,7 +41,7 @@
     'alma-koenig':{name:'콘라트 발렌',unit:'유니온 제3잔존시설',recordFunction:'중앙 지휘가 끊긴 F.H.C 시설을 독립 피난소로 바꾸려 한 관리자.',incident:'2021 서브매서커 이전 지휘권 분리의 선행 사례'},
 
     'ezekiel-kalp':{name:'엘리아스 카르프',unit:'아크 제2회수구역',role:'아크 회수구역장',recordFunction:'연구 자산 회수와 생존자 구조를 같은 명령서에 넣은 지휘관.',incident:'2006 북해 회수선 실종사건'},
-    'sakuma-yuta':{name:'사쿠마 진',unit:'아크 내부정보선 / 하이먼 이탈망',role:'전향 정보원 / 레드 마우스',recordFunction:'조국·기관·교단 사이에서 이름을 바꾸며 살아남은 이중 정보원.',incident:'1989 도쿄 기록 및 2006 오리진 실험체 탈출'},
+    'sakuma-yuta':{name:'사쿠마 진',unit:'아크 내부정보선 / 하이문 이탈망',role:'전향 정보원 / 레드 마우스',recordFunction:'조국·기관·교단 사이에서 이름을 바꾸며 살아남은 이중 정보원.',incident:'1989 도쿄 기록 및 2006 오리진 실험체 탈출'},
     'karl-maxwell':{name:'케일럽 맥스웰',unit:'아크 야외회수조',recordFunction:'괴이보다 먼저 굶주림과 추위에 무너지는 회수대의 현실을 보여 주는 사냥꾼.',incident:'2004 유콘 백색회랑 19일 생환'},
     'brian-alberoz':{name:'브루노 알바레스',unit:'아크 표식추적조',recordFunction:'카드 표식을 이용해 실종자의 마지막 이동을 재구성하는 사냥꾼.',incident:'2005 남대서양 의식선 추적'},
     'yanami-shinka':{name:'야나기 신카',unit:'아크 중량회수조',recordFunction:'강한 능력이 구조 성공과 생존을 보장하지 않는다는 사망 기록.',incident:'2005 아크 제7창고 붕괴',abilitySource:'선천 생기 / 염동 발현',abilityCost:'사용량에 비례한 미세혈관 파열과 방향감각 소실'},
@@ -74,7 +74,7 @@
 
     'mizumi-yanami':{name:'야나미 미즈호',unit:'우시노다 혈교 / 혈좌 주장자',role:'혈좌 주장자',recordFunction:'교주라는 호칭이 한 사람의 직책인지 계승 가능한 좌석인지 흔드는 인물.',incident:'2003 피의 강 결계 현장',abilitySource:'교단 계약 / 혈좌 의식',abilityCost:'타인의 피를 움직일수록 자신의 기억이 결계 참여자에게 분산'},
     'ramus-manson':{name:'엘리어스 맨슨',unit:'우시노다 타락교 / 부패좌 주장자',role:'부패좌 주장자',recordFunction:'능력을 드러내지 않고 집단의 죄책감을 의식으로 바꾸는 설교자.',incident:'2006 세 도시 동시 고백집회',abilitySource:'교단 계약 / 집단고백 의식',abilityCost:'청중의 죄책감을 받을수록 자신의 감정과 타인의 감정을 구분하지 못함'},
-    'apostle-luke-eugene':{name:'루시앙 유진',unit:'우시노다 제1석 주장자',role:'제1석 주장자 / 삼권능 모방자',recordFunction:'제1사도가 한 인간인지 시대마다 되풀이되는 좌석인지 판정할 수 없게 만드는 존재.',incident:'1986 피의 호수 삼권능 흔적',abilitySource:'기원 불명 / 삼중 권능 모방',abilityCost:'복제한 기술마다 고유한 기억과 신체 특징 하나가 일시 소실'},
+    'apostle-luke-eugene':{name:'루시앙 유진',unit:'우시노다 제1석 주장자',role:'제1석 주장자 / 삼권능 모방자',recordFunction:'첫 번째 사도가 한 인간인지 시대마다 되풀이되는 좌석인지 판정할 수 없게 만드는 존재.',incident:'1986 피의 호수 삼권능 흔적',abilitySource:'기원 불명 / 삼중 권능 모방',abilityCost:'복제한 기술마다 고유한 기억과 신체 특징 하나가 일시 소실'},
     'apostle-urzag':{name:'우르자그',unit:'우시노다 육체석 주장자',role:'육체석 주장자',recordFunction:'이름이 인격이 아니라 여러 육체를 건너는 명령일 가능성을 보여 주는 존재.',incident:'2004 육체이전 23분 공백',abilitySource:'의식 이식 / 육체강탈',abilityCost:'이전할 때마다 이전 숙주의 욕망과 공포가 새 육체에 잔류'},
     'apostle-jade-jackson':{name:'제이드 잭슨',unit:'우시노다 그림자석 주장자',role:'그림자석 주장자',recordFunction:'조직을 죽이지 않고 내부 기억과 그림자를 갈라 장기 붕괴시키는 침투자.',incident:'2005 S.I.D 그림자 자율행동 사건',abilitySource:'교단 계약 / 그림자 빙의',abilityCost:'침투한 정신마다 자신의 그림자가 독립 의지를 얻음'},
     'apostle-shahin':{name:'샤힌 아자르',unit:'우시노다 의지석 주장자',role:'의지석 주장자',recordFunction:'명령하지 않고 이미 가진 결심을 극단으로 밀어 자멸시키는 검사.',incident:'2006 북부전선 탈영·돌격 동시발생',abilitySource:'교단 계약 / 의지증폭',abilityCost:'타인의 결심을 증폭할수록 본인의 선택 능력이 일시 마비'},
@@ -85,7 +85,7 @@
     'apostle-sharma':{name:'라비 샤르마',unit:'우시노다 재생석 주장자',role:'재생석 주장자',recordFunction:'재생할수록 인간의 좌우대칭과 원래 형태를 잃는 공성 전력.',incident:'2006 북부 차단벽 19시간 압박',abilitySource:'의식 이식 / 초재생',abilityCost:'큰 손상을 복구할수록 비인간 조직과 촉수가 영구 잔류'},
     'apostle-uro':{name:'우로 카인',unit:'우시노다 뇌영석 주장자',role:'뇌영석 주장자',recordFunction:'그림자와 기록선 자체를 전력 통로로 바꾸는 계승 경쟁자.',incident:'2006 시에나 계보문양 대조',abilitySource:'유물 계승 / 그림자뇌격',abilityCost:'전력을 흘린 지도·사진의 경로가 실제 기억 속 장소와 뒤섞임'},
 
-    'semyon-reyes':{name:'세묜 레예스',unit:'P.O.H 하이먼 회랑',role:'인력·장비 운송책',recordFunction:'실험 대상으로 팔릴 사람을 운송명부의 빈자리로 빼돌리는 내부 배신자.',incident:'2005–2006 오리진 대상 6명 경로 이탈'}
+    'semyon-reyes':{name:'세묜 레예스',unit:'P.O.H 하이문 회랑',role:'인력·장비 운송책',recordFunction:'실험 대상으로 팔릴 사람을 운송명부의 빈자리로 빼돌리는 내부 배신자.',incident:'2005–2006 오리진 대상 6명 경로 이탈'}
   };
 
   root.ProjectCursePersonnelRemake=freeze({

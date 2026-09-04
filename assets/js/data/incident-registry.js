@@ -15,9 +15,9 @@
       region:'northamerica',coordinates:[-98,39],history:'1975-09-12-amarion',factions:['amarion','fhc'],records:['Unknown_Record1_860204']
     },
     'evt-blood-lake':{
-      id:'evt-blood-lake',code:'EVT-1986-0725',date:'1986.07.25',status:'RESIDUAL',confidence:'confirmed',
+      id:'evt-blood-lake',code:'EVT-1986-0201',date:'1986.02.01',status:'RESIDUAL',confidence:'confirmed',
       title:'피의 호수 사건',summary:'F.H.C 조사팀이 북해권 혈액성 수역에 진입한 뒤 발생한 회수·실종 사건.',
-      region:'europe',coordinates:[9.2,55.5],history:'1986-07-25-immortality',factions:['fhc','uac','nhc','blood-cult'],
+      region:'europe',coordinates:[9.2,55.5],history:'1986-02-01-immortality',factions:['fhc','uac','nhc','blood-cult'],
       records:['Immortality_860201','Unknown_Record2_860205'],operation:'op-immortality'
     },
     'evt-tokyo-record':{

@@ -21,7 +21,7 @@
     {id:'sid-us',label:'S.I.D 미국 지부',short:'S.I.D',code:'SID',tone:'institution',factionKeys:['sid']},
     {id:'syndicate',label:'신디케이트',short:'신디케이트',code:'SYN',tone:'rogue',factionKeys:['syndicate']},
     {id:'ushinoda',label:'우시노다교',short:'우시노다',code:'USH',tone:'cult',factionKeys:['ushinoda']},
-    {id:'haiman',label:'하이먼',short:'하이먼',code:'HYM',tone:'rogue',factionKeys:['haimun']}
+    {id:'haiman',label:'하이문',short:'하이문',code:'HYM',tone:'rogue',factionKeys:['haimun']}
   ];
   const groups=legacyGroups.map(group=>({...group,...(remakeSource?.groupOverrides?.[group.id]||{})}));
 
@@ -129,12 +129,12 @@
       limits:['능력, 지휘 범위와 유니온과의 관계는 제공되지 않았다.']
     },
     {
-      id:'sakuma-yuta',name:'사쿠마 유타',aliases:['레드 마우스'],group:'fhc-ark',secondaryGroups:['haiman'],role:'U.A.C 정보원 / 하이먼 리더',status:'active',certainty:'partial',
-      overview:'F.H.C-아크 구간에서는 U.A.C 정보원으로, 하이먼 구간에서는 “레드 마우스”라는 이름의 리더이자 오리진 실험체로 기재된다. 두 기록은 동일 인물을 가리키는 것으로 직접 연결되어 있다.',
+      id:'sakuma-yuta',name:'사쿠마 유타',aliases:['레드 마우스'],group:'fhc-ark',secondaryGroups:['haiman'],role:'U.A.C 정보원 / 하이문 리더',status:'active',certainty:'partial',
+      overview:'F.H.C-아크 구간에서는 U.A.C 정보원으로, 하이문 구간에서는 “레드 마우스”라는 이름의 리더이자 오리진 실험체로 기재된다. 두 기록은 동일 인물을 가리키는 것으로 직접 연결되어 있다.',
       affiliations:[
         {key:'uac',label:'U.A.C',role:'정보원',certainty:'listed'},
         {key:'fhc',label:'F.H.C-아크',role:'잠입·전향 경위 미확인',certainty:'partial'},
-        {key:'haimun',label:'하이먼',role:'리더 / 레드 마우스',certainty:'listed'}
+        {key:'haimun',label:'하이문',role:'리더 / 레드 마우스',certainty:'listed'}
       ],
       capabilities:['겜블러 표기','오리진 실험체'],
       notes:['조국에 충성했으나 일종의 배신을 당해 돌아선 것으로 기재된다.','“진정한 힘을 목도한 주군을 모시기로 한다”는 동기 문구가 남아 있다.'],
@@ -288,9 +288,9 @@
       limits:['능력과 세부 활동이 물음표로 남아 있다.']
     },
     {
-      id:'apostle-luke-eugene',name:'루크 유진',group:'ushinoda',role:'제1사도',status:'active',certainty:'listed',
-      overview:'우시노다교 제1사도로 기재된 복합 능력 사용자다.',
-      affiliations:[{key:'ushinoda',label:'우시노다교',role:'제1사도',certainty:'listed'}],
+      id:'apostle-luke-eugene',name:'루크 유진',group:'ushinoda',role:'제1석 주장자',status:'active',certainty:'listed',
+      overview:'우시노다교 제1석 주장자로 기재된 복합 능력 사용자다.',
+      affiliations:[{key:'ushinoda',label:'우시노다교',role:'제1석 주장자',certainty:'listed'}],
       capabilities:['기술 모방 — 그림자·타락·혈액','제6안','예지'],
       limits:['사도 번호가 강함의 순위를 뜻하는지는 확인되지 않았다.','각 모방 능력의 범위와 제6안의 기능은 제공되지 않았다.']
     },
@@ -352,8 +352,8 @@
     },
     {
       id:'semyon-reyes',name:'세묜 레예스',group:'haiman',role:'소속 인물',status:'unknown',certainty:'partial',
-      overview:'하이먼 인물군에서 이름만 남아 있는 인물이다.',
-      affiliations:[{key:'haimun',label:'하이먼',role:'소속 인물',certainty:'partial'}],
+      overview:'하이문 인물군에서 이름만 남아 있는 인물이다.',
+      affiliations:[{key:'haimun',label:'하이문',role:'소속 인물',certainty:'partial'}],
       limits:['직책, 능력, 사쿠마 유타와의 관계 및 현재 상태가 제공되지 않았다.']
     }
   ];

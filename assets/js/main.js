@@ -7753,9 +7753,21 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     return KEEP_PATTERNS.some(re=>re.test(t));
   }
   function normalizeTerm(t){ return String(t||'').replace(/[：:;,.，。)\]】]+$/,'').replace(/^[(\[【]+/,'').trim(); }
+  const TERM_PATTERNS=new Map();
+  // 토큰 단위로만 치환한다. 부분 문자열로 바꾸면 CLASSIFICATION 같은 단어가 깨진다.
+  function termPattern(en){
+    let re=TERM_PATTERNS.get(en);
+    if(!re){
+      const body=String(en).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+      re=new RegExp("(^|[^A-Za-z])"+body+"(?![A-Za-z])","g");
+      TERM_PATTERNS.set(en,re);
+    }
+    re.lastIndex=0;
+    return re;
+  }
   function replaceTextValue(value){
     let next=String(value||'');
-    TERM_MAP.forEach((ko,en)=>{ next=next.split(en).join(ko); });
+    TERM_MAP.forEach((ko,en)=>{ next=next.replace(termPattern(en),(m,pre)=>pre+ko); });
     // common mixed-case labels from older blocks
     next=next.replace(/ZONE-CLASS/g,'구역 등급').replace(/ZONE CLASS/g,'구역 등급').replace(/SETTING TEXTS/g,'설정 기록').replace(/REGION/g,'지역').replace(/LAYER/g,'표시 항목').replace(/SELECTED SIGNAL/g,'선택 신호').replace(/SIGNALS/g,'신호 기록').replace(/INTELLIGENCE NETWORK/g,'감청 관계망').replace(/NETWORK/g,'관계망').replace(/\bStatus\b/g,'상태').replace(/\bZone\b/g,'활동권').replace(/\bRisk\b/g,'위험').replace(/\bClass\b/g,'분류').replace(/\bDirect Links\b/g,'직접 연결');
     return next;
@@ -7897,10 +7909,22 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     document.body.classList.remove('pc584-main-drawer-open','pc5152be-drawer-open');
     return true;
   }
+  const PAIR_PATTERNS=new Map();
+  // 토큰 단위로만 치환한다. 부분 문자열로 바꾸면 CLASSIFICATION 같은 단어가 깨진다.
+  function pairPattern(en){
+    let re=PAIR_PATTERNS.get(en);
+    if(!re){
+      const body=String(en).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+      re=new RegExp("(^|[^A-Za-z])"+body+"(?![A-Za-z])","g");
+      PAIR_PATTERNS.set(en,re);
+    }
+    re.lastIndex=0;
+    return re;
+  }
   function replaceValue(value){
     let out=String(value||'');
     // Longer labels first so ZONE-CLASS does not degrade to ZONE-분류.
-    REPLACE_PAIRS.forEach(([en,ko])=>{ out=out.split(en).join(ko); });
+    REPLACE_PAIRS.forEach(([en,ko])=>{ out=out.replace(pairPattern(en),(m,pre)=>pre+ko); });
     out=out.replace(/\bStatus\b/g,'상태').replace(/\bZone\b/g,'활동권').replace(/\bRisk\b/g,'위험').replace(/\bClass\b/g,'분류').replace(/\bDirect Links\b/g,'직접 연결');
     return out;
   }

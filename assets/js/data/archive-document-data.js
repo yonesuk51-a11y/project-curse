@@ -9,7 +9,7 @@
         code:'FERAL-CLASSIFICATION',
         title:'괴이',
         summary:'리버스 현장에서 확인된 괴이·상위체·이례체를 행동과 발생 경로에 따라 분류하고, 개체별 관찰 기록과 대응 기준을 정리한 초기 보고서.',
-        date:'1997.01.27', owner:'키무라 쿄 / U.A.C 개체 분류실', classification:'원문 복원·통합 개정본',
+        date:'1986.07.22 원본 / 1997.01.27 통합 개정', owner:'키무라 쿄 / U.A.C 개체 분류실', classification:'원문 복원·통합 개정본',
         hero:{src:'../../assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp',alt:'Ferals, Superiors, Unusuals로 나뉜 타락 개체 분류도',caption:'CORRUPTED LIFEFORMS / SIMPLIFIED FIELD CLASSIFICATION'},
         sections:[
           {title:'작성 경위와 범위',paragraphs:[
@@ -405,7 +405,7 @@
         code:'SID-SAKUMA',
         title:'사쿠마의 테이프',
         summary:'F.H.C 도쿄 교육기관의 이상 징후를 조사하던 사쿠마 유타의 기록과 실종 경위.',
-        date:'사건 기준 1989.08.23', owner:'S.I.D 도쿄 지부', classification:'공개 복구본',
+        date:'기록 1999.10.28 / 사건 기준 1989.08.23', owner:'S.I.D 도쿄 지부', classification:'공개 복구본',
         sections:[
           {title:'조사 대상',paragraphs:[
             'F.H.C가 운영에 관여한 도쿄 교육기관에서 학생 실종, 비정상 사망과 신체 변형 사례가 연속해서 보고됐다. 기관 내부에서는 Basic Of Blood Path와 Basic Of Flesh Path가 일반 교재처럼 배포되고 있었다.',

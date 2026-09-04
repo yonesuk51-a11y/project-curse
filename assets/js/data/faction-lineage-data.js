@@ -19,7 +19,7 @@
     ushinoda:{
       name:'우시노다교',short:'공통 교단',kind:'근원 교단',state:'confirmed',command:'단일 중앙지휘 미확인',
       summary:'타락교·혈교·그림자교라는 세 종파를 공유 명칭 아래 묶는 교단 계통. 세 종파의 존재와 정원은 확정됐지만 모든 현장 명령이 하나의 중앙에서 나오는지는 확인되지 않았다.',
-      history:['1986-07-25-immortality','1989-08-23-tokyo','2024-03-17-ushinoda-fabrication']
+      history:['1986-02-01-immortality','1989-08-23-tokyo','2024-03-17-ushinoda-fabrication']
     },
     'corruption-cult':{
       name:'타락교',short:'신체 계통',kind:'정식 종파',state:'confirmed',command:'교리상 로드좌 1 / 사도석 4',
@@ -29,7 +29,7 @@
     'blood-cult':{
       name:'혈교',short:'혈액 계통',kind:'정식 종파',state:'confirmed',command:'교리상 로드좌 1 / 사도석 4',
       summary:'혈액·희생·생명 매개를 중심으로 움직이는 우시노다의 정식 종파. 남부 혈교의 계승 주장은 별도 판정 대상이다.',
-      history:['1986-07-25-immortality','2024-03-17-ushinoda-fabrication']
+      history:['1986-02-01-immortality','2024-03-17-ushinoda-fabrication']
     },
     'shadow-cult':{
       name:'그림자교',short:'빙의 계통',kind:'정식 종파',state:'confirmed',command:'교리상 로드좌 1 / 사도석 4',
@@ -64,7 +64,7 @@
 
   const historyMeta={
     '1975-09-12-amarion':{date:'1975.09.12',title:'아마리온 설립'},
-    '1986-07-25-immortality':{date:'1986.07.25',title:'「불멸을 향하여」 작전'},
+    '1986-02-01-immortality':{date:'1986.02.01',title:'「불멸을 향하여」 작전'},
     '1989-08-23-tokyo':{date:'1989.08.23',title:'도쿄 지부 기록'}
   };
 

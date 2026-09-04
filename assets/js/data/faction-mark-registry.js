@@ -91,7 +91,7 @@
     },
     'blood-cult':{
       name:'혈교',asset:'assets/faction_marks/blood-cult.svg',type:'종파 의식문양 / 감식 재구성',source:'피의 호수·Blood Path 교재·의식 저장소',assetState:'파생 벡터 / 중앙 종파 추정형',
-      firstSeen:'1986.07.25 이전',confidence:'B',usage:'혈액 의식진·저장용기·교재',accent:'#ac2431',
+      firstSeen:'1986.02.01 이전',confidence:'B',usage:'혈액 의식진·저장용기·교재',accent:'#ac2431',
       symbols:[
         {label:'닫힌 혈액 방울',text:'피를 소모품이 아니라 기억과 통로를 보존하는 그릇으로 본다.'},
         {label:'좌우 유입축',text:'희생자와 의식자가 같은 혈액 좌표에 묶이는 구조를 나타낸다.'},

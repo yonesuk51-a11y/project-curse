@@ -62,14 +62,14 @@
       },
       {
         id:'Unknown_Record3_920711', code:'REDWOLF-DEFECTION', access:'open', format:'document',
-        category:'incident', categoryLabel:'사건·회수', date:'1992.07.11', risk:'HIGH', provenance:'UNVERIFIED',
+        category:'incident', categoryLabel:'사건·회수', date:'2005.09.01', risk:'HIGH', provenance:'UNVERIFIED',
         tags:['레드울프','이탈','CCTV'],
         title:'레드울프 이탈 기록',
         summary:'웨이드 밀렌과 제임스 애셔가 이탈 직전 나눈 대화가 담긴 암호화 CCTV 기록.'
       },
       {
         id:'Unknown_Record4_930314', code:'SON-ILLEGAL-ARMS', access:'open', format:'document',
-        category:'incident', categoryLabel:'사건·회수', date:'1993.03.14', risk:'HIGH', provenance:'UNVERIFIED',
+        category:'incident', categoryLabel:'사건·회수', date:'2005년 이후', risk:'HIGH', provenance:'UNVERIFIED',
         tags:['S.O.N','비인가 장비','감청'],
         title:'S.O.N 비인가 장비 유통 기록',
         summary:'축복으로 위장한 병기 계획을 논의한 웨이드 밀렌·윌리엄 카터의 감청 음성.'
@@ -97,7 +97,7 @@
       },
       {
         id:'Operation_Broken_Crown', code:'OP-BROKEN-CROWN', access:'open', format:'document',
-        category:'operation', categoryLabel:'작전', date:'PENDING', risk:'CRITICAL', provenance:'UNVERIFIED',
+        category:'operation', categoryLabel:'작전', date:'2030.01.17', risk:'CRITICAL', provenance:'UNVERIFIED',
         tags:['남방','쿠데타','집단 소환'],
         title:'부서진 왕관 작전 판정 기록',
         summary:'남방 집단 소환을 차단하며 처형 명령의 진위를 판별하는 대리 지휘 정보 기록.'

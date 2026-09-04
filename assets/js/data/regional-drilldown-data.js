@@ -66,7 +66,7 @@
         warning:'호수의 기원과 실종 인원의 최종 상태는 확인되지 않았다. 잔류 반응이 있다는 사실을 호수가 이동하거나 증식했다는 결론으로 확대하지 말 것.',
         operation:'op-immortality',
         visual:{
-          src:'assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png',history:'1986-07-25-immortality',assetId:'VEA-NS-BL-01',
+          src:'assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png',history:'1986-02-01-immortality',assetId:'VEA-NS-BL-01',
           label:'분석 재구성 / 현장 원본 아님',title:'북해 피의 호수 봉쇄선 재구성',
           alt:'폭우가 내리는 북해 연안에서 사슬 봉쇄선과 투광등 너머 검붉은 수면을 감시하는 두 명의 익명 현장 인원을 담은 분석 재구성',
           caption:'1986년 유닛2 원기록과 후대 봉쇄 감시 기록을 한 장면에 겹쳤다. 실제 현장 사진, 대원 외형 또는 호수의 기원을 확정하지 않는다.',
@@ -97,15 +97,15 @@
           {id:'north-sea-blockade',className:'front',label:'NORTH SEA BLOCKADE AXIS',risk:'high',signal:'observed',rule:'봉쇄 유지가 사건 종결이나 현상 위치의 고정을 뜻하지 않는다',siteIds:['europe-analysis-zone','europe-blockade-line','europe-blood-lake'],points:[[904,151],[742,92],[596,229]]}
         ],
         sites:[
-          {id:'europe-entry-s',x:76,y:433,type:'facility',label:'유닛2 S지점',meta:'16:10 / 마렌 예거트·요나스 밀로 진입',status:'진입 기록 확인',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality',history:'1986-07-25-immortality'},
+          {id:'europe-entry-s',x:76,y:433,type:'facility',label:'유닛2 S지점',meta:'16:10 / 마렌 예거트·요나스 밀로 진입',status:'진입 기록 확인',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality',history:'1986-02-01-immortality'},
           {id:'europe-abandoned-tent',x:239,y:365,type:'incident',label:'버려진 텐트',meta:'빈 내부·혈흔·변형된 영상 문장',status:'현장 의미 미확인',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality'},
           {id:'europe-river-reaction',x:407,y:302,type:'anomaly',label:'강변 응고 반응점',meta:'혈액과 유사한 점도·응고 반응 관측',status:'접촉 금지',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality'},
           {id:'europe-blood-lake',x:596,y:229,type:'incident',label:'피의 호수 사건권',meta:'혈액성 수면·대형 실루엣·인식표 회수',status:'RESIDUAL',confidence:'confirmed',records:['Immortality_860201','Unknown_Record2_860205'],operation:'op-immortality',incident:'evt-blood-lake'},
           {id:'europe-ipd-split',x:742,y:286,type:'signal',label:'I.P.D 분리 신호권',meta:'밀로의 장치가 복수 좌표에서 활성화',status:'신원 연속성 불명',confidence:'observed',records:['Immortality_860201'],operation:'op-immortality'},
           {id:'europe-last-signal',x:850,y:351,type:'unknown',label:'마지막 영상 신호',meta:'18:56 마지막 전송·19:00 임무 완료 처리',status:'인원 상태 미확인',confidence:'disputed',records:['Immortality_860201'],operation:'op-immortality'},
           {id:'europe-seventh-line',x:890,y:424,type:'line',label:'7분대 회수 접근선',meta:'18:51 이동 기록·세부 좌표 삭제',status:'경로 부분 복원',confidence:'estimated',records:['Immortality_860201'],operation:'op-immortality'},
-          {id:'europe-analysis-zone',x:904,y:151,type:'facility',label:'F.H.C 유럽 분석권',meta:'BL-088 표본·회수 사체·생체연구 보관계통',status:'부분 가동',confidence:'observed',records:['Unknown_Record2_860205'],history:'1986-07-25-immortality'},
-          {id:'europe-blockade-line',x:742,y:92,type:'line',label:'북해 봉쇄 감시선',meta:'피의 호수 잔류 반응 관측축',status:'봉쇄 유지',confidence:'confirmed',history:'1986-07-25-immortality'}
+          {id:'europe-analysis-zone',x:904,y:151,type:'facility',label:'F.H.C 유럽 분석권',meta:'BL-088 표본·회수 사체·생체연구 보관계통',status:'부분 가동',confidence:'observed',records:['Unknown_Record2_860205'],history:'1986-02-01-immortality'},
+          {id:'europe-blockade-line',x:742,y:92,type:'line',label:'북해 봉쇄 감시선',meta:'피의 호수 잔류 반응 관측축',status:'봉쇄 유지',confidence:'confirmed',history:'1986-02-01-immortality'}
         ]
       },
       {
