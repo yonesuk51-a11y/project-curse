@@ -25,8 +25,12 @@
     </section>
     <div class="pc-world-history-reference-stack" data-history-reference-stack>
       <details class="pc-world-history-reference">
-        <summary><span><small>WORLD RULES</small><b>세계의 기본 규칙</b></span><em>괴이·능력·민간 생존 체계&nbsp;＋</em></summary>
+        <summary><span><small>WORLD RULES</small><b>세계의 기본 규칙</b></span><em>존재 구분·발현 대가·민간 생존&nbsp;＋</em></summary>
         <div><section class="pc-world-framework" data-world-framework aria-label="세계 기본법"></section></div>
+      </details>
+      <details class="pc-world-history-reference">
+        <summary><span><small>UNCONFIRMED PATTERNS</small><b>확인되지 않은 세 규칙</b></span><em>관측·봉쇄·능력 상한&nbsp;＋</em></summary>
+        <div><section class="pc-world-framework" data-world-observations aria-label="확인되지 않은 세 규칙"></section></div>
       </details>
       <details class="pc-world-history-reference">
         <summary><span><small>TECHNOLOGY TRACE</small><b>일본 기술 도약의 계보</b></span><em>1982–1992 계측 계획&nbsp;＋</em></summary>
@@ -269,9 +273,19 @@
     host.innerHTML=`<header><div><small>WORLD CONDITION</small><h3>세계의 기본 규칙</h3><p>${framework.thesis}</p></div><span>기관은 원인이 아니라 후발 대응체계다.</span></header>
       <div class="pc-world-ontology">${framework.ontology.map(item=>`<article><small>${item.code}</small><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div>
       <details><summary>능력의 일곱 발현 경로와 대가</summary><div class="pc-world-ability-sources">${framework.abilitySources.map(item=>`<p><b>${item.name}</b><span>${item.cost}</span></p>`).join('')}</div></details>
-      <details><summary>괴이 재난 속 민간인의 일상</summary><p class="pc-world-public-baseline">${framework.publicBaseline}</p><div class="pc-world-civilian-systems">${framework.civilianSystems.map(item=>`<article><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div></details>${framework.observerDivergence?`<details class="pc-world-history-canon-key"><summary>${framework.observerDivergence.label} — ${framework.observerDivergence.status}</summary><p class="pc-world-public-baseline">${framework.observerDivergence.rule}</p><div class="pc-world-civilian-systems">${framework.observerDivergence.cases.map(item=>`<article><button type="button" data-uac-route="history" data-uac-history-record="${item.record}">${item.label}</button><p>${item.note}</p></article>`).join('')}</div><p class="pc-world-public-baseline">${framework.observerDivergence.caution}</p></details>`:''}${framework.containmentDrift?`<details class="pc-world-history-canon-key"><summary>${framework.containmentDrift.label} — ${framework.containmentDrift.status}</summary><p class="pc-world-public-baseline">${framework.containmentDrift.rule}</p><div class="pc-world-civilian-systems">${framework.containmentDrift.cases.map(item=>`<article><button type="button" data-uac-route="history" data-uac-history-record="${item.record}">${item.label}</button><p>${item.note}</p></article>`).join('')}</div><p class="pc-world-public-baseline">${framework.containmentDrift.caution}</p></details>`:''}${framework.wielderCeiling?`<details class="pc-world-history-canon-key"><summary>${framework.wielderCeiling.label} — ${framework.wielderCeiling.status}</summary><p class="pc-world-public-baseline">${framework.wielderCeiling.rule}</p><p class="pc-world-public-baseline">${framework.wielderCeiling.consequence}</p><div class="pc-world-civilian-systems">${framework.wielderCeiling.cases.map(item=>`<article><button type="button" data-uac-route="history" data-uac-history-record="${item.record}">${item.label}</button><p>${item.note}</p></article>`).join('')}</div><p class="pc-world-public-baseline">${framework.wielderCeiling.caution}</p></details>`:''}`;
+      <details><summary>괴이 재난 속 민간인의 일상</summary><p class="pc-world-public-baseline">${framework.publicBaseline}</p><div class="pc-world-civilian-systems">${framework.civilianSystems.map(item=>`<article><b>${item.name}</b><p>${item.text}</p></article>`).join('')}</div></details>`;
   }
   renderWorldFramework();
+
+  function renderWorldObservations(){
+    const host=root.querySelector('[data-world-observations]');
+    const framework=chronology?.worldFramework;
+    if(!host||!framework) return;
+    const cases=list=>`<div class="pc-world-civilian-systems">${list.map(item=>`<article><button type="button" data-uac-route="history" data-uac-history-record="${item.record}">${item.label}</button><p>${item.note}</p></article>`).join('')}</div>`;
+    const rule=item=>item?`<details class="pc-world-history-canon-key" open><summary>${item.label} — ${item.status}</summary><p class="pc-world-public-baseline">${item.rule}</p>${item.consequence?`<p class="pc-world-public-baseline">${item.consequence}</p>`:''}${cases(item.cases)}<p class="pc-world-public-baseline">${item.caution}</p></details>`:'';
+    host.innerHTML=`<header><div><small>UNCONFIRMED PATTERNS</small><h3>확인되지 않은 세 규칙</h3><p>세계가 어떻게 어긋나는지에 대한 세 가지 관측이다. 어느 기관도 확인하지 못했고, 셋 다 결정 대기 상태로 남아 있다.</p></div><span>사례를 같은 원인으로 묶는 근거로 쓰지 않는다.</span></header>${rule(framework.observerDivergence)}${rule(framework.containmentDrift)}${rule(framework.wielderCeiling)}`;
+  }
+  renderWorldObservations();
 
   function renderTechnologyTrace(){
     if(!technologyTrace||!japanTechnology) return;
