@@ -7325,18 +7325,29 @@ window.ProjectCursePatch = Object.assign(window.ProjectCursePatch||{}, {patch54:
     if(nav.dataset.pc5152bjFlat==='1') return;
     nav.dataset.pc5152bjFlat='1';
     nav.classList.add('pc5152bj-flat-nav');
+    // 화면 목록은 build-info 의 6개 화면과 같은 순서·번호를 쓴다.
+    const NAV_SCREENS=[
+      ['terminal-home','00','단말 상태','폐쇄 서버'],
+      ['map-room','01','상황 관제','권역 관제도'],
+      ['history','02','세계 기록','세계 사건 연표'],
+      ['faction-info','03','세력 분석','기관·관계 기록'],
+      ['archive-entry','04','기록보관소','회수 색인'],
+      ['personnel','05','인물 기록','인물 명부']
+    ];
+    // 문서 페이지에는 각 화면이 없다. 같은 문서의 앵커를 가리키면 링크가 죽으므로
+    // 본 앱 주소로 내보내고 data-target 을 붙이지 않아 SPA 핸들러가 가로채지 않게 한다.
+    const inApp=!!document.getElementById('terminal-home');
+    const appBase=location.pathname.includes('/docs/')?'../../index.html':'index.html';
+    const navItems=NAV_SCREENS.map(([id,idx,label,sub])=>inApp
+      ? `<a data-target="${id}" href="#${id}"><i>${idx}</i><b>${label}</b><small>${sub}</small></a>`
+      : `<a href="${appBase}#${id}"><i>${idx}</i><b>${label}</b><small>${sub}</small></a>`).join('');
     nav.innerHTML=`
       <div class="pc5151-terminal-status">
         <span>U.A.C 복구 신호</span>
         <b>PC-03 / 폐쇄 기록</b>
         <small>폐쇄 기록 색인</small>
       </div>
-      <div class="pc5152bj-nav-list">
-        <a data-target="terminal-home" href="#terminal-home"><i>00</i><b>단말 상태</b><small>폐쇄 서버</small></a>
-        <a data-target="history" href="#history"><i>01</i><b>세계 사건 연표</b><small>세계 연표</small></a>
-        <a data-target="faction-info" href="#faction-info"><i>02</i><b>세력 분석실</b><small>기관·관계 기록</small></a>
-        <a data-target="archive-entry" href="#archive-entry"><i>03</i><b>기록보관실</b><small>회수 색인</small></a>
-      </div>`;
+      <div class="pc5152bj-nav-list">${navItems}</div>`;
     nav.addEventListener('click',function(e){
       const a=e.target.closest && e.target.closest('a[data-target]');
       if(!a) return;
