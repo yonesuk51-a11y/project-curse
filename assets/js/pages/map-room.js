@@ -1074,7 +1074,7 @@
       mount.innerHTML=`
         <div class="pc-map-room">
           <header class="pc-map-room-head">
-            <div><span>U.A.C CARTOGRAPHIC INTELLIGENCE</span><h2>권역 관제도</h2><p>${state.mode==='landing'?'네 개 전구에서 회수된 불완전한 관측 기록.':'확인 좌표, 현장 진술, 손상된 작전 신호를 겹쳐 표시한다.'}</p></div>
+            <div><span>U.A.C CARTOGRAPHIC INTELLIGENCE</span><h2>상황 관제 / 권역 관제도</h2><p>${state.mode==='landing'?'네 개 전구에서 회수된 불완전한 관측 기록.':'확인 좌표, 현장 진술, 손상된 작전 신호를 겹쳐 표시한다.'}</p></div>
             <div class="pc-map-live"><i></i><span>PARTIAL UPLINK</span><b>${escapeHTML(data.version)}</b></div>
           </header>
           ${state.mode==='landing'?renderTheaterIndex():renderWorkspace()}

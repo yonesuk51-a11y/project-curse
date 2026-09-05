@@ -10,7 +10,7 @@
   root.innerHTML = `
     <header class="pc-world-history-head">
       <div class="label">세계 기록 / 중앙 연표 복구본</div>
-      <h2>세계 사건 연표</h2>
+      <h2>세계 기록 / 세계 사건 연표</h2>
       <p>세계는 어느 날 한꺼번에 무너지지 않았다. 오래된 금기, 산업화된 계측, 대응기관의 모방과 대륙의 침묵이 수십 년에 걸쳐 겹쳤다. 먼저 네 전환점으로 흐름을 잡고, 필요한 시대와 사건 기록을 열 수 있다.</p>
     </header>
     <div class="pc-world-history-range">ORIGIN UNKNOWN–2042 / ACTIVE ARCHIVE</div>
