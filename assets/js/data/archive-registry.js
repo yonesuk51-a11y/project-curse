@@ -108,6 +108,13 @@
         tags:['민간','대피 훈련','아동'],
         title:'아이들의 대피 수업',
         summary:'경보색, 창문 봉인, 가족 기억 대조문과 대피번호를 아이에게 가르치는 학교 훈련 교재.'
+      },
+      {
+        id:'Returner_Note_West', code:'CIVIL-CUSTODY-NOTE', access:'open', format:'document',
+        category:'incident', categoryLabel:'사건·회수', date:'2019.11.30 보관 / 회수일 미기재', risk:'GUARDED', provenance:'UNVERIFIED',
+        tags:['민간','귀환자','기억 대조'],
+        title:'보관함에 남긴 쪽지',
+        summary:'서부 귀환 회랑 검문소 보관함에서 나온 민간인의 손글씨. 가족 기억 대조 질문 세 개가 답 없이 적혀 있다.'
       }
     ]
   });
