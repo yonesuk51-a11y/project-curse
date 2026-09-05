@@ -249,3 +249,9 @@
   #history .pc-world-history-index-row{transition:none}
   #history .pc-world-history-index-row:hover,#history .pc-world-history-index-row:focus-visible{transform:none}
 }
+
+/* 같은 사건을 다른 편이 적은 기록. 앞의 보고서와 시각적으로 분리한다. */
+#history .pc-world-history-counter{margin:26px 0 0;padding:18px 16px 4px;border-top:1px solid rgba(183,73,80,.34);border-left:2px solid rgba(183,73,80,.44);background:rgba(24,10,12,.32)}
+#history .pc-world-history-counter>header{display:flex;align-items:baseline;gap:10px;margin:0 0 14px}
+#history .pc-world-history-counter>header small{color:rgba(207,103,110,.68);font:700 .56rem/1.5 ui-monospace,Consolas,monospace;letter-spacing:.09em}
+#history .pc-world-history-counter>header b{color:rgba(229,231,232,.86);font-size:.82rem;letter-spacing:.02em}

@@ -592,6 +592,43 @@
       body.appendChild(section);
     });
 
+    // 같은 사건을 다른 편이 적은 기록이 있으면 나란히 붙인다.
+    const counter=record.counterRecord;
+    if(counter){
+      const panel=document.createElement('section');
+      panel.className='pc-world-history-counter';
+      const type=prose?.documentTypes?.[counter.documentType];
+      const head=document.createElement("header");
+      head.innerHTML=`<small>${type?.code||'CONTESTED RECORD'}</small><b>${type?.label||'상충 기록'}</b>`;
+      panel.appendChild(head);
+      const meta=document.createElement('div');
+      meta.className='pc-world-history-provenance';
+      [['작성',counter.author],['수신',counter.recipient],['목적',counter.purpose],['자료 상태',counter.provenance]].forEach(([k,v])=>{
+        if(!v) return;
+        const row=document.createElement('div');
+        const key=document.createElement('span'); key.textContent=k;
+        const val=document.createElement('b'); val.textContent=v;
+        row.append(key,val); meta.appendChild(row);
+      });
+      panel.appendChild(meta);
+      (counter.fragments||[]).forEach(fragment=>{
+        const block=document.createElement('section');
+        block.className=`pc-world-history-fragment is-${fragment.kind||'document'}`;
+        const label=document.createElement('small'); label.textContent=fragment.label||'기록 발췌';
+        const copy=fragment.kind==='log'?document.createElement('pre'):fragment.kind==='quote'?document.createElement('blockquote'):document.createElement('p');
+        copy.textContent=fragment.text;
+        block.append(label,copy); panel.appendChild(block);
+      });
+      if(counter.limit){
+        const limit=document.createElement('aside');
+        limit.className='pc-world-history-limit';
+        const cap=document.createElement('span'); cap.textContent='두 기록을 대조할 때';
+        const text=document.createElement('p'); text.textContent=counter.limit;
+        limit.append(cap,text); panel.appendChild(limit);
+      }
+      body.appendChild(panel);
+    }
+
     const linkedIncidents=incidentNetwork?.incidentList?.filter(item=>item.history===record.id)||[];
     const linkedSynchrony=(window.ProjectCurseMapRoom?.synchronyEvents||[]).filter(event=>event.history===record.id);
     const mappedIncidentIds=new Set((window.ProjectCurseMapRoom?.markers||[]).map(marker=>marker.incident).filter(Boolean));
