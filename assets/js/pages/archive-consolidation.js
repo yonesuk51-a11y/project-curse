@@ -18,7 +18,7 @@
     {index:'01',range:'아마리온–피의 호수',title:'금기를 사업으로 바꾸다',summary:'공간 개척 사업과 피의 호수 작전은 현상을 막기보다 이용할 수 있는 자원으로 보려 했던 시기를 남겼다.',ids:['Unknown_Record1_860204','Immortality_860201','Unknown_Record2_860205']},
     {index:'02',range:'괴이–구역–교단',title:'위협에 이름을 붙이다',summary:'괴이와 위험 구역, 교단의 의식을 분류하면서 흩어진 피해가 하나의 세계적 위협으로 묶이기 시작했다.',ids:['Ferals_860722','Zone_870815','Cults_871104']},
     {index:'03',range:'이탈–유통–실종',title:'기관이 서로를 배신하다',summary:'레드울프의 이탈, 비인가 병기 유통과 사쿠마의 실종은 대응기관 내부의 균열이 이미 진행 중이었음을 보여준다.',ids:['Unknown_Record3_920711','Unknown_Record4_930314','Sakuma_Tape_991028']},
-    {index:'04',range:'대흑림–데드존',title:'국가 이후의 생존',summary:'대흑림과 데드존에서는 국가 대신 성채, 검문소와 순례자의 불완전한 규칙이 사람을 살려 두었다.',ids:['Great_Black_Forest_Region','Pilgrim_Rules_GBF','Dead_Zone_Pilgrimage']},
+    {index:'04',range:'대흑림–데드존–도시권',title:'국가 이후의 생존',summary:'대흑림과 데드존, 그리고 도시권에서는 국가 대신 성채와 검문소, 순례자와 학교의 불완전한 규칙이 사람을 살려 두었다.',ids:['Great_Black_Forest_Region','Pilgrim_Rules_GBF','Dead_Zone_Pilgrimage','Civil_Child_Drill']},
     {index:'05',range:'남부 작전',title:'남부 전쟁이 모이다',summary:'분열된 교단과 특수부대, 집단 소환 계획이 하나의 쿠데타 작전으로 수렴한다.',ids:['Operation_Broken_Crown']}
   ];
   let observer=null;

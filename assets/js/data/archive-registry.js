@@ -101,6 +101,13 @@
         tags:['남방','쿠데타','집단 소환'],
         title:'부서진 왕관 작전 판정 기록',
         summary:'남방 집단 소환을 차단하며 처형 명령의 진위를 판별하는 대리 지휘 정보 기록.'
+      },
+      {
+        id:'Civil_Child_Drill', code:'CIVIL-CHILD-DRILL', access:'open', format:'document',
+        category:'guide', categoryLabel:'규정·안내', date:'2011.09.05 초판 / 2027.03 개정', risk:'GUARDED', provenance:'UNVERIFIED',
+        tags:['민간','대피 훈련','아동'],
+        title:'아이들의 대피 수업',
+        summary:'경보색, 창문 봉인, 가족 기억 대조문과 대피번호를 아이에게 가르치는 학교 훈련 교재.'
       }
     ]
   });
