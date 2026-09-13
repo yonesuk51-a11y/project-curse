@@ -349,3 +349,26 @@ html[data-audio-blocked] .uac-shell-status button{border-style:dashed;color:#b7a
   .pc-terminal-radar::before { animation: none; transform: rotate(28deg); }
   .pc-terminal-primary,.uac-shell-quick { transition: none; }
 }
+
+/* 첫 방문자가 기관 사건보다 기록 한 장을 먼저 읽게 한다. */
+.pc-terminal-first-record{margin-top:14px;border:1px solid var(--pc-line);border-top:2px solid #7f3036;background:linear-gradient(140deg,rgba(76,20,25,.14),rgba(6,8,9,.97) 44%)}
+.pc-terminal-first-record>header{display:grid;gap:8px;padding:20px 24px 0}
+.pc-terminal-first-record>header small{color:#c45b63;font:750 8px/1 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em}
+.pc-terminal-first-record>header h2{margin:0;color:#e0e4e2;font-size:clamp(1.25rem,1.8vw,1.75rem);font-weight:580;letter-spacing:-.02em}
+.pc-terminal-first-record blockquote{margin:16px 24px 0;padding:14px 18px;border-left:2px solid rgba(183,73,80,.55);background:rgba(233,228,214,.035)}
+.pc-terminal-first-record blockquote p{margin:0;color:#d3d6d2;font-size:.86rem;line-height:1.95}
+.pc-terminal-first-record blockquote p+p{margin-top:10px;color:#aeb5b2}
+.pc-terminal-first-record-note{margin:12px 24px 0;color:#7f8885;font-size:.72rem;line-height:1.7}
+.pc-terminal-first-record nav{display:flex;flex-wrap:wrap;gap:8px;padding:16px 24px 20px}
+.pc-terminal-first-record nav button{min-height:36px;padding:8px 14px;border:1px solid rgba(190,197,195,.22);color:#c2c8c5;background:rgba(8,10,11,.8);font-size:.74rem;cursor:pointer}
+.pc-terminal-first-record nav button:first-child{border-color:rgba(183,73,80,.6);color:#e7e9e8;background:rgba(129,31,37,.18)}
+.pc-terminal-first-record nav button:hover,.pc-terminal-first-record nav button:focus-visible{background:rgba(129,31,37,.24);outline:1px solid rgba(179,57,65,.5)}
+.pc-terminal-first-record nav button i{margin-left:4px;color:#d56a72;font-style:normal}
+@media (max-width: 760px) {
+  .pc-terminal-first-record>header{padding:17px 17px 0}
+  .pc-terminal-first-record blockquote{margin:14px 17px 0;padding:12px 14px}
+  .pc-terminal-first-record blockquote p{font-size:.82rem;line-height:1.9}
+  .pc-terminal-first-record-note{margin:10px 17px 0}
+  .pc-terminal-first-record nav{padding:14px 17px 17px}
+  .pc-terminal-first-record nav button{flex:1 1 auto;min-height:42px}
+}
