@@ -327,7 +327,7 @@
         const links=item.records.length+(item.history?1:0)+(item.factions?.length||0);
         const actions=item.category==='withheld'?`<div class="pc-map-index-item-actions">
           ${item.history?`<button type="button" data-map-open-history="${escapeHTML(item.history)}">세계 기록</button>`:''}
-          ${(item.factionKeys||[]).map(key=>`<button type="button" data-map-open-faction="${escapeHTML(key)}">${escapeHTML(root.ProjectCurseCanon?.factions?.[key]?.name||key)}</button>`).join('')}
+          ${(item.factionKeys||[]).map(key=>{const label=escapeHTML(root.ProjectCurseCanon?.factions?.[key]?.name||key);return root.ProjectCurseFactionAnalysis?.factions?.[key]?`<button type="button" data-map-open-faction="${escapeHTML(key)}">${label}</button>`:`<span class="pc-map-faction-static">${label}</span>`;}).join('')}
           ${item.records.map(record=>`<button type="button" data-map-open-record="${escapeHTML(record)}">${escapeHTML(record)}</button>`).join('')}
         </div>`:'';
         return `<article class="pc-map-index-item pc-map-index-item--${escapeHTML(item.category)}${selected?' is-selected':''}" role="listitem">
@@ -533,7 +533,7 @@
         .map(record=>`<button type="button" data-map-open-record="${escapeHTML(record)}">${escapeHTML(record)}<i>ARCHIVE →</i></button>`).join('');
       const factions=(incident?.factions||[])
         .filter(key=>root.ProjectCurseCanon?.factions?.[key])
-        .map(key=>`<button type="button" data-map-open-faction="${escapeHTML(key)}">${escapeHTML(root.ProjectCurseCanon.factions[key].name)}<i>INTEL →</i></button>`).join('');
+        .map(key=>{const label=escapeHTML(root.ProjectCurseCanon?.factions?.[key]?.name||key);return root.ProjectCurseFactionAnalysis?.factions?.[key]?`<button type="button" data-map-open-faction="${escapeHTML(key)}">${label}<i>INTEL →</i></button>`:`<span class="pc-map-faction-static">${label}</span>`;}).join('');
       const operation=marker.operation?operationById(marker.operation):null;
       const nearestDetail=detailForMarker(marker);
       return `

@@ -47,7 +47,9 @@
     return ({
       'PRIMARY INSTITUTIONS':'주요 기관',
       'EXTERNAL POWERS':'독립 세력',
-      'CULT LINEAGE / COMMAND STATUS':'우시노다 계통'
+      'CULT LINEAGE / COMMAND STATUS':'우시노다 계통',
+      'FIELD RESPONSE LINE':'현장 사후 대응',
+      'PREDECESSOR RECORD':'전신 기업 기록'
     })[label]||label;
   }
 
@@ -270,13 +272,22 @@
     return true;
   }
 
+  function missingDossier(key){
+    const name=window.ProjectCurseCanon?.factions?.[key]?.name||key||'미확인 세력';
+    return `<article class="pc-faction-dossier pc-faction-dossier-missing" data-pc-faction-dossier="${esc(key||'')}" aria-live="polite">
+      <header class="pc-faction-dossier-head"><div><span>FACTION</span><h3>${esc(name)}</h3></div></header>
+      <p class="pc-faction-lead">이 세력의 분석 문서는 아직 작성되지 않았다. 다른 세력의 문서로 대신 열지 않는다.</p>
+    </article>`;
+  }
+
   function renderDossier(key){
     const section=prepareSection();
     if(!section) return false;
-    selected=source.factions[key]?key:'uac';
+    // 문서가 없는 세력을 다른 세력 문서로 대신 열지 않는다.
+    selected=source.factions[key]?key:null;
     section.innerHTML=`<div class="pc-faction-analysis pc-faction-analysis-detail" data-pc-faction-owner="1">
       <button class="pc-faction-back" data-pc-faction-back type="button"><i aria-hidden="true">←</i> 세력 목록으로 복귀</button>
-      ${dossier(selected)}
+      ${selected?dossier(selected):missingDossier(key)}
     </div>`;
     bindMarkFallbacks(section);
     resetScroll();
@@ -289,7 +300,6 @@
   }
 
   function openDossier(key){
-    if(!source.factions[key]) key='uac';
     if(window.ProjectCurseShell?.getRoute()!=='faction-info') window.ProjectCurseShell?.navigate('faction-info');
     return renderDossier(key);
   }
@@ -322,8 +332,18 @@
         event.preventDefault();
         event.stopImmediatePropagation();
         window.ProjectCurseAudioControl?.play?.('incident.link');
+        const incidentId=incident.dataset.pcFactionIncident;
+        // 지도 표식이 승인되지 않은 사건(위치 보류)은 빈 지도 대신 연표 기록으로 연다.
+        const hasMarker=(window.ProjectCurseMapRoom?.markers||[]).some(marker=>marker.incident===incidentId);
+        const historyId=incidentNetwork?.getIncident?.(incidentId)?.history;
+        if(!hasMarker&&historyId){
+          window.ProjectCurseShell?.navigate('history',{replace:false,historyMode:'push'}).then(()=>{
+            window.ProjectCurseWorldHistoryRuntime?.open?.(historyId);
+          });
+          return;
+        }
         window.ProjectCurseShell?.navigate('map-room',{replace:false,historyMode:'push'}).then(()=>{
-          window.ProjectCurseMapRoomRuntime?.showIncident?.(incident.dataset.pcFactionIncident);
+          window.ProjectCurseMapRoomRuntime?.showIncident?.(incidentId);
         });
         return;
       }

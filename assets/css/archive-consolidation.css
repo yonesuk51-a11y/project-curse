@@ -188,3 +188,8 @@ body.pc-archive-index-active #archive-entry .pc-archive-row:focus-visible{outlin
   body.pc-archive-index-active #archive-entry.active .pc-archive-card,body.pc-archive-index-active #archive-entry .pc-archive-card.is-requested:after{animation:none}
   body.pc-archive-index-active #archive-entry .pc-archive-card,body.pc-archive-index-active #archive-entry .pc-archive-card-visual img,body.pc-archive-index-active #archive-entry .pc-archive-card-foot i b{transition:none}
 }
+
+/* 자료 출처 링크 — 휴대 기기 탭 영역 확보 */
+@media (max-width: 760px), (pointer: coarse) {
+  .pc-archive-audit-link a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 14px}
+}

@@ -1174,3 +1174,6 @@
   .pc-map-recent-list button { transition:none; }
   .pc-map-visual-open:hover .pc-map-visual-frame.pc-media-ready>img,.pc-map-visual-open:focus-visible .pc-map-visual-frame.pc-media-ready>img{transform:none}
 }
+
+/* 분석 문서가 없는 세력 이름 — 링크가 아니라 표시만 한다. */
+.pc-map-faction-static{display:inline-flex;align-items:center;color:rgba(203,208,206,.6);cursor:default}

@@ -255,3 +255,11 @@
 #history .pc-world-history-counter>header{display:flex;align-items:baseline;gap:10px;margin:0 0 14px}
 #history .pc-world-history-counter>header small{color:rgba(207,103,110,.68);font:700 .56rem/1.5 ui-monospace,Consolas,monospace;letter-spacing:.09em}
 #history .pc-world-history-counter>header b{color:rgba(229,231,232,.86);font-size:.82rem;letter-spacing:.02em}
+
+/* 확인되지 않은 세 규칙의 사례 버튼 — 기본 버튼 모양을 지우고 탭 영역을 확보한다. */
+#history .pc-world-civilian-systems article>button{display:block;width:100%;margin:0 0 6px;padding:9px 0;border:0;border-bottom:1px solid rgba(190,197,195,.16);border-radius:0;color:#dfe3e1;background:transparent;font:inherit;font-size:.78rem;font-weight:620;line-height:1.4;text-align:left;cursor:pointer}
+#history .pc-world-civilian-systems article>button::after{content:" ›";color:#c45b63}
+#history .pc-world-civilian-systems article>button:hover,#history .pc-world-civilian-systems article>button:focus-visible{color:#fff;outline:1px solid rgba(179,57,65,.45);outline-offset:2px}
+@media (max-width: 760px), (pointer: coarse) {
+  #history .pc-world-civilian-systems article>button{min-height:44px;padding:12px 0}
+}

@@ -273,3 +273,8 @@ body.pc-preferences-open{overflow:hidden}
   .pc-channel-identity::before,.pc-channel-sigil::after,.pc-channel-live>b,.content-page.pc-channel-arrival *{animation:none!important}
   .pc-preference-panel,.pc-preference-dialog,.uac-shell-quick a[data-channel-route]::after{transition-duration:.01ms!important}
 }
+
+/* 휴대 기기에서 채널 정보 토글을 손가락으로 누를 수 있는 크기로 키운다. */
+@media (max-width: 760px), (pointer: coarse) {
+  .pc-channel-density-toggle{width:40px;min-width:40px;height:36px;min-height:36px}
+}
