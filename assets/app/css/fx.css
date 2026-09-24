@@ -1,0 +1,172 @@
+/* Project Curse 6 — 연출(pc-fx.js)과 화면 공용 연출 부품.
+   셸은 멀쩡하게 둔다: 채널 인계는 상단 바의 채널 표지 자리와 바 아래 1px 연결선만 쓴다.
+   손상 느낌(현상·잡음)은 증거 층에만 쓴다. 글로우·번쩍임·큰 움직임 없음.
+   모션 감소 설정이면 pc-fx.js가 연출을 만들지 않고, 여기의 반복 움직임도 끈다. */
+
+/* ---------- 1. 채널 인계 ---------- */
+.tc-bar-channel {
+  position: relative;
+  flex: 1 1 auto; /* 인계 문구가 들어갈 자리 — 브랜드와 상태 계기 사이의 빈칸을 쓴다 */
+}
+.tc-fx-handoff {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  color: var(--ch-ink, var(--text-2));
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: .12em;
+  opacity: 0;
+  pointer-events: none;
+}
+.tc-fx-handing .tc-fx-handoff {
+  opacity: 1;
+}
+.tc-fx-handing .tc-bar-channel > i,
+.tc-fx-handing .tc-bar-channel > span:not(.tc-fx-handoff) {
+  opacity: 0;
+}
+.tc-fx-link {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 1px;
+  background: var(--ch, var(--amber));
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+.tc-fx-link.is-running {
+  animation: tc-fx-link 760ms var(--ease) both;
+}
+@keyframes tc-fx-link {
+  0% { opacity: 1; transform: scaleX(0); }
+  72% { opacity: 1; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+
+/* ---------- 2. 단말 기동 ---------- */
+.tc-fx-boot {
+  position: fixed;
+  inset: var(--bar-h) 0 0 0;
+  z-index: 25;
+  display: grid;
+  align-content: center;
+  padding: var(--s6) max(var(--s5), 8vw);
+  background: var(--bg);
+  pointer-events: none;
+  animation: tc-fx-fade-in 120ms linear both;
+}
+.tc-fx-boot.is-leaving {
+  animation: tc-fx-fade-out 220ms linear both;
+}
+.tc-fx-boot-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--amber);
+  transform-origin: left center;
+  animation: tc-fx-link 1200ms linear both;
+}
+.tc-fx-boot-lines {
+  display: grid;
+  gap: 6px;
+  max-width: 620px;
+  font-family: var(--mono);
+  font-size: var(--fs-s);
+  letter-spacing: .06em;
+}
+.tc-fx-boot-lines li {
+  display: grid;
+  grid-template-columns: minmax(0, 22ch) minmax(0, 1fr);
+  gap: var(--s3);
+  animation: tc-fx-line 150ms steps(3, end) both;
+}
+.tc-fx-boot-lines span {
+  color: var(--text-3);
+}
+.tc-fx-boot-lines b {
+  color: var(--amber-ink);
+  font-weight: 500;
+}
+@keyframes tc-fx-line {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+@keyframes tc-fx-fade-in {
+  from { opacity: 0; }
+}
+@keyframes tc-fx-fade-out {
+  to { opacity: 0; }
+}
+
+/* ---------- 3. 증거 현상 — 끝 값은 원래 필터로 돌아간다 ---------- */
+.tc-fx-develop {
+  animation: tc-fx-develop 720ms var(--ease) backwards;
+}
+@keyframes tc-fx-develop {
+  from { filter: grayscale(1) brightness(.12) contrast(1.8); }
+}
+
+/* ---------- 4. 가림 막대 — 증거 층의 낮은 잡음 ---------- */
+.tc-redact {
+  background-image: repeating-linear-gradient(90deg, rgba(216, 214, 204, .05) 0 1px, transparent 1px 4px);
+  background-size: 12px 100%;
+  animation: tc-fx-static 1.8s steps(6, end) infinite;
+}
+@keyframes tc-fx-static {
+  to { background-position: 12px 0; }
+}
+
+/* ---------- 5. 화면 공용 — 수신 중 표시(천천히 숨쉬듯, 번쩍이지 않는다) ---------- */
+.tc-fx-live {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 6px 0 0;
+  background: var(--red-ink);
+  vertical-align: .05em;
+  animation: tc-fx-breathe 2.4s ease-in-out infinite;
+}
+@keyframes tc-fx-breathe {
+  0%, 100% { opacity: .35; }
+  50% { opacity: 1; }
+}
+
+/* ---------- 6. 화면 공용 — 순서대로 들어오는 줄. 줄마다 style="--i:n" ---------- */
+.tc-fx-stagger > * {
+  animation: tc-fx-row 260ms var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes tc-fx-row {
+  from { opacity: 0; transform: translateY(4px); }
+}
+
+@media (max-width: 560px) {
+  .tc-fx-boot-lines {
+    font-size: var(--fs-xs);
+  }
+  .tc-fx-boot-lines li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tc-fx-boot,
+  .tc-fx-link {
+    display: none;
+  }
+  .tc-redact,
+  .tc-fx-live,
+  .tc-fx-stagger > *,
+  .tc-fx-develop {
+    animation: none;
+  }
+}

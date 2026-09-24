@@ -120,7 +120,7 @@
     if (!item?.src) return null;
     const index = registerImage(item.src, item.caption, item.alt), resolved = images[index];
     const fig = h('figure.tc-evidence.tc-arc-figure', null,
-      h('div.tc-arc-evidence-head', null, sourceTag(resolved.className), h('span.tc-code', { text: resolved.assetId }), button('증거 확대·대조', e => openEvidence(index, e.currentTarget), { dataset: { arcEvidence: String(index) } })),
+      h('div.tc-arc-evidence-head', null, sourceTag(resolved.className), h('span.tc-code', { text: resolved.assetId }), button('증거 확대·대조', e => openEvidence(index, e.currentTarget), { dataset: { arcEvidence: String(index), tcCue: 'evidence.open' } })),
       imageNode(item.src, item.alt), item.caption ? h('figcaption', null, h('span', { text: item.caption })) : null);
     if (eager) fig.querySelector('img').loading = 'eager'; return fig;
   }
@@ -135,7 +135,7 @@
       status.textContent = `${list.childElementCount} / ${images.length}개 첨부`;
       if (!list.childElementCount) list.append(PC.missing('NO MATCHING EVIDENCE', selected, '이 출처 등급의 첨부가 없습니다.'));
     }
-    [['ALL', '전체'], ...Object.entries(sourceNames)].forEach(([key, label]) => controls.append(button(label, () => { selected = key; render(); }, { dataset: { source: key } }))); render();
+    [['ALL', '전체'], ...Object.entries(sourceNames)].forEach(([key, label]) => controls.append(button(label, () => { selected = key; render(); }, { dataset: { source: key, tcCue: 'evidence.filter' } }))); render();
     return disclosure('시각 증거 보존 상태와 첨부', [h('p', { text: data.copy.sourceIntro }), controls, status, list], 'VISUAL EVIDENCE');
   }
   function openEvidence(index, trigger) {
@@ -164,6 +164,7 @@
       current.classList.add('tc-arc-compare-current'); compare.style.setProperty('--arc-split', '50%');
       range = h('input#tc-arc-compare-range', { type: 'range', min: 0, max: 100, value: 50, disabled: true });
       scope.on(range, 'input', () => compare.style.setProperty('--arc-split', `${range.value}%`));
+      scope.on(range, 'change', () => root.PCAudio?.cue('evidence.compare'));
       stage.append(h('div.tc-arc-compare-labels', null, h('span', { text: item.className }), h('span', { text: item.comparison.label })), compare, h('label.tc-arc-range', { for: range.id }, '두 이미지 비교 경계', range));
     } else stage.append(current);
     const sync = () => { const imgs = [...stage.querySelectorAll('img')], ready = imgs.every(img => img.complete && img.naturalWidth > 0); if (range) range.disabled = !ready; loading.textContent = ready ? `${imgs.length} / ${imgs.length}개 원본 크기 자료 수신` : '자료 수신 대기 · 실패한 자료는 다시 요청할 수 있습니다.'; };
@@ -423,7 +424,7 @@
       function picture(src, alt, caption) {
         const n = attachments.get(src), fig = h('figure.tc-arc-cinema-figure', null, imageNode(src, alt, scope));
         if (caption) fig.append(h('figcaption', { text: caption }));
-        fig.append(button('증거 확대·대조', e => openEvidence(n, e.currentTarget), { dataset: { arcEvidence: String(n) } }, scope)); return fig;
+        fig.append(button('증거 확대·대조', e => openEvidence(n, e.currentTarget), { dataset: { arcEvidence: String(n), tcCue: 'evidence.open' } }, scope)); return fig;
       }
       if (!staticText && page.people) panel.append(h('div.tc-arc-people', null, page.people.map(person => picture(person.image, person.name, `${person.name} / ${person.role}`))));
       if (staticText && page.people) panel.append(kv(page.people.map(p => [p.name, p.role])));

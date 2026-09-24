@@ -422,3 +422,18 @@
     justify-self: start;
   }
 }
+
+/* 이상 층 — 접촉 보고 재계수(home.js recount). 세던 값은 흐리게 깜빡이고, 다시 센 칸에는 RECOUNT가 붙는다 */
+.tc-home-contact .tc-sensor span.is-counting b {
+  color: var(--text-2);
+  animation: tc-fx-breathe .9s ease-in-out infinite;
+}
+.tc-home-contact .tc-sensor span.is-recount small::after {
+  content: " · RECOUNT";
+  color: var(--red-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tc-home-contact .tc-sensor span.is-counting b {
+    animation: none;
+  }
+}

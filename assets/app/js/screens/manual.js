@@ -91,7 +91,7 @@
       verdict.textContent = abort
         ? `전원 철수 — 셋 가운데 ${lost.size}개 상실`
         : `작전 지속 — 셋 가운데 ${lost.size}개 상실. 두 개를 잃으면 전원 철수한다.`;
-      if (abort) root.PCAudio?.play('denied');
+      if (abort) root.PCAudio?.cue('system.denied');
     }
     update();
 

@@ -1,16 +1,21 @@
 // Project Curse 6 — 음향. 가이드 8절: 건조하고 낮게, 기본은 꺼짐, 효과음마다 쿨다운.
-// 파일 목록은 site-manifest.js의 audio 항목을 그대로 쓴다.
-// 화면 모듈은 window.PCAudio?.play('marker') 처럼 부른다. 꺼져 있으면 아무 일도 하지 않는다.
+// 소리 이름(cue)·파일·기본 음량은 terminal-fx-data.js, 사건(event)의 버스·게인·쿨다운·덕킹과 화면별 음량 프로필은
+// audio-manifest.js, 채널별 인계 소리는 transition-manifest.js를 그대로 쓴다.
+// 화면 모듈은 window.PCAudio?.cue('operation.step')처럼 사건 이름으로 부른다. 꺼져 있으면 아무 일도 하지 않는다.
+// 채널 이동·상세 열람·목록 복귀 소리는 pc-core.js의 'pc:route' 알림을 듣고 여기서 낸다. 화면이 따로 부르지 않는다.
 (function (root) {
   'use strict';
 
   const doc = root.document;
   const STORAGE_KEY = 'pc6_audio_v1';
-  const BASE = 'assets/audio/';
-  const manifest = root.ProjectCurseStructure?.audio || {};
-  const effects = manifest.effects || {};
-  const GAIN = { ambient: 0.16, effect: 0.34 };
-  const COOLDOWN_MS = 260;
+  const fx = root.ProjectCurseTerminalFx || {};
+  const manifest = root.ProjectCurseAudioManifest || {};
+  const transitions = root.ProjectCurseTransitions?.screens || {};
+  const events = manifest.events || {};
+  const profiles = manifest.profiles || {};
+  const cues = fx.cues || {};
+  const BASE = fx.audioBase || 'assets/audio/';
+  const DEFAULT_COOLDOWN = 220;
 
   let on = false;
   try {
@@ -20,26 +25,47 @@
   const players = new Map();
   const lastPlayed = new Map();
   let ambient = null;
+  let profileId = 'terminal-home';
+  let duck = 1;
+  let duckTimer = 0;
 
-  function player(cue) {
-    const file = effects[cue];
-    if (!file) return null;
-    if (!players.has(cue)) {
-      const audio = new Audio(BASE + file);
+  const clamp = (value) => Math.max(0, Math.min(1, Number(value) || 0));
+  const busGain = (bus) => Number((profiles[profileId] || profiles.document || {})[bus] ?? 1);
+
+  function player(name) {
+    const cue = cues[name];
+    if (!cue) return null;
+    if (!players.has(name)) {
+      const audio = new Audio(BASE + cue.file);
       audio.preload = 'auto';
-      audio.volume = GAIN.effect;
-      players.set(cue, audio);
+      players.set(name, audio);
     }
-    return players.get(cue);
+    return players.get(name);
   }
 
-  function play(cue) {
+  function applyAmbient() {
+    if (ambient) ambient.volume = clamp((fx.ambient?.volume || 0) * busGain('ambient') * duck);
+  }
+
+  // 소리 하나를 낸다. 덕킹이 있으면 환경음을 잠깐 낮춘다.
+  function sound(name, options = {}) {
     if (!on || doc.hidden) return false;
+    const { gain = 1, bus = 'interface', cooldown = DEFAULT_COOLDOWN, key = name, duckTo = null, duckMs = 0 } = options;
     const now = Date.now();
-    if (now - (lastPlayed.get(cue) || 0) < COOLDOWN_MS) return false;
-    const audio = player(cue);
+    if (now - (lastPlayed.get(key) || 0) < cooldown) return false;
+    const audio = player(name);
     if (!audio) return false;
-    lastPlayed.set(cue, now);
+    lastPlayed.set(key, now);
+    audio.volume = clamp((cues[name].volume || 0) * gain * busGain(bus));
+    if (duckTo != null && duckMs > 0) {
+      duck = clamp(duckTo);
+      applyAmbient();
+      root.clearTimeout(duckTimer);
+      duckTimer = root.setTimeout(() => {
+        duck = 1;
+        applyAmbient();
+      }, duckMs);
+    }
     try {
       audio.currentTime = 0;
       const result = audio.play();
@@ -50,13 +76,27 @@
     return true;
   }
 
+  // 사건 이름으로 부른다(audio-manifest.js events). 사건이 아니면 소리 이름으로 본다.
+  function cue(eventName) {
+    const event = events[eventName];
+    if (!event) return sound(eventName);
+    return sound(event.cue, {
+      gain: event.gain ?? 1,
+      bus: event.bus || 'interface',
+      cooldown: event.cooldown ?? DEFAULT_COOLDOWN,
+      key: eventName,
+      duckTo: event.duck ?? null,
+      duckMs: event.duckMs || 0
+    });
+  }
+
   function startAmbient() {
-    if (!manifest.ambient) return;
+    if (!fx.ambient?.file) return;
     if (!ambient) {
-      ambient = new Audio(BASE + manifest.ambient);
+      ambient = new Audio(BASE + fx.ambient.file);
       ambient.loop = true;
-      ambient.volume = GAIN.ambient;
     }
+    applyAmbient();
     const result = ambient.play();
     if (result && result.catch) result.catch(() => {});
   }
@@ -81,12 +121,44 @@
     } catch (_error) { /* 저장하지 못해도 이번 방문에서는 따른다 */ }
     if (on) {
       startAmbient();
-      play('contact');
+      cue('channel.request');
     } else {
       stopAmbient();
     }
     render();
   }
+
+  // 화면별 음량 프로필 — 주소가 길게 맞는 것부터 찾는다. 없으면 화면 id, 그래도 없으면 문서 프로필.
+  function pickProfile(route, parts) {
+    const map = fx.profiles || {};
+    for (let n = parts.length; n >= 0; n--) {
+      const key = [route, ...parts.slice(0, n)].join('/');
+      if (map[key]) return map[key];
+    }
+    if (parts.length && map[`${route}/*`]) return map[`${route}/*`];
+    return profiles[route] ? route : 'document';
+  }
+
+  // 이동 소리 — 채널이 바뀌면 채널 인계음, 같은 채널에서 상세로 들어가면 열람음, 목록으로 돌아오면 복귀음.
+  doc.addEventListener('pc:route', (event) => {
+    const detail = event.detail || {};
+    const parts = detail.parts || [];
+    profileId = pickProfile(detail.route, parts);
+    applyAmbient();
+    if (detail.reason === 'initial' || detail.reason === 'same') return;
+    if (detail.screenChanged) {
+      cue((transitions[detail.route] || fx.handoff?.[detail.route])?.sound || 'channel.request');
+      return;
+    }
+    const nav = fx.navigation?.[detail.route];
+    if (!nav) return;
+    if (!parts.length) {
+      if ((detail.previousParts || []).length && nav.back) cue(nav.back);
+      return;
+    }
+    const open = typeof nav.open === 'string' ? nav.open : nav.open?.[parts[0]];
+    if (open) cue(open);
+  });
 
   doc.addEventListener('click', (event) => {
     const toggle = event.target.closest('[data-tc-audio]');
@@ -94,20 +166,13 @@
       set(!on);
       return;
     }
-    // 링크·버튼을 누를 때 아주 짧은 접점 소리
-    if (event.target.closest('a[href^="#"], button, summary')) play('analog');
-  });
-
-  // 채널이 바뀌면 무전 신호음. 같은 채널 안의 이동은 판독음.
-  let lastScreen = '';
-  root.addEventListener('hashchange', () => {
-    const screen = doc.body.dataset.screen || '';
-    root.setTimeout(() => {
-      const next = doc.body.dataset.screen || '';
-      play(next !== lastScreen ? 'radio' : 'marker');
-      lastScreen = next;
-    }, 0);
-    lastScreen = lastScreen || screen;
+    // 화면이 정해 둔 소리가 있으면 그것을, 없으면 버튼·펼침에 아주 짧은 접점음. 링크는 이동 소리가 맡는다.
+    const tagged = event.target.closest('[data-tc-cue]');
+    if (tagged) {
+      cue(tagged.dataset.tcCue);
+      return;
+    }
+    if (event.target.closest('button, summary')) cue('archive.filter');
   });
 
   doc.addEventListener('visibilitychange', () => {
@@ -127,7 +192,7 @@
     doc.addEventListener('keydown', resume);
   }
 
-  root.PCAudio = Object.freeze({ play, set, isOn: () => on });
+  root.PCAudio = Object.freeze({ cue, play: sound, set, isOn: () => on });
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', render, { once: true });
   else render();
 })(window);

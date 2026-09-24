@@ -64,6 +64,10 @@ function operationTerrain(operation){
   const PC=root.PCApp, {h}=PC;
   const D=root.ProjectCurseMapRoom, X=root.ProjectCurseMapScreenData;
   const P=root.ProjectCursePilgrimageState, V=root.ProjectCurseVerdictArchiveState, O=root.ProjectCurseOperationState;
+  // 효과음 — 사건 이름은 terminal-fx-data.js(stepCues·scenarioCues·verdictCue). 음향이 꺼져 있으면 아무 일도 없다.
+  const fxData=root.ProjectCurseTerminalFx||{}, sfx=name=>{if(name)root.PCAudio?.cue(name);};
+  const unitRank={normal:0,unstable:1,unknown:2,split:3,lost:4};
+  const worstUnit=s=>(s?.units||[]).reduce((w,u)=>(unitRank[u.status]??0)>(unitRank[w]??0)?u.status:w,'normal');
   const scenarios=root.ProjectCursePilgrimageData.scenarios;
   const signals=root.ProjectCurseMapSignalIndex;
   const sessionKey='project_curse_map_session_v1', recentKey='project_curse_map_recent_v1';
@@ -299,6 +303,7 @@ function operationTerrain(operation){
     step=Math.max(0,Math.min(view.item.steps.length-1,index));rememberedSteps.set(view.item.id,step);
     if(view.item.id===O.operationId)O.setMapStep(step);
     renderOperationFrame();saveSession();
+    sfx(fxData.stepCues?.[worstUnit(view.item.steps[step])]);
   }
   function play(){
     if(playing){stop();renderOperationFrame();return;}
@@ -450,12 +455,12 @@ function operationTerrain(operation){
       if(a==='previous'||a==='next'||a==='step'){stop();setStep(a==='step'?Number(key):adjacent(view.item,a==='next'?1:-1));return;}
       if(a==='play'){play();return;}
       if(a==='branch'){branchOpen=branchOpen===key?null:key;if(branchOpen)O.visitBranch(key);preserveFocus(render);return;}
-      if(a==='command'){stop();if(O.chooseVerdict(key)){step=O.get().mapStep;rememberedSteps.set(O.operationId,step);}preserveFocus(render);return;}
+      if(a==='command'){stop();if(O.chooseVerdict(key)){step=O.get().mapStep;rememberedSteps.set(O.operationId,step);sfx(fxData.verdictCue);}preserveFocus(render);return;}
       if(a==='reset-operation'){confirmAction('operation',()=>{O.reset();step=0;branchOpen=null;rememberedSteps.delete(O.operationId);});return;}
-      if(a==='start'){if(allowedScenario(key)){P.start(key);render();focusContent();}return;}
+      if(a==='start'){if(allowedScenario(key)){P.start(key);sfx(fxData.scenarioCues?.[key]?.start);render();focusContent();}return;}
       if(a==='choice'&&view.kind==='pilgrimage'&&allowedScenario(view.item.id)){
         const id=view.item.id,before=P.getStage(id),choice=before?.choices.find(c=>c.id===key);
-        if(choice&&P.choose(key,id)){feedback={scenarioId:id,code:before.code,label:choice.label,description:choice.description,outcome:scenarios[id].outcomeLabels[choice.ruleOutcome],deltas:choice.deltas||{},after:P.get(id).metrics};render();focusContent();}return;
+        if(choice&&P.choose(key,id)){const cueSet=fxData.scenarioCues?.[id]||{};sfx(P.get(id).status==='complete'?cueSet.complete:['broken','compromised'].includes(choice.ruleOutcome)?cueSet.danger:cueSet.step);feedback={scenarioId:id,code:before.code,label:choice.label,description:choice.description,outcome:scenarios[id].outcomeLabels[choice.ruleOutcome],deltas:choice.deltas||{},after:P.get(id).metrics};render();focusContent();}return;
       }
       if(a==='reset-pilgrimage'){confirmAction(key,()=>{feedback=null;P.reset(key);});return;}
       if(a==='reset-read'){V.resetRead();preserveFocus(render);return;}

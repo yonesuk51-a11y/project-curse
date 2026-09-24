@@ -247,6 +247,18 @@
 
     if (reason !== 'initial' && reason !== 'replace') focusHeading(entry.el);
     if (screenChanged && reason !== 'initial') announce(`${channel(loc.route)?.label || loc.route} 채널`);
+
+    // 음향·연출 계층(pc-audio.js, pc-fx.js)이 듣는 이동 알림. 화면 모듈은 쓰지 않는다.
+    doc.dispatchEvent(new CustomEvent('pc:route', {
+      detail: {
+        route: loc.route,
+        parts: [...loc.parts],
+        previousRoute: previous ? previous.route : null,
+        previousParts: previous ? [...previous.parts] : [],
+        screenChanged,
+        reason
+      }
+    }));
   }
 
   /* ---------- 공용 조각 ---------- */

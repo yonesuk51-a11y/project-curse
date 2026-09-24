@@ -199,8 +199,8 @@
         h('div', null, h('span.tc-label', { text: 'LIVE INTELLIGENCE FEED' }), h('h2#tc-home-signals-title', { text: '최근 수신' })),
         h('span.tc-code.tc-dim', { text: `${signals.length} CHANNELS` })
       ),
-      h('ol.tc-home-signal-list', null, signals.map((signal) =>
-        h('li', null, h('a.tc-home-signal', { href: signal.href, dataset: { signalTone: signal.tone } },
+      h('ol.tc-home-signal-list.tc-fx-stagger', null, signals.map((signal, index) =>
+        h('li', { style: `--i:${index}` }, h('a.tc-home-signal', { href: signal.href, dataset: { signalTone: signal.tone } },
           h('time.tc-code', { text: signal.time }),
           h('span', { text: signal.label }),
           PC.tag(signal.status, SIGNAL_TONES[signal.tone] || 'dim', { latin: true })
@@ -270,7 +270,7 @@
     return h('section.tc-panel.tc-home-civil', { 'aria-labelledby': 'tc-home-civil-title' },
       h('header.tc-panel-head', null,
         h('div', null, h('span.tc-label', { text: civil.code }), h('h2#tc-home-civil-title', { text: civil.title })),
-        h('span.tc-code.tc-dim', { text: civil.relay })
+        h('span.tc-code.tc-dim', null, h('span.tc-fx-live', { 'aria-hidden': 'true' }), civil.relay)
       ),
       h('div.tc-home-civil-body', null,
         h('ol.tc-home-civil-list', null, civil.broadcasts.map((item) =>
@@ -309,7 +309,7 @@
       ),
       h('div.tc-panel-body.tc-home-contact-body', null,
         readable ? h('div.tc-sensor', { role: 'img', 'aria-label': contact.readout.map(([k, v]) => `${k} ${v}`).join(', ') },
-          contact.readout.map(([label, value, mismatch]) => h('span', { class: mismatch ? 'is-mismatch' : null }, h('small', { text: label }), h('b', { text: value })))
+          contact.readout.map(([label, value, mismatch]) => h('span', { class: mismatch ? 'is-mismatch' : null, dataset: mismatch ? { fxFinal: value, fxFrom: contact.readout[0][1] } : null }, h('small', { text: label }), h('b', { text: value })))
         ) : null,
         h('p', { text: step.note }),
         h('a.tc-btn', { href: PC.href('map-room', 'op', op.id) }, `${op.label} 경과 재생`, h('i', { 'aria-hidden': 'true', text: '›' }))
@@ -385,13 +385,59 @@
     );
   }
 
+  /* ---------- 이상 층 — 접촉 보고 재계수 ---------- */
+  // 열원이 처음에는 육안 인원과 같게 잡혔다가, 다시 세면 하나가 더 나온다. 세션마다 한 번.
+  // 모션 감소 설정이면 바로 최종 값만 보인다. 화면 낭독기는 처음부터 최종 값(aria-label)을 읽는다.
+  const RECOUNT_KEY = 'pc6_contact_recount_v1';
+  let recountTimers = [];
+  const recountCells = () => [...document.querySelectorAll('#terminal-home .tc-home-contact [data-fx-final]')];
+
+  function finishRecount() {
+    recountTimers.forEach((timer) => root.clearTimeout(timer));
+    recountTimers = [];
+    recountCells().forEach((cell) => {
+      cell.querySelector('b').textContent = cell.dataset.fxFinal;
+      cell.classList.remove('is-counting');
+      cell.classList.add('is-mismatch');
+    });
+  }
+
+  function recount() {
+    finishRecount();
+    const cells = recountCells();
+    const reduce = root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    let seen = true;
+    try {
+      seen = root.sessionStorage.getItem(RECOUNT_KEY) === '1';
+      if (!seen && !reduce) root.sessionStorage.setItem(RECOUNT_KEY, '1');
+    } catch (_error) { /* 기록할 수 없으면 연출하지 않는다 */ }
+    if (!cells.length || reduce || seen) return;
+    cells.forEach((cell) => {
+      cell.querySelector('b').textContent = cell.dataset.fxFrom;
+      cell.classList.remove('is-mismatch');
+      cell.classList.add('is-counting');
+    });
+    cells.forEach((cell, index) => {
+      recountTimers.push(root.setTimeout(() => {
+        cell.querySelector('b').textContent = cell.dataset.fxFinal;
+        cell.classList.remove('is-counting');
+        cell.classList.add('is-mismatch', 'is-recount');
+        if (index === 0) root.PCAudio?.cue('screening.mismatch');
+      }, 2200 + index * 650));
+    });
+  }
+
   /* ---------- 화면 ---------- */
   const live = { flash: null, signals: null, ops: null };
   let listeners = null;
 
   // 진행 상태로 바뀌는 세 판을 다시 그린다. 같은 자리에서 바꿔 끼우므로 배치는 그대로다.
-  function refresh() {
+  let lastUnread = null;
+  function refresh(event) {
     const state = progress();
+    const unread = state.unreadVerdict?.id || null;
+    if (event && unread && unread !== lastUnread) root.PCAudio?.cue('system.alert');
+    lastUnread = unread;
     const next = { flash: flashPanel(state), signals: signalPanel(state), ops: operationPanel(state) };
     Object.keys(next).forEach((key) => {
       live[key].replaceWith(next[key]);
@@ -424,6 +470,7 @@
     listeners?.abort();
     listeners = new AbortController();
     STATE_EVENTS.forEach((type) => document.addEventListener(type, refresh, { signal: listeners.signal }));
+    recount();
     // 모르는 주소로 들어오면 조용히 넘기지 않고 알린다.
     const box = document.querySelector('#terminal-home .tc-home-unknown');
     if (!box) return;
@@ -435,6 +482,7 @@
   function hide() {
     listeners?.abort();
     listeners = null;
+    finishRecount();
   }
 
   PC.screen({ id: 'terminal-home', mount, show, hide });
