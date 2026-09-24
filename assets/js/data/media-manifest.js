@@ -31,12 +31,13 @@
     'assets/resources/archive-enex/source-records/a0574079b4d9dfe7d5ed810e28c2e7c5.jpg':{width:2928,height:3104,widths:[480,960]},
     'assets/resources/archive-enex/source-records/b2fb8ea921916789c0f39989d106b670.jpg':{width:768,height:713,widths:[480,768]},
     'assets/resources/archive-enex/source-records/daa52fcde14e129a569b7c1703bf0c5c.jpg':{width:791,height:765,widths:[480,791]},
-    // 2026-09-24 사용자 채택 — 리메이크 이미지 5장
-    'assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png':{width:1672,height:941,widths:[480,960]},
-    'assets/resources/derived/blood-lake-rite-1986-concept-v1.png':{width:1536,height:1024,widths:[480,960]},
-    'assets/resources/derived/ash-crew-aftermath-concept-v1.png':{width:1536,height:1024,widths:[480,960]},
-    'assets/resources/derived/cpd-screening-line-concept-v1.png':{width:1536,height:1024,widths:[480,960]},
-    'assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png':{width:1536,height:1024,widths:[480,960]}
+    // 2026-09-24 사용자 채택 — 리메이크 이미지 5장(지옥 그림체 재작업).
+    // tone:'low-key' — 이미 저조도로 칠한 그림이라 증거 틀의 보정 필터(회색조·명도 낮춤)를 걸지 않는다.
+    'assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png':{width:1672,height:941,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/blood-lake-rite-1986-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/ash-crew-aftermath-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/cpd-screening-line-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
   };
 
   const normalize=src=>{

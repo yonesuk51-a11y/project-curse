@@ -182,6 +182,14 @@ add('fx-sound-events-and-files', !!terminalFx && !missingEvents.length && !missi
 const screenIdsForFx = ['terminal-home', 'map-room', 'history', 'faction-info', 'archive-entry', 'personnel', 'field-manual', 'media-audit'];
 const noHandoff = screenIdsForFx.filter((id) => !(context.ProjectCurseTransitions?.screens?.[id] || terminalFx?.handoff?.[id]));
 add('fx-every-channel-has-handoff', noHandoff.length === 0, noHandoff.join(' | '));
+// 저조도로 칠한 그림(media-manifest tone:'low-key')은 증거 틀 보정 필터를 끈다 — 매니페스트 값, PCApp.img, CSS 규칙이 이어져 있어야 한다.
+const toneEntries = Object.values(context.ProjectCurseMediaManifest?.assets || {}).filter((entry) => entry.tone);
+const badTones = toneEntries.filter((entry) => entry.tone !== 'low-key').map((entry) => entry.source);
+add('evidence-low-key-tone-unfiltered',
+  toneEntries.length > 0 && !badTones.length &&
+  read('assets/app/js/pc-core.js').includes("if (entry?.tone) attrs['data-tone'] = entry.tone;") &&
+  /\.tc-evidence-media img\[data-tone="low-key"\]\s*\{\s*filter:\s*none;/.test(read('assets/app/css/components.css')),
+  badTones.join(' | ') || `${toneEntries.length} low-key`);
 
 /* ---------- 6. 공개 문구 — 메타 용어 금지 ---------- */
 const FORBIDDEN = ['정사', '캐논', '플레이어', '독자 선택', '시나리오 모드', '메인 스토리', 'AI 이미지', '생성 이미지'];

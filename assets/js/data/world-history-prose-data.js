@@ -105,7 +105,7 @@
         purpose:'중단된 부름의 경위와 재개 금지 사유 기록',
         provenance:'1991년 압수 문서철 회수본 / 필사본, 원본 미회수',
         visual:{
-          src:'assets/resources/derived/blood-lake-rite-1986-concept-v1.png',
+          src:'assets/resources/derived/blood-lake-rite-1986-concept-v2.png',
           className:'RECONSTRUCTED',label:'CALLING RITE / 분석 재구성',
           alt:'붉은 호숫가 바위에서 두건을 쓴 네 사람이 두 손을 입가에 모으고 물을 향해 부르는 장면. 발치 바위에 인식표 두 개가 놓여 있고, 건너편 물가에 불빛 여섯 개가 보인다.',
           caption:'교단 측 기입의 부르는 넷, 물가의 표 두 개, 바깥의 불빛 여섯을 한 장면으로 옮긴 분석 재구성이다. 의식의 원본 장면, 참가자 신원, 호수 위치를 확정하지 않는다.'

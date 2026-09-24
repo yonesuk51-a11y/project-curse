@@ -165,44 +165,44 @@
       "source": "삼야 무응답 독립시계·종 장부·검문소 자동기록 기반 분석 재구성",
       "handling": "권역 간 통로·중계망·동일 공간 또는 호출 발신자 신원의 증거로 표시 금지"
     },
-    "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png": {
+    "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png": {
       "credit": "Project Curse remake key-art brief (Checkpoint 07) / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "검문소 07 귀환 심사 장면을 바탕으로 한 리메이크 편집 키아트",
+      "source": "검문소 07 귀환 심사 장면을 바탕으로 한 리메이크 편집 키아트 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "사건 원본·감시 화면으로 표시 금지. 다섯 번째 열원의 신원과 적대 여부를 확정하지 않음"
     },
-    "assets/resources/derived/blood-lake-rite-1986-concept-v1.png": {
+    "assets/resources/derived/blood-lake-rite-1986-concept-v2.png": {
       "credit": "Project Curse Blood Lake counter-record brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "1986 피의 호수 교단 측 상충 기록(부름 기입) 기반 분석 재구성",
+      "source": "1986 피의 호수 교단 측 상충 기록(부름 기입) 기반 분석 재구성 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "교단 의식의 원본 장면, 참가자 신원, 호수 위치의 증거로 표시 금지"
     },
-    "assets/resources/derived/ash-crew-aftermath-concept-v1.png": {
+    "assets/resources/derived/ash-crew-aftermath-concept-v2.png": {
       "credit": "Project Curse Ash Crew post-incident brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "애시 크루 회수·소각 절차(N.H.C 현장 교범) 기반 분석 재구성",
+      "source": "애시 크루 회수·소각 절차(N.H.C 현장 교범) 기반 분석 재구성 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "특정 현장, 사망자, 대원 신원의 증거로 표시 금지"
     },
-    "assets/resources/derived/cpd-screening-line-concept-v1.png": {
+    "assets/resources/derived/cpd-screening-line-concept-v2.png": {
       "credit": "Project Curse C.P.D civilian screening brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "C.P.D 민간 분리·선별 절차 기반 분석 재구성",
+      "source": "C.P.D 민간 분리·선별 절차 기반 분석 재구성 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "특정 검문소, 피난민 신원, 손목 표식 판정의 증거로 표시 금지"
     },
-    "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png": {
+    "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png": {
       "credit": "Project Curse civil child drill brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "민간 아동 대피 훈련 기록 기반 분석 재구성 — 인물 없음",
+      "source": "민간 아동 대피 훈련 기록 기반 분석 재구성 — 인물 없음 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "특정 학교, 학생, 훈련 결과의 증거로 표시 금지"
     }
   }

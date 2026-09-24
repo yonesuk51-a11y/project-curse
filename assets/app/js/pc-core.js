@@ -316,6 +316,8 @@
     } else {
       attrs.src = clean;
     }
+    // 저조도로 칠한 그림은 증거 틀 보정 필터를 끈다(components.css).
+    if (entry?.tone) attrs['data-tone'] = entry.tone;
     return h('img', attrs);
   }
 

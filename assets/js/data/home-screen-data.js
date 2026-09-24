@@ -190,7 +190,7 @@
     },
 
     keyArt: {
-      src: 'assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png',
+      src: 'assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png',
       alt: '검문소 07 출입문 앞에 귀환자 네 명이 서 있고, 대원이 든 열상 판독 단말에는 인체 형상 다섯 개가 표시된 편집 키아트',
       label: 'EDITORIAL KEY ART / CHECKPOINT 07',
       caption: '설정 기반 편집 키아트 · 사건 원본이나 감시 화면으로 취급하지 않음 · 다섯 번째 열원의 신원은 확정되지 않았다'

@@ -2260,16 +2260,16 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/derived/ash-crew-aftermath-concept-v1.png",
+      "path": "assets/resources/derived/ash-crew-aftermath-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "애시 크루 회수·소각 절차(N.H.C 현장 교범) 기반 분석 재구성",
+      "source": "애시 크루 회수·소각 절차(N.H.C 현장 교범) 기반 분석 재구성 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "특정 현장, 사망자, 대원 신원의 증거로 표시 금지",
       "credit": "Project Curse Ash Crew post-incident brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
-      "bytes": 2148945,
-      "sha256": "5c14dd0f8eb463e1049fa2fb0c00f65d2eec5e0505e6b07ac167d592dd23e674",
+      "bytes": 1800334,
+      "sha256": "716f0b6efb43273010eb532bd087e308044e8b7f9c698e630ee3bade9b47ce37",
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
@@ -2281,16 +2281,16 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png",
+      "path": "assets/resources/derived/blood-lake-rite-1986-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "1986 피의 호수 교단 측 상충 기록(부름 기입) 기반 분석 재구성",
+      "source": "1986 피의 호수 교단 측 상충 기록(부름 기입) 기반 분석 재구성 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "교단 의식의 원본 장면, 참가자 신원, 호수 위치의 증거로 표시 금지",
       "credit": "Project Curse Blood Lake counter-record brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
-      "bytes": 1872269,
-      "sha256": "b1852f5dc88ad94489205dbf8e8d02f6849f8cb43d1d01b94f112627686291b4",
+      "bytes": 1949575,
+      "sha256": "457334f1e7cac5cc27ac48a3780880e10b2892a02692ed7623dcd0dd6ca47c1d",
       "usedBy": [
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
@@ -2346,16 +2346,16 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png",
+      "path": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "민간 아동 대피 훈련 기록 기반 분석 재구성 — 인물 없음",
+      "source": "민간 아동 대피 훈련 기록 기반 분석 재구성 — 인물 없음 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "특정 학교, 학생, 훈련 결과의 증거로 표시 금지",
       "credit": "Project Curse civil child drill brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
-      "bytes": 1755603,
-      "sha256": "108c6038eb18df08b40b63aad8cfc9e6076917238a1381949303adf745442e19",
+      "bytes": 1723405,
+      "sha256": "04d1389217ff2ace8a4f3a0e246c2acaa1ded5239ebe0cf08d66858bb59fbb93",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
@@ -2367,16 +2367,16 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/derived/cpd-screening-line-concept-v1.png",
+      "path": "assets/resources/derived/cpd-screening-line-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "C.P.D 민간 분리·선별 절차 기반 분석 재구성",
+      "source": "C.P.D 민간 분리·선별 절차 기반 분석 재구성 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "특정 검문소, 피난민 신원, 손목 표식 판정의 증거로 표시 금지",
       "credit": "Project Curse C.P.D civilian screening brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
-      "bytes": 2060650,
-      "sha256": "a4913d011d210479acd6d70d2a98e6ef24e58c3e7fde8be31ae90379f62cdb62",
+      "bytes": 1989223,
+      "sha256": "c7d8a5e7aa351bde7fe574215cff2fb6cbc83cf4b7ea9fb14c519b05ccff012c",
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
@@ -2621,16 +2621,16 @@
       "protectedScope": true
     },
     {
-      "path": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png",
+      "path": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "검문소 07 귀환 심사 장면을 바탕으로 한 리메이크 편집 키아트",
+      "source": "검문소 07 귀환 심사 장면을 바탕으로 한 리메이크 편집 키아트 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "사건 원본·감시 화면으로 표시 금지. 다섯 번째 열원의 신원과 적대 여부를 확정하지 않음",
       "credit": "Project Curse remake key-art brief (Checkpoint 07) / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
-      "bytes": 2074931,
-      "sha256": "cc9ca3b2942e3d9aeed28cc1397caccf2a4894976d165ea07e7eb062303469ea",
+      "bytes": 1577407,
+      "sha256": "b9e044f420b51fe2debae364b560a738f7fe46f982263796d6343d7e8e2f2977",
       "usedBy": [
         "assets/js/data/home-screen-data.js",
         "assets/js/data/media-manifest.js",
@@ -3412,130 +3412,130 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/ash-crew-aftermath-concept-v1-w480.webp",
+      "path": "assets/resources/responsive/derived/ash-crew-aftermath-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/ash-crew-aftermath-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/ash-crew-aftermath-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 26402,
-      "sha256": "a901c9a0d5324e8cfbf7699511d425f7b89907d0d42a4abc5c06ec50f1bbbe8a",
+      "bytes": 11874,
+      "sha256": "58f0b73e6b9a1b3fad3d9536a52bad547faf1df80b5c612ba48d7e146c749458",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/ash-crew-aftermath-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/ash-crew-aftermath-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/ash-crew-aftermath-concept-v1-w960.webp",
+      "path": "assets/resources/responsive/derived/ash-crew-aftermath-concept-v2-w960.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/ash-crew-aftermath-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/ash-crew-aftermath-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 78048,
-      "sha256": "4d8346e78baaba2d8ed57711078ba1af0b8dc9097f8ae02f4fd186ead9e704d4",
+      "bytes": 38970,
+      "sha256": "f5556c6f9b752d39fdbee8f80b998a46ae557bbdcd2e879ca03aa742405f81ec",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/ash-crew-aftermath-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/ash-crew-aftermath-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/blood-lake-rite-1986-concept-v1-w480.webp",
+      "path": "assets/resources/responsive/derived/blood-lake-rite-1986-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/blood-lake-rite-1986-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 18714,
-      "sha256": "9e0a8f60d4eb7b04579ce195bd46d3522991ef5945b404cd3ea6dc41beb8f45c",
+      "bytes": 5982,
+      "sha256": "f055eebaeec020c106b9c98052a0d6d257851987271dba01cf58d190a8a5cf7b",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/blood-lake-rite-1986-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/blood-lake-rite-1986-concept-v1-w960.webp",
+      "path": "assets/resources/responsive/derived/blood-lake-rite-1986-concept-v2-w960.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/blood-lake-rite-1986-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 58462,
-      "sha256": "d03413a2f2075fc458da79e144261dbdc224a5bab982631751cd24f062acad0f",
+      "bytes": 19004,
+      "sha256": "6a054b4cd2a04794108d7aa244b3e0f78e44c41482caf6312fcdfd03156c77a1",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/blood-lake-rite-1986-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/civil-child-drill-empty-classroom-concept-v1-w480.webp",
+      "path": "assets/resources/responsive/derived/civil-child-drill-empty-classroom-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 16044,
-      "sha256": "0e86b2ce2a9084be82a09ac38b3dc49b184b35505a96452859549acbab7661e1",
+      "bytes": 9356,
+      "sha256": "ad5e47e630c6557d9054a2e65a45a68bf590b6d02d54d4915a6e42dcaf1b58b0",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/civil-child-drill-empty-classroom-concept-v1-w960.webp",
+      "path": "assets/resources/responsive/derived/civil-child-drill-empty-classroom-concept-v2-w960.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 45880,
-      "sha256": "003f7b36e28a2561ce388340f38c27e94779148c80a6d5a0fc8da9e17e804c79",
+      "bytes": 31388,
+      "sha256": "8a79ec7c4d744f941373b477d4774409f98c52dbc6e72647c9228e11599f3506",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/cpd-screening-line-concept-v1-w480.webp",
+      "path": "assets/resources/responsive/derived/cpd-screening-line-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/cpd-screening-line-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/cpd-screening-line-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 26076,
-      "sha256": "c42a563856bf71f29301b815247352dfe804592b21bae666e4a8a717f742e61f",
+      "bytes": 9374,
+      "sha256": "8c9ed787ae18ce93233718898e2fce0452591ea020c69806d307fc94dcceb2c3",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/cpd-screening-line-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/cpd-screening-line-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/cpd-screening-line-concept-v1-w960.webp",
+      "path": "assets/resources/responsive/derived/cpd-screening-line-concept-v2-w960.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/cpd-screening-line-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/cpd-screening-line-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 75024,
-      "sha256": "5d66e53283d1d8439ae1f9a467ff8ef0a1674226375e8a19cd2d8bfba0f2ff8f",
+      "bytes": 37022,
+      "sha256": "3fd56edc408ade2181cea4d1b2bdf74bf44b1dd23796a7692bbcea800e5cf72f",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/cpd-screening-line-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/cpd-screening-line-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -3732,34 +3732,34 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/remake-keyart-checkpoint-07-concept-v1-w480.webp",
+      "path": "assets/resources/responsive/derived/remake-keyart-checkpoint-07-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 21314,
-      "sha256": "7acb395e12c06e048480005131493f27caf1735b120b3af4b4d838242db77edc",
+      "bytes": 5656,
+      "sha256": "cf0c17d935fb7c9bfcfcf08cddafbd7b49bbad28e7f44fca80df972bfc2e6740",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/remake-keyart-checkpoint-07-concept-v1-w960.webp",
+      "path": "assets/resources/responsive/derived/remake-keyart-checkpoint-07-concept-v2-w960.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 66300,
-      "sha256": "6c50d222f50579f660527a6cecd2145f177e72499daf7d2fab05ff4628ca2ff9",
+      "bytes": 19426,
+      "sha256": "979dca1f914ad3a6bb693e7f15632d41c1eceea01a3b33d97df07ce9b3594973",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
