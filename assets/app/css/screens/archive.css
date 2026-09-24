@@ -61,7 +61,7 @@
 .tc-arc-cue p { color: var(--coyote-ink); }
 .tc-arc-file-end { border-top: 1px solid var(--line-2); padding-top: var(--s5); }
 
-/* Image integrity controls belong to this viewer, including its native dialog. */
+/* 그림 보존 상태와 원본 비교는 이 뷰어와 대화상자가 맡는다. */
 .tc-arc-figure { margin: 0; border: 1px solid var(--line-2); background: var(--sunken); }
 .tc-arc-evidence-head { padding: var(--s3); }
 .tc-arc-figure figcaption { padding: var(--s4); color: var(--text-2); line-height: 1.7; }
@@ -86,7 +86,7 @@
 .tc-arc-range { display: grid; gap: var(--s1); padding-top: var(--s3); }
 .tc-arc-range input { width: 100%; min-height: var(--tap); accent-color: var(--coyote-ink); }
 
-/* All inherited protected-document class names are scoped under the moved article's wrapper. */
+/* 옛 보호 기록의 클래스는 옮겨 온 기록의 감싸는 요소 안에서만 꾸민다. */
 .tc-arc-protected { padding: var(--s6); border: 1px solid var(--line-2); background: var(--panel); display: grid; gap: var(--s5); }
 .tc-arc-protected .doc-header { border-bottom: 1px solid var(--line-2); padding-bottom: var(--s5); margin-bottom: var(--s5); }
 .tc-arc-protected .doc-title { font-size: var(--fs-2xl); margin-block: var(--s2); }
@@ -105,7 +105,7 @@
 .tc-arc-protected .record-page blockquote { border-left: 2px solid var(--coyote); margin-inline: 0; padding-inline: var(--s4); }
 .tc-arc-protected .tc-arc-redaction { display: inline-block; vertical-align: baseline; max-width: 60%; width: var(--arc-redaction-width); height: .9em; background: var(--bg); outline: 1px solid var(--line-2); }
 
-/* Storyboard damage is confined to the evidence surface. Controls and transcripts stay intact. */
+/* 매체 손상은 증거 표면에만 입힌다. 조작부와 대본은 가리지 않는다. */
 .tc-arc-cinema { display: grid; gap: var(--s4); }
 .tc-arc-player-heading, .tc-arc-player-controls { display: flex; gap: var(--s2); align-items: center; flex-wrap: wrap; }
 .tc-arc-player-heading { justify-content: space-between; }
@@ -180,8 +180,70 @@
   .tc-arc-transcript li { grid-template-columns: 58px minmax(0, 1fr); }
   .tc-arc-table th, .tc-arc-table td { padding: 8px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .tc-arc *, .tc-arc-dialog * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-  .tc-arc-cinema-stage .tc-arc-line-pending { opacity: 1; }
-  .tc-arc-cinema.is-playing .tc-arc-image-frame::after { display: none; }
+/* 목록 인계와 문서 해독은 기록 영역 안에서만 동작한다. */
+html:not([data-density="full"]) .tc-arc .tc-full-only { display: none !important; }
+.tc-arc-row { position: relative; animation: tc-arc-arrival 220ms both; animation-delay: var(--arc-arrival, 0ms); }
+.tc-arc-mounting { position: absolute; inset: auto 0 0; display: flex; justify-content: space-between; gap: var(--s2); padding: 8px 12px; background: var(--bg); border-top: 2px solid var(--red); color: var(--text); font: var(--fs-xs)/1.5 var(--mono); pointer-events: none; }
+.tc-arc-decoding :is(.tc-arc-document-section, .record-page, .sub-page) > :is(p, ul, ol, blockquote) { animation: tc-arc-decode 220ms both; }
+.tc-arc-decoding :is(.tc-arc-document-section, .record-page, .sub-page) > :nth-child(2n) { animation-delay: 80ms; }
+.tc-arc-decoding :is(.tc-arc-document-section, .record-page, .sub-page) > :nth-child(3n) { animation-delay: 160ms; }
+.tc-arc-decoding :is(.tc-arc-document-section, .record-page, .sub-page) > :nth-child(4n) { animation-delay: 280ms; }
+.tc-arc-acquisition { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px; padding: var(--s4); background: var(--sunken); color: var(--text-2); overflow: hidden; text-align: center; }
+.tc-arc-acquisition::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 5px, var(--line) 5px 6px); animation: tc-arc-scan 1800ms linear infinite; pointer-events: none; }
+@keyframes tc-arc-arrival { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+@keyframes tc-arc-decode { from { opacity: .15; filter: blur(2px); } to { opacity: 1; filter: none; } }
+@keyframes tc-arc-scan { from { background-position: 0 0; } to { background-position: 0 18px; } }
+@keyframes tc-arc-tracking { 0%, 92%, 100% { transform: none; } 93% { transform: translateX(1px); } 95% { transform: translateX(-1px); } }
+
+/* 몰입 재생은 최상위 대화상자에 둔다. 조작부는 손상 연출 밖에 고정한다. */
+.tc-arc-cinema > .tc-btn { justify-self: start; }
+.tc-arc-cinema-dialog { position: fixed; inset: 0; margin: 0; padding: 0; width: 100%; max-width: 100%; height: 100vh; height: 100dvh; max-height: 100dvh; border: 0; border-radius: 0; overflow: hidden; color: var(--text); background: var(--bg); }
+.tc-arc-cinema-dialog[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.tc-arc-cinema-dialog::backdrop { background: var(--bg); }
+.tc-arc-cinema-dialog > audio { display: none; }
+.tc-arc-cinema-head { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s3); padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left)); border-bottom: 1px solid var(--line); }
+.tc-arc-cinema-head h2 { margin: 0; font-size: var(--fs-l); }
+.tc-arc-cinema-head select { margin-left: auto; max-width: min(48vw, 480px); }
+.tc-arc-cinema-viewport { min-height: 0; position: relative; isolation: isolate; overflow: hidden; }
+.tc-arc-cinema-viewport::after { content: ''; pointer-events: none; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent 0 3px, var(--bg) 3px 4px); opacity: .2; animation: tc-arc-scan 2200ms linear infinite; }
+.tc-arc-cinema-noise { pointer-events: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .08; z-index: 1; }
+.tc-arc-cinema-dialog .tc-arc-cinema-stage { position: relative; border: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; padding: clamp(16px, 3vw, 42px); align-content: start; background: var(--bg); scrollbar-gutter: stable; }
+.tc-arc-cinema-dialog.is-playing .tc-arc-scene-body { animation: tc-arc-tracking 9s linear infinite; }
+.tc-arc-cinema-dialog .tc-arc-scene-body { width: min(100%, 1120px); margin-inline: auto; }
+.tc-arc-cinema-dialog .tc-arc-scene-body:has(> .tc-arc-cinema-figure) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: start; column-gap: clamp(16px, 3vw, 48px); }
+.tc-arc-cinema-dialog .tc-arc-scene-body > :is(h3, .tc-arc-scene-subtitle, .tc-arc-time) { grid-column: 1 / -1; }
+.tc-arc-cinema-dialog .tc-arc-scene-body > .tc-arc-cinema-figure { grid-column: 1; }
+.tc-arc-cinema-dialog .tc-arc-scene-body:has(> .tc-arc-cinema-figure) > .tc-arc-scene-lines { grid-column: 2; }
+.tc-arc-cinema-dialog .tc-arc-scene-lines { font-size: var(--fs); line-height: 1.85; }
+.tc-arc-cinema-dialog .tc-arc-line-revealed { animation: tc-arc-decode 200ms both; }
+.tc-arc-cinema-dialog .tc-arc-image-frame img { max-height: 42dvh; }
+.tc-arc-cinema-dialog .tc-arc-bridge-video { width: 100%; height: 100%; max-height: none; object-fit: contain; }
+.tc-arc-cinema-dialog.is-bridge .tc-arc-cinema-stage { display: grid; place-items: center; padding: 0; }
+.tc-arc-bridge-still { display: none; }
+.tc-arc-bridge-still-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: .65; pointer-events: none; }
+.tc-arc-bridge-still > :is(span, p) { position: relative; }
+.tc-arc-black-step { display: grid; place-items: center; width: 100%; min-height: 50dvh; background: var(--bg); color: var(--text-2); }
+.tc-arc-cinema-footer { padding: 8px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); border-top: 1px solid var(--line); display: grid; gap: 8px; background: var(--bg); }
+.tc-arc-cinema-footer p { margin: 0; font-size: var(--fs-xs); }
+.tc-arc-cinema-progress { appearance: none; display: block; width: 100%; height: 3px; border: 0; background: var(--line); accent-color: var(--red); }
+.tc-arc-cinema-progress::-webkit-progress-bar { background: var(--line); }
+.tc-arc-cinema-progress::-webkit-progress-value { background: var(--red); }
+.tc-arc-cinema-progress::-moz-progress-bar { background: var(--red); }
+.tc-arc-cinema-dialog:not(.is-playing) .tc-arc-scene-body, .tc-arc-cinema-dialog:not(.is-playing) .tc-arc-cinema-viewport::after { animation-play-state: paused; }
+@media (max-width: 600px) {
+  .tc-arc-cinema-head { gap: 8px; padding: 8px 12px; }
+  .tc-arc-cinema-head h2 { flex: 1; }
+  .tc-arc-cinema-head select { order: 3; width: 100%; max-width: 100%; }
+  .tc-arc-cinema-footer { padding-inline: 12px; }
+  .tc-arc-cinema-footer .tc-arc-player-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tc-arc-cinema-footer .tc-btn { padding: 8px 4px; font-size: var(--fs-xs); white-space: normal; }
+  .tc-arc-cinema-dialog .tc-arc-scene-body:has(> .tc-arc-cinema-figure) { grid-template-columns: minmax(0, 1fr); }
+  .tc-arc-cinema-dialog .tc-arc-scene-body:has(> .tc-arc-cinema-figure) > .tc-arc-scene-lines { grid-column: 1; }
+  .tc-arc-cinema-dialog .tc-arc-image-frame img { max-height: 23dvh; }
+  .tc-arc-cinema-dialog .tc-arc-scene-lines p { line-height: 1.65; }
 }
+/* 효과 줄임에서는 정지한 손상 표면과 재생·자막·음향을 유지한다. */
+html[data-fx="reduced"] .tc-arc *, html[data-fx="reduced"] .tc-arc *::before, html[data-fx="reduced"] .tc-arc *::after,
+.tc-arc-fx-reduced *, .tc-arc-fx-reduced *::before, .tc-arc-fx-reduced *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+html[data-fx="reduced"] .tc-arc-bridge-video, .tc-arc-fx-reduced .tc-arc-bridge-video { position: absolute; visibility: hidden; }
+html[data-fx="reduced"] .tc-arc-bridge-still, .tc-arc-fx-reduced .tc-arc-bridge-still { display: grid; place-content: center; min-height: 100%; padding: var(--s5); text-align: center; }

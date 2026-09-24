@@ -90,7 +90,9 @@
   .tc-fac-context > div, .tc-fac-chronology li { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
   .tc-fac-lineage-nodes, .tc-fac-people { grid-template-columns: minmax(0, 1fr); }
 }
-@media (prefers-reduced-motion: reduce) {
-  #faction-info { animation: none; }
-  .tc-fac-index *, .tc-fac-detail * { transition: none !important; animation: none !important; }
-}
+html:not([data-density="full"]) :is(.tc-fac-index, .tc-fac-detail) .tc-full-only { display: none !important; }
+.tc-fac-person-uncertain, .tc-fac-open-canon { display: grid; gap: var(--s2); }
+.tc-fac-person-uncertain { padding: var(--s3); border: 1px solid var(--line); }
+.tc-fac-person-uncertain > .tc-btn { justify-self: start; }
+html[data-fx="reduced"] #faction-info { animation: none; }
+html[data-fx="reduced"] .tc-fac-index *, html[data-fx="reduced"] .tc-fac-detail * { transition: none !important; animation: none !important; }

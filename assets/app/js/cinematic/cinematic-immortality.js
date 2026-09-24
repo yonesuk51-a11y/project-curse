@@ -1,4 +1,4 @@
-// Project Curse — Immortality_860201 cinematic ownership
+// Project Curse — Immortality_860201 기록 영상 재생 설정
 (function(root){
   'use strict';
   root.ProjectCurseCinematicRegistry?.register({
@@ -10,9 +10,9 @@
     transitionVideo:'assets/video/pc5152q_immortality_fhc_transition_204_209.mp4',
     endingVideo:'',
     bgm:'assets/audio/pc5152am_immortality_scp087_theme.mp3',
-    bgmVolume:.52,
-    introVolume:.09,
-    transitionVolume:.72,
+    bgmVolume:.54,
+    introVolume:.68,
+    transitionVolume:.78,
     introFallback:14650,
     transitionFallback:5650,
     pages:()=>root.ProjectCurseLegacyCinematicSources?.immortality||[]

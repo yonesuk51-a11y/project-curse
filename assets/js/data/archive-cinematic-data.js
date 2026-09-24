@@ -1,4 +1,4 @@
-// Cults source pages copied verbatim from record-cinematic-runtime.js; checked by verify-app.d/archive.mjs.
+// 교단 대본은 옛 기록 영상의 원문이다. archive 검사에서 문장·순서·시각을 대조한다.
 (function(root){
   'use strict';
   const cults = [
@@ -239,6 +239,12 @@
       }
 ];
   root.ProjectCurseLegacyCinematicSources=Object.freeze({cults,
+    media: Object.freeze({
+      noise: 'assets/video/pc5152am_cult_trace_vhs_noise.mp4',
+      radio: 'assets/audio/pc5152an_cult_radio_static_layer.mp3',
+      mount: 'assets/audio/pc5152f_record_mount_soft.wav',
+      blackBeep: 'assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3'
+    }),
     cues: Object.freeze({
       step:'assets/audio/pc5152p_internal_projector_vhs_step.wav',
       photo:'assets/audio/pc5152v_field_photo_click_42s.mp3',

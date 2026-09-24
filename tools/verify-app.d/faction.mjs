@@ -1,4 +1,6 @@
 import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import { screenRuntime } from './archive.mjs';
 
 export default function ({ add, read, context, app, historyIds, opIds }) {
   const F = context.ProjectCurseFactionAnalysis;
@@ -35,5 +37,27 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
   add('no-html-string-rendering', !/innerHTML|insertAdjacentHTML|document\.write/.test(source));
   add('unknown-key-is-explicit', source.includes("Object.hasOwn(object, key)") && source.includes("PC.missing('FACTION NOT FOUND'") && !/factions\[key\]\s*\|\|/.test(source));
   add('lifecycle-cleans-events-and-frame', source.includes('function hide()') && source.includes('listeners?.abort()') && source.includes('cancelAnimationFrame(restoreFrame)'));
-  add('reduced-motion-screen-rule', read('assets/app/css/screens/faction.css').includes('@media (prefers-reduced-motion: reduce)'));
+  const css = read('assets/app/css/screens/faction.css');
+  add('reduced-motion-screen-rule', css.includes('html[data-fx="reduced"]') && !css.includes('@media (prefers-reduced-motion: reduce)'));
+  add('brief-labels-and-optional-shell', source.includes('tc-full-only') && source.includes('PC.threat?.(threat)') && source.includes('root.ProjectCurseOpenCanon?.faction?.[key]') && source.includes('PC.openCanon?.(text)'));
+  add('uncertain-names-outside-links', source.includes('anomalyCount < 2') && source.includes("h('span', { text: person.name, dataset: { tcAnomaly: 'name' } })") && source.includes("person.certainty === 'unresolved'"));
+  try {
+    const runtime = screenRuntime({ read, context, screenName: 'faction' });
+    for (const key of keys) {
+      runtime.show([key]);
+      assert.ok(runtime.host.textContent.includes(F.factions[key].name));
+      assert.ok(runtime.host.textContent.includes(F.factions[key].fault));
+      const anomalies = runtime.host.querySelectorAll('[data-tc-anomaly]');
+      assert.ok(anomalies.length <= 2);
+      assert.ok(anomalies.every(el => !el.closest('a,button,h1,h2,h3,input')));
+    }
+    assert.equal(runtime.threats.length, 0, '위험 설명에서 등급을 지어내지 않는다');
+    runtime.c.ProjectCurseOpenCanon = { faction: { fhc: ['검사용 자유 해석'] } };
+    runtime.c.PCApp.openCanon = text => runtime.h('p', null, text);
+    runtime.show(['fhc']); assert.ok(runtime.host.textContent.includes('검사용 자유 해석'));
+    assert.ok(runtime.host.querySelectorAll('[data-tc-anomaly]').length > 0, '신원 불명 인물이 표시되어야 한다');
+    runtime.show(['없는-세력']); assert.ok(runtime.host.textContent.includes('FACTION NOT FOUND'));
+    runtime.screen.hide(); assert.equal(runtime.host.listeners('click').length, 0); assert.equal(runtime.timers.size, 0);
+    add('detail-shell-fallback-and-identity-execution', true);
+  } catch (error) { add('detail-shell-fallback-and-identity-execution', false, error.stack); }
 }
