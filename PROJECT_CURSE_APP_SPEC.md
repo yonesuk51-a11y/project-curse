@@ -7,7 +7,7 @@ Status: `2026-09-24 / 표시층 재작성 진행 중`
 
 ## 0. 진행 방식
 
-- 새 앱은 완성 전까지 `app.html`로 따로 연다. 옛 앱(`index.html`)은 교체 직전까지 그대로 둔다.
+- 새 단말은 `index.html`이다(2026-09-24 교체, 그 전까지는 `app.html`로 따로 열었다). `docs/`의 옛 문서 페이지는 `tools/build-docs-stubs.mjs`가 만든 안내 페이지로, 기록보관소의 같은 기록으로 보낸다.
 - `index.html` 교체와 docs 페이지 스타일 교체는 모든 화면을 검증한 뒤 Claude가 한다.
 - 새 앱은 옛 `assets/css/*.css`, `assets/js/main.js`, `assets/js/core/*`, `assets/js/pages/*`를 불러오지 않는다. 옛 모듈의 로직을 쓰려면 새 화면 파일로 옮겨 온다.
   - 예외: 기록 영상 연출(`record-cinematic-*`, `cinematic-*.js`)은 기록보관소 화면이 재사용할 수 있다. 재사용하면 이 문서 5절의 기록보관소 항목에 적는다.
@@ -16,7 +16,7 @@ Status: `2026-09-24 / 표시층 재작성 진행 중`
 
 | 파일 | 역할 |
 |---|---|
-| `app.html` | 셸 마크업, 보호 기록 원문(`#tc-vault`), 스크립트 순서 |
+| `index.html` | 셸 마크업, 보호 기록 개정판(`#tc-vault`), 스크립트 순서 |
 | `assets/app/css/tokens.css` | 색·글꼴·간격·모션 토큰, 화면별 강조색 |
 | `assets/app/css/base.css` | 기본값, 포커스, 모션 감소 |
 | `assets/app/css/shell.css` | 상단 명령 바, 채널 레일(모바일 하단 도크), 화면 머리 |
@@ -32,7 +32,7 @@ Status: `2026-09-24 / 표시층 재작성 진행 중`
 
 ### 여럿이 동시에 작업할 때
 
-- `app.html`의 데이터 스크립트 목록에는 화면별 자리 표지가 있다: `<!-- slot:map-data -->`, `<!-- slot:faction-data -->`, `<!-- slot:archive-data -->`, `<!-- slot:personnel-data -->`, `<!-- slot:archive-modules -->`. 화면 전용 데이터 파일이나 모듈을 추가할 때는 **자기 표지 바로 아래에만** `<script>`/`<link>` 줄을 넣는다. 다른 곳은 고치지 않는다.
+- `index.html`의 데이터 스크립트 목록에는 화면별 자리 표지가 있다: `<!-- slot:map-data -->`, `<!-- slot:faction-data -->`, `<!-- slot:archive-data -->`, `<!-- slot:personnel-data -->`, `<!-- slot:archive-modules -->`. 화면 전용 데이터 파일이나 모듈을 추가할 때는 **자기 표지 바로 아래에만** `<script>`/`<link>` 줄을 넣는다. 다른 곳은 고치지 않는다.
 - 옛 화면 코드 안에 박혀 있던 설정 문장(세계관 내용)은 새 데이터 파일(`assets/js/data/<화면>-...-data.js`)로 옮긴다. 옮길 때 글자를 바꾸지 않고, 옛 화면이 보여주던 결과와 대조해 차이가 없음을 확인한다.
 - 화면별 검사는 `tools/verify-app.d/<화면>.mjs`에 둔다. `default export` 함수가 `({add, read, context, app, historyIds, archiveIds, opIds})`를 받는다. `tools/verify-app.mjs` 본체는 고치지 않는다.
 
@@ -149,8 +149,9 @@ PCApp.screen({
 ## 6. 검증
 
 - `node tools/verify-app.mjs` 전부 통과. 새 화면을 만들면 그 화면의 데이터 무결성·이동 대상 검사를 추가한다.
-- `node tools/verify-package.mjs`(옛 앱)도 교체 전까지 통과를 유지한다.
-- 브라우저: `npx --yes http-server . -p 4174 -c-1` → `http://localhost:4174/app.html#<화면>`.
+- `node tools/verify-data.mjs`(데이터·정사·매체) 전부 통과. 옛 `verify-package.mjs`는 2026-09-24 교체와 함께 은퇴했다.
+- 옛 문서 주소 안내 페이지는 `node tools/build-docs-stubs.mjs --check`로 생성 결과와 같은지 본다.
+- 브라우저: `npx --yes http-server . -p 4174 -c-1` → `http://localhost:4174/index.html#<화면>`.
   - 데스크톱 1280px, 모바일 375px, 가로 넘침 없음
   - 목록 → 상세 → 뒤로 가기 왕복, 다른 화면으로 나갔다 돌아오기
   - 키보드 탭 이동과 초점 표시, 모션 감소 설정, 콘솔 오류 0

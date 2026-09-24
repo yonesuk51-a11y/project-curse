@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Project Curse 6 — 새 앱(app.html + assets/app/) 검증.
+// Project Curse 6 — 새 단말(index.html + assets/app/) 검증.
 // 옛 verify-package.mjs 가운데 보호 기록·데이터·정사 검사를 새 구조로 옮기고, 새 앱의 화면·디자인 규칙을 더한다.
 // 개수 단언은 기록을 추가·삭제했을 때만 새 값으로 고치고, 그 이유를 커밋 메시지에 적는다.
 import { createHash } from 'node:crypto';
@@ -31,27 +31,20 @@ const LOCKED = {
   Cults_871104: { inline: 'aefa15d45fd74b868223144455da4dae59b5545f61fd5687a3132d8cf27c3429', standalone: '71b052533c33f3c4d9838a55633be82bb64030d4028be2304a48154fa049a740' },
   Immortality_860201: { inline: '38cd38c7db213c15517284155e7a70f98092cf9cae52e18d0be40b85fe73e993', standalone: '1d6c0fb57135631deb7feed3c4f6845f4bd1337e3b7ad34db78f95b8d5855626' }
 };
-const app = read('app.html');
+const app = read('index.html');
 const editions = [];
 for (const [id, expected] of Object.entries(LOCKED)) {
   const originalArticle = read(`canon/originals/${id}.article.html`);
   const originalDocs = read(`canon/originals/${id}.docs.html`);
   add(`original-sealed:${id}`, hash(originalArticle) === expected.inline, hash(originalArticle));
   add(`original-docs-sealed:${id}`, hash(originalDocs) === expected.standalone, hash(originalDocs));
-  editions.push([id, originalArticle, article(app, id), 'app.html']);
-  editions.push([id, originalDocs, read(`docs/${id}/index.html`), 'docs']);
-}
-// 잠긴 두 docs 페이지는 HTML을 고칠 수 없으므로, 그 페이지가 부르는 파일이 있어야 한다.
-for (const id of Object.keys(LOCKED)) {
-  const page = read(`docs/${id}/index.html`);
-  const refs = [...page.matchAll(/(?:src|href)="\.\.\/\.\.\/([^"#?]+)/g)].map((m) => m[1]).filter((p) => !p.endsWith('.html'));
-  const missing = refs.filter((p) => !existsSync(ROOT + p));
-  add(`locked-page-assets:${id}`, missing.length === 0, missing.join(' | '));
+  // 개정판은 새 단말(index.html)의 #tc-vault에만 있다. docs/ 두 페이지는 기록보관소로 보내는 안내 페이지다(5절 끝에서 검사).
+  editions.push([id, originalArticle, article(app, id), 'index.html']);
 }
 const publicApp = Object.keys(LOCKED).reduce((source, id) => source.replace(article(source, id), ''), app);
 // 개정판 사실 대조는 데이터(고유명사 사전)를 불러온 뒤에 한다 — 아래 3절 끝.
 
-/* ---------- 2. app.html이 부르는 파일 ---------- */
+/* ---------- 2. index.html이 부르는 파일 ---------- */
 const localRefs = [...app.matchAll(/(?:src|href)="([^"#?]+)(?:\?[^"]*)?"/g)].map((m) => m[1]).filter((p) => !/^(https?:)?\/\//.test(p));
 const missingRefs = localRefs.filter((p) => !existsSync(ROOT + p));
 add('app-local-files-exist', missingRefs.length === 0, missingRefs.join(' | '));
@@ -120,7 +113,7 @@ const archiveIds = new Set([
 const opIds = new Set((context.ProjectCurseMapRoom?.operations || []).map((op) => op.id));
 const historySet = new Set(historyIds);
 const screenSources = tree('assets/app/js/screens/').filter((p) => p.endsWith('.js')).map((p) => [p, read(p)]);
-// 새 앱이 만든 데이터 파일(app.html에서 ?v=6.x로 부르는 assets/js/data/*). 화면 문구와 이동 대상이 여기에도 있다.
+// 새 앱이 만든 데이터 파일(index.html에서 ?v=6.x로 부르는 assets/js/data/*). 화면 문구와 이동 대상이 여기에도 있다.
 const newDataFiles = [...new Set([...app.matchAll(/src="(assets\/js\/data\/[^"?]+\.js)\?v=6\./g)].map((m) => m[1]))];
 const brokenTargets = [];
 for (const [file, source] of [...screenSources, ...newDataFiles.map((file) => [file, read(file)])]) {
@@ -128,6 +121,19 @@ for (const [file, source] of [...screenSources, ...newDataFiles.map((file) => [f
   for (const m of source.matchAll(/\['archive-entry',\s*'([^']+)'\]/g)) if (!archiveIds.has(m[1])) brokenTargets.push(`${file}: archive-entry/${m[1]}`);
   for (const m of source.matchAll(/\['map-room',\s*'op',\s*'([^']+)'\]/g)) if (!opIds.has(m[1])) brokenTargets.push(`${file}: map-room/op/${m[1]}`);
 }
+// 옛 독립 문서 페이지(docs/<ID>/)는 새 단말의 기록보관소로 보내는 안내 페이지다(tools/build-docs-stubs.mjs).
+// 공유된 주소가 끊기지 않고 미리보기 정보가 남아야 한다. 옛 표시층 파일을 부르지 않는다.
+const docsIds = readdirSync(ROOT + 'docs', { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name);
+const badStubs = docsIds.filter((id) => {
+  const page = read(`docs/${id}/index.html`);
+  const target = `../../index.html#archive-entry/${id}`;
+  return !archiveIds.has(id) || !page.includes(`url=${target}"`) || !page.includes(`location.replace(${JSON.stringify(target)})`) ||
+    !['property="og:title"', 'property="og:description"', 'property="og:image"', 'name="twitter:card"'].every((needle) => page.includes(needle)) ||
+    /assets\/(?:css|js)\//.test(page);
+});
+add('docs-pages-forward-to-archive', docsIds.length === 9 && badStubs.length === 0, badStubs.join(' | ') || `${docsIds.length} pages`);
+add('app-html-retired', !existsSync(ROOT + 'app.html'), '새 단말은 index.html 하나다');
+
 const turns = context.ProjectCurseHistoryScreen?.turns || [];
 if (turns.length !== 4) brokenTargets.push(`history-screen-data turns: ${turns.length}/4`);
 for (const [id] of turns) if (!historySet.has(id)) brokenTargets.push(`history-screen-data turns: ${id}`);

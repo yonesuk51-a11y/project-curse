@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Project Curse — 보호 기록 개정판 적용.
-// 원본(canon/originals/)은 건드리지 않는다. 사이트 사본(app.html 인라인, 나중에 index.html·docs)에 문장 교체 목록을 적용한다.
+// 원본(canon/originals/)은 건드리지 않는다. 사이트 사본(index.html 인라인의 #tc-vault)에 문장 교체 목록을 적용한다. docs/ 두 페이지는 새 단말로 보내는 안내 페이지다.
 // 사용: node tools/protected-edition.mjs <대상 파일...>
 // 교체 목록의 원문 문장은 대상 기록 안에서 정확히 한 번 나와야 한다. 한 번도 없거나 여러 번이면 멈춘다.
 // 교신(〔…〕), 기록 변조 문구, 시각은 목록에 넣지 않는다 — 화자의 목소리와 공포 장치다.

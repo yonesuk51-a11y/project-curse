@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Project Curse — 데이터·정사·매체 검증. 사용: node tools/verify-data.mjs [저장소 루트]
-// app.html의 데이터 스크립트만 순서대로 실행한다. 옛 화면 소스나 검증기를 실행하지 않는다.
+// index.html(새 단말)의 데이터 스크립트만 순서대로 실행한다. 옛 화면 소스나 검증기를 실행하지 않는다.
 // A/C의 데이터 조건을 유지하고, D 혼합 검사의 데이터 조건은 :data로 구분한다.
 // owners의 옛 CSS/런타임 경로 값은 메타데이터 비교일 뿐 파일 접근/존재 요구가 아니다.
 // 보호 기록의 봉인 해시와 개정판 사실 대조, 화면 동작은 verify-app.mjs가 담당한다.
@@ -35,7 +35,7 @@ function article(source,id){
 function verify(){
   // C: 옛 표시층 파일 50개 제외, 기존 파일 78개와 새 앱 진입점/추가 데이터 3개 확인.
   const required=[
-    "app.html",
+    "index.html",
     "assets/favicon.svg",
     "assets/js/data/build-info.js",
     "assets/js/data/site-manifest.js",
@@ -119,8 +119,8 @@ function verify(){
   ];
   required.forEach(relative=>add(`required:${relative}`,existsSync(path(relative))));
 
-  // app.html에 실제 연결된 데이터만 브라우저와 같은 순서로 적재한다.
-  const app=read('app.html');
+  // index.html(새 단말)에 실제 연결된 데이터만 브라우저와 같은 순서로 적재한다.
+  const app=read('index.html');
   const dataScripts=[...app.replace(/<!--[\s\S]*?-->/g,'').matchAll(/<script\b[^>]*\bsrc\s*=\s*["'](assets\/js\/data\/[^"'?#]+\.js)(?:[?#][^"']*)?["'][^>]*>/g)].map(match=>match[1]);
   const requiredData=required.filter(relative=>relative.startsWith('assets/js/data/'));
   const missingData=requiredData.filter(relative=>!dataScripts.includes(relative));

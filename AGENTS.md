@@ -28,7 +28,7 @@
 
 - 자료 우선순위는 `WORLD_CANON_LEDGER.md`를 따른다. 낮은 순위 자료가 높은 순위 자료를 덮어쓰지 않는다.
 - 보호 원문 `Cults_871104`, `Immortality_860201`의 원본은 `canon/originals/`에 봉인 보관하고 해시로 잠근다. 원본은 고치지 않는다.
-- 사이트의 보호 기록(`app.html` 인라인, `docs/` 문서)은 2026-09-24 사용자 승인에 따라 문장을 개정할 수 있다. 개정판은 원본의 사실·순서·발화의 뜻을 바꾸지 않고, `verify-app`이 원본과 사실을 대조한다. 원본과 어긋나면 원본이 이긴다.
+- 사이트의 보호 기록(`index.html`의 `#tc-vault` 인라인)은 2026-09-24 사용자 승인에 따라 문장을 개정할 수 있다. `docs/`의 두 페이지는 새 단말로 보내는 안내 페이지다. 개정판은 원본의 사실·순서·발화의 뜻을 바꾸지 않고, `verify-app`이 원본과 사실을 대조한다. 원본과 어긋나면 원본이 이긴다.
 - 문장 개정은 `WRITING_STYLE_GUIDE.md`의 "문장 흐름 — 2026-09 개정"을 따르고 `tools/check-prose.mjs`로 원문과 대조한다.
 - 확인되지 않은 것을 확정문으로 쓰지 않는다. 기록끼리 충돌하면 지우거나 합치지 말고 `상충 기록` 또는 `결정 대기`로 남긴다.
 - 리버스(사건), 괴이(비인간 존재), 타락자(변질된 인간), 능력자(변칙을 쓰는 인간)를 동의어로 쓰지 않는다.
@@ -38,21 +38,22 @@
 
 ## 3. 코드 규칙
 
-표시층을 새로 만드는 중이다. 새 작업은 새 앱에서 한다. 구조와 화면별 요구는 `PROJECT_CURSE_APP_SPEC.md`가 정한다.
+표시층은 2026-09-24에 새 단말(`index.html`)로 교체했다. 구조와 화면별 요구는 `PROJECT_CURSE_APP_SPEC.md`가 정한다.
 
 - 사실 데이터는 `assets/js/data/`에 둔다. 화면 코드에 설정 문장을 박지 않는다.
-- 새 앱: `app.html`, `assets/app/css/`, `assets/app/js/pc-core.js`(`PCApp`), `assets/app/js/screens/<화면>.js`.
+- 새 단말: `index.html`, `assets/app/css/`, `assets/app/js/pc-core.js`(`PCApp`), `pc-audio.js`(`PCAudio`), `pc-state.js`(진행 상태), `assets/app/js/screens/<화면>.js`.
+- `docs/<ID>/index.html`은 옛 공유 주소를 기록보관소로 보내는 안내 페이지다. 손으로 고치지 말고 `node tools/build-docs-stubs.mjs`로 다시 만든다.
 - 화면은 `PCApp.screen({id, mount, show, hide})`로 등록한다. 이동은 `PCApp.href()` 링크, 스크립트 이동은 `PCApp.go()`.
 - 없는 키를 다른 값으로 조용히 바꾸는 폴백을 쓰지 않는다. 예를 들어 없는 세력을 U.A.C 문서로 열면 안 된다. `PCApp.missing()`으로 없다고 표시한다.
 - DOM은 `PCApp.h()`로 만들고 `innerHTML`을 쓰지 않는다.
 - 이벤트 리스너와 타이머는 화면의 `hide()`에서 정리한다. 같은 화면에 두 번 들어와도 중복으로 붙지 않게 한다.
-- 옛 앱(`index.html`, `assets/css/`, `assets/js/main.js`, `assets/js/core/`, `assets/js/pages/`)은 교체 전까지 고치지 않는다. 잠긴 docs 두 페이지가 `assets/css/style.css`와 `assets/js/main.js`를 부르므로 이 두 파일을 지우지 않는다.
+- 옛 앱 파일(`assets/css/`, `assets/js/main.js`, `assets/js/core/`, `assets/js/pages/`)은 새 단말이 불러오지 않는다. 다만 기록보관소가 재사용하는 기록 영상 모듈(`core/record-cinematic-registry.js`, `pages/cinematic-*.js`)과 화면별 검사가 옛 기능과 대조하려고 읽는 파일이 있으므로, 정리 작업 전까지 지우지 않는다.
 
 ### 화면별 담당 파일
 
 | 화면 | 새 앱 파일 | 담당 |
 |---|---|---|
-| 셸·주소·공용 부품 | `app.html`, `pc-core.js`, `tokens.css`·`base.css`·`shell.css`·`components.css` | Claude |
+| 셸·주소·공용 부품 | `index.html`, `pc-core.js`, `pc-audio.js`, `pc-state.js`, `tokens.css`·`base.css`·`shell.css`·`components.css` | Claude |
 | 단말 상태(홈) | `screens/home.*` | Claude |
 | 세계 기록 | `screens/history.*`, `assets/js/data/world-history-core-data.js` | Claude |
 | 교전 교범 | `screens/manual.*` | Claude |
@@ -65,9 +66,9 @@
 
 ## 4. 검증 — 커밋 전에 반드시
 
-- `node tools/verify-app.mjs`(새 앱)와 `node tools/verify-package.mjs`(옛 앱)가 전부 통과해야 한다.
+- `node tools/verify-app.mjs`(새 단말·보호 기록·화면별 검사)와 `node tools/verify-data.mjs`(데이터·정사·매체)가 전부 통과해야 한다. 옛 `verify-package.mjs`는 교체와 함께 은퇴했다. 그 데이터·정사·매체 검사는 `verify-data.mjs`로, 보호 기록 해시는 `verify-app.mjs`로 옮겼다.
 - 검증 조건을 약하게 바꿔서 통과시키지 않는다. 기록이나 세력을 추가해 개수가 바뀐 경우에만 개수 단언을 새 값으로 고치고, 그 이유를 커밋 메시지에 적는다.
-- 화면을 바꿨으면 브라우저에서 `app.html#<화면>`을 열어 아래를 확인한다.
+- 화면을 바꿨으면 브라우저에서 `index.html#<화면>`을 열어 아래를 확인한다.
   - 데스크톱(1280px)과 모바일(375px) 표시, 가로 넘침 없음
   - 목록 → 상세 → 뒤로 가기 왕복, 다른 화면으로 나갔다 돌아오기
   - 키보드 탭 이동과 포커스 표시

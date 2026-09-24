@@ -154,7 +154,7 @@
       "usedBy": [
         "assets/js/main.js",
         "assets/js/pages/cinematic-immortality.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": true
@@ -189,7 +189,7 @@
       "usedBy": [
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -207,7 +207,7 @@
         "README_MapPatch5_15_2cf.md",
         "assets/js/data/feral-cinematic-data.js",
         "assets/js/pages/cinematic-ferals.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -239,6 +239,7 @@
       "usedBy": [
         "assets/js/core/base-runtime.js",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js"
       ],
       "referenced": true,
@@ -270,6 +271,7 @@
       "sha256": "b96d16b57ce28e099e486b9fc90d73338cb0835a86bc7f2ba66a978b125b2ba6",
       "usedBy": [
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
@@ -286,6 +288,7 @@
       "sha256": "372c256723f7ef6c9561b5de14555beabe9329141519460ba39f2fc1757c7154",
       "usedBy": [
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
@@ -302,6 +305,7 @@
       "sha256": "f60e316c0aa08612115654a45f51664542103c160a904751556f218fe86ee612",
       "usedBy": [
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
@@ -320,7 +324,7 @@
         "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -404,7 +408,7 @@
         "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -422,7 +426,7 @@
         "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -439,9 +443,10 @@
       "usedBy": [
         "assets/js/core/base-runtime.js",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -474,9 +479,10 @@
       "usedBy": [
         "assets/js/core/base-runtime.js",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -493,9 +499,10 @@
       "usedBy": [
         "assets/js/core/base-runtime.js",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -514,7 +521,7 @@
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -531,7 +538,7 @@
       "usedBy": [
         "assets/js/main.js",
         "assets/js/pages/cinematic-cults.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": true
@@ -548,7 +555,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -564,8 +571,7 @@
       "sha256": "628ee9d43391318519c00922bdae07c4110cda4d884e474a98606f9777a9fa22",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -582,7 +588,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -598,8 +604,7 @@
       "sha256": "2137ec7ae998d35155ea1688886304fb9c457390a435e98b92e4869402873fc1",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -616,7 +621,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -632,8 +637,7 @@
       "sha256": "8ca551c73cb5744c29b7a6ba0b32ab9e755cbb04bccf946fd3f96ea1a15af32b",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -649,7 +653,7 @@
       "sha256": "63e1f6d5e5dccbd9fd832c4aa50bffc9327203e7932acecd490fd5ad6d9e3f74",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -665,7 +669,7 @@
       "sha256": "9a50737f9a517c67edb369c7c0809208e41986ef828f9b2d6e911a7e5bfab996",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -682,7 +686,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -698,8 +702,7 @@
       "sha256": "6c8df1b9d21b4b1679c39e2461563ed4592a6b525bc24d65352c79cad322d98e",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -715,7 +718,7 @@
       "sha256": "4915f1fc6585048fa4072ceefd68a9363744db638198470db213a08a66c828c9",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -732,7 +735,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -748,8 +751,7 @@
       "sha256": "f8ed15bc2632ee8301cf7b83f42b24ec34ce477d8889fedd4e9e2bec1329ea6a",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -765,7 +767,7 @@
       "sha256": "f20e7f6a1fbe446f839e3cbfcf5626ae0cbc34c2a726d079e8d82e6343ecd89b",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -782,7 +784,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -798,8 +800,7 @@
       "sha256": "8192bfb9097d69bf62e1ad81f1df631fdbc613eeab49ca0822b5b21c1402a8c6",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -816,7 +817,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -832,8 +833,7 @@
       "sha256": "18cae9288112f58fc630feaacbc4c00b7cf860de312192ee54ca782f2b8d89c3",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -849,7 +849,7 @@
       "sha256": "f0b306436c3454379a9157ae0549615a0da6c6c56f947cb16dee92670e54899c",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -866,7 +866,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -882,8 +882,7 @@
       "sha256": "a0a3488527cbb5b0ac0643f816ec8658042589aef6a6d0d08f79a5083713b6dd",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -899,7 +898,7 @@
       "sha256": "06912b3f9c53f030efe2126bfe1592d54402317fb55bbdadefeacec9cc083510",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -916,7 +915,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -932,8 +931,7 @@
       "sha256": "de455885fe5365d8602e63afb910949b5f27887a2e245e7a7c3dadfc46f17b1a",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -950,7 +948,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -966,8 +964,7 @@
       "sha256": "a97e982ae7a1af6f5810798180f2524fbaed7ccf10b1d338fc9d0a9ddf4a27ea",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -984,7 +981,7 @@
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1000,8 +997,7 @@
       "sha256": "35fd51ff92c321b96296ea0cbc09ed59a80226a83acf8c441890d9b35b95a06b",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js",
-        "index.html"
+        "assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1016,10 +1012,9 @@
       "bytes": 316,
       "sha256": "16ec9a62d16a91bda73b7c64745922f99ca2e5583ee12ba5d912ddeb458941ed",
       "usedBy": [
-        "app.html",
         "index.html",
         "tools/build-media-provenance.mjs",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1034,13 +1029,11 @@
       "bytes": 2524,
       "sha256": "c68d6ca6bf38833e88404fb04e2a62a5880efb27af123f923d619755f8c26cfc",
       "usedBy": [
-        "app.html",
         "assets/js/data/archive-registry.js",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1058,7 +1051,7 @@
       "usedBy": [
         "assets/js/data/archive-document-data.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1073,12 +1066,10 @@
       "bytes": 5156,
       "sha256": "6acaa7e0ecc097cedb9247908bf04fe8d97946ff6795f89c75dd563889e882f5",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1094,12 +1085,11 @@
       "bytes": 6728,
       "sha256": "1d7487d34a052d8e0979bb6c1731d69df5007041d1fe3b2b296df0f5dd07afad",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1130,12 +1120,11 @@
       "bytes": 8344,
       "sha256": "2f0ecad48aef5c07e3a8e767a257ae4756528070329056d58e8b1b56a84f6a6d",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1151,12 +1140,10 @@
       "bytes": 2312,
       "sha256": "f7770413116a8ed55fea833ec12adeabc5eaf1d5170f0f5e170dfd1021583ff4",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1173,7 +1160,7 @@
       "sha256": "75045f5792bf79415228df504e264f050ec3bdc52ea625af599d8e916758cccb",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1190,7 +1177,7 @@
       "usedBy": [
         "assets/js/data/archive-document-data.js",
         "assets/js/data/archive-registry.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1220,12 +1207,11 @@
       "bytes": 7438,
       "sha256": "b778166e06efa4f4760fe584b01eaa5a28f59f7d1208857dbdf309bf87f2c777",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1241,12 +1227,11 @@
       "bytes": 7268,
       "sha256": "455559354825066de060d4dfe518d0a2ee4ebb7a182562296df64c7f21ed2a37",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1277,12 +1262,11 @@
       "bytes": 9626,
       "sha256": "5d8c86f2c479a350776dfdce993c76c6a505e9417d5b0c2303d8e810298fca8b",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1298,14 +1282,12 @@
       "bytes": 14742,
       "sha256": "d39a3d9f1059b1a6f94ac6aa202ba6319cb4db27f5f870d5755a7e4ddcdd317e",
       "usedBy": [
-        "app.html",
         "assets/js/data/archive-registry.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/js/main.js",
         "assets/resources/ASSET_REGISTRY.md",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1321,12 +1303,11 @@
       "bytes": 3612,
       "sha256": "d1e15201f654f167ba299555996d08ce974951c38fb8dd65c97a7920f9097458",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1342,12 +1323,11 @@
       "bytes": 7864,
       "sha256": "b55150a921588144205b9e1d8005d057247de0b7f01650f36ac1a32d246c468c",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1363,12 +1343,11 @@
       "bytes": 9092,
       "sha256": "dcc3697930eb49692e5fa45b00d1c2b5bca24cb2999c9b639633d562d08accc0",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1388,7 +1367,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/main.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1403,12 +1382,10 @@
       "bytes": 2658,
       "sha256": "634da67b67b2f6b664a6df77c2a68a7f9640e5a70b1a3731783a93821d0539cc",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1424,12 +1401,10 @@
       "bytes": 13190,
       "sha256": "cd51ca3fb0662ccc7aa3a73431c0b18c1e7a3b17168e6f84de4414607a3d006f",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1445,12 +1420,10 @@
       "bytes": 13650,
       "sha256": "023da8f0f8c52aed984af57b7c3081708dbfe290eb3fe8a027ae46ffa759a79e",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -1467,9 +1440,10 @@
       "sha256": "36fb0468a33ab4c5a2735eb16058be4e7bcfd7bd28af924fa1f0e083cd6ddfa4",
       "usedBy": [
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1488,7 +1462,7 @@
         "assets/js/data/archive-registry.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1504,7 +1478,7 @@
       "sha256": "b8471cc76bc5ac099f44f5b0e8482d67ba8bdbdd2d405782b5aa856eda237049",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1520,7 +1494,7 @@
       "sha256": "17dd8b475245ab5b42eecb055ed5a123803648f5f0b2e25fc8264f9452dc98b0",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1536,7 +1510,7 @@
       "sha256": "5adab31cafe509ae63c3989695cbce4036fb457748cba5c6387611c334cf62c8",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1552,7 +1526,7 @@
       "sha256": "8fb4a87888c14df297d01215321f3b3712d0d6f351d13e2bde10d0808b8b2ab9",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1568,7 +1542,7 @@
       "sha256": "417ee768e41f46db7841300472de44899842ca879983a9361937f9ce66ceff73",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1584,7 +1558,7 @@
       "sha256": "dab382829cc5d1b48594d966f01f6695a467c7f5a5c63cb8211f663bd6e07ff6",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1600,7 +1574,7 @@
       "sha256": "e6cf3faf29c2d2be52c4104e673429afd9ecd8ca4ff942d989d2c1588f71c40f",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1616,7 +1590,7 @@
       "sha256": "77d65ccd4b72c1b778cc0c58b02dd5ae06890e166eca7b6acc49a7f53a001029",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1632,7 +1606,7 @@
       "sha256": "4d6b710322c66dcce1ce9bb3f410c01ffa8242ef63506e11499729c33a677a76",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1648,7 +1622,7 @@
       "sha256": "f502eff0d32c325915ea1cfd85c04ac3508413e0e57da110ed2b3ba5e74250cc",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1664,7 +1638,7 @@
       "sha256": "6ba073add6a6c78107b4a0af5b77157c9b2232844029688cebb83abb319269ef",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1680,7 +1654,7 @@
       "sha256": "fd67cb552541cded9991834f6c9b8b15e5cd75a90276aecd11e16a6d3e5b802c",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1699,7 +1673,7 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1716,7 +1690,7 @@
       "usedBy": [
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1733,7 +1707,7 @@
       "usedBy": [
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1750,7 +1724,7 @@
       "usedBy": [
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1766,7 +1740,7 @@
       "sha256": "13098d658336b15c70604d7f439341137356d190fd66e6b94bb4ffa12ea4e15d",
       "usedBy": [
         "UNUSED_DATA_AUDIT_5_15_2co.md",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1782,7 +1756,7 @@
       "sha256": "20ec85d77bbc10e165846ca7d19f5e01aa9d55d83ca30f553c87a4989f2caf0d",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1798,7 +1772,7 @@
       "sha256": "8759e9d1db2e82cbbddf0550c487087dd590f907d32239692de7d1e86277fe5f",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1814,7 +1788,7 @@
       "sha256": "17c71df9fd8551e263beb9da7237cf64cd31554f69c8eb892d91a1785fa32652",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1830,7 +1804,7 @@
       "sha256": "9d5f5e6427033ebc16a2932e01f893744787536003dbcbbf9eecfa66e08f8294",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1846,7 +1820,7 @@
       "sha256": "2c105bb432ca28e2facfb35cf8843216b455904cb18aa8caed64bb1886712831",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1862,7 +1836,7 @@
       "sha256": "8b554e5aeb923c2e9a3267e8c46c88a88c0fe91fb816dbaa3bf18d450d9d4112",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1878,7 +1852,7 @@
       "sha256": "1fd1b4da338ba15a8623a681fc76a14c8e0a9b5621893a288869640886bb22a4",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2070,12 +2044,10 @@
       "bytes": 2540,
       "sha256": "bff4f024e0ab00e997eac2e5f9771b6a095b503ab63dd067e5da8168bb546692",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2091,14 +2063,13 @@
       "bytes": 8402,
       "sha256": "7135d0e2d79c181adb4843a26e0a44b63f33575c57dc258756b7b0f1e6ec020e",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": true
@@ -2113,12 +2084,10 @@
       "bytes": 4270,
       "sha256": "f12c14b0cca22a7844199b36b3ea1f1592e57e6ebbab2f8d77fe725b9ae81976",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2134,12 +2103,10 @@
       "bytes": 2750,
       "sha256": "4f561b54c4f8c3471865d2588618d1f8afa00c1af1c1b25c69443660e5c8d9f3",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2170,12 +2137,10 @@
       "bytes": 4006,
       "sha256": "cdef046820e72bee49a93ea2948a87f05a22334a9a3755595f25289d0e014a30",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2191,12 +2156,10 @@
       "bytes": 4624,
       "sha256": "0d30b917105d14eb98c283c8860c550d060480c37d252179bd76bd292fb681fd",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2219,8 +2182,8 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-internal-document-shell.mjs",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs",
+        "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2242,8 +2205,8 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-internal-document-shell.mjs",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs",
+        "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2265,8 +2228,8 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-internal-document-shell.mjs",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs",
+        "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2288,8 +2251,8 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-internal-document-shell.mjs",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs",
+        "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2353,7 +2316,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2375,7 +2338,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2441,7 +2404,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2463,8 +2426,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-internal-document-shell.mjs",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs",
+        "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2485,7 +2448,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2509,7 +2472,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2531,7 +2494,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2552,7 +2515,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2573,7 +2536,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2595,8 +2558,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-internal-document-shell.mjs",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs",
+        "tools/verify-internal-document-shell.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2619,7 +2582,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2636,17 +2599,26 @@
       "bytes": 1852611,
       "sha256": "473ee8fe8882177ca523249f3f37640ad848a1254b98b75fa27d9323315fc798",
       "usedBy": [
-        "app.html",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "docs/Cults_871104/index.html",
+        "docs/Ferals_860722/index.html",
+        "docs/Immortality_860201/index.html",
+        "docs/Sakuma_Tape_991028/index.html",
+        "docs/Unknown_Record1_860204/index.html",
+        "docs/Unknown_Record2_860205/index.html",
+        "docs/Unknown_Record3_920711/index.html",
+        "docs/Unknown_Record4_930314/index.html",
+        "docs/Zone_870815/index.html",
         "index.html",
+        "tools/build-docs-stubs.mjs",
         "tools/verify-app.mjs",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
-      "protectedScope": false
+      "protectedScope": true
     },
     {
       "path": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png",
@@ -2660,7 +2632,7 @@
       "bytes": 2074931,
       "sha256": "cc9ca3b2942e3d9aeed28cc1397caccf2a4894976d165ea07e7eb062303469ea",
       "usedBy": [
-        "assets/app/js/screens/home.js",
+        "assets/js/data/home-screen-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -2695,12 +2667,10 @@
       "bytes": 2852,
       "sha256": "fc6f495cbc88d312f3f3f5659d65a5b06823916092de311ceefd3f8e64ed928e",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2716,12 +2686,10 @@
       "bytes": 2658,
       "sha256": "d1bf11edf85c4f0ca832b4a9413f70cc941b3451415463dc2cd9874505dc6e32",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2737,12 +2705,10 @@
       "bytes": 4826,
       "sha256": "b743dd815d27eb2f4770de81415e05bee2f90bcf6bbe20f8ff2a902a44cd2261",
       "usedBy": [
-        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "docs/Immortality_860201/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2773,13 +2739,12 @@
       "bytes": 335631,
       "sha256": "7e59f285b44d3c77b251d576a2bad2c24363261b71e8e1275620371c0fae367a",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -2795,13 +2760,12 @@
       "bytes": 303726,
       "sha256": "3dc94d47f3b3e989cf8f61f46df238366861df4b70fffa08931fed74cc2509e5",
       "usedBy": [
-        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "docs/Cults_871104/index.html",
         "index.html"
       ],
       "referenced": true,
@@ -3923,7 +3887,7 @@
         "assets/js/main.js",
         "assets/js/pages/cinematic-cults.js",
         "assets/js/pages/cinematic-ferals.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "referenced": true,
       "protectedScope": true
@@ -3995,7 +3959,7 @@
       "usedBy": [
         "assets/js/main.js",
         "assets/js/pages/cinematic-immortality.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 109,
       "priorityReason": "보호 기록에 연결된 음향 · 제작자와 공개 허가 범위 우선 확인"
@@ -4015,7 +3979,7 @@
       "usedBy": [
         "assets/js/main.js",
         "assets/js/pages/cinematic-cults.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 109,
       "priorityReason": "보호 기록에 연결된 음향 · 제작자와 공개 허가 범위 우선 확인"
@@ -4037,7 +4001,7 @@
         "assets/js/main.js",
         "assets/js/pages/cinematic-cults.js",
         "assets/js/pages/cinematic-ferals.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 101,
       "priorityReason": "보호 기록에 연결된 영상 · 영상과 내장 음향 권리를 함께 확인"
@@ -4116,15 +4080,62 @@
       "usedBy": [
         "assets/js/core/base-runtime.js",
         "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
-      "priorityScore": 93,
+      "priorityScore": 94,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
       "rank": 8,
+      "path": "assets/audio/pc5152v_comm_line_cue_73_74.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 13973,
+      "sha256": "56f02dc68089337961497d9191a41a42eae975c51a437276f87c1d9624eaec03",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-data.mjs"
+      ],
+      "priorityScore": 94,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 9,
+      "path": "assets/audio/pc5152v_field_photo_click_42s.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 13921,
+      "sha256": "f7f57ea6d38160cb9dcb148b32c53db45569f378af337eefe9acb1c27750004d",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
+        "assets/js/data/site-manifest.js",
+        "assets/js/main.js",
+        "tools/verify-data.mjs"
+      ],
+      "priorityScore": 94,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 10,
       "path": "assets/audio/pc5152x_late_log_beep_195s.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -4140,51 +4151,7 @@
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
-      ],
-      "priorityScore": 93,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
-      "rank": 9,
-      "path": "assets/audio/pc5152v_comm_line_cue_73_74.mp3",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 13973,
-      "sha256": "56f02dc68089337961497d9191a41a42eae975c51a437276f87c1d9624eaec03",
-      "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/data/site-manifest.js",
-        "assets/js/main.js",
-        "tools/verify-package.mjs"
-      ],
-      "priorityScore": 93,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
-      "rank": 10,
-      "path": "assets/audio/pc5152v_field_photo_click_42s.mp3",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 13921,
-      "sha256": "f7f57ea6d38160cb9dcb148b32c53db45569f378af337eefe9acb1c27750004d",
-      "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/data/site-manifest.js",
-        "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 93,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -4205,7 +4172,7 @@
         "README_MapPatch5_15_2cf.md",
         "assets/js/data/feral-cinematic-data.js",
         "assets/js/pages/cinematic-ferals.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -4247,13 +4214,34 @@
         "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
       "rank": 14,
+      "path": "assets/audio/pc5152cf_sakuma_projector_advance.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 65396,
+      "sha256": "3d2b557c7d25b3c60e107d61ffcce3bea3e99392014c6bdb2dcf43acac2585d3",
+      "usedBy": [
+        "assets/js/core/base-runtime.js",
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
+        "assets/js/main.js"
+      ],
+      "priorityScore": 92,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 15,
       "path": "assets/audio/pc5152f_analog_contact_soft.wav",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -4268,13 +4256,13 @@
         "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 15,
+      "rank": 16,
       "path": "assets/audio/pc5152h_terminal_contact_clear.wav",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -4289,13 +4277,13 @@
         "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 16,
+      "rank": 17,
       "path": "assets/audio/pc5152an_cult_radio_static_layer.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -4309,13 +4297,13 @@
       "usedBy": [
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
-        "tools/verify-package.mjs"
+        "tools/verify-data.mjs"
       ],
       "priorityScore": 91,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 17,
+      "rank": 18,
       "path": "assets/audio/pc5152f_boot_access_oldpc.wav",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -4335,8 +4323,8 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 18,
-      "path": "assets/audio/pc5152cf_sakuma_projector_advance.mp3",
+      "rank": 19,
+      "path": "assets/audio/pc5152dd_immortality_pursuit_range.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
       "provenance": "UNVERIFIED",
@@ -4344,18 +4332,18 @@
       "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
       "referenced": true,
       "protectedScope": false,
-      "bytes": 65396,
-      "sha256": "3d2b557c7d25b3c60e107d61ffcce3bea3e99392014c6bdb2dcf43acac2585d3",
+      "bytes": 60376,
+      "sha256": "f60e316c0aa08612115654a45f51664542103c160a904751556f218fe86ee612",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js"
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/verify-internal-document-shell.mjs"
       ],
       "priorityScore": 91,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 19,
+      "rank": 20,
       "path": "assets/audio/pc5152f_low_denied_oldpc.wav",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -4375,7 +4363,27 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 20,
+      "rank": 21,
+      "path": "assets/audio/pc5152db_immortality_report_progress.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 49091,
+      "sha256": "372c256723f7ef6c9561b5de14555beabe9329141519460ba39f2fc1757c7154",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/verify-internal-document-shell.mjs"
+      ],
+      "priorityScore": 91,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 22,
       "path": "assets/audio/pc5152h_frame_pop.wav",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -4395,45 +4403,27 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 21,
-      "path": "assets/audio/pc5152dd_immortality_pursuit_range.mp3",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 60376,
-      "sha256": "f60e316c0aa08612115654a45f51664542103c160a904751556f218fe86ee612",
-      "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "tools/verify-internal-document-shell.mjs"
-      ],
-      "priorityScore": 90,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
-      "rank": 22,
-      "path": "assets/audio/pc5152db_immortality_report_progress.mp3",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 49091,
-      "sha256": "372c256723f7ef6c9561b5de14555beabe9329141519460ba39f2fc1757c7154",
-      "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "tools/verify-internal-document-shell.mjs"
-      ],
-      "priorityScore": 90,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
       "rank": 23,
+      "path": "assets/audio/pc5152db_immortality_intrusion_voice.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 13982,
+      "sha256": "b96d16b57ce28e099e486b9fc90d73338cb0835a86bc7f2ba66a978b125b2ba6",
+      "usedBy": [
+        "assets/js/core/record-cinematic-runtime.js",
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/verify-internal-document-shell.mjs"
+      ],
+      "priorityScore": 91,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 24,
       "path": "assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -4447,25 +4437,6 @@
       "usedBy": [
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js"
-      ],
-      "priorityScore": 90,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
-      "rank": 24,
-      "path": "assets/audio/pc5152db_immortality_intrusion_voice.mp3",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 13982,
-      "sha256": "b96d16b57ce28e099e486b9fc90d73338cb0835a86bc7f2ba66a978b125b2ba6",
-      "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "tools/verify-internal-document-shell.mjs"
       ],
       "priorityScore": 90,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"

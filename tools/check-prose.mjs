@@ -19,9 +19,9 @@ if (!base || !targets.length) {
 const normalize = (p) => p.replace(/\\/g, '/').replace(/^\.\//, '');
 const targetSet = new Set(targets.map(normalize));
 
-const app = readFileSync(ROOT + 'app.html', 'utf8');
+const app = readFileSync(ROOT + 'index.html', 'utf8');
 const dataScripts = [...app.matchAll(/<script src="(assets\/js\/data\/[^"?]+)/g)].map((m) => m[1]);
-for (const t of targetSet) if (!dataScripts.includes(t)) console.warn(`주의: ${t}는 app.html의 데이터 목록에 없다. 단독으로 불러온다.`);
+for (const t of targetSet) if (!dataScripts.includes(t)) console.warn(`주의: ${t}는 index.html의 데이터 목록에 없다. 단독으로 불러온다.`);
 
 function oldSource(file) {
   try {
