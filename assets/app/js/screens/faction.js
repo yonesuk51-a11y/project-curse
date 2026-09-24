@@ -33,6 +33,10 @@
   function link(label, route, ...parts) {
     return h('a.tc-btn', { href: PC.href(route, ...parts) }, label);
   }
+  function factionName(key, name) {
+    const roleLabel = faction(key)?.roleLabel;
+    return [name, roleLabel ? h('span.tc-fac-role', { text: ` ${roleLabel}` }) : null];
+  }
   function section(code, title, ...body) {
     return h('section.tc-panel.tc-fac-section', null,
       h('header.tc-panel-head', null, h('div', null, h('span.tc-label.tc-full-only', { text: code }), h('h2', { text: title }))),
@@ -70,7 +74,7 @@
     return h('a.tc-row.tc-fac-row', { href: PC.href('faction-info', key), dataset: { facKey: key } },
       markBoard(key, true),
       h('div.tc-fac-row-copy', null,
-        h('div.tc-fac-tags', null, h('h3', { text: item.name }), PC.tag(classification(key), node(key) ? 'occult' : 'info')),
+        h('div.tc-fac-tags', null, h('h3', null, factionName(key, item.name)), PC.tag(classification(key), node(key) ? 'occult' : 'info')),
         h('p', { text: item.lead }),
         h('p.tc-fac-index-status', { text: firstSentence(item.assessment?.status) })),
       h('span.tc-row-go', { 'aria-hidden': 'true', text: '›' }));
@@ -120,12 +124,12 @@
       h('p.tc-fac-command', { text: current.command }), h('p', { text: current.summary }),
       h('ul.tc-fac-lineage-nodes', { 'aria-label': '우시노다 갈래 목록' }, data.order.map((id) => h('li', null,
         h('a.tc-fac-connection', { href: PC.href('faction-info', id), 'aria-current': id === key ? 'page' : null },
-          h('b', { text: data.nodes[id].name }), h('span', { text: data.nodes[id].short }), PC.tag(data.states[data.nodes[id].state].label, stateTone(data.nodes[id].state)))))),
+          h('b', null, factionName(id, data.nodes[id].name)), h('span', { text: data.nodes[id].short }), PC.tag(data.states[data.nodes[id].state].label, stateTone(data.nodes[id].state)))))),
       h('ol.tc-fac-lineage-edges', null, data.edges.map((edge) => h('li', { dataset: { state: edge.state } },
         h('div.tc-fac-tags', null,
-          h('a.tc-fac-inline-link', { href: PC.href('faction-info', edge.from), text: data.nodes[edge.from].name }),
+          h('a.tc-fac-inline-link', { href: PC.href('faction-info', edge.from) }, factionName(edge.from, data.nodes[edge.from].name)),
           h('i.tc-fac-edge-line', { 'aria-hidden': 'true' }),
-          h('a.tc-fac-inline-link', { href: PC.href('faction-info', edge.to), text: data.nodes[edge.to].name })),
+          h('a.tc-fac-inline-link', { href: PC.href('faction-info', edge.to) }, factionName(edge.to, data.nodes[edge.to].name))),
         h('p', { text: edge.label }), PC.tag(data.states[edge.state].label, stateTone(edge.state))))),
       h('aside.tc-note.tc-note--caution', null, h('b', { text: '확인되지 않음' }),
         h('p.tc-fac-prose', { text: data.unresolved.map((item) => item.text).join(' ') })),
@@ -200,7 +204,7 @@
       h('header.tc-panel.tc-bracket.tc-fac-cover', null, markBoard(key),
         h('div.tc-fac-cover-copy', null,
           h('p.tc-label.tc-full-only', { text: `FACTION DOSSIER / ${key}` }),
-          h('h1', { text: item.name, 'data-tc-focus': true }), h('p', { text: item.lead }),
+          h('h1', { 'data-tc-focus': true }, factionName(key, item.name)), h('p', { text: item.lead }),
           h('div.tc-fac-tags', null, PC.tag(classification(key), current ? 'occult' : 'info'),
             registered?.status ? PC.tag(registered.status, relationTone(registered.status)) : null,
             current ? PC.tag(lineage().states[current.state].label, stateTone(current.state)) : null),
@@ -209,7 +213,7 @@
       section('CURRENT ASSESSMENT', '현재와 주요 행동',
         h('p', { text: item.assessment?.status || item.lead }),
         h('ul.tc-fac-bullets', null, item.operations.map((text) => h('li', { text }))),
-        h('div.tc-btnrow', null, item.relations[0] ? link(`${faction(item.relations[0].target)?.name || item.relations[0].target} · ${item.relations[0].label}`, 'faction-info', item.relations[0].target) : null,
+        h('div.tc-btnrow', null, item.relations[0] ? link(h('span', null, factionName(item.relations[0].target, faction(item.relations[0].target)?.name || item.relations[0].target), ` · ${item.relations[0].label}`), 'faction-info', item.relations[0].target) : null,
           incidents(key)[0] ? link(incidents(key)[0].title, incidents(key)[0].history ? 'history' : 'map-room', ...(incidents(key)[0].history ? [incidents(key)[0].history] : ['incident', incidents(key)[0].id])) : null)),
       section('ORGANIZATION', '조직과 활동', paragraphs(item.overview),
         item.profile ? h('section.tc-fac-profile', null,
@@ -228,7 +232,7 @@
       section('CONNECTED FACTIONS', '다른 세력과의 관계',
         h('ul.tc-fac-relations', null, item.relations.map((relation) => h('li', null,
           faction(relation.target) ? h('a.tc-fac-relation', { href: PC.href('faction-info', relation.target) },
-            h('div.tc-fac-tags', null, h('b', { text: faction(relation.target).name }), PC.tag(relation.label, relationTone(relation.label))), h('p', { text: relation.text }))
+            h('div.tc-fac-tags', null, h('b', null, factionName(relation.target, faction(relation.target).name)), PC.tag(relation.label, relationTone(relation.label))), h('p', { text: relation.text }))
             : PC.missing('FACTION NOT FOUND', relation.target, relation.text))))),
       relatedPeople(key), incidentSection(key),
       h('nav.tc-btnrow', { 'aria-label': '세력 목록으로 돌아가기' }, backLink())]);
