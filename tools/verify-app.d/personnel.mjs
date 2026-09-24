@@ -1,4 +1,6 @@
 import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import { screenHarness } from './map.mjs';
 
 export default function ({ add, read, context, app, historyIds, archiveIds, opIds }) {
   const P = context.ProjectCursePersonnel;
@@ -45,7 +47,9 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     (record.relationships || []).every((item) => P.byId[item.target] && P.certainties[item.certainty]) &&
     (!record.abilitySource || record.abilityCost)) && (P.additionGroups || []).every((group) => group.factionKeys.every((key) => F.factions[key])));
   add('addition-year-and-status-per-record', source.includes('record.registerYear || display().year') && source.includes("isAddition(record) ? own(source()?.statuses, id)?.label"));
-  add('legacy-display-copy-exact', D?.year === '2006' && [D.intro, D.limitDefault, D.abilityCostMissing, ...Object.values(D.statusLabels)].every((text) => legacy.includes(text)));
+  // 사용자 요청에 따른 안내문 두 어절만 교체한다. 연도·상태·대가·기록 한계는 옛 문구와 대조한다.
+  add('legacy-display-facts-and-approved-intro', D?.year === '2006' && D.intro === '2006년까지 확인된 인물과 그들이 남긴 사건을 모았다. 이름을 누르면 주요 기록부터 읽을 수 있다.' &&
+    [D.intro.replace('이름을 누르면 주요 기록', '이름을 선택하면 핵심 기록'), D.limitDefault, D.abilityCostMissing, ...Object.values(D.statusLabels)].every((text) => legacy.includes(text)));
   const incidents = context.ProjectCurseIncidentNetwork.incidentList;
   add('cross-reference-targets-exist', incidents.every((item) => (!item.history || historyIds.has(item.history)) && (!item.operation || opIds.has(item.operation)) && item.records.every((id) => archiveIds.has(id))));
   // 주소 끝의 내용 해시(-8자)는 tools/stamp-assets.mjs가 찍는다.
@@ -56,5 +60,70 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   add('no-html-string-rendering', !/innerHTML|insertAdjacentHTML|document\.write/.test(source));
   add('unknown-key-is-explicit', source.includes('Object.hasOwn(object, key)') && source.includes("PC.missing('PERSONNEL NOT FOUND'"));
   add('lifecycle-cleans-events-and-frame', source.includes('function hide()') && source.includes('listeners?.abort()') && source.includes('cancelAnimationFrame(restoreFrame)'));
-  add('reduced-motion-screen-rule', read('assets/app/css/screens/personnel.css').includes('@media (prefers-reduced-motion: reduce)'));
+  const css = read('assets/app/css/screens/personnel.css');
+  add('reduced-motion-screen-rule', css.includes('html[data-fx="reduced"]') && !/@media\s*\(prefers-reduced-motion/.test(css) && source.includes("addEventListener('pc:fx'"));
+  add('dossier-open-and-responsive-density', css.includes('@keyframes tc-per-file-open') && css.includes('clip-path: inset(0 0 100% 0)') && css.includes('html:not([data-density="full"])') && css.includes('@media (max-width: 720px)') && css.includes('minmax(0, 1fr)'));
+  add('identity-anomalies-backed-by-records', D.identityAnomalies.length === 3 && D.identityAnomalies.every((id) => /기억|신원/.test(P.byId[id]?.abilityCost || '') && /흐려짐|소실|재현하지 못함/.test(P.byId[id]?.abilityCost || '')));
+  const check = (name, run) => { try { add(name, true, run() || ''); } catch (error) { add(name, false, error.message); } };
+  check('six-per-group-expand-search-and-return', () => {
+    const { c, host, screen, navigations } = screenHarness(context, source);
+    const show = (parts) => screen.show(parts, c.PCApp, { reason: 'navigate' });
+    const click = (key, value) => { const button = host.all().find((node) => node.dataset[key] === value); assert.ok(button, `${key}:${value}`); host.emit('click', button); };
+    const roster = () => host.querySelectorAll('[data-per-id]');
+    const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
+    const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
+    show([]); assert.equal(roster().length, initial); assert.equal(initial, 54);
+    const ids = () => roster().map((node) => node.dataset.perId);
+    for (const group of groups) assert.ok(ids().filter((id) => P.byId[id].group === group.id).length <= 6);
+    assert.equal(host.querySelectorAll('[data-per-expand]').length, 3);
+    click('perExpand', 'personal'); assert.equal(roster().length, initial + 3); assert.equal(navigations.length, 0);
+    assert.equal(c.document.activeElement.dataset.perExpand, 'personal');
+    assert.equal(c.document.activeElement.getAttribute('aria-expanded'), 'true');
+    show([records[0].id]); show([]); assert.equal(roster().length, initial + 3);
+    screen.hide(); show([]); assert.equal(roster().length, initial + 3);
+    click('perExpand', 'personal'); assert.equal(roster().length, initial);
+    click('perGroup', 'ushinoda'); assert.equal(roster().length, everyone.filter((person) => [person.group, ...(person.secondaryGroups || [])].includes('ushinoda')).length); assert.equal(host.querySelectorAll('[data-per-expand]').length, 0);
+    click('perReset', '');
+    const search = host.querySelector('#tc-per-search'); search.value = '사도'; host.emit('input', search);
+    assert.ok(roster().length > 6); assert.equal(host.querySelectorAll('[data-per-expand]').length, 0);
+    search.value = '찾을수없는인물000'; host.emit('input', search); assert.equal(roster().length, 0); assert.ok(host.textContent.includes('NO MATCHING PERSONNEL'));
+    click('perReset', ''); click('perStatus', 'active'); assert.equal(roster().length, everyone.filter((person) => person.status === 'active').length);
+    screen.hide(); return `처음 ${initial}/${everyone.length}명 · 펼침·검색·소속·상태·왕복 확인`;
+  });
+  check('names-affiliations-status-and-brief-labels', () => {
+    const { c, host, screen } = screenHarness(context, source); screen.show([], c.PCApp);
+    const brief = host.visibleText(true), full = host.visibleText();
+    assert.ok(!brief.includes('PERSONNEL REGISTER')); assert.ok(full.includes('PERSONNEL REGISTER'));
+    for (const row of host.querySelectorAll('[data-per-id]')) {
+      const person = P.byId[row.dataset.perId], text = row.visibleText(true);
+      assert.ok(text.includes(person.name)); assert.ok(text.includes(person.role));
+      assert.ok(text.includes(person.affiliationSummary || P.groupById[person.group].label));
+      assert.ok(text.includes(person.register === 'addition' ? P.statuses[person.status].label : D.statusLabels[person.status]));
+      for (const alias of person.aliases || []) assert.ok(text.includes(alias));
+    }
+    screen.hide();
+  });
+  check('detail-anomaly-open-canon-and-fx-lifecycle', () => {
+    const { c, host, screen, frames, media } = screenHarness(context, source);
+    const show = (parts) => screen.show(parts, c.PCApp, { reason: 'navigate' });
+    for (const person of [...records, ...additions]) {
+      show([person.id]);
+      const hooks = host.querySelectorAll('[data-tc-anomaly]');
+      assert.equal(hooks.length, D.identityAnomalies.includes(person.id) ? 1 : 0);
+      for (const hook of hooks) { assert.equal(hook.closest('a,button,h1,h2,h3,input'), null); assert.equal(hook.textContent, person.name); }
+      assert.ok(host.querySelector('.tc-per-dossier'));
+    }
+    const id = D.identityAnomalies[0];
+    c.ProjectCurseOpenCanon = { personnel: { [id]: ['검사용 자유 해석'] } };
+    show([id]); assert.ok(host.textContent.includes('자유 해석')); assert.ok(host.textContent.includes('검사용 자유 해석'));
+    let calls = 0; c.PCApp.openCanon = (text) => { calls++; return c.PCApp.h('span', { text }); };
+    show([id]); assert.equal(calls, 1);
+    media.matches = true; c.PCApp.fx = () => 'full'; media.emit('change', media); assert.equal(host.dataset.perFx, 'full');
+    c.PCApp.fx = () => 'reduced'; c.document.emit('pc:fx', c.document, undefined, { mode: 'reduced' }); assert.equal(host.dataset.perFx, 'reduced');
+    assert.ok(host.textContent.includes(P.byId[id].name)); assert.ok(host.textContent.includes(P.byId[id].abilityCost));
+    show(['missing-person']); assert.ok(host.textContent.includes('PERSONNEL NOT FOUND')); assert.equal(host.querySelector('.tc-per-dossier'), null);
+    show([]); assert.ok(frames.size > 0); screen.hide(); assert.equal(frames.size, 0);
+    assert.equal(c.document.events.get('pc:fx').size, 0); assert.equal(media.events.get('change').size, 0); assert.equal(host.events.get('click').size, 0);
+    show([]); show([]); assert.equal(host.events.get('click').size, 1); assert.equal(c.document.events.get('pc:fx').size, 1); screen.hide();
+  });
 }

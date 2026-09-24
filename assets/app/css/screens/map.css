@@ -28,6 +28,22 @@
 .tc-map-board-head > :last-child { color: var(--text-2); font-size: var(--fs-xs); }
 .tc-map-canvas { position: relative; width: 100%; min-width: 0; background: var(--bg); }
 .tc-map-svg { width: 100%; height: 100%; object-fit: contain; }
+.tc-map-effects { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.tc-map-scan { position: absolute; inset: 0 0 auto; height: 18%; background: linear-gradient(transparent, var(--red), transparent); opacity: .13; transform: translateY(260%); animation: tc-map-scan 7s linear infinite; }
+.tc-map-live { display: inline-flex; align-items: center; gap: var(--s2); color: var(--red-ink); font-size: var(--fs-xs); }
+.tc-map-live i { color: var(--red-ink); font: normal 10px/1 var(--font); animation: tc-map-breathe 3.2s ease-in-out infinite; }
+.tc-map-ring { position: absolute; width: 24px; height: 24px; opacity: .6; transform: translate(-50%, -50%); animation: tc-map-ring 2.8s ease-out infinite; }
+.tc-map-ring.is-selected { animation-duration: 2.2s; }
+.tc-map-route-segment { position: absolute; height: 2px; transform-origin: left center; background: repeating-linear-gradient(90deg, currentColor 0 9px, transparent 9px 15px); animation: tc-map-route-flow 1.8s linear infinite; }
+.tc-map-route-segment.is-alternate { height: 1px; background: repeating-linear-gradient(90deg, currentColor 0 3px, transparent 3px 15px); }
+.tc-map-new { animation: tc-map-breathe 2.8s ease-in-out infinite; }
+#map-room[data-map-reaction="critical"] .tc-map-content,
+#map-room[data-map-reaction="denied"] .tc-map-content { animation: tc-map-denied .28s ease-out 1; }
+@keyframes tc-map-scan { from { transform: translateY(-110%); } to { transform: translateY(570%); } }
+@keyframes tc-map-breathe { 50% { opacity: .5; } }
+@keyframes tc-map-ring { from { transform: translate(-50%, -50%) scale(.8); opacity: .65; } to { transform: translate(-50%, -50%) scale(1.8); opacity: .12; } }
+@keyframes tc-map-route-flow { to { background-position-x: 30px; } }
+@keyframes tc-map-denied { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 65% { transform: translateX(3px); } }
 .tc-map-point { position: absolute; width: 40px; height: 40px; transform: translate(-50%, -50%); border: 1px solid transparent; }
 .tc-map-point:hover, .tc-map-point.is-selected { border-color: var(--ir); background: var(--fill-ir); }
 .tc-map-point:focus-visible { outline: 2px solid var(--amber); outline-offset: 0; z-index: 2; }
@@ -86,9 +102,19 @@
   .tc-map-maplabels { grid-template-columns: minmax(0, 1fr); }
   .tc-map-table th, .tc-map-table td { padding: var(--s2); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .tc-map-content *, .tc-map-content *::before, .tc-map-content *::after { animation: none !important; transition: none !important; }
-}
+/* 셸이 아직 없는 작업 트리에서도 간략 보기와 시스템의 효과 줄임이 적용된다. */
+html:not([data-density="full"]) #map-room .tc-full-only { display: none !important; }
+html:not([data-density="full"]) .tc-map-row { grid-template-columns: minmax(0, 1fr) 16px; }
+html:not([data-density="full"]) .tc-map-row .tc-row-meta { grid-column: 1; }
+html:not([data-density="full"]) .tc-map-row .tc-row-go { grid-column: 2; }
+html[data-fx="reduced"] #map-room .tc-map-content,
+html[data-fx="reduced"] #map-room .tc-map-content *,
+html[data-fx="reduced"] #map-room .tc-map-content *::before,
+html[data-fx="reduced"] #map-room .tc-map-content *::after,
+#map-room[data-map-fx="reduced"] .tc-map-content,
+#map-room[data-map-fx="reduced"] .tc-map-content *,
+#map-room[data-map-fx="reduced"] .tc-map-content *::before,
+#map-room[data-map-fx="reduced"] .tc-map-content *::after { animation: none !important; transition: none !important; }
 
 .tc-map-theater { display:grid; gap:var(--s2); padding:var(--s4); border-bottom:1px solid var(--line); min-height:var(--tap); overflow-wrap:anywhere; }
 .tc-map-theater:hover { background:var(--panel-2); }
