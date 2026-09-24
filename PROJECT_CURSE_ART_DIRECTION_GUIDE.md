@@ -1,445 +1,128 @@
-# PROJECT CURSE ART DIRECTION GUIDE
-Source note after: MapPatch5.13.3b ArtDirectionGuide_SourceNote
+# PROJECT CURSE 아트 디렉션 가이드 — 리메이크
 
-## 0. Core Theme
+Status: `2026-09-24 개정 / 현대 전술 × 오컬트 판타지 × 호러`
 
-Project Curse must feel like a damaged archive and operation terminal from a 2000~2010-era institutional security network.
+이전 판(2000~2010년대 기관 기록 단말)은 git 이력에 남아 있다. 세계관의 현재가 2042년인데 단말이 2000년대식이던 어긋남을 이번 개정으로 바로잡는다.
 
-It is not a modern game hub.
-It is not a clean sci-fi HUD.
-It is not a polished mobile/admin dashboard.
-
-The user experience should feel like viewing recovered material from a closed U.A.C / F.H.C / S.I.D / N.H.C system.
-
----
-
-## 1. One-Line Definition
+## 0. 한 줄 정의
 
 ```text
-Project Curse is not "a game UI decorated with analog horror."
-Project Curse is "a 2000~2010-era institutional archive where damaged records, maps, CCTV footage, and operation files are being accessed under restricted clearance."
+Project Curse는 2042년 합동작전 단말이다.
+현대 전술 체계가 오컬트 현상을 처리하려 하고, 처리하지 못한 것이 공포가 된다.
 ```
 
----
+## 1. 세 개의 층
 
-## 2. World Mood
+| 층 | 무엇 | 느낌 |
+|---|---|---|
+| 셸 | 탐색, 화면 틀, 상태 표시, 지도 | 현대 전술 작전 소프트웨어. 정밀하고 건조하고 무광 |
+| 증거 | 기록 본문, 회수 영상, 사진, 문양, 교재 | 오컬트 증거와 옛 매체. 1986년 필름은 1986년처럼, CCTV는 CCTV처럼 |
+| 이상 | 셸과 증거가 서로 맞지 않는 지점 | 호러. 센서 불일치, 맞지 않는 인원수, 가림, 신호 소실 |
 
-### Required mood
-- Cold
-- Dry
-- Suppressed
-- Institutional
-- Low-resolution
-- Incomplete
-- Quietly hostile
-- More archival than cinematic
-- More classified file than entertainment screen
+- 손상 효과는 증거 층과 이상 층에만 쓴다. 셸은 끝까지 멀쩡해야 공포가 산다.
+- 일러스트 파일에는 손상 효과를 굽지 않는다. 노이즈·스캔선·가림은 표시층(CSS)에서 입힌다.
 
-### Horror direction
-Use fear through:
-- missing data
-- corrupted files
-- damaged video
-- partial redaction
-- unexplained logs
-- signal loss
-- access restrictions
-- archival evidence
-- incomplete context
+## 2. 셸 — 현대 전술
 
-Avoid fear through:
-- jump scares
-- flashy effects
-- loud stingers
-- bright warning flashes
-- game-like fail/clear sounds
-- overly theatrical horror presentation
+참조: 실제 군 지휘통제 소프트웨어, 전술 지도 기호, 드론·열상 영상 판독 화면, 작전 명령서.
 
----
+- 날짜·시각은 DTG(`311417ZOCT42`)와 UTC로 적는다.
+- 좌표, 호출부호, 구역 등급, 교전 규칙, 판정 태그는 장식이 아니라 실제로 읽히는 운용 정보다.
+- 프레임은 1px 선, 조준경 모서리 같은 모서리 괄호, 격자로 만든다. 둥근 모서리는 최대 2px.
+- 표·행·라벨 위주로 밀도 있게 배치한다. 요소는 작고 정확하게, 여백은 넉넉하게.
 
-## 3. Time Period Reference
+하지 않는다: 네온·홀로그램·글로시 SF 방어구, 게임 메뉴(미션 카드·레벨·보상·잠금 해제 연출), 강한 글로우, 큰 CTA 버튼, 둥근 칩.
 
-Primary reference era:
+## 3. 증거 — 오컬트 판타지
+
+- 오컬트는 전술 체계가 분류하려는 대상이다. 문양·유물·의식 흔적은 증거판(증거 번호, 회수 위치, 판정 등급)에 올려 보여준다.
+- 세력 문양(`assets/js/data/faction-mark-registry.js`)을 교단·세력 문서의 주 시각 요소로 쓴다.
+- 의식과 권능은 과장된 이펙트가 아니라 결과로 보여준다. 흔적, 사진, 측정값, 대가 기록이 그 결과다.
+- 옛 기록은 그 시대 매체의 손상을 유지한다. 4:3 비율, 압축 노이즈, 타임스탬프가 그것이다.
+
+## 4. 이상 — 호러
+
+공포는 다음으로 만든다.
+
+- 센서 불일치 — 예: `육안 4 / 열상 5`
+- 같은 사건을 적은 두 기록의 어긋남
+- 가림 막대, 신호 소실, 존재하지 않는 층이나 호출부호
+- 돌아온 사람의 신원 불일치
+
+하지 않는다: 점프 스케어, 번쩍임, 큰 효과음, 스타일로 남용하는 글리치.
+
+빈도는 드물게 둔다. 셸이 대부분의 시간 정상이어야 이상이 드러난다.
+
+## 5. 색
+
+| 역할 | 값 |
+|---|---|
+| 바탕 | `#0A0C0B`, 패널 `#111513` / `#171C19` |
+| 선 | 뼈색 14~28% 불투명도 |
+| 본문 | 뼈색 `#D8D6CC`, 보조 `#A3A596`, 흐림 `#6E7466` |
+| 전술 중립 — 활성·아군 | 올리브 `#56613F`, 코요테 `#9A7B50` |
+| 주의 | 앰버 `#C98A2E` |
+| 위험·봉인·오염 | 탁한 적색 `#9E2F2A` |
+| 오컬트 | 핏빛 `#6E1F2A` |
+| 센서·정보 | 탁한 청록 `#7FA39A` |
+
+색은 기능이다. 채도 높은 색 블록을 쓰지 않는다. 빨강은 위험·봉인·오컬트에만 쓴다.
+
+## 6. 글꼴과 어투
+
+- 영문 라벨·코드: 좁은 산세리프 대문자(Barlow Condensed), 자간을 넓게.
+- 한국어 제목·본문: IBM Plex Sans KR.
+- 숫자·좌표·DTG: IBM Plex Mono, 고정폭 숫자.
+- 어투는 기관·군 보고서다. "시작", "완료", "추천", "축하" 같은 친절한 앱 어투 대신 "진입", "판정", "인계", "접근 제한"을 쓴다.
+
+## 7. 조작
+
+- 버튼은 직사각형 1px 테두리에 대문자 라벨이다. 기본 동작은 올리브, 주의는 앰버, 위험은 적색 테두리로 표시한다. 채운 버튼은 화면당 하나 이하.
+- 호버는 배경을 6~10% 채울 뿐 글로우가 없다. 전환은 150~250ms이고 튀는 움직임이 없다.
+- 모든 조작은 키보드로 가능해야 하고, 포커스는 앰버 1px 외곽선으로 보인다.
+- `prefers-reduced-motion`이 켜져 있으면 전환과 스캔 효과를 끈다.
+
+## 8. 소리
+
+건조하고 낮게 둔다. 무전 스켈치, 릴레이 딸깍임, 키 입력, 낮은 험이 기준이다. 게임 효과음과 보상 차임을 쓰지 않는다. 기본은 무음에 가깝게 두고 쿨다운을 건다.
+
+## 9. 기록 뷰어
+
+증거 파일처럼 보이게 한다. 증거 번호, 보안 등급, 출처, 인계 기록(chain of custody), 관련 작전·세력, 첨부, 판정 주석을 갖춘다. 콘텐츠 작업 요청이 없으면 본문은 바꾸지 않는다.
+
+## 10. 지도
+
+전술 상황판이다. 격자와 좌표, 간결한 표식을 쓰고 설명은 측면 패널에 둔다. 표식은 전술 지도 기호처럼 기하 도형으로 그린다(아군 사각형, 적대 마름모, 미상 사엽형). 장난감 같은 아이콘을 쓰지 않는다. 확대·드래그는 따로 결정하기 전까지 넣지 않는다.
+
+## 11. 교류(롤플레이) 참가자
+
+이 세계관의 주력 용도는 카카오스토리 자캐 교류다. 참가자가 캐릭터를 만들고 소속을 정하는 데 필요한 정보는 숨기거나 손상시키지 않는다. 분위기 연출이 참가 정보를 읽기 어렵게 만들면 연출을 줄인다.
+
+## 12. 사용성 최소선 — 연출보다 우선
+
+- 본문 대비는 WCAG AA(4.5:1) 이상, 조작부 라벨은 읽을 수 있어야 한다.
+- 모바일 375px에서 가로로 넘치지 않고, 탭 영역은 40px 이상이다.
+- 키보드만으로 모든 화면을 이동하고 열람할 수 있다.
+- 연출이 본문 위를 덮지 않는다.
+
+## 13. 변경 점검표
 
 ```text
-2000~2010
-Analog horror / digital transition period
+셸이 현대 전술 소프트웨어처럼 정밀하고 건조한가?
+오컬트가 과장된 이펙트가 아니라 증거로 보이는가?
+공포가 셸이 아니라 증거와 이상 층에서 나오는가?
+네온·게임 UI·보상 연출이 없는가?
+빨강을 위험·봉인·오컬트에만 썼는가?
+교류 참가자가 읽어야 할 정보가 연출에 가려지지 않았는가?
+12절 사용성 최소선을 지켰는가?
 ```
 
-This means:
-- CRT monitors still exist
-- early LCD monitors exist
-- CCTV and DV camcorder material feel appropriate
-- compression artifacts are common
-- 4:3 footage is natural
-- early institutional intranet / archive terminal UI is appropriate
-- modern responsive dashboard polish is inappropriate unless heavily degraded
-
----
-
-## 4. Visual Texture
-
-### Correct
-- CRT scanline hints
-- weak interlace
-- low contrast
-- muted colors
-- slight blur
-- compression noise
-- dirty black/gray UI
-- old institutional terminal frames
-- rough archival panels
-- damaged image/video surfaces
-
-### Incorrect
-- sharp neon HUD
-- glossy cyberpunk
-- clean game interface
-- bright SaaS dashboard
-- mobile-app smoothness
-- colorful achievement-style feedback
-- crisp sci-fi hologram feeling
-
----
-
-## 5. Color Rules
-
-### Base palette
-- black
-- charcoal
-- dark gray
-- dull green
-- dark teal
-- faded white
-- dirty beige/yellow for caution
-- dull red only for danger/seal/contamination
-
-### Color behavior
-Color must be functional, not decorative.
-
-```text
-normal state = gray / dark teal / faded white
-warning state = dull yellow / dirty amber
-danger state = dull red
-restricted / sealed = dark red / near black
-information = faded cyan or gray-blue, never neon blue
-```
-
-### Avoid
-- neon cyan
-- bright blue sci-fi UI
-- bright green hacker UI
-- high-saturation red
-- colorful module cards
-- game reward colors
-
----
-
-## 6. Interface Direction
-
-### Correct interface identity
-The UI should feel like:
-- U.A.C operation terminal
-- internal archive viewer
-- closed network server
-- security office machine
-- field record recovery terminal
-- old command board
-- damaged government/agency intranet
-
-### Incorrect interface identity
-Avoid:
-- game mission select screen
-- minigame panel
-- hero-card dashboard
-- clean modern admin UI
-- futuristic tactical HUD
-- mobile app style
-- colorful card grid
-
-### UI structure preferences
-Prefer:
-- old lists
-- dense text rows
-- divided panels
-- document tabs
-- terminal sections
-- file codes
-- status lines
-- archival categories
-- restrained buttons
-
-Use cards only if they look like dull file blocks or status sheets, not modern UI cards.
-
----
-
-## 7. Buttons and Interaction
-
-### Correct
-Buttons should feel like:
-- terminal line selection
-- old security terminal control
-- file row access
-- dry mechanical input
-
-### Incorrect
-Buttons should not feel like:
-- game menu buttons
-- big modern CTA buttons
-- mission cards
-- mobile UI chips
-- colorful unlock buttons
-
-### Interaction rules
-- hover effects should be weak
-- glow should be rare
-- transitions should be short
-- no bouncy animation
-- no playful confirmation feedback
-- no reward-like effects
-
----
-
-## 8. Sound Direction
-
-### Correct sounds
-- dry key press
-- relay click
-- dull mechanical load
-- CRT hum
-- server fan
-- low electrical buzz
-- weak tape noise
-- low access denied tone
-- muffled record loading
-- radio/static texture
-
-### Incorrect sounds
-- bright ping
-- cute beep
-- minigame select tone
-- reward chime
-- hover tick spam
-- clean sci-fi blip
-- loud alert sting
-- musical success/failure cue
-
-### Sound rules
-- quiet by default
-- low-frequency preferred
-- short and dry
-- no jump scare
-- no hover sound unless necessary
-- sound cooldown required
-- ambient must stay low and background-like
-- access denied should sound like old equipment refusing access, not game failure
-
----
-
-## 9. Record Viewer Direction
-
-The record viewer should feel like:
-- recovered case file
-- internal archive file
-- restricted agency document
-- damaged attachment bundle
-
-It should not feel like:
-- polished wiki page
-- trading-card database
-- RPG codex screen
-- modern dashboard detail page
-
-### Required record elements
-- file code
-- security grade
-- record origin
-- related operation area
-- related faction
-- related equipment
-- related anomaly/entity
-- attachments/sub-records
-- system annotation
-- corrupted/missing/restricted hints when appropriate
-
-### Body text rule
-Do not rewrite record body text unless a patch explicitly targets lore/content.
-
-UI shell and metadata may change.
-Lore body must remain stable by default.
-
----
-
-## 10. Map / Operation Board Direction
-
-Maps must feel like:
-- institutional operation board
-- surveillance map
-- containment board
-- static command board
-- recovered tactical overlay
-
-Maps must not feel like:
-- mobile map app
-- colorful strategy game map
-- neon tactical HUD
-- abstract art map
-- minigame map
-
-### Map rules
-- real geography/urban structure should remain readable when possible
-- overlays must not overpower base geography
-- marker labels should be short
-- detailed explanation belongs in dock/panel
-- no zoom/drag/FIT/RESET unless a future patch explicitly redefines the map system
-- operation board must feel fixed and classified
-
----
-
-## 11. Video / CCTV / Recovered Footage Direction
-
-Correct footage feeling:
-- 4:3
-- low-resolution
-- CCTV
-- DV camcorder
-- damaged recording
-- compressed video
-- weak timestamp
-- signal loss
-- recovered feed
-- frame loss
-- audio degradation
-- incomplete image
-
-Avoid:
-- cinematic trailer
-- modern high-definition horror
-- too-clean ARG screen
-- flashy VHS effect overuse
-- fake glitch that looks stylish rather than damaged
-
----
-
-## 12. Typography and Text
-
-### Correct text tone
-- security note
-- field report
-- archive log
-- operation status
-- warning notice
-- restricted access
-- corrupted file note
-- system message
-
-### Avoid overly friendly UX text
-Avoid:
-- "click here"
-- "learn more"
-- "recommended"
-- "start"
-- "congratulations"
-- "completed"
-- "nice"
-- "new feature"
-
-Use instead:
-- ACCESS RESTRICTED
-- FILE PARTIALLY RECOVERED
-- SIGNAL DEGRADED
-- RECORD SEALED
-- FIELD REVIEW ONLY
-- NODE OFFLINE
-- ARCHIVE LINKED
-- CLEARANCE MISMATCH
-- CONTAINMENT STATUS
-
----
-
-## 13. Faction / Agency Presentation
-
-Factions are not character factions in a game menu.
-They are institutional files and intelligence nodes.
-
-### Correct presentation
-- agency record
-- authority level
-- operational role
-- current activity
-- known tension
-- linked incidents
-- related operation zones
-- related equipment
-- risk / trust / control rating
-
-### Avoid
-- flashy faction cards
-- colorful character banners
-- RPG-style faction reputation UI
-- overly clean relationship diagrams
-
----
-
-## 14. Future Patch Rules
-
-Every future patch should pass this checklist:
-
-```text
-Does it look like a 2000~2010 institutional terminal?
-Does it avoid modern game UI?
-Are sounds dull/low/dry rather than bright?
-Is the interface more archive/operation file than entertainment hub?
-Are colors low-saturation?
-Is red used only for danger/restriction/contamination?
-Is information partially constrained rather than too friendly?
-Are record bodies preserved unless content editing is explicitly requested?
-```
-
----
-
-## 15. Absolute Do-Not-Do List
-
-Do not:
-- turn Project Curse into a modern game dashboard
-- use bright mini-game sounds
-- use reward/confirmation chimes
-- overuse cards
-- use neon sci-fi HUD style
-- make everything too clean
-- make all information too easy and friendly
-- use high-saturation color blocks
-- make UI feel like a mobile app
-- make map markers look like toys
-- make horror too theatrical
-
----
-
-## 16. Project Curse Patch Priority
-
-### Highest priority
-- atmosphere preservation
-- analog horror period correctness
-- institutional archive identity
-- low-saturation terminal UI
-- quiet sound design
-- damaged record feeling
-
-### Secondary priority
-- feature richness
-- convenience
-- visual clarity
-- module expansion
-
-### Rule
-If a feature makes the project feel like a modern game UI, reduce or redesign it.
-
----
-
-## 17. Final Summary
-
-```text
-Project Curse must feel like a closed U.A.C archive and operation terminal from the 2000~2010 analog-horror/digital-transition era.
-
-The user should feel like they are browsing damaged institutional records, not playing a modern UI-driven game hub.
-```
+## 14. 절대 하지 말 것
+
+- 네온 SF HUD, 홀로그램, 글로시 방어구
+- 게임 메뉴 — 미션 카드, 레벨, 보상, 잠금 해제 연출
+- 점프 스케어와 번쩍임
+- 셸 전체에 손상 효과를 칠하기
+- 채도 높은 색 블록, 둥근 카드와 칩
+- 친절한 앱 어투
+- 참가자가 읽어야 할 규칙을 연출로 가리기
