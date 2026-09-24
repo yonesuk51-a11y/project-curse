@@ -10,6 +10,18 @@
     return Object.freeze(value);
   }
 
+  // 2026-09-25 사용자 채택 인물 사진 — 원작자 설정화의 외형을 따른 인물 재구성. id별로 records에 붙인다.
+  const portraits = {
+    'tachibana-isamu': {src:'assets/resources/derived/tachibana-isamu-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'폐쇄시설 입구에서 흰 머리의 타치바나 이사무가 두 자루 칼과 내려 든 권총을 지닌 채 보랏빛 틈이 난 그림자 망토 너머로 돌아본다.',caption:'대조용 인물 재구성 스케치다. 그림자의 발현 경위와 잃은 기억의 내용은 확정하지 않는다.'},
+    'kagami-itsuki': {src:'assets/resources/derived/kagami-itsuki-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'카가미 이츠키가 어두운 자료실의 열린 문서함 곁에 앉아 민무늬 폴더를 든 채 안경 너머로 돌아본다.',caption:'대조용 인물 재구성 스케치다. 본명과 감사를 맡은 기관, 활동 연도는 확정하지 않는다.'},
+    'enrilbani': {src:'assets/resources/derived/enrilbani-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'작은 흰 얼굴면만 드러낸 엔릴바니가 털 망토와 긴 로브를 두르고 보랏빛 연무의 숲에서 그림자 조각을 흩뜨린다.',caption:'대조용 인물 재구성 스케치다. 흰 얼굴면 너머의 실제 얼굴과 육체, 로드좌와의 관계는 확정하지 않는다.'},
+    'epoptes': {src:'assets/resources/derived/epoptes-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'긴 머리와 여러 줄 눈을 지닌 에폽테스가 라벤더 창빛 아래 여섯 날개를 펼치고 뼈 손을 모아 앉아 있다.',caption:'「본 자의 서」 제1장의 묘사에 맞춘 인물 재구성 스케치다. 강림의 연대와 장소, 현재 생존은 확정하지 않는다.'},
+    'kieran-hayward': {src:'assets/resources/derived/kieran-hayward-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'가시 머리와 빈 얼굴의 키어런 헤이워드가 대흑림의 나무 사이에서 긴 발톱 팔을 늘어뜨리고 찢긴 망토를 잡고 있다.',caption:'대조용 인물 재구성 스케치다. 교단 내 정확한 직위와 거점, 의식의 목적은 확정하지 않는다.'},
+    'yanan-kes': {src:'assets/resources/derived/yanan-kes-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'투명한 곤충 날개 네 장과 메마른 팔다리를 지닌 야난 케스가 대흑림의 나무 사이에 붉은 장창을 세우고 서 있으며 멀리 성채 입구가 빛난다.',caption:'대조용 인물 재구성 스케치다. 천로교의 교리와 규모, 순회 경로는 확정하지 않는다.'},
+    'kenevin': {src:'assets/resources/derived/kenevin-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'해진 녹회색 망토와 황갈색 겉옷의 커네빈이 순례 피난처 벤치에 앉아 긴 창과 어깨짐을 붙들고 어두운 숲 쪽을 본다.',caption:'대조용 인물 재구성 스케치다. 기사에서 이질적 존재로 바뀐 경위와 현재 소재는 확정하지 않는다.'}
+  };
+  const withPortraits = (list) => list.map((record) => (portraits[record.id] ? { ...record, visual: portraits[record.id] } : record));
+
   root.ProjectCursePersonnelAdditions = freeze({
     version: '6.0.0',
     label: '2042 추가 등록',
@@ -21,7 +33,7 @@
       { id: 'independent-rites', label: '독립 교단·성채권', short: '독립 교단', code: 'IND', tone: 'cult', factionKeys: [] },
       { id: 'unaffiliated', label: '소속 불명·특수 존재', short: '소속 불명', code: 'UNK', tone: 'civilian', factionKeys: [] }
     ],
-    records: [
+    records: withPortraits([
       {
         id: 'tachibana-isamu', name: '타치바나 이사무', aliases: ['아바야'], group: 'nhc-additional',
         role: 'N.H.C 대괴이 전투요원 / 코드명 아바야', status: 'active', certainty: 'listed', registerYear: '연대 미확정',
@@ -105,6 +117,6 @@
         notes: ['우시노다를 주군으로 부르는 화자의 구술은 히라에스를 우시노다에게 검을 겨눈 인간 전사로 기억한다. 고향에 아내와 어린 아들이 있었다고 전한다.', '히라에스는 돌아갈 수 없는 고향과 과거를 향한 그리움을 뜻하는 웨일스어다.', '구술 전문은 세계 기록 「외신 강림과 성벽의 저항」에 실려 있다.'],
         limits: ['기사에서 이질적 존재로 바뀐 경위와 시점은 기록되지 않았다.', '현재 소재와 적대 여부는 확인되지 않았다.']
       }
-    ]
+    ])
   });
 })(window);

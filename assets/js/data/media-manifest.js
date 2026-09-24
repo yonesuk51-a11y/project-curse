@@ -51,7 +51,27 @@
     'assets/resources/derived/deadzone-2008-broken-line-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/uac-coordination-office-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/fhc-split-command-lab-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
-    'assets/resources/derived/ushinoda-basement-rite-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
+    'assets/resources/derived/ushinoda-basement-rite-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    // 2026-09-25 사용자 채택 — 2차 묶음 10장(세력 9, 세계 기록 1)과 인물 사진 9장(세로 2:3)
+    'assets/resources/derived/corruption-cult-drain-room-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/blood-cult-reservoir-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/southern-blood-coastal-command-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/son-hidden-depot-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/haimun-night-transfer-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/amarion-abandoned-facility-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/angel-descent-red-sky-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/tachibana-isamu-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/kagami-itsuki-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/enrilbani-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/epoptes-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/kieran-hayward-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/yanan-kes-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/kenevin-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/sakuma-yuta-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/mason-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'}
   };
 
   const normalize=src=>{

@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 272,
-    "referenced": 272,
+    "registered": 329,
+    "referenced": 329,
     "unreferenced": 0,
     "review": 150,
-    "managed": 122,
+    "managed": 179,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 242,
+      "image": 299,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 104,
+      "PROJECT_GENERATED": 161,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 90,
+      "DELIVERY_DERIVATIVE": 128,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 50,
+      "RECONSTRUCTED": 69,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2604,6 +2604,69 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/amarion-abandoned-facility-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "아마리온 활동 중단·승계 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "아마리온의 활동 중단과 승계 기록 뒤 수십 년이 흐른 폐시설을 상정했다. 시설의 실제 위치와 상태, 장비의 행방, 왜곡 시스템의 결과와 이상현상과의 인과를 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1824982,
+      "sha256": "a8275fc96374d4f38ff0939825a7d2b7ff3ef86502401671bbb0b3bcca051d6f",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/angel-descent-red-sky-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "천사 강림과 「본 자의 서」(deep-angel-descent) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "「본 자의 서」가 전하는 천사 강림과 얼굴을 든 한 사람을 지상에서 바라본 전승 장면이다. 강림의 실제 연대·장소·규모, 생존자의 신원과 현재 존재, IMAGE-241HS 증언과의 독립성을 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1958845,
+      "sha256": "1bbfb117c2b6b1431d5bbdf76d76829da350d23d6887dafa16950f6c0c3d2462",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "A.R.F 밀봉·분리 회수 절차 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "A.R.F의 밀봉·분리 회수 절차를 오염 구역의 견인 작업으로 옮겼다. 운반함의 내용과 실제 사체 수, 반출·폐기 판정, 오염 제거의 성공을 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1687432,
+      "sha256": "e4c50246c8a121c92c357fab82756ac364f52e8460ee24743f8cbe067c9a278b",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/ash-crew-aftermath-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2639,6 +2702,27 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/blood-cult-reservoir-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "혈교 혈액 의식 좌표·저장소 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "혈교가 혈액의 저장소와 수로를 의식의 좌표로 삼는다는 기록을 지하 저장소로 옮겼다. 혈액의 출처, 통로의 개통과 행선지, 다른 혈교 계통과의 지휘 공유를 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1683680,
+      "sha256": "c2f19db62e02ef25278c6f777944e8fee22cae162574325a75268dabeb67501f",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -2795,6 +2879,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/corruption-cult-drain-room-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "타락교 신체 타락 의식·생체 구조 재작성 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "타락교의 신체 타락 의식과 생체 구조 재작성을 폐쇄 설비실의 장면으로 상정했다. 대상자의 신원과 생사, 실제 시술 형태, 지휘자와 의식의 성공 여부를 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1736297,
+      "sha256": "80451e92c6afbffef4e2701f39473084a622dbcecbfcc7fb9cfb130180cac0b8",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/cpd-screening-line-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2876,6 +2981,69 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "데드존 혈교 순례자 구호 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "데드존 혈교 거점에서 반복 보고된 순례자 응급처치와 임시 숙영 지원을 옮겼다. 구조 활동의 목적과 개별 거점의 규칙, 치료 결과, 데드존 전역의 안전을 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1745937,
+      "sha256": "6594c1767defbf4a1eb586f6a4a9167c24f18f20a38bd6c1e5bbecb1a5a577ac",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/enrilbani-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(enrilbani)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 흰 얼굴면 너머의 실제 얼굴과 육체, 로드좌와의 관계는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1686224,
+      "sha256": "8f83a6c084190687757f9004dc1382790766b9e3bf0ac1330a354beb7bf3bdb4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/epoptes-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(epoptes)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "「본 자의 서」 제1장의 묘사에 맞춘 인물 재구성 스케치다. 강림의 연대와 장소, 현재 생존은 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1726104,
+      "sha256": "a58802ec5ae3c3fe4b49ae4abe0e088ea9bb2e32c9b4534622e26a9146aeab8d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -2971,6 +3139,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/haimun-night-transfer-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "P.O.H 위장 진료소·운송망 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "P.O.H의 위장 진료소와 운송망을 통한 등록 밖의 인력 이동을 야간 하역 장면으로 상정했다. 이동하는 사람의 신원과 전체 수, 최종 목적지, 특정 거래의 성립과 결과를 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1585119,
+      "sha256": "5d902b8883f78fc902a1d53ebb374e66276e378734d6d9d3a916815122768bf0",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2987,6 +3176,90 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-data.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/kagami-itsuki-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(kagami-itsuki)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 본명과 감사를 맡은 기관, 활동 연도는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1563242,
+      "sha256": "55a82c448b4c05084a1ba5b0082f06f63d10182689e4fbcae7979047c62a3304",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/kenevin-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(kenevin)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 기사에서 이질적 존재로 바뀐 경위와 현재 소재는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1869562,
+      "sha256": "9b6c49cc992cccb1f216cee6830210ba47587669c8b3dd2291ae0d30c0591419",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/kieran-hayward-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(kieran-hayward)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 교단 내 정확한 직위와 거점, 의식의 목적은 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2069519,
+      "sha256": "0a5ad81f57b5d014fba0505169446abb9f4e3fcc529358798b97c52aa3112a77",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/mason-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(mason)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 투시의 작동 방식과 대가의 범위는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1662723,
+      "sha256": "42453af46e3b095f50e6a7ade701d9c2f7ca885e45d495fc531554c7e9c04d97",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3133,6 +3406,48 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/sakuma-yuta-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(sakuma-yuta)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 1989년 기록 표지의 인상을 따른다. 현재 거점과 하이문 안의 지휘 범위는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1635393,
+      "sha256": "441f1e5c28ce991c942531c79622a9d84ec57b14755759612a332500bbfc0286",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "그림자교 반사면·인식 불일치 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "그림자교 기록에 반복되는 반사면과 인식의 불일치를 복도의 한순간으로 상정했다. 사람과 반사 형체의 신원, 엔릴바니의 외형과 개입, 빙의의 성립 여부를 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1599465,
+      "sha256": "4d6f295cbf1c164dab024dd4ca0ba760b0f1cec365e5b32666f00a291f65119b",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/sid-memory-check-booth-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3146,6 +3461,69 @@
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/son-hidden-depot-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "S.O.N 분산 지원망·은닉 거점 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "S.O.N의 분산 지원망이 오염 대응 장비를 은닉하고 재배치하는 활동을 상정했다. 인원의 신원과 소속국, 실제 지휘 관계, 장비의 출처와 특정 작전의 성과를 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1588662,
+      "sha256": "0723c8eef0dfddb7915a78fdb3bb4094ee5af7d0901f655d1a399413ae5ab56d",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/southern-blood-coastal-command-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "남부 혈교 해안 전시 지휘망 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "남부 혈교의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 중앙 혈교와의 직계 관계와 작전 결과를 확정하지 않는다.",
+      "credit": "Project Curse batch B scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1682420,
+      "sha256": "68fd2a58bcc0c70e5b11b71a0403378fc980fcce372a7c389ed9c738b4bc950c",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/tachibana-isamu-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(tachibana-isamu)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 그림자의 발현 경위와 잃은 기억의 내용은 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1712702,
+      "sha256": "0f4665d6042e2d329a2741a488107649771ea0bf285c3c835fabab138974df05",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
@@ -3209,6 +3587,27 @@
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/yanan-kes-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(yanan-kes)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 천로교의 교리와 규모, 순회 경로는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1785252,
+      "sha256": "0e7e073c50a951738d17732c1a851ae14d117917c5800cb4ab54c5983dbee77d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
@@ -4019,6 +4418,102 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/amarion-abandoned-facility-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/amarion-abandoned-facility-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5688,
+      "sha256": "c6b30d127a814c9f9381aa59387884c2b98c048b6482f86e339744786884437a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/amarion-abandoned-facility-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/amarion-abandoned-facility-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/amarion-abandoned-facility-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 18948,
+      "sha256": "578d9d4dc25df0f6421a44b99e04ca9da357dea1795fc37ecd4232f0dfe1f9f2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/amarion-abandoned-facility-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/angel-descent-red-sky-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/angel-descent-red-sky-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 8640,
+      "sha256": "9a0b2d01f704e360710fbb65982f5967156adb96aa2fc1d38d4ca2b23903615a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/angel-descent-red-sky-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/angel-descent-red-sky-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/angel-descent-red-sky-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 28292,
+      "sha256": "c2b864070f38539eb947da0b112d4044b44a71197831fe78a7944271fbb4b7cf",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/angel-descent-red-sky-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/arf-sealed-recovery-hoist-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9606,
+      "sha256": "bd0d86f26fa5a1644910f93e3add788fc606a794426136657f7e6461696cf75d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/arf-sealed-recovery-hoist-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 31494,
+      "sha256": "2b5170ab57de5a9d21304d2baa4b8273c14d3c9527eee21472a45d80ed260a17",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/ash-crew-aftermath-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -4079,6 +4574,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/blood-cult-reservoir-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/blood-cult-reservoir-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 4478,
+      "sha256": "a182157d823c73da7b8be115630d102aa1c5f3acd65543a20e2646d40bfd4871",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/blood-cult-reservoir-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/blood-cult-reservoir-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/blood-cult-reservoir-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 13500,
+      "sha256": "ca24e3fc84a70a948268f294150930ad80e4b613a60786c7bf8872cd47b7f6c9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/blood-cult-reservoir-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -4243,6 +4770,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/corruption-cult-drain-room-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/corruption-cult-drain-room-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 8152,
+      "sha256": "0528b8e07c242a1a1c8b9ed71ec1daa4ef0336334974f2a3d5167e512af6dd56",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/corruption-cult-drain-room-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/corruption-cult-drain-room-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/corruption-cult-drain-room-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 25612,
+      "sha256": "6fd08e03a1e745f63702a83c0924183c6a694f7b2b2f42c4ecee380a276b034a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/corruption-cult-drain-room-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/cpd-screening-line-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -4371,6 +4930,102 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/deadzone-blood-pilgrim-aid-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5928,
+      "sha256": "5d5437471f7eff17794c7c05196ff7589aedc04ca9a2e60ca169cce876e0344a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/deadzone-blood-pilgrim-aid-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 20890,
+      "sha256": "6f7d76546ac83c09e74b697065d223726f77cf8c5231d938badd57d4ffe55066",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/enrilbani-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/enrilbani-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9108,
+      "sha256": "6910712364eeb6c9dff05ebe8608f7a80cf2ef0cd346f330d19f870ea462499b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/enrilbani-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/enrilbani-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/enrilbani-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 27658,
+      "sha256": "c699023ebd439a13c1cf85121d6a50dc021862f0b02566ca3fd7f21ef80ddd4b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/enrilbani-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/epoptes-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/epoptes-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9788,
+      "sha256": "04b881004c1c182736caf0468f4d0de2c8a7bfc600fc8a3f5e4ac0ffb9a8cc1e",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/epoptes-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/epoptes-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/epoptes-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 31912,
+      "sha256": "68cece8d3c901cfa576344131992d847eebaa1d0f8afc802553f2e6ae2437bb2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/epoptes-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/fhc-split-command-lab-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -4431,6 +5086,166 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/great-black-forest_reconstructed-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/haimun-night-transfer-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/haimun-night-transfer-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7352,
+      "sha256": "2ae68e42be26d86d4a1529a87cc3bdba981f11b53b78b2903dbdbc7ecaa0fe53",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/haimun-night-transfer-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/haimun-night-transfer-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/haimun-night-transfer-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 23024,
+      "sha256": "ed25c57caba8251fae2519f3b1e8a806debd239c27d0430363ee72c75c5502ba",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/haimun-night-transfer-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kagami-itsuki-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kagami-itsuki-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7996,
+      "sha256": "3c28a0e18c82c188a1d7775286f640a756f7d33efe46c6cf4d3be447cb8d66e9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kagami-itsuki-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kagami-itsuki-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kagami-itsuki-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 23990,
+      "sha256": "66474afc04963325936d1439532ef0505d90a00282284ca549170579bc951b7a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kagami-itsuki-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kenevin-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kenevin-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10912,
+      "sha256": "e40a5a3f28c4f39034c55bc090fb93d5fde8ae3d27ea31a3a82c40d7f4c01d87",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kenevin-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kenevin-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kenevin-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 41244,
+      "sha256": "d6160200cc6aea26487eeef25bbfd78a68fceecee9c471ed84f814f88bb02f42",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kenevin-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kieran-hayward-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kieran-hayward-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 15454,
+      "sha256": "61f340b7abfa118865b2adcb58525cfd761e7435f1f472873880fc02e8fbf270",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kieran-hayward-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kieran-hayward-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kieran-hayward-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 53692,
+      "sha256": "31f5cc727026861311842bdd9fabc267bdd03e056f419bf6abf5ebf96bf93326",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kieran-hayward-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/mason-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mason-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10162,
+      "sha256": "77fc6eae7db73f96489c7891615d858aba991dc8e91d161eca9e20f0cc456ec4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mason-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/mason-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mason-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 31860,
+      "sha256": "d5d31b4945b0a3c75406d3f304407e5bc0ded8945c3ff4abc4abd9d8af828090",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mason-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -4595,6 +5410,70 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/sakuma-yuta-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/sakuma-yuta-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9132,
+      "sha256": "b7cdd9564aa53cdf1ebc2a886e8b88504520145fa2d0fefa906dbbf6485a5bb5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/sakuma-yuta-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/sakuma-yuta-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/sakuma-yuta-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 26074,
+      "sha256": "8435ef5e6f8265406c43150898f0958d66b13dd35649813e838668538ebfe0f4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/sakuma-yuta-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/shadow-cult-mismatched-reflection-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 3674,
+      "sha256": "bea27b1c6ff75f404c17d9ac7b9894e693d933d66e61795cafb603738b1044ae",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/shadow-cult-mismatched-reflection-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 11462,
+      "sha256": "9c8fd7ba4249011a0fd81d4d55cb229cbc687fef95b9fe11b3d05a86704d87ae",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/sid-memory-check-booth-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -4623,6 +5502,102 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/sid-memory-check-booth-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/son-hidden-depot-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/son-hidden-depot-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5308,
+      "sha256": "e3c3602f960b18c0e90795633fe86075aa9c6278337107c77cf97c48dd74c544",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/son-hidden-depot-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/son-hidden-depot-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/son-hidden-depot-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 17068,
+      "sha256": "aaa39f503a931896143370ad33bbf4d133de41ae9cc30f20cddffbec62eaf6f7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/son-hidden-depot-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/southern-blood-coastal-command-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/southern-blood-coastal-command-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 8142,
+      "sha256": "a937a478fd3611948a175fee48a901fc699ea486b29a7fa90e0a9b4c36b04058",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/southern-blood-coastal-command-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/southern-blood-coastal-command-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/southern-blood-coastal-command-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 26500,
+      "sha256": "f3e85b15b9981c765a0bc5e6963f2d242c0c7b0dc34634ef05ab626ec3e92ae5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/southern-blood-coastal-command-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/tachibana-isamu-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/tachibana-isamu-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9588,
+      "sha256": "33c6eb32ef5dbade3a61b41aaa4ffedded874bd8711ab67e2dd0a48eef644f87",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/tachibana-isamu-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/tachibana-isamu-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/tachibana-isamu-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 29914,
+      "sha256": "6702e80ec82ae3c61abd9ffba6fd2fbfbd56e6a0110b521ee59f6a0c91569c03",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/tachibana-isamu-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -4719,6 +5694,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/ushinoda-basement-rite-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/yanan-kes-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/yanan-kes-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 11398,
+      "sha256": "eacae90310120e998d6f6f9c7a32c4dfbeac8cc0441140406e75fb91169e19b5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/yanan-kes-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/yanan-kes-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/yanan-kes-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 38310,
+      "sha256": "8e90826f7fde910342e7e786d952f81bfd53e89c3aa848a3c76819bcfd683c87",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/yanan-kes-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

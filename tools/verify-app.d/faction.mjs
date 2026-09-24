@@ -20,7 +20,7 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
   }));
   const images = keys.flatMap((key) => [M.marks[key]?.asset, F.factions[key].visual?.src]).filter(Boolean);
   const missingImages = images.filter((file) => { try { return !read(file).length; } catch { return true; } });
-  add('registered-marks-and-visuals-exist', images.length === 25 && !missingImages.length, missingImages.join('|'));
+  add('registered-marks-and-visuals-exist', images.length === 34 && !missingImages.length, missingImages.join('|'));
   add('mark-provenance-and-grades', keys.every((key) => M.marks[key]?.source && /^[A-D]$/.test(M.marks[key]?.confidence)));
   add('lineage-links-resolve', L.order.every((key) => F.factions[key] && L.nodes[key].history.every((id) => historyIds.has(id))) && L.edges.every((edge) => L.nodes[edge.from] && L.nodes[edge.to] && L.states[edge.state]));
   const incidents = context.ProjectCurseIncidentNetwork.incidentList.filter((item) => item.factions.some((key) => keys.includes(key)));

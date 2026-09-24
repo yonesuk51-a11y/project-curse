@@ -89,6 +89,10 @@
     'semyon-reyes':{name:'세묜 레예스',unit:'P.O.H 하이문 회랑',role:'인력·장비 운송책',recordFunction:'실험 대상으로 팔릴 사람을 운송명부의 빈자리로 빼돌리는 내부 배신자.',incident:'2005–2006 오리진 대상 6명 경로 이탈'}
   };
 
+  // 2026-09-25 사용자 채택 인물 사진 — 2006년 명부 중 사쿠마 유타·마커스 콜만. 원작자 설정화의 외형을 따른 인물 재구성.
+  records['sakuma-yuta'].visual={src:'assets/resources/derived/sakuma-yuta-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'검은 정장과 넥타이의 사쿠마 유타가 어두운 은신처 의자에 비스듬히 앉아 민무늬 동전 하나를 들고 옅게 웃는다.',caption:'대조용 인물 재구성 스케치다. 1989년 기록 표지의 인상을 따른다. 현재 거점과 하이문 안의 지휘 범위는 확정하지 않는다.'};
+  records['mason'].visual={src:'assets/resources/derived/mason-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'긴 흑발과 전술 조끼의 메이슨이 도시 시설 창가에서 저격총을 세워 들고 있으며 얼굴 한쪽에서 여러 눈이 박힌 검붉은 잉크가 뒤로 퍼진다.',caption:'대조용 인물 재구성 스케치다. 투시의 작동 방식과 대가의 범위는 확정하지 않는다.'};
+
   root.ProjectCursePersonnelRemake=freeze({
     version:'5.54.0',schema:'project-curse-personnel-remake-v1',
     status:'CANON-FACING REVISION / LEGACY NAMES RETAINED',

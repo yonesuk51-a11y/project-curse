@@ -599,6 +599,61 @@
     alt:'서류 선반과 배관이 있는 사무 건물 지하에서 평상복에 두건을 쓴 성인들이 라벤더색 불 주위에 무릎 꿇거나 서서 조용히 의식을 치른다.',
     caption:'평범한 기관 안에 잠복한 우시노다교의 의식을 사무 건물 지하로 상정한 장면이다. 참가자의 신원과 파벌, 특정 기관의 공모, 의식의 결과를 확정하지 않는다.'
   };
+  // 2026-09-25 사용자 채택 — 2차 묶음 세력 9곳
+  factions['corruption-cult'].visual={
+    src:'assets/resources/derived/corruption-cult-drain-room-concept-v1.png',
+    className:'RECONSTRUCTED',label:'FLESH REWRITE / 분석 재구성',
+    alt:'어두운 설비실에서 성인 작업 인원들이 뼈와 손 모양 조직이 돋아난 몸을 다루고, 검붉은 흔적이 배수로로 흐른다.',
+    caption:'타락교의 신체 타락 의식과 생체 구조 재작성을 폐쇄 설비실의 장면으로 상정했다. 대상자의 신원과 생사, 실제 시술 형태, 지휘자와 의식의 성공 여부를 확정하지 않는다.'
+  };
+  factions['blood-cult'].visual={
+    src:'assets/resources/derived/blood-cult-reservoir-concept-v1.png',
+    className:'RECONSTRUCTED',label:'BLOOD RESERVOIR / 분석 재구성',
+    alt:'지하 저장소의 넓은 검붉은 수면과 좁은 수로 곁에서 성인들이 라벤더빛 아래 혈액의 흐름을 살핀다.',
+    caption:'혈교가 혈액의 저장소와 수로를 의식의 좌표로 삼는다는 기록을 지하 저장소로 옮겼다. 혈액의 출처, 통로의 개통과 행선지, 다른 혈교 계통과의 지휘 공유를 확정하지 않는다.'
+  };
+  factions['shadow-cult'].visual={
+    src:'assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png',
+    className:'RECONSTRUCTED',label:'MISMATCHED REFLECTION / 분석 재구성',
+    alt:'폐쇄 건물의 거울 복도에서 고개를 숙인 성인과, 다른 자세로 남은 반사 속 형체가 어긋난다.',
+    caption:'그림자교 기록에 반복되는 반사면과 인식의 불일치를 복도의 한순간으로 상정했다. 사람과 반사 형체의 신원, 엔릴바니의 외형과 개입, 빙의의 성립 여부를 확정하지 않는다.'
+  };
+  factions['southern-blood'].visual={
+    src:'assets/resources/derived/southern-blood-coastal-command-concept-v1.png',
+    className:'RECONSTRUCTED',label:'COASTAL COMMAND / 분석 재구성',
+    alt:'밤의 해안 지휘소에서 긴 외투를 입은 성인들과 무장 인원들이 지도와 무전기 곁으로 보급함을 옮긴다.',
+    caption:'남부 혈교의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 중앙 혈교와의 직계 관계와 작전 결과를 확정하지 않는다.'
+  };
+  factions['deadzone-blood'].visual={
+    src:'assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png',
+    className:'RECONSTRUCTED',label:'PILGRIM AID / 분석 재구성',
+    alt:'도로변 임시 숙영지에서 지친 성인 순례자들이 쉬는 동안 돌봄 인원이 팔에 붕대를 감고, 컵을 든 순례자가 곁에서 쉰다.',
+    caption:'데드존 혈교 거점에서 반복 보고된 순례자 응급처치와 임시 숙영 지원을 옮겼다. 구조 활동의 목적과 개별 거점의 규칙, 치료 결과, 데드존 전역의 안전을 확정하지 않는다.'
+  };
+  factions['syndicate'].visual={
+    src:'assets/resources/derived/son-hidden-depot-concept-v1.png',
+    className:'RECONSTRUCTED',label:'HIDDEN DEPOT / 분석 재구성',
+    alt:'숨겨진 하역 공간에서 정장·전투복·연구복 차림의 성인들이 방독면과 보호장비가 담긴 운반함을 옮긴다.',
+    caption:'S.O.N의 분산 지원망이 오염 대응 장비를 은닉하고 재배치하는 활동을 상정했다. 인원의 신원과 소속국, 실제 지휘 관계, 장비의 출처와 특정 작전의 성과를 확정하지 않는다.'
+  };
+  factions['haimun'].visual={
+    src:'assets/resources/derived/haimun-night-transfer-concept-v1.png',
+    className:'RECONSTRUCTED',label:'NIGHT TRANSFER / 분석 재구성',
+    alt:'밤의 진료소 뒤편에서 무표기 냉동차량과 열린 뒷문 사이로 성인들이 조용히 이동한다.',
+    caption:'P.O.H의 위장 진료소와 운송망을 통한 등록 밖의 인력 이동을 야간 하역 장면으로 상정했다. 이동하는 사람의 신원과 전체 수, 최종 목적지, 특정 거래의 성립과 결과를 확정하지 않는다.'
+  };
+  factions['arf'].visual={
+    src:'assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png',
+    className:'RECONSTRUCTED',label:'SEALED RECOVERY / 분석 재구성',
+    alt:'오염된 설비 구덩이에서 보호복을 입은 회수 인원이 견인 장비로 밀봉 운반함을 끌어올린다.',
+    caption:'A.R.F의 밀봉·분리 회수 절차를 오염 구역의 견인 작업으로 옮겼다. 운반함의 내용과 실제 사체 수, 반출·폐기 판정, 오염 제거의 성공을 확정하지 않는다.'
+  };
+  factions['amarion'].visual={
+    src:'assets/resources/derived/amarion-abandoned-facility-concept-v1.png',
+    className:'RECONSTRUCTED',label:'ABANDONED FACILITY / 분석 재구성',
+    alt:'먼지가 내려앉은 옛 제어반과 멈춘 장치들 뒤로 기계적으로 봉인된 문이 남아 있는 빈 시설 내부다.',
+    caption:'아마리온의 활동 중단과 승계 기록 뒤 수십 년이 흐른 폐시설을 상정했다. 시설의 실제 위치와 상태, 장비의 행방, 왜곡 시스템의 결과와 이상현상과의 인과를 확정하지 않는다.'
+  };
 
   root.ProjectCurseFactionAnalysis = freeze({
     version: root.ProjectCurseBuild?.version||'5.42.0',

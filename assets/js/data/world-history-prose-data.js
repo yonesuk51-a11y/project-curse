@@ -441,6 +441,13 @@
   };
 
   const recordVisuals={
+    'deep-angel-descent':{
+      src:'assets/resources/derived/angel-descent-red-sky-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'붉게 갈라진 하늘에서 날개 윤곽이 쏟아지는 동안 군사들은 얼굴을 가리고, 한 성인만 고개를 든다.',
+      label:'INTERPRETIVE RECONSTRUCTION / RED SKY DESCENT — 증언 기반',
+      caption:'「본 자의 서」가 전하는 천사 강림과 얼굴을 든 한 사람을 지상에서 바라본 전승 장면이다. 강림의 실제 연대·장소·규모, 생존자의 신원과 현재 존재, IMAGE-241HS 증언과의 독립성을 확정하지 않는다.'
+    },
     '1975-09-12-amarion':{
       src:'assets/resources/derived/amarion-1975-test-hall-concept-v1.png',
       className:'RECONSTRUCTED',

@@ -24,7 +24,14 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   add('ability-cost-preserved', records.filter((record) => record.abilitySource).every((record) => record.abilityCost));
   add('historical-names-searchable', records.filter((record) => record.sourceName).every((record) => record.aliases.includes(record.sourceName)));
   add('distinct-aaron-identities', P.byId['aaron-uac'] && P.byId['aaron-syndicate'] && P.byId['aaron-uac'].name !== P.byId['aaron-syndicate'].name);
-  add('no-unregistered-portraits', records.every((record) => !record.visual?.src));
+  // 2026-09-25 사용자 채택: 2006년 명부에서는 사쿠마 유타·마커스 콜만 사진이 있다.
+  // 사진은 매체 목록과 증거 대장에 등록된 재구성 파일만 쓴다(추가 등록 명부도 같다).
+  const withPortrait = (list) => list.filter((record) => record.visual?.src);
+  const registeredPortrait = (visual) => Boolean(context.ProjectCurseMediaManifest?.resolve(visual.src) &&
+    context.ProjectCurseVisualEvidence?.known?.[visual.src] && visual.className === 'RECONSTRUCTED' && visual.alt && visual.caption && visual.label);
+  add('portraits-registered-only', withPortrait(records).map((record) => record.id).sort().join(',') === 'mason,sakuma-yuta' &&
+    [...withPortrait(records), ...withPortrait(P.additions || [])].every((record) => registeredPortrait(record.visual)),
+    `${withPortrait(records).length} legacy / ${withPortrait(P.additions || []).length} additions`);
   // 2042 추가 등록 — 2006년 명부(records)와 섞지 않는다. 인물마다 기준 연도와 확인되지 않은 부분을 적는다.
   const additions = P.additions || [];
   const additionGroupIds = new Set((P.additionGroups || []).map((group) => group.id));

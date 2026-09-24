@@ -121,6 +121,63 @@
     }),
     'assets/resources/derived/ushinoda-basement-rite-concept-v1.png':Object.freeze({
       assetId:'VEA-USH-RITE-01',className:'RECONSTRUCTED',source:'우시노다교 기관 침투·의식 활동 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'사무 건물 지하의 의식으로 잠복 활동을 상정했다. 참가자의 신원과 파벌, 특정 기관의 공모, 의식의 결과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/corruption-cult-drain-room-concept-v1.png':Object.freeze({
+      assetId:'VEA-CRC-RITE-01',className:'RECONSTRUCTED',source:'타락교 신체 타락 의식·생체 구조 재작성 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'타락교의 신체 타락 의식과 생체 구조 재작성을 폐쇄 설비실의 장면으로 상정했다. 대상자의 신원과 생사, 실제 시술 형태, 지휘자와 의식의 성공 여부를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/blood-cult-reservoir-concept-v1.png':Object.freeze({
+      assetId:'VEA-BLC-RES-01',className:'RECONSTRUCTED',source:'혈교 혈액 의식 좌표·저장소 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'혈교가 혈액의 저장소와 수로를 의식의 좌표로 삼는다는 기록을 지하 저장소로 옮겼다. 혈액의 출처, 통로의 개통과 행선지, 다른 혈교 계통과의 지휘 공유를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png':Object.freeze({
+      assetId:'VEA-SHC-REF-01',className:'RECONSTRUCTED',source:'그림자교 반사면·인식 불일치 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'그림자교 기록에 반복되는 반사면과 인식의 불일치를 복도의 한순간으로 상정했다. 사람과 반사 형체의 신원, 엔릴바니의 외형과 개입, 빙의의 성립 여부를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/southern-blood-coastal-command-concept-v1.png':Object.freeze({
+      assetId:'VEA-SBC-CMD-01',className:'RECONSTRUCTED',source:'남부 혈교 해안 전시 지휘망 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'남부 혈교의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 중앙 혈교와의 직계 관계와 작전 결과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png':Object.freeze({
+      assetId:'VEA-DZB-AID-01',className:'RECONSTRUCTED',source:'데드존 혈교 순례자 구호 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'데드존 혈교 거점에서 반복 보고된 순례자 응급처치와 임시 숙영 지원을 옮겼다. 구조 활동의 목적과 개별 거점의 규칙, 치료 결과, 데드존 전역의 안전을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/son-hidden-depot-concept-v1.png':Object.freeze({
+      assetId:'VEA-SON-DEP-01',className:'RECONSTRUCTED',source:'S.O.N 분산 지원망·은닉 거점 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'S.O.N의 분산 지원망이 오염 대응 장비를 은닉하고 재배치하는 활동을 상정했다. 인원의 신원과 소속국, 실제 지휘 관계, 장비의 출처와 특정 작전의 성과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/haimun-night-transfer-concept-v1.png':Object.freeze({
+      assetId:'VEA-POH-TRN-01',className:'RECONSTRUCTED',source:'P.O.H 위장 진료소·운송망 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'P.O.H의 위장 진료소와 운송망을 통한 등록 밖의 인력 이동을 야간 하역 장면으로 상정했다. 이동하는 사람의 신원과 전체 수, 최종 목적지, 특정 거래의 성립과 결과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png':Object.freeze({
+      assetId:'VEA-ARF-HST-01',className:'RECONSTRUCTED',source:'A.R.F 밀봉·분리 회수 절차 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'A.R.F의 밀봉·분리 회수 절차를 오염 구역의 견인 작업으로 옮겼다. 운반함의 내용과 실제 사체 수, 반출·폐기 판정, 오염 제거의 성공을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/amarion-abandoned-facility-concept-v1.png':Object.freeze({
+      assetId:'VEA-AMR-SITE-01',className:'RECONSTRUCTED',source:'아마리온 활동 중단·승계 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'아마리온의 활동 중단과 승계 기록 뒤 수십 년이 흐른 폐시설을 상정했다. 시설의 실제 위치와 상태, 장비의 행방, 왜곡 시스템의 결과와 이상현상과의 인과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/angel-descent-red-sky-concept-v1.png':Object.freeze({
+      assetId:'VEA-ANG-DSC-01',className:'RECONSTRUCTED',source:'천사 강림과 「본 자의 서」(deep-angel-descent) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'「본 자의 서」가 전하는 천사 강림과 얼굴을 든 한 사람을 지상에서 바라본 전승 장면이다. 강림의 실제 연대·장소·규모, 생존자의 신원과 현재 존재, IMAGE-241HS 증언과의 독립성을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/tachibana-isamu-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-TCH-01',className:'RECONSTRUCTED',source:'인물 기록(tachibana-isamu)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 그림자의 발현 경위와 잃은 기억의 내용은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/kagami-itsuki-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-KGM-01',className:'RECONSTRUCTED',source:'인물 기록(kagami-itsuki)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 본명과 감사를 맡은 기관, 활동 연도는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/enrilbani-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-ENR-01',className:'RECONSTRUCTED',source:'인물 기록(enrilbani)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 흰 얼굴면 너머의 실제 얼굴과 육체, 로드좌와의 관계는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/epoptes-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-EPO-01',className:'RECONSTRUCTED',source:'인물 기록(epoptes)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'「본 자의 서」 제1장의 묘사에 맞춘 인물 재구성 스케치다. 강림의 연대와 장소, 현재 생존은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/kieran-hayward-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-KRN-01',className:'RECONSTRUCTED',source:'인물 기록(kieran-hayward)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 교단 내 정확한 직위와 거점, 의식의 목적은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/yanan-kes-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-YNK-01',className:'RECONSTRUCTED',source:'인물 기록(yanan-kes)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 천로교의 교리와 규모, 순회 경로는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/kenevin-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-KNV-01',className:'RECONSTRUCTED',source:'인물 기록(kenevin)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 기사에서 이질적 존재로 바뀐 경위와 현재 소재는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/sakuma-yuta-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-SKM-01',className:'RECONSTRUCTED',source:'인물 기록(sakuma-yuta)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 1989년 기록 표지의 인상을 따른다. 현재 거점과 하이문 안의 지휘 범위는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/mason-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-MSN-01',className:'RECONSTRUCTED',source:'인물 기록(mason)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 투시의 작동 방식과 대가의 범위는 확정하지 않는다.'
     })
   });
 
