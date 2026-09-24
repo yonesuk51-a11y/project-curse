@@ -162,7 +162,7 @@
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "삼야 무응답 독립시계·종 장부·검문소 자동기록 기반 분석 재구성",
+      "source": "삼야 무응답 독립시계·타종 장부·검문소 자동기록 기반 분석 재구성",
       "handling": "권역 간 통로·중계망·동일 공간 또는 호출 발신자 신원의 증거로 표시 금지"
     },
     "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png": {
@@ -378,7 +378,7 @@
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "남부 혈교 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(뒤집힌 전시 왕관·폐쇄된 혈액핵·세 작전축) 기준 (2026-09-24 사용자 채택)",
+      "source": "남방 혈맹 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(뒤집힌 전시 왕관·폐쇄된 혈액핵·세 작전축) 기준 (2026-09-24 사용자 채택)",
       "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
     },
     "assets/faction_marks/v3/deadzone-blood.png": {
@@ -466,8 +466,8 @@
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "남부 혈교 해안 전시 지휘망 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
-      "handling": "남부 혈교의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 중앙 혈교와의 직계 관계와 작전 결과를 확정하지 않는다."
+      "source": "남방 혈맹 해안 전시 지휘망 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "남방 혈맹의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 혈교와의 직계 관계와 작전 결과를 확정하지 않는다."
     },
     "assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png": {
       "credit": "Project Curse batch B scene brief / Codex image generation",
@@ -875,7 +875,7 @@
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
       "source": "세계 기록(2016-02-21-blood-cult-atlantic-schism) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
-      "handling": "데드존 지부의 순례자 보호 노선과 남부 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다."
+      "handling": "데드존 지부의 순례자 보호 노선과 혈맹 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다."
     },
     "assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png": {
       "credit": "Project Curse batch E scene brief / Codex image generation",
@@ -883,7 +883,7 @@
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
       "source": "세계 기록(2027-11-02-southern-allegiance) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
-      "handling": "감청으로 추정된 남부 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다."
+      "handling": "감청으로 추정된 혈맹 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다."
     },
     "assets/resources/derived/branch-seal-2031-four-files-concept-v1.png": {
       "credit": "Project Curse batch E scene brief / Codex image generation",

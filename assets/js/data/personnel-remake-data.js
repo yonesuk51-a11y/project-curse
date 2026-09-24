@@ -73,7 +73,7 @@
     saxon:{name:'콘라트 작센',unit:'레드울프 감시망',recordFunction:'벽 너머를 보는 능력 때문에 동료의 마지막 순간까지 목격한 감시자.',incident:'2006 시설 내부 구금실 위치 확인',abilitySource:'선천 생기 / 투시',abilityCost:'투시 대상의 감각 잔향이 남아 수면 중 타인의 죽음을 반복 체험'},
     isaac:{name:'아이작 벨',unit:'레드울프 회수조',recordFunction:'실험체를 짐이 아니라 사람으로 운반하라는 명령을 고집한 회수요원.',incident:'2006 방랑자 10명 탈출 호송',abilitySource:'오리진 실험 강화',abilityCost:'괴력 사용 뒤 근육이 회복될 때 타인의 음성이 환청으로 재생'},
 
-    'mizumi-yanami':{name:'야나미 미즈호',unit:'우시노다 혈교 / 혈좌 주장자',role:'혈좌 주장자',recordFunction:'교주라는 호칭이 한 사람의 직책인지 계승 가능한 좌석인지 흔드는 인물.',incident:'2003 피의 강 결계 현장',abilitySource:'교단 계약 / 혈좌 의식',abilityCost:'타인의 피를 움직일수록 자신의 기억이 결계 참여자에게 분산'},
+    'mizumi-yanami':{name:'야나미 미즈호',unit:'혈교 / 혈좌 주장자',role:'혈좌 주장자',recordFunction:'교주라는 호칭이 한 사람의 직책인지 계승 가능한 좌석인지 흔드는 인물.',incident:'2003 피의 강 결계 현장',abilitySource:'교단 계약 / 혈좌 의식',abilityCost:'타인의 피를 움직일수록 자신의 기억이 결계 참여자에게 분산'},
     'ramus-manson':{name:'엘리어스 맨슨',unit:'우시노다 타락교 / 부패좌 주장자',role:'부패좌 주장자',recordFunction:'능력을 드러내지 않고 집단의 죄책감을 의식으로 바꾸는 설교자.',incident:'2006 세 도시 동시 고백집회',abilitySource:'교단 계약 / 집단고백 의식',abilityCost:'청중의 죄책감을 받을수록 자신의 감정과 타인의 감정을 구분하지 못함'},
     'apostle-luke-eugene':{name:'루시앙 유진',unit:'우시노다 제1석 주장자',role:'제1석 주장자 / 삼권능 모방자',recordFunction:'첫 번째 사도가 한 인간인지 시대마다 되풀이되는 좌석인지 판정할 수 없게 만드는 존재.',incident:'1986 피의 호수 삼권능 흔적',abilitySource:'기원 불명 / 삼중 권능 모방',abilityCost:'복제한 기술마다 고유한 기억과 신체 특징 하나가 일시 소실'},
     'apostle-urzag':{name:'우르자그',unit:'우시노다 육체석 주장자',role:'육체석 주장자',recordFunction:'이름이 인격이 아니라 여러 육체를 건너는 명령일 가능성을 보여 주는 존재.',incident:'2004 육체이전 23분 공백',abilitySource:'의식 이식 / 육체강탈',abilityCost:'이전할 때마다 이전 숙주의 욕망과 공포가 새 육체에 잔류'},
@@ -82,7 +82,7 @@
     'apostle-moha':{name:'무사 라힘',unit:'우시노다 혈열석 주장자',role:'혈열석 주장자',recordFunction:'전투자. 자신의 변형을 유지하려고 같은 편의 체온까지 빼앗는다.',incident:'2005 신도 14명 저체온 사망',abilitySource:'의식 이식 / 혈열 변형',abilityCost:'냉각 시 신체가 이전 변형 상태로 굳고 주변인의 체온을 강제 흡수'},
     'apostle-siena-khan':{name:'시에나 칸',unit:'우시노다 자동인형석 주장자',role:'자동인형석 주장자',recordFunction:'인간과 기계의 경계를 지우는 계승자. 그 과정에서 스스로 부품이 되어 간다.',incident:'2006 오토마톤 군집 최초 영상',abilitySource:'유물 계승 / 오토마톤 접속',abilityCost:'재생할수록 손상 부위가 생체가 아닌 기계 구조로 대체'},
     'apostle-alvarez':{name:'마테오 알바레스',unit:'우시노다 미믹석 주장자',role:'미믹석 주장자',recordFunction:'원본보다 오래 신뢰받는 복제품을 만들어 신원체계를 무너뜨리는 자.',incident:'2005 분신 명령거부 장면',abilitySource:'교단 계약 / 그림자 미믹',abilityCost:'복제한 신원이 늘수록 원래 얼굴과 목소리를 재현하지 못함'},
-    'apostle-parthea-hill':{name:'파르테아 힐',unit:'우시노다 결투석 주장자',role:'결투석 주장자',recordFunction:'검사. 학살을 통제된 의식으로 포장해 혈교 내부에서도 독자행동했다.',incident:'2004 남부 집단처형 명령 거부',abilitySource:'교단 계약 / 혈액경화',abilityCost:'상대의 출혈을 유지하는 동안 자신의 혈액도 같은 비율로 응고'},
+    'apostle-parthea-hill':{name:'파르테아 힐',unit:'우시노다 결투석 주장자',role:'결투석 주장자',recordFunction:'검사. 학살을 통제된 의식으로 포장해 혈교 내부에서도 독자행동했다.',incident:'2004 혈맹 집단처형 명령 거부',abilitySource:'교단 계약 / 혈액경화',abilityCost:'상대의 출혈을 유지하는 동안 자신의 혈액도 같은 비율로 응고'},
     'apostle-sharma':{name:'라비 샤르마',unit:'우시노다 재생석 주장자',role:'재생석 주장자',recordFunction:'재생할수록 인간의 좌우대칭과 원래 형태를 잃는 공성 전력.',incident:'2006 북부 차단벽 19시간 압박',abilitySource:'의식 이식 / 초재생',abilityCost:'큰 손상을 복구할수록 비인간 조직과 촉수가 영구 잔류'},
     'apostle-uro':{name:'우로 카인',unit:'우시노다 뇌영석 주장자',role:'뇌영석 주장자',recordFunction:'그림자와 기록선 자체를 전력 통로로 바꾸는 계승 경쟁자.',incident:'2006 시에나 계보문양 대조',abilitySource:'유물 계승 / 그림자뇌격',abilityCost:'전력을 흘린 지도·사진의 경로가 실제 기억 속 장소와 뒤섞임'},
 

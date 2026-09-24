@@ -13,7 +13,7 @@
     districts:[
       {
         id:'eastasia-northern-front',region:'eastasia',terrain:'front',
-        label:'북부 연속 차단선',code:'NORTH / CONTINUOUS BARRIER',status:'ADVANTAGE / WAR ACTIVE',confidence:'78%',
+        label:'북부 차단선',code:'NORTH / CONTINUOUS BARRIER',status:'ADVANTAGE / WAR ACTIVE',confidence:'78%',
         description:'북동아시아 전구. 2018년 개전 당시 붕괴한 감시선, 2026년 탈환선과 2038년 분산 감시망을 겹쳐 복원했다. 선의 번호가 높아져도 전쟁이 끝났다는 뜻은 아니다.',
         warning:'구조 요청자의 목소리나 호출명만으로 예비대를 이동시키지 말 것. 서로 떨어진 두 계측 노드의 반환 지문이 일치해야 한다.',
         visual:{
@@ -61,7 +61,7 @@
       },
       {
         id:'europe-north-sea-blockade',region:'europe',terrain:'northsea',
-        label:'북해 피의 호수 봉쇄축',code:'EUROPE / BLOOD LAKE BLOCKADE',status:'RESIDUAL / BLOCKADE ACTIVE',confidence:'84%',
+        label:'피의 호수 봉쇄선',code:'EUROPE / BLOOD LAKE BLOCKADE',status:'RESIDUAL / BLOCKADE ACTIVE',confidence:'84%',
         description:'1986년 유닛2의 진입 경로와 F.H.C 회수 기록, 후대 북해 봉쇄선을 겹쳐 놓은 사건권. 현장 위치 일부는 검열됐다. 지점 간 거리는 항법값이 아니다.',
         warning:'호수의 기원과 실종 인원의 최종 상태는 확인되지 않았다. 잔류 반응만으로 호수가 이동하거나 증식했다고 결론짓지 말 것.',
         operation:'op-immortality',
@@ -115,9 +115,9 @@
         warning:'비현실감이 발생하면 기존 경로를 역행하지 말 것. 검은 강의 강둑은 지도상 안전지대가 아니다. 이 회랑의 피의 호수 흔적을 북해 사건과 연결하지 말 것.',
         visual:{
           src:'assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png',history:'2032-08-14-three-bells-compact',assetId:'VEA-GBF-BELL-01',
-          label:'해석 재구성 / 특정 성채 원본 아님',title:'무등화 성채 종 운반 재구성',
+          label:'해석 재구성 / 특정 성채 원본 아님',title:'불빛 없는 성채 종 운반 재구성',
           alt:'등불 하나에 의지한 세 순례자가 덮개를 씌운 종을 수레에 싣고 불빛 없는 숲속 성채로 옮기는 장면을 담은 분석 재구성',
-          caption:'서로 다른 귀환자 증언에 반복된 종 운반, 성채 접근로와 무등화 정문을 한 장면에 겹쳤다. 실제 순례단이나 특정 성채의 원본 장면은 아니다.',
+          caption:'서로 다른 귀환자 증언에 반복된 종 운반, 성채 접근로와 불빛 없는 정문을 한 장면에 겹쳤다. 실제 순례단이나 특정 성채의 원본 장면은 아니다.',
           siteIds:['gbf-monsur-chapel','gbf-derealization','gbf-unlit-fortress']
         },
         signalBrief:{
@@ -136,7 +136,7 @@
           log:[
             {time:'T+00:00',text:'몬수르 서부 교회 운반 요청 장부 대조'},
             {time:'T+18:40',text:'동일 타종 기록 · 목적지 표기 분기 확인'},
-            {time:'T+21:12',text:'무등화 정문 진입 보류 · 등화 확인 절차 전환'}
+            {time:'T+21:12',text:'불빛 없는 정문 진입 보류 · 등화 확인 절차 전환'}
           ]
         },
         routes:[
@@ -150,15 +150,15 @@
           {id:'gbf-duel-ground',x:400,y:289,type:'incident',label:'귀환자의 결투 지점',meta:'영상마다 참가 인원 변동',status:'상충 진술',confidence:'disputed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
           {id:'gbf-derealization',x:520,y:329,type:'anomaly',label:'비현실감 중첩권',meta:'회랑이 교회와 강 양쪽으로 이어짐',status:'경로 이중화',confidence:'estimated',operation:'op-unlit-fortress'},
           {id:'gbf-black-river',x:610,y:353,type:'anomaly',label:'검은 강 제4관측점',meta:'동일 일련번호 장비 회수',status:'접근 금지',confidence:'observed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
-          {id:'gbf-blood-lake',x:744,y:250,type:'incident',label:'피의 호수 흔적 05',meta:'복수 순례 보고 중 한 곳 / 북부 전사자·남부 특수부대 표식',status:'북해 사건과 연결 미확인',confidence:'observed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
+          {id:'gbf-blood-lake',x:744,y:250,type:'incident',label:'피의 호수 흔적 05',meta:'복수 순례 보고 중 한 곳 / 북부 전사자·혈맹 특수부대 표식',status:'북해 사건과 연결 미확인',confidence:'observed',records:['Pilgrim_Rules_GBF'],operation:'op-unlit-fortress'},
           {id:'gbf-unlit-fortress',x:908,y:124,type:'fortress',label:'불빛 없는 성채',meta:'외부 폐허 / 내부 거주 진술',status:'좌표 중첩',confidence:'disputed',records:['Great_Black_Forest_Region'],operation:'op-unlit-fortress',incident:'evt-gbf-unlit'}
         ]
       },
       {
         id:'gbf-coastal-belt',region:'southamerica',terrain:'coast',
         label:'남방권 해안 동원선',code:'SOUTHERN THEATER / COASTAL MOBILIZATION',status:'ACTIVE OPERATION',confidence:'46%',
-        description:'해안 작전망에서 남부 특수부대의 집결, 도시 집단 소환과 성위대 침투 신호가 만난다. 남방권은 국가나 자연지리가 아니라 동원·통신 범위를 뜻한다.',
-        warning:'표시 상태는 OP-BROKEN-CROWN 최종 판단에 따라 갱신된다. 남부 혈교, 해안 세력과 협력 성채를 하나의 지휘조직으로 묶어 판정하지 말 것.',
+        description:'해안 작전망에서 혈맹 특수부대의 집결, 도시 집단 소환과 성위대 침투 신호가 만난다. 남방권은 국가나 자연지리가 아니라 동원·통신 범위를 뜻한다.',
+        warning:'표시 상태는 OP-BROKEN-CROWN 최종 판단에 따라 갱신된다. 남방 혈맹, 해안 세력과 협력 성채를 하나의 지휘조직으로 묶어 판정하지 말 것.',
         operation:'op-southern-coup',
         visual:{
           src:'assets/resources/derived/broken-crown-erased-commander-concept-v1.png',history:'2030-01-17-broken-crown',assetId:'VEA-BC-CMD-01',
@@ -181,7 +181,7 @@
             {label:'현장 명령',value:'신원 분리',tone:'hold'}
           ],
           log:[
-            {time:'T-00:17',text:'성위대 지휘 서명과 남부 암호키 중첩 확인'},
+            {time:'T-00:17',text:'성위대 지휘 서명과 혈맹 암호키 중첩 확인'},
             {time:'T-00:08',text:'처형 명령 사본 · 별도 발신 계통에서 수신'},
             {time:'T+00:00',text:'단일 명령으로 병합 금지 · 현장 판정 분기 개방'}
           ]
@@ -193,7 +193,7 @@
         ],
         sites:[
           {id:'coast-listening-post',x:86,y:430,type:'facility',label:'해안 감청소',meta:'남방 주파수 최초 포착',status:'감청 유지',confidence:'observed',records:['Operation_Broken_Crown'],operation:'op-southern-coup',incident:'evt-southern-mobilization'},
-          {id:'coast-muster',x:250,y:365,type:'line',label:'남부 특수부대 집결지',meta:'분산 침투조 출항 흔적',status:'부분 식별',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup'},
+          {id:'coast-muster',x:250,y:365,type:'line',label:'혈맹 특수부대 집결지',meta:'분산 침투조 출항 흔적',status:'부분 식별',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup'},
           {id:'coast-summon-a',x:418,y:294,type:'incident',label:'도시 소환권 A',meta:'동시다발 소환 반응',status:'소환 진행',confidence:'observed',records:['Operation_Broken_Crown'],operation:'op-southern-coup',verdictStates:{execute:{status:'의식 붕괴 / 민간 피해',tone:'failed'},detain:{status:'외곽 봉쇄',tone:'contained'},cooperate:{status:'소환 좌표 공유',tone:'allied'},defer:{status:'소환 진행',tone:'hostile'}}},
           {id:'coast-guard-command',x:590,y:250,type:'facility',label:'성위대 지휘부',meta:'특수부대 지휘관 침투 의심',status:'처형 명령 대기',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',verdictStates:{execute:{status:'지휘관 제거',tone:'secured'},detain:{status:'구금 / 심문 중',tone:'contained'},cooperate:{status:'제한 교신 개방',tone:'allied'},defer:{status:'지휘권 미확인',tone:'unknown'}}},
           {id:'coast-summon-b',x:750,y:179,type:'incident',label:'도시 소환권 B',meta:'북부 전력 분산 목표',status:'활성 신호',confidence:'estimated',records:['Operation_Broken_Crown'],operation:'op-southern-coup',verdictStates:{execute:{status:'소환핵 파괴',tone:'secured'},detain:{status:'반응 격리',tone:'contained'},cooperate:{status:'위장 채널 전환',tone:'allied'},defer:{status:'신호 확대',tone:'hostile'}}},
@@ -202,12 +202,12 @@
       },
       {
         id:'gbf-inner-refuges',region:'southamerica',terrain:'deep-forest',
-        label:'내부 피난 성채권',code:'GBF / INNER REFUGES',status:'NO CENTRAL AUTHORITY',confidence:'18%',
+        label:'피난 성채 지대',code:'GBF / INNER REFUGES',status:'NO CENTRAL AUTHORITY',confidence:'18%',
         description:'내부 정착권에서는 국가 대신 성채, 촌락, 교회가 서로 피난처를 제공한다. 지도상의 거리는 도보 기록과 일치하지 않는다.',
         warning:'성채 자체가 하나의 교단일 수 있다. 불빛이 없는 성채와 오래된 전장은 우회할 것.',
         visual:{
           src:'assets/resources/derived/great-black-forest_reconstructed-v1.png',history:'2032-08-14-three-bells-compact',assetId:'VEA-GBF-R01',
-          label:'복원 추정 / 항법 사진 아님',title:'피난 성채권 거리 측정 재구성',
+          label:'복원 추정 / 항법 사진 아님',title:'피난 성채 지대 거리 측정 재구성',
           alt:'거대한 나무 사이의 젖은 숲길에 측량 장비가 세워져 있고 멀리 작은 불빛과 성채가 보이는 복원 추정 이미지',
           caption:'성채권 도보 기록과 반복 측량 실패를 설명하는 편집 재구성이다. 보이는 숲길과 성채의 실제 거리나 위치를 증명하지 않는다.',
           siteIds:['inner-sanctuary-castle','inner-distance-fork','inner-old-citadel']
@@ -340,20 +340,20 @@
         routes:[
           {id:'grave-road',className:'historical',label:'KINGDOM GRAVE ROAD',risk:'high',signal:'historical',rule:'왕국 표식과 현재 성채의 소속을 동일시하지 말 것',siteIds:['grave-throne','grave-refuge','grave-weapon-field','grave-unlit','grave-memorial','grave-last-kingdom'],points:[[90,438],[250,367],[421,309],[575,232],[742,279],[915,161]]},
           {id:'refuge-route',className:'pilgrimage',label:'REFUGE CASTLE TRACE',risk:'medium',signal:'testimony',rule:'불빛과 내부 열원이 함께 확인된 성채만 피난처로 판정',siteIds:['grave-throne','grave-refuge','grave-weapon-field'],points:[[250,367],[366,437],[524,398]]},
-          {id:'collapsed-wall',className:'hazard',label:'COLLAPSED FORTIFICATION',risk:'critical',signal:'lost',rule:'무등화 요새와 붕괴 방벽 사이에서 야영하지 말 것',siteIds:['grave-unlit','grave-last-kingdom'],points:[[151,163],[318,204],[489,147],[651,196],[844,112]]}
+          {id:'collapsed-wall',className:'hazard',label:'COLLAPSED FORTIFICATION',risk:'critical',signal:'lost',rule:'불빛 없는 요새와 붕괴 방벽 사이에서 야영하지 말 것',siteIds:['grave-unlit','grave-last-kingdom'],points:[[151,163],[318,204],[489,147],[651,196],[844,112]]}
         ],
         sites:[
           {id:'grave-throne',x:90,y:438,type:'ruin',label:'이름 없는 왕좌터',meta:'왕조 표식 11종 중첩',status:'발굴 중지',confidence:'historical',records:['Dead_Zone_Pilgrimage']},
           {id:'grave-refuge',x:250,y:367,type:'fortress',label:'귀환 성채',meta:'집을 잃은 순례자 임시 수용',status:'불빛 확인',confidence:'testimony',records:['Dead_Zone_Pilgrimage']},
           {id:'grave-weapon-field',x:421,y:309,type:'anomaly',label:'봉인 무기 묘지',meta:'개체 결박 반응 다수',status:'회수 금지',confidence:'observed',records:['Dead_Zone_Pilgrimage']},
-          {id:'grave-unlit',x:575,y:232,type:'fortress',label:'무등화 요새',meta:'내부 열원 없음 / 문 개방',status:'접근 금지',confidence:'disputed',records:['Dead_Zone_Pilgrimage']},
+          {id:'grave-unlit',x:575,y:232,type:'fortress',label:'불빛 없는 요새',meta:'내부 열원 없음 / 문 개방',status:'접근 금지',confidence:'disputed',records:['Dead_Zone_Pilgrimage']},
           {id:'grave-memorial',x:742,y:279,type:'incident',label:'순례자 추모호',meta:'피의 수면 아래 장비 신호 / 타 권역 혈성 수면과 연결 미확인',status:'헌정 흔적',confidence:'testimony',records:['Dead_Zone_Pilgrimage']},
           {id:'grave-last-kingdom',x:915,y:161,type:'ruin',label:'마지막 왕국 잔해',meta:'국가 이전 연대의 방벽',status:'미확인 수호 반응',confidence:'historical',records:['Dead_Zone_Pilgrimage']}
         ]
       },
       {
         id:'deadzone-silent-interior',region:'northamerica',terrain:'silent',
-        label:'내륙 무응답권',code:'DEAD ZONE / SILENT INTERIOR',status:'MAP TERMINATES HERE',confidence:'7%',
+        label:'무응답 내륙',code:'DEAD ZONE / SILENT INTERIOR',status:'MAP TERMINATES HERE',confidence:'7%',
         description:'내륙에서는 지도, 위성, 순례자 진술이 모두 끊긴다. 표식 대부분은 위치가 아니다. 마지막 통신 시각을 지리 좌표처럼 환산한 값이다.',
         warning:'이 지도는 경로 안내가 아니다. 자신이 보내지 않은 구조 신호와 개인 식별 신호에 응답하지 말 것.',
         visual:{

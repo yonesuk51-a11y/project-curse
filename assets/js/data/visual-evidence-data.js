@@ -48,7 +48,7 @@
       assetId:'VEA-NF-NODE-01',className:'RECONSTRUCTED',source:'2038년 북부 제6차 차단선 전황검토·감시노드 기록 기반 분석 재구성',date:'2026-08-31',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'폐쇄역의 분산 감시노드 운용을 재구성했다. 정확한 전선 위치, 대원 외형, 적 전력 총량 또는 전쟁 종료를 확정하지 않는다.'
     }),
     'assets/resources/derived/2042-10-31-three-night-silence_001_reconstructed.png':Object.freeze({
-      assetId:'VEA-SYNC-10-01',className:'RECONSTRUCTED',source:'삼야 무응답 독립시계·종 장부·검문소 자동기록 기반 분석 재구성',date:'2026-08-31',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'성채 여섯 곳과 검문소 네 곳의 독립 기록을 한 대조 화면에 배치했다. 권역 간 통로·중계망·동일 공간 또는 발신자의 신원을 확정하지 않는다.'
+      assetId:'VEA-SYNC-10-01',className:'RECONSTRUCTED',source:'삼야 무응답 독립시계·타종 장부·검문소 자동기록 기반 분석 재구성',date:'2026-08-31',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'성채 여섯 곳과 검문소 네 곳의 독립 기록을 한 대조 화면에 배치했다. 권역 간 통로·중계망·동일 공간 또는 발신자의 신원을 확정하지 않는다.'
     }),
     'assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png':Object.freeze({
       assetId:'VEA-NF-DUP-01',className:'RECONSTRUCTED',source:'2026년 북부전선 전황검토·복제 구조신호 보고 기반 분석 재구성',date:'2026-08-28',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'복제 구조신호, 분산 계측 노드와 제3 차단선의 관계를 한 장면에 합성했다. 실제 전황 사진, 대원 외형이나 구조 요청자의 신원을 확정하지 않는다.'
@@ -132,7 +132,7 @@
       assetId:'VEA-SHC-REF-01',className:'RECONSTRUCTED',source:'그림자교 반사면·인식 불일치 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'그림자교 기록에 반복되는 반사면과 인식의 불일치를 복도의 한순간으로 상정했다. 사람과 반사 형체의 신원, 엔릴바니의 외형과 개입, 빙의의 성립 여부를 확정하지 않는다.'
     }),
     'assets/resources/derived/southern-blood-coastal-command-concept-v1.png':Object.freeze({
-      assetId:'VEA-SBC-CMD-01',className:'RECONSTRUCTED',source:'남부 혈교 해안 전시 지휘망 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'남부 혈교의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 중앙 혈교와의 직계 관계와 작전 결과를 확정하지 않는다.'
+      assetId:'VEA-SBC-CMD-01',className:'RECONSTRUCTED',source:'남방 혈맹 해안 전시 지휘망 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'남방 혈맹의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 혈교와의 직계 관계와 작전 결과를 확정하지 않는다.'
     }),
     'assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png':Object.freeze({
       assetId:'VEA-DZB-AID-01',className:'RECONSTRUCTED',source:'데드존 혈교 순례자 구호 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'데드존 혈교 거점에서 반복 보고된 순례자 응급처치와 임시 숙영 지원을 옮겼다. 구조 활동의 목적과 개별 거점의 규칙, 치료 결과, 데드존 전역의 안전을 확정하지 않는다.'
@@ -285,10 +285,10 @@
       assetId:'VEA-HIS-ASYLUM-01',className:'RECONSTRUCTED',source:'세계 기록(2014-06-08-castle-asylum-right) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'일곱 성채로 전하는 야간 피난 관습을 숲속에 흩어진 불빛으로 표현한 원경이다. 성채의 실제 위치와 거리, 동시 점등 여부는 확정하지 않는다.'
     }),
     'assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png':Object.freeze({
-      assetId:'VEA-HIS-SCHISM-01',className:'RECONSTRUCTED',source:'세계 기록(2016-02-21-blood-cult-atlantic-schism) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'데드존 지부의 순례자 보호 노선과 남부 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다.'
+      assetId:'VEA-HIS-SCHISM-01',className:'RECONSTRUCTED',source:'세계 기록(2016-02-21-blood-cult-atlantic-schism) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'데드존 지부의 순례자 보호 노선과 혈맹 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다.'
     }),
     'assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png':Object.freeze({
-      assetId:'VEA-HIS-OATH-01',className:'RECONSTRUCTED',source:'세계 기록(2027-11-02-southern-allegiance) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'감청으로 추정된 남부 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다.'
+      assetId:'VEA-HIS-OATH-01',className:'RECONSTRUCTED',source:'세계 기록(2027-11-02-southern-allegiance) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'감청으로 추정된 혈맹 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다.'
     }),
     'assets/resources/derived/branch-seal-2031-four-files-concept-v1.png':Object.freeze({
       assetId:'VEA-HIS-BRANCH-01',className:'RECONSTRUCTED',source:'세계 기록(2031-02-03-branch-seal) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'같은 인계 절차를 통과한 네 결과철을 어느 하나도 원본으로 고르지 않고 봉인하는 기록보관실이다. 네 결과철의 내용과 어느 결말이 실제였는지는 확정하지 않는다.'

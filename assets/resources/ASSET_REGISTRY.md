@@ -129,7 +129,7 @@ The user adopted the 17 faction marks redrawn as images (`output/imagegen/202609
 | `faction_marks/v3/blood-cult.png` | RECONSTRUCTED | Faction dossier mark board (혈교) | Registered symbols: 닫힌 혈액 방울 · 좌우 유입축 · 하부 결속점. Confidence B. | `감식 B` |
 | `faction_marks/v3/shadow-cult.png` | RECONSTRUCTED | Faction dossier mark board (그림자교) | Registered symbols: 어긋난 두 축 · 끊긴 외곽환 · 공유 하부점. Confidence C. Forensic reconstruction, not an approved emblem. | `감식 C` |
 | `faction_marks/v3/first-apostle.png` | RECONSTRUCTED | Faction dossier mark board (첫 번째 사도) | Registered symbols: 닫힌 이중환 · 삼권능 중첩 · 상부 선행점. Confidence D. Forensic reconstruction, not an approved emblem. | `감식 D` |
-| `faction_marks/v3/southern-blood.png` | RECONSTRUCTED | Faction dossier mark board (남부 혈교) | Registered symbols: 뒤집힌 전시 왕관 · 폐쇄된 혈액핵 · 세 작전축. Confidence B. | `감식 B` |
+| `faction_marks/v3/southern-blood.png` | RECONSTRUCTED | Faction dossier mark board (남방 혈맹) | Registered symbols: 뒤집힌 전시 왕관 · 폐쇄된 혈액핵 · 세 작전축. Confidence B. | `감식 B` |
 | `faction_marks/v3/deadzone-blood.png` | RECONSTRUCTED | Faction dossier mark board (데드존 혈교) | Registered symbols: 열린 혈액 방울 · 관통 순례로 · 두 피난 거점. Confidence B. | `감식 B` |
 
 ## 2026-09-24 batch A adoption
@@ -154,7 +154,7 @@ The user adopted ten images of Codex batch B (`output/imagegen/20260924-batchB-*
 | `derived/corruption-cult-drain-room-concept-v1.png` | RECONSTRUCTED | 타락교 faction dossier | A closed plant room: masked handlers work on an adult body with bone and hand-shaped growths; dark red traces run into a floor drain. | `분석 재구성` |
 | `derived/blood-cult-reservoir-concept-v1.png` | RECONSTRUCTED | 혈교 faction dossier | An underground reservoir of dark red liquid with narrow channels; adults watch the flow under one lavender flame. | `분석 재구성` |
 | `derived/shadow-cult-mismatched-reflection-concept-v1.png` | RECONSTRUCTED | 그림자교 faction dossier | A closed corridor with a glass wall; the reflected figure keeps a different posture from the adult walking past. | `분석 재구성` |
-| `derived/southern-blood-coastal-command-concept-v1.png` | RECONSTRUCTED | 남부 혈교 faction dossier | A night coastal command shed: robed adults and armed personnel move supply crates past a map table and radios. The map has no readable text. | `분석 재구성` |
+| `derived/southern-blood-coastal-command-concept-v1.png` | RECONSTRUCTED | 남방 혈맹 faction dossier | A night coastal command shed: robed adults and armed personnel move supply crates past a map table and radios. The map has no readable text. | `분석 재구성` |
 | `derived/deadzone-blood-pilgrim-aid-concept-v1.png` | RECONSTRUCTED | 데드존 혈교 faction dossier | A roadside camp shelter: carers bandage and rest tired adult pilgrims by one lantern; a hooded figure stands at the edge. | `분석 재구성` |
 | `derived/son-hidden-depot-concept-v1.png` | RECONSTRUCTED | S.O.N faction dossier | A hidden loading bay: adults in a suit, combat clothes and a lab coat move crates of respirators and protective gear. | `분석 재구성` |
 | `derived/haimun-night-transfer-concept-v1.png` | RECONSTRUCTED | P.O.H faction dossier | Night behind a disguised clinic: adults move quietly between an unmarked refrigerated truck and an open back door. No covered stretchers or exposed bodies. | `분석 재구성` |

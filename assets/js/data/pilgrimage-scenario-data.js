@@ -65,7 +65,7 @@
           },
           {
             id:'blood-lake',code:'TRACE 05',time:'18:29',title:'피의 호수 흔적',location:'복수 순례 보고 중 한 곳 / 시간 불명',
-            narrative:'순례자들은 모두 이 수면을 피의 호수라고 부른다. 주변에는 서로 다른 시대와 전선의 장비가 놓여 있다. 남부 특수부대 표식 사이에서 아직 켜진 송신기가 전사자들의 호출 부호를 반복한다. 북해 사건과 같은 장소거나 같은 현상이라는 증거는 없다.',
+            narrative:'순례자들은 모두 이 수면을 피의 호수라고 부른다. 주변에는 서로 다른 시대와 전선의 장비가 놓여 있다. 혈맹 특수부대 표식 사이에서 아직 켜진 송신기가 전사자들의 호출 부호를 반복한다. 북해 사건과 같은 장소거나 같은 현상이라는 증거는 없다.',
             signal:'MEMORIAL RESPONSE / HOSTILE TRACE NEARBY',rule:{code:'RULE 06',text:'피의 호수를 만나면 쓰러진 자들에게 예를 표하라.'},
             choices:[
               {id:'pay-respect',label:'무기를 내리고 전사자의 호출 부호를 읽는다',description:'종을 한 번 울린다. 장비를 원래 위치에 둔다.',tone:'safe',deltas:{fear:-2,corruption:-4,signal:9},ruleOutcome:'kept'},

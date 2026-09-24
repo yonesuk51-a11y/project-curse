@@ -2,8 +2,10 @@ import vm from 'node:vm';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
+import { applyCanonRenames, renamedValue } from '../lib/canon-renames.mjs';
 
 // 옛 화면의 실제 대본과 대조한다. 승인된 화면 안내만 지정된 위치에서 새 문구로 대조한다.
+// 2026-09-25 사용자 승인 정사 이름 변경(tools/lib/canon-renames.mjs)은 옛 원문에 먼저 적용한 뒤 글자 그대로 비교한다.
 export default function ({ add, read, context, app, archiveIds, opIds, historyIds }) {
   const source = read('assets/app/js/screens/archive.js');
   const css = read('assets/app/css/screens/archive.css');
@@ -19,14 +21,14 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   add('bounded-mount-and-decode', source.includes('scope.later(finish, 400)') && source.includes("scope.on(doc, 'keydown', finish") && source.includes('mounting?.end()') && source.includes("view.classList.remove('tc-arc-decoding'), 600") && css.includes('tc-arc-acquisition::after'));
   const migrated = context.ProjectCurseArchiveViewerData;
   const oldChapters = vm.runInNewContext(read('tools/fixtures/legacy-app/assets/js/pages/archive-consolidation.js').match(/const storyChapters\s*=\s*(\[[\s\S]*?\n\s*\]);/)[1]);
-  add('chapter-prose-verbatim', JSON.stringify(oldChapters) === JSON.stringify(migrated.chapters));
+  add('chapter-prose-verbatim', JSON.stringify(renamedValue(oldChapters)) === JSON.stringify(migrated.chapters));
   const oldPages = vm.runInNewContext(read('tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js').match(/    const pages = (\[[\s\S]*?\n\]);/)[1]);
   // 마지막 쪽은 영상 속 대사가 아니라 화면 닫기 안내다. 나머지 대사·장면·순서는 그대로 대조한다.
   const returnPage = oldPages.at(-1);
   const originalReturn = returnPage.group === 'return' && returnPage.title === '기록보관소 복귀' && JSON.stringify(returnPage.lines) === JSON.stringify(['손상 영상 첨부 확인이 끝났습니다.', '화면 선택 시 기록보관소 목록으로 복귀합니다.']);
   const expectedPages = oldPages.map(page => page === returnPage ? { ...page, title: '기록으로 돌아가기', lines: ['손상된 첨부 영상 확인이 끝났습니다.', '화면을 누르면 보고 있던 기록으로 돌아갑니다.'] } : page);
   add('cults-storyboard-preserved-with-approved-return-copy', originalReturn && JSON.stringify(expectedPages) === JSON.stringify(context.ProjectCurseLegacyCinematicSources.cults));
-  const oldCopy = (read('tools/fixtures/legacy-app/assets/js/main.js') + read('tools/fixtures/legacy-app/assets/js/pages/archive-document.js') + read('tools/fixtures/legacy-app/assets/js/pages/archive-consolidation.js') + read('tools/fixtures/legacy-app/assets/js/pages/media-clearance.js')).replace(/<\/?strong>/g, '');
+  const oldCopy = applyCanonRenames(read('tools/fixtures/legacy-app/assets/js/main.js') + read('tools/fixtures/legacy-app/assets/js/pages/archive-document.js') + read('tools/fixtures/legacy-app/assets/js/pages/archive-consolidation.js') + read('tools/fixtures/legacy-app/assets/js/pages/media-clearance.js')).replace(/<\/?strong>/g, '');
   const copyStrings = value => typeof value === 'string' ? [value] : Object.values(value).flatMap(copyStrings);
   const approvedCopy = {
     verdictIntro: ['직접 확인한 결과만 열린다. 최종 판정 순간의 선택과 측정값은 원본 기록과 분리한 판정 사본으로 보존된다.', '직접 확인한 결과만 열린다. 최종 판정 순간의 선택과 측정값은 원본 기록과 분리한 판정 기록으로 보존된다.'],
@@ -43,7 +45,7 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   for (const m of app.matchAll(/<script src="(assets\/js\/data\/[^"?]+)/g)) vm.runInContext(read(m[1]), test);
   vm.runInContext(read('tools/fixtures/legacy-app/assets/js/core/operation-state.js'), test);
   const operation = test.ProjectCurseOperationState;
-  add('operation-boundary-verbatim', ['operationId', 'storageKey', 'branchIds', 'canonBoundary', 'decisions'].every(key => JSON.stringify(operation[key]) === JSON.stringify(migrated.operation[key])));
+  add('operation-boundary-verbatim', ['operationId', 'storageKey', 'branchIds', 'canonBoundary', 'decisions'].every(key => JSON.stringify(renamedValue(operation[key] ?? null)) === JSON.stringify(migrated.operation[key] ?? null)));
   ['record-cinematic-registry.js'].forEach(file => vm.runInContext(read(`assets/app/js/cinematic/${file}`), test));
   ['cults', 'immortality', 'ferals', 'sakuma'].forEach(name => vm.runInContext(read(`assets/app/js/cinematic/cinematic-${name}.js`), test));
   const registry = test.ProjectCurseCinematicRegistry;

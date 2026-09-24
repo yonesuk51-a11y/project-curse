@@ -187,6 +187,7 @@
       "bytes": 1118529,
       "sha256": "3ad8d1b5cb05a8599c4b6058d3c79574b5e6df7c8683631d53a5be7227c4f164",
       "usedBy": [
+        "assets/js/data/archive-cinematic-data.js",
         "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
         "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
@@ -373,6 +374,7 @@
       "bytes": 110328,
       "sha256": "af8fd8e3c1b73a303569d3021a7820f85f1bef5d029c692c903d04782c1106ef",
       "usedBy": [
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/terminal-fx-data.js",
         "tools/fixtures/legacy-app/assets/js/main.js"
       ],
@@ -466,6 +468,7 @@
       "bytes": 45491,
       "sha256": "32d5c745cfc28f9a22b8942d6b77b9b5543e177cac0e2b7f24b059bf63de120a",
       "usedBy": [
+        "assets/js/data/archive-cinematic-data.js",
         "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
         "tools/fixtures/legacy-app/assets/js/main.js"
       ],
@@ -1040,7 +1043,7 @@
       "source": "Project Curse 코드 기반 인터페이스 마스터",
       "handling": "증거 이미지가 아닌 UI 자산",
       "bytes": 891,
-      "sha256": "06912b3f9c53f030efe2126bfe1592d54402317fb55bbdadefeacec9cc083510",
+      "sha256": "01dc7306f82d71b34f8a09d057ea859f7d04841bf8e83c58f682804660cae8b8",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
         "tools/verify-data.mjs"
@@ -1399,7 +1402,7 @@
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "남부 혈교 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(뒤집힌 전시 왕관·폐쇄된 혈액핵·세 작전축) 기준 (2026-09-24 사용자 채택)",
+      "source": "남방 혈맹 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(뒤집힌 전시 왕관·폐쇄된 혈액핵·세 작전축) 기준 (2026-09-24 사용자 채택)",
       "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다.",
       "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
@@ -2703,7 +2706,7 @@
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "삼야 무응답 독립시계·종 장부·검문소 자동기록 기반 분석 재구성",
+      "source": "삼야 무응답 독립시계·타종 장부·검문소 자동기록 기반 분석 재구성",
       "handling": "권역 간 통로·중계망·동일 공간 또는 호출 발신자 신원의 증거로 표시 금지",
       "credit": "Project Curse Three-Night Silence independent-record comparison brief / built-in image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
@@ -2874,7 +2877,7 @@
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
       "source": "세계 기록(2016-02-21-blood-cult-atlantic-schism) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
-      "handling": "데드존 지부의 순례자 보호 노선과 남부 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다.",
+      "handling": "데드존 지부의 순례자 보호 노선과 혈맹 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다.",
       "credit": "Project Curse batch E scene brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "bytes": 1701659,
@@ -4334,7 +4337,7 @@
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
       "source": "세계 기록(2027-11-02-southern-allegiance) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
-      "handling": "감청으로 추정된 남부 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다.",
+      "handling": "감청으로 추정된 혈맹 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다.",
       "credit": "Project Curse batch E scene brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "bytes": 1765713,
@@ -4354,8 +4357,8 @@
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
-      "source": "남부 혈교 해안 전시 지휘망 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
-      "handling": "남부 혈교의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 중앙 혈교와의 직계 관계와 작전 결과를 확정하지 않는다.",
+      "source": "남방 혈맹 해안 전시 지휘망 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "남방 혈맹의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 혈교와의 직계 관계와 작전 결과를 확정하지 않는다.",
       "credit": "Project Curse batch B scene brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "bytes": 1682420,
@@ -7964,6 +7967,7 @@
       "bytes": 9297920,
       "sha256": "93723dfab5866b2b1125feb0da0cf0994ed82bdbefb9fabe99c056102e76faaf",
       "usedBy": [
+        "assets/js/data/archive-cinematic-data.js",
         "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
         "tools/fixtures/legacy-app/assets/js/main.js"
       ],
@@ -8397,6 +8401,27 @@
     },
     {
       "rank": 16,
+      "path": "assets/audio/pc5152an_cult_radio_static_layer.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 1118529,
+      "sha256": "3ad8d1b5cb05a8599c4b6058d3c79574b5e6df7c8683631d53a5be7227c4f164",
+      "usedBy": [
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
+        "tools/verify-data.mjs"
+      ],
+      "priorityScore": 92,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 17,
       "path": "assets/audio/pc5152f_boot_access_oldpc.wav",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8417,7 +8442,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 17,
+      "rank": 18,
       "path": "assets/audio/pc5152cf_sakuma_projector_advance.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8438,7 +8463,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 18,
+      "rank": 19,
       "path": "assets/audio/pc5152f_low_denied_oldpc.wav",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8459,7 +8484,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 19,
+      "rank": 20,
       "path": "assets/audio/pc5152h_frame_pop.wav",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8480,26 +8505,6 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 20,
-      "path": "assets/audio/pc5152an_cult_radio_static_layer.mp3",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 1118529,
-      "sha256": "3ad8d1b5cb05a8599c4b6058d3c79574b5e6df7c8683631d53a5be7227c4f164",
-      "usedBy": [
-        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
-        "tools/fixtures/legacy-app/assets/js/main.js",
-        "tools/verify-data.mjs"
-      ],
-      "priorityScore": 91,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
       "rank": 21,
       "path": "assets/audio/pc5152f_record_mount_soft.wav",
       "kind": "audio",
@@ -8512,14 +8517,35 @@
       "bytes": 110328,
       "sha256": "af8fd8e3c1b73a303569d3021a7820f85f1bef5d029c692c903d04782c1106ef",
       "usedBy": [
+        "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/terminal-fx-data.js",
         "tools/fixtures/legacy-app/assets/js/main.js"
       ],
-      "priorityScore": 90,
+      "priorityScore": 91,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
       "rank": 22,
+      "path": "assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 45491,
+      "sha256": "32d5c745cfc28f9a22b8942d6b77b9b5543e177cac0e2b7f24b059bf63de120a",
+      "usedBy": [
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
+      ],
+      "priorityScore": 91,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 23,
       "path": "assets/audio/pc5152dd_immortality_pursuit_range.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8538,7 +8564,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 23,
+      "rank": 24,
       "path": "assets/audio/pc5152db_immortality_report_progress.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8552,25 +8578,6 @@
       "usedBy": [
         "assets/js/data/archive-cinematic-data.js",
         "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js"
-      ],
-      "priorityScore": 90,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
-      "rank": 24,
-      "path": "assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 45491,
-      "sha256": "32d5c745cfc28f9a22b8942d6b77b9b5543e177cac0e2b7f24b059bf63de120a",
-      "usedBy": [
-        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
-        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 90,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -8643,10 +8650,11 @@
       "bytes": 9297920,
       "sha256": "93723dfab5866b2b1125feb0da0cf0994ed82bdbefb9fabe99c056102e76faaf",
       "usedBy": [
+        "assets/js/data/archive-cinematic-data.js",
         "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
         "tools/fixtures/legacy-app/assets/js/main.js"
       ],
-      "priorityScore": 80,
+      "priorityScore": 81,
       "priorityReason": "재생 가능한 영상 · 영상과 내장 음향의 제작·사용 범위 확인"
     },
     {

@@ -118,17 +118,17 @@
       ],note:'이 표상은 현장 식별을 위한 U.A.C 분석 기호다. 첫 번째 사도가 직접 사용한 휘장으로 제시하지 않는다.'
     },
     'southern-blood':{
-      name:'남부 혈교',asset:'assets/faction_marks/v3/southern-blood.png',previousAsset:'assets/faction_marks/southern-blood.svg',type:'지역 전시지휘 문양',source:'남부 감청문·소환 앵커·성위대 침투 장비',assetState:'파생 이미지 / 작전형 통합',
+      name:'남방 혈맹',asset:'assets/faction_marks/v3/southern-blood.png',previousAsset:'assets/faction_marks/southern-blood.svg',type:'지역 전시지휘 문양',source:'혈맹 감청문·소환 앵커·성위대 침투 장비',assetState:'파생 이미지 / 작전형 통합',
       firstSeen:'2016.02.21 이전',confidence:'B',usage:'충성 서약·작전표·도시 소환 앵커',accent:'#ae2330',
       symbols:[
         {label:'뒤집힌 전시 왕관',text:'교회와 성채를 종교국가가 아닌 임시 전시 지휘망 아래 묶는다는 뜻이다.'},
-        {label:'폐쇄된 혈액핵',text:'자원과 의식 재료를 남부 지휘부가 통제하는 구조를 나타낸다.'},
+        {label:'폐쇄된 혈액핵',text:'자원과 의식 재료를 혈맹 지휘부가 통제하는 구조를 나타낸다.'},
         {label:'세 작전축',text:'해안 보급·도시 소환·성위대 침투를 하나의 일정표로 연결한다.'}
-      ],note:'우시노다 혈교의 정통 휘장으로 판정되지 않았다. 계승 주장을 시각화한 지역 작전형이다.'
+      ],note:'혈교의 정통 휘장으로 판정되지 않았다. 계승 주장을 시각화한 지역 작전형이다.'
     },
     'deadzone-blood':{
       name:'데드존 혈교',asset:'assets/faction_marks/v3/deadzone-blood.png',previousAsset:'assets/faction_marks/deadzone-blood.svg',type:'지역 자치분파 문양',source:'순례자 숙영지·구호표식·2016년 결별문',assetState:'파생 이미지 / 열린 회랑형',
-      firstSeen:'2016.02.21 이전',confidence:'B',usage:'순례로·응급 숙영지·남부 명령 거부문',accent:'#9f3340',
+      firstSeen:'2016.02.21 이전',confidence:'B',usage:'순례로·응급 숙영지·혈맹 명령 거부문',accent:'#9f3340',
       symbols:[
         {label:'열린 혈액 방울',text:'혈액 의례를 유지하면서도 남부의 폐쇄 지휘를 거부한다는 표시다.'},
         {label:'관통 순례로',text:'중립 순례자에게 이동과 귀환의 가능성을 남겨두는 현장 원칙을 뜻한다.'},

@@ -28,7 +28,7 @@
     },
     'blood-cult':{
       name:'혈교',short:'혈액 계통',kind:'정식 종파',state:'confirmed',command:'교리상 로드좌 1 / 사도석 4',
-      summary:'혈액·희생·생명 매개를 중심으로 움직이는 우시노다의 정식 종파. 남부 혈교의 계승 주장은 별도 판정 대상이다.',
+      summary:'혈액·희생·생명 매개를 중심으로 움직이는 우시노다의 정식 종파. 남방 혈맹의 계승 주장은 별도 판정 대상이다.',
       history:['1986-02-01-immortality','2024-03-17-ushinoda-fabrication']
     },
     'shadow-cult':{
@@ -42,13 +42,13 @@
       history:['1975-09-12-amarion','2024-03-17-ushinoda-fabrication']
     },
     'southern-blood':{
-      name:'남부 혈교',short:'남방권 전시망',kind:'지역 전시 연합',state:'disputed',command:'남부 혈교 지휘부 / 계승 관계 미확정',
-      summary:'남방권 해안 교단과 무장세력을 충성망으로 묶은 전시 지휘체계. 우시노다 혈교의 후계임을 주장한다. 동맹·계승·흡수 중 어느 관계인지는 확정되지 않았다.',
+      name:'남방 혈맹',short:'남방권 전시망',kind:'지역 전시 연합',state:'disputed',command:'혈맹 지휘부 / 계승 관계 미확정',
+      summary:'남방권 해안 교단과 무장세력을 충성망으로 묶은 전시 지휘체계. 혈교의 후계임을 주장한다. 동맹·계승·흡수 중 어느 관계인지는 확정되지 않았다.',
       history:['2016-02-21-blood-cult-atlantic-schism','2026-08-20-northern-reversal','2027-11-02-southern-allegiance','2028-07-25-mass-summoning-rehearsal','2030-01-17-broken-crown']
     },
     'deadzone-blood':{
-      name:'데드존 혈교',short:'순례자 보호파',kind:'지역 자치 분파',state:'split',command:'2016년 이후 남부 명령 불인정',
-      summary:'중립국 순례자를 돕고 공존을 주장하는 데드존 계통. 2016년 남부 혈교 지휘부와 공개 결별했다. 같은 문양과 의례만으로 동일 명령망이라 판단할 수 없다.',
+      name:'데드존 혈교',short:'순례자 보호파',kind:'지역 자치 분파',state:'split',command:'2016년 이후 혈맹 명령 불인정',
+      summary:'중립국 순례자를 돕고 공존을 주장하는 데드존 계통. 2016년 혈맹 지휘부와 공개 결별했다. 같은 문양과 의례만으로 동일 명령망이라 판단할 수 없다.',
       history:['2016-02-21-blood-cult-atlantic-schism','2029-04-12-checkpoint-07']
     }
   };
@@ -80,11 +80,11 @@
       '각 종파는 교리상 로드좌 1석과 사도석 4석을 주장한다. 공석과 복수 주장 때문에 실제 인원수와 같지 않을 수 있다.',
       '센티넬은 계급이 아니라 로드좌 주장자에게 귀속되는 호위·전투·처형 자산이다.',
       '첫 번째 사도는 교단 창설 이전 예외개체다. 세 권능을 모두 사용한다.',
-      '남부 혈교의 우시노다 혈교 계승 주장은 미확정이다. 데드존 혈교는 2016년 이후 남부 지휘와 분리한다.'
+      '남방 혈맹의 혈교 계승 주장은 미확정이다. 데드존 혈교는 2016년 이후 혈맹 지휘와 분리한다.'
     ],
     unresolved:[
-      {id:'cult-lineage',label:'남부 혈교의 정통 계승 여부',text:'기록마다 동맹·계승·흡수라는 표현이 다르다. 계보선은 주장 상태로 유지한다.'},
-      {id:'deadzone-origin',label:'데드존 혈교의 최초 설립 계통',text:'남부 지휘에서 이탈한 날짜는 확인됐다. 그 이전의 설립 주체와 우시노다 중앙 혈교의 직접 명령 여부는 확인되지 않았다.'}
+      {id:'cult-lineage',label:'남방 혈맹의 정통 계승 여부',text:'기록마다 동맹·계승·흡수라는 표현이 다르다. 계보선은 주장 상태로 유지한다.'},
+      {id:'deadzone-origin',label:'데드존 혈교의 최초 설립 계통',text:'혈맹 지휘에서 이탈한 날짜는 확인됐다. 그 이전의 설립 주체와 혈교의 직접 명령 여부는 확인되지 않았다.'}
     ],
     getNode:id=>nodes[id]||null,
     getEdges:id=>edges.filter(edge=>edge.from===id||edge.to===id)

@@ -41,7 +41,7 @@
       {
         id:'europe',label:'유럽',code:'EUROPE SEA LOCK',viewBox:'390 55 500 280',
         status:'북해 봉쇄 유지',confidence:'관측 신뢰도 84%',
-        description:'피의 호수와 F.H.C 유럽 분석권을 중심으로 한 북해 봉쇄축.'
+        description:'피의 호수와 F.H.C 유럽 분석권을 중심으로 한 북해 봉쇄선.'
       },
       {
         id:'northamerica',label:'북미 데드존',code:'DEAD ZONE / NORTH',viewBox:'15 35 520 290',
@@ -76,22 +76,22 @@
         summary:'대흑림 성채 여섯 곳과 데드존 검문소 네 곳이 61시간 1분 동안 외부 교신을 잃었다. 복구 장부에는 상대 권역의 호출 부호가 남았다. 중계 경로는 확인되지 않았다.',
         boundary:'열 개 표식은 같은 시간대의 독립 관측점이다. 대륙 사이의 통로·항로·지리적 연결을 뜻하지 않는다.',
         points:[
-          {id:'gbf-bell-01',region:'southamerica',x:338,y:362,code:'G01',kind:'castle',label:'성채 종 장부 01',site:'대흑림 북서 성채권',callsign:'DZ-GATE-07',log:'검문소 호출 부호 1회 기록'},
-          {id:'gbf-bell-02',region:'southamerica',x:381,y:350,code:'G02',kind:'castle',label:'성채 종 장부 02',site:'대흑림 북부 성채권',callsign:'DZ-WHITE-ASH',log:'백색 재 검문 코드 3회 기록'},
-          {id:'gbf-bell-03',region:'southamerica',x:420,y:378,code:'G03',kind:'castle',label:'성채 종 장부 03',site:'대흑림 동부 성채권',callsign:'DZ-RETURN-04',log:'귀환자 검문 호출 2회 기록'},
-          {id:'gbf-bell-04',region:'southamerica',x:342,y:422,code:'G04',kind:'castle',label:'성채 종 장부 04',site:'대흑림 서부 성채권',callsign:'DZ-CHECK-11',log:'미등록 검문 호출 1회 기록'},
-          {id:'gbf-bell-05',region:'southamerica',x:394,y:453,code:'G05',kind:'castle',label:'성채 종 장부 05',site:'대흑림 내측 성채권',callsign:'DZ-GATE-07',log:'동일 호출의 역순 재생 기록'},
-          {id:'gbf-bell-06',region:'southamerica',x:371,y:501,code:'G06',kind:'castle',label:'성채 종 장부 06',site:'대흑림 남서 성채권',callsign:'DZ-WHITE-ASH',log:'폐쇄 확인문 일부 기록'},
+          {id:'gbf-bell-01',region:'southamerica',x:338,y:362,code:'G01',kind:'castle',label:'성채 타종 장부 01',site:'대흑림 북서 성채권',callsign:'DZ-GATE-07',log:'검문소 호출 부호 1회 기록'},
+          {id:'gbf-bell-02',region:'southamerica',x:381,y:350,code:'G02',kind:'castle',label:'성채 타종 장부 02',site:'대흑림 북부 성채권',callsign:'DZ-WHITE-ASH',log:'백색 재 검문 코드 3회 기록'},
+          {id:'gbf-bell-03',region:'southamerica',x:420,y:378,code:'G03',kind:'castle',label:'성채 타종 장부 03',site:'대흑림 동부 성채권',callsign:'DZ-RETURN-04',log:'귀환자 검문 호출 2회 기록'},
+          {id:'gbf-bell-04',region:'southamerica',x:342,y:422,code:'G04',kind:'castle',label:'성채 타종 장부 04',site:'대흑림 서부 성채권',callsign:'DZ-CHECK-11',log:'미등록 검문 호출 1회 기록'},
+          {id:'gbf-bell-05',region:'southamerica',x:394,y:453,code:'G05',kind:'castle',label:'성채 타종 장부 05',site:'대흑림 내측 성채권',callsign:'DZ-GATE-07',log:'동일 호출의 역순 재생 기록'},
+          {id:'gbf-bell-06',region:'southamerica',x:371,y:501,code:'G06',kind:'castle',label:'성채 타종 장부 06',site:'대흑림 남서 성채권',callsign:'DZ-WHITE-ASH',log:'폐쇄 확인문 일부 기록'},
           {id:'dz-check-a',region:'northamerica',x:142,y:183,code:'D01',kind:'checkpoint',label:'검문소 무응답 기록 A',site:'데드존 서부 검문권',callsign:'GBF-BELL-01',log:'성채 종지기 호출 2회 기록'},
           {id:'dz-check-b',region:'northamerica',x:184,y:214,code:'D02',kind:'checkpoint',label:'검문소 무응답 기록 B',site:'데드존 남서 검문권',callsign:'GBF-BELL-04',log:'서부 성채 응답문 1회 기록'},
-          {id:'dz-check-c',region:'northamerica',x:235,y:164,code:'D03',kind:'checkpoint',label:'검문소 무응답 기록 C',site:'검문소 07 인접 관측권',callsign:'GBF-BELL-06',log:'남서 성채 종 장부 문구 기록'},
+          {id:'dz-check-c',region:'northamerica',x:235,y:164,code:'D03',kind:'checkpoint',label:'검문소 무응답 기록 C',site:'검문소 07 인접 관측권',callsign:'GBF-BELL-06',log:'남서 성채 타종 장부 문구 기록'},
           {id:'dz-check-d',region:'northamerica',x:292,y:196,code:'D04',kind:'checkpoint',label:'검문소 무응답 기록 D',site:'데드존 동부 검문권',callsign:'GBF-BELL-02',log:'북부 성채 폐쇄 확인문 기록'}
         ]
       }
     ],
     markers:[
       {id:'east-overview',region:'eastasia',overview:true,x:913,y:170,type:'signal',title:'동아시아 감시권',meta:'도쿄·란저우·북부 전선',status:'감시 강화',confidence:'confirmed'},
-      {id:'europe-overview',region:'europe',overview:true,x:579,y:139,type:'incident',title:'북해 봉쇄축',meta:'피의 호수 잔류 반응',status:'봉쇄 유지',confidence:'confirmed'},
+      {id:'europe-overview',region:'europe',overview:true,x:579,y:139,type:'incident',title:'북해 봉쇄선',meta:'피의 호수 잔류 반응',status:'봉쇄 유지',confidence:'confirmed'},
       {id:'north-overview',region:'northamerica',overview:true,x:220,y:157,type:'unknown',title:'북미 데드존',meta:'내륙 관측 신호 소실',status:'응답 없음',confidence:'disputed'},
       {id:'south-overview',region:'southamerica',overview:true,x:374,y:408,type:'anomaly',title:'대흑림',meta:'내부 거리 불일치',status:'통제권 없음',confidence:'estimated'},
 
@@ -175,7 +175,7 @@
           {time:'17:18',title:'귀환자의 결투',note:'결투 영상 프레임마다 참가 인원이 달라진다.',route:[[88,420],[248,337],[409,278]],units:[{id:'T-01',x:409,y:278,status:'unstable'},{id:'R-02',x:431,y:264,status:'normal'}]},
           {time:'17:41',title:'비현실감 구역',note:'같은 경로가 교회와 검은 강 양쪽으로 이어진다.',route:[[88,420],[248,337],[409,278],[505,318]],alternate:[[409,278],[248,337]],units:[{id:'T-01',x:505,y:318,status:'unstable'},{id:'X-05',x:486,y:301,status:'unknown'}]},
           {time:'18:06',title:'검은 강',note:'강둑에서 현재 조사팀과 동일한 일련번호의 장비가 회수됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344]],units:[{id:'T-01',x:575,y:344,status:'unstable'},{id:'X-05',x:596,y:331,status:'unknown'}]},
-          {time:'18:29',title:'피의 호수 흔적',note:'순례로의 복수 보고 중 한 곳에서 북부 전쟁 사망자 장비와 남부 특수부대 표식이 함께 발견됐다. 북해 사건과의 연결은 확인되지 않았다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244]],units:[{id:'T-01',x:716,y:244,status:'unstable'}]},
+          {time:'18:29',title:'피의 호수 흔적',note:'순례로의 복수 보고 중 한 곳에서 북부 전쟁 사망자 장비와 혈맹 특수부대 표식이 함께 발견됐다. 북해 사건과의 연결은 확인되지 않았다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244]],units:[{id:'T-01',x:716,y:244,status:'unstable'}]},
           {time:'18:51',title:'성채 진입',note:'외부에서는 불이 꺼졌다. 내부 주민들은 정상적으로 생활하고 있었다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244],[876,132]],units:[{id:'T-01',x:876,y:132,status:'split'},{id:'X-05',x:854,y:149,status:'unknown'}]},
           {time:'19:00',title:'처형 명령',note:'철수 경로가 사라졌다. 등록 인원은 4명에서 5명으로 변경됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244],[876,132]],alternate:[[876,132],[575,344],[248,337]],units:[{id:'T-01',x:876,y:132,status:'split'},{id:'X-05',x:876,y:132,status:'unknown'}]}
         ]
