@@ -191,6 +191,103 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     screen.hide();
   });
 
+  check('timeline-dates-unknown-zones-and-operations',()=>{
+    const {c,host,screen}=screenHarness(context,source,stateSource);screen.show([],c.PCApp);
+    const slider=host.querySelector('#tc-map-year'),point=id=>host.querySelector(`[data-contact="${id}"]`);
+    assert.equal(slider.attrs.type,'range');assert.equal(slider.attrs.min,1975);assert.equal(slider.attrs.max,2042);assert.equal(Number(slider.value),2042);
+    assert.equal(slider.attrs['aria-valuetext'],'2042년');assert.equal(point('blood-lake-site').dataset.mapYear,'1986');
+    assert.equal(point('dead-interior').dataset.mapYear,'');assert.equal(point('unlit-fortress').dataset.mapYear,'');
+    slider.value=1985;host.emit('input',slider);
+    assert.equal(point('blood-lake-site').dataset.timeState,'future');assert.equal(point('blood-lake-site').attrs.tabindex,'-1');
+    assert.equal(point('dead-interior').dataset.timeState,'unknown');assert.equal(point('dead-interior').attrs.tabindex,'0');
+    assert.ok(host.querySelectorAll('.tc-map-zone').every(n=>n.dataset.timeState==='unknown'));
+    const operationRow=host.all().find(n=>n.tag==='a'&&n.attrs.href==='#map-room/op/op-southern-coup'&&n.closest('.tc-map-catalog-entry'));
+    assert.ok(operationRow);assert.equal(operationRow.parentElement.hidden,true);
+    slider.value=1986;host.emit('input',slider);assert.equal(point('blood-lake-site').dataset.timeState,'known');
+    slider.value=2042;host.emit('input',slider);assert.equal(operationRow.parentElement.hidden,false);
+    screen.show(['region','eastasia-northern-front'],c.PCApp);
+    assert.equal(point('north-sixth-line').dataset.mapYear,'2038');assert.equal(point('north-joint-command').dataset.mapYear,'2018');
+    assert.equal(point('north-lanzhou-perimeter').dataset.mapYear,'');screen.hide();
+    // 구역에 날짜가 주어졌을 때도 표식과 같은 연도 판정을 쓴다.
+    const fixture={...context,ProjectCurseMapRoom:{...context.ProjectCurseMapRoom,zones:context.ProjectCurseMapRoom.zones.map((z,i)=>i===0?{...z,date:'2008.09.06'}:z)}};
+    const next=screenHarness(fixture,source,stateSource);next.screen.show([],next.c.PCApp);const range=next.host.querySelector('#tc-map-year');range.value=2007;next.host.emit('input',range);
+    assert.equal(next.host.querySelector('.tc-map-zone').dataset.timeState,'future');next.screen.hide();
+  });
+  check('timeline-play-reduced-and-hidden-cleanup',()=>{
+    const {c,host,screen,timers,timeouts}=screenHarness(context,source,stateSource);screen.show([],c.PCApp);
+    const click=name=>host.emit('click',host.querySelector(`[data-action="${name}"]`));click('year-play');
+    assert.equal(Number(host.querySelector('#tc-map-year').value),1975);assert.equal(timers.size,1);
+    for(let i=0;i<67;i++)for(const fn of [...timers.values()])fn();
+    assert.equal(Number(host.querySelector('#tc-map-year').value),2042);assert.equal(timers.size,0);
+    click('year-play');c.PCApp.fx=()=> 'reduced';c.document.emit('pc:fx',c.document,undefined,{mode:'reduced'});
+    assert.equal(timers.size,0);assert.equal(timeouts.size,0);click('year-play');assert.equal(Number(host.querySelector('#tc-map-year').value),2042);assert.equal(timers.size,0);
+    c.PCApp.fx=()=> 'full';c.document.emit('pc:fx',c.document,undefined,{mode:'full'});click('year-play');
+    c.document.hidden=true;c.document.emit('visibilitychange',c.document);assert.equal(timers.size,0);assert.equal(timeouts.size,0);
+    c.document.hidden=false;screen.show([],c.PCApp);click('year-play');screen.hide();assert.equal(timers.size,0);assert.equal(timeouts.size,0);
+  });
+  check('affiliation-frames-and-visible-operational-key',()=>{
+    const d=context.ProjectCurseMapRoom,fixture={...context,ProjectCurseMapRoom:{...d,markers:[
+      {...d.markers[0],affiliation:'friendly'}, {...d.markers[1],affiliation:'hostile'}, {...d.markers[2],type:'settlement'}, {...d.markers[3],type:'facility'}]}};
+    const {c,host,screen}=screenHarness(fixture,source,stateSource);screen.show([],c.PCApp);
+    for(const [id,frame] of [['east-overview','friendly'],['europe-overview','hostile'],['north-overview','civilian'],['south-overview','unknown']])assert.equal(host.querySelector(`[data-contact="${id}"]`).dataset.affiliation,frame);
+    const key=host.querySelector('.tc-map-frame-legend');for(const label of ['아군','적대','민간','미확인'])assert.ok(key.visibleText(true).includes(label));
+    assert.ok(host.querySelectorAll('.tc-map-frame-word').every(n=>n.textContent.length<=2));
+    assert.ok(decodeURIComponent(host.querySelector('.tc-map-frame-icon').attrs.src).includes('stroke-dasharray="3 3"'));screen.hide();
+  });
+  check('fog-confidence-order-and-symbol-layer',()=>{
+    const {c,host,screen}=screenHarness(context,source,stateSource),values=[];
+    for(const d of context.ProjectCurseMapRoom.drilldowns){screen.show(['region',d.id],c.PCApp);const fog=host.querySelector('.tc-map-fog');
+      assert.equal(Number(fog.dataset.confidence),parseInt(d.confidence));const opacity=Number(fog.attrs.style.split(':')[1]);values.push({confidence:parseInt(d.confidence),opacity});
+      assert.ok(decodeURIComponent(fog.attrs.src).includes('feTurbulence'));assert.ok(host.querySelectorAll('.tc-map-framed').length===d.sites.length);
+    }
+    values.sort((a,b)=>a.confidence-b.confidence);assert.equal(values[0].confidence,7);assert.equal(values.at(-1).confidence,84);
+    for(let i=1;i<values.length;i++)assert.ok(values[i-1].opacity>values[i].opacity);
+    const css=read('assets/app/css/screens/map.css');assert.match(css,/\.tc-map-fog\s*\{[^}]*z-index:1/);assert.match(css,/\.tc-map-points\s*\{[^}]*z-index:3/);screen.hide();
+  });
+  check('observation-signal-loss-silence-and-reduced',()=>{
+    const {c,host,screen,timeouts,observers}=screenHarness(context,source,stateSource);screen.show(['synchrony','three-night-silence'],c.PCApp);
+    const points=()=>context.ProjectCurseMapRoom.synchronyEvents[0].points.map(p=>host.querySelector(`[data-contact="${p.id}"]`));
+    assert.equal(points().length,10);assert.ok(points().every(n=>n.querySelector('.tc-map-signal-line')));
+    const fire=()=>{const [id,fn]=[...timeouts][0];timeouts.delete(id);fn();};assert.ok([...timeouts.values()][0].delay>=30000);fire();
+    assert.equal(host.querySelectorAll('[data-signal-state="lost"]').length,1);assert.equal([...timeouts.values()][0].delay,3400);fire();assert.equal(host.querySelectorAll('[data-signal-state="lost"]').length,0);
+    c.document.documentElement.dataset.silence='on';for(const observer of observers)observer.callback();
+    assert.ok(points().every(n=>n.dataset.signalState==='silent'&&n.textContent.includes('무응답')));
+    c.PCApp.fx=()=> 'reduced';c.document.emit('pc:fx',c.document,undefined,{mode:'reduced'});assert.equal(timeouts.size,0);assert.ok(points().every(n=>n.querySelector('.tc-map-signal-line')));
+    c.document.documentElement.dataset.silence='off';for(const observer of observers)observer.callback();assert.ok(points().every(n=>n.dataset.signalState==='active'));
+    assert.match(read('assets/app/css/screens/map.css'),/html\[data-fx="reduced"\] \.tc-map-signal-flow/);
+    screen.hide();assert.equal(observers.size,0);assert.equal(timeouts.size,0);
+  });
+  check('preview-explicit-evidence-and-known-metadata-only',()=>{
+    const {c,host,screen,navigations}=screenHarness(context,source,stateSource);screen.show(['region','eastasia-northern-front'],c.PCApp);
+    const click=id=>host.emit('click',host.querySelector(`[data-contact="${id}"]`));click('north-distributed-nodes');
+    const preview=host.querySelector('.tc-map-preview'),figure=preview.querySelector('figure'),visual=context.ProjectCurseMapRoom.drilldowns[0].visual;
+    assert.equal(figure.dataset.record,visual.assetId);assert.equal(figure.dataset.dtg,undefined);assert.equal(figure.dataset.place,undefined);
+    assert.equal(figure.attrs['data-record'],visual.assetId);assert.equal(figure.querySelector('.tc-evidence-media img').closest('a'),null);
+    assert.ok(preview.textContent.includes('촬영 시각: 미상'));assert.equal(navigations.length,0);
+    const slider=host.querySelector('#tc-map-year');slider.value=1985;host.emit('input',slider);assert.equal(preview.hidden,true);click('north-distributed-nodes');assert.equal(preview.hidden,true);
+    slider.value=2042;host.emit('input',slider);
+    click('north-lanzhou-perimeter');assert.ok(preview.textContent.includes('연결된 현장 사진 없음'));assert.equal(preview.querySelector('img'),null);
+    host.emit('keydown',preview.querySelector('h3'),'Escape');assert.equal(preview.hidden,true);screen.hide();
+    const d=context.ProjectCurseMapRoom,fixture={...context,ProjectCurseMapRoom:{...d,drilldowns:d.drilldowns.map((item,i)=>i===0?{...item,visual:{...item.visual,dtg:'시험 시각',place:'시험 위치',record:'시험 기록'}}:item)}};
+    const next=screenHarness(fixture,source,stateSource);next.screen.show(['region',d.drilldowns[0].id],next.c.PCApp);next.host.emit('click',next.host.querySelector('[data-contact="north-distributed-nodes"]'));
+    const f=next.host.querySelector('.tc-map-preview figure');assert.equal(f.attrs['data-dtg'],'시험 시각');assert.equal(f.attrs['data-place'],'시험 위치');assert.equal(f.attrs['data-record'],'시험 기록');next.screen.hide();
+    screen.show(['region','eastasia-northern-front','site','north-distributed-nodes'],c.PCApp);host.emit('click',host.querySelector('[data-action="back"]'));equal(navigations.at(-1),['back','map-room','region','eastasia-northern-front']);screen.hide();
+  });
+  check('zoom-wheel-pinch-drag-keyboard-reset-and-disposal',()=>{
+    const {c,host,screen}=screenHarness(context,source,stateSource);screen.show(['region','world'],c.PCApp);
+    const canvas=host.querySelector('.tc-map-canvas[data-map-id]'),box=()=>canvas.dataset.viewbox.split(' ').map(Number),initial=box();
+    const event=(type,extra)=>host.emit(type,canvas,undefined,{},extra),pointer=(type,id,x,y)=>event(type,{pointerId:id,clientX:x,clientY:y});
+    assert.equal(event('wheel',{deltaY:-200,deltaMode:0,clientX:400,clientY:200}).defaultPrevented,true);assert.ok(box()[2]<initial[2]);
+    assert.doesNotMatch(host.textContent,/\[object /);
+    const before=box();pointer('pointerdown',1,400,200);pointer('pointermove',1,420,215);pointer('pointerup',1,420,215);assert.ok(box()[0]<before[0]);
+    const oldWidth=box()[2];pointer('pointerdown',1,300,200);pointer('pointerdown',2,500,200);pointer('pointermove',2,600,200);assert.ok(box()[2]<oldWidth);pointer('pointerup',2,600,200);pointer('pointerup',1,300,200);
+    host.emit('keydown',canvas,'0');equal(box(),initial);host.emit('keydown',canvas,'+');const left=box()[0];host.emit('keydown',canvas,'ArrowRight');assert.ok(box()[0]>left);
+    host.emit('click',host.querySelector('[data-action="zoom-reset"]'));equal(box(),initial);
+    for(let i=0;i<30;i++)host.emit('keydown',canvas,'+');assert.equal(box()[2],initial[2]/6);assert.equal(canvas.querySelector('.tc-map-frame-icon').attrs.style,undefined);
+    screen.hide();for(const name of ['wheel','pointerdown','pointermove','pointerup','pointercancel'])assert.equal(host.events.get(name).size,0);
+    screen.show(['region','world'],c.PCApp);assert.equal(host.events.get('wheel').size,1);screen.hide();
+    const css=read('assets/app/css/screens/map.css');assert.match(css,/\.tc-map-canvas\[data-map-id\][^}]*touch-action:none/);assert.match(css,/\.tc-map-frame-icon\s*\{[^}]*width:36px/);
+  });
 }
 
 // 실제 화면 함수를 실행하는 작은 DOM 대역. 배치·그림 검증을 대신하지 않는다.
@@ -200,7 +297,7 @@ export function screenHarness(context,source,stateSource='') {
   class Target {
     constructor(){this.events=new Map();}
     addEventListener(type,fn,opts={}){if(!this.events.has(type))this.events.set(type,new Set());this.events.get(type).add(fn);opts.signal?.addEventListener('abort',()=>this.events.get(type).delete(fn),{once:true});}
-    emit(type,target,key,detail={}){const event={type,target,key,detail,button:0,defaultPrevented:false,preventDefault(){this.defaultPrevented=true;}};this.dispatchEvent(event);return event;}
+    emit(type,target,key,detail={},extra={}){const event={type,target,key,detail,button:0,...extra,defaultPrevented:false,preventDefault(){this.defaultPrevented=true;}};this.dispatchEvent(event);return event;}
     dispatchEvent(event){for(const fn of [...this.events.get(event.type)||[]])fn(event);}
   }
   const dataKey=key=>key.replace(/^data-/,'').replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase());
@@ -210,9 +307,9 @@ export function screenHarness(context,source,stateSource='') {
       this.classes=new Set([...spec.matchAll(/\.([\w-]+)/g)].map(m=>m[1]));this.dataset={};this.attrs={};this.children=[];this.isConnected=true;
       this.classList={add:(...names)=>names.forEach(name=>this.classes.add(name)),remove:(...names)=>names.forEach(name=>this.classes.delete(name)),contains:name=>this.classes.has(name)};
       for(const [key,value] of Object.entries(props||{})){if(value==null||value===false)continue;if(key==='text')this.textContent=value;else if(key==='dataset')Object.assign(this.dataset,value);else this.setAttribute(key,value);}
-      this.append(...children);
+      this.append(...children.flat(Infinity).filter(x=>x!=null&&x!==false));
     }
-    append(...items){for(const child of items.flat(Infinity).filter(x=>x!=null&&x!==false)){if(child instanceof Element)child.parentElement=this;this.children.push(child);}}
+    append(...items){for(const child of items){if(child instanceof Element)child.parentElement=this;this.children.push(child instanceof Element?child:String(child));}}
     replaceChildren(...items){for(const child of this.children)if(child instanceof Element)child.isConnected=false;this.children=[];this.append(...items);}
     setAttribute(key,value){this.attrs[key]=value;if(key==='class')String(value).split(/\s+/).forEach(name=>this.classes.add(name));else if(key.startsWith('data-'))this.dataset[dataKey(key)]=value;else if(['value','disabled','hidden','id','open'].includes(key))this[key]=value;}
     getAttribute(key){return key==='class'?[...this.classes].join(' '):key.startsWith('data-')?this.dataset[dataKey(key)]:this.attrs[key];}
@@ -232,22 +329,30 @@ export function screenHarness(context,source,stateSource='') {
     contains(node){return this.all().includes(node);}
     closest(selector){return this.matches(selector)?this:this.parentElement?.closest(selector)||null;}
     focus(){c.document.activeElement=this;}
+    getBoundingClientRect(){return {left:0,top:0,width:800,height:400};}
+    setPointerCapture(id){this.captures||=new Set();this.captures.add(id);}
+    hasPointerCapture(id){return this.captures?.has(id)||false;}
+    releasePointerCapture(id){this.captures?.delete(id);}
     select(){}
     visibleText(brief=false){if(this.hidden||brief&&this.classes.has('tc-full-only'))return '';return this.children.map(child=>child instanceof Element?child.visibleText(brief):String(child)).join(' ');}
   }
-  const h=(...args)=>new Element(...args),timers=new Map(),timeouts=new Map(),frames=new Map(),audio=[],threats=[],navigations=[];
+  const h=(...args)=>new Element(...args),timers=new Map(),timeouts=new Map(),frames=new Map(),observers=new Set(),audio=[],threats=[],navigations=[];
   const storage=()=>{const values=new Map();return {getItem:key=>values.get(key)||null,setItem:(key,value)=>values.set(key,value),removeItem:key=>values.delete(key)};};
   c={...context,AbortController,document:new Target(),localStorage:storage(),sessionStorage:storage(),
     CustomEvent:class{constructor(type,props){this.type=type;Object.assign(this,props);}},
     getComputedStyle:()=>({getPropertyValue:()=> '#8d9c77'}),scrollY:0,scrollTo(_x,y){this.scrollY=y;},location:{href:'http://localhost/index.html#map-room'},navigator:{},
     setInterval:fn=>{const id=++nextTimer;timers.set(id,fn);return id;},clearInterval:id=>timers.delete(id),
-    setTimeout:fn=>{const id=++nextTimer;timeouts.set(id,fn);return id;},clearTimeout:id=>timeouts.delete(id),
+    setTimeout:(fn,delay)=>{const id=++nextTimer;fn.delay=delay;timeouts.set(id,fn);return id;},clearTimeout:id=>timeouts.delete(id),
     requestAnimationFrame:fn=>{const id=++nextTimer;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)};
   const media=new Target();media.matches=false;c.matchMedia=()=>media;
+  c.document.documentElement=h('html');
+  c.MutationObserver=class{constructor(callback){this.callback=callback;}observe(){observers.add(this);}disconnect(){observers.delete(this);}};
   c.PCAudio={cue:name=>audio.push(name)};
   c.PCApp={h,screen:value=>{screen=value;},href:(...parts)=>'#'+parts.join('/'),go:(...parts)=>navigations.push(parts),back:id=>navigations.push(['back',id]),setTitle(){},append:(el,children)=>el.append(children),clear:el=>{el.replaceChildren();return el;},tag:text=>h('span.tc-tag',null,text),verdictTone:()=> 'info',missing:(code,key,text)=>h('div.tc-missing',null,code,key,text),
     screenHead:(_id,options={})=>h('header.tc-screenhead',null,h('p.tc-screenhead-code',null,'CH SCREEN'),h('h1',{text:options.title}),h('p',{text:options.desc}),h('dl.tc-screenhead-meta',null,options.meta?.map(([term,value])=>h('div',null,term,value)))),img:(src,props={})=>h('img',{alt:'',...props,src})};
+  c.PCApp.append=(el,children)=>el.append(...children.flat(Infinity).filter(x=>x!=null&&x!==false&&x!==''));
+  c.PCApp.back=(...parts)=>navigations.push(['back',...parts]);
   c.window=c;vm.createContext(c);if(stateSource)vm.runInContext(stateSource,c);vm.runInContext(source,c);
   const host=h(`main#${screen.id}`);screen.mount(host);
-  return {c,host,screen,timers,timeouts,frames,media,audio,threats,navigations};
+  return {c,host,screen,timers,timeouts,frames,media,observers,audio,threats,navigations};
 }
