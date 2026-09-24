@@ -3,14 +3,14 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 
-// 옛 화면의 실제 대본과 대조한다. 기대 문장을 별도 사본으로 만들지 않는다.
+// 옛 화면의 실제 대본과 대조한다. 승인된 화면 안내만 지정된 위치에서 새 문구로 대조한다.
 export default function ({ add, read, context, app, archiveIds, opIds, historyIds }) {
   const source = read('assets/app/js/screens/archive.js');
   const css = read('assets/app/css/screens/archive.css');
   new vm.Script(source, { filename: 'archive.js' });
   add('two-screen-registration', ['archive-entry', 'media-audit'].every(id => source.includes(`PC.screen({ id: '${id}'`)));
   add('safe-dom-and-disposal', !/innerHTML|outerHTML\s*=|insertAdjacentHTML/.test(source) && ['AbortController', 'restoreVault?.()', 'releaseMedia', 'observer.disconnect()', 'auditHide()'].every(s => source.includes(s)));
-  add('motion-playback-and-sound-preserved', source.includes("life.on(doc, 'pc:fx', syncFx)") && source.includes("life.on(motion, 'change', syncFx)") && !source.includes('toggle.disabled = motion.matches') && source.includes('영상 대본 전체 열람') && css.includes('html[data-fx="reduced"] .tc-arc') && !css.includes('@media (prefers-reduced-motion: reduce)'));
+  add('motion-playback-and-sound-preserved', source.includes("life.on(doc, 'pc:fx', syncFx)") && source.includes("life.on(motion, 'change', syncFx)") && !source.includes('toggle.disabled = motion.matches') && source.includes('영상 대본 전체 읽기') && css.includes('html[data-fx="reduced"] .tc-arc') && !css.includes('@media (prefers-reduced-motion: reduce)'));
   // html의 효과·밀도 속성은 읽되 반드시 기록보관소 아래에만 적용해야 한다.
   const scopedCss = css.replace(/html\[data-fx="reduced"\]\s+(?=\.tc-arc)/g, '').replace(/html:not\(\[data-density="full"\]\)\s+(?=\.tc-arc)/g, '');
   add('styles-scoped', !/(?:^|\})\s*(?:body|html|:root|\.record-page|\.page-tab|\.tc-btn|\.tc-row)\b/m.test(scopedCss));
@@ -21,10 +21,21 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   const oldChapters = vm.runInNewContext(read('tools/fixtures/legacy-app/assets/js/pages/archive-consolidation.js').match(/const storyChapters\s*=\s*(\[[\s\S]*?\n\s*\]);/)[1]);
   add('chapter-prose-verbatim', JSON.stringify(oldChapters) === JSON.stringify(migrated.chapters));
   const oldPages = vm.runInNewContext(read('tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js').match(/    const pages = (\[[\s\S]*?\n\]);/)[1]);
-  add('cults-storyboard-verbatim', JSON.stringify(oldPages) === JSON.stringify(context.ProjectCurseLegacyCinematicSources.cults));
+  // 마지막 쪽은 영상 속 대사가 아니라 화면 닫기 안내다. 나머지 대사·장면·순서는 그대로 대조한다.
+  const returnPage = oldPages.at(-1);
+  const originalReturn = returnPage.group === 'return' && returnPage.title === '기록보관소 복귀' && JSON.stringify(returnPage.lines) === JSON.stringify(['손상 영상 첨부 확인이 끝났습니다.', '화면 선택 시 기록보관소 목록으로 복귀합니다.']);
+  const expectedPages = oldPages.map(page => page === returnPage ? { ...page, title: '기록으로 돌아가기', lines: ['손상된 첨부 영상 확인이 끝났습니다.', '화면을 누르면 보고 있던 기록으로 돌아갑니다.'] } : page);
+  add('cults-storyboard-preserved-with-approved-return-copy', originalReturn && JSON.stringify(expectedPages) === JSON.stringify(context.ProjectCurseLegacyCinematicSources.cults));
   const oldCopy = (read('tools/fixtures/legacy-app/assets/js/main.js') + read('tools/fixtures/legacy-app/assets/js/pages/archive-document.js') + read('tools/fixtures/legacy-app/assets/js/pages/archive-consolidation.js') + read('tools/fixtures/legacy-app/assets/js/pages/media-clearance.js')).replace(/<\/?strong>/g, '');
   const copyStrings = value => typeof value === 'string' ? [value] : Object.values(value).flatMap(copyStrings);
-  add('viewer-copy-verbatim', copyStrings(migrated.copy).every(text => oldCopy.includes(text)));
+  const approvedCopy = {
+    verdictIntro: ['직접 확인한 결과만 열린다. 최종 판정 순간의 선택과 측정값은 원본 기록과 분리한 판정 사본으로 보존된다.', '직접 확인한 결과만 열린다. 최종 판정 순간의 선택과 측정값은 원본 기록과 분리한 판정 기록으로 보존된다.'],
+    operationReady: ['모든 정보가 복구됐다. 중앙 기록을 바꾸지 않는 현장 판정을 선택하라.', '모든 정보가 복구됐습니다. 중앙 기록을 바꾸지 않는 현장 판정을 고르십시오.'],
+    operationSaved: [' / 현재 단말 사본에만 저장됨 · 중앙 기록 변화 없음.', ' / 현재 단말 기록에만 저장됨 · 중앙 기록 변화 없음.'],
+    sourceIntro: ['현재 문서에 사용된 이미지의 출처 등급과 원본 대조 가능 여부를 표시한다. 복원 추정본은 원본 기록을 대신하지 않는다.', '현재 문서에 사용된 이미지의 출처 등급을 표시하고, 원본과 맞춰 볼 수 있는지 알려 준다. 복원 추정본은 원본 기록을 대신하지 않는다.'],
+    comparisonNote: ['비교 경계를 움직여 두 사본의 크롭·색상·정보 손실을 직접 대조할 수 있다.', '비교 경계를 움직여 두 그림의 잘린 부분·색상·빠진 정보를 직접 맞춰 볼 수 있다.']
+  };
+  add('viewer-copy-approved-wording', Object.entries(approvedCopy).every(([key, [before, after]]) => oldCopy.includes(before) && migrated.copy[key] === after) && Object.entries(migrated.copy).every(([key, value]) => Object.hasOwn(approvedCopy, key) ? value === approvedCopy[key][1] : copyStrings(value).every(text => oldCopy.includes(text))));
 
   const storage = new Map(), events = [];
   const test = { console, localStorage: { getItem: k => storage.get(k) || null, setItem: (k, v) => storage.set(k, v), removeItem: k => storage.delete(k) }, document: { dispatchEvent: e => events.push(e), addEventListener() {} }, CustomEvent: class { constructor(type, init) { this.type = type; this.detail = init?.detail; } } };
@@ -52,7 +63,17 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   add('registry-before-screen-no-old-runtime', app.indexOf('assets/app/js/cinematic/record-cinematic-registry.js') > moduleStart && app.indexOf('assets/app/js/cinematic/cinematic-sakuma.js') < screenStart && !app.includes('assets/js/core/record-cinematic-runtime.js'));
   add('restored-record-volumes', expected.every(id => { const cfg = registry.get(id); return cfg.introVolume === .68 && cfg.bgmVolume >= .54 && cfg.bgmVolume <= .78 && cfg.transitionVolume === .78; }) && source.includes('radio.volume = .17') && !source.includes('Math.min(.25'));
 
-  // 같은 완료 상태에서 새 읽기 코드와 옛 보고서 생성 결과를 대조한다.
+  // 읽음 표 머리·제출 유형·저장 안내 세 곳만 바꾼다. 보고 내용·판정·수치는 모두 그대로 대조한다.
+  function approvedVerdictDocument(document) {
+    const expectedDocument = JSON.parse(JSON.stringify(document));
+    assert.equal(expectedDocument.telemetry[3][0], '열람 상태');
+    expectedDocument.telemetry[3][0] = '읽음 상태';
+    assert.equal(expectedDocument.sections[0].record.type, '현장 판정자 제출 사본');
+    expectedDocument.sections[0].record.type = '현장 판정자 제출 기록';
+    assert.equal(expectedDocument.sections[1].paragraphs[0], '아래 내용은 최종 판정이 내려진 순간의 선택 기록이다. 이후 작전을 다시 시작해도 이 사본은 바뀌지 않는다.');
+    expectedDocument.sections[1].paragraphs[0] = '아래 내용은 최종 판정이 내려진 순간의 선택 기록이다. 이후 작전을 다시 시작해도 이 기록은 바뀌지 않는다.';
+    return expectedDocument;
+  }
   const states = {};
   Object.entries(test.ProjectCursePilgrimageData.scenarios).forEach(([id, scenario]) => { states[id] = { schema: 2, scenarioId: id, status: 'complete', step: scenario.stages.length - 1, metrics: Object.fromEntries(scenario.metrics.map(m => [m.key, 51])), violations: 1, choices: scenario.stages.map(s => ({ stage: s.id, choice: s.choices[0].id, ruleOutcome: 'unknown' })), ending: Object.keys(scenario.endings)[0], startedAt: '2042-01-01T00:00:00.000Z', updatedAt: '2042-01-01T01:00:00.000Z' }; });
   storage.set('pc_pilgrimage_states_v2', JSON.stringify({ schema: 2, states }));
@@ -64,10 +85,10 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   vm.runInContext(source.replace("  PC.screen({ id: 'archive-entry'", `${hook}\n  PC.screen({ id: 'archive-entry'`), test);
   test.__archiveTest.loadVerdicts();
   const reportIds = test.ProjectCurseVerdictArchiveState.list().filter(e => e.unlocked).map(e => e.id);
-  const mismatches = reportIds.filter(id => JSON.stringify(test.ProjectCurseVerdictArchiveState.getDocument(id)) !== JSON.stringify(test.__archiveTest.verdictDocument(id)));
+  const mismatches = reportIds.filter(id => JSON.stringify(approvedVerdictDocument(test.ProjectCurseVerdictArchiveState.getDocument(id))) !== JSON.stringify(test.__archiveTest.verdictDocument(id)));
   add('saved-verdict-render-data-parity', reportIds.length === 3 && !mismatches.length, mismatches.join(', '));
   const existingOwner = test.ProjectCurseVerdictArchiveState;
-  const expectedReports = Object.fromEntries(reportIds.map(id => [id, JSON.stringify(existingOwner.getDocument(id))]));
+  const expectedReports = Object.fromEntries(reportIds.map(id => [id, JSON.stringify(approvedVerdictDocument(existingOwner.getDocument(id)))]));
   vm.runInContext('window.ProjectCurseVerdictArchiveState = null;', test);
   test.__archiveTest.loadVerdicts();
   add('independent-verdict-adapter-parity', reportIds.every(id => JSON.stringify(test.__archiveTest.verdictDocument(id)) === expectedReports[id]));
@@ -207,6 +228,27 @@ export function screenRuntime({ context, read, screenName = 'archive' }) {
 
 function verifyArchivePlayback({ add, read, context }) {
   const check = (name, run) => { try { run(); add(name, true); } catch (error) { add(name, false, error.stack); } };
+  check('ui-labels-preserve-source-records', () => {
+    const r = screenRuntime({ read, context });
+    const originalRecords = JSON.stringify(r.c.ProjectCurseArchive.publicRecords);
+    const regionRecords = r.c.ProjectCurseArchive.publicRecords.filter(record => record.category === 'region');
+    assert.ok(regionRecords.length > 0, '지역 분류 기록이 있어야 한다');
+    r.show([]);
+    assert.ok(r.host.querySelectorAll('.tc-arc-legend-row').every(row => !/열람|대조/.test(row.textContent)), '출처 범례도 쉬운 말로 표시한다');
+    r.click(r.host.querySelector('[data-arc-filter="region"]'));
+    const input = r.host.querySelector('#tc-arc-search'); input.value = '지역'; input.emit('input');
+    const rows = r.host.querySelectorAll('.tc-arc-list [data-arc-record]');
+    assert.equal(rows.length, regionRecords.length, '표시된 분류 이름으로도 기록을 찾는다');
+    assert.ok(rows.every(row => row.querySelector('.tc-row-meta').textContent.includes('지역')));
+    for (const record of regionRecords) {
+      r.show([record.id]);
+      assert.equal(r.host.querySelector('h1').textContent, record.title, '기록 제목은 고유명사로 보존한다');
+      const term = r.host.querySelector('.tc-arc-cover').querySelectorAll('dt').find(el => el.textContent === '분류');
+      assert.equal(term.parentNode.querySelector('dd').textContent, '지역');
+    }
+    assert.equal(JSON.stringify(r.c.ProjectCurseArchive.publicRecords), originalRecords, '표시 문구가 원본 자료를 바꾸지 않는다');
+    r.screen.hide(); assert.equal(r.timers.size, 0);
+  });
   check('four-modal-playback-lifecycles', () => {
     const r = screenRuntime({ read, context });
     for (const id of ['Cults_871104', 'Immortality_860201', 'Ferals_860722', 'Sakuma_Tape_991028']) {

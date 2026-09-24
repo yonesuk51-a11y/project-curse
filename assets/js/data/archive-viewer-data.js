@@ -1,4 +1,4 @@
-// Existing archive copy and local operation definitions; no new setting prose.
+// 기존 기록보관소의 화면 문구와 현장 작전 정의다. 설정 문장은 추가하지 않는다.
 (function(root){
   'use strict';
   const chapters=[
@@ -228,32 +228,36 @@
     return {
       sourceId:id,scenarioId:entry.scenarioId,unlockScenario:entry.unlockScenario||null,presentation:'verdict',theme:entry.theme,code:entry.code,title:entry.title,
       summary:entry.summary,date:new Date(snapshot.unlockedAt).toLocaleString('ko-KR'),owner:'U.A.C 현장 판정 보관소',classification:'단말 보관 판정·중앙 기록 미승인',
-      telemetry:[['판정 상태',ending.status],['선택 기록',`${choiceRows.length} / ${scenario.stages.length}`],['규칙 위반',`${snapshot.violations}회`],['열람 상태',entry.unread?'새 기록':'확인함']],
+      telemetry:[['판정 상태',ending.status],['선택 기록',`${choiceRows.length} / ${scenario.stages.length}`],['규칙 위반',`${snapshot.violations}회`],['읽음 상태',entry.unread?'새 기록':'확인함']],
       sections:[
-        {title:'판정 요약',record:{code:'FIELD VERDICT',type:'현장 판정자 제출 사본',author:'현재 단말 현장 판정 저장소',recipient:'단말 관제 기록',evidence:'저장된 선택·측정값',limit:scenario.canonBoundary},paragraphs:[entry.summary,ending.summary],warning:`단말 관제 결과: ${ending.consequence} ${scenario.canonBoundary}`},
-        {title:'현장 선택 기록',paragraphs:['아래 내용은 최종 판정이 내려진 순간의 선택 기록이다. 이후 작전을 다시 시작해도 이 사본은 바뀌지 않는다.'],table:{headers:['단계','현장','선택한 행동','규칙 판정'],rows:choiceRows}},
+        {title:'판정 요약',record:{code:'FIELD VERDICT',type:'현장 판정자 제출 기록',author:'현재 단말 현장 판정 저장소',recipient:'단말 관제 기록',evidence:'저장된 선택·측정값',limit:scenario.canonBoundary},paragraphs:[entry.summary,ending.summary],warning:`단말 관제 결과: ${ending.consequence} ${scenario.canonBoundary}`},
+        {title:'현장 선택 기록',paragraphs:['아래 내용은 최종 판정이 내려진 순간의 선택 기록이다. 이후 작전을 다시 시작해도 이 기록은 바뀌지 않는다.'],table:{headers:['단계','현장','선택한 행동','규칙 판정'],rows:choiceRows}},
         {title:'최종 측정값',paragraphs:['수치는 현장 판정이 끝난 시점의 값이다. 서로 다른 시점의 결과를 직접 비교할 때는 선택 기록도 함께 확인한다.'],table:{headers:['항목','최종 값'],rows:metricRows}},
         {title:'분석과 후속 조치',paragraphs:[entry.finding,entry.directive],quote:entry.hidden}
       ]
     };
   }
 
-  root.ProjectCurseArchiveViewerData=Object.freeze({chapters,operation,copy:{
+  root.ProjectCurseArchiveViewerData=Object.freeze({chapters,operation,
+  sourceDescriptions:Object.freeze({
+    STABILIZED:'원본을 보존한 채 읽기 편하게 보정한 그림',
+    UNVERIFIED:'기존 기록에 쓰였지만 원본의 출처가 아직 확인되지 않은 그림'
+  }),copy:{
   "indexIntro": "처음에는 한 사건처럼 보였던 기록들이 시간이 지나며 같은 붕괴의 일부로 이어졌다. 위에서 아래로 읽으면 금지 기술의 실험부터 남부 전쟁까지의 흐름을 따라갈 수 있다.",
-  "verdictIntro": "직접 확인한 결과만 열린다. 최종 판정 순간의 선택과 측정값은 원본 기록과 분리한 판정 사본으로 보존된다.",
+  "verdictIntro": "직접 확인한 결과만 열린다. 최종 판정 순간의 선택과 측정값은 원본 기록과 분리한 판정 기록으로 보존된다.",
   "verdictManage": "현재 작전 진행을 초기화해도 여기 보존된 판정 기록은 남는다. 아래 작업은 판정 보관소에만 적용된다.",
   "operationPending": "세 정보 경로를 모두 회수해야 현장 지휘 판정을 기록할 수 있다.",
-  "operationReady": "모든 정보가 복구됐다. 중앙 기록을 바꾸지 않는 현장 판정을 선택하라.",
-  "operationSaved": " / 현재 단말 사본에만 저장됨 · 중앙 기록 변화 없음.",
+  "operationReady": "모든 정보가 복구됐습니다. 중앙 기록을 바꾸지 않는 현장 판정을 고르십시오.",
+  "operationSaved": " / 현재 단말 기록에만 저장됨 · 중앙 기록 변화 없음.",
   "mediaIntro": "파일 존재, 원본 계보, 제작 출처와 공개 허가는 서로 다른 판정이다. 이 화면은 자동 삭제나 승인 없이 확인해야 할 근거와 실제 사용 위치만 정리한다.",
   "mediaFooter": "지옥.zip과 Pictures 계열은 분위기 참고용이다. 개별 파일 승인 전에는 공개 기록, 세력 문양, 증거 이미지로 편입하지 않는다.",
   "mediaBoundary": [["FILE REGISTERED","해시·용량·사용처 확인"],["SOURCE IDENTIFIED","제작자·원출처·계보 증빙"],["RELEASE PERMISSION","라이선스·재배포 허가 문서"]],
   "mediaEvidenceState": {"CLEARED":"코드 기반 인터페이스 마스터","PROJECT_GENERATED":"생성 기록과 브리프 보존","SOURCE_REVIEW":"원본 계보 확인 / 재배포 범위 미확인","LICENSE_REVIEW":"제작자·원출처·허가 증빙 미등록"},
   "securityTitle": "F.H.C 제한 기록 / 부분 공개",
   "securityNote": "※ 검열 구간은 원문 일부가 삭제된 상태로 표시된다.",
-  "sourceIntro": "현재 문서에 사용된 이미지의 출처 등급과 원본 대조 가능 여부를 표시한다. 복원 추정본은 원본 기록을 대신하지 않는다.",
+  "sourceIntro": "현재 문서에 사용된 이미지의 출처 등급을 표시하고, 원본과 맞춰 볼 수 있는지 알려 준다. 복원 추정본은 원본 기록을 대신하지 않는다.",
   "securityFacts": [["보안","F.H.C 제한"],["접근","부분 공개"],["흔적","활성"],["무결성","61%"]],
-  "comparisonNote": "비교 경계를 움직여 두 사본의 크롭·색상·정보 손실을 직접 대조할 수 있다.",
+  "comparisonNote": "비교 경계를 움직여 두 그림의 잘린 부분·색상·빠진 정보를 직접 맞춰 볼 수 있다.",
   "reconstructionNote": "이 이미지는 현존 원본이 아니다. 실제 원본이 확보되기 전까지 기록의 시각적 참고 자료로만 사용한다.",
   "sourceNote": "원본 계보가 완전히 확인되기 전에는 이 이미지를 재구성이나 보정의 기준본으로 사용하지 않는다.",
   "centralNoEffect": "없음. 이 판정은 중앙 연표와 혈교 지휘 계보를 변경하지 않는다."

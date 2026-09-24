@@ -58,7 +58,7 @@
     const number = String(source().order.indexOf(key) + 1).padStart(2, '0');
     return h('figure.tc-evidence.tc-fac-mark', { class: compact ? 'tc-fac-mark--compact' : null },
       h('div.tc-fac-mark-image', null, h('span.tc-code.tc-full-only', { text: `MARK / ${number}` }),
-        h('img', { src: mark.asset, alt: `${faction(key).name} 표식`, loading: 'lazy', decoding: 'async', width: 160, height: 160, 'data-tc-inspect': compact ? null : '' })),
+        h('img', { src: mark.asset, alt: `${faction(key).name} 문양`, loading: 'lazy', decoding: 'async', width: 160, height: 160, 'data-tc-inspect': compact ? null : '' })),
       h('figcaption', null,
         PC.tag(`감식 ${mark.confidence}`, mark.confidence === 'A' ? 'evidence' : 'caution'),
         compact ? null : h('span', { text: mark.source })));
@@ -66,7 +66,7 @@
 
   function indexRow(key) {
     const item = faction(key);
-    if (!item) return PC.missing('FACTION NOT FOUND', key, '편제표에 연결된 세력 문서가 없습니다.');
+    if (!item) return PC.missing('FACTION NOT FOUND', key, '목록에 연결된 세력 문서가 없습니다.');
     return h('a.tc-row.tc-fac-row', { href: PC.href('faction-info', key), dataset: { facKey: key } },
       markBoard(key, true),
       h('div.tc-fac-row-copy', null,
@@ -115,10 +115,10 @@
     const current = node(key);
     if (!current) return null;
     const data = lineage();
-    return section('LINEAGE / COMMAND STATUS', '교단 계통',
+    return section('LINEAGE / COMMAND STATUS', '교단 갈래',
       h('div.tc-fac-tags', null, PC.tag(data.states[current.state].label, stateTone(current.state)), h('b', { text: current.kind })),
       h('p.tc-fac-command', { text: current.command }), h('p', { text: current.summary }),
-      h('ul.tc-fac-lineage-nodes', { 'aria-label': '우시노다 계보 노드' }, data.order.map((id) => h('li', null,
+      h('ul.tc-fac-lineage-nodes', { 'aria-label': '우시노다 갈래 목록' }, data.order.map((id) => h('li', null,
         h('a.tc-fac-connection', { href: PC.href('faction-info', id), 'aria-current': id === key ? 'page' : null },
           h('b', { text: data.nodes[id].name }), h('span', { text: data.nodes[id].short }), PC.tag(data.states[data.nodes[id].state].label, stateTone(data.nodes[id].state)))))),
       h('ol.tc-fac-lineage-edges', null, data.edges.map((edge) => h('li', { dataset: { state: edge.state } },
@@ -135,7 +135,7 @@
           const meta = data.historyMeta?.[id];
           return record ? h('a.tc-fac-connection', { href: PC.href('history', id) },
             h('time.tc-code', { text: record.date || meta?.date }), h('b', { text: record.title || meta?.title || id }))
-            : PC.missing('HISTORY NOT FOUND', id, '계통에 연결된 세계 기록이 없습니다.');
+            : PC.missing('HISTORY NOT FOUND', id, '이 갈래에 연결된 세계 기록이 없습니다.');
         })));
   }
 
@@ -177,7 +177,7 @@
         h('div.tc-btnrow', null,
           item.history ? link('연표 기록 ↗', 'history', item.history) : null,
           markers.has(item.id) ? link('지도 위치 ↗', 'map-room', 'incident', item.id) : null,
-          item.operation && ops.has(item.operation) ? link('작전 경과 ↗', 'map-room', 'op', item.operation) : null)))));
+          item.operation && ops.has(item.operation) ? link('작전 진행 ↗', 'map-room', 'op', item.operation) : null)))));
   }
 
   function renderDetail(key) {
@@ -231,7 +231,7 @@
             h('div.tc-fac-tags', null, h('b', { text: faction(relation.target).name }), PC.tag(relation.label, relationTone(relation.label))), h('p', { text: relation.text }))
             : PC.missing('FACTION NOT FOUND', relation.target, relation.text))))),
       relatedPeople(key), incidentSection(key),
-      h('nav.tc-btnrow', { 'aria-label': '세력 목록 복귀' }, backLink())]);
+      h('nav.tc-btnrow', { 'aria-label': '세력 목록으로 돌아가기' }, backLink())]);
     return item.name;
   }
 
@@ -254,7 +254,7 @@
     count = h('p.tc-code', { role: 'status', 'aria-live': 'polite' });
     indexView.append(PC.screenHead('faction-info', { desc: display().intro, meta: [['DOSSIERS', `${source().order.length}`], ['GROUPS', `${source().groups.length}`]] }),
       h('section.tc-panel.tc-fac-controls', { 'aria-label': '세력 분류 필터' },
-        h('div.tc-fac-control-head', null, h('h2', { text: '분석 대상 편제' }), count),
+        h('div.tc-fac-control-head', null, h('h2', { text: '분석 대상 조직' }), count),
         h('div.tc-seg', { role: 'group', 'aria-label': '세력 분류' }, Object.entries(root.ProjectCurseCanon.factionTagLabels).map(([id, label]) =>
           h('button', { type: 'button', 'aria-pressed': String(id === filter), dataset: { facFilter: id } }, label)))), rows);
     indexView.querySelectorAll('.tc-screenhead-meta, .tc-screenhead-code').forEach(el => el.classList.add('tc-full-only'));

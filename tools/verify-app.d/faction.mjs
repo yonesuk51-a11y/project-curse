@@ -28,7 +28,9 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
   const incidents = context.ProjectCurseIncidentNetwork.incidentList.filter((item) => item.factions.some((key) => keys.includes(key)));
   add('incident-history-operation-targets', incidents.every((item) => (!item.history || historyIds.has(item.history)) && (!item.operation || opIds.has(item.operation))));
   add('personnel-links-resolve', Object.entries(P.factionIndex).filter(([key]) => keys.includes(key)).every(([, ids]) => ids.every((id) => P.byId[id])));
-  add('legacy-display-copy-exact', !!D?.intro && legacy.includes(D.intro) && F.groups.every((group) => D.groupLabels[group.label] && legacy.includes(`'${group.label}':'${D.groupLabels[group.label]}'`)));
+  // 사용자 용어표에 따른 묶음 이름 한 곳만 바꾼다. 도입문과 다른 묶음 이름은 옛 화면과 대조한다.
+  const approvedGroup = 'CULT LINEAGE / COMMAND STATUS';
+  add('display-copy-approved-wording', !!D?.intro && legacy.includes(D.intro) && D.groupLabels[approvedGroup] === '우시노다 갈래' && F.groups.every((group) => D.groupLabels[group.label] && legacy.includes(`'${group.label}':'${group.label === approvedGroup ? '우시노다 계통' : D.groupLabels[group.label]}'`)));
   // 주소 끝의 내용 해시(-8자)는 tools/stamp-assets.mjs가 찍는다.
   add('own-data-slot-only', /<!-- slot:faction-data -->\r?\n<script src="assets\/js\/data\/faction-display-data\.js\?v=6\.0\.0(?:-[0-9a-f]{8})?"><\/script>/.test(app));
   let syntax = true;
