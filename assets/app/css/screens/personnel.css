@@ -18,6 +18,11 @@
 .tc-per-result-count { margin-bottom: var(--s4); color: var(--ch-ink); font-size: var(--fs); overflow-wrap: anywhere; }
 .tc-per-results { gap: var(--s5); }
 .tc-per-roster-group h2 { font-size: var(--fs-l); }
+/* 2042 추가 등록 — 2006년 명부 아래에 따로 싣는다 */
+.tc-per-roster-addition { border-top: 1px dashed var(--line); padding-top: var(--s4); }
+.tc-per-addition-intro { margin: 0 0 var(--s3); color: var(--text-2); font-size: var(--fs-s); }
+.tc-per-addition-group + .tc-per-addition-group { margin-top: var(--s4); }
+.tc-per-addition-group h3 { margin: 0 0 var(--s2); color: var(--text-2); font-size: var(--fs-s); }
 .tc-per-row { grid-template-columns: 34px minmax(0, 1.05fr) minmax(0, 1fr) 16px; gap: var(--s2) var(--s3); }
 .tc-per-row-name, .tc-per-row-unit { display: grid; gap: var(--s1); min-width: 0; }
 .tc-per-row-name b { font-size: var(--fs-l); font-weight: 600; }

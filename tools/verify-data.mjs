@@ -550,14 +550,14 @@ function verify(){
   // D 혼합: uac-independent-in-history의 데이터/매체 조건.
   add('uac-independent-in-history:data',factionAnalysisSource.includes('UN 산하기관은 아니며'));
   add('history-ten-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===10&&worldHistoryData.eras.map(era=>era.id).join('|')==='deep|origin|exposure|institution|separation|fracture|silence|frontiers|mobilization|aftermath');
-  add('history-base-forty-four-evidence-records',Object.keys(worldHistoryData?.records||{}).length===44&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
+  add('history-base-forty-six-evidence-records',Object.keys(worldHistoryData?.records||{}).length===46&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   // D 혼합: history-deep-world-framework의 데이터/매체 조건.
-  add('history-deep-world-framework:data',worldHistoryData?.deepHistoryRecords?.length===6&&worldHistoryData?.worldFramework?.ontology?.length===4&&worldHistoryData.worldFramework.abilitySources?.length===7&&worldHistoryData.worldFramework.civilianSystems?.length===5);
+  add('history-deep-world-framework:data',worldHistoryData?.deepHistoryRecords?.length===8&&worldHistoryData?.worldFramework?.ontology?.length===4&&worldHistoryData.worldFramework.abilitySources?.length===7&&worldHistoryData.worldFramework.civilianSystems?.length===5);
   const japanTechRecords=japanTechnology?.records||[];
   const japanTechIds=japanTechRecords.map(record=>record.id).join('|');
   const expectedJapanTechIds='1982-04-06-sixth-instrumentation|1985-09-18-optical-return-test|1987-11-04-jid87-standard|1990-04-12-municipal-mesh-pilot|1992-10-30-sixth-program-dispersal';
   add('history-japan-technology-schema',japanTechnology?.version===VERSION&&japanTechnology?.schema==='project-curse-japan-technology-v1'&&japanTechRecords.length===5&&japanTechnology?.technologies?.length===7&&japanTechnology?.edges?.length===6);
-  add('history-forty-nine-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===49);
+  add('history-fifty-one-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===51);
   add('history-japan-technology-record-depth',japanTechRecords.every(record=>record.id&&record.date&&record.title&&record.summary&&record.author&&record.recipient&&record.purpose&&record.basis&&record.sourceState&&record.fragments?.length>=3&&worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   add('history-japan-technology-chronology',japanTechIds===expectedJapanTechIds,japanTechIds);
   add('history-japan-public-boundaries',japanTechnology?.publicAnchors?.length===4&&japanTechnology.publicAnchors.map(anchor=>anchor.id).join('|')==='fgcs|optical-network|tron|bubble'&&japanTechnology.publicAnchors.every(anchor=>anchor.fact&&anchor.boundary&&anchor.source&&anchor.url.startsWith('https://')));
@@ -575,7 +575,7 @@ function verify(){
   const proseText=proseRecords.flatMap(record=>record.fragments||[]).map(fragment=>fragment.text).join('\n');
   const proseTypes=new Set(proseRecords.map(record=>record.documentType));
   const fragmentCounts=new Set(proseRecords.map(record=>record.fragments?.length||0));
-  add('history-authored-prose-forty-nine',worldHistoryProse?.version===VERSION&&proseRecords.length===44&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
+  add('history-authored-prose-fifty-one',worldHistoryProse?.version===VERSION&&proseRecords.length===46&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
   add('history-prose-canon-id-parity',Object.keys(worldHistoryProse?.records||{}).sort().join('|')===Object.keys(worldHistoryData?.records||{}).sort().join('|')&&structureData?.owners?.worldHistoryProse==='assets/js/data/world-history-prose-data.js');
   add('history-eight-document-voices',Object.keys(worldHistoryProse?.documentTypes||{}).length===8&&proseTypes.size===8);
   add('history-variable-fragment-structure',fragmentCounts.size>=3&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='log'))&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='quote')));

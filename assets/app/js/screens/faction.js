@@ -135,14 +135,19 @@
   function relatedPeople(key) {
     const people = root.ProjectCursePersonnel;
     const ids = people?.factionIndex?.[key] || [];
-    if (!ids.length) return null;
-    return section('PERSONNEL / 2006', '관련 인물',
-      h('ul.tc-fac-people', null, ids.map((id) => {
-        const person = own(people.byId, id);
-        return h('li', null, person ? h('a.tc-fac-connection', { href: PC.href('personnel', id) },
-          h('b', { text: person.name }), h('span', { text: person.role }))
-          : PC.missing('PERSONNEL NOT FOUND', id, '연결된 인물 파일이 없습니다.'));
-      })), h('div.tc-btnrow', null, link('인물 기록 열기 ↗', 'personnel')));
+    // 2042 추가 등록 인물은 2006년 명부와 섞지 않고 따로 싣는다(담당: Claude).
+    const added = people?.additionIndex?.[key] || [];
+    if (!ids.length && !added.length) return null;
+    const item = (id) => {
+      const person = own(people.byId, id);
+      return h('li', null, person ? h('a.tc-fac-connection', { href: PC.href('personnel', id) },
+        h('b', { text: person.name }), h('span', { text: person.role }))
+        : PC.missing('PERSONNEL NOT FOUND', id, '연결된 인물 파일이 없습니다.'));
+    };
+    return section(ids.length ? 'PERSONNEL / 2006' : 'PERSONNEL / 2042', '관련 인물',
+      ids.length ? h('ul.tc-fac-people', null, ids.map(item)) : null,
+      added.length ? [h('h3', { text: people.additionLabel }), h('ul.tc-fac-people', null, added.map(item))] : null,
+      h('div.tc-btnrow', null, link('인물 기록 열기 ↗', 'personnel')));
   }
 
   function incidentSection(key) {

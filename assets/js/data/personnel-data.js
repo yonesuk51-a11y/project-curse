@@ -375,18 +375,28 @@
     };
   });
 
-  const byId=Object.fromEntries(records.map(record=>[record.id,record]));
-  const groupById=Object.fromEntries(groups.map(group=>[group.id,group]));
-  const factionIndex={};
-  records.forEach(record=>{
-    const keys=new Set(record.affiliations?.map(item=>item.key)||[]);
-    const relatedGroups=[record.group,...(record.secondaryGroups||[])];
-    relatedGroups.forEach(groupId=>groupById[groupId]?.factionKeys?.forEach(key=>keys.add(key)));
-    keys.forEach(key=>{
-      if(!factionIndex[key]) factionIndex[key]=[];
-      factionIndex[key].push(record.id);
+  // 2042년 단말 추가 등록(personnel-additions-data.js) — 2006년 명부(records)에 섞지 않고 additions로 따로 싣는다.
+  const additionSource=root.ProjectCursePersonnelAdditions;
+  const additionGroups=additionSource?.groups||[];
+  const additions=(additionSource?.records||[]).map(record=>({...record,register:'addition',affiliationSummary:record.affiliationSummary||record.unit,aliases:[...(record.aliases||[])]}));
+
+  const byId=Object.fromEntries([...records,...additions].map(record=>[record.id,record]));
+  const groupById=Object.fromEntries([...groups,...additionGroups].map(group=>[group.id,group]));
+  const indexByFaction=list=>{
+    const index={};
+    list.forEach(record=>{
+      const keys=new Set(record.affiliations?.map(item=>item.key)||[]);
+      const relatedGroups=[record.group,...(record.secondaryGroups||[])];
+      relatedGroups.forEach(groupId=>groupById[groupId]?.factionKeys?.forEach(key=>keys.add(key)));
+      keys.forEach(key=>{
+        if(!index[key]) index[key]=[];
+        index[key].push(record.id);
+      });
     });
-  });
+    return index;
+  };
+  const factionIndex=indexByFaction(records);
+  const additionIndex=indexByFaction(additions);
 
   const stats={
     total:records.length,
@@ -401,6 +411,7 @@
   root.ProjectCursePersonnel=freeze({
     version:'5.54.0',schema:'project-curse-personnel-v3',sourceClass:'LEGACY REGISTER + SUPPLEMENTAL IDENTITY + CANON REVISION',
     editorialRule:'개편 정본명·작전 분류와 2006년 원 명부명을 함께 보존한다. 능력은 발현 경로와 대가를 분리해 판독한다.',
-    groups,statuses,certainties,records,byId,groupById,factionIndex,stats
+    groups,statuses,certainties,records,byId,groupById,factionIndex,stats,
+    additions,additionGroups,additionIndex,additionLabel:additionSource?.label||'',additionIntro:additionSource?.intro||''
   });
 })(window);

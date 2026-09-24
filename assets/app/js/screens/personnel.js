@@ -1,5 +1,6 @@
-// Project Curse 6 — 2006년 인물 명부와 파일 (담당: Codex)
+// Project Curse 6 — 2006년 인물 명부·2042 추가 등록과 파일 (담당: Codex, 추가 등록 표시는 Claude)
 // profiles/remake를 재조립하지 않는다. personnel-data.js가 확정한 표시 결과를 그대로 읽는다.
+// 추가 등록(additions)은 2006년 명부와 섞지 않고 아래에 따로 싣는다. 기준 연도와 상태 문구도 인물마다 따로 쓴다.
 (function (root) {
   'use strict';
   const PC = root.PCApp;
@@ -9,6 +10,9 @@
   const own = (object, key) => object && Object.hasOwn(object, key) ? object[key] : null;
   const groupOf = (id) => own(source()?.groupById, id);
   const person = (id) => own(source()?.byId, id);
+  const additions = () => source()?.additions || [];
+  const everyone = () => [...(source()?.records || []), ...additions()];
+  const isAddition = (record) => record?.register === 'addition';
   const groupsOf = (record) => [record.group, ...(record.secondaryGroups || [])];
   const normalize = (value) => String(value ?? '').toLocaleLowerCase('ko-KR').replace(/[.·_\-\s]/g, '');
   const state = { query: '', group: 'all', status: 'all' };
@@ -31,12 +35,13 @@
   }
   function filteredRecords() {
     const query = normalize(state.query);
-    return (source()?.records || []).filter((record) =>
+    return everyone().filter((record) =>
       (state.group === 'all' || groupsOf(record).includes(state.group)) &&
       (state.status === 'all' || record.status === state.status) && (!query || searchText(record).includes(query)));
   }
-  function statusTag(id) {
-    const label = own(display()?.statusLabels, id);
+  function statusTag(id, record) {
+    // 2042 추가 등록 인물에는 "2006년 …" 문구 대신 일반 상태 문구를 쓴다.
+    const label = isAddition(record) ? own(source()?.statuses, id)?.label : own(display()?.statusLabels, id);
     return label ? PC.tag(label, { active: 'ok', deceased: 'evidence', unknown: 'caution' }[id])
       : PC.missing('STATUS NOT FOUND', id, '상태 분류가 없습니다.');
   }
@@ -66,7 +71,7 @@
         h('p', { text: record.role })),
       h('div.tc-per-row-unit', null, h('span.tc-label', { text: 'AFFILIATION' }), h('p', { text: record.affiliationSummary || groupOf(record.group)?.label }),
         record.secondaryGroups?.length ? h('p', { text: record.secondaryGroups.map((id) => groupOf(id)?.label || id).join(' · ') }) : null),
-      h('span.tc-row-meta', null, statusTag(record.status)),
+      h('span.tc-row-meta', null, statusTag(record.status, record)),
       h('span.tc-row-go', { 'aria-hidden': 'true', text: '›' }));
   }
   function renderResults() {
@@ -74,16 +79,28 @@
     PC.clear(resultList);
     source().groups.forEach((group) => {
       // 부 소속 필터로 찾더라도 명부의 주 편제에 한 번만 싣는다.
-      const members = records.filter((record) => record.group === group.id);
+      const members = records.filter((record) => !isAddition(record) && record.group === group.id);
       if (!members.length) return;
       resultList.append(h('section.tc-per-roster-group', null,
         h('header.tc-section-head', null, h('div', null, h('span.tc-label', { text: `${group.code} / PERSONNEL REGISTER` }), h('h2', { text: group.label })), h('span.tc-code', { text: `${members.length}명` })),
         h('div.tc-rows', null, members.map(recordRow))));
     });
+    const added = records.filter(isAddition);
+    if (added.length) {
+      resultList.append(h('section.tc-per-roster-group.tc-per-roster-addition', null,
+        h('header.tc-section-head', null, h('div', null, h('span.tc-label', { text: 'ADDITIONAL REGISTER / 2042' }), h('h2', { text: source().additionLabel })), h('span.tc-code', { text: `${added.length}명` })),
+        h('p.tc-per-addition-intro', { text: source().additionIntro }),
+        (source().additionGroups || []).map((group) => {
+          const members = added.filter((record) => record.group === group.id);
+          return members.length ? h('div.tc-per-addition-group', null,
+            h('h3', null, h('span.tc-code', { text: group.code }), ` ${group.label}`),
+            h('div.tc-rows', null, members.map(recordRow))) : null;
+        })));
+    }
     if (!records.length) resultList.append(PC.missing('NO MATCHING PERSONNEL', state.query, '조건에 맞는 인물 파일이 없습니다. 검색어나 상태·소속 필터를 조정하십시오.'));
     const groupLabel = state.group === 'all' ? '전체 인물' : groupOf(state.group)?.label;
-    const statusLabel = state.status === 'all' ? '' : ` · ${display().statusLabels[state.status]}`;
-    resultCount.textContent = `${records.length} / ${source().records.length}명 · ${groupLabel}${statusLabel}${state.query.trim() ? ` · “${state.query.trim()}”` : ''}`;
+    const statusLabel = state.status === 'all' ? '' : ` · ${own(source().statuses, state.status)?.label}`;
+    resultCount.textContent = `${records.length} / ${everyone().length}명 · ${groupLabel}${statusLabel}${state.query.trim() ? ` · “${state.query.trim()}”` : ''}`;
     indexView.querySelectorAll('[data-per-group]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.perGroup === state.group)));
     indexView.querySelectorAll('[data-per-status]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.perStatus === state.status)));
     search.value = state.query;
@@ -135,7 +152,8 @@
   function relatedRecords(record) {
     // 개인 사건 문자열을 다른 사건 id로 추측해 치환하지 않는다.
     // 기존 factionIndex의 역방향 연결로 세력 사건철을 제공하고, 개인의 직접 참여와 구분한다.
-    const keys = Object.entries(source().factionIndex).filter(([, ids]) => ids.includes(record.id)).map(([key]) => key);
+    const index = isAddition(record) ? (source().additionIndex || {}) : source().factionIndex;
+    const keys = Object.entries(index).filter(([, ids]) => ids.includes(record.id)).map(([key]) => key);
     const network = root.ProjectCurseIncidentNetwork;
     const events = (network?.incidentList || []).filter((item) => item.factions.some((key) => keys.includes(key)));
     const mapped = new Set((root.ProjectCurseMapRoom?.markers || []).map((item) => item.incident));
@@ -176,13 +194,13 @@
       h('div.tc-per-copy-feedback', { role: 'status', 'aria-live': 'polite' }),
       h('header.tc-panel.tc-bracket.tc-bracket--evidence.tc-per-cover', null,
         h('div.tc-per-cover-main', null,
-          h('p.tc-label', { text: `PERSONNEL FILE / ${display().year}` }),
+          h('p.tc-label', { text: `PERSONNEL FILE / ${record.registerYear || display().year}` }),
           h('p.tc-code', { text: record.id }),
           h('h1', { text: record.name, 'data-tc-focus': true }), h('p', { text: record.role }),
-          h('div.tc-per-tags', null, statusTag(record.status), certaintyTag(record.certainty)),
+          h('div.tc-per-tags', null, statusTag(record.status, record), certaintyTag(record.certainty)),
           record.aliases?.length ? kv([['별칭·기존 명부명', record.aliases.join(' · ')]]) : null),
         photoPlate(record),
-        kv([['기준 연도', display().year], ['편제', groupOf(record.group)?.label || record.group], ['소속', record.affiliationSummary], ['출신', identity?.origin]])),
+        kv([['기준 연도', record.registerYear || display().year], ['등록', isAddition(record) ? source().additionLabel : null], ['편제', groupOf(record.group)?.label || record.group], ['소속', record.affiliationSummary], ['출신', identity?.origin]])),
       section('PROFILE / KEY RECORD', '주요 기록', h('p', { text: record.overview }),
         kv([['소속', record.unit], ['연결 사건', record.incident]])),
       (record.capabilities?.length || record.equipment?.length || record.abilitySource) ? section('CAPABILITY / COST', '능력과 대가',
@@ -250,18 +268,20 @@
     search = h('input#tc-per-search', { type: 'search', autocomplete: 'off', placeholder: '이름 / 소속 / 역할', 'aria-controls': 'tc-per-results' });
     resultCount = h('p.tc-per-result-count', { role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' });
     resultList = h('div#tc-per-results.tc-per-results');
-    indexView.append(PC.screenHead('personnel', { desc: display().intro, meta: [['REGISTER', display().year], ['FILES', `${source().records.length}`], ['GROUPS', `${source().groups.length}`]] }),
+    const allGroups = [...source().groups, ...(source().additionGroups || [])];
+    indexView.append(PC.screenHead('personnel', { desc: display().intro, meta: [['REGISTER', additions().length ? `${display().year} · ${source().additionLabel}` : display().year], ['FILES', `${everyone().length}`], ['GROUPS', `${allGroups.length}`]] }),
       h('section.tc-panel.tc-per-controls', { 'aria-label': '인물 기록 검색과 필터' },
         h('div.tc-per-search-row', null, h('label.tc-per-search', { for: 'tc-per-search' }, h('span', { text: '인물 검색' }), search), h('button.tc-btn', { type: 'button', dataset: { perReset: '' } }, '필터 초기화')),
-        h('div.tc-seg', { role: 'group', 'aria-label': '상태 필터' }, [['all', '전체 상태'], ...Object.entries(display().statusLabels)].map(([id, label]) =>
+        // 두 명부를 함께 거르므로 연도 없는 일반 상태 문구를 쓴다.
+        h('div.tc-seg', { role: 'group', 'aria-label': '상태 필터' }, [['all', '전체 상태'], ...Object.entries(source().statuses).map(([id, item]) => [id, item.label])].map(([id, label]) =>
           h('button', { type: 'button', 'aria-pressed': String(id === state.status), dataset: { perStatus: id } }, label)))),
       h('div.tc-per-workspace', null,
         h('aside.tc-panel.tc-per-groups', { 'aria-label': '소속 분류 필터' },
           h('header.tc-panel-head', null, h('div', null, h('span.tc-label', { text: 'CLASSIFICATION' }), h('h2', { text: '소속·관계군' }))),
           h('div.tc-per-group-buttons', { role: 'group', 'aria-label': '소속·관계군' },
-            h('button.tc-per-group-button', { type: 'button', 'aria-pressed': 'true', dataset: { perGroup: 'all' } }, h('span', { text: '전체 명부' }), h('b', { text: `${source().records.length}` })),
-            source().groups.map((group) => h('button.tc-per-group-button', { type: 'button', 'aria-pressed': 'false', dataset: { perGroup: group.id }, title: group.label },
-              h('span', { text: group.short }), h('b', { text: `${source().records.filter((record) => groupsOf(record).includes(group.id)).length}` }))))),
+            h('button.tc-per-group-button', { type: 'button', 'aria-pressed': 'true', dataset: { perGroup: 'all' } }, h('span', { text: '전체 명부' }), h('b', { text: `${everyone().length}` })),
+            allGroups.map((group) => h('button.tc-per-group-button', { type: 'button', 'aria-pressed': 'false', dataset: { perGroup: group.id }, title: group.label },
+              h('span', { text: group.short }), h('b', { text: `${everyone().filter((record) => groupsOf(record).includes(group.id)).length}` }))))),
         h('div.tc-per-roster', null, resultCount, resultList)));
     renderResults();
   }

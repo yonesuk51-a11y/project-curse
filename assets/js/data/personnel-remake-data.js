@@ -41,7 +41,8 @@
     'alma-koenig':{name:'콘라트 발렌',unit:'유니온 제3잔존시설',recordFunction:'중앙 지휘가 끊긴 F.H.C 시설을 독립 피난소로 바꾸려 한 관리자.',incident:'2021 서브매서커 이전 지휘권 분리의 선행 사례'},
 
     'ezekiel-kalp':{name:'엘리아스 카르프',unit:'아크 제2회수구역',role:'아크 회수구역장',recordFunction:'연구 자산 회수와 생존자 구조를 같은 명령서에 넣은 지휘관.',incident:'2006 북해 회수선 실종사건'},
-    'sakuma-yuta':{name:'사쿠마 진',unit:'아크 내부정보선 / 하이문 이탈망',role:'전향 정보원 / 레드 마우스',recordFunction:'이중 정보원. 조국·기관·교단 사이에서 이름을 바꾸며 살아남았다.',incident:'1989 도쿄 기록 및 2006 오리진 실험체 탈출'},
+    // 2026-09-24 사용자 설정글 반영: 이름을 사쿠마 유타로 되돌리고 전직 형사·U.A.C 정보원 출신·현 하이문 리더로 적는다.
+    'sakuma-yuta':{name:'사쿠마 유타',unit:'하이문 리더 / 전 U.A.C 정보원',role:'전향 정보원 / 레드 마우스',recordFunction:'전직 형사이자 U.A.C 정보원 출신. 우시노다교의 힘에 매료돼 조직을 등졌고, 교단에 사람과 물자를 대며 그 힘에 다가가려 한다.',incident:'1989 도쿄 기록 및 2006 오리진 실험체 탈출'},
     'karl-maxwell':{name:'케일럽 맥스웰',unit:'아크 야외회수조',recordFunction:'괴이보다 먼저 굶주림과 추위에 무너지는 회수대의 현실을 보여 주는 사냥꾼.',incident:'2004 유콘 백색회랑 19일 생환'},
     'brian-alberoz':{name:'브루노 알바레스',unit:'아크 표식추적조',recordFunction:'카드 표식을 이용해 실종자의 마지막 이동을 재구성하는 사냥꾼.',incident:'2005 남대서양 의식선 추적'},
     'yanami-shinka':{name:'야나기 신카',unit:'아크 중량회수조',recordFunction:'강한 능력이 구조 성공과 생존을 보장하지 않는다는 사망 기록.',incident:'2005 아크 제7창고 붕괴',abilitySource:'선천 생기 / 염동 발현',abilityCost:'사용량에 비례한 미세혈관 파열과 방향감각 소실'},
@@ -52,7 +53,7 @@
     baranto:{name:'마테오 오르테가',unit:'N.H.C 제4봉쇄군 사령부',role:'제4봉쇄군 사령관',recordFunction:'승리보다 봉쇄선 유지와 철수 결정을 책임지는 현장 지휘관.',incident:'2006 북부 차단선 재편',abilitySource:'선천 생기 / 태양계 활성',abilityCost:'회복을 앞당길수록 이후 체온·면역 기능이 급격히 저하됨'},
     yohan:{name:'요한 크루거',unit:'제4봉쇄군 지휘통신실',recordFunction:'명령을 전달하는 수행비서. 누가 그 명령을 승인했는지 확인한다.',incident:'2006 상충 철수명령 3건 보류',abilitySource:'선천 생기 / 전격 발현',abilityCost:'장거리 전도 뒤 청각과 단기기억이 순차적으로 끊김'},
     roden:{name:'라자르 마르코프',unit:'제4봉쇄군 공생정찰조',recordFunction:'괴이 기생체를 제거하지 않고 협상 가능한 전력으로 운용한 위험한 선례.',incident:'2004 검은 강변 약점지도 작성',abilitySource:'기생체 공생',abilityCost:'모방한 생기마다 숙주의 감각 우선권을 기생체에 일시 양도'},
-    mason:{name:'마커스 콜',unit:'제4봉쇄군 원거리차단조',recordFunction:'한 발의 성공보다 관측과 철수로를 설계하는 지원 저격수.',incident:'2005 레드울프 이탈 당시 민간 회랑 엄호',abilitySource:'선천 생기 / 투시·초감각',abilityCost:'장시간 투시 뒤 현재 시야와 예측상이 겹쳐 오인사격 위험 증가'},
+    mason:{name:'마커스 콜',unit:'제4봉쇄군 원거리차단조',role:'지원 저격수 / 코드명 메이슨',recordFunction:'한 발의 성공보다 관측과 철수로를 설계하는 지원 저격수.',incident:'2005 레드울프 이탈 당시 민간 회랑 엄호',abilitySource:'선천 생기 / 투시·초감각',abilityCost:'장시간 투시 뒤 현재 시야와 예측상이 겹쳐 오인사격 위험 증가'},
     kate:{name:'카트린 모로',unit:'제4봉쇄군 중장돌격조',recordFunction:'돌격요원. 방패 뒤의 생존자를 지키려고 자신의 회복 가능성을 소모한다.',incident:'2006 위버멘시 외곽 격벽 돌파',abilitySource:'F.H.C 계열 강화시술 생존',abilityCost:'근력 가속 때마다 관절 석회화와 심근 손상이 누적'},
 
     frux:{name:'알렉세이 프루신',unit:'U.A.C 중앙조정국',role:'중앙조정국장 / 프룩스',recordFunction:'관리자. 국가·기관·민간 회랑의 상충 권한을 봉인문 한 장으로 임시 조정한다.',incident:'2006 북미 시설 동시폐쇄 승인',abilitySource:'의식 유물 / 봉인부적',abilityCost:'효력이 강할수록 부적 작성자의 이름과 소속이 기록망에서 지워짐'},

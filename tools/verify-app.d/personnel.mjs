@@ -25,6 +25,19 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   add('historical-names-searchable', records.filter((record) => record.sourceName).every((record) => record.aliases.includes(record.sourceName)));
   add('distinct-aaron-identities', P.byId['aaron-uac'] && P.byId['aaron-syndicate'] && P.byId['aaron-uac'].name !== P.byId['aaron-syndicate'].name);
   add('no-unregistered-portraits', records.every((record) => !record.visual?.src));
+  // 2042 추가 등록 — 2006년 명부(records)와 섞지 않는다. 인물마다 기준 연도와 확인되지 않은 부분을 적는다.
+  const additions = P.additions || [];
+  const additionGroupIds = new Set((P.additionGroups || []).map((group) => group.id));
+  const legacyIds = new Set(records.map((record) => record.id));
+  add('addition-register-separate', additions.length === 9 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
+    new Set(additions.map((record) => record.id)).size === additions.length && P.groups.every((group) => !additionGroupIds.has(group.id)),
+    `${additions.length} additions`);
+  add('addition-records-complete', additions.every((record) => record.registerYear && record.role && record.overview && record.limits?.length &&
+    additionGroupIds.has(record.group) && P.statuses[record.status] && P.certainties[record.certainty] &&
+    (record.affiliations || []).every((item) => F.factions[item.key] && P.certainties[item.certainty]) &&
+    (record.relationships || []).every((item) => P.byId[item.target] && P.certainties[item.certainty]) &&
+    (!record.abilitySource || record.abilityCost)) && (P.additionGroups || []).every((group) => group.factionKeys.every((key) => F.factions[key])));
+  add('addition-year-and-status-per-record', source.includes('record.registerYear || display().year') && source.includes("isAddition(record) ? own(source()?.statuses, id)?.label"));
   add('legacy-display-copy-exact', D?.year === '2006' && [D.intro, D.limitDefault, D.abilityCostMissing, ...Object.values(D.statusLabels)].every((text) => legacy.includes(text)));
   const incidents = context.ProjectCurseIncidentNetwork.incidentList;
   add('cross-reference-targets-exist', incidents.every((item) => (!item.history || historyIds.has(item.history)) && (!item.operation || opIds.has(item.operation)) && item.records.every((id) => archiveIds.has(id))));

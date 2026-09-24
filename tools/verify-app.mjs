@@ -94,7 +94,7 @@ const historyRecords = [
   ...(W?.post2006Records || []).map((record) => ({ ...record, ...(P?.getRecord?.(record.id) || {}) }))
 ];
 const historyIds = historyRecords.map((record) => record.id);
-add('history-forty-nine-records', historyIds.length === 49, historyIds.length);
+add('history-fifty-one-records', historyIds.length === 51, historyIds.length);
 add('history-ids-unique', new Set(historyIds).size === historyIds.length);
 const eraIds = new Set((W?.eras || []).map((era) => era.id));
 const noEra = historyRecords.filter((record) => !eraIds.has(record.era)).map((record) => record.id);
