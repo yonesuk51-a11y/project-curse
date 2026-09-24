@@ -588,6 +588,78 @@
       "release": "PROJECT_GENERATED",
       "source": "인물 기록(mason)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
       "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 투시의 작동 방식과 대가의 범위는 확정하지 않는다."
+    },
+    "assets/resources/derived/outer-god-war-wall-host-concept-v1.png": {
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "외신 강림과 성벽의 저항(deep-outer-god-war)·커네빈 인물 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "교단 측 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁의 연대·장소·규모와 경과, 우시노다의 모습은 확정하지 않는다."
+    },
+    "assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png": {
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "사쿠마의 테이프(Sakuma_Tape_991028) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "1989년 도쿄의 교육기관으로 들어가는 조사관의 뒷모습. 건물의 실제 외관과 조사관의 얼굴, 마지막 이동 경로와 실종 이후의 생존 여부는 확정하지 않는다."
+    },
+    "assets/resources/derived/amarion-training-screening-concept-v1.png": {
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "아마리온 회수 영상 기록(Unknown_Record1_860204) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "1970년대 사내 상영실에서 교육 영상을 보는 직원들. 회수 영상의 프레임이 아니며, 상영 시기·장소·참석 인원과 장치의 작동 성공은 확정하지 않는다."
+    },
+    "assets/resources/derived/redwolf-waiting-room-concept-v1.png": {
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "레드울프 이탈 기록(Unknown_Record3_920711) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "2005년 9월 1일 이탈 직전 임시 대기실의 두 사람. 실제 CCTV 원본이 아니며, 얼굴과 인물별 위치, 대기실의 구조와 도시의 위치는 확정하지 않는다."
+    },
+    "assets/resources/derived/son-quarantine-shelf-concept-v1.png": {
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "S.O.N 비인가 장비 유통 기록(Unknown_Record4_930314) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "회수품을 오염 매개체로 우선 격리한다는 경고를 옮긴 보관 장면. 봉투 속 물건의 제품명·효능·회수 수량과 S.O.N의 제조·유통 사실은 확정하지 않는다."
+    },
+    "assets/resources/derived/returner-note-locker-concept-v1.png": {
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "보관함에 남긴 쪽지(Returner_Note_West) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "서부 귀환 회랑 검문소의 열린 보관함과 접힌 개인 문서. 보관함의 실제 형태, 문서가 목록에서 빠진 경위, 위탁자·수취인의 신원과 이후 행방은 확정하지 않는다."
+    },
+    "assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png": {
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "순례자의 규칙 제1부(Pilgrim_Rules_GBF) 규칙 05 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "가진 것 하나를 남기고 소리가 없는 쪽으로 떠나라는 규칙 05의 장면. 속삭임의 주체, 실제 순례 인원과 규칙의 효력·생환 결과는 확정하지 않는다."
+    },
+    "assets/resources/derived/alullim-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(alullim)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 얼굴과 정체, 한 존재인지 반복 현상이나 계승 좌석인지는 확정하지 않는다."
+    },
+    "assets/resources/derived/mikage-shiori-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(mikage-shiori)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 아버지의 이름과 사망 경위, 저주의 내용은 확정하지 않는다."
     }
   }
 }

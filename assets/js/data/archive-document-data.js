@@ -411,7 +411,7 @@
             'F.H.C가 운영에 관여한 도쿄 교육기관에서 학생 실종, 비정상 사망과 신체 변형 사례가 연속해서 보고됐다. 기관 내부에서는 Basic Of Blood Path와 Basic Of Flesh Path가 일반 교재처럼 배포되고 있었다.',
             '사쿠마 유타는 인간으로 위장한 괴이의 출현 가능성과 교재를 접한 학생들의 피해 사례를 조사했다. 외부 신고와 달리 학교·행정기관의 공식 기록에는 사건 사이의 연관성이 남아 있지 않았다.'
           ]},
-          {title:'마지막 기록',paragraphs:[
+          {title:'마지막 기록',image:{src:'../../assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png',alt:'회보라색 어둠에 잠긴 건물 입구에서 갈색 머리와 검은 정장의 성인이 안쪽 천장 등빛을 배경으로 문턱을 넘는 뒷모습이 보인다.',caption:'SAKUMA ENTRY / INTERPRETIVE RECONSTRUCTION — 1989년 도쿄의 교육기관으로 들어가는 조사관의 뒷모습. 건물의 실제 외관과 조사관의 얼굴, 마지막 이동 경로와 실종 이후의 생존 여부는 확정하지 않는다.',placement:'after'},paragraphs:[
             '1989년 8월 23일 회수된 기록에는 피해자의 신원과 교재 배포 경로, 시설 출입 내역을 대조하려 한 흔적이 남아 있다. 그러나 기록 일부가 손상돼 사쿠마가 마지막으로 확인한 장소와 이동 경로는 복구되지 않았다.',
             '사쿠마는 추가 확인을 위해 교육기관 내부로 들어간 뒤 정규 통신망에서 사라졌다. 철수 기록, 병원 이송, 구금 또는 사망 확인서는 발견되지 않았다.'
           ]},
@@ -429,7 +429,7 @@
         summary:'직원 교육용으로 제작된 아마리온 기업 영상. 저근접 자기 왜곡 시스템과 공간 개척 사업을 순서대로 소개한다.',
         date:'1975년 이후 / 정확한 제작일 손실', owner:'아마리온 교육부 / U.A.C 회수본', classification:'회수 영상·부분 손상',
         sections:[
-          {title:'교육 영상 시작',paragraphs:[
+          {title:'교육 영상 시작',image:{src:'../../assets/resources/derived/amarion-training-screening-concept-v1.png',alt:'어두운 사내 상영실에서 성인 직원 다섯 명이 필름 영사기가 비추는 고리 모양 도식을 바라본다.',caption:'TRAINING SCREENING / INTERPRETIVE RECONSTRUCTION — 1970년대 사내 상영실에서 교육 영상을 보는 직원들. 회수 영상의 프레임이 아니며, 상영 시기·장소·참석 인원과 장치의 작동 성공은 확정하지 않는다.',placement:'after'},paragraphs:[
             '화면 중앙에 아마리온 상표가 나타난다. 아래 기록은 손상된 자막과 음성을 같은 시각대에 맞춰 복원했다.'
           ],transcript:[
             {time:'00:00',cue:'【검은 화면 / 아마리온 표장 표시】'},
@@ -509,7 +509,7 @@
         summary:'레드울프 부대 이탈 직전의 암호화 CCTV 기록. 웨이드 밀렌과 제임스 애셔의 대화가 담겨 있다.',
         date:'2005.09.01', owner:'N.H.C 내부감찰 / 암호화 CCTV 회수본', classification:'감시 영상·음성 복구',
         sections:[
-          {title:'암호화 CCTV / 채널 복구',paragraphs:[
+          {title:'암호화 CCTV / 채널 복구',image:{src:'../../assets/resources/derived/redwolf-waiting-room-concept-v1.png',alt:'천장 구석에서 내려다본 임시 대기실에 전투복 차림의 두 성인이 각각 서고 앉아 있고 창밖으로 무너진 도시의 윤곽이 보인다.',caption:'CCTV ROOM / INTERPRETIVE RECONSTRUCTION — 2005년 9월 1일 이탈 직전 임시 대기실의 두 사람. 실제 CCTV 원본이 아니며, 얼굴과 인물별 위치, 대기실의 구조와 도시의 위치는 확정하지 않는다.',placement:'after'},paragraphs:[
             '인물 식별: 웨이드 밀렌, 호출명 Cerberus. 제임스 애셔, 호출명 Epsilon. 영상은 작전지 이탈 직전의 임시 대기실에서 녹화됐다.'
           ],transcript:[
             {time:'22:14:03',cue:'【화면 복구 / 조명 불안정】'},
@@ -571,7 +571,7 @@
             {time:'02:12',speaker:'카터',tone:'witness',text:'희망?'},
             {time:'02:15',speaker:'밀렌',tone:'command',text:'병을 만든 놈보다 무서운 건 치료제를 가진 놈이야. 사람을 죽이겠다는 게 아니야. 죽일 수 있다고 위협하고, 살릴 수 있다고 믿게 만드는 거지.'}
           ]},
-          {title:'유통 방식',transcript:[
+          {title:'유통 방식',image:{src:'../../assets/resources/derived/son-quarantine-shelf-concept-v1.png',alt:'방독면을 쓴 담당자가 빈 표찰이 놓인 선반에 회수품 봉투를 올리고, 앞에는 작은 천 묶음과 약병, 구슬이 각각 투명 봉투에 봉인돼 있다.',caption:'QUARANTINE SHELF / INTERPRETIVE RECONSTRUCTION — 회수품을 오염 매개체로 우선 격리한다는 경고를 옮긴 보관 장면. 봉투 속 물건의 제품명·효능·회수 수량과 S.O.N의 제조·유통 사실은 확정하지 않는다.',placement:'after'},transcript:[
             {time:'02:43',speaker:'카터',tone:'witness',text:'그게 네가 말하는 질서냐?'},
             {time:'02:48',speaker:'밀렌',tone:'command',text:'문명이 폐허가 되고 서로 살겠다고 싸우는 마당에 질서는 힘을 가진 놈이 만드는 거야.'},
             {time:'03:01',speaker:'밀렌',tone:'command',text:'우리가 만든 걸 직접 뿌릴 필요도 없어. 교단 바깥에는 신앙보다 돈과 공포에 더 쉽게 움직이는 놈들이 있지. 축복이라고 속여 쥐여주면 돼.'},
@@ -642,7 +642,7 @@
             '세 번째는 맞힐 수 없다. 나도 안다. 그래도 묻겠다.',
             '문 앞에서 기다리지 마라. 들어와서 앉아라. 물은 올려 두었다.'
           ],quote:'맞히는지가 아니라 맞히려고 하는지를 보겠다.'},
-          {title:'회수 경위',paragraphs:[
+          {title:'회수 경위',image:{src:'../../assets/resources/derived/returner-note-locker-concept-v1.png',alt:'짙은 회보라색 어둠의 보관함 벽에서 오른쪽 문이 열린 칸 하나와 선반에 낮게 접힌 작은 쪽지 한 장이 부드러운 빛에 드러난다.',caption:'CUSTODY LOCKER / INTERPRETIVE RECONSTRUCTION — 서부 귀환 회랑 검문소의 열린 보관함과 접힌 개인 문서. 보관함의 실제 형태, 문서가 목록에서 빠진 경위, 위탁자·수취인의 신원과 이후 행방은 확정하지 않는다.',placement:'after'},paragraphs:[
             '2031년 보관함 정리 중 확인됐다. 종이는 접힌 자국이 여러 번 덧나 있다. 모서리가 닳아 있다. 여러 번 꺼내 보고 다시 넣은 흔적으로 판단됐다.',
             '수취인이 찾아갔는지, 위탁자가 이후에도 검문소를 찾았는지는 보관 장부에 남아 있지 않다. 같은 보관 번호로 다른 문서가 위탁된 기록도 없다.'
           ],warning:'이 문서는 개인 기록으로 보존한다. 질문의 형식을 대조 절차의 표준이나 사례집으로 옮기지 않는다.'}

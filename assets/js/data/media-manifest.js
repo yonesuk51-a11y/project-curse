@@ -71,7 +71,17 @@
     'assets/resources/derived/yanan-kes-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/kenevin-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/sakuma-yuta-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
-    'assets/resources/derived/mason-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'}
+    'assets/resources/derived/mason-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    // 2026-09-25 사용자 채택 — 기록보관소 6장, 외신 전쟁, 인물 사진 2장(알룰림·미카게 시오리)
+    'assets/resources/derived/outer-god-war-wall-host-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/amarion-training-screening-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/redwolf-waiting-room-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/son-quarantine-shelf-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/returner-note-locker-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/alullim-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/mikage-shiori-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'}
   };
 
   const normalize=src=>{

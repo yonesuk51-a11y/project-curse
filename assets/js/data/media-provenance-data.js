@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 329,
-    "referenced": 329,
+    "registered": 356,
+    "referenced": 356,
     "unreferenced": 0,
     "review": 150,
-    "managed": 179,
+    "managed": 206,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 299,
+      "image": 326,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 161,
+      "PROJECT_GENERATED": 188,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 128,
+      "DELIVERY_DERIVATIVE": 146,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 69,
+      "RECONSTRUCTED": 78,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2583,6 +2583,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/alullim-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(alullim)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 얼굴과 정체, 한 존재인지 반복 현상이나 계승 좌석인지는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1555163,
+      "sha256": "a86448908716984f832198f2b0c21c042dedf2685731fcb28308761530c840e5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/amarion-1975-test-hall-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2616,6 +2637,27 @@
       "sha256": "a8275fc96374d4f38ff0939825a7d2b7ff3ef86502401671bbb0b3bcca051d6f",
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/amarion-training-screening-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "아마리온 회수 영상 기록(Unknown_Record1_860204) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "1970년대 사내 상영실에서 교육 영상을 보는 직원들. 회수 영상의 프레임이 아니며, 상영 시기·장소·참석 인원과 장치의 작동 성공은 확정하지 않는다.",
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1574681,
+      "sha256": "56da02f5b91e332d26ad8a9d74f07fc1e30a07d6092e9cb2646c3cc816ef68ff",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -3265,6 +3307,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/mikage-shiori-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(mikage-shiori)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 아버지의 이름과 사망 경위, 저주의 내용은 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1619259,
+      "sha256": "1ffb26ae8e7d95a40880e4e6eba696ff89fbddbaf5cef606f5c9e86b850c475a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3352,6 +3415,48 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/outer-god-war-wall-host-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "외신 강림과 성벽의 저항(deep-outer-god-war)·커네빈 인물 기록 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "교단 측 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁의 연대·장소·규모와 경과, 우시노다의 모습은 확정하지 않는다.",
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1734615,
+      "sha256": "829caaf3f1bdfc56240a7f1ba0eb46e79d4c61bc9b4b6ec6b5ba26f2d868847b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "순례자의 규칙 제1부(Pilgrim_Rules_GBF) 규칙 05 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "가진 것 하나를 남기고 소리가 없는 쪽으로 떠나라는 규칙 05의 장면. 속삭임의 주체, 실제 순례 인원과 규칙의 효력·생환 결과는 확정하지 않는다.",
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1982781,
+      "sha256": "dbe0500a0008b49bc4255df5dfff5704f5abe0967d453b758d7d834a4f200873",
+      "usedBy": [
+        "assets/js/data/field-dossier-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/project-curse-world-keyart-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3385,6 +3490,27 @@
       "protectedScope": true
     },
     {
+      "path": "assets/resources/derived/redwolf-waiting-room-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "레드울프 이탈 기록(Unknown_Record3_920711) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "2005년 9월 1일 이탈 직전 임시 대기실의 두 사람. 실제 CCTV 원본이 아니며, 얼굴과 인물별 위치, 대기실의 구조와 도시의 위치는 확정하지 않는다.",
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1627432,
+      "sha256": "c97cb7a9ff1db7a328c66e629f1513bb740a150e5e6a3027533ae4587529af7c",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3397,6 +3523,48 @@
       "sha256": "b9e044f420b51fe2debae364b560a738f7fe46f982263796d6343d7e8e2f2977",
       "usedBy": [
         "assets/js/data/home-screen-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/returner-note-locker-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "보관함에 남긴 쪽지(Returner_Note_West) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "서부 귀환 회랑 검문소의 열린 보관함과 접힌 개인 문서. 보관함의 실제 형태, 문서가 목록에서 빠진 경위, 위탁자·수취인의 신원과 이후 행방은 확정하지 않는다.",
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1488967,
+      "sha256": "7155769f16f2f3781ad55d4c4d36482ce3341c3aa5e43361e94855e0252073eb",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "사쿠마의 테이프(Sakuma_Tape_991028) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "1989년 도쿄의 교육기관으로 들어가는 조사관의 뒷모습. 건물의 실제 외관과 조사관의 얼굴, 마지막 이동 경로와 실종 이후의 생존 여부는 확정하지 않는다.",
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1794047,
+      "sha256": "ad6d193c51aae928369358bb5d04ef2803de1746baeacf59267da101295f2cb6",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -3481,6 +3649,27 @@
       "sha256": "0723c8eef0dfddb7915a78fdb3bb4094ee5af7d0901f655d1a399413ae5ab56d",
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/son-quarantine-shelf-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "S.O.N 비인가 장비 유통 기록(Unknown_Record4_930314) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "회수품을 오염 매개체로 우선 격리한다는 경고를 옮긴 보관 장면. 봉투 속 물건의 제품명·효능·회수 수량과 S.O.N의 제조·유통 사실은 확정하지 않는다.",
+      "credit": "Project Curse batch C scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1755560,
+      "sha256": "57bd061a0ea82a6d467ebbdcc028a1b8b3139b92943eae83b6fc19e5838764dd",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -4386,6 +4575,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/alullim-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alullim-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6638,
+      "sha256": "c10a14cec32cb7237cbc679667f4662666ae5eb5158d9eec113e01f0b872769d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alullim-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alullim-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alullim-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 20454,
+      "sha256": "8ea4f3a45df67cf27aa60788bcf53b7d33ed4522a22b5e36fa290c7cb855aa48",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alullim-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/amarion-1975-test-hall-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -4446,6 +4667,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/amarion-abandoned-facility-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/amarion-training-screening-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/amarion-training-screening-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6284,
+      "sha256": "7cb23b6e0327fb57e77a74698bbf51ad530a22f9bfba19e41d8d47e8eb9329df",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/amarion-training-screening-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/amarion-training-screening-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/amarion-training-screening-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 18414,
+      "sha256": "3d5018e512c960a769c11c58901035cae796468513f3418dd79bcf423e2f3d12",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/amarion-training-screening-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -5250,6 +5503,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/mikage-shiori-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mikage-shiori-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9612,
+      "sha256": "1a9c04b421fe1d5659a8e34257e226be9d0251709c547dc0ab3e56d8beedba3f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mikage-shiori-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/mikage-shiori-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mikage-shiori-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 29550,
+      "sha256": "822f0f6c3a1b8aa99c0a70f032e95bfe63416e27cecaf3fb677e4f6baf051d71",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mikage-shiori-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/nhc-close-quarters-stairwell-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5346,6 +5631,70 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/outer-god-war-wall-host-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/outer-god-war-wall-host-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6438,
+      "sha256": "c495dea114c2c3fc933b390d5d4b810986d0c87c285459f940876e3efbfc734e",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/outer-god-war-wall-host-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/outer-god-war-wall-host-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/outer-god-war-wall-host-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 23218,
+      "sha256": "ed95605368432c2d5b59ca2a5e626d0b6b764c1ffcbeaa663a3f95b607b4294a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/outer-god-war-wall-host-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/pilgrim-rule-05-forest-path-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12046,
+      "sha256": "a0dad4e87805752b38530f0133f93b6d9a0d01a1246210c4fde2cb549328abe7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/pilgrim-rule-05-forest-path-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 38652,
+      "sha256": "2f47244a9cde99a019705aec74c5e57eda82b2da001544e0455a83978e51f320",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/project-curse-world-keyart-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5378,6 +5727,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/redwolf-waiting-room-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/redwolf-waiting-room-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 4120,
+      "sha256": "d6f944906ac820de2b06b0c212346aad5ce865359a56f0f405dd41be7795fcfb",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/redwolf-waiting-room-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/redwolf-waiting-room-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/redwolf-waiting-room-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12734,
+      "sha256": "850f1284db790bb798faf17e36dfb4ba7efc0ef6b579077b65002ec3950c6e9a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/redwolf-waiting-room-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/remake-keyart-checkpoint-07-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5406,6 +5787,70 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/returner-note-locker-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/returner-note-locker-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 3368,
+      "sha256": "cbe319c2a17970c8d4e3258f0ffe9ca77da410e10bcc80ba9a0713efe146a2c7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/returner-note-locker-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/returner-note-locker-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/returner-note-locker-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10120,
+      "sha256": "104e15a541aaaf2b9653a472d064b6602434b338ecc61edf8fc6e0eaaf40ec14",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/returner-note-locker-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/sakuma-tape-institution-entry-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6480,
+      "sha256": "0c90c22ae8bd2ab6ebf157f9d6b49b60e313394aec43af98b843e715168730fd",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/sakuma-tape-institution-entry-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 20516,
+      "sha256": "cab635f82adab21a6ff2d0ee68e9eab4b95c1c2a78bc90047a6e2a1cd82c0503",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -5534,6 +5979,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/son-hidden-depot-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/son-quarantine-shelf-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/son-quarantine-shelf-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7058,
+      "sha256": "30ef72d0fe733f06d98b9ea1d3a5d173ef7acbbc10d432c04074b12ef9d8820d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/son-quarantine-shelf-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/son-quarantine-shelf-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/son-quarantine-shelf-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 22460,
+      "sha256": "e1da749b54c79c51abe73ed35effa043fbd77dea46baf0536c4c7e97eead8d15",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/son-quarantine-shelf-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

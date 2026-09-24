@@ -441,6 +441,13 @@
   };
 
   const recordVisuals={
+    'deep-outer-god-war':{
+      src:'assets/resources/derived/outer-god-war-wall-host-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'달빛 아래 창을 짚고 성벽에 선 커네빈 뒤로, 빽빽한 사람 형체와 창끝이 연무 속 지평선까지 이어진다.',
+      label:'INTERPRETIVE RECONSTRUCTION / THE WALL AND THE HOST — 증언 기반',
+      caption:'교단 측 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁의 연대·장소·규모와 경과, 우시노다의 모습은 확정하지 않는다.'
+    },
     'deep-angel-descent':{
       src:'assets/resources/derived/angel-descent-red-sky-concept-v1.png',
       className:'RECONSTRUCTED',
