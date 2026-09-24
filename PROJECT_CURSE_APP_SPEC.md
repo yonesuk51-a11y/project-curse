@@ -23,7 +23,9 @@ Status: `2026-09-24 / 표시층 재작성 진행 중`
 | `assets/app/css/components.css` | 공용 부품 |
 | `assets/app/css/screens/<화면>.css` | 화면 전용 배치 |
 | `assets/app/js/pc-core.js` | `PCApp` — DOM 도우미, 화면 등록, 주소 규칙, 셸 표시 |
-| `assets/app/js/pc-audio.js` | `PCAudio` — 음향 토글(기본 꺼짐), 채널 이동·링크 클릭 소리 |
+| `assets/app/js/pc-audio.js` | `PCAudio` — 음향 토글(기본 꺼짐). 사건 이름으로 소리를 낸다(`cue`). 채널 이동·상세 열람·목록 복귀 소리는 `pc:route` 알림을 듣고 스스로 낸다 |
+| `assets/app/js/pc-fx.js` · `assets/app/css/fx.css` | 연출 — 채널 인계(상단 바), 단말 기동(세션 첫 홈), 증거 현상, 공용 연출 부품(`tc-fx-live`, `tc-fx-stagger`). 모션 감소면 없음 |
+| `assets/js/data/terminal-fx-data.js` | 소리 이름→파일·음량, 화면 이동 사건, 작전·순례 소리, 새 채널 인계 문구, 기동 문구 |
 | `assets/app/js/pc-state.js` | 진행 상태 저장소 — `ProjectCurseOperationState`(부서진 왕관 판정), `ProjectCursePilgrimageState`(순례), `ProjectCurseVerdictArchiveState`(현장 판정 보관). 상황 관제가 쓰고 홈·세계 기록이 읽는다. 옛 저장 키와 `projectcurse:*-change` 이벤트를 그대로 쓴다 |
 | `assets/app/js/screens/<화면>.js` | 화면 모듈 |
 | `tools/verify-app.mjs` | 새 앱 검증 |
@@ -54,7 +56,8 @@ PCApp.screen({
 - 제목은 `app.setTitle(글)`. 상세 화면의 제목 요소에 `data-tc-focus`를 달면 이동 뒤 초점이 간다.
 - 화면 머리는 `PCApp.screenHead(id, {title, desc, meta})`. 채널 코드와 설명은 `channel-identity-data.js`에서 온다.
 - 판정 태그는 `PCApp.tag(글, 톤, {latin, mark})`, 기록 판정 키의 톤은 `PCApp.verdictTone(키)`.
-- 소리는 `window.PCAudio?.play(신호)`. 신호는 `site-manifest.js`의 audio.effects 키다(`contact`, `analog`, `mount`, `projector`, `scan`, `marker`, `radio`, `denied`, `boot`). 음향은 기본 꺼짐이고 꺼져 있으면 아무 일도 하지 않는다. 채널 이동과 링크 클릭 소리는 `pc-audio.js`가 이미 낸다. 화면에서는 기록 열람(`mount`), 재생 단계(`marker`), 봉인·거부(`denied`)처럼 의미 있는 순간에만 부른다.
+- 소리는 `window.PCAudio?.cue('사건')`. 사건 이름은 `audio-manifest.js`의 events(예: `operation.step`, `pilgrimage.danger`, `evidence.open`, `system.denied`)이고, 버스·게인·쿨다운·덕킹도 거기 있다. 음향은 기본 꺼짐이고 꺼져 있으면 아무 일도 하지 않는다. 채널 이동·상세 열람·목록 복귀 소리는 `pc-audio.js`가 이미 낸다. 버튼에는 `data-tc-cue="사건"`을 달아 기본 접점음 대신 쓸 수 있다. 화면에서는 의미 있는 순간에만 부른다.
+- 연출은 `pc-fx.js`와 `fx.css`가 맡는다. 화면이 따로 연출을 만들 때도 조작을 막지 않고, 짧게, 모션 감소면 없게 한다. 셸에는 손상 효과를 쓰지 않는다.
 
 ### 주소
 
