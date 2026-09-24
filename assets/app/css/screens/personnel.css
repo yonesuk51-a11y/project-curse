@@ -1,2 +1,82 @@
-/* Project Curse 6 — personnel 화면 (담당: Codex)
-   공용 부품(components.css)의 색·모양을 바꾸지 않는다. 이 화면에만 필요한 배치와 부품을 둔다. */
+/* Project Curse 6 — 인물 편제표와 2006년 기록 파일. */
+.tc-per-index, .tc-per-detail, .tc-per-roster, .tc-per-results { min-width: 0; }
+.tc-per-detail, .tc-per-copy, .tc-per-results { display: grid; gap: var(--s4); }
+.tc-per-controls { display: grid; gap: var(--s3); padding: var(--s4); margin-bottom: var(--s5); }
+.tc-per-search-row { display: flex; align-items: end; flex-wrap: wrap; gap: var(--s3); }
+.tc-per-search { display: grid; gap: var(--s2); flex: 1 1 220px; min-width: 0; }
+.tc-per-search > span { color: var(--text-2); }
+.tc-per-search input, .tc-per-link-input { min-width: 0; width: 100%; min-height: 44px; padding: var(--s2) var(--s3); border: 1px solid var(--line-2); border-radius: 0; color: var(--text); background: var(--sunken); }
+.tc-per-search input::placeholder { color: var(--text-2); }
+.tc-per-workspace { display: grid; grid-template-columns: 178px minmax(0, 1fr); align-items: start; gap: var(--s4); }
+.tc-per-groups { position: sticky; top: calc(var(--bar-h) + var(--s4)); }
+.tc-per-group-buttons { display: grid; }
+.tc-per-group-button { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); min-height: 44px; padding: var(--s2) var(--s3); border: 0; border-bottom: 1px solid var(--line); border-radius: 0; color: var(--text-2); background: transparent; text-align: left; font-size: var(--fs); transition: background-color var(--t) var(--ease); }
+.tc-per-group-button b { color: var(--coyote-ink); font-family: var(--mono); font-size: var(--fs-xs); font-weight: 500; }
+.tc-per-group-button:hover { color: var(--text); background: var(--fill-od); }
+.tc-per-group-button[aria-pressed="true"] { color: var(--text); background: var(--fill-od-2); box-shadow: inset 2px 0 0 var(--ch); }
+.tc-per-group-button:last-child { border-bottom: 0; }
+.tc-per-result-count { margin-bottom: var(--s4); color: var(--ch-ink); font-size: var(--fs); overflow-wrap: anywhere; }
+.tc-per-results { gap: var(--s5); }
+.tc-per-roster-group h2 { font-size: var(--fs-l); }
+.tc-per-row { grid-template-columns: 34px minmax(0, 1.05fr) minmax(0, 1fr) 16px; gap: var(--s2) var(--s3); }
+.tc-per-row-name, .tc-per-row-unit { display: grid; gap: var(--s1); min-width: 0; }
+.tc-per-row-name b { font-size: var(--fs-l); font-weight: 600; }
+.tc-per-row-name > span { color: var(--text-2); font-size: var(--fs-s); }
+.tc-per-row-name p, .tc-per-row-unit p { font-size: var(--fs); line-height: 1.65; }
+.tc-per-row-unit p { color: var(--text-2); }
+.tc-per-roster-code { color: var(--coyote-ink); align-self: start; padding-top: 3px; font-size: var(--fs-2xs); }
+.tc-per-row .tc-row-meta { grid-column: 2 / 4; justify-content: flex-start; }
+.tc-per-row .tc-row-go { grid-column: 4; grid-row: 1 / 3; }
+.tc-per-navigation { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s3); }
+.tc-per-copy-feedback:empty { display: none; }
+.tc-per-copy-feedback { display: grid; gap: var(--s2); color: var(--ch-ink); }
+.tc-per-cover { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s4); padding: var(--s5); }
+.tc-per-cover:has(.tc-per-photo) { grid-template-columns: minmax(0, 1fr) 200px; }
+.tc-per-cover > .tc-per-kv { grid-column: 1 / -1; }
+.tc-per-cover-main { display: grid; gap: var(--s2); min-width: 0; }
+.tc-per-cover-main > .tc-code { color: var(--text-2); overflow-wrap: anywhere; }
+.tc-per-cover h1 { font-size: var(--fs-2xl); }
+.tc-per-cover-main > p:not(.tc-label):not(.tc-code) { font-size: var(--fs-l); }
+.tc-per-tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.tc-per-tags .tc-tag { white-space: normal; }
+.tc-per-kv { grid-template-columns: repeat(auto-fit, minmax(min(215px, 100%), 1fr)); }
+.tc-per-kv > div { min-width: 0; }
+.tc-per-kv dd { font-size: var(--fs); line-height: 1.75; }
+.tc-per-copy { font-size: var(--fs); line-height: 1.85; }
+.tc-per-copy > p { max-width: 82ch; }
+.tc-per-copy h3 { font-size: var(--fs-l); }
+.tc-per-bullets { display: grid; gap: var(--s2); }
+.tc-per-bullets li { padding-left: var(--s4); border-left: 1px solid var(--line-2); font-size: var(--fs); }
+.tc-per-chronology { display: grid; }
+.tc-per-chronology li { display: grid; grid-template-columns: 126px minmax(0, 1fr); gap: var(--s4); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+.tc-per-chronology time { color: var(--coyote-ink); padding-top: 4px; }
+.tc-per-connection { display: grid; align-content: start; gap: var(--s1); min-height: var(--tap); padding: var(--s3); border: 1px solid var(--line); transition: background-color var(--t) var(--ease); }
+.tc-per-connection > .tc-code { overflow-wrap: anywhere; }
+.tc-per-connection:hover { background: var(--fill-od); }
+.tc-per-connections { display: grid; gap: var(--s2); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tc-per-limits { gap: var(--s3); }
+.tc-per-event { display: grid; gap: var(--s2); padding-bottom: var(--s4); border-bottom: 1px solid var(--line); }
+.tc-per-photo > img { width: 100%; max-height: 320px; object-fit: contain; }
+.tc-per-detail .tc-missing { overflow-wrap: anywhere; }
+@media (max-width: 1100px) {
+  .tc-per-workspace { grid-template-columns: minmax(0, 1fr); }
+  .tc-per-groups { position: static; }
+  .tc-per-group-buttons { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .tc-per-group-button { box-shadow: 0 0 0 1px var(--line); }
+}
+@media (max-width: 720px) {
+  .tc-per-row { grid-template-columns: 36px minmax(0, 1fr) 16px; }
+  .tc-per-row-name { grid-column: 2; }
+  .tc-per-row-unit { grid-column: 2; }
+  .tc-per-row .tc-row-meta { grid-column: 2; }
+  .tc-per-row .tc-row-go { grid-column: 3; grid-row: 1 / 4; }
+  .tc-per-connections { grid-template-columns: minmax(0, 1fr); }
+  .tc-per-cover, .tc-per-cover:has(.tc-per-photo) { grid-template-columns: minmax(0, 1fr); padding: var(--s4); }
+  .tc-per-group-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tc-per-navigation > .tc-btnrow { flex: 1 1 100%; }
+  .tc-per-chronology li { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #personnel { animation: none; }
+  .tc-per-index *, .tc-per-detail * { transition: none !important; animation: none !important; }
+}

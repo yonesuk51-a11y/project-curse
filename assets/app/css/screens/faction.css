@@ -1,2 +1,96 @@
-/* Project Curse 6 — faction 화면 (담당: Codex)
-   공용 부품(components.css)의 색·모양을 바꾸지 않는다. 이 화면에만 필요한 배치와 부품을 둔다. */
+/* Project Curse 6 — 세력 편제표. 공용 부품의 색과 형태는 유지한다. */
+.tc-fac-index, .tc-fac-detail, .tc-fac-groups, .tc-fac-copy { min-width: 0; }
+.tc-fac-detail, .tc-fac-groups, .tc-fac-copy { display: grid; gap: var(--s4); }
+.tc-fac-groups { gap: var(--s6); }
+.tc-fac-controls { display: grid; gap: var(--s3); margin-bottom: var(--s5); padding: var(--s4); }
+.tc-fac-control-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s2); }
+.tc-fac-control-head h2 { font-size: var(--fs-l); }
+.tc-fac-control-head p { color: var(--ch-ink); }
+.tc-fac-row { grid-template-columns: 112px minmax(0, 1fr) 16px; align-items: center; gap: var(--s5); }
+.tc-fac-row-copy { display: grid; gap: var(--s2); min-width: 0; }
+.tc-fac-row-copy h3 { font-size: var(--fs-l); }
+.tc-fac-row-copy p { color: var(--text); font-size: var(--fs); line-height: 1.65; }
+.tc-fac-row-copy .tc-fac-index-status { color: var(--text-2); }
+.tc-fac-tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); min-width: 0; }
+.tc-fac-tags .tc-tag { white-space: normal; }
+.tc-fac-mark { min-width: 0; align-self: start; }
+.tc-fac-mark-image { display: grid; justify-items: center; gap: var(--s3); padding: var(--s4); }
+.tc-fac-mark-image .tc-code { justify-self: start; color: var(--coyote-ink); }
+.tc-fac-mark-image img { width: 160px; height: 160px; object-fit: contain; }
+.tc-fac-mark--compact .tc-fac-mark-image { gap: var(--s1); padding: var(--s2); }
+.tc-fac-mark--compact .tc-fac-mark-image img { width: 58px; height: 58px; }
+.tc-fac-mark--compact figcaption { padding: var(--s1) var(--s2); }
+.tc-fac-mark--compact .tc-code { font-size: var(--fs-2xs); }
+.tc-fac-cover { display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: var(--s5); padding: var(--s5); align-items: start; }
+.tc-fac-cover-copy { display: grid; gap: var(--s3); min-width: 0; }
+.tc-fac-cover-copy h1 { font-size: var(--fs-2xl); }
+.tc-fac-cover-copy > p { max-width: 76ch; }
+.tc-fac-cover-copy > .tc-label { overflow-wrap: anywhere; }
+.tc-fac-copy { font-size: var(--fs); line-height: 1.8; }
+.tc-fac-copy > p { max-width: 82ch; }
+.tc-fac-copy h3 { font-size: var(--fs-l); }
+.tc-fac-kv { grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); }
+.tc-fac-kv > div { min-width: 0; }
+.tc-fac-kv dd, .tc-fac-prose { font-size: var(--fs); }
+.tc-fac-bullets { display: grid; }
+.tc-fac-bullets li { padding: var(--s2) 0 var(--s2) var(--s4); border-bottom: 1px solid var(--line); position: relative; }
+.tc-fac-bullets li::before { content: ""; position: absolute; left: 0; top: 19px; width: 5px; height: 5px; border: 1px solid var(--od-2); }
+.tc-fac-profile { display: grid; gap: var(--s3); }
+.tc-fac-context { display: grid; }
+.tc-fac-context > div { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: var(--s4); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+.tc-fac-context > div:last-child { border: 0; }
+.tc-fac-context dt { color: var(--text-2); }
+.tc-fac-chronology { display: grid; }
+.tc-fac-chronology li { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: var(--s4); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+.tc-fac-chronology time { color: var(--coyote-ink); padding-top: 4px; }
+.tc-fac-visual { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: end; }
+.tc-fac-visual > img { width: 100%; max-height: 480px; object-fit: contain; }
+.tc-fac-symbols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 1px; }
+.tc-fac-symbols li { display: grid; align-content: start; gap: var(--s2); padding: var(--s3); box-shadow: 0 0 0 1px var(--line); }
+.tc-fac-symbols b { color: var(--coyote-ink); }
+.tc-fac-command { color: var(--blood-ink); }
+.tc-fac-lineage-nodes, .tc-fac-people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; }
+.tc-fac-lineage-nodes li, .tc-fac-people li { min-width: 0; box-shadow: 0 0 0 1px var(--line); }
+.tc-fac-connection { display: grid; align-content: start; gap: var(--s1); min-height: var(--tap); height: 100%; padding: var(--s3); transition: background-color var(--t) var(--ease); }
+.tc-fac-connection:hover, .tc-fac-connection[aria-current="page"] { background: var(--fill-od); }
+.tc-fac-connection span { color: var(--text-2); }
+.tc-fac-connection .tc-tag { white-space: normal; }
+.tc-fac-lineage-edges { display: grid; }
+.tc-fac-lineage-edges li { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--s2) var(--s4); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+.tc-fac-lineage-edges li > .tc-tag { grid-column: 2; white-space: normal; }
+.tc-fac-inline-link { display: inline-flex; align-items: center; min-width: var(--tap); min-height: var(--tap); border-bottom: 1px solid var(--line-2); }
+.tc-fac-inline-link:hover { color: var(--ch-ink); }
+.tc-fac-edge-line { width: 28px; height: 0; border-top: 1px solid var(--blood-ink); }
+.tc-fac-lineage-edges [data-state="disputed"] .tc-fac-edge-line { border-top-style: dashed; border-color: var(--red); }
+.tc-fac-lineage-edges [data-state="split"] .tc-fac-edge-line { border-top-style: dotted; border-color: var(--amber); }
+.tc-fac-lineage-edges [data-state="exception"] .tc-fac-edge-line { height: 4px; border-bottom: 1px solid var(--blood-ink); }
+.tc-fac-relations, .tc-fac-incidents { display: grid; }
+.tc-fac-relation { display: grid; gap: var(--s2); min-height: var(--tap); padding: var(--s4) 0; border-bottom: 1px solid var(--line); transition: background-color var(--t) var(--ease); }
+.tc-fac-relation:hover { background: var(--fill-od); }
+.tc-fac-incidents li { display: grid; gap: var(--s3); padding: var(--s4) 0; border-bottom: 1px solid var(--line); }
+.tc-fac-detail .tc-missing { overflow-wrap: anywhere; }
+@media (max-width: 720px) {
+  .tc-fac-row { grid-template-columns: 92px minmax(0, 1fr) 12px; gap: var(--s3); }
+  .tc-fac-row > .tc-row-go { grid-column: 3; grid-row: auto; }
+  .tc-fac-cover { grid-template-columns: minmax(0, 1fr); padding: var(--s4); }
+  .tc-fac-cover > .tc-fac-mark { width: 100%; display: grid; grid-template-columns: 160px minmax(0, 1fr); align-items: end; }
+  .tc-fac-cover .tc-fac-mark-image img { width: 116px; height: 116px; }
+  .tc-fac-cover .tc-fac-mark figcaption { border-top: 0; }
+  .tc-fac-lineage-nodes, .tc-fac-people { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tc-fac-visual { grid-template-columns: minmax(0, 1fr); }
+  .tc-fac-lineage-edges li { grid-template-columns: minmax(0, 1fr); }
+  .tc-fac-lineage-edges li > .tc-tag { grid-column: 1; }
+}
+@media (max-width: 480px) {
+  .tc-fac-row { grid-template-columns: 84px minmax(0, 1fr) 12px; }
+  .tc-fac-row-copy p { grid-column: 1 / -1; }
+  .tc-fac-row-copy { display: contents; }
+  .tc-fac-row-copy > .tc-fac-tags { grid-column: 2; grid-row: 1; align-self: center; }
+  .tc-fac-row > .tc-row-go { grid-row: 1; }
+  .tc-fac-context > div, .tc-fac-chronology li { grid-template-columns: minmax(0, 1fr); gap: var(--s1); }
+  .tc-fac-lineage-nodes, .tc-fac-people { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #faction-info { animation: none; }
+  .tc-fac-index *, .tc-fac-detail * { transition: none !important; animation: none !important; }
+}
