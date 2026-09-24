@@ -152,7 +152,7 @@
     );
   }
 
-  // 리버스 지점의 민간인 빙의(2026-09-25 사용자 설정) — 분류 근거는 괴이 판정표로 연결한다.
+  // 리버스 지점의 피탈자(2026-09-25 사용자 설정) — 분류 근거는 괴이 판정표로, 교전은 교범으로 연결한다.
   function possessionBlock(item) {
     if (!item) return null;
     return h('details.tc-disclosure.tc-hist-sub', null,
@@ -160,6 +160,8 @@
       h('div.tc-disclosure-body', null,
         h('p', { text: item.rule }),
         h('p', { text: item.handling }),
+        item.state ? h('p', { text: item.state }) : null,
+        item.release ? h('p', { text: item.release }) : null,
         h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
         item.record ? h('p', null, h('a', { href: PC.href('archive-entry', item.record) }, '괴이 판정표 원문 열기', h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null,
         item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `교전 교범의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null

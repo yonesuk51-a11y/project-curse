@@ -128,19 +128,19 @@
     ], { slug: 'roe' });
   }
 
-  /* ---------- 빙의 민간인 교전 규칙 ---------- */
-  // 리버스 지점의 민간인 빙의(2026-09-25 사용자 설정). 세계 기본 규칙의 같은 항목과 서로 링크한다.
+  /* ---------- 피탈자 교전 규칙 ---------- */
+  // 리버스 지점에서 몸을 빼앗긴 민간인, 피탈자(2026-09-25 사용자 설정). 세계 기본 규칙의 같은 항목과 서로 링크한다.
   function possessionPanel() {
-    const sec = section('빙의 민간인 교전 규칙');
-    if (!sec) return missingSection('빙의 민간인 교전 규칙');
+    const sec = section('피탈자 교전 규칙');
+    if (!sec) return missingSection('피탈자 교전 규칙');
     const rec = sec.record || {};
-    return panel('ROE / POSSESSED CIVILIANS', '빙의 민간인 교전 규칙', [
+    return panel('ROE / TAKEN CIVILIANS', '피탈자 교전 규칙', [
       paragraphs(sec.paragraphs),
       list(sec.items, 'tc-man-list tc-man-list--rules'),
       sec.quote ? h('blockquote.tc-man-quote', null, h('p', { text: sec.quote })) : null,
       sec.warning ? h('div.tc-note.tc-note--danger', null, h('b', { text: 'MISSION FAILURE' }), h('p', { text: sec.warning })) : null,
       rec.limit ? h('div.tc-note.tc-note--caution', null, h('b', { text: 'INFORMATION LIMIT' }), h('p', { text: rec.limit })) : null,
-      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 리버스 지점의 민간인 빙의 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 피탈자 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
     ], { bracket: 'danger', slug: 'possessed' });
   }
 
