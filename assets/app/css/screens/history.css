@@ -854,7 +854,7 @@ a.tc-hist-turn:hover {
   }
 }
 
-/* 판정 도장 — 사건 기록을 열 때 기록 판정 태그가 한 번 찍힌다(증거 층). 모션 감소면 없음 */
+/* 판정 도장 — 사건 기록을 열 때 기록 판정 태그가 한 번 찍힌다(증거 층). 효과 줄임이면 없음 */
 .tc-hist-kv .tc-tag {
   animation: tc-fx-stamp 300ms var(--ease) 140ms both;
 }
@@ -862,8 +862,6 @@ a.tc-hist-turn:hover {
   from { opacity: 0; transform: scale(1.18); }
   60% { opacity: 1; transform: scale(.97); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .tc-hist-kv .tc-tag {
-    animation: none;
-  }
+html[data-fx="reduced"] .tc-hist-kv .tc-tag {
+  animation: none;
 }

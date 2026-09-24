@@ -144,6 +144,8 @@
 
 /* ---------- 버튼 — 직사각형 1px. 채운 버튼은 화면당 하나 이하 ---------- */
 .tc-btn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -158,11 +160,11 @@
   font-weight: 600;
   line-height: 1.3;
   text-align: left;
-  transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease);
+  transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease), filter 220ms var(--ease);
 }
 .tc-btn:hover {
-  border-color: var(--od-2);
-  background: var(--fill-od);
+  border-color: var(--ch);
+  background-color: rgba(var(--ch-rgb), .1);
 }
 .tc-btn i {
   color: var(--text-3);
@@ -171,25 +173,26 @@
   font-style: normal;
 }
 .tc-btn--primary {
-  border-color: var(--od-2);
-  background: var(--fill-od-2);
+  border-color: var(--red);
+  background-color: rgba(179, 60, 69, .2);
 }
 .tc-btn--primary:hover {
-  background: rgba(86, 97, 63, .4);
+  border-color: var(--red-bright);
+  background-color: rgba(179, 60, 69, .32);
 }
 .tc-btn--caution {
   border-color: rgba(201, 138, 46, .6);
 }
 .tc-btn--caution:hover {
   border-color: var(--amber);
-  background: var(--fill-amber);
+  background-color: var(--fill-amber);
 }
 .tc-btn--danger {
   border-color: var(--red);
 }
 .tc-btn--danger:hover {
   border-color: var(--red-ink);
-  background: var(--fill-red);
+  background-color: var(--fill-red);
 }
 .tc-btn:disabled {
   opacity: .35;
@@ -218,7 +221,7 @@
   background: transparent;
   font-size: var(--fs-s);
   font-weight: 600;
-  transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease);
+  transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease), filter 220ms var(--ease);
 }
 .tc-seg button i {
   color: var(--text-3);
@@ -227,14 +230,14 @@
   font-style: normal;
 }
 .tc-seg button:hover {
-  border-color: var(--od-2);
+  border-color: var(--ch);
   color: var(--text);
-  background: var(--fill-od);
+  background-color: rgba(var(--ch-rgb), .08);
 }
 .tc-seg button[aria-pressed="true"] {
-  border-color: var(--od-2);
+  border-color: var(--ch);
   color: var(--text);
-  background: var(--fill-od-2);
+  background-color: rgba(var(--ch-rgb), .18);
 }
 .tc-seg button[aria-pressed="true"] i {
   color: var(--amber-ink);
@@ -257,7 +260,7 @@
   border-top: 1px solid var(--line);
   color: inherit;
   text-align: left;
-  transition: background-color var(--t) var(--ease);
+  transition: background-color var(--t) var(--ease), filter 220ms var(--ease);
 }
 .tc-row:first-child {
   border-top: 0;
@@ -274,7 +277,7 @@
 }
 a.tc-row:hover,
 button.tc-row:hover {
-  background: var(--fill-od);
+  background-color: rgba(var(--ch-rgb), .07);
 }
 a.tc-row:hover::before,
 button.tc-row:hover::before,
@@ -665,4 +668,163 @@ button.tc-row {
   .tc-phase {
     grid-auto-flow: row;
   }
+}
+
+/* =========================================================
+   2026-09-25 분위기 복원 — 공용 부품
+   ========================================================= */
+
+/* 간략/전체 보기 — 간략 보기에서 영문 코드·부가 수치를 숨긴다(pc-prefs.js). 이름·날짜·판정·본문은 숨기지 않는다 */
+html[data-density="brief"] .tc-full-only {
+  display: none !important;
+}
+html[data-density="full"] .tc-brief-only {
+  display: none !important;
+}
+
+/* 붉은 빛줄기 — 누를 수 있는 것에 마우스를 올리면 채널색 빛이 비스듬히 지나간다(옛 app-shell.css 호버) */
+:is(.tc-btn, a.tc-row, button.tc-row, .tc-rail-list a)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 36%, rgba(var(--ch-rgb), .2) 50%, transparent 64%) no-repeat;
+  background-size: 260% 100%;
+  background-position: 130% 0;
+  opacity: 0;
+  transition: background-position 640ms var(--ease-out), opacity 200ms var(--ease);
+}
+:is(.tc-btn, a.tc-row, button.tc-row, .tc-rail-list a):hover::after {
+  background-position: -30% 0;
+  opacity: 1;
+}
+/* 누름 — 0.2초 밝아진다 */
+:is(.tc-btn, a.tc-row, button.tc-row, .tc-rail-list a, .tc-seg button, .tc-audio, .tc-barbtn):active {
+  filter: brightness(1.45);
+  transition-duration: 0s;
+}
+
+/* 새 기록 — 지난 방문 뒤에 생긴 기록으로 가는 링크(pc-updates.js) */
+a[data-tc-new] {
+  position: relative;
+}
+.tc-new-badge {
+  display: inline-block;
+  margin: 0 0 0 6px;
+  padding: 0 5px;
+  border: 1px solid var(--red);
+  color: var(--red-ink);
+  background: rgba(179, 60, 69, .14);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .08em;
+  line-height: 1.5;
+  vertical-align: .1em;
+  white-space: nowrap;
+}
+a[data-tc-new="block"] > .tc-new-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  margin: 0;
+}
+
+/* 자유 해석 — 공식 기록이 정하지 않은 부분(PCApp.openCanon). 기록 본문과 구분되게 점선 틀 */
+.tc-open-canon {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4);
+  border: 1px dashed rgba(154, 123, 80, .7);
+  background: var(--fill-coyote);
+}
+.tc-open-canon-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px var(--s3);
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-open-canon-head b {
+  color: var(--coyote-ink);
+  font-weight: 600;
+}
+.tc-open-canon-head a {
+  color: var(--coyote-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.tc-open-canon p,
+.tc-open-canon li {
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.65;
+}
+.tc-open-canon ul {
+  display: grid;
+  gap: 4px;
+}
+.tc-open-canon li::before {
+  content: "— ";
+  color: var(--coyote-ink);
+}
+
+/* 알림 — 링크 복사 등(PCApp.toast) */
+.tc-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+  z-index: 70;
+  max-width: min(92vw, 520px);
+  padding: 10px 16px;
+  border: 1px solid var(--red);
+  color: var(--text);
+  background: #0c0909;
+  font-size: var(--fs-s);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
+}
+.tc-toast.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+@media (max-width: 960px) {
+  .tc-toast {
+    bottom: calc(var(--dock-h) + var(--s4) + env(safe-area-inset-bottom));
+  }
+}
+
+/* 감식 보기로 열 수 있는 증거 그림(pc-inspect.js) */
+img[data-tc-inspectable] {
+  cursor: zoom-in;
+}
+img[data-tc-inspectable]:focus-visible {
+  outline-offset: -3px;
+}
+
+/* 이상 신호 — 원래 글자는 두고 겉에 다른 값을 덮는다(화면 낭독기는 원래 글자를 읽는다) */
+.tc-anomaly-on {
+  position: relative;
+  color: transparent !important;
+}
+.tc-anomaly-on::after {
+  content: attr(data-tc-anomaly-show);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--red-ink);
+  white-space: nowrap;
+  animation: tc-anomaly-jitter 180ms steps(3, end) 2;
+}
+@keyframes tc-anomaly-jitter {
+  0% { transform: translateX(-1px); }
+  50% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+html.tc-anomaly-clock [data-tc-clock] {
+  color: var(--red-ink);
 }

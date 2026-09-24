@@ -55,7 +55,9 @@ add('app-no-legacy-runtime', !/assets\/css\/style\.css|assets\/js\/main\.js/.tes
 const stampCheck = spawnSync(process.execPath, [ROOT + 'tools/stamp-assets.mjs', '--check'], { encoding: 'utf8' });
 add('asset-stamps-current', stampCheck.status === 0 && /\?v=6\.0\.0-[0-9a-f]{8}"/.test(app),
   (stampCheck.stdout || '').split(/\r?\n/).filter((line) => line.startsWith('STALE')).join(' | ') || 'stamped');
-add('app-social-metadata', ['name="description"', 'rel="canonical"', 'property="og:title"', 'property="og:image"', 'name="twitter:card"', 'project-curse-world-keyart-concept-v1.png'].every((needle) => app.includes(needle)));
+// 링크 미리보기 — 2026-09-25 사용자 결정으로 금 간 봉인 로고(assets/brand/og-image.png, 1200×630)를 쓴다. 탭 아이콘도 같은 로고.
+add('app-social-metadata', ['name="description"', 'rel="canonical"', 'property="og:title"', 'property="og:image"', 'name="twitter:card"', 'assets/brand/og-image.png', 'content="1200" property="og:image:width"', 'assets/brand/favicon-32.png'].every((needle) => app.includes(needle)) &&
+  ['assets/brand/og-image.png', 'assets/brand/favicon-32.png', 'assets/brand/apple-touch-icon.png', 'assets/brand/project-curse-emblem-64.png', 'assets/brand/project-curse-emblem-128.png'].every((file) => existsSync(ROOT + file)));
 
 /* ---------- 3. 데이터 적재 ---------- */
 const context = { console };
@@ -265,9 +267,11 @@ for (const file of cssFiles) {
 }
 add('design-radius-max-2px', radiusViolations.length === 0, radiusViolations.join(' | '));
 add('design-no-glow', glowViolations.length === 0, glowViolations.join(' | '));
-add('design-reduced-motion', read('assets/app/css/base.css').includes('prefers-reduced-motion'));
+// 움직임 줄이기 — 기기의 prefers-reduced-motion(또는 표시 설정 '줄임')을 pc-prefs.js가 html[data-fx]로 옮기고, base.css가 그 속성에서 움직임을 멈춘다.
+add('design-reduced-motion', read('assets/app/js/pc-prefs.js').includes('(prefers-reduced-motion: reduce)') && /html\[data-fx="reduced"\] \*[\s\S]*animation-duration: 1ms !important/.test(read('assets/app/css/base.css')) && app.indexOf('pc-prefs.js') > -1 && app.indexOf('pc-prefs.js') < app.indexOf('tokens.css'));
 const tokens = read('assets/app/css/tokens.css');
-add('design-guide-palette', ['#0a0c0b', '#111513', '#d8d6cc', '#56613f', '#9a7b50', '#c98a2e', '#9e2f2a', '#6e1f2a', '#7fa39a'].every((hex) => tokens.toLowerCase().includes(hex)));
+// 2026-09-25 사용자 결정: 전술 기능색(올리브·코요테·앰버·적외선)은 두고 바탕·패널·글자·위험색을 옛 붉은 검정 값으로(가이드 5절).
+add('design-guide-palette', ['#070606', '#100c0d', '#e2dcd6', '#56613f', '#9a7b50', '#c98a2e', '#b33c45', '#6e1f2a', '#7fa39a', '#e05a63'].every((hex) => tokens.toLowerCase().includes(hex)));
 
 /* ---------- 9. 외부 링크 ---------- */
 const blankLinks = screenSources.filter(([, source]) => source.includes("target: '_blank'"));

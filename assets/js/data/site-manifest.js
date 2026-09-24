@@ -12,8 +12,8 @@
     version:root.ProjectCurseBuild?.version||'5.54.0',
     schema:root.ProjectCurseBuild?.schema||'project-curse-v44',
     screens:root.ProjectCurseBuild?.screens||[
-      {id:'terminal-home',label:'단말 상태',index:'00'},
-      {id:'map-room',label:'상황 관제',index:'01'},
+      {id:'terminal-home',label:'상황판',index:'00'},
+      {id:'map-room',label:'작전 지도',index:'01'},
       {id:'history',label:'세계 기록',index:'02'},
       {id:'faction-info',label:'세력 분석',index:'03'},
       {id:'archive-entry',label:'기록보관소',index:'04'},

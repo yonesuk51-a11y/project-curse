@@ -380,10 +380,10 @@ function verify(){
   const forbiddenReferenceNames=new Set(['지옥.zip','Pictures.zip','Pictures2.zip']);
   const exposedReferenceFiles=fileTree(ROOT).filter(relative=>forbiddenReferenceNames.has(relative.split('/').at(-1)));
   add('media-provenance-owner',structureData?.owners?.mediaProvenance==='assets/js/data/media-provenance-data.js'&&mediaProvenance?.version==='1.1.0');
-  add('media-provenance-all-443-assets',provenanceAssets.length===443&&repositoryMedia.join('|')===provenancePaths.join('|'),`${provenanceAssets.length} registered / ${repositoryMedia.length} files`);
+  add('media-provenance-all-450-assets',provenanceAssets.length===450&&repositoryMedia.join('|')===provenancePaths.join('|'),`${provenanceAssets.length} registered / ${repositoryMedia.length} files`);
   add('media-provenance-hash-and-size',provenanceAssets.every(asset=>existsSync(path(asset.path))&&statSync(path(asset.path)).size===asset.bytes&&hash(readFileSync(path(asset.path)))===asset.sha256));
-  add('media-provenance-kind-counts',mediaProvenance?.stats?.byKind?.image===413&&mediaProvenance?.stats?.byKind?.audio===23&&mediaProvenance?.stats?.byKind?.video===7);
-  add('media-provenance-honest-review',provenanceAssets.filter(asset=>asset.kind==='audio'||asset.kind==='video').every(asset=>asset.release==='LICENSE_REVIEW')&&mediaProvenance?.stats?.review===150&&mediaProvenance?.stats?.managed===293);
+  add('media-provenance-kind-counts',mediaProvenance?.stats?.byKind?.image===420&&mediaProvenance?.stats?.byKind?.audio===23&&mediaProvenance?.stats?.byKind?.video===7);
+  add('media-provenance-honest-review',provenanceAssets.filter(asset=>asset.kind==='audio'||asset.kind==='video').every(asset=>asset.release==='LICENSE_REVIEW')&&mediaProvenance?.stats?.review===150&&mediaProvenance?.stats?.managed===300);
   add('media-provenance-internal-keyart-excluded',internalOnlyMedia.has('assets/resources/derived/project-curse-world-keyart-concept-v2.png')&&!provenancePaths.includes('assets/resources/derived/project-curse-world-keyart-concept-v2.png'));
   add('media-provenance-unselected-candidates-excluded',[...unselectedCandidateMedia].every(relative=>!provenancePaths.includes(relative)&&!app.includes(relative.split('/').at(-1))));
   add('media-provenance-reference-boundary',mediaProvenance?.referenceOnly?.map(item=>item.name).join('|')==='지옥.zip|Pictures.zip|Pictures2.zip'&&mediaProvenance?.stats?.referenceExposure===exposedReferenceFiles.length&&exposedReferenceFiles.length===0);

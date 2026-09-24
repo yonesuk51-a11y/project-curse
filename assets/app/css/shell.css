@@ -1,5 +1,6 @@
 /* Project Curse 6 — 셸: 상단 명령 바, 채널 레일, 화면 틀
-   셸은 끝까지 멀쩡해야 한다. 손상 효과를 여기에 쓰지 않는다. */
+   셸 자체는 멀쩡하게 읽혀야 한다. 2026-09-25 사용자 결정으로 붉은 분위기·채널색·빛줄기를 되살렸지만
+   글자를 가리는 손상 효과(스캔선·가림)는 여기에 쓰지 않는다. 연출은 fx.css가 맡는다. */
 
 .tc-app {
   display: grid;
@@ -19,9 +20,10 @@
   gap: var(--s4);
   height: var(--bar-h);
   padding: 0 var(--s4) 0 0;
-  border-bottom: 1px solid var(--line);
-  background: #0d100f;
-  box-shadow: inset 0 2px 0 var(--od);
+  border-bottom: 1px solid rgba(var(--ch-rgb), .28);
+  background: #0c0909;
+  box-shadow: inset 0 2px 0 var(--ch);
+  transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
 }
 .tc-brand {
   display: flex;
@@ -32,18 +34,13 @@
   padding: 0 var(--s4);
   border-right: 1px solid var(--line);
 }
+/* 금 간 봉인 로고(2026-09-25 채택). 그림이 없으면 옛 사각 표지로 보인다 */
 .tc-brand-mark {
   position: relative;
   flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
-  border: 1px solid var(--od-2);
-}
-.tc-brand-mark::before {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  background: var(--amber);
+  width: 26px;
+  height: 26px;
+  background: url("../../brand/project-curse-emblem-64.png") center / contain no-repeat;
 }
 .tc-brand-text {
   display: grid;
@@ -127,8 +124,9 @@
   vertical-align: middle;
 }
 
-/* 음향 토글 — 기본은 꺼짐 */
-.tc-audio {
+/* 상단 단추 — 보기(간략·전체), 링크 복사, 음향, 설정. 음향은 2026-09-25부터 기본 켜짐 */
+.tc-audio,
+.tc-barbtn {
   display: grid;
   align-content: center;
   gap: 1px;
@@ -141,25 +139,36 @@
   text-align: left;
   transition: background-color var(--t) var(--ease);
 }
-.tc-audio span {
+.tc-audio span,
+.tc-barbtn span {
   font-family: var(--label);
   font-size: var(--fs-2xs);
   font-weight: 600;
   letter-spacing: .16em;
   line-height: 1.1;
 }
-.tc-audio b {
+.tc-audio b,
+.tc-barbtn b {
   color: var(--text-2);
   font-family: var(--mono);
   font-size: var(--fs-xs);
   font-weight: 500;
   line-height: 1.2;
 }
-.tc-audio:hover {
-  background: var(--fill-od);
+.tc-audio:hover,
+.tc-barbtn:hover {
+  background: var(--fill-red);
 }
 .tc-audio[aria-pressed="true"] b {
-  color: var(--od-ink);
+  color: var(--red-ink);
+}
+.tc-barbtn[aria-pressed="true"] b,
+.tc-barbtn[aria-expanded="true"] b {
+  color: var(--ch-ink);
+}
+/* 삼야 무응답 기념일 — 상단 바 경과 시계(pc-anomaly.js) */
+.tc-bar-status .is-silence dd {
+  color: var(--red-ink);
 }
 
 /* ---------- 채널 레일 ---------- */
@@ -231,7 +240,7 @@
 }
 .tc-rail-list a:hover {
   color: var(--text);
-  background: var(--fill-od);
+  background-color: rgba(var(--ch-rgb), .08);
 }
 .tc-rail-list a[aria-current="page"] {
   color: var(--text);
@@ -283,16 +292,22 @@
 .tc-main:focus {
   outline: none;
 }
+/* 화면 등장은 fx.css의 채널별 등장(.is-entering)과 부품 순차 등장(.is-staggering)이 맡는다 */
 .tc-screen {
   max-width: var(--content-max);
   margin: 0 auto;
-  animation: tc-screen-enter var(--t-screen) var(--ease) both;
 }
-@keyframes tc-screen-enter {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
+
+/* 기록 영상 몰입 재생 — 기록보관소가 html.tc-immersive를 붙이는 동안 셸을 숨긴다 */
+html.tc-immersive .tc-bar,
+html.tc-immersive .tc-rail {
+  display: none;
+}
+html.tc-immersive .tc-app {
+  display: block;
+}
+html.tc-immersive .tc-main {
+  padding: 0;
 }
 
 /* 화면 머리 — 채널 표지, 제목, 한 줄 설명, 운용 수치 */
@@ -462,9 +477,14 @@
   .tc-screenhead-meta > div {
     min-width: 0;
   }
-  .tc-audio {
+  .tc-audio,
+  .tc-barbtn {
     min-width: 0;
     padding: 0 var(--s3);
+  }
+  /* 좁은 화면에서는 보기·링크를 설정 창으로 옮긴다 */
+  .tc-barbtn.is-wide-only {
+    display: none;
   }
 }
 /* 아주 좁은 화면 — 위협 등급은 홈의 긴급 경보에도 있으므로 상단 바에서 뺀다 */
@@ -472,4 +492,68 @@
   .tc-bar-status .is-alert {
     display: none;
   }
+}
+
+/* ---------- 화면 머리 — 채널 대표 그림과 인장(2026-09-25) ---------- */
+.tc-screenhead {
+  isolation: isolate;
+  overflow: hidden;
+  padding-right: calc(var(--s5) + 76px);
+}
+.tc-screenhead > .tc-seal {
+  position: absolute;
+  top: var(--s4);
+  right: var(--s4);
+}
+.tc-screenhead.has-hero {
+  min-height: 200px;
+  align-content: end;
+  background: var(--sunken);
+}
+.tc-screenhead-hero {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.tc-screenhead-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(.8) brightness(.62);
+}
+/* 글자가 읽히도록 왼쪽과 아래를 어둡게 */
+.tc-screenhead-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(7, 6, 6, .95) 0%, rgba(7, 6, 6, .8) 38%, rgba(7, 6, 6, .3) 100%),
+    linear-gradient(0deg, rgba(7, 6, 6, .9) 0%, transparent 60%);
+}
+@media (max-width: 960px) {
+  .tc-screenhead {
+    padding-right: calc(var(--s4) + 60px);
+  }
+  .tc-screenhead > .tc-seal {
+    width: 52px;
+    height: 52px;
+    top: var(--s3);
+    right: var(--s3);
+  }
+  .tc-screenhead.has-hero {
+    min-height: 180px;
+  }
+  .tc-screenhead-hero::after {
+    background: linear-gradient(0deg, rgba(7, 6, 6, .95) 10%, rgba(7, 6, 6, .55) 70%, rgba(7, 6, 6, .35) 100%);
+  }
+}
+
+/* 간략 보기 — 레일의 영문 부제와 아래쪽 단말 표지는 전체 보기에서만 */
+html[data-density="brief"] .tc-rail-list a em,
+html[data-density="brief"] .tc-rail-head,
+html[data-density="brief"] .tc-rail-foot {
+  display: none;
+}
+html[data-density="brief"] .tc-rail-list a {
+  min-height: 48px;
 }

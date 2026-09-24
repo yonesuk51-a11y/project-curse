@@ -15,12 +15,12 @@
     defaults:{quality:'auto',effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on'},
     channels:[
       {
-        id:'terminal-home',index:'00',code:'COMMAND NODE',label:'단말 상태',shortLabel:'단말',theme:'command',glyph:'CN',
+        id:'terminal-home',index:'00',code:'COMMAND NODE',label:'상황판',shortLabel:'상황',theme:'command',glyph:'CN',
         description:'폐쇄 서버의 현재 신호와 모든 기록 채널을 통합 지휘한다.',
         telemetry:[['NETWORK','ISOLATED'],['UPLINK','LOCAL'],['THREAT','ESCALATED']]
       },
       {
-        id:'map-room',index:'01',code:'CARTOGRAPHY',label:'상황 관제',shortLabel:'관제',theme:'cartography',glyph:'MR',
+        id:'map-room',index:'01',code:'CARTOGRAPHY',label:'작전 지도',shortLabel:'지도',theme:'cartography',glyph:'MR',
         description:'권역·현장·작전 좌표를 겹쳐 보고 생존 가능한 이동 경로를 판독한다.',
         telemetry:[['GRID','ACTIVE'],['LAYERS','SYNCHRONIZED'],['SIGNAL','UNSTABLE']]
       },

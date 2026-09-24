@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 443,
-    "referenced": 443,
+    "registered": 450,
+    "referenced": 450,
     "unreferenced": 0,
     "review": 150,
-    "managed": 293,
+    "managed": 300,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,18 +37,18 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 413,
+      "image": 420,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 275,
+      "PROJECT_GENERATED": 282,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
       "DELIVERY_DERIVATIVE": 204,
-      "INTERFACE": 18,
+      "INTERFACE": 25,
       "ORIGINAL_SOURCE": 37,
       "RECONSTRUCTED": 107,
       "UNVERIFIED": 66,
@@ -373,6 +373,7 @@
       "bytes": 110328,
       "sha256": "af8fd8e3c1b73a303569d3021a7820f85f1bef5d029c692c903d04782c1106ef",
       "usedBy": [
+        "assets/js/data/terminal-fx-data.js",
         "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
@@ -504,6 +505,7 @@
       "usedBy": [
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
+        "assets/js/data/terminal-fx-data.js",
         "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
         "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
         "tools/fixtures/legacy-app/assets/js/main.js",
@@ -548,6 +550,143 @@
       ],
       "referenced": true,
       "protectedScope": true
+    },
+    {
+      "path": "assets/brand/apple-touch-icon.png",
+      "kind": "image",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "source": "금 간 봉인 엠블럼을 어두운 바탕 180px 홈 화면 아이콘으로 배치",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 22403,
+      "sha256": "9291373131f1e348cc20900c245fd10d81af32b424fd3931bc755179cb1624a2",
+      "usedBy": [
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "index.html",
+        "tools/verify-app.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/brand/favicon-32.png",
+      "kind": "image",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "source": "금 간 봉인 엠블럼(투명판)을 32px 탭 아이콘으로 축소",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1936,
+      "sha256": "864491a8e001ca12208b743f0d80b112511991545c9bd3aaf71872e3ace247bb",
+      "usedBy": [
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "index.html",
+        "tools/verify-app.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/brand/icon-192.png",
+      "kind": "image",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "source": "금 간 봉인 엠블럼을 어두운 바탕 192px 아이콘으로 배치",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 25199,
+      "sha256": "9b0ee75561362d67dce0c497be72dd1ba36809c8716f65bdb120ac345a1d8ef0",
+      "usedBy": [
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/brand/icon-512.png",
+      "kind": "image",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "source": "금 간 봉인 엠블럼을 어두운 바탕 512px 아이콘으로 배치",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 157928,
+      "sha256": "f1419937ae02866f42f285f6302a4a090737b302871be1d5ba53fa38931a2a29",
+      "usedBy": [
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/brand/og-image.png",
+      "kind": "image",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "source": "금 간 봉인 가로 로고(투명판)를 어두운 바탕 1200×630 링크 미리보기 규격으로 배치",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 536761,
+      "sha256": "a152f9ac0fb72a8d3ffdeff083f2172bf0a3d8701dca91b0b0ab49577695bf0e",
+      "usedBy": [
+        "assets/app/js/screens/home.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "index.html",
+        "tools/verify-app.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/brand/project-curse-emblem-128.png",
+      "kind": "image",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "source": "금 간 봉인 엠블럼(투명판)을 기동 화면 표지용 128px로 축소",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 17555,
+      "sha256": "9478b934755fdba57ca1a034fc738f0e44ad7766261fc9f70012eb3451f5c252",
+      "usedBy": [
+        "assets/app/js/pc-fx.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-app.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/brand/project-curse-emblem-64.png",
+      "kind": "image",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "source": "금 간 봉인 엠블럼(투명판)을 상단 바 표지용 64px로 축소",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 5469,
+      "sha256": "912a20554eee8a7652063442d95a8eadcaab3704c4baed61a8316164d95e70c5",
+      "usedBy": [
+        "assets/app/css/shell.css",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "tools/verify-app.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
     },
     {
       "path": "assets/faction_marks/amarion.svg",
@@ -1341,7 +1480,6 @@
       "bytes": 316,
       "sha256": "16ec9a62d16a91bda73b7c64745922f99ca2e5583ee12ba5d912ddeb458941ed",
       "usedBy": [
-        "index.html",
         "tools/build-media-provenance.mjs",
         "tools/verify-data.mjs"
       ],
@@ -2678,6 +2816,7 @@
       "bytes": 1958845,
       "sha256": "1bbfb117c2b6b1431d5bbdf76d76829da350d23d6887dafa16950f6c0c3d2462",
       "usedBy": [
+        "assets/js/data/channel-hero-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
@@ -3147,6 +3286,7 @@
       "bytes": 1954036,
       "sha256": "c98fdfa8ae59ad086e1f7aae951aa99169819d355219636a0d8465d74b5b243c",
       "usedBy": [
+        "assets/js/data/channel-hero-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
@@ -3679,6 +3819,7 @@
       "sha256": "1c426258abd045930a193e1270a6cb4ed0f57097b915f65b674055ff150beece",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
+        "assets/js/data/channel-hero-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -3720,6 +3861,7 @@
       "bytes": 2458256,
       "sha256": "d17bfc89c540eb57aeea0e0d40b80f4adb247502730049945cc64bd357233cef",
       "usedBy": [
+        "assets/js/data/channel-hero-data.js",
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -3925,9 +4067,7 @@
         "docs/Unknown_Record3_920711/index.html",
         "docs/Unknown_Record4_930314/index.html",
         "docs/Zone_870815/index.html",
-        "index.html",
         "tools/build-docs-stubs.mjs",
-        "tools/verify-app.mjs",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -4031,6 +4171,7 @@
       "sha256": "ad6d193c51aae928369358bb5d04ef2803de1746baeacf59267da101295f2cb6",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
+        "assets/js/data/channel-hero-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
@@ -4367,6 +4508,7 @@
       "bytes": 1478199,
       "sha256": "5718546c6a3f56213086ad151380e853703cbf818119309147fb722b696a059c",
       "usedBy": [
+        "assets/js/data/channel-hero-data.js",
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
@@ -8100,29 +8242,6 @@
     },
     {
       "rank": 9,
-      "path": "assets/audio/pc5152x_late_log_beep_195s.mp3",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 16212,
-      "sha256": "15dce06ebad99699c6c54be99b913f3ac8dff9b35dcb3a628e3c8ac59ecab9cb",
-      "usedBy": [
-        "assets/js/data/site-manifest.js",
-        "assets/js/data/terminal-fx-data.js",
-        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
-        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
-        "tools/fixtures/legacy-app/assets/js/main.js",
-        "tools/verify-data.mjs"
-      ],
-      "priorityScore": 94,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
-      "rank": 10,
       "path": "assets/audio/pc5152v_field_photo_click_42s.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8136,6 +8255,30 @@
       "usedBy": [
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
+        "assets/js/data/terminal-fx-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
+        "tools/verify-data.mjs"
+      ],
+      "priorityScore": 94,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 10,
+      "path": "assets/audio/pc5152x_late_log_beep_195s.mp3",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 16212,
+      "sha256": "15dce06ebad99699c6c54be99b913f3ac8dff9b35dcb3a628e3c8ac59ecab9cb",
+      "usedBy": [
+        "assets/js/data/site-manifest.js",
+        "assets/js/data/terminal-fx-data.js",
         "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
         "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
         "tools/fixtures/legacy-app/assets/js/main.js",
@@ -8358,6 +8501,25 @@
     },
     {
       "rank": 21,
+      "path": "assets/audio/pc5152f_record_mount_soft.wav",
+      "kind": "audio",
+      "release": "LICENSE_REVIEW",
+      "provenance": "UNVERIFIED",
+      "source": "기존 Project Curse 음향 자산 묶음",
+      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
+      "referenced": true,
+      "protectedScope": false,
+      "bytes": 110328,
+      "sha256": "af8fd8e3c1b73a303569d3021a7820f85f1bef5d029c692c903d04782c1106ef",
+      "usedBy": [
+        "assets/js/data/terminal-fx-data.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
+      ],
+      "priorityScore": 90,
+      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
+    },
+    {
+      "rank": 22,
       "path": "assets/audio/pc5152dd_immortality_pursuit_range.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8376,7 +8538,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 22,
+      "rank": 23,
       "path": "assets/audio/pc5152db_immortality_report_progress.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8395,7 +8557,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 23,
+      "rank": 24,
       "path": "assets/audio/pc5152s_immortality_page_black_beep_51_55.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8414,7 +8576,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 24,
+      "rank": 25,
       "path": "assets/audio/pc5152db_immortality_intrusion_voice.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8433,7 +8595,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 25,
+      "rank": 26,
       "path": "assets/audio/pc5152cf_sakuma_vcr_hiss_bgm.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8451,7 +8613,7 @@
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
     },
     {
-      "rank": 26,
+      "rank": 27,
       "path": "assets/audio/pc5152cf_sakuma_birthday_cue.mp3",
       "kind": "audio",
       "release": "LICENSE_REVIEW",
@@ -8464,24 +8626,6 @@
       "sha256": "88caaa17323cd8cf8b8e04c2ce39a0ac543e8f3e5146a9de20cd88d61b1096d3",
       "usedBy": [
         "assets/app/js/cinematic/cinematic-sakuma.js"
-      ],
-      "priorityScore": 89,
-      "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
-    },
-    {
-      "rank": 27,
-      "path": "assets/audio/pc5152f_record_mount_soft.wav",
-      "kind": "audio",
-      "release": "LICENSE_REVIEW",
-      "provenance": "UNVERIFIED",
-      "source": "기존 Project Curse 음향 자산 묶음",
-      "handling": "제작자·원출처·허가 범위 확인 전 공개 승인 금지",
-      "referenced": true,
-      "protectedScope": false,
-      "bytes": 110328,
-      "sha256": "af8fd8e3c1b73a303569d3021a7820f85f1bef5d029c692c903d04782c1106ef",
-      "usedBy": [
-        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 89,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"

@@ -1,0 +1,55 @@
+// Project Curse 6 — 자유 해석 표시. 2026-09-25 사용자 결정.
+// WORLD_CANON_LEDGER.md에서 '결정 대기'로 남긴 것, 즉 공식 기록이 아직 정하지 않은 부분이다.
+// 화면은 PCApp.openCanon(목록)으로 '자유 해석' 칸을 그린다. 교류(자캐 설정)에서 자유롭게 해석해도 되는 곳이라는 표시다.
+// 확정된 사실을 여기 넣지 않는다. 정사 대장에서 결정되면 이 목록에서 뺀다.
+// 문장은 열린 질문으로 쓴다. 사실처럼 단정하지 않는다.
+(function (root) {
+  'use strict';
+
+  const freeze = (value) => {
+    if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+      Object.values(value).forEach(freeze);
+      Object.freeze(value);
+    }
+    return value;
+  };
+
+  root.ProjectCurseOpenCanon = freeze({
+    lead: '공식 기록이 아직 정하지 않은 부분입니다. 교류에서 자유롭게 해석해도 됩니다. 확정된 기록과 부딪히지 않게만 써 주세요.',
+    // 세력 분석 화면(faction.js) — 세력 id별
+    faction: {
+      'blood-cult': ['혈교와 남방 혈맹은 같은 지휘 체계인가, 이름만 이어받은 다른 조직인가?'],
+      'southern-blood': ['남방 혈맹은 혈교의 정통 후계인가, 계승을 주장할 뿐인가?', '지부·동맹·흡수 가운데 어느 관계인가?'],
+      'deadzone-blood': ['2016년 이탈 이전에 데드존 혈교를 세운 것은 누구인가?', '혈교가 데드존 혈교에 직접 명령을 내린 적이 있는가?'],
+      'first-apostle': ['알룰림은 한 존재인가, 되풀이되는 현상인가, 이어받는 자리의 이름인가?', '제1석을 주장하는 루시앙 유진과는 어떤 관계인가?'],
+      ushinoda: ['교단 도상 속 소녀의 모습이 우시노다의 실제 모습인가?', '곁에 무릎 꿇은 검은 날개의 기사는 누구인가?'],
+      amarion: ['F.H.C 장치의 조달 코드와 닮은 두 건은 우연인가, 연결인가?']
+    },
+    // 인물 기록 화면(personnel.js) — 인물 id별
+    personnel: {
+      alullim: ['알룰림은 한 존재인가, 되풀이되는 현상인가, 이어받는 자리의 이름인가?']
+    },
+    // 세계 기록 화면(history.js) — 기록 id별
+    history: {
+      '2012-11-19-great-black-forest-survey': ['대흑림의 경계가 계절·관측자·통행 관습에 따라 달라지는 까닭은 무엇인가?', '남미 해안 현실권과 대흑림 내륙 이상권 사이의 정확한 선은 어디인가?'],
+      '2042-10-31-three-night-silence': ['열 지점이 같은 시각에 침묵한 원인은 무엇인가?']
+    },
+    // 세계의 기본 규칙(history.js의 세계 틀) — 틀 항목 키별
+    world: {
+      reverseSiteCivilians: ['풀려난 피탈자에게서 빙의 징후가 사라지는가?', '몸이 죽은 뒤 들어왔던 존재는 어디로 가는가?', '풀려나기까지 걸리는 정확한 시간은 얼마인가?'],
+      ontology: ['괴이, 타락체, 타락 야생체는 같은 기원인가, 변이 단계인가, 지역마다 다른 계통인가?']
+    },
+    // 자캐 설정 안내에 모아 보여 줄 목록 — 위 항목과 화면 밖 항목(천로교, 순례자 규칙)
+    guide: [
+      { title: '혈교와 남방 혈맹', text: '같은 지휘 체계인지, 계승을 주장할 뿐인지 정하지 않았다.', route: ['faction-info', 'southern-blood'] },
+      { title: '알룰림(첫 번째 사도)', text: '한 존재인지, 되풀이되는 현상인지, 이어받는 자리의 이름인지 정하지 않았다.', route: ['faction-info', 'first-apostle'] },
+      { title: '우시노다와 그녀의 기사', text: '도상 속 모습이 실제인지, 검은 날개의 기사가 누구인지 정하지 않았다.', route: ['faction-info', 'ushinoda'] },
+      { title: '피탈자의 이후', text: '풀려난 뒤 징후가 사라지는지, 몸이 죽은 뒤 들어왔던 존재가 어디로 가는지 정하지 않았다.', route: ['history'] },
+      { title: '괴이의 계통', text: '괴이, 타락체, 타락 야생체의 관계를 하나로 정하지 않았다.', route: ['archive-entry', 'Ferals_860722'] },
+      { title: '대흑림의 경계', text: '해안과 내륙 사이의 정확한 선과, 경계가 달라지는 까닭을 정하지 않았다.', route: ['history', '2012-11-19-great-black-forest-survey'] },
+      { title: '천로교', text: '대흑림 성채를 돌아다니는 교단이라는 것 말고는 교리·규모·우시노다교와의 관계를 정하지 않았다.', route: null },
+      { title: '순례자의 규칙', text: '규칙을 지켜서 살아남은 것인지, 규칙을 요구하는 것이 무엇인지, 어디까지 통하는지 정하지 않았다.', route: ['archive-entry', 'Pilgrim_Rules_GBF'] },
+      { title: '삼야 무응답의 원인', text: '열 지점이 같은 시각에 침묵한 원인을 정하지 않았다.', route: ['history', '2042-10-31-three-night-silence'] }
+    ]
+  });
+})(window);

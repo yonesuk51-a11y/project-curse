@@ -8,8 +8,8 @@
   // 새 앱에서 생긴 채널 — 옛 앱과 함께 쓰는 channel-identity-data.js에는 넣지 않는다.
   const APP_CHANNELS = [
     {
-      id: 'field-manual', index: '06', code: 'FIELD MANUAL', label: '교전 교범', shortLabel: '교범',
-      description: '투입 전에 확인하는 현장 기준. 교전 원칙, 철수 조건, 표식, 장비, 능력 운용과 인원 등록 양식.',
+      id: 'field-manual', index: '06', code: 'FIELD MANUAL', label: '현장 지침', shortLabel: '지침',
+      description: '현장에 들어가기 전에 확인하는 기준. 교전 원칙, 철수 조건, 표식, 장비, 능력과 대가, 인원 등록 양식.',
       telemetry: [['SOURCE', 'N.H.C MANUAL'], ['REVISION', '2005.01.21'], ['FORM', 'FIELD REGISTER']]
     }
   ];
@@ -222,6 +222,10 @@
     });
 
     updateChrome(loc.route);
+    // 위협 등급은 채널 기본값으로 되돌리고, 상세 화면이 show()에서 자기 등급을 넘긴다.
+    threat(null, loc.route);
+    // 기록 영상 몰입 재생은 기록보관소를 떠나면 끝난다(화면의 hide()가 먼저 지우지만 안전하게 한 번 더).
+    if (loc.route !== 'archive-entry') doc.documentElement.classList.remove('tc-immersive');
 
     if (!entry) {
       const host = doc.getElementById(loc.route);
@@ -264,16 +268,125 @@
   /* ---------- 공용 조각 ---------- */
 
   // 화면 머리 — 채널 데이터에서 코드·설명·수치를 가져온다. 넘긴 값이 있으면 그 값을 쓴다.
+  // 채널 대표 그림(channel-hero-data.js)이 있으면 머리 뒤에 어둡게 깐다. 상세 화면은 hero:false로 끈다.
+  // 오른쪽 인장(조준선·점선 고리·채널 번호)은 옛 5.54 채널 머리판의 표지다. 영문 코드와 운용 수치는 간략 보기에서 숨는다.
   function screenHead(id, options = {}) {
     const info = channel(id) || {};
     const meta = options.meta || info.telemetry || [];
-    return h('header.tc-screenhead.tc-bracket', null,
-      h('p.tc-screenhead-code', null, h('i', { text: `CH ${info.index || '--'}` }), h('span', { text: options.code || info.code || '' })),
+    const hero = options.hero === false ? null : (options.hero || root.ProjectCurseChannelHeroes?.[id] || null);
+    return h('header.tc-screenhead.tc-bracket', hero ? { class: 'has-hero' } : null,
+      hero ? h('div.tc-screenhead-hero', { 'aria-hidden': 'true' },
+        img(hero.src, { alt: '', loading: 'eager', sizes: '(max-width: 760px) 100vw, 1200px', style: hero.position ? `object-position:${hero.position}` : null })) : null,
+      h('p.tc-screenhead-code', null, h('i', { text: `CH ${info.index || '--'}` }), h('span.tc-full-only', { text: options.code || info.code || '' })),
       h('h1', { text: options.title || info.label || id, 'data-tc-focus': true }),
       (options.desc || info.description) ? h('p.tc-screenhead-desc', { text: options.desc || info.description }) : null,
-      meta.length ? h('dl.tc-screenhead-meta', null, meta.map(([term, value]) => h('div', null, h('dt', { text: term }), h('dd', { text: value })))) : null
+      meta.length ? h('dl.tc-screenhead-meta.tc-full-only', null, meta.map(([term, value]) => h('div', null, h('dt', { text: term }), h('dd', { text: value })))) : null,
+      h('span.tc-seal', { 'aria-hidden': 'true' }, h('i', { text: info.index || '--' }))
     );
   }
+
+  /* ---------- 위협 등급 — 2026-09-25 사용자 결정: 기록의 등급에 따라 화면 분위기가 달라진다 ---------- */
+
+  const THREATS = ['low', 'guarded', 'elevated', 'high', 'critical'];
+  const THREAT_LABELS = {
+    low: ['LOW', '낮음'],
+    guarded: ['GUARDED', '경계'],
+    elevated: ['ELEVATED', '주의'],
+    high: ['HIGH', '높음'],
+    critical: ['CRITICAL', '심각']
+  };
+  // 채널 기본값. 홈은 현재 긴급 경보의 등급을 따른다. 나머지 채널 목록은 '주의'에서 시작하고 상세 화면이 올리거나 내린다.
+  function baseThreat(route) {
+    if (route === 'terminal-home') {
+      const alert = String(root.ProjectCurseHomeIntelligence?.alert?.threat || '').toLowerCase();
+      return THREATS.includes(alert) ? alert : 'elevated';
+    }
+    if (route === 'field-manual') return 'guarded';
+    return 'elevated';
+  }
+  function threat(level, route) {
+    const key = String(level || '').toLowerCase();
+    const next = THREATS.includes(key) ? key : baseThreat(route || current?.route);
+    const html = doc.documentElement;
+    const previous = html.dataset.threat || null;
+    html.dataset.threat = next;
+    const el = doc.querySelector('[data-tc-threat]');
+    if (el) {
+      clear(el).append(h('span.tc-full-only', { text: THREAT_LABELS[next][0] }), h('span.tc-brief-only', { text: THREAT_LABELS[next][1] }));
+    }
+    if (previous !== next) doc.dispatchEvent(new CustomEvent('pc:threat', { detail: { level: next, previous } }));
+    return next;
+  }
+
+  /* ---------- 자유 해석 표시 — 공식 기록이 정하지 않은 부분. 교류에서 자유롭게 해석해도 된다 ---------- */
+
+  function openCanon(items, options = {}) {
+    const list = (Array.isArray(items) ? items : [items]).filter((item) => typeof item === 'string' && item.trim());
+    if (!list.length) return null;
+    return h('aside.tc-open-canon', { 'aria-label': '자유 해석' },
+      h('p.tc-open-canon-head', null,
+        h('b', { text: '자유 해석' }),
+        h('span', { text: options.lead || '공식 기록이 아직 정하지 않은 부분입니다. 교류에서 자유롭게 해석해도 됩니다.' }),
+        h('a', { href: href('terminal-home', 'guide'), text: '안내' })
+      ),
+      list.length === 1 ? h('p', { text: list[0] }) : h('ul', null, list.map((item) => h('li', { text: item })))
+    );
+  }
+
+  /* ---------- 알림과 링크 복사 ---------- */
+
+  let toastTimer = 0;
+  function toast(text) {
+    let el = doc.querySelector('[data-tc-toast]');
+    if (!el) {
+      el = h('p.tc-toast', { 'data-tc-toast': true, role: 'status', 'aria-live': 'polite' });
+      doc.body.append(el);
+    }
+    el.textContent = text;
+    el.classList.add('is-on');
+    root.clearTimeout(toastTimer);
+    toastTimer = root.setTimeout(() => el.classList.remove('is-on'), 2200);
+  }
+
+  // 공유 주소 — 인물·기록 상세는 링크 미리보기용 정적 주소(share/…)가 있으면 그것을, 없으면 지금 주소를 쓴다.
+  function shareUrl(loc = current) {
+    const base = root.location.href.replace(/#.*$/, '').replace(/[^/]*$/, '');
+    const shared = root.ProjectCurseShareIndex?.resolve?.(loc?.route, loc?.parts || []);
+    if (shared) return base + shared;
+    return base + (location.hash || '#terminal-home');
+  }
+
+  function copyText(text) {
+    if (root.navigator?.clipboard?.writeText && root.isSecureContext) {
+      return root.navigator.clipboard.writeText(text).then(() => true, () => fallbackCopy(text));
+    }
+    return Promise.resolve(fallbackCopy(text));
+  }
+  function fallbackCopy(text) {
+    const area = h('textarea', { readonly: true, 'aria-hidden': 'true', style: 'position:fixed;top:-100px;left:0;opacity:0' });
+    area.value = text;
+    doc.body.append(area);
+    area.select();
+    let ok = false;
+    try {
+      ok = doc.execCommand('copy');
+    } catch (_error) {
+      ok = false;
+    }
+    area.remove();
+    return ok;
+  }
+  function copyLink(url) {
+    const text = url || shareUrl();
+    return copyText(text).then((ok) => {
+      toast(ok ? '링크를 복사했습니다.' : `복사하지 못했습니다. 주소: ${text}`);
+      root.PCAudio?.cue(ok ? 'menu.select' : 'system.denied');
+      return ok;
+    });
+  }
+
+  const fx = () => (root.PCPrefs ? root.PCPrefs.fx() : (root.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'full'));
+  const density = () => (root.PCPrefs ? root.PCPrefs.density() : 'brief');
 
   function tag(text, tone, options = {}) {
     const classes = ['tc-tag'];
@@ -339,7 +452,8 @@
     if (!el) return;
     let timer = 0;
     const tick = () => {
-      const now = new Date();
+      // 이상 신호(pc-anomaly.js)가 가끔 시계를 한 초 어긋나게 한다
+      const now = new Date(Date.now() + (root.PCAnomaly?.clockSkew?.() || 0));
       el.textContent = `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}Z`;
       el.setAttribute('datetime', now.toISOString());
     };
@@ -392,10 +506,6 @@
       history.scrollRestoration = 'manual';
     } catch (_error) { /* 지원하지 않는 브라우저 */ }
     doc.addEventListener('click', onClick);
-    // 상단 바 위협 등급 — 어느 화면으로 들어와도 채운다
-    const threat = doc.querySelector('[data-tc-threat]');
-    const level = root.ProjectCurseHomeIntelligence?.alert?.threat;
-    if (threat) threat.textContent = level || 'UNREPORTED';
     root.addEventListener('hashchange', () => {
       const reason = pushPending ? 'push' : 'pop';
       pushPending = false;
@@ -410,7 +520,14 @@
   }
 
   const api = Object.freeze({
-    version: '6.0.0',
+    version: '6.1.0',
+    fx,
+    density,
+    threat,
+    openCanon,
+    toast,
+    copyLink,
+    shareUrl,
     h,
     append,
     clear,

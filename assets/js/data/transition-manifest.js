@@ -10,13 +10,13 @@
 
   const screens={
     'terminal-home':{
-      code:'COMMAND',label:'단말 상태',accent:'#c98a2e',theme:'command',
+      code:'COMMAND',label:'상황판',accent:'#c98a2e',theme:'command',
       enter:'command-online',exit:'command-handoff',
       request:'COMMAND CHANNEL REQUESTED',status:'LOCAL CONTROL RESTORED',sound:'channel.command',
       symbol:'00',signal:'LOCAL COMMAND BUS',phases:['CONTROL RELEASE','KERNEL HANDOFF','COMMAND RESTORE']
     },
     'map-room':{
-      code:'CARTOGRAPHY',label:'상황 관제',accent:'#7fa39a',theme:'cartography',
+      code:'CARTOGRAPHY',label:'작전 지도',accent:'#7fa39a',theme:'cartography',
       enter:'coordinate-acquire',exit:'signal-collapse',
       request:'CARTOGRAPHIC CHANNEL REQUESTED',status:'COORDINATE LAYER ACQUIRED',sound:'channel.cartography',
       symbol:'01',signal:'CARTOGRAPHIC ARRAY',phases:['SIGNAL COLLAPSE','COORDINATE LOCK','LAYER ASSEMBLY']

@@ -1,5 +1,8 @@
-// Project Curse 6 — 단말 상태(홈) 화면 (담당: Claude)
-// 작전 현황판이다. 현재 경보, 최근 수신, 접촉 보고, 작전 목록, 사건 진입, 신규 열람 안내 순서.
+// Project Curse 6 — 상황판(홈) 화면 (담당: Claude). 주소는 #terminal-home 그대로.
+// 2026-09-25 사용자 결정: 옛 5.54 홈처럼 '설명 없이 이상한 것 하나'부터 보여 준다. 화면에 한꺼번에 보이는 양을 줄인다.
+// 순서: 화면 머리 → 보관함 쪽지와 키아트(복구 스캔·레이더) → 긴급 경보(요약)·최근 신호 → 지난 방문 이후 → 사건부터 읽기
+//       → 접어 둔 판(귀환 신호 접촉 보고, 민간 재난 방송, 작전 기록).
+// 하위 쪽: #terminal-home/intro(입문 카드), #terminal-home/guide(자캐 설정 안내) — 단말 밖 안내(community-guide-data.js).
 // 경보·수신·작전 목록은 진행 상태(pc-state.js)를 따라 바뀐다. 문구는 home-screen-data.js에 있다.
 (function (root) {
   'use strict';
@@ -9,6 +12,7 @@
 
   const intel = () => root.ProjectCurseHomeIntelligence || {};
   const copy = () => root.ProjectCurseHomeScreen || {};
+  const guideData = () => root.ProjectCurseCommunityGuide || {};
   const operations = () => root.ProjectCurseMapRoom?.operations || [];
   const findOperation = (id) => operations().find((op) => op.id === id) || null;
   const opState = () => root.ProjectCurseOperationState;
@@ -17,9 +21,17 @@
 
   const SIGNAL_TONES = { critical: 'danger', unstable: 'caution', returned: 'info', recovered: 'ok' };
   const STATE_EVENTS = ['projectcurse:operation-state-change', 'projectcurse:pilgrimage-state-change', 'projectcurse:verdict-archive-change'];
+  const TITLES = { index: '상황판', intro: '입문 카드', guide: '자캐 설정 안내' };
 
   // {이름} 자리를 값으로 채운다. 값이 없으면 자리를 그대로 두지 않고 빈 문자열로 둔다.
   const fill = (template, values) => String(template || '').replace(/\{(\w+)\}/g, (_, key) => (values[key] ?? ''));
+
+  // 영문 표지와 한글 표지를 나눠 붙인다 — 영문은 전체 보기에서만(간략 보기에서는 한글만).
+  function label(english, korean) {
+    return h('span.tc-label', null,
+      english ? h('span.tc-full-only', { text: korean ? `${english} / ` : english }) : null,
+      korean ? h('span', { text: korean }) : null);
+  }
 
   // 단말 상태 — 옛 홈처럼 실제 데이터에서 센다.
   function counts() {
@@ -58,15 +70,22 @@
     };
   }
 
-  function link(label, target, primary) {
+  function link(text, target, primary) {
     return h('a', { class: primary ? 'tc-btn tc-btn--primary' : 'tc-btn', href: PC.href(...target) },
-      label, primary ? h('i', { 'aria-hidden': 'true', text: '›' }) : null);
+      text, primary ? h('i', { 'aria-hidden': 'true', text: '›' }) : null);
   }
   function kv(term, value, code) {
     return h('div', null, h('dt', { text: term }), h('dd', { class: code ? 'tc-code' : null, text: value }));
   }
+  // 접어 둔 판 — 제목과 한 줄 요약만 보이고 누르면 펼친다
+  function fold(id, title, summary, body) {
+    return h('details.tc-disclosure.tc-home-fold', { id },
+      h('summary', null, h('span', null, h('b', { text: title }), summary ? h('small', { text: summary }) : null)),
+      h('div.tc-disclosure-body', null, body)
+    );
+  }
 
-  /* ---------- 현재 경보 ---------- */
+  /* ---------- 현재 경보(요약) ---------- */
   function flashPanel(state) {
     const alert = intel().alert;
     if (!alert) return PC.missing('ALERT FEED EMPTY', 'ProjectCurseHomeIntelligence.alert', '긴급 경보 데이터가 없습니다.');
@@ -83,7 +102,7 @@
         title: text.verdict.title,
         priority: text.verdict.priority,
         copy: fill(text.verdict.copy, { id: verdict.id, title: verdict.title }),
-        facts: [['기록', verdict.id, true], ['복호화 기록', `${verdicts.unlocked} / ${verdicts.total}`, true], ['읽지 않음', String(verdicts.unread), true], ['판단 상태', text.verdict.scope, true]],
+        facts: [['기록', verdict.id, true], ['풀린 기록', `${verdicts.unlocked} / ${verdicts.total}`, true], ['읽지 않음', String(verdicts.unread), true], ['판단 상태', text.verdict.scope, true]],
         action: [text.verdict.action, ['map-room', 'verdict', verdict.id]]
       };
     } else {
@@ -97,7 +116,7 @@
             : incident?.summary || text.fallbackCopy,
         facts: [
           ['작전', op ? op.code : alert.operation, true],
-          ['정보 회수', `${operation.recovered} / ${operation.total}`, true],
+          ['확보한 정보', `${operation.recovered} / ${operation.total}`, true],
           steps ? ['작전 단계', `${Math.min(operation.mapStep + 1, steps)} / ${steps}`, true] : null,
           decision ? ['판정 범위', text.decision.scope, true] : ['판단 상태', alert.threat, true],
           ['신뢰도', alert.confidence]
@@ -109,23 +128,26 @@
 
     return h('section.tc-panel.tc-bracket.tc-bracket--danger.tc-home-flash', { 'aria-labelledby': 'tc-home-flash-title', dataset: { operationStatus: operation.status } },
       h('header.tc-home-flash-head', null,
-        h('p.tc-home-flash-code', null, h('b', { text: 'FLASH' }), h('span', { text: `CURRENT ALERT / ${view.code}` })),
+        h('p.tc-home-flash-code', null, h('b', { text: 'FLASH' }), h('span', null, h('span.tc-brief-only', { text: '긴급 경보' }), h('span.tc-full-only', { text: `CURRENT ALERT / ${view.code}` }))),
         PC.tag(view.priority, verdict ? 'ok' : 'danger', { latin: true, mark: true })
       ),
       h('div.tc-home-flash-body', null,
         h('h2#tc-home-flash-title', { text: view.title }),
         h('p', { text: view.copy }),
-        h('dl.tc-kv.tc-home-flash-kv', null, view.facts.map(([term, value, code]) => kv(term, value, code))),
-        view.directive ? h('div.tc-note.tc-note--caution', null, h('b', { text: 'DIRECTIVE / 지시' }), h('p', { text: view.directive })) : null,
         h('div.tc-btnrow', null,
           link(view.action[0], view.action[1], true),
           verdict ? link('판정 보관', ['map-room', 'verdict']) : link('부서진 왕관 기록', ['history', '2030-01-17-broken-crown'])
+        ),
+        h('details.tc-home-flash-more', null,
+          h('summary', { text: '작전 정보' }),
+          h('dl.tc-kv.tc-home-flash-kv', null, view.facts.map(([term, value, code]) => kv(term, value, code))),
+          view.directive ? h('div.tc-note.tc-note--caution', null, h('b', null, h('span.tc-full-only', { text: 'DIRECTIVE / ' }), '지시'), h('p', { text: view.directive })) : null
         )
       )
     );
   }
 
-  /* ---------- 최근 수신 ---------- */
+  /* ---------- 최근 들어온 신호 ---------- */
   // 순례 채널은 마지막 선택의 규칙 결과를 보여 준다.
   function trace(state, scenarioId) {
     const choice = state.lastChoice(scenarioId);
@@ -157,27 +179,27 @@
     const locked = channel.unlockVerdict && !state.unlocked(channel.unlockVerdict);
     const ending = summary.endingData;
     const values = { ending: ending?.title || channel.endingFallback, completed: summary.completed, total: summary.total, trace: last?.label || channel.traceFallback };
-    let label, status, tone;
+    let text, status, tone;
     if (summary.status === 'complete') {
-      label = fill(channel.complete, values);
+      text = fill(channel.complete, values);
       status = channel.status.complete;
       tone = ending?.tone === 'hostile' ? 'critical' : channel.unstableEnding && ending?.tone === 'unstable' ? 'unstable' : 'recovered';
     } else if (summary.status === 'active') {
-      label = fill(channel.active, values);
+      text = fill(channel.active, values);
       status = `${summary.progress}% · ${last?.outcome || channel.status.outcomeFallback}`;
       tone = last?.tone || 'unstable';
     } else if (locked) {
-      label = channel.locked;
+      text = channel.locked;
       status = channel.status.locked;
       tone = 'critical';
     } else {
-      label = channel.idle;
+      text = channel.idle;
       status = channel.status.idle;
       tone = channel.unlockVerdict ? 'returned' : signal.tone;
     }
     // 봉인된 회수선은 순례 대신 작전의 봉인 상태로 보낸다.
     const href = locked ? PC.href('map-room', 'op', channel.operation) : PC.href('map-room', 'pilgrimage', channel.scenario);
-    return { ...signal, label, status, tone, href };
+    return { ...signal, label: text, status, tone, href };
   }
 
   function staticHref(signal) {
@@ -196,12 +218,12 @@
     }
     return h('section.tc-panel.tc-home-signals', { 'aria-labelledby': 'tc-home-signals-title' },
       h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label', { text: 'LIVE INTELLIGENCE FEED' }), h('h2#tc-home-signals-title', { text: '최근 수신' })),
-        h('span.tc-code.tc-dim', { text: `${signals.length} CHANNELS` })
+        h('div', null, h('span.tc-label.tc-full-only', { text: 'LIVE INTELLIGENCE FEED' }), h('h2#tc-home-signals-title', { text: '최근 들어온 신호' })),
+        h('span.tc-code.tc-dim.tc-full-only', { text: `${signals.length} CHANNELS` })
       ),
       h('ol.tc-home-signal-list.tc-fx-stagger', null, signals.map((signal, index) =>
         h('li', { style: `--i:${index}` }, h('a.tc-home-signal', { href: signal.href, dataset: { signalTone: signal.tone } },
-          h('time.tc-code', { text: signal.time }),
+          h('time.tc-code', { text: signal.time, 'data-tc-anomaly': index === 1 ? 'count' : null }),
           h('span', { text: signal.label }),
           PC.tag(signal.status, SIGNAL_TONES[signal.tone] || 'dim', { latin: true })
         ))
@@ -209,8 +231,8 @@
     );
   }
 
-  /* ---------- 작전 목록 ---------- */
-  // 판정으로 봉인된 작전은 기입 내용을 보여주지 않는다. 판정 사본이 보관되면 풀린다.
+  /* ---------- 작전 기록 ---------- */
+  // 판정으로 봉인된 작전은 기록 내용을 보여주지 않는다. 판정 기록이 보관되면 풀린다.
   function sealState(op, state) {
     if (op.unlockVerdict) return state.unlocked(op.unlockVerdict) ? 'cleared' : 'sealed';
     return /SEALED/.test(op.status || '') ? 'sealed' : 'open';
@@ -225,17 +247,17 @@
       : op.status ? PC.tag(op.status, seal === 'sealed' ? 'danger' : 'caution', { latin: true })
         : PC.tag('RECOVERED TRACK', 'dim', { latin: true });
     return h('a.tc-row.tc-home-op', { href: PC.href('map-room', 'op', op.id) },
-      h('span.tc-row-time', { text: op.code }),
+      h('span.tc-row-time.tc-full-only', { text: op.code }),
       h('span.tc-row-main', null,
         h('b', { text: op.label }),
         h('span', { text: op.region }),
         seal === 'sealed'
-          ? h('span.tc-home-op-last', null, '최종 기입 — ', h('span.tc-redact', { role: 'img', 'aria-label': '봉인된 기입' }), ' 판정 이후 열람')
-          : last ? h('span.tc-home-op-last', null, h('time.tc-code', { text: last.time }), ` 최종 기입 — ${last.title}`) : null
+          ? h('span.tc-home-op-last', null, '마지막 기록 — ', h('span.tc-redact', { role: 'img', 'aria-label': '봉인된 기록' }), ' 판정 뒤에 볼 수 있음')
+          : last ? h('span.tc-home-op-last', null, h('time.tc-code', { text: last.time }), ` 마지막 기록 — ${last.title}`) : null
       ),
       h('span.tc-row-meta', null,
         statusTag,
-        span ? PC.tag(`${steps.length} STEPS · ${span}`, 'info', { latin: true }) : null
+        span ? h('span.tc-full-only', null, PC.tag(`${steps.length} STEPS · ${span}`, 'info', { latin: true })) : null
       ),
       h('span.tc-row-go', { 'aria-hidden': 'true', text: '›' })
     );
@@ -243,11 +265,8 @@
 
   function operationPanel(state) {
     const ops = operations();
-    return h('section.tc-section.tc-home-ops', { 'aria-labelledby': 'tc-home-ops-title' },
-      h('header.tc-section-head', null,
-        h('div', null, h('span.tc-label', { text: 'OPERATIONS INDEX' }), h('h2#tc-home-ops-title', { text: '작전 기록' })),
-        h('p', { text: `현재 ${counts().regions}개 권역에서 ${counts().ops}개 작전 채널이 응답 중이다. 지도에서 경과를 재생한다.` })
-      ),
+    return h('section.tc-section.tc-home-ops', { 'aria-label': '작전 기록' },
+      h('p.tc-home-fold-lead', { text: `지금 ${counts().regions}개 지역에서 작전 ${counts().ops}건이 응답 중이다. 지도에서 진행을 다시 볼 수 있다.` }),
       ops.length ? h('div.tc-rows', null, ops.map((op) => operationRow(op, state))) : PC.missing('NO OPERATIONS', 'ProjectCurseMapRoom.operations', '작전 데이터가 없습니다.')
     );
   }
@@ -267,11 +286,8 @@
     const civil = copy().civil;
     if (!civil) return PC.missing('CIVIL RELAY MISSING', 'ProjectCurseHomeScreen.civil', '민간 방송 수신본이 없습니다.');
     const colors = alertColors();
-    return h('section.tc-panel.tc-home-civil', { 'aria-labelledby': 'tc-home-civil-title' },
-      h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label', { text: civil.code }), h('h2#tc-home-civil-title', { text: civil.title })),
-        h('span.tc-code.tc-dim', null, h('span.tc-fx-live', { 'aria-hidden': 'true' }), civil.relay)
-      ),
+    return h('section.tc-home-civil', { 'aria-label': civil.title },
+      h('p.tc-home-fold-lead', null, h('span.tc-fx-live', { 'aria-hidden': 'true' }), civil.relay),
       h('div.tc-home-civil-body', null,
         h('ol.tc-home-civil-list', null, civil.broadcasts.map((item) =>
           h('li', null,
@@ -289,105 +305,116 @@
         )
       ),
       h('footer.tc-home-civil-foot', null,
-        h('dl.tc-kv', null, kv('발신', civil.author), kv('수신', civil.recipient), kv('목적', civil.purpose)),
-        h('div.tc-note.tc-note--caution', null, h('b', { text: '수신본의 한계' }), h('p', { text: civil.limit }))
+        h('dl.tc-kv', null, kv('보낸 곳', civil.author), kv('받는 곳', civil.recipient), kv('목적', civil.purpose)),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: '이 방송 기록의 한계' }), h('p', { text: civil.limit }))
       )
     );
   }
 
-  /* ---------- 접촉 보고 ---------- */
+  /* ---------- 귀환 신호 접촉 보고 ---------- */
   function contactPanel() {
     const contact = copy().contact;
     const op = contact && findOperation(contact.operation);
     const step = op?.steps?.[contact.step];
     if (!op || !step) return PC.missing('CONTACT REPORT MISSING', contact ? `${contact.operation} / step ${contact.step}` : 'ProjectCurseHomeScreen.contact', '접촉 보고의 원본 작전 단계를 찾지 못했습니다.');
     const readable = contact.expect.every((value) => String(step.note || '').includes(value));
-    return h('section.tc-panel.tc-home-contact', { 'aria-labelledby': 'tc-home-contact-title' },
-      h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label', { text: `CONTACT REPORT · ${op.code}` }), h('h2#tc-home-contact-title', { text: step.title })),
-        h('time.tc-code.tc-dim', { text: step.time })
-      ),
-      h('div.tc-panel-body.tc-home-contact-body', null,
+    return h('section.tc-home-contact', { 'aria-label': step.title },
+      h('p.tc-home-fold-lead', null, label(`CONTACT REPORT · ${op.code}`, `${op.label} · ${step.time}`)),
+      h('div.tc-home-contact-body', null,
         readable ? h('div.tc-sensor', { role: 'img', 'aria-label': contact.readout.map(([k, v]) => `${k} ${v}`).join(', ') },
-          contact.readout.map(([label, value, mismatch]) => h('span', { class: mismatch ? 'is-mismatch' : null, dataset: mismatch ? { fxFinal: value, fxFrom: contact.readout[0][1] } : null }, h('small', { text: label }), h('b', { text: value })))
+          contact.readout.map(([name, value, mismatch]) => h('span', { class: mismatch ? 'is-mismatch' : null, dataset: mismatch ? { fxFinal: value, fxFrom: contact.readout[0][1] } : null }, h('small', { text: name }), h('b', { text: value })))
         ) : null,
         h('p', { text: step.note }),
-        h('a.tc-btn', { href: PC.href('map-room', 'op', op.id) }, `${op.label} 경과 재생`, h('i', { 'aria-hidden': 'true', text: '›' }))
+        h('a.tc-btn', { href: PC.href('map-room', 'op', op.id) }, `${op.label} 진행 다시 보기`, h('i', { 'aria-hidden': 'true', text: '›' }))
       )
     );
   }
 
-  /* ---------- 사건 진입 ---------- */
+  /* ---------- 사건부터 읽기 ---------- */
   function entryPanel() {
     return h('section.tc-section.tc-home-entry', { 'aria-labelledby': 'tc-home-entry-title' },
       h('header.tc-section-head', null,
-        h('div', null, h('span.tc-label', { text: 'INCIDENT-LED ENTRY' }), h('h2#tc-home-entry-title', { text: '사건으로 세계에 진입' })),
-        h('p', { text: '세 기록선은 서로 다른 시기에서 시작하지만 같은 붕괴를 향한다.' })
+        h('div', null, h('span.tc-label.tc-full-only', { text: 'INCIDENT-LED ENTRY' }), h('h2#tc-home-entry-title', { text: '사건부터 읽기' })),
+        h('p', { text: '세 기록 줄기는 서로 다른 시기에서 시작하지만 같은 붕괴를 향한다.' })
       ),
       h('ol.tc-home-entry-list', null, (copy().entries || []).map((entry) =>
         h('li', { class: `is-${entry.phase}` },
           h('span.tc-label', { text: entry.code }),
           h('h3', { text: entry.title }),
           h('p', { text: entry.text }),
-          h('div.tc-btnrow', null, entry.links.map(([label, target, primary]) => link(label, target, primary)))
+          h('div.tc-btnrow', null, entry.links.map(([text, target, primary]) => link(text, target, primary)))
         )
       ))
     );
   }
 
-  /* ---------- 신규 열람 안내 ---------- */
-  function readingPanel() {
-    const manual = copy().manualLink;
-    return h('section.tc-panel.tc-home-reading', { 'aria-labelledby': 'tc-home-reading-title' },
+  /* ---------- 지난 방문 이후 — 새 기록 알림(pc-updates.js) ---------- */
+  function updatesPanel() {
+    const U = root.PCUpdates;
+    if (!U) return null;
+    const { first, entries } = U.since(3);
+    const fresh = U.count();
+    if (!entries.length && !fresh) return null;
+    return h('section.tc-panel.tc-home-updates', { 'aria-labelledby': 'tc-home-updates-title' },
       h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label', { text: 'NEW READER ORIENTATION' }), h('h2#tc-home-reading-title', { text: '처음 접속했다면 여섯 기록선을 따라가십시오' }))
+        h('div', null, h('span.tc-label.tc-full-only', { text: 'UPDATE LOG' }), h('h2#tc-home-updates-title', { text: first ? '최근 갱신' : '지난 방문 이후' })),
+        fresh ? PC.tag(`새 기록 ${fresh}건`, 'danger') : null
       ),
-      h('ol.tc-home-reading-list', null, (copy().readingPath || []).map(([title, text, target], index) =>
-        h('li', null, h('a', { href: PC.href(...target) },
-          h('i', { text: String(index + 1).padStart(2, '0') }),
-          h('span', null, h('b', { text: title }), h('small', { text })),
-          h('em', { 'aria-hidden': 'true', text: '›' })
-        ))
-      )),
-      manual ? h('a.tc-home-manual', { href: PC.href('field-manual') },
-        h('span.tc-label', { text: manual.code }),
-        h('b', { text: manual.title }),
-        h('small', { text: manual.text }),
-        h('em', { 'aria-hidden': 'true', text: '›' })
-      ) : null
+      entries.length ? h('ol.tc-home-update-list', null, entries.map((entry) =>
+        h('li', null,
+          h('time.tc-code', { text: entry.date }),
+          h('div', null, h('b', { text: entry.title }), entry.text ? h('p', { text: entry.text }) : null),
+          (entry.links || []).length ? h('div.tc-btnrow', null, entry.links.map((item) => h('a.tc-btn', { href: PC.href(item.route, ...(item.parts || [])) }, item.label))) : null
+        )
+      )) : h('p.tc-home-fold-lead', { text: '지난 방문 뒤에 새로 들어온 기록이 있습니다. 목록의 \'새 기록\' 표시를 확인하십시오.' })
     );
   }
 
-  /* ---------- 증거 두 점 ---------- */
+  /* ---------- 보관함 쪽지 ---------- */
   function custodyPanel() {
     const note = copy().custody;
     if (!note) return PC.missing('CUSTODY NOTE MISSING', 'ProjectCurseHomeScreen.custody', '보관함 쪽지 기록이 없습니다.');
     const questions = [];
     note.questions.forEach((line, index) => questions.push(index ? h('br') : null, line));
+    const [english, korean] = String(note.code || '').split(' / ');
     return h('section.tc-panel.tc-bracket.tc-bracket--evidence.tc-home-custody', { 'aria-labelledby': 'tc-home-custody-title' },
       h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label', { text: note.code }), h('h2#tc-home-custody-title', { text: note.title }))
+        h('div', null, label(korean ? english : '', korean || english), h('h2#tc-home-custody-title', { text: note.title }))
       ),
       h('div.tc-panel-body', null,
         h('blockquote.tc-home-custody-note', null, h('p', { text: note.opening }), h('p', null, questions)),
         h('p.tc-home-custody-foot', { text: note.foot }),
-        h('div.tc-btnrow', null, note.links.map(([label, target]) => link(label, target)))
+        h('div.tc-btnrow', null, note.links.map(([text, target]) => link(text, target)))
       )
     );
   }
 
+  // 키아트 — 옛 홈의 '신호 복구' 연출(스캔선·빛줄기·진행 막대)과 붉은 레이더를 표시층에서 입힌다.
   function keyArt() {
     const art = copy().keyArt;
     if (!art) return null;
     return h('figure.tc-evidence.tc-home-keyart', null,
-      h('div.tc-evidence-media', null, PC.img(art.src, { alt: art.alt, sizes: '(max-width: 860px) 94vw, 58vw' })),
+      h('div.tc-evidence-media', null,
+        PC.img(art.src, { alt: art.alt, sizes: '(max-width: 860px) 94vw, 46vw' }),
+        h('span.tc-recovery', { 'aria-hidden': 'true' }, h('i.tc-recovery-beam'), h('b', { text: 'VISUAL SIGNAL / RECOVERED' }), h('i.tc-recovery-bar'))
+      ),
+      h('span.tc-radar', { 'aria-hidden': 'true' }, h('i')),
       h('figcaption', null, h('b', { text: art.label }), h('span', { text: art.caption }))
     );
   }
 
+  // 처음 온 사람을 위한 짧은 길
+  function quickLinks() {
+    return h('nav.tc-home-quick', { 'aria-label': '처음 온 열람자 안내' },
+      h('a', { href: PC.href('terminal-home', 'intro') }, h('b', { text: '처음이라면' }), h('span', { text: '입문 카드' }), h('i', { 'aria-hidden': 'true', text: '›' })),
+      h('a', { href: PC.href('terminal-home', 'guide') }, h('b', { text: '캐릭터를 만든다면' }), h('span', { text: '자캐 설정 안내' }), h('i', { 'aria-hidden': 'true', text: '›' })),
+      h('a', { href: PC.href('field-manual') }, h('b', { text: '들어가기 전 확인' }), h('span', { text: '현장 지침' }), h('i', { 'aria-hidden': 'true', text: '›' }))
+    );
+  }
+
   /* ---------- 이상 층 — 접촉 보고 재계수 ---------- */
-  // 열원이 처음에는 육안 인원과 같게 잡혔다가, 다시 세면 하나가 더 나온다. 세션마다 한 번.
-  // 모션 감소 설정이면 바로 최종 값만 보인다. 화면 낭독기는 처음부터 최종 값(aria-label)을 읽는다.
+  // 열원이 처음에는 육안 인원과 같게 잡혔다가, 다시 세면 하나가 더 나온다. 세션마다 한 번, 판을 펼쳤을 때.
+  // 효과 줄임이면 바로 최종 값만 보인다. 화면 낭독기는 처음부터 최종 값(aria-label)을 읽는다.
   const RECOUNT_KEY = 'pc6_contact_recount_v1';
   let recountTimers = [];
   const recountCells = () => [...document.querySelectorAll('#terminal-home .tc-home-contact [data-fx-final]')];
@@ -405,7 +432,7 @@
   function recount() {
     finishRecount();
     const cells = recountCells();
-    const reduce = root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const reduce = PC.fx() === 'reduced';
     let seen = true;
     try {
       seen = root.sessionStorage.getItem(RECOUNT_KEY) === '1';
@@ -427,9 +454,99 @@
     });
   }
 
+  /* ---------- 입문 카드 ---------- */
+  function termOf(term) {
+    const framework = root.ProjectCurseWorldHistoryData?.worldFramework || {};
+    if (term.code) {
+      const item = (framework.ontology || []).find((entry) => entry.code === term.code);
+      return item ? { name: item.name, text: item.text } : null;
+    }
+    return framework[term.key] ? { name: term.name, text: term.text } : null;
+  }
+
+  function backLink() {
+    return h('a.tc-home-back', { href: PC.href('terminal-home'), onclick: (event) => { event.preventDefault(); PC.back('terminal-home'); } }, '← 상황판');
+  }
+
+  function renderIntro(box) {
+    const data = guideData().intro;
+    if (!data) {
+      box.append(backLink(), PC.missing('INTRO MISSING', 'ProjectCurseCommunityGuide.intro', '입문 카드 자료가 없습니다.'));
+      return;
+    }
+    const terms = data.terms.map(termOf).filter(Boolean);
+    const path = copy().readingPath || [];
+    box.append(
+      backLink(),
+      h('article.tc-ooc.tc-home-intro', { 'aria-labelledby': 'tc-intro-title' },
+        h('header.tc-ooc-head', null,
+          h('img.tc-ooc-logo', { src: 'assets/brand/og-image.png', alt: '가운데가 붉게 갈라진 흰 봉인 옆에 PROJECT CURSE 글자가 있는 로고', width: '1200', height: '630' }),
+          h('p.tc-label', { text: data.kicker }),
+          h('h1#tc-intro-title', { text: data.title, 'data-tc-focus': true }),
+          h('p.tc-ooc-lead', { text: data.lead })
+        ),
+        h('section.tc-ooc-story', { 'aria-label': '이 세계는' }, data.story.map((line) => h('p', { text: line }))),
+        h('section.tc-ooc-section', { 'aria-labelledby': 'tc-intro-terms' },
+          h('h2#tc-intro-terms', { text: data.termsTitle }),
+          h('dl.tc-ooc-terms', null, terms.map((term) => h('div', null, h('dt', { text: term.name }), h('dd', { text: term.text })))),
+          h('p.tc-ooc-note', { text: data.termsNote })
+        ),
+        h('section.tc-ooc-section', { 'aria-labelledby': 'tc-intro-start' },
+          h('h2#tc-intro-start', { text: data.startTitle }),
+          h('ol.tc-ooc-cards', null, data.start.map((item, index) => h('li', null, h('a', { href: PC.href(...item.route) },
+            h('i', { text: String(index + 1).padStart(2, '0') }), h('b', { text: item.title }), h('span', { text: item.text }), h('em', { 'aria-hidden': 'true', text: '›' })
+          ))))
+        ),
+        path.length ? h('section.tc-ooc-section', { 'aria-labelledby': 'tc-intro-more' },
+          h('h2#tc-intro-more', { text: data.moreTitle }),
+          h('ol.tc-ooc-path', null, path.map(([title, text, target]) => h('li', null, h('a', { href: PC.href(...target) }, h('b', { text: title }), h('span', { text }), h('em', { 'aria-hidden': 'true', text: '›' })))))
+        ) : null,
+        h('div.tc-btnrow', null, data.links.map((item) => link(item.label, item.route, item.primary)))
+      )
+    );
+  }
+
+  /* ---------- 자캐 설정 안내 ---------- */
+  function renderGuide(box) {
+    const data = guideData().guide;
+    if (!data) {
+      box.append(backLink(), PC.missing('GUIDE MISSING', 'ProjectCurseCommunityGuide.guide', '자캐 설정 안내 자료가 없습니다.'));
+      return;
+    }
+    const open = root.ProjectCurseOpenCanon || {};
+    const section = (item) => {
+      const body = [];
+      if (item.paragraphs) body.push(...item.paragraphs.map((text) => h('p', { text })));
+      if (item.items) body.push(h('dl.tc-ooc-terms', null, item.items.map(([term, text]) => h('div', null, h('dt', { text: term }), h('dd', { text })))));
+      if (item.openCanon) {
+        body.push(h('p', { text: open.lead || '' }));
+        body.push(h('ul.tc-ooc-open', null, (open.guide || []).map((entry) => h('li', null,
+          h('b', { text: entry.title }), h('span', { text: entry.text }),
+          entry.route ? h('a', { href: PC.href(...entry.route) }, '관련 기록 ›') : null
+        ))));
+      }
+      if (item.link) body.push(h('div.tc-btnrow', null, link(item.link.label, item.link.route)));
+      return h('section.tc-ooc-section', { id: `tc-guide-${item.id}`, 'aria-labelledby': `tc-guide-${item.id}-title` },
+        h('h2', { id: `tc-guide-${item.id}-title`, text: item.title }), body);
+    };
+    box.append(
+      backLink(),
+      h('article.tc-ooc.tc-home-guide', { 'aria-labelledby': 'tc-guide-title' },
+        h('header.tc-ooc-head', null,
+          h('p.tc-label', { text: data.kicker }),
+          h('h1#tc-guide-title', { text: data.title, 'data-tc-focus': true }),
+          h('p.tc-ooc-notice', { text: data.notice })
+        ),
+        data.sections.map(section)
+      )
+    );
+  }
+
   /* ---------- 화면 ---------- */
   const live = { flash: null, signals: null, ops: null };
   let listeners = null;
+  let indexView = null;
+  let subView = null;
 
   // 진행 상태로 바뀌는 세 판을 다시 그린다. 같은 자리에서 바꿔 끼우므로 배치는 그대로다.
   let lastUnread = null;
@@ -450,33 +567,62 @@
     live.flash = flashPanel(state);
     live.signals = signalPanel(state);
     live.ops = operationPanel(state);
-    el.append(
+    const civil = copy().civil;
+    const contactStep = findOperation(copy().contact?.operation)?.steps?.[copy().contact?.step];
+    indexView = h('div.tc-home-index', null,
       h('div.tc-home-unknown', { hidden: true }),
       PC.screenHead('terminal-home', { title: '합동작전 단말', desc: copy().lead, meta: nodeState() }),
-      h('div.tc-home-grid', null, live.flash, live.signals, contactPanel()),
-      civilPanel(),
-      live.ops,
+      quickLinks(),
+      h('p.tc-home-silence', { role: 'status' }, h('b', { text: '외부 교신 두절' }), h('span', { text: '삼야 무응답과 같은 시각이다. 수신 목록이 멈췄다.' }), h('a', { href: PC.href('history', '2042-10-31-three-night-silence') }, '기록 보기 ›')),
+      h('div.tc-home-open', null, custodyPanel(), keyArt()),
+      h('div.tc-home-grid', null, live.flash, live.signals),
+      h('div.tc-home-updates-slot'),
       entryPanel(),
-      readingPanel(),
-      h('div.tc-home-evidence', null, custodyPanel(), keyArt()),
-      h('p.tc-home-foot', null, h('span', { text: 'PC-03' }), h('b', { text: 'NO EXTERNAL HANDSHAKE' }))
+      h('div.tc-home-folds', null,
+        fold('tc-home-fold-contact', contactStep ? `귀환 신호 — ${contactStep.title}` : '귀환 신호 접촉 보고', '육안 인원과 열원 수가 맞지 않은 보고', contactPanel()),
+        fold('tc-home-fold-civil', civil?.title || '민간 재난 방송', '권역 경보망에서 받은 방송 여섯 건과 경보색 기준', civilPanel()),
+        fold('tc-home-fold-ops', '작전 기록', `작전 ${counts().ops}건의 마지막 기록`, live.ops)
+      ),
+      h('p.tc-home-foot.tc-full-only', null, h('span', { text: 'PC-03' }), h('b', { text: 'NO EXTERNAL HANDSHAKE' }))
     );
+    subView = h('div.tc-home-sub', { hidden: true });
+    el.append(indexView, subView);
+    // 접촉 보고를 펼치면 재계수 연출을 한 번 보여 준다
+    indexView.querySelector('#tc-home-fold-contact')?.addEventListener('toggle', (event) => {
+      if (event.target.open) recount();
+    });
   }
 
-  function show(_parts, app, info) {
-    app.setTitle('단말 상태');
+  function show(parts, app, info) {
+    const page = parts[0] === 'intro' || parts[0] === 'guide' ? parts[0] : 'index';
+    app.setTitle(TITLES[page]);
+    indexView.hidden = page !== 'index';
+    subView.hidden = page === 'index';
+    if (page !== 'index') {
+      PC.clear(subView);
+      if (page === 'intro') renderIntro(subView);
+      else renderGuide(subView);
+      PC.threat('low');
+      return;
+    }
     refresh();
-    // 홈이 보이는 동안 진행 상태가 바뀌면 다시 그린다. 두 번 들어와도 하나만 붙는다.
+    // 지난 방문 이후 판은 새 기록 계산이 끝난 뒤 그린다
+    const slot = indexView.querySelector('.tc-home-updates-slot');
+    if (slot) {
+      PC.clear(slot);
+      const panel = updatesPanel();
+      if (panel) slot.append(panel);
+    }
+    // 상황판이 보이는 동안 진행 상태가 바뀌면 다시 그린다. 두 번 들어와도 하나만 붙는다.
     listeners?.abort();
     listeners = new AbortController();
     STATE_EVENTS.forEach((type) => document.addEventListener(type, refresh, { signal: listeners.signal }));
-    recount();
     // 모르는 주소로 들어오면 조용히 넘기지 않고 알린다.
-    const box = document.querySelector('#terminal-home .tc-home-unknown');
+    const box = indexView.querySelector('.tc-home-unknown');
     if (!box) return;
     PC.clear(box);
     box.hidden = !info.unknown;
-    if (info.unknown) box.append(PC.missing('UNKNOWN CHANNEL', `#${info.unknown}`, '요청한 주소에 해당하는 채널이 없습니다. 단말 상태로 연결했습니다.'));
+    if (info.unknown) box.append(PC.missing('UNKNOWN CHANNEL', `#${info.unknown}`, '요청한 주소에 해당하는 채널이 없습니다. 상황판으로 연결했습니다.'));
   }
 
   function hide() {

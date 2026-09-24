@@ -1,35 +1,39 @@
 /* Project Curse 6 — 디자인 토큰
    기준: PROJECT_CURSE_ART_DIRECTION_GUIDE.md 5~7절.
+   2026-09-25 사용자 결정: 전술 틀은 두고 예전(5.54) 붉은 검정 분위기를 되살린다.
+   바탕은 붉은 기가 도는 검정, 강조와 포커스는 붉은색, 채널색은 옛 채널 정체성 값(channel-identity.css)을 쓴다.
+   전술 기능색(올리브=활성·아군, 코요테=증거·인계, 앰버=주의, 적외선=센서)은 그대로 둔다.
    색은 기능이다. 기본값(선·면용)과 글자용 밝은 변형(-ink)을 나눈다.
-   글자용 값은 패널(#111513) 위에서 대비 4.5:1 이상이다. */
+   글자용 값은 패널(#100c0d) 위에서 대비 4.5:1 이상이다. */
 
 :root {
   color-scheme: dark;
 
   /* 바탕 */
-  --bg: #0a0c0b;
-  --bg-grid: rgba(216, 214, 204, .028);
-  --panel: #111513;
-  --panel-2: #171c19;
-  --panel-3: #1e2420;
-  --sunken: #070908;
+  --bg: #070606;
+  --bg-grid: rgba(222, 186, 180, .03);
+  --panel: #100c0d;
+  --panel-2: #161112;
+  --panel-3: #1d1617;
+  --sunken: #050404;
 
   /* 선 — 뼈색 14~40% */
-  --line: rgba(216, 214, 204, .14);
-  --line-2: rgba(216, 214, 204, .26);
-  --line-3: rgba(216, 214, 204, .4);
+  --line: rgba(226, 210, 204, .14);
+  --line-2: rgba(226, 210, 204, .26);
+  --line-3: rgba(226, 210, 204, .4);
 
   /* 글자 */
-  --text: #d8d6cc;
-  --text-2: #a3a596;
-  --text-3: #7a8070;
+  --text: #e2dcd6;
+  --text-2: #aca29c;
+  --text-3: #8a7f78;
 
   /* 기능색 — 선·면용 */
   --od: #56613f;       /* 활성·아군 */
   --od-2: #8b9a66;
   --coyote: #9a7b50;   /* 증거·인계 */
   --amber: #c98a2e;    /* 주의 */
-  --red: #9e2f2a;      /* 위험·봉인·오염 */
+  --red: #b33c45;      /* 위험·봉인·오염, 단말 강조 */
+  --red-bright: #e05a63;
   --blood: #6e1f2a;    /* 오컬트 */
   --ir: #7fa39a;       /* 센서·정보 */
 
@@ -37,22 +41,26 @@
   --od-ink: #9aab72;
   --coyote-ink: #b39468;
   --amber-ink: #d39a45;
-  --red-ink: #c66a5f;
-  --blood-ink: #b86a78;
+  --red-ink: #e0706f;
+  --blood-ink: #c77886;
   --ir-ink: #8fb3aa;
 
   /* 면 채움 — 호버·선택 */
   --fill-od: rgba(86, 97, 63, .14);
   --fill-od-2: rgba(86, 97, 63, .28);
   --fill-amber: rgba(201, 138, 46, .07);
-  --fill-red: rgba(158, 47, 42, .12);
-  --fill-blood: rgba(110, 31, 42, .14);
+  --fill-red: rgba(179, 60, 69, .14);
+  --fill-blood: rgba(110, 31, 42, .16);
   --fill-ir: rgba(127, 163, 154, .08);
   --fill-coyote: rgba(154, 123, 80, .07);
 
-  /* 화면 강조색 — 화면마다 body[data-screen]에서 바꾼다 */
-  --ch: var(--amber);
-  --ch-ink: var(--amber-ink);
+  /* 포커스 — 옛 단말의 밝은 붉은 선 */
+  --focus: #e05a63;
+
+  /* 화면 강조색 — 화면마다 body[data-screen]에서 바꾼다. --ch-rgb는 번짐·빛줄기용 */
+  --ch: #b84249;
+  --ch-ink: #e0767d;
+  --ch-rgb: 184, 66, 73;
 
   /* 글꼴 */
   --font: "IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
@@ -77,10 +85,11 @@
   --s6: 32px;
   --s7: 48px;
 
-  /* 모션 — 150~250ms, 튀는 움직임 없음 */
+  /* 모션 — 화면 안의 작은 움직임은 150~250ms. 기동·인계 연출은 fx.css가 따로 정한다 */
   --t: 180ms;
   --t-screen: 220ms;
   --ease: cubic-bezier(.2, .7, .2, 1);
+  --ease-out: cubic-bezier(.2, .84, .12, 1);
 
   /* 셸 치수 */
   --bar-h: 52px;
@@ -90,12 +99,12 @@
   --tap: 40px;
 }
 
-/* 화면별 강조색 — 채도 낮은 전술 계열. 빨강은 쓰지 않는다 */
-body[data-screen="terminal-home"] { --ch: #c98a2e; --ch-ink: #d39a45; }
-body[data-screen="map-room"]      { --ch: #7fa39a; --ch-ink: #8fb3aa; }
-body[data-screen="history"]       { --ch: #a8875a; --ch-ink: #b8976a; }
-body[data-screen="faction-info"]  { --ch: #8b9a66; --ch-ink: #9aab72; }
-body[data-screen="archive-entry"] { --ch: #b7a98a; --ch-ink: #c2b594; }
-body[data-screen="personnel"]     { --ch: #b29466; --ch-ink: #bea173; }
-body[data-screen="field-manual"]  { --ch: #a39a62; --ch-ink: #b3aa70; }
-body[data-screen="media-audit"]   { --ch: #7fa39a; --ch-ink: #8fb3aa; }
+/* 화면별 강조색 — 옛 5.54 채널 정체성(단말 적색, 관제 청록, 연표 금색, 세력 청회, 보관소 적색, 인물 황갈). 교범은 새 채널이라 카키 */
+body[data-screen="terminal-home"] { --ch: #b84249; --ch-ink: #e0767d; --ch-rgb: 184, 66, 73; }
+body[data-screen="map-room"]      { --ch: #55b5aa; --ch-ink: #7fcbc1; --ch-rgb: 85, 181, 170; }
+body[data-screen="history"]       { --ch: #c39a5c; --ch-ink: #d6b27a; --ch-rgb: 195, 154, 92; }
+body[data-screen="faction-info"]  { --ch: #72a4c6; --ch-ink: #93bcd8; --ch-rgb: 114, 164, 198; }
+body[data-screen="archive-entry"] { --ch: #d45c65; --ch-ink: #e5838a; --ch-rgb: 212, 92, 101; }
+body[data-screen="personnel"]     { --ch: #aa8f68; --ch-ink: #c4a982; --ch-rgb: 170, 143, 104; }
+body[data-screen="field-manual"]  { --ch: #a39a62; --ch-ink: #bdb47c; --ch-rgb: 163, 154, 98; }
+body[data-screen="media-audit"]   { --ch: #65aaa3; --ch-ink: #86c2bb; --ch-rgb: 101, 170, 163; }

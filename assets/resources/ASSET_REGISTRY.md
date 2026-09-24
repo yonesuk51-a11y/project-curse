@@ -240,3 +240,17 @@ The user adopted all seventeen world-history scenes of Codex batch E (`output/im
 | `derived/atlantic-schism-2016-cut-line-concept-v1.png` | RECONSTRUCTED | World record `2016-02-21-blood-cult-atlantic-schism` | 조용한 무전실에서 성인 교단원이 통신 장비의 플러그를 빼 들고 창밖의 성인 순례자들은 짐 곁에서 쉬고 있다. | `분석 재구성` |
 | `derived/southern-allegiance-2027-vessel-concept-v1.png` | RECONSTRUCTED | World record `2027-11-02-southern-allegiance` | 어두운 해안 창고에 모인 성인 무장 분파 대표들이 라벤더 불빛 아래 검붉은 그릇을 향해 손을 내밀거나 거리를 유지한다. | `분석 재구성` |
 | `derived/branch-seal-2031-four-files-concept-v1.png` | RECONSTRUCTED | World record `2031-02-03-branch-seal` | 형광등 아래 기록보관실 탁자에 똑같이 생긴 서류함 네 개가 나란히 놓이고 무표정한 성인 담당자가 마지막 봉인을 누른다. | `분석 재구성` |
+
+## 2026-09-25 site logo (금 간 봉인)
+
+The user chose logo A "금 간 봉인" (`output/imagegen/20260925-logo-seal-breach/`) and on 2026-09-25 asked to use it on the site ("로고·링크 미리보기"): browser tab icon, top-bar mark, boot screen and link preview. The files below were resized from the transparent derivatives in `output/imagegen/20260925-logo-seal-breach-derivatives/` (emblem and horizontal wordmark). They are interface assets, not evidence images.
+
+| File | Class | Use | Source |
+|---|---|---|---|
+| `brand/og-image.png` | INTERFACE | Brand / logo | 금 간 봉인 가로 로고(투명판)를 어두운 바탕 1200×630 링크 미리보기 규격으로 배치 |
+| `brand/favicon-32.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼(투명판)을 32px 탭 아이콘으로 축소 |
+| `brand/apple-touch-icon.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼을 어두운 바탕 180px 홈 화면 아이콘으로 배치 |
+| `brand/icon-192.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼을 어두운 바탕 192px 아이콘으로 배치 |
+| `brand/icon-512.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼을 어두운 바탕 512px 아이콘으로 배치 |
+| `brand/project-curse-emblem-64.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼(투명판)을 상단 바 표지용 64px로 축소 |
+| `brand/project-curse-emblem-128.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼(투명판)을 기동 화면 표지용 128px로 축소 |

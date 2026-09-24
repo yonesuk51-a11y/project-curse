@@ -1,4 +1,4 @@
-// Project Curse 6 — 교전 교범 화면 (담당: Claude)
+// Project Curse 6 — 현장 지침 화면(옛 이름 교전 교범, 2026-09-25 채널 이름 변경) (담당: Claude)
 // 새 설정을 쓰지 않는다. N.H.C 현장 교범(archive-document-data.js의 NHC_Manual_891219)과
 // 세계 기본 규칙(world-history-data.js의 worldFramework)을 투입 전 참조판으로 다시 배치한다.
 // 문장은 데이터에서 절 제목으로 찾아 읽는다. 제목이 바뀌어 찾지 못하면 없다고 표시한다.
@@ -33,11 +33,23 @@
     return (items || []).map((text) => h('p', { text }));
   }
 
+  // 표지 — 영문만 있는 표지는 전체 보기에서만, 'EN / 한글' 겹표지는 한글만 남긴다(2026-09-25 간략/전체 보기).
+  function lbl(text) {
+    const value = String(text || '');
+    const [first, second] = value.split(' / ');
+    const latin = (part) => /^[A-Z0-9 .·\-–?()'&:]+$/.test(part.trim()) && /[A-Z]{2}/.test(part);
+    if (second && latin(first) && !latin(second)) return h('span.tc-label', null, h('span.tc-full-only', { text: `${first} / ` }), h('span', { text: second }));
+    if (latin(value)) return h('span.tc-label.tc-full-only', { text: value });
+    return h('span.tc-label', { text: value });
+  }
+  // 영문 머리글 + 한글 — 간략 보기에서는 한글만
+  const bi = (english, korean) => h('b', null, h('span.tc-full-only', { text: `${english} / ` }), korean);
+
   function panel(code, title, body, options = {}) {
     const id = `tc-man-${options.slug || code.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     return h('section', { class: `tc-panel tc-man-panel${options.bracket ? ` tc-bracket${options.bracket === true ? '' : ` tc-bracket--${options.bracket}`}` : ''}${options.cls ? ` ${options.cls}` : ''}`, 'aria-labelledby': id },
       h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label', { text: code }), h('h2', { id, text: title })),
+        h('div', null, lbl(code), h('h2', { id, text: title })),
         options.aside || null
       ),
       h('div.tc-panel-body', null, body)
@@ -54,7 +66,7 @@
         h('span.tc-label', { text: doc?.code || MANUAL_ID }),
         h('span', { text: `${doc?.owner || ''} · ${doc?.classification || ''}` }),
         h('span', { text: '이 단말에 등록된 마지막 개정은 2005.01.21 현장 개정본이다.' }),
-        h('a.tc-btn', { href: PC.href('archive-entry', MANUAL_ID) }, '교범 원문 열람', h('i', { 'aria-hidden': 'true', text: '›' }))
+        h('a.tc-btn', { href: PC.href('archive-entry', MANUAL_ID) }, '교범 원문 보기', h('i', { 'aria-hidden': 'true', text: '›' }))
       )
     );
   }
@@ -101,7 +113,7 @@
       h('div.tc-man-signals', { role: 'group', 'aria-label': '상실한 기준 선택' }, buttons),
       verdict,
       list(withdrawal.slice(1)),
-      sec.warning ? h('div.tc-note.tc-note--caution', null, h('b', { text: 'COMMANDER NOTE' }), h('p', { text: sec.warning })) : null
+      sec.warning ? h('div.tc-note.tc-note--caution', null, bi('COMMANDER NOTE', '지휘관 메모'), h('p', { text: sec.warning })) : null
     ], { bracket: 'danger', slug: 'break' });
   }
 
@@ -124,7 +136,7 @@
       paragraphs(sec.paragraphs),
       scene(sec.image),
       list(sec.items, 'tc-man-list tc-man-list--rules'),
-      sec.warning ? h('div.tc-note.tc-note--danger', null, h('b', { text: 'MISSION FAILURE' }), h('p', { text: sec.warning })) : null
+      sec.warning ? h('div.tc-note.tc-note--danger', null, bi('MISSION FAILURE', '임무 실패'), h('p', { text: sec.warning })) : null
     ], { slug: 'roe' });
   }
 
@@ -139,8 +151,8 @@
       scene(sec.image),
       list(sec.items, 'tc-man-list tc-man-list--rules'),
       sec.quote ? h('blockquote.tc-man-quote', null, h('p', { text: sec.quote })) : null,
-      sec.warning ? h('div.tc-note.tc-note--danger', null, h('b', { text: 'MISSION FAILURE' }), h('p', { text: sec.warning })) : null,
-      rec.limit ? h('div.tc-note.tc-note--caution', null, h('b', { text: 'INFORMATION LIMIT' }), h('p', { text: rec.limit })) : null,
+      sec.warning ? h('div.tc-note.tc-note--danger', null, bi('MISSION FAILURE', '임무 실패'), h('p', { text: sec.warning })) : null,
+      rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
       h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 피탈자 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
     ], { bracket: 'danger', slug: 'possessed' });
   }
@@ -168,7 +180,7 @@
           h('span', { role: 'cell', 'data-head': actionHead, text: action })
         ))
       ),
-      sec.warning ? h('div.tc-note.tc-note--evidence', null, h('b', { text: 'TAG RULE' }), h('p', { text: sec.warning })) : null
+      sec.warning ? h('div.tc-note.tc-note--evidence', null, bi('TAG RULE', '표식 규칙'), h('p', { text: sec.warning })) : null
     ], { bracket: true, slug: 'tags' });
   }
 
@@ -179,7 +191,7 @@
     return h('div.tc-man-pair', null,
       prep ? panel('PRE-ENTRY CHECK', '진입 전 준비', [
         list(prep.items, 'tc-man-list tc-man-list--check'),
-        prep.warning ? h('div.tc-note.tc-note--caution', null, h('b', { text: 'NO ENTRY' }), h('p', { text: prep.warning })) : null
+        prep.warning ? h('div.tc-note.tc-note--caution', null, bi('NO ENTRY', '들어가지 말 것'), h('p', { text: prep.warning })) : null
       ], { slug: 'prep' }) : missingSection('진입 전 준비'),
       move ? panel('MOVEMENT', '진입과 이동', [
         paragraphs(move.paragraphs),
@@ -205,7 +217,7 @@
           return h('li', null, h('b.tc-man-item-name', { text: name }), rest.length ? h('span', { text: rest.join(' — ') }) : null);
         }))
       ))),
-      sec.warning ? h('div.tc-note.tc-note--caution', null, h('b', { text: 'ROUND DISCIPLINE' }), h('p', { text: sec.warning })) : null
+      sec.warning ? h('div.tc-note.tc-note--caution', null, bi('ROUND DISCIPLINE', '사격 규율'), h('p', { text: sec.warning })) : null
     ], { slug: 'loadout' });
   }
 
@@ -233,7 +245,7 @@
             h('div', null,
               paragraphs(sec.paragraphs),
               list(sec.items),
-              sec.warning ? h('div.tc-note.tc-note--caution', null, h('b', { text: 'NOTE' }), h('p', { text: sec.warning })) : null
+              sec.warning ? h('div.tc-note.tc-note--caution', null, bi('NOTE', '참고'), h('p', { text: sec.warning })) : null
             )
           )
         );
@@ -311,7 +323,7 @@
       field('소속', select('faction', factionOptions, saved.faction || '')),
       field('배치선', select('line', [['', '선택'], ...LINES.map(([line, unit]) => [line, unit ? `${line} — ${unit}` : line])], saved.line || '')),
       field('분류', select('class', classOptions, saved.class || ''), '괴이는 등록 대상이 아니다.'),
-      field('발현 경로', select('source', sourceOptions, saved.source || ''), '능력자만 적는다. 대가는 교범 기준으로 자동 기입된다.'),
+      field('발현 경로', select('source', sourceOptions, saved.source || ''), '능력자만 적는다. 대가는 교범 기준으로 자동으로 적힌다.'),
       field('표식', select('tag', tagOptions, saved.tag || '')),
       h('fieldset.tc-man-field.tc-man-gear', null,
         h('legend', { text: '장비군' }),
@@ -400,11 +412,11 @@
     update();
 
     return panel('FIELD REGISTER', '현장 인원 등록 양식', [
-      h('p.tc-man-lead', { text: '투입 인원은 진입 전에 호출부호·배치선·표식을 원본 명단에 남긴다. 아래 양식은 교범의 표식과 장비군, 세계 기본 규칙의 발현 경로를 그대로 쓴다.' }),
+      h('p.tc-man-lead', { text: '현장에 들어가는 인원은 들어가기 전에 호출부호·배치선·표식을 원본 명단에 남긴다. 아래 양식은 교범의 표식과 장비군, 세계 기본 규칙의 발현 경로를 그대로 쓴다.' }),
       h('div.tc-man-register', null,
         form,
         h('div.tc-man-output', null,
-          h('span.tc-label', { text: 'REGISTER COPY' }),
+          lbl('REGISTER COPY'),
           preview,
           h('div.tc-btnrow', null, copyButton, copyStatus)
         )
@@ -420,8 +432,9 @@
     }
     el.append(
       PC.screenHead('field-manual', {
-        title: '교전 교범',
-        desc: doc.summary,
+        title: '현장 지침',
+        // 채널 이름은 2026-09-25에 '현장 지침'으로 바꿨다. 원문 문서 이름(N.H.C 교전 교범)은 고유명사라 그대로 둔다
+        desc: `N.H.C 교전 교범(2005.01.21 개정)을 옮긴 현장 기준. ${doc.summary}`,
         meta: [['ISSUER', 'N.H.C HQ'], ['REVISION', '2005.01.21'], ['FIRST ED.', '1989.12.19']]
       }),
       doctrine(),
@@ -437,7 +450,7 @@
   }
 
   function show(_parts, app) {
-    app.setTitle('교전 교범');
+    app.setTitle('현장 지침');
   }
 
   PC.screen({ id: 'field-manual', mount, show });

@@ -5,19 +5,17 @@
   margin: 0 0 var(--s4);
 }
 
-/* 경보·수신·접촉 — 왼쪽 경보가 두 칸을 차지한다 */
+/* 경보·최근 신호 — 2026-09-25: 접촉 보고는 아래 접힌 판으로 옮겼다 */
 .tc-home-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  grid-template-areas:
-    "flash signals"
-    "flash contact";
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  grid-template-areas: "flash signals";
+  align-items: start;
   gap: var(--s4);
   margin: 0 0 var(--s6);
 }
 .tc-home-flash { grid-area: flash; }
 .tc-home-signals { grid-area: signals; }
-.tc-home-contact { grid-area: contact; }
 
 /* ---------- 긴급 경보 ---------- */
 .tc-home-flash {
@@ -322,11 +320,13 @@
   font-style: normal;
 }
 
-/* ---------- 증거 두 점 ---------- */
-.tc-home-evidence {
+/* ---------- 첫 기록 — 보관함 쪽지와 키아트(옛 5.54: 설명 없이 이상한 것 하나부터) ---------- */
+.tc-home-open {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: start;
   gap: var(--s4);
+  margin: 0 0 var(--s6);
 }
 .tc-home-custody-note {
   display: grid;
@@ -367,7 +367,7 @@
 @media (max-width: 1100px) {
   .tc-home-grid {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "flash" "signals" "contact";
+    grid-template-areas: "flash" "signals";
   }
   .tc-home-ops .tc-row {
     grid-template-columns: 160px minmax(0, 1fr) auto 20px;
@@ -376,7 +376,7 @@
 @media (max-width: 860px) {
   .tc-home-entry-list,
   .tc-home-reading-list,
-  .tc-home-evidence {
+  .tc-home-open {
     grid-template-columns: minmax(0, 1fr);
   }
   .tc-home-reading-list li {
@@ -432,8 +432,409 @@
   content: " · RECOUNT";
   color: var(--red-ink);
 }
-@media (prefers-reduced-motion: reduce) {
-  .tc-home-contact .tc-sensor span.is-counting b {
-    animation: none;
+html[data-fx="reduced"] .tc-home-contact .tc-sensor span.is-counting b {
+  animation: none;
+}
+
+/* =========================================================
+   2026-09-25 상황판 재구성 — 처음 온 사람 안내, 기념일 알림, 키아트 복구·레이더, 접은 판, 지난 방문 이후
+   ========================================================= */
+
+/* 처음 온 사람을 위한 짧은 길 */
+.tc-home-quick {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s2);
+  margin: 0 0 var(--s5);
+}
+.tc-home-quick a {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 var(--s3);
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  transition: border-color var(--t) var(--ease), background-color var(--t) var(--ease);
+}
+.tc-home-quick a:hover {
+  border-color: var(--ch);
+  background-color: rgba(var(--ch-rgb), .08);
+}
+.tc-home-quick b {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+.tc-home-quick span {
+  grid-column: 1;
+  color: var(--text);
+  font-weight: 600;
+}
+.tc-home-quick i {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: var(--ch-ink);
+  font-style: normal;
+}
+
+/* 삼야 무응답 기념일 알림 — 기념 기간에만 보인다(pc-anomaly.js) */
+.tc-home-silence {
+  display: none;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px var(--s3);
+  margin: 0 0 var(--s4);
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--red);
+  background: rgba(179, 60, 69, .12);
+  font-size: var(--fs-s);
+}
+html[data-silence="on"] .tc-home-silence {
+  display: flex;
+}
+html[data-silence="on"] .tc-home-signals {
+  opacity: .55;
+}
+.tc-home-silence b {
+  color: var(--red-ink);
+}
+.tc-home-silence a {
+  color: var(--red-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 키아트 — 신호 복구(옛 pc-media-scanlines·beam·progress)와 붉은 레이더(옛 pc-terminal-sweep) */
+.tc-home-keyart {
+  position: relative;
+}
+.tc-recovery {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.tc-recovery-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -30%;
+  height: 30%;
+  background: linear-gradient(180deg, transparent, rgba(224, 90, 99, .16) 60%, rgba(226, 210, 204, .12) 96%, transparent);
+  animation: tc-recovery-beam 6.5s linear infinite;
+}
+@keyframes tc-recovery-beam {
+  to { transform: translateY(440%); }
+}
+.tc-recovery b {
+  position: absolute;
+  left: var(--s3);
+  bottom: calc(var(--s3) + 8px);
+  color: rgba(226, 210, 204, .75);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: .12em;
+}
+.tc-recovery-bar {
+  position: absolute;
+  left: var(--s3);
+  right: var(--s3);
+  bottom: var(--s3);
+  height: 2px;
+  background: linear-gradient(90deg, var(--red-bright), var(--red-bright)) 0 0 / 0% 100% no-repeat, rgba(226, 210, 204, .14);
+  animation: tc-recovery-bar 6.5s var(--ease-out) infinite;
+}
+@keyframes tc-recovery-bar {
+  0% { background-size: 0% 100%, auto; }
+  70%, 100% { background-size: 100% 100%, auto; }
+}
+.tc-radar {
+  position: absolute;
+  top: var(--s3);
+  right: var(--s3);
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+  color: var(--red-bright);
+}
+.tc-radar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2'%3E%3Ccircle cx='32' cy='32' r='30'/%3E%3Ccircle cx='32' cy='32' r='20' stroke-opacity='.6'/%3E%3Ccircle cx='32' cy='32' r='10' stroke-opacity='.45'/%3E%3Cpath d='M32 2v60M2 32h60' stroke-opacity='.4'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2'%3E%3Ccircle cx='32' cy='32' r='30'/%3E%3Ccircle cx='32' cy='32' r='20' stroke-opacity='.6'/%3E%3Ccircle cx='32' cy='32' r='10' stroke-opacity='.45'/%3E%3Cpath d='M32 2v60M2 32h60' stroke-opacity='.4'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: .7;
+}
+/* 쓸고 지나가는 빛 — 원 모양은 SVG 가림으로 잘라 낸다(모서리 둥글리기 대신) */
+.tc-radar i {
+  position: absolute;
+  inset: 2px;
+  background: conic-gradient(from 0deg, rgba(224, 90, 99, .55), rgba(224, 90, 99, 0) 26%, transparent 100%);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Ccircle cx='30' cy='30' r='30'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Ccircle cx='30' cy='30' r='30'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: tc-spin 5s linear infinite;
+}
+
+/* 긴급 경보의 세부 — 작전 정보는 접어 둔다 */
+.tc-home-flash-more {
+  margin: var(--s4) 0 0;
+  border-top: 1px solid var(--line);
+}
+.tc-home-flash-more > summary {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--s2) 0;
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+.tc-home-flash-more > summary::-webkit-details-marker {
+  display: none;
+}
+.tc-home-flash-more > summary::after {
+  content: "+";
+  color: var(--text-3);
+  font-family: var(--mono);
+}
+.tc-home-flash-more[open] > summary::after {
+  content: "−";
+}
+.tc-home-flash-more .tc-note {
+  margin: var(--s3) 0 0;
+}
+
+/* 접어 둔 판 */
+.tc-home-folds {
+  display: grid;
+  gap: var(--s2);
+  margin: var(--s6) 0 0;
+}
+.tc-home-fold > summary small {
+  display: block;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+}
+.tc-home-fold-lead {
+  margin: 0 0 var(--s3);
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+
+/* 지난 방문 이후 */
+.tc-home-updates {
+  margin: 0 0 var(--s6);
+}
+.tc-home-update-list {
+  display: grid;
+}
+.tc-home-update-list li {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--s1) var(--s4);
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--line);
+}
+.tc-home-update-list time {
+  color: var(--ch-ink);
+  font-size: var(--fs-xs);
+}
+.tc-home-update-list b {
+  color: var(--text);
+  font-weight: 600;
+}
+.tc-home-update-list p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+
+/* ---------- 입문 카드·자캐 설정 안내 — 단말 밖 안내. 기록과 구분되게 점선 틀 ---------- */
+.tc-home-back {
+  display: inline-block;
+  margin: 0 0 var(--s4);
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-home-back:hover {
+  color: var(--text);
+}
+.tc-ooc {
+  display: grid;
+  gap: var(--s5);
+  max-width: 880px;
+  padding: var(--s5);
+  border: 1px dashed rgba(226, 210, 204, .28);
+  background: rgba(16, 12, 13, .88);
+}
+.tc-ooc-head {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-ooc-logo {
+  width: min(420px, 100%);
+  height: auto;
+  margin: 0 0 var(--s2);
+}
+.tc-ooc-head h1 {
+  font-size: var(--fs-2xl);
+}
+.tc-ooc-lead {
+  color: var(--text-2);
+}
+.tc-ooc-notice {
+  padding: var(--s3) var(--s4);
+  border-left: 2px solid var(--coyote);
+  background: var(--fill-coyote);
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-ooc-story {
+  display: grid;
+  gap: var(--s3);
+  padding: var(--s4) var(--s5);
+  border-left: 2px solid var(--red);
+  background: rgba(179, 60, 69, .06);
+  font-size: var(--fs-l);
+  line-height: 1.85;
+}
+.tc-ooc-story p:last-child {
+  color: var(--red-ink);
+}
+.tc-ooc-section {
+  display: grid;
+  gap: var(--s3);
+}
+.tc-ooc-section h2 {
+  font-size: var(--fs-xl);
+}
+.tc-ooc-section p {
+  color: var(--text-2);
+}
+.tc-ooc-terms {
+  display: grid;
+  border: 1px solid var(--line);
+}
+.tc-ooc-terms > div {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr);
+  gap: var(--s4);
+  padding: var(--s3) var(--s4);
+}
+.tc-ooc-terms > div + div {
+  border-top: 1px solid var(--line);
+}
+.tc-ooc-terms dt {
+  color: var(--ch-ink);
+  font-weight: 600;
+}
+.tc-ooc-terms dd {
+  margin: 0;
+  color: var(--text);
+}
+.tc-ooc-note {
+  font-size: var(--fs-s);
+}
+.tc-ooc-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s2);
+}
+.tc-ooc-cards a,
+.tc-ooc-path a {
+  position: relative;
+  display: grid;
+  gap: var(--s1);
+  height: 100%;
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  background: var(--panel);
+  transition: border-color var(--t) var(--ease), background-color var(--t) var(--ease);
+}
+.tc-ooc-cards a:hover,
+.tc-ooc-path a:hover {
+  border-color: var(--ch);
+  background-color: rgba(var(--ch-rgb), .08);
+}
+.tc-ooc-cards i {
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-style: normal;
+}
+.tc-ooc-cards b,
+.tc-ooc-path b {
+  color: var(--text);
+  font-weight: 600;
+}
+.tc-ooc-cards span,
+.tc-ooc-path span {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-ooc-cards em,
+.tc-ooc-path em {
+  position: absolute;
+  top: var(--s4);
+  right: var(--s4);
+  color: var(--text-3);
+  font-style: normal;
+}
+.tc-ooc-path {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2);
+}
+.tc-ooc-open {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-ooc-open li {
+  display: grid;
+  gap: 2px;
+  padding: var(--s3) var(--s4);
+  border: 1px dashed rgba(154, 123, 80, .7);
+  background: var(--fill-coyote);
+}
+.tc-ooc-open b {
+  color: var(--coyote-ink);
+  font-weight: 600;
+}
+.tc-ooc-open span {
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-ooc-open a {
+  justify-self: start;
+  color: var(--coyote-ink);
+  font-size: var(--fs-xs);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 860px) {
+  .tc-home-quick,
+  .tc-ooc-cards,
+  .tc-ooc-path {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-home-update-list li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-ooc {
+    padding: var(--s4);
+  }
+  .tc-ooc-terms > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .tc-radar {
+    width: 48px;
+    height: 48px;
   }
 }

@@ -892,6 +892,62 @@
       "release": "PROJECT_GENERATED",
       "source": "세계 기록(2031-02-03-branch-seal) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
       "handling": "같은 인계 절차를 통과한 네 결과철을 어느 하나도 원본으로 고르지 않고 봉인하는 기록보관실이다. 네 결과철의 내용과 어느 결말이 실제였는지는 확정하지 않는다."
+    },
+    "assets/brand/og-image.png": {
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "source": "금 간 봉인 가로 로고(투명판)를 어두운 바탕 1200×630 링크 미리보기 규격으로 배치"
+    },
+    "assets/brand/favicon-32.png": {
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "source": "금 간 봉인 엠블럼(투명판)을 32px 탭 아이콘으로 축소"
+    },
+    "assets/brand/apple-touch-icon.png": {
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "source": "금 간 봉인 엠블럼을 어두운 바탕 180px 홈 화면 아이콘으로 배치"
+    },
+    "assets/brand/icon-192.png": {
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "source": "금 간 봉인 엠블럼을 어두운 바탕 192px 아이콘으로 배치"
+    },
+    "assets/brand/icon-512.png": {
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "source": "금 간 봉인 엠블럼을 어두운 바탕 512px 아이콘으로 배치"
+    },
+    "assets/brand/project-curse-emblem-64.png": {
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "source": "금 간 봉인 엠블럼(투명판)을 상단 바 표지용 64px로 축소"
+    },
+    "assets/brand/project-curse-emblem-128.png": {
+      "credit": "Project Curse logo brief (금 간 봉인, 2026-09-25 사용자 선택) / Codex image generation; 사이트 규격 축소·배치는 Claude",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "INTERFACE",
+      "release": "PROJECT_GENERATED",
+      "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
+      "source": "금 간 봉인 엠블럼(투명판)을 기동 화면 표지용 128px로 축소"
     }
   }
 }

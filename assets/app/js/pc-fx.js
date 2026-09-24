@@ -1,124 +1,437 @@
-// Project Curse 6 — 연출. 가이드: 셸은 정밀하고 건조하게, 손상은 증거·이상 층에만, 점프 스케어·번쩍임 금지.
-// 모든 연출은 짧게 끝나고 조작을 막지 않는다(pointer-events 없음, 아무 키·클릭으로 건너뜀).
-// 모션 감소 설정이면 아무것도 하지 않는다. 문구는 transition-manifest.js·terminal-fx-data.js에서 읽는다.
+// Project Curse 6 — 연출. 2026-09-25 사용자 결정으로 옛 5.54의 기동·인계 연출을 되살렸다.
+// 문구와 시간은 terminal-fx-data.js(boot, handoffTiming)와 transition-manifest.js에서 읽는다.
+// 효과 모드(PCApp.fx())가 'reduced'이면 같은 화면을 움직임 없이 짧게 보여 준다(연출을 지우지 않는다).
 //
-// 1. 채널 인계 — 채널이 바뀌면 상단 바의 채널 표지 자리에 요청 › 단계 › 상태가 짧게 지나가고, 바 아래에 연결선이 그어진다.
-// 2. 단말 기동 — 세션마다 한 번, 주소 없이 홈으로 들어왔을 때만 기동 대조 다섯 줄을 보여 주고 걷힌다.
-// 3. 증거 현상 — 증거 사진이 다 받아지면 어두운 필름에서 현상되듯 떠오른다.
+// 1. 단말 기동 — 탭마다 처음 들어올 때. 홈으로 들어오면 접속 확인 뒤 옛 기동(약 8.9초, 2.6초 뒤부터 건너뛰기),
+//    공유 링크로 바로 들어오면 2초짜리 접속, 같은 탭에서 새로고침하면 세션 복원(1.2초).
+// 2. 기록 언마운트 — 기록보관소의 기록을 닫고 목록으로 돌아올 때(약 0.95초).
+// 3. 화면 인계 막 — 채널이 바뀌면 본문을 덮고 경로·요청·채널명·인장·세 단계·진행 막대를 보여 준 뒤 드러낸다.
+// 4. 채널별 등장 — 드러날 때 채널마다 다른 방식으로 나타나고, 부품이 차례로 떠오른다.
+// 5. 돌아오면 화면 켜짐 — 다른 탭에 갔다 오면 화면이 가로선에서 한 번 펼쳐진다.
+// 6. 증거 현상 — 증거 사진이 다 받아지면 어두운 필름에서 현상되듯 떠오른다.
+// 기동 중이 아닌 연출은 아무 곳이나 누르거나 아무 키나 누르면 바로 끝난다.
 (function (root) {
   'use strict';
 
   const doc = root.document;
+  const html = doc.documentElement;
   const PC = root.PCApp;
   const h = PC.h;
-  const fx = root.ProjectCurseTerminalFx || {};
+  const data = root.ProjectCurseTerminalFx || {};
+  const bootData = data.boot || {};
   const transitions = root.ProjectCurseTransitions?.screens || {};
-  const reduced = root.matchMedia ? root.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
-  const BOOT_KEY = 'pc6_boot_seen_v1';
-  const STEP_MS = 110;
+  const BOOT_KEY = 'pc6_boot_seen_v2';
+  const BRAND = 'assets/brand/project-curse-emblem-128.png';
 
-  const allowed = () => !reduced.matches && !doc.hidden;
+  const reduced = () => PC.fx() === 'reduced';
+  const mobile = () => !!root.matchMedia?.('(max-width: 760px)').matches;
+  const audio = () => root.PCAudio;
+  const version = () => PC.version; // 단말(표시층) 버전. build-info.js의 5.x는 자료 묶음 버전이다
+  let bootActive = false;
 
-  /* ---------- 1. 채널 인계 ---------- */
-  let handoffEl = null;
-  let linkEl = null;
-  let handoffTimers = [];
-
-  function ensureHandoff() {
-    const channelBox = doc.querySelector('.tc-bar-channel');
-    const bar = doc.querySelector('.tc-bar');
-    if (!channelBox || !bar) return false;
-    if (!handoffEl) {
-      handoffEl = h('span.tc-fx-handoff', { 'aria-hidden': 'true' });
-      channelBox.append(handoffEl);
-    }
-    if (!linkEl) {
-      linkEl = h('i.tc-fx-link', { 'aria-hidden': 'true' });
-      bar.append(linkEl);
-    }
-    return true;
+  /* ---------- 공용: 타이머 묶음 ---------- */
+  function timeline() {
+    const timers = [];
+    return {
+      at(ms, fn) {
+        timers.push(root.setTimeout(fn, Math.max(0, ms)));
+      },
+      clear() {
+        timers.splice(0).forEach((timer) => root.clearTimeout(timer));
+      }
+    };
   }
 
-  function endHandoff() {
-    handoffTimers.forEach((timer) => root.clearTimeout(timer));
-    handoffTimers = [];
-    doc.documentElement.classList.remove('tc-fx-handing');
-    if (linkEl) linkEl.classList.remove('is-running');
-  }
+  /* ---------- 1·2. 기동과 언마운트 ---------- */
 
-  function handoff(route) {
-    const data = transitions[route] || fx.handoff?.[route];
-    if (!data || !allowed() || !ensureHandoff()) return;
-    endHandoff();
-    const steps = [data.request, ...(data.phases || []), data.status].filter(Boolean);
-    doc.documentElement.classList.add('tc-fx-handing');
-    void linkEl.offsetWidth; // 연결선 애니메이션을 처음부터 다시 시작한다
-    linkEl.classList.add('is-running');
-    steps.forEach((step, index) => {
-      handoffTimers.push(root.setTimeout(() => {
-        handoffEl.textContent = step;
-      }, index * STEP_MS));
-    });
-    handoffTimers.push(root.setTimeout(endHandoff, steps.length * STEP_MS + 320));
-  }
-
-  /* ---------- 2. 단말 기동 ---------- */
-  function bootSeen() {
+  function sessionSeen() {
     try {
       return root.sessionStorage.getItem(BOOT_KEY) === '1';
     } catch (_error) {
-      return true; // 기록할 수 없으면 매번 보여 주지 않는다
+      return false;
     }
   }
-
-  function boot() {
-    const lines = fx.boot || [];
-    const hash = root.location.hash.replace(/^#/, '');
-    if (!lines.length || !allowed() || bootSeen() || (hash && hash !== 'terminal-home')) return;
+  function markSeen() {
     try {
       root.sessionStorage.setItem(BOOT_KEY, '1');
-    } catch (_error) { /* 다음에도 보일 수 있다 */ }
-    const list = h('ol.tc-fx-boot-lines');
-    const overlay = h('div.tc-fx-boot', { 'aria-hidden': 'true' }, h('i.tc-fx-boot-bar'), list);
-    doc.body.append(overlay);
-    root.PCAudio?.cue('boot.start');
-    const timers = [];
-    const finish = () => {
-      timers.forEach((timer) => root.clearTimeout(timer));
-      doc.removeEventListener('pointerdown', finish, true);
-      doc.removeEventListener('keydown', finish, true);
-      overlay.classList.add('is-leaving');
-      root.setTimeout(() => overlay.remove(), 240);
-    };
-    lines.forEach(([term, value], index) => {
-      timers.push(root.setTimeout(() => {
-        list.append(h('li', null, h('span', { text: term }), h('b', { text: value })));
-      }, 90 + index * 150));
-    });
-    timers.push(root.setTimeout(finish, 90 + lines.length * 150 + 380));
-    doc.addEventListener('pointerdown', finish, true);
-    doc.addEventListener('keydown', finish, true);
+    } catch (_error) { /* 다음 새로고침에도 첫 기동으로 보일 수 있다 */ }
+  }
+  // 확인용 주소 인자: ?boot=full|link|restore|skip
+  function forcedMode() {
+    try {
+      const mode = new URLSearchParams(root.location.search).get('boot');
+      return ['full', 'link', 'restore', 'skip'].includes(mode) ? mode : null;
+    } catch (_error) {
+      return null;
+    }
+  }
+  function initialMode() {
+    const forced = forcedMode();
+    if (forced === 'skip') return null;
+    if (forced === 'full') return 'cold';
+    if (forced) return forced;
+    if (sessionSeen()) return 'restore';
+    const hash = root.location.hash.replace(/^#/, '');
+    return !hash || hash === 'terminal-home' ? 'cold' : 'link';
   }
 
-  /* ---------- 3. 증거 현상 ---------- */
+  function releaseApp() {
+    html.classList.remove('tc-boot-pending');
+    doc.querySelector('.tc-app')?.removeAttribute('inert');
+  }
+
+  function bootPanel(mode, cfg, extra = {}) {
+    const lines = (cfg.lines || []).map(([code, label, result, tone]) => {
+      const row = h('li', { class: tone ? `is-${tone}` : null, 'data-state': 'wait' },
+        h('b', { text: `[${code}]` }),
+        h('span', { text: code === 'CHANNEL' && extra.channel ? `${extra.channel} 채널 연결` : label }),
+        h('em', { text: 'WAIT' })
+      );
+      row.dataset.result = result;
+      return row;
+    });
+    const gates = (cfg.gates || []).map((gate) => h('li', null, h('i'), h('span', { text: gate })));
+    const meterBar = h('i');
+    const meterText = h('b', { text: '000%' });
+    const footer = h('span', { text: cfg.footer ? `BUILD ${version()} / ${cfg.footer[0]}` : `${cfg.kicker}` });
+    const skip = cfg.skip ? h('button.tc-boot-skip', { type: 'button', disabled: true, 'data-tc-cue': 'menu.close', text: cfg.skip }) : null;
+    const panel = h('div.tc-boot-panel', null,
+      h('header.tc-boot-head', null,
+        h('img.tc-boot-logo', { src: BRAND, alt: '', width: '48', height: '48' }),
+        h('div', null, h('p.tc-boot-kicker', { text: cfg.kicker }), h('h2', { id: 'tc-boot-title', text: cfg.title }))
+      ),
+      h('ol.tc-boot-lines', null, lines),
+      h('div.tc-boot-meter', null, h('span', null, meterBar), meterText),
+      gates.length ? h('ol.tc-boot-gates', null, gates) : null,
+      h('footer.tc-boot-foot', null, footer, skip)
+    );
+    return { panel, lines, gates, meterBar, meterText, footer, skip };
+  }
+
+  function runBoot(mode, extra = {}) {
+    const cfg = bootData[mode];
+    if (!cfg) {
+      releaseApp();
+      return;
+    }
+    bootActive = true;
+    const calm = reduced();
+    const scale = calm ? (bootData.reducedScale || 0.32) : 1;
+    const parts = bootPanel(mode, cfg, extra);
+    const interactive = mode === 'cold';
+    const overlay = h('div.tc-boot', {
+      'data-mode': mode,
+      role: interactive ? 'dialog' : null,
+      'aria-modal': interactive ? 'true' : null,
+      'aria-labelledby': interactive ? 'tc-boot-title' : null,
+      'aria-hidden': interactive ? null : 'true'
+    }, parts.panel);
+    if (interactive) doc.querySelector('.tc-app')?.setAttribute('inert', '');
+    const existing = doc.querySelector('.tc-boot');
+    if (existing) existing.replaceWith(overlay);
+    else doc.body.append(overlay);
+    html.classList.remove('tc-boot-pending');
+
+    const t = timeline();
+    const duration = (cfg.duration || 1000) * scale;
+    const finish = (cfg.finish || 200) * scale;
+    let done = false;
+    let skippable = !interactive;
+    let raf = 0;
+    const started = performance.now();
+
+    const setMeter = (ratio) => {
+      const pct = Math.max(0, Math.min(100, Math.round(ratio * 100)));
+      parts.meterBar.style.setProperty('--p', pct + '%');
+      parts.meterText.textContent = String(pct).padStart(3, '0') + '%';
+      parts.gates.forEach((gate, index) => gate.classList.toggle('is-on', pct >= ((index + 1) / parts.gates.length) * 100 - 0.5));
+    };
+    if (!calm) {
+      const step = () => {
+        setMeter((performance.now() - started) / duration);
+        if (!done) raf = root.requestAnimationFrame(step);
+      };
+      raf = root.requestAnimationFrame(step);
+    } else {
+      setMeter(0);
+    }
+
+    (cfg.lines || []).forEach((line, index) => {
+      const row = parts.lines[index];
+      t.at((cfg.starts?.[index] || 0) * scale, () => {
+        row.dataset.state = 'check';
+        row.querySelector('em').textContent = 'CHECK';
+      });
+      t.at((cfg.ends?.[index] || 0) * scale, () => {
+        row.dataset.state = 'done';
+        row.querySelector('em').textContent = row.dataset.result;
+        if (calm) setMeter((index + 1) / cfg.lines.length);
+        if (mode !== 'cold') return;
+        if (line[3] === 'danger') {
+          overlay.classList.add('is-alarm');
+          t.at(700, () => overlay.classList.remove('is-alarm'));
+          audio()?.cue('system.alert');
+        } else {
+          audio()?.cue('operation.step');
+        }
+      });
+    });
+    if (cfg.footer) {
+      const lastEnd = (cfg.ends?.[cfg.ends.length - 1] || duration) * scale;
+      t.at(lastEnd - 260 * scale, () => { parts.footer.textContent = `BUILD ${version()} / ${cfg.footer[1]}`; });
+      t.at(duration, () => {
+        parts.footer.textContent = `BUILD ${version()} / ${cfg.footer[2]}`;
+        overlay.classList.add('is-granted');
+        audio()?.cue('channel.command');
+      });
+    }
+    if (parts.skip) {
+      t.at((cfg.skipAfter || 0) * scale, () => {
+        parts.skip.disabled = false;
+        skippable = true;
+      });
+      parts.skip.addEventListener('click', () => end());
+    }
+
+    function onKey(event) {
+      if (!skippable) return;
+      if (interactive && event.key !== 'Escape') return;
+      end();
+    }
+    function onPointer(event) {
+      if (!skippable || interactive) return;
+      if (event.target.closest('.tc-boot-skip')) return;
+      end();
+    }
+    doc.addEventListener('keydown', onKey, true);
+    overlay.addEventListener('pointerdown', onPointer);
+
+    function end() {
+      if (done) return;
+      done = true;
+      t.clear();
+      root.cancelAnimationFrame(raf);
+      setMeter(1);
+      doc.removeEventListener('keydown', onKey, true);
+      markSeen();
+      releaseApp();
+      overlay.classList.add('is-leaving');
+      root.setTimeout(() => {
+        overlay.remove();
+        bootActive = false;
+        enter(PC.current()?.route, true);
+        if (interactive) {
+          const heading = doc.querySelector('.tc-screen:not([hidden]) h1');
+          if (heading) {
+            if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+            heading.focus({ preventScroll: true });
+          }
+        }
+      }, calm ? 0 : 280);
+    }
+    t.at(duration + finish, end);
+    if (interactive) root.setTimeout(() => parts.skip?.focus({ preventScroll: true }), 30);
+  }
+
+  // 접속 확인 — 누르는 순간 브라우저가 소리를 허락한다. '소리 없이 접속'은 음향을 끄고 들어간다.
+  function gate() {
+    const cfg = bootData.gate;
+    if (!cfg) {
+      runBoot('cold');
+      return;
+    }
+    bootActive = true;
+    const enterBtn = h('button.tc-btn.tc-btn--primary', { type: 'button', text: cfg.enter });
+    const silentBtn = h('button.tc-btn', { type: 'button', text: cfg.silent });
+    const overlay = h('div.tc-boot.is-gate', { role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'tc-gate-title' },
+      h('div.tc-boot-panel', null,
+        h('header.tc-boot-head', null,
+          h('img.tc-boot-logo', { src: BRAND, alt: '', width: '48', height: '48' }),
+          h('div', null, h('p.tc-boot-kicker', { text: cfg.kicker }), h('h2', { id: 'tc-gate-title', text: cfg.title }))
+        ),
+        h('div.tc-boot-gate-copy', null, (cfg.lines || []).map((line) => h('p', { text: line }))),
+        h('div.tc-boot-actions', null, enterBtn, silentBtn),
+        h('p.tc-boot-note', { text: cfg.note })
+      )
+    );
+    doc.querySelector('.tc-app')?.setAttribute('inert', '');
+    doc.body.append(overlay);
+    html.classList.remove('tc-boot-pending');
+    root.setTimeout(() => enterBtn.focus({ preventScroll: true }), 30);
+
+    let passed = false;
+    function pass(withSound) {
+      if (passed) return;
+      passed = true;
+      doc.removeEventListener('keydown', onKey, true);
+      if (withSound) {
+        root.PCAudio?.unlock?.();
+        if (!root.PCAudio?.isOn?.()) root.PCAudio?.set?.(true, { quiet: true });
+        root.PCAudio?.cue('boot.start');
+      } else {
+        root.PCAudio?.set?.(false, { quiet: true });
+      }
+      runBoot('cold');
+    }
+    function onKey(event) {
+      if (event.key === 'Tab' || event.key === 'Shift') return;
+      if ((event.key === 'Enter' || event.key === ' ') && doc.activeElement === silentBtn) return;
+      if (event.key === 'Enter' || event.key === ' ') event.preventDefault();
+      pass(true);
+    }
+    enterBtn.addEventListener('click', () => pass(true));
+    silentBtn.addEventListener('click', () => pass(false));
+    silentBtn.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        event.stopPropagation();
+        pass(false);
+      }
+    });
+    overlay.addEventListener('pointerdown', (event) => {
+      if (event.target.closest('button')) return;
+      pass(true);
+    });
+    doc.addEventListener('keydown', onKey, true);
+  }
+
+  /* ---------- 3·4. 화면 인계 막과 채널별 등장 ---------- */
+
+  let handoffEl = null;
+  let handoffTimeline = null;
+  let handoffEnd = null;
+
+  function endHandoff() {
+    if (handoffEnd) handoffEnd();
+  }
+
+  function handoff(fromRoute, toRoute) {
+    const to = transitions[toRoute] || data.handoff?.[toRoute];
+    if (!to) {
+      enter(toRoute, true);
+      return;
+    }
+    endHandoff();
+    const from = transitions[fromRoute] || data.handoff?.[fromRoute] || {};
+    const info = PC.channel(toRoute) || {};
+    const calm = reduced();
+    const timing = (calm ? data.handoffTiming?.reduced : (mobile() ? data.handoffTiming?.mobile : data.handoffTiming?.desktop)) || { reveal: 900, out: 200 };
+    const phases = (to.phases || []).slice(0, 3).map((phase, index) => h('li', null, h('span', { text: String(index + 1).padStart(2, '0') }), h('b', { text: phase })));
+    const status = h('p.tc-handoff-status', { text: calm ? to.status || '' : '' });
+    const el = h('div.tc-handoff', { 'aria-hidden': 'true', 'data-route': toRoute },
+      h('div.tc-handoff-card', null,
+        h('p.tc-handoff-path', null, h('span', { text: from.code || 'COMMAND' }), h('i'), h('span', { text: to.code || info.code || '' })),
+        h('p.tc-handoff-request', { text: to.request || '' }),
+        h('div.tc-handoff-title', null, h('b', { text: info.label || to.label || '' }), h('span.tc-seal', null, h('i', { text: info.index || '--' }))),
+        h('ol.tc-handoff-phases', null, phases),
+        status,
+        h('i.tc-handoff-progress')
+      )
+    );
+    if (calm) phases.forEach((phase) => phase.classList.add('is-done'));
+    doc.body.append(el);
+    handoffEl = el;
+    const t = timeline();
+    handoffTimeline = t;
+    if (!calm) {
+      (timing.phases || []).forEach((ms, index) => t.at(ms, () => {
+        phases.forEach((phase, i) => {
+          phase.classList.toggle('is-active', i === index);
+          phase.classList.toggle('is-done', i < index);
+        });
+      }));
+      t.at(timing.status || 0, () => {
+        phases.forEach((phase) => {
+          phase.classList.remove('is-active');
+          phase.classList.add('is-done');
+        });
+        status.textContent = to.status || '';
+      });
+    }
+    const skip = () => handoffEnd && handoffEnd();
+    el.addEventListener('pointerdown', skip);
+    doc.addEventListener('keydown', skip, true);
+    handoffEnd = () => {
+      handoffEnd = null;
+      t.clear();
+      el.removeEventListener('pointerdown', skip);
+      doc.removeEventListener('keydown', skip, true);
+      enter(toRoute, true);
+      if (calm || !timing.out) {
+        el.remove();
+      } else {
+        el.classList.add('is-leaving');
+        root.setTimeout(() => el.remove(), timing.out);
+      }
+      if (handoffEl === el) handoffEl = null;
+    };
+    t.at(timing.reveal || 900, () => handoffEnd && handoffEnd());
+  }
+
+  // 채널별 등장(channel=true)과 부품 순차 등장. 줄임 모드에서는 CSS가 움직임을 끈다.
+  function enter(route, channelEntry) {
+    const el = route && doc.getElementById(route);
+    if (!el || el.hidden) return;
+    el.classList.remove('is-entering', 'is-staggering');
+    void el.offsetWidth; // 애니메이션을 처음부터 다시 시작한다
+    el.classList.add(channelEntry ? 'is-entering' : 'is-staggering');
+    root.setTimeout(() => el.classList.remove('is-entering', 'is-staggering'), 1100);
+  }
+
+  /* ---------- 5. 돌아오면 화면 켜짐 ---------- */
+
+  let hiddenAt = 0;
+  doc.addEventListener('visibilitychange', () => {
+    if (doc.hidden) {
+      hiddenAt = Date.now();
+      return;
+    }
+    if (!hiddenAt || Date.now() - hiddenAt < 2000 || bootActive) return;
+    html.classList.remove('tc-poweron');
+    void html.offsetWidth;
+    html.classList.add('tc-poweron');
+    root.PCAudio?.play?.('analog', { gain: 0.9, key: 'poweron', cooldown: 1500 });
+    root.setTimeout(() => html.classList.remove('tc-poweron'), 520);
+  });
+
+  /* ---------- 6. 증거 현상 ---------- */
   doc.addEventListener('load', (event) => {
     const img = event.target;
     if (!(img instanceof HTMLImageElement) || img.dataset.fxDeveloped) return;
     if (!img.closest('.tc-evidence-media, .tc-arc-image-frame')) return;
     img.dataset.fxDeveloped = '1';
-    if (allowed()) img.classList.add('tc-fx-develop');
+    if (!reduced()) img.classList.add('tc-fx-develop');
   }, true);
 
   /* ---------- 이동 ---------- */
   doc.addEventListener('pc:route', (event) => {
     const detail = event.detail || {};
     if (detail.reason === 'initial') {
-      boot();
+      const mode = initialMode();
+      if (!mode) {
+        releaseApp();
+        markSeen();
+        return;
+      }
+      if (mode === 'cold') gate();
+      else runBoot(mode, { channel: PC.channel(detail.route)?.label });
       return;
     }
-    if (detail.screenChanged) handoff(detail.route);
+    if (bootActive) return;
+    if (detail.screenChanged) {
+      handoff(detail.previousRoute, detail.route);
+      return;
+    }
+    const leftRecord = detail.previousRoute === 'archive-entry' && (detail.previousParts || []).length && detail.route === 'archive-entry' && !(detail.parts || []).length;
+    if (leftRecord) {
+      runBoot('unmount');
+      return;
+    }
+    if (detail.reason !== 'same' && detail.reason !== 'replace') enter(detail.route, false);
   });
 
-  // 모션 감소로 바뀌면 진행 중인 연출을 바로 끝낸다.
-  if (reduced.addEventListener) reduced.addEventListener('change', () => { if (reduced.matches) endHandoff(); });
+  // 효과를 줄임으로 바꾸면 진행 중인 인계 막을 바로 끝낸다.
+  doc.addEventListener('pc:fx', (event) => {
+    if (event.detail?.mode === 'reduced') endHandoff();
+  });
 })(window);

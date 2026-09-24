@@ -14,8 +14,8 @@
     schema:'project-curse-v44',
     released:'2026-08-27',
     screens:[
-      {id:'terminal-home',index:'00',label:'단말 상태',shortLabel:'홈'},
-      {id:'map-room',index:'01',label:'상황 관제',shortLabel:'관제'},
+      {id:'terminal-home',index:'00',label:'상황판',shortLabel:'상황'},
+      {id:'map-room',index:'01',label:'작전 지도',shortLabel:'지도'},
       {id:'history',index:'02',label:'세계 기록',shortLabel:'연표'},
       {id:'faction-info',index:'03',label:'세력 분석',shortLabel:'세력'},
       {id:'archive-entry',index:'04',label:'기록보관소',shortLabel:'기록'},

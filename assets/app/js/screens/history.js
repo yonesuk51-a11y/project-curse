@@ -13,6 +13,19 @@
   const core = () => root.ProjectCurseWorldHistoryCore;
 
   const screenCopy = () => root.ProjectCurseHistoryScreen || {};
+  const openCanon = () => root.ProjectCurseOpenCanon || {};
+
+  // 표지 — 영문만 있는 표지는 전체 보기에서만, 'EN / 한글' 겹표지는 한글만 남긴다(2026-09-25 간략/전체 보기).
+  const latin = (value) => /^[A-Z0-9 .·\-–?()'&:]+$/.test(String(value).trim()) && /[A-Z]{2}/.test(String(value));
+  function lbl(text) {
+    const value = String(text || '');
+    const [first, second] = value.split(' / ');
+    if (second && latin(first) && !latin(second)) return h('span.tc-label', null, h('span.tc-full-only', { text: `${first} / ` }), h('span', { text: second }));
+    if (latin(value)) return h('span.tc-label.tc-full-only', { text: value });
+    return lbl(value);
+  }
+  // 영문 머리글 + 한글 — 간략 보기에서는 한글만
+  const bi = (english, korean) => [h('span.tc-full-only', { text: `${english} / ` }), korean];
 
   /* ---------- 기록 조립 — 5.54 화면과 같은 순서로 합친다 ---------- */
 
@@ -108,7 +121,7 @@
   function turnsPanel() {
     return h('section.tc-panel.tc-bracket.tc-hist-turns', { 'aria-labelledby': 'tc-hist-turns-title' },
       h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label', { text: 'READING PATH' }), h('h2#tc-hist-turns-title', { text: '먼저 볼 네 전환점' }))
+        h('div', null, lbl('READING PATH'), h('h2#tc-hist-turns-title', { text: '먼저 볼 네 전환점' }))
       ),
       h('ol.tc-hist-turn-list', null, (screenCopy().turns || []).map(([id, range, title, text]) => {
         const exists = findIndex(id) >= 0;
@@ -116,7 +129,7 @@
           h('time', { text: range }),
           h('b', { text: title }),
           h('span', { text: text }),
-          exists ? h('em', { text: '대표 기록 열람 ›' }) : h('em.is-missing', { text: `기록 없음: ${id}` })
+          exists ? h('em', { text: '대표 기록 보기 ›' }) : h('em.is-missing', { text: `기록 없음: ${id}` })
         ));
       }))
     );
@@ -128,13 +141,14 @@
     return h('div.tc-hist-ref', null,
       h('div.tc-hist-ref-lead', null,
         h('p', { text: framework.thesis }),
-        h('div.tc-note.tc-note--evidence', null, h('b', { text: 'WORLD CONDITION' }), h('p', { text: '기관은 원인이 아니라 후발 대응체계다.' }))
+        h('div.tc-note.tc-note--evidence', null, h('b', null, bi('WORLD CONDITION', '세계의 조건')), h('p', { text: '기관은 원인이 아니라 후발 대응체계다.' }))
       ),
       h('ul.tc-hist-grid.tc-hist-grid--4', null, framework.ontology.map((item) =>
-        h('li', null, h('span.tc-label', { text: item.code }), h('b', { text: item.name }), h('p', { text: item.text }))
+        h('li', null, lbl(item.code), h('b', { text: item.name }), h('p', { text: item.text }))
       )),
       // 존재 구분 그림 — history-screen-data.js의 ontologyVisuals[구분 코드]
       framework.ontology.map((item) => visualBlock(screenCopy().ontologyVisuals?.[item.code])),
+      PC.openCanon?.(openCanon().world?.ontology || []),
       h('details.tc-disclosure.tc-hist-sub', null,
         h('summary', null, h('span', null, h('b', { text: '능력의 일곱 발현 경로와 대가' }))),
         h('ul.tc-hist-grid.tc-hist-grid--4', null, framework.abilitySources.map((item) =>
@@ -165,8 +179,9 @@
         item.afterDeath ? h('p', { text: item.afterDeath }) : null,
         visualBlock(item.visual),
         h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
+        PC.openCanon?.(openCanon().world?.reverseSiteCivilians || []),
         item.record ? h('p', null, h('a', { href: PC.href('archive-entry', item.record) }, '괴이 판정표 원문 열기', h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null,
-        item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `교전 교범의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
+        item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `현장 지침의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
       )
     );
   }
@@ -191,7 +206,7 @@
     return h('div.tc-hist-ref', null,
       h('div.tc-hist-ref-lead', null,
         h('p', { text: '세계가 어떻게 어긋나는지에 대한 세 가지 관측이다. 어느 기관도 확인하지 못했고, 셋 다 결정 대기 상태로 남아 있다.' }),
-        h('div.tc-note.tc-note--caution', null, h('b', { text: 'UNCONFIRMED PATTERNS' }), h('p', { text: '사례를 같은 원인으로 묶는 근거로 쓰지 않는다.' }))
+        h('div.tc-note.tc-note--caution', null, h('b', null, bi('UNCONFIRMED PATTERNS', '확인되지 않은 규칙')), h('p', { text: '사례를 같은 원인으로 묶는 근거로 쓰지 않는다.' }))
       ),
       rule(framework.observerDivergence),
       rule(framework.containmentDrift),
@@ -205,10 +220,10 @@
     const program = jp.program;
     return h('div.tc-hist-ref.tc-hist-tech', null,
       h('div.tc-hist-tech-head', null,
-        h('div', null, h('span.tc-label', { text: program.code }), h('b', { text: program.name }), h('p', { text: program.purpose })),
+        h('div', null, lbl(program.code), h('b', { text: program.name }), h('p', { text: program.purpose })),
         h('dl', null,
-          h('div', null, h('dt', { text: 'PERIOD' }), h('dd', { text: program.period })),
-          h('div', null, h('dt', { text: 'STATUS' }), h('dd.is-sealed', { text: program.status }))
+          h('div', null, h('dt', null, bi('PERIOD', '기간')), h('dd', { text: program.period })),
+          h('div', null, h('dt', null, bi('STATUS', '상태')), h('dd.is-sealed', { text: program.status }))
         )
       ),
       h('ol.tc-hist-track', null, jp.technologies.map((item, index) =>
@@ -220,7 +235,7 @@
         ))
       )),
       h('ul.tc-hist-grid.tc-hist-grid--4', null, jp.socialOutcomes.map((item) =>
-        h('li', null, h('span.tc-label', { text: item.label }), h('p', { text: item.text }))
+        h('li', null, lbl(item.label), h('p', { text: item.text }))
       )),
       h('details.tc-disclosure.tc-hist-sub', null,
         h('summary', null, h('span', null, h('b', { text: '공개 역사와 U.A.C 제한 기록의 경계' }))),
@@ -239,7 +254,7 @@
 
   function referenceStack() {
     const item = (code, title, hint, body) => h('details.tc-disclosure.tc-hist-refbox', null,
-      h('summary', null, h('span', null, h('span.tc-label', { text: code }), h('b', { text: title }), h('small', { text: hint }))),
+      h('summary', null, h('span', null, lbl(code), h('b', { text: title }), h('small', { text: hint }))),
       h('div.tc-disclosure-body', null, body)
     );
     return h('div.tc-hist-refs', null,
@@ -261,10 +276,10 @@
     const levels = Object.entries(chronology()?.evidenceLevels || {});
     const unresolved = chronology()?.unresolved || [];
     return h('section.tc-hist-controls', { 'aria-label': '연표 필터' },
-      h('div.tc-hist-controls-head', null, h('span.tc-label', { text: 'ERA FILTER / 시대 선택' }), status),
+      h('div.tc-hist-controls-head', null, lbl('ERA FILTER / 시대 선택'), status),
       seg,
       h('details.tc-disclosure.tc-hist-key', null,
-        h('summary', null, h('span', null, h('span.tc-label', { text: 'CANON KEY' }), h('b', { text: '기록의 확실성과 아직 결정되지 않은 설정' }))),
+        h('summary', null, h('span', null, lbl('CANON KEY'), h('b', { text: '기록의 확실성과 아직 결정되지 않은 설정' }))),
         h('div.tc-disclosure-body', null,
           h('ul.tc-hist-levels', null, levels.map(([key, level]) =>
             h('li', null, PC.tag(level.label, PC.verdictTone(key)), h('p', { text: level.description }))
@@ -378,14 +393,14 @@
     const links = [];
     incidents.forEach((incident) => {
       if (mappedIncidents.has(incident.id)) links.push([`${incident.title} 위치`, 'COORDINATES / 관측 좌표', PC.href('map-room', 'incident', incident.id)]);
-      if (incident.operation && mappedOps.has(incident.operation)) links.push([`${incident.title} 작전`, 'OPERATION / 작전 경과', PC.href('map-room', 'op', incident.operation), 'op']);
+      if (incident.operation && mappedOps.has(incident.operation)) links.push([`${incident.title} 작전`, 'OPERATION / 작전 진행', PC.href('map-room', 'op', incident.operation), 'op']);
     });
     synchrony.forEach((event) => links.push([`${event.title} 관측도 · ${event.points.length}개 신호`, '2042 SIGNAL LAYER / 동시 관측', PC.href('map-room', 'synchrony', event.id), 'signal']));
     factions.forEach((key) => links.push([`${canonFactions[key].name} 분석`, 'DOSSIER / 세력 문서', PC.href('faction-info', key)]));
     archives.forEach((id) => links.push([`${id} 기록`, 'RECOVERED / 회수 원문', PC.href('archive-entry', id)]));
     if (!links.length) return null;
     return h('section.tc-panel.tc-bracket.tc-hist-links', { 'aria-labelledby': 'tc-hist-links-title' },
-      h('header.tc-panel-head', null, h('div', null, h('span.tc-label', { text: 'CROSS REFERENCE' }), h('h2#tc-hist-links-title', { text: '관련 기록' }))),
+      h('header.tc-panel-head', null, h('div', null, lbl('CROSS REFERENCE'), h('h2#tc-hist-links-title', { text: '관련 기록' }))),
       h('ul.tc-hist-link-list', null, links.map(([label, kind, target, tone]) =>
         h('li', null, h('a', { href: target, class: tone ? `is-${tone}` : null },
           h('small', { text: kind }),
@@ -401,7 +416,7 @@
   const STATUS_RANK = { normal: 0, unstable: 1, unknown: 2, split: 3, lost: 4 };
   const STATUS_CLASS = { normal: 'is-done', unstable: 'is-contact', unknown: 'is-unknown', split: 'is-loss', lost: 'is-loss' };
   const STATUS_LABEL = { normal: '정상', unstable: '불안정', unknown: '미상', split: '분열', lost: '소실' };
-  // 판정 사본이 보관되면(상황 관제에서 판정을 마치면) 봉인이 풀린다.
+  // 판정 기록이 보관되면(작전 지도에서 판정을 마치면) 봉인이 풀린다.
   const isSealed = (op) => (op.unlockVerdict
     ? !root.ProjectCurseVerdictArchiveState?.isUnlocked(op.unlockVerdict)
     : /SEALED/.test(op.status || ''));
@@ -416,11 +431,11 @@
     const id = `tc-hist-op-${op.id}`;
     return h('section.tc-panel.tc-hist-optrack', { 'aria-labelledby': id },
       h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label', { text: `OPERATION TRACK · ${op.code}` }), h('h2', { id, text: `${op.label} — 작전 경과` })),
+        h('div', null, lbl(`OPERATION TRACK · ${op.code}`), h('h2', { id, text: `${op.label} — 작전 진행` })),
         h('span.tc-code.tc-dim', { text: `${steps.length} STEPS · ${steps[0].time}–${steps[steps.length - 1].time}` })
       ),
       sealed
-        ? h('div.tc-panel-body', null, h('div.tc-note.tc-note--danger', null, h('b', { text: 'SEALED' }), h('p', { text: `${op.status || '판정 봉인'} — 경과 기록은 판정 이후 상황 관제에서 열람한다.` })))
+        ? h('div.tc-panel-body', null, h('div.tc-note.tc-note--danger', null, h('b', null, bi('SEALED', '봉인')), h('p', { text: `${op.status || '판정 봉인'} — 진행 기록은 판정을 마친 뒤 작전 지도에서 볼 수 있다.` })))
         : h('ol.tc-phase.tc-hist-phase', null, steps.map((step) => {
           const status = worstStatus(step);
           return h('li', { class: STATUS_CLASS[status] || 'is-done' },
@@ -430,7 +445,7 @@
           );
         })),
       h('div.tc-hist-optrack-foot', null,
-        h('a.tc-btn', { href: PC.href('map-room', 'op', op.id) }, sealed ? '상황 관제에서 봉인 상태 확인' : '지도에서 경과 재생', h('i', { 'aria-hidden': 'true', text: '›' }))
+        h('a.tc-btn', { href: PC.href('map-room', 'op', op.id) }, sealed ? '작전 지도에서 봉인 상태 확인' : '지도에서 진행 다시 보기', h('i', { 'aria-hidden': 'true', text: '›' }))
       )
     );
   }
@@ -450,24 +465,28 @@
     const type = prose()?.documentTypes?.[counter.documentType];
     return h('section.tc-panel.tc-bracket.tc-bracket--occult.tc-hist-counter', { 'aria-label': type?.label || '상충 기록' },
       h('header.tc-hist-counter-head', null,
-        h('span.tc-label', { text: type?.code || 'CONTESTED RECORD' }),
+        lbl(type?.code || 'CONTESTED RECORD'),
         h('b', { text: type?.label || '상충 기록' }),
         PC.tag('교단 측 기록', 'occult')
       ),
       h('dl.tc-kv.tc-hist-counter-kv', null,
-        [['작성', counter.author], ['수신', counter.recipient], ['목적', counter.purpose], ['자료 상태', counter.provenance]]
+        [['작성', counter.author], ['받는 곳', counter.recipient], ['목적', counter.purpose], ['자료 상태', counter.provenance]]
           .filter(([, value]) => value)
           .map(([term, value]) => h('div', null, h('dt', { text: term }), h('dd', { text: value })))
       ),
       visualBlock(counter.visual),
       h('div.tc-hist-counter-body', null, (counter.fragments || []).map((fragment) => fragmentBlock(fragment, true))),
-      counter.limit ? h('div.tc-note.tc-note--caution', null, h('b', { text: '두 기록을 대조할 때' }), h('p', { text: counter.limit })) : null
+      counter.limit ? h('div.tc-note.tc-note--caution', null, h('b', { text: '두 기록을 맞춰 볼 때' }), h('p', { text: counter.limit })) : null
     );
   }
 
-  function visualBlock(visual) {
+  function visualBlock(visual, record) {
     if (!visual?.src) return null;
-    return h('figure.tc-evidence.tc-hist-visual', { dataset: { evidenceClass: visual.className || 'RECONSTRUCTED' } },
+    // 감식 보기(pc-inspect.js)가 읽는 기록 번호·날짜. 모르는 값은 붙이지 않는다
+    const evidence = { evidenceClass: visual.className || 'RECONSTRUCTED' };
+    if (record?.id) evidence.record = record.id;
+    if (record?.date) evidence.dtg = String(record.date);
+    return h('figure.tc-evidence.tc-hist-visual', { dataset: evidence },
       h('div.tc-evidence-media', null, PC.img(visual.src, { alt: visual.alt || '' })),
       h('figcaption', null, h('b', { text: visual.label || 'INTERPRETIVE RECONSTRUCTION' }), h('span', { text: visual.caption || '' }))
     );
@@ -494,7 +513,7 @@
       h('header.tc-panel.tc-bracket.tc-hist-dossier', null,
         h('p.tc-hist-dossier-code', null,
           h('span.tc-label', { text: record.isTechnology ? `TECHNICAL RECORD / ${String(index + 1).padStart(2, '0')}` : `EVENT RECORD / ${String(index + 1).padStart(2, '0')}` }),
-          h('span.tc-label', { text: record.documentCode || 'EDITORIAL NOTE' })
+          lbl(record.documentCode || 'EDITORIAL NOTE')
         ),
         h('time.tc-hist-date', { text: record.date }),
         h('h1', { text: record.title, 'data-tc-focus': true }),
@@ -507,21 +526,22 @@
         )
       ),
       h('details.tc-disclosure.tc-hist-context', null,
-        h('summary', null, h('span', null, h('span.tc-label', { text: 'CHAIN OF CUSTODY' }), h('b', { text: '기록 근거와 한계' }))),
+        h('summary', null, h('span', null, lbl('CHAIN OF CUSTODY'), h('b', { text: '기록 근거와 한계' }))),
         h('div.tc-disclosure-body', null,
           h('p.tc-hist-basis', { text: record.basis || '판정 근거가 등록되지 않았다.' }),
           h('dl.tc-kv.tc-hist-provenance', null,
             h('div', null, h('dt', { text: '작성' }), h('dd', { text: record.author || '작성 주체 미상' })),
-            h('div', null, h('dt', { text: '수신' }), h('dd', { text: record.recipient || '수신 기록 없음' })),
+            h('div', null, h('dt', { text: '받는 곳' }), h('dd', { text: record.recipient || '받는 곳 기록 없음' })),
             h('div', null, h('dt', { text: '목적' }), h('dd', { text: record.purpose || '편찬 목적 미등록' }))
           ),
           h('div.tc-note.tc-note--caution', null, h('b', { text: '이 기록으로 확정할 수 없는 것' }), h('p', { text: record.archiveLimit || screenCopy().limitDefault }))
         )
       ),
       h('div.tc-hist-body', null,
-        visualBlock(record.visual),
+        visualBlock(record.visual, record),
         fragments.map((fragment) => fragmentBlock(fragment, false)),
-        counterPanel(record)
+        counterPanel(record),
+        PC.openCanon?.(openCanon().history?.[record.id] || [])
       ),
       operationTracks(record),
       relatedLinks(record),

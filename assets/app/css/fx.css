@@ -1,112 +1,548 @@
-/* Project Curse 6 — 연출(pc-fx.js)과 화면 공용 연출 부품.
-   셸은 멀쩡하게 둔다: 채널 인계는 상단 바의 채널 표지 자리와 바 아래 1px 연결선만 쓴다.
-   손상 느낌(현상·잡음)은 증거 층에만 쓴다. 글로우·번쩍임·큰 움직임 없음.
-   모션 감소 설정이면 pc-fx.js가 연출을 만들지 않고, 여기의 반복 움직임도 끈다. */
+/* Project Curse 6 — 연출(pc-fx.js·pc-anomaly.js·pc-inspect.js·pc-settings.js)과 화면 공용 연출 부품.
+   2026-09-25 사용자 결정: 옛 5.54의 기동·채널 인계·채널별 등장을 되살린다. 붉은 검정 분위기.
+   번짐은 그림자가 아니라 그라데이션으로 칠한다(가이드 2절 — 번지는 그림자 없음).
+   효과 줄임(html[data-fx="reduced"])에서는 base.css가 움직임을 멈추고, 여기의 연출은 멈춘 화면으로 보인다. */
 
-/* ---------- 1. 채널 인계 ---------- */
-.tc-bar-channel {
-  position: relative;
-  flex: 1 1 auto; /* 인계 문구가 들어갈 자리 — 브랜드와 상태 계기 사이의 빈칸을 쓴다 */
-}
-.tc-fx-handoff {
-  position: absolute;
+/* ---------- 1. 단말 기동 — 접속 확인·기동·링크 접속·세션 복원·기록 언마운트 ---------- */
+.tc-boot {
+  position: fixed;
   inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: var(--s5) var(--s4);
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .28) 0 1px, transparent 1px 3px),
+    radial-gradient(80% 60% at 50% 40%, rgba(110, 31, 42, .22), transparent 70%),
+    #040303;
+  animation: tc-fade-in 160ms linear both;
+}
+.tc-boot.is-leaving {
+  animation: tc-fade-out 280ms linear both;
+}
+.tc-boot-panel {
+  position: relative;
+  display: grid;
+  gap: var(--s4);
+  width: min(640px, 100%);
+  padding: var(--s5);
+  border: 1px solid rgba(179, 60, 69, .55);
+  background: linear-gradient(180deg, rgba(20, 12, 13, .96), rgba(10, 7, 8, .98));
+  transition: border-color 400ms var(--ease);
+}
+/* 모서리 괄호 */
+.tc-boot-panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--red-bright), var(--red-bright)) 0 0 / 14px 1px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 0 0 / 1px 14px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 100% 100% / 14px 1px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 100% 100% / 1px 14px no-repeat;
+}
+.tc-boot-head {
   display: flex;
   align-items: center;
-  color: var(--ch-ink, var(--text-2));
+  gap: var(--s3);
+}
+.tc-boot-logo {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+.tc-boot-kicker {
+  color: var(--red-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: .12em;
+}
+.tc-boot-head h2 {
+  margin: 2px 0 0;
+  font-size: var(--fs-xl);
+  letter-spacing: .02em;
+}
+.tc-boot-lines {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+.tc-boot-lines li {
+  display: grid;
+  grid-template-columns: minmax(0, 11ch) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--s3);
+  min-height: 34px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(226, 210, 204, .07);
+  color: var(--text-3);
+  font-size: var(--fs-s);
+  transition: color 200ms var(--ease);
+}
+.tc-boot-lines b {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+.tc-boot-lines em {
+  color: var(--text-3);
   font-family: var(--mono);
   font-size: var(--fs-2xs);
+  font-style: normal;
+  letter-spacing: .1em;
+}
+.tc-boot-lines li[data-state="check"] {
+  color: var(--text-2);
+}
+.tc-boot-lines li[data-state="check"] em {
+  color: var(--amber-ink);
+  animation: tc-blink 520ms steps(2, end) infinite;
+}
+.tc-boot-lines li[data-state="done"] {
+  color: var(--text);
+}
+.tc-boot-lines li[data-state="done"] em {
+  color: var(--od-ink);
+}
+.tc-boot-lines li.is-caution[data-state="done"] em {
+  color: var(--amber-ink);
+}
+.tc-boot-lines li.is-danger[data-state="done"],
+.tc-boot-lines li.is-danger[data-state="done"] b,
+.tc-boot-lines li.is-danger[data-state="done"] em {
+  color: var(--red-ink);
+}
+.tc-boot-meter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s3);
+}
+.tc-boot-meter > span {
+  position: relative;
+  height: 3px;
+  background: rgba(226, 210, 204, .1);
+}
+.tc-boot-meter i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--p, 0%);
+  background: linear-gradient(90deg, #7a1f27, var(--red-bright));
+}
+/* 번짐 — 막대 위아래로 붉은 빛이 옅게 퍼진다(그라데이션) */
+.tc-boot-meter i::after {
+  content: "";
+  position: absolute;
+  inset: -7px 0;
+  background: linear-gradient(180deg, transparent, rgba(224, 90, 99, .22) 50%, transparent);
+}
+.tc-boot-meter b {
+  min-width: 4ch;
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
   font-weight: 500;
+  text-align: right;
+}
+.tc-boot-gates {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--line);
+}
+.tc-boot-gates li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.tc-boot-gates li + li {
+  border-left: 1px solid var(--line);
+}
+.tc-boot-gates i {
+  width: 6px;
+  height: 6px;
+  background: var(--line-2);
+}
+.tc-boot-gates li.is-on {
+  color: var(--text);
+  background: rgba(179, 60, 69, .16);
+}
+.tc-boot-gates li.is-on i {
+  background: var(--red-bright);
+  animation: tc-blink 900ms steps(2, end) 2;
+}
+.tc-boot-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: .08em;
+}
+.tc-boot-skip {
+  min-height: var(--tap);
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  color: var(--text-2);
+  background: transparent;
+  font-size: var(--fs-s);
+}
+.tc-boot-skip:not(:disabled):hover {
+  border-color: var(--red);
+  color: var(--text);
+}
+.tc-boot-skip:disabled {
+  opacity: .35;
+}
+/* 레드라인 줄 — 틀이 한 번 붉게 짙어진다(번쩍임 없이 0.7초) */
+.tc-boot.is-alarm .tc-boot-panel {
+  border-color: var(--red-bright);
+  background: linear-gradient(180deg, rgba(58, 14, 18, .96), rgba(16, 7, 8, .98));
+}
+/* 접근 승인 — 틀이 초록으로 */
+.tc-boot.is-granted .tc-boot-panel {
+  border-color: var(--od-2);
+}
+.tc-boot.is-granted .tc-boot-meter i {
+  background: linear-gradient(90deg, var(--od), var(--od-ink));
+}
+.tc-boot.is-granted .tc-boot-meter i::after {
+  background: linear-gradient(180deg, transparent, rgba(154, 171, 114, .2) 50%, transparent);
+}
+/* 짧은 기동(링크·복원·언마운트)은 조금 작게, 가운데 위쪽 */
+.tc-boot[data-mode="link"] .tc-boot-panel,
+.tc-boot[data-mode="restore"] .tc-boot-panel,
+.tc-boot[data-mode="unmount"] .tc-boot-panel {
+  width: min(520px, 100%);
+  gap: var(--s3);
+}
+.tc-boot[data-mode="unmount"] {
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .3) 0 1px, transparent 1px 3px),
+    rgba(4, 3, 3, .94);
+}
+/* 접속 확인 */
+.tc-boot.is-gate .tc-boot-panel {
+  width: min(560px, 100%);
+}
+.tc-boot-gate-copy {
+  display: grid;
+  gap: 4px;
+  color: var(--text-2);
+}
+.tc-boot-gate-copy p:first-child {
+  color: var(--text);
+}
+.tc-boot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+.tc-boot-actions .tc-btn {
+  min-width: 140px;
+  justify-content: center;
+}
+.tc-boot-note {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-boot.is-gate .tc-boot-panel::after {
+  content: "_";
+  position: absolute;
+  right: var(--s5);
+  top: var(--s5);
+  color: var(--red-ink);
+  font-family: var(--mono);
+  animation: tc-blink 1s steps(2, end) infinite;
+}
+
+/* ---------- 2. 화면 인계 막 — 본문을 덮는다. 상단 바와 채널 레일은 보인다 ---------- */
+.tc-handoff {
+  position: fixed;
+  top: var(--bar-h);
+  right: 0;
+  bottom: 0;
+  left: var(--rail-w);
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: var(--s5);
+  --ho: var(--red);
+  background:
+    radial-gradient(70% 55% at 50% 45%, rgba(var(--ho-rgb, 179, 60, 69), .14), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .26) 0 1px, transparent 1px 3px),
+    rgba(5, 4, 4, .97);
+  animation: tc-fade-in 120ms linear both;
+}
+.tc-handoff.is-leaving {
+  animation: tc-handoff-out 260ms var(--ease) both;
+}
+@keyframes tc-handoff-out {
+  to { opacity: 0; clip-path: inset(0 0 100% 0); }
+}
+/* 채널 무늬 — 관제 격자, 연표 세로 눈금, 세력 사선, 보관소 붉은 가로줄, 인물 가로줄 */
+.tc-handoff[data-route="map-room"] { --ho-rgb: 85, 181, 170; background-image: radial-gradient(70% 55% at 50% 45%, rgba(85, 181, 170, .12), transparent 70%), linear-gradient(rgba(85, 181, 170, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(85, 181, 170, .07) 1px, transparent 1px); background-size: auto, 24px 24px, 24px 24px; }
+.tc-handoff[data-route="history"] { --ho-rgb: 195, 154, 92; background-image: radial-gradient(70% 55% at 50% 45%, rgba(195, 154, 92, .12), transparent 70%), repeating-linear-gradient(90deg, rgba(195, 154, 92, .08) 0 1px, transparent 1px 18px); }
+.tc-handoff[data-route="faction-info"] { --ho-rgb: 114, 164, 198; background-image: radial-gradient(70% 55% at 50% 45%, rgba(114, 164, 198, .12), transparent 70%), repeating-linear-gradient(135deg, rgba(114, 164, 198, .08) 0 1px, transparent 1px 14px); }
+.tc-handoff[data-route="archive-entry"] { --ho-rgb: 212, 92, 101; background-image: radial-gradient(70% 55% at 50% 45%, rgba(212, 92, 101, .16), transparent 70%), repeating-linear-gradient(0deg, rgba(212, 92, 101, .09) 0 1px, transparent 1px 12px); }
+.tc-handoff[data-route="personnel"] { --ho-rgb: 170, 143, 104; background-image: radial-gradient(70% 55% at 50% 45%, rgba(170, 143, 104, .12), transparent 70%), repeating-linear-gradient(0deg, rgba(170, 143, 104, .07) 0 1px, transparent 1px 20px); }
+.tc-handoff[data-route="field-manual"] { --ho-rgb: 163, 154, 98; }
+.tc-handoff[data-route="terminal-home"] { --ho-rgb: 184, 66, 73; }
+.tc-handoff[data-route] { background-color: rgba(5, 4, 4, .97); }
+.tc-handoff-card {
+  position: relative;
+  display: grid;
+  gap: var(--s3);
+  width: min(600px, 100%);
+  padding: var(--s5);
+  border: 1px solid rgba(var(--ho-rgb, 179, 60, 69), .6);
+  background: rgba(10, 7, 8, .92);
+  animation: tc-handoff-card 420ms var(--ease-out) both;
+}
+@keyframes tc-handoff-card {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); }
+}
+.tc-handoff-path {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .2em;
+}
+.tc-handoff-path i {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line-2), rgba(var(--ho-rgb, 179, 60, 69), .9));
+}
+.tc-handoff-path span:last-child {
+  color: rgb(var(--ho-rgb, 179, 60, 69));
+}
+.tc-handoff-request {
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
   letter-spacing: .12em;
-  opacity: 0;
-  pointer-events: none;
 }
-.tc-fx-handing .tc-fx-handoff {
-  opacity: 1;
+.tc-handoff-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
 }
-.tc-fx-handing .tc-bar-channel > i,
-.tc-fx-handing .tc-bar-channel > span:not(.tc-fx-handoff) {
-  opacity: 0;
+.tc-handoff-title b {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  line-height: 1.15;
 }
-.tc-fx-link {
+.tc-handoff-phases {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--line);
+}
+.tc-handoff-phases li {
+  display: grid;
+  gap: 2px;
+  padding: 6px 8px;
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .12em;
+}
+.tc-handoff-phases li + li {
+  border-left: 1px solid var(--line);
+}
+.tc-handoff-phases span {
+  font-family: var(--mono);
+  letter-spacing: .04em;
+}
+.tc-handoff-phases li.is-active {
+  color: var(--text);
+  background: rgba(var(--ho-rgb, 179, 60, 69), .2);
+  animation: tc-blink 300ms steps(2, end) 2;
+}
+.tc-handoff-phases li.is-done {
+  color: rgb(var(--ho-rgb, 179, 60, 69));
+}
+.tc-handoff-status {
+  min-height: 1.4em;
+  color: var(--od-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: .1em;
+}
+.tc-handoff-progress {
   position: absolute;
   left: 0;
   bottom: -1px;
+  height: 2px;
   width: 100%;
-  height: 1px;
-  background: var(--ch, var(--amber));
-  opacity: 0;
-  transform: scaleX(0);
+  background: rgb(var(--ho-rgb, 179, 60, 69));
   transform-origin: left center;
-  pointer-events: none;
+  animation: tc-grow 1100ms var(--ease-out) both;
 }
-.tc-fx-link.is-running {
-  animation: tc-fx-link 760ms var(--ease) both;
+@media (max-width: 960px) {
+  .tc-handoff {
+    left: 0;
+    bottom: calc(var(--dock-h) + env(safe-area-inset-bottom));
+  }
 }
-@keyframes tc-fx-link {
-  0% { opacity: 1; transform: scaleX(0); }
-  72% { opacity: 1; transform: scaleX(1); }
-  100% { opacity: 0; transform: scaleX(1); }
+@media (max-width: 560px) {
+  .tc-handoff-phases {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-handoff-phases li + li {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
 }
 
-/* ---------- 2. 단말 기동 ---------- */
-.tc-fx-boot {
-  position: fixed;
-  inset: var(--bar-h) 0 0 0;
-  z-index: 25;
+/* ---------- 인장 — 조준선·점선 고리(화면 머리·인계 막) ---------- */
+.tc-seal {
+  position: relative;
   display: grid;
-  align-content: center;
-  padding: var(--s6) max(var(--s5), 8vw);
-  background: var(--bg);
-  pointer-events: none;
-  animation: tc-fx-fade-in 120ms linear both;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+  color: var(--ch-ink);
 }
-.tc-fx-boot.is-leaving {
-  animation: tc-fx-fade-out 220ms linear both;
+.tc-handoff .tc-seal {
+  color: rgb(var(--ho-rgb, 179, 60, 69));
 }
-.tc-fx-boot-bar {
+.tc-seal::before {
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--amber);
-  transform-origin: left center;
-  animation: tc-fx-link 1200ms linear both;
+  inset: 0;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.3'%3E%3Ccircle cx='32' cy='32' r='28' stroke-dasharray='2.2 3.6'/%3E%3Ccircle cx='32' cy='32' r='20' stroke-opacity='.55'/%3E%3Cpath d='M32 0v13M32 51v13M0 32h13M51 32h13'/%3E%3Cpath d='M32 9v4M32 51v4M9 32h4M51 32h4' stroke-width='2.4'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.3'%3E%3Ccircle cx='32' cy='32' r='28' stroke-dasharray='2.2 3.6'/%3E%3Ccircle cx='32' cy='32' r='20' stroke-opacity='.55'/%3E%3Cpath d='M32 0v13M32 51v13M0 32h13M51 32h13'/%3E%3Cpath d='M32 9v4M32 51v4M9 32h4M51 32h4' stroke-width='2.4'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
 }
-.tc-fx-boot-lines {
-  display: grid;
-  gap: 6px;
-  max-width: 620px;
+.tc-seal i {
+  position: relative;
   font-family: var(--mono);
-  font-size: var(--fs-s);
-  letter-spacing: .06em;
-}
-.tc-fx-boot-lines li {
-  display: grid;
-  grid-template-columns: minmax(0, 22ch) minmax(0, 1fr);
-  gap: var(--s3);
-  animation: tc-fx-line 150ms steps(3, end) both;
-}
-.tc-fx-boot-lines span {
-  color: var(--text-3);
-}
-.tc-fx-boot-lines b {
-  color: var(--amber-ink);
+  font-size: var(--fs-xs);
+  font-style: normal;
   font-weight: 500;
 }
-@keyframes tc-fx-line {
-  from { opacity: 0; clip-path: inset(0 100% 0 0); }
-  to { opacity: 1; clip-path: inset(0 0 0 0); }
+.tc-handoff .tc-seal::before {
+  animation: tc-spin 5s linear infinite;
 }
-@keyframes tc-fx-fade-in {
-  from { opacity: 0; }
-}
-@keyframes tc-fx-fade-out {
-  to { opacity: 0; }
+body[data-screen="map-room"] .tc-screenhead .tc-seal::before {
+  animation: tc-spin 12s linear infinite;
 }
 
-/* ---------- 3. 증거 현상 — 끝 값은 원래 필터로 돌아간다 ---------- */
+/* ---------- 3. 채널별 등장 — 옛 transition-system.css:132-176 ---------- */
+.tc-screen.is-entering {
+  animation: tc-enter-rise 460ms var(--ease-out) both;
+}
+body[data-screen="terminal-home"] .tc-screen.is-entering { animation: tc-enter-flicker 420ms steps(1, end) both; }
+body[data-screen="map-room"] .tc-screen.is-entering { animation: tc-enter-top 560ms var(--ease-out) both; }
+body[data-screen="history"] .tc-screen.is-entering { animation: tc-enter-sepia 600ms var(--ease-out) both; }
+body[data-screen="faction-info"] .tc-screen.is-entering { animation: tc-enter-side 520ms var(--ease-out) both; }
+body[data-screen="archive-entry"] .tc-screen.is-entering { animation: tc-enter-slit 560ms var(--ease-out) both; }
+body[data-screen="personnel"] .tc-screen.is-entering { animation: tc-enter-drop 520ms var(--ease-out) both; }
+@keyframes tc-enter-rise {
+  from { opacity: 0; transform: translateY(10px); }
+}
+@keyframes tc-enter-flicker {
+  0% { opacity: 0; }
+  20% { opacity: .7; }
+  30% { opacity: .15; }
+  45% { opacity: .9; }
+  55% { opacity: .5; }
+  70% { opacity: 1; }
+}
+@keyframes tc-enter-top {
+  from { clip-path: inset(0 0 100% 0); filter: saturate(0) brightness(.7); }
+  70% { filter: saturate(.4) brightness(.9); }
+}
+@keyframes tc-enter-sepia {
+  from { opacity: 0; transform: translateY(14px); filter: sepia(.85) brightness(.6); }
+  60% { filter: sepia(.4) brightness(.85); }
+}
+@keyframes tc-enter-side {
+  from { opacity: 0; transform: translateX(-18px); filter: grayscale(1); }
+  60% { filter: grayscale(.5); }
+}
+@keyframes tc-enter-slit {
+  from { clip-path: inset(49.5% 0 49.5% 0); filter: brightness(1.6); }
+  40% { clip-path: inset(30% 0 30% 0); }
+}
+@keyframes tc-enter-drop {
+  from { clip-path: inset(0 0 100% 0); transform: translateY(-8px); }
+}
+/* 부품이 차례로 떠오른다(0.04초 간격, 최대 0.42초) */
+.tc-screen.is-entering > *,
+.tc-screen.is-staggering > *,
+.tc-screen.is-entering > * > *,
+.tc-screen.is-staggering > * > * {
+  animation: tc-part-rise 380ms var(--ease-out) both;
+}
+.tc-screen.is-entering > * > :nth-child(1), .tc-screen.is-staggering > * > :nth-child(1) { animation-delay: 60ms; }
+.tc-screen.is-entering > * > :nth-child(2), .tc-screen.is-staggering > * > :nth-child(2) { animation-delay: 100ms; }
+.tc-screen.is-entering > * > :nth-child(3), .tc-screen.is-staggering > * > :nth-child(3) { animation-delay: 140ms; }
+.tc-screen.is-entering > * > :nth-child(4), .tc-screen.is-staggering > * > :nth-child(4) { animation-delay: 180ms; }
+.tc-screen.is-entering > * > :nth-child(5), .tc-screen.is-staggering > * > :nth-child(5) { animation-delay: 220ms; }
+.tc-screen.is-entering > * > :nth-child(6), .tc-screen.is-staggering > * > :nth-child(6) { animation-delay: 260ms; }
+.tc-screen.is-entering > * > :nth-child(7), .tc-screen.is-staggering > * > :nth-child(7) { animation-delay: 300ms; }
+.tc-screen.is-entering > * > :nth-child(8), .tc-screen.is-staggering > * > :nth-child(8) { animation-delay: 340ms; }
+.tc-screen.is-entering > * > :nth-child(n+9), .tc-screen.is-staggering > * > :nth-child(n+9) { animation-delay: 420ms; }
+@keyframes tc-part-rise {
+  from { opacity: 0; transform: translateY(6px); }
+}
+/* 화면 머리 — 잘려 들어오고 인장이 돌며 커진다 */
+.tc-screen.is-entering .tc-screenhead {
+  animation: tc-head-cut 520ms var(--ease-out) both;
+}
+.tc-screen.is-entering .tc-screenhead .tc-seal::before {
+  animation: tc-seal-in 900ms var(--ease-out) both;
+}
+@keyframes tc-head-cut {
+  from { clip-path: inset(0 100% 0 0); }
+}
+@keyframes tc-seal-in {
+  from { opacity: 0; transform: rotate(-120deg) scale(.6); }
+}
+
+/* ---------- 4. 돌아오면 화면 켜짐 — 가로선에서 펼쳐진다 ---------- */
+html.tc-poweron .tc-app {
+  animation: tc-poweron 460ms var(--ease-out) both;
+}
+@keyframes tc-poweron {
+  0% { transform: scaleY(.006); filter: brightness(3.2); }
+  38% { transform: scaleY(1); filter: brightness(1.7); }
+  100% { transform: none; filter: none; }
+}
+html[data-fx="reduced"].tc-poweron .tc-app {
+  animation: tc-fade-in 1ms linear both;
+}
+
+/* ---------- 5. 삼야 무응답 기념일 — 더 어둡고, 채널 레일이 흐려진다 ---------- */
+html[data-silence="on"] body::after {
+  --edge: rgba(0, 0, 0, .66);
+}
+html[data-silence="on"] .tc-rail {
+  filter: saturate(.25) brightness(.8);
+}
+html[data-silence="on"] .tc-bar {
+  box-shadow: inset 0 2px 0 var(--red-bright);
+}
+
+/* ---------- 6. 증거 현상 — 끝 값은 원래 필터로 돌아간다 ---------- */
 .tc-fx-develop {
   animation: tc-fx-develop 720ms var(--ease) backwards;
 }
@@ -114,7 +550,7 @@
   from { filter: grayscale(1) brightness(.12) contrast(1.8); }
 }
 
-/* ---------- 4. 가림 막대 — 증거 층의 낮은 잡음 ---------- */
+/* ---------- 7. 가림 막대 — 증거 층의 낮은 잡음 ---------- */
 .tc-redact {
   background-image: repeating-linear-gradient(90deg, rgba(216, 214, 204, .05) 0 1px, transparent 1px 4px);
   background-size: 12px 100%;
@@ -124,7 +560,7 @@
   to { background-position: 12px 0; }
 }
 
-/* ---------- 5. 화면 공용 — 수신 중 표시(천천히 숨쉬듯, 번쩍이지 않는다) ---------- */
+/* ---------- 8. 화면 공용 — 수신 중 표시(천천히 숨쉬듯) ---------- */
 .tc-fx-live {
   display: inline-block;
   width: 6px;
@@ -139,7 +575,7 @@
   50% { opacity: 1; }
 }
 
-/* ---------- 6. 화면 공용 — 순서대로 들어오는 줄. 줄마다 style="--i:n" ---------- */
+/* ---------- 9. 화면 공용 — 순서대로 들어오는 줄. 줄마다 style="--i:n" ---------- */
 .tc-fx-stagger > * {
   animation: tc-fx-row 260ms var(--ease) both;
   animation-delay: calc(var(--i, 0) * 70ms);
@@ -148,25 +584,211 @@
   from { opacity: 0; transform: translateY(4px); }
 }
 
+/* ---------- 10. 감식 보기 ---------- */
+.tc-inspect {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: rgba(3, 2, 2, .96);
+  animation: tc-fade-in 140ms linear both;
+}
+.tc-inspect-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2) var(--s4);
+  padding: var(--s3) var(--s4);
+  border-bottom: 1px solid rgba(179, 60, 69, .45);
+  background: #0a0707;
+}
+.tc-inspect-title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+}
+.tc-inspect-title b {
+  color: var(--red-ink);
+  font-weight: 600;
+}
+.tc-inspect-title span {
+  color: var(--coyote-ink);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.tc-inspect-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--s4);
+}
+.tc-inspect-meta div {
+  display: flex;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+.tc-inspect-meta dt {
+  color: var(--text-3);
+}
+.tc-inspect-meta dd {
+  margin: 0;
+  color: var(--text);
+}
+.tc-inspect-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tc-inspect-tools .tc-btn {
+  min-width: var(--tap);
+  justify-content: center;
+  padding: 6px 10px;
+}
+.tc-inspect-zoom {
+  min-width: 5ch;
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  text-align: center;
+}
+.tc-inspect-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: var(--s4);
+  cursor: zoom-in;
+  touch-action: none;
+}
+.tc-inspect.is-zoomed .tc-inspect-stage {
+  cursor: grab;
+}
+.tc-inspect-frame {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  transform-origin: center center;
+  transition: transform 120ms var(--ease);
+}
+.tc-inspect-img {
+  display: block;
+  max-width: min(100%, 1400px);
+  max-height: calc(100dvh - 190px);
+  object-fit: contain;
+  user-select: none;
+}
+/* 격자·모서리·눈금 — 표시층에서 입힌다 */
+.tc-inspect-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(224, 90, 99, .14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224, 90, 99, .14) 1px, transparent 1px);
+  background-size: 10% 10%;
+  mix-blend-mode: screen;
+}
+.tc-inspect-corners {
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--red-bright), var(--red-bright)) 0 0 / 18px 1px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 0 0 / 1px 18px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 100% 0 / 18px 1px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 100% 0 / 1px 18px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 0 100% / 18px 1px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 0 100% / 1px 18px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 100% 100% / 18px 1px no-repeat,
+    linear-gradient(var(--red-bright), var(--red-bright)) 100% 100% / 1px 18px no-repeat;
+}
+.tc-inspect-ruler {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 14px;
+  height: 8px;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(226, 210, 204, .7) 0 1px, transparent 1px) 0 0 / 10% 100% repeat-x,
+    linear-gradient(rgba(226, 210, 204, .7), rgba(226, 210, 204, .7)) 0 100% / 100% 1px no-repeat;
+}
+.tc-inspect-caption {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--s3) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+  text-align: center;
+}
 @media (max-width: 560px) {
-  .tc-fx-boot-lines {
-    font-size: var(--fs-xs);
+  .tc-inspect-bar {
+    padding: var(--s2) var(--s3);
   }
-  .tc-fx-boot-lines li {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
+  .tc-inspect-meta {
+    order: 3;
+    width: 100%;
+  }
+  .tc-inspect-img {
+    max-height: calc(100dvh - 240px);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .tc-fx-boot,
-  .tc-fx-link {
-    display: none;
-  }
-  .tc-redact,
-  .tc-fx-live,
-  .tc-fx-stagger > *,
-  .tc-fx-develop {
-    animation: none;
-  }
+/* ---------- 11. 설정 창 ---------- */
+.tc-settings {
+  position: fixed;
+  top: calc(var(--bar-h) + 6px);
+  right: 8px;
+  z-index: 50;
+  display: grid;
+  gap: var(--s3);
+  width: min(360px, calc(100vw - 16px));
+  max-height: calc(100dvh - var(--bar-h) - 16px);
+  overflow-y: auto;
+  padding: var(--s4);
+  border: 1px solid rgba(179, 60, 69, .55);
+  background: #0c0909;
+  animation: tc-fade-in 120ms linear both;
+}
+.tc-settings-head {
+  display: grid;
+  gap: 2px;
+}
+.tc-settings-head span,
+.tc-set-note {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+.tc-set-row {
+  display: grid;
+  gap: 6px;
+}
+.tc-set-label {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+
+/* ---------- 공용 키프레임 ---------- */
+@keyframes tc-fade-in {
+  from { opacity: 0; }
+}
+@keyframes tc-fade-out {
+  to { opacity: 0; }
+}
+@keyframes tc-blink {
+  50% { opacity: .25; }
+}
+@keyframes tc-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes tc-grow {
+  from { transform: scaleX(0); }
 }

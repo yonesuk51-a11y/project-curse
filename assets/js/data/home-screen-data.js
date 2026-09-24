@@ -1,4 +1,4 @@
-// Project Curse 6 — 단말 상태(홈) 화면의 편집 문구·기록선·상태 표시 문구.
+// Project Curse 6 — 상황판(홈) 화면의 편집 문구·기록 줄기·상태 표시 문구. 2026-09-25 화면 말 용어표 적용.
 // 화면 코드(assets/app/js/screens/home.js)는 이 값을 그대로 보여 준다. {이름} 자리는 진행 상태 값으로 채운다.
 // 경보·수신 문구는 옛 홈(pages/terminal-home.js)의 상태 문구를 글자 그대로 옮겼다.
 (function (root) {
@@ -12,7 +12,7 @@
 
   root.ProjectCurseHomeScreen = freeze({
     version: '6.0.0',
-    lead: '외부망은 끊겼다. 남은 것은 서로 모순되는 사건철과 아직 응답 중인 관측점뿐이다.',
+    lead: '외부망은 끊겼다. 남은 것은 서로 모순되는 사건 기록과 아직 응답 중인 관측 지점뿐이다.',
 
     // 현재 경보 — 미열람 판정 기록 → 저장된 작전 판정 → 정보 회수 진행 → 기본 경보 순서로 바뀐다.
     alert: {
@@ -61,7 +61,7 @@
         complete: '불빛 없는 성채 · {ending}',
         endingFallback: '순례 종료',
         active: '불빛 없는 성채 {completed}/{total} · {trace}',
-        traceFallback: '진입 중',
+        traceFallback: '들어가는 중',
         idle: '불빛 없는 성채 순례 채널 대기',
         status: { complete: 'RESULT SAVED', outcomeFallback: 'TRACE', idle: 'PILGRIMAGE READY' }
       },
@@ -97,9 +97,9 @@
     // 경보색 뜻은 화면이 Civil_Child_Drill의 '경보색과 할 일' 표에서 직접 읽는다. 여기 적지 않는다.
     civil: {
       code: 'CIVIL ALERT RELAY / 민간 재난 방송',
-      title: '민간 방송 수신본',
+      title: '민간 재난 방송',
       relay: '1 REGION COPY',
-      author: '권역 공식 재난 방송 · 발신 기관 표기 없음',
+      author: '권역 공식 재난 방송 · 보낸 기관 표기 없음',
       recipient: '권역 거주민·검문 대기열',
       purpose: '경보색 전환과 행동 지시',
       limit: '한 권역 경보망에서 받은 사본이다. 같은 소식도 권역마다 날짜가 다르다. 방송은 발생 원인, 기관 책임, 능력자의 대가를 다루지 않는다.',
@@ -112,7 +112,7 @@
         { time: '00:30', kind: '실종자 공고', region: '도시권', text: '시신 없는 장례는 이름, 물건, 음성기록으로 나눠 접수합니다. 귀가한 가족의 동일인 판정이 끝나기 전에도 장례 접수는 유지됩니다.' }
       ],
       legendTitle: '경보색 기준 — 학교 대피 수업 표',
-      legendLink: ['기준 문서 열람', ['archive-entry', 'Civil_Child_Drill']]
+      legendLink: ['기준 문서 보기', ['archive-entry', 'Civil_Child_Drill']]
     },
 
     // 접촉 보고 — 작전 단계의 기입 문장에서 센서 값을 뽑는다. 기입 문장이 바뀌어 값이 맞지 않으면 판독 막대를 그리지 않는다.
@@ -130,7 +130,7 @@
         title: '최초 노출',
         text: '호수에서 돌아온 조사관들은 같은 시체를 두고 서로 다른 보고서를 남겼다. 교단이라는 이름이 공식 기록에 처음 등장한 것도 그날이었다.',
         links: [
-          ['연표로 진입', ['history', '1986-02-01-immortality'], true],
+          ['연표에서 보기', ['history', '1986-02-01-immortality'], true],
           ['피의 호수 원기록', ['archive-entry', 'Immortality_860201']]
         ]
       },
@@ -149,7 +149,7 @@
         phase: 'current',
         code: 'ENTRY 03 / 2030–2042',
         title: '현재 기록',
-        text: '중앙 색인이 닫힌 뒤에도 관측점은 신호를 보냈다. 2042년, 세 밤 동안 열 개 지점이 같은 시각에 침묵했다.',
+        text: '중앙 기록이 멈춘 뒤에도 관측 지점은 신호를 보냈다. 2042년, 세 밤 동안 열 개 지점이 같은 시각에 침묵했다.',
         links: [
           ['부서진 왕관', ['history', '2030-01-17-broken-crown'], true],
           ['작전 지도', ['map-room', 'op', 'op-southern-coup']],
@@ -161,15 +161,15 @@
     // 처음 접속한 사람을 위한 여섯 기록선
     readingPath: [
       ['세계 기록', '기관 이전의 성채 전승에서 2042년 세 밤의 침묵까지 큰 흐름을 잡는다.', ['history']],
-      ['기관과 교단', '같은 사건을 두고 갈라진 조직과 교단의 지휘선을 대조한다.', ['faction-info']],
+      ['기관과 교단', '같은 사건을 두고 갈라진 조직과 교단의 지휘선을 맞춰 본다.', ['faction-info']],
       ['인물 기록', '주요 인물과 그들이 남긴 사건을 따라간다.', ['personnel']],
       ['대흑림과 순례 규칙', '성채 밖에서 법 대신 생환자들의 규칙이 작동하는 이유를 읽는다.', ['archive-entry', 'Great_Black_Forest_Region']],
       ['데드존 귀환선', '사라진 대륙에서 돌아온 자들이 어떤 판정을 받았는지 따라간다.', ['archive-entry', 'Dead_Zone_Pilgrimage']],
-      ['부서진 왕관', '중앙 색인 동결 이후에도 끝나지 않은 남부 작전의 분기 기록을 연다.', ['archive-entry', 'Operation_Broken_Crown']]
+      ['부서진 왕관', '중앙 기록이 멈춘 뒤에도 끝나지 않은 남방 작전, 네 갈래로 나뉜 결과를 연다.', ['archive-entry', 'Operation_Broken_Crown']]
     ],
     manualLink: {
       code: 'BEFORE DEPLOYMENT',
-      title: '투입 전 확인 — 교전 교범',
+      title: '들어가기 전 확인 — 현장 지침',
       text: '교전 원칙, 철수 조건, 표식, 장비군, 능력과 대가, 현장 인원 등록 양식'
     },
 
