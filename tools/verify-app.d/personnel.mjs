@@ -4,7 +4,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const P = context.ProjectCursePersonnel;
   const D = context.ProjectCursePersonnelDisplay;
   const F = context.ProjectCurseFactionAnalysis;
-  const legacy = read('assets/js/pages/personnel-archive.js');
+  const legacy = read('tools/fixtures/legacy-app/assets/js/pages/personnel-archive.js');
   const source = read('assets/app/js/screens/personnel.js');
   const records = P.records;
   add('fifty-six-files-ten-groups', records.length === 56 && P.groups.length === 10);

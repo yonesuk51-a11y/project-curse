@@ -12,11 +12,11 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   add('motion-manual-reading', source.includes("life.on(motion, 'change'") && source.includes('toggle.disabled = motion.matches') && source.includes('영상 대본 전체 열람') && css.includes('@media (prefers-reduced-motion: reduce)'));
   add('styles-scoped', !/(?:^|\})\s*(?:body|html|:root|\.record-page|\.page-tab|\.tc-btn|\.tc-row)\b/m.test(css));
   const migrated = context.ProjectCurseArchiveViewerData;
-  const oldChapters = vm.runInNewContext(read('assets/js/pages/archive-consolidation.js').match(/const storyChapters\s*=\s*(\[[\s\S]*?\n\s*\]);/)[1]);
+  const oldChapters = vm.runInNewContext(read('tools/fixtures/legacy-app/assets/js/pages/archive-consolidation.js').match(/const storyChapters\s*=\s*(\[[\s\S]*?\n\s*\]);/)[1]);
   add('chapter-prose-verbatim', JSON.stringify(oldChapters) === JSON.stringify(migrated.chapters));
-  const oldPages = vm.runInNewContext(read('assets/js/core/record-cinematic-runtime.js').match(/    const pages = (\[[\s\S]*?\n\]);/)[1]);
+  const oldPages = vm.runInNewContext(read('tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js').match(/    const pages = (\[[\s\S]*?\n\]);/)[1]);
   add('cults-storyboard-verbatim', JSON.stringify(oldPages) === JSON.stringify(context.ProjectCurseLegacyCinematicSources.cults));
-  const oldCopy = (read('assets/js/main.js') + read('assets/js/pages/archive-document.js') + read('assets/js/pages/archive-consolidation.js') + read('assets/js/pages/media-clearance.js')).replace(/<\/?strong>/g, '');
+  const oldCopy = (read('tools/fixtures/legacy-app/assets/js/main.js') + read('tools/fixtures/legacy-app/assets/js/pages/archive-document.js') + read('tools/fixtures/legacy-app/assets/js/pages/archive-consolidation.js') + read('tools/fixtures/legacy-app/assets/js/pages/media-clearance.js')).replace(/<\/?strong>/g, '');
   const copyStrings = value => typeof value === 'string' ? [value] : Object.values(value).flatMap(copyStrings);
   add('viewer-copy-verbatim', copyStrings(migrated.copy).every(text => oldCopy.includes(text)));
 
@@ -24,7 +24,7 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   const test = { console, localStorage: { getItem: k => storage.get(k) || null, setItem: (k, v) => storage.set(k, v), removeItem: k => storage.delete(k) }, document: { dispatchEvent: e => events.push(e), addEventListener() {} }, CustomEvent: class { constructor(type, init) { this.type = type; this.detail = init?.detail; } } };
   test.window = test; vm.createContext(test);
   for (const m of app.matchAll(/<script src="(assets\/js\/data\/[^"?]+)/g)) vm.runInContext(read(m[1]), test);
-  vm.runInContext(read('assets/js/core/operation-state.js'), test);
+  vm.runInContext(read('tools/fixtures/legacy-app/assets/js/core/operation-state.js'), test);
   const operation = test.ProjectCurseOperationState;
   add('operation-boundary-verbatim', ['operationId', 'storageKey', 'branchIds', 'canonBoundary', 'decisions'].every(key => JSON.stringify(operation[key]) === JSON.stringify(migrated.operation[key])));
   ['record-cinematic-registry.js'].forEach(file => vm.runInContext(read(`assets/app/js/cinematic/${file}`), test));
@@ -49,8 +49,8 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   const states = {};
   Object.entries(test.ProjectCursePilgrimageData.scenarios).forEach(([id, scenario]) => { states[id] = { schema: 2, scenarioId: id, status: 'complete', step: scenario.stages.length - 1, metrics: Object.fromEntries(scenario.metrics.map(m => [m.key, 51])), violations: 1, choices: scenario.stages.map(s => ({ stage: s.id, choice: s.choices[0].id, ruleOutcome: 'unknown' })), ending: Object.keys(scenario.endings)[0], startedAt: '2042-01-01T00:00:00.000Z', updatedAt: '2042-01-01T01:00:00.000Z' }; });
   storage.set('pc_pilgrimage_states_v2', JSON.stringify({ schema: 2, states }));
-  vm.runInContext(read('assets/js/core/pilgrimage-state.js'), test);
-  vm.runInContext(read('assets/js/core/verdict-archive-state.js'), test);
+  vm.runInContext(read('tools/fixtures/legacy-app/assets/js/core/pilgrimage-state.js'), test);
+  vm.runInContext(read('tools/fixtures/legacy-app/assets/js/core/verdict-archive-state.js'), test);
   const registered = [];
   test.PCApp = { h() {}, screen: def => registered.push(def) }; test.matchMedia = () => ({ matches: false });
   const hook = 'root.__archiveTest = { loadVerdicts, verdictDocument, resolveVariant };';

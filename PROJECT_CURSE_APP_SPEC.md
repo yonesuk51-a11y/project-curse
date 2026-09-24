@@ -9,7 +9,7 @@ Status: `2026-09-24 / 표시층 재작성 진행 중`
 
 - 새 단말은 `index.html`이다(2026-09-24 교체, 그 전까지는 `app.html`로 따로 열었다). `docs/`의 옛 문서 페이지는 `tools/build-docs-stubs.mjs`가 만든 안내 페이지로, 기록보관소의 같은 기록으로 보낸다.
 - `index.html` 교체와 docs 페이지 스타일 교체는 모든 화면을 검증한 뒤 Claude가 한다.
-- 새 앱은 옛 `assets/css/*.css`, `assets/js/main.js`, `assets/js/core/*`, `assets/js/pages/*`를 불러오지 않는다. 옛 모듈의 로직을 쓰려면 새 화면 파일로 옮겨 온다.
+- 새 앱은 옛 `assets/css/*.css`, `assets/js/main.js`, `assets/js/core/*`, `assets/js/pages/*`를 불러오지 않는다. 옛 모듈의 로직을 쓰려면 새 화면 파일로 옮겨 온다. 옛 파일은 2026-09-24 `tools/fixtures/legacy-app/`(원래 경로 유지)으로 옮겨 화면별 검사의 대조 기준으로만 쓴다.
   - 예외: 기록 영상 연출(`record-cinematic-*`, `cinematic-*.js`)은 기록보관소 화면이 재사용할 수 있다. 재사용하면 이 문서 5절의 기록보관소 항목에 적는다.
 
 ## 1. 파일

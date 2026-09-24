@@ -153,7 +153,7 @@
       "sha256": "c36e55d8c0d75d7ec4623f2d03ff19b419345bb5a90fe9d380bfbf33a05d3bed",
       "usedBy": [
         "assets/app/js/cinematic/cinematic-immortality.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -169,10 +169,10 @@
       "bytes": 3163908,
       "sha256": "791381f008e06a8450b2f9459557dbc56f84b597af634f6b6e170b27be0f4f09",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -187,8 +187,8 @@
       "bytes": 1118529,
       "sha256": "3ad8d1b5cb05a8599c4b6058d3c79574b5e6df7c8683631d53a5be7227c4f164",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -237,10 +237,10 @@
       "bytes": 65396,
       "sha256": "3d2b557c7d25b3c60e107d61ffcce3bea3e99392014c6bdb2dcf43acac2585d3",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -270,8 +270,8 @@
       "bytes": 13982,
       "sha256": "b96d16b57ce28e099e486b9fc90d73338cb0835a86bc7f2ba66a978b125b2ba6",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/data/archive-cinematic-data.js"
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -286,8 +286,8 @@
       "bytes": 49091,
       "sha256": "372c256723f7ef6c9561b5de14555beabe9329141519460ba39f2fc1757c7154",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/data/archive-cinematic-data.js"
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -302,8 +302,8 @@
       "bytes": 60376,
       "sha256": "f60e316c0aa08612115654a45f51664542103c160a904751556f218fe86ee612",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/data/archive-cinematic-data.js"
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -318,10 +318,10 @@
       "bytes": 30104,
       "sha256": "50344c9e7f7a2c7e54b458d1a33dec917d31023d42040fc3dfff594103c3fec0",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -337,10 +337,10 @@
       "bytes": 211758,
       "sha256": "375997a886c16f32fe450403f1b4a013f23779718adc6e9bc7906ef55623941d",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -355,10 +355,10 @@
       "bytes": 54762,
       "sha256": "471bffa0a34f75f36af67d3ddf2257ab4db04c87c93ec8a9516f45f1a4056d94",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -373,7 +373,7 @@
       "bytes": 110328,
       "sha256": "af8fd8e3c1b73a303569d3021a7820f85f1bef5d029c692c903d04782c1106ef",
       "usedBy": [
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -388,10 +388,10 @@
       "bytes": 14156,
       "sha256": "db6c9de68c7f073a254f47521bd493362abacc58ccfffae779602a7407186225",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -406,10 +406,10 @@
       "bytes": 110328,
       "sha256": "4852eec8d99536584851d2c2c802f0e025461da47c656518625e3c9dd652e9ea",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -425,10 +425,10 @@
       "bytes": 30104,
       "sha256": "fc4b005e78be32541db6793a99c977462bed70de53424a8929f34515291e97b3",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -444,12 +444,12 @@
       "bytes": 79056,
       "sha256": "81effbc48a4a46d64699b1ba64a2260dbc54fb90c40ede38e94608d58d82686d",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -465,8 +465,8 @@
       "bytes": 45491,
       "sha256": "32d5c745cfc28f9a22b8942d6b77b9b5543e177cac0e2b7f24b059bf63de120a",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -481,12 +481,12 @@
       "bytes": 13973,
       "sha256": "56f02dc68089337961497d9191a41a42eae975c51a437276f87c1d9624eaec03",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -502,11 +502,11 @@
       "bytes": 13921,
       "sha256": "f7f57ea6d38160cb9dcb148b32c53db45569f378af337eefe9acb1c27750004d",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -522,11 +522,11 @@
       "bytes": 16212,
       "sha256": "15dce06ebad99699c6c54be99b913f3ac8dff9b35dcb3a628e3c8ac59ecab9cb",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -543,7 +543,7 @@
       "sha256": "582b23ae0af63c89616d51ba3cbc0c5b550b4c7bd43b1f956aa10023b64d75a0",
       "usedBy": [
         "assets/app/js/cinematic/cinematic-cults.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -577,7 +577,7 @@
       "sha256": "628ee9d43391318519c00922bdae07c4110cda4d884e474a98606f9777a9fa22",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -610,7 +610,7 @@
       "sha256": "2137ec7ae998d35155ea1688886304fb9c457390a435e98b92e4869402873fc1",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -643,7 +643,7 @@
       "sha256": "8ca551c73cb5744c29b7a6ba0b32ab9e755cbb04bccf946fd3f96ea1a15af32b",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -708,7 +708,7 @@
       "sha256": "6c8df1b9d21b4b1679c39e2461563ed4592a6b525bc24d65352c79cad322d98e",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -757,7 +757,7 @@
       "sha256": "f8ed15bc2632ee8301cf7b83f42b24ec34ce477d8889fedd4e9e2bec1329ea6a",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -806,7 +806,7 @@
       "sha256": "8192bfb9097d69bf62e1ad81f1df631fdbc613eeab49ca0822b5b21c1402a8c6",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -839,7 +839,7 @@
       "sha256": "18cae9288112f58fc630feaacbc4c00b7cf860de312192ee54ca782f2b8d89c3",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -888,7 +888,7 @@
       "sha256": "a0a3488527cbb5b0ac0643f816ec8658042589aef6a6d0d08f79a5083713b6dd",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -937,7 +937,7 @@
       "sha256": "de455885fe5365d8602e63afb910949b5f27887a2e245e7a7c3dadfc46f17b1a",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -970,7 +970,7 @@
       "sha256": "a97e982ae7a1af6f5810798180f2524fbaed7ccf10b1d338fc9d0a9ddf4a27ea",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1003,7 +1003,7 @@
       "sha256": "35fd51ff92c321b96296ea0cbc09ed59a80226a83acf8c441890d9b35b95a06b",
       "usedBy": [
         "assets/js/data/faction-mark-registry.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1360,10 +1360,10 @@
       "usedBy": [
         "assets/js/data/archive-registry.js",
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1379,7 +1379,7 @@
       "sha256": "cc4121f6774e4848562731a9c380e265a95a2a6448df4d738984070e81e5930f",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -1396,10 +1396,10 @@
       "sha256": "6acaa7e0ecc097cedb9247908bf04fe8d97946ff6795f89c75dd563889e882f5",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1414,12 +1414,12 @@
       "bytes": 6728,
       "sha256": "1d7487d34a052d8e0979bb6c1731d69df5007041d1fe3b2b296df0f5dd07afad",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1449,12 +1449,12 @@
       "bytes": 8344,
       "sha256": "2f0ecad48aef5c07e3a8e767a257ae4756528070329056d58e8b1b56a84f6a6d",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1470,10 +1470,10 @@
       "sha256": "f7770413116a8ed55fea833ec12adeabc5eaf1d5170f0f5e170dfd1021583ff4",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1521,7 +1521,7 @@
       "bytes": 78824,
       "sha256": "d1e86d55c8f698186ac8a7f40b0a98a693fb9079cb8bcaeeced03cd62133391d",
       "usedBy": [
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1536,12 +1536,12 @@
       "bytes": 7438,
       "sha256": "b778166e06efa4f4760fe584b01eaa5a28f59f7d1208857dbdf309bf87f2c777",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1556,12 +1556,12 @@
       "bytes": 7268,
       "sha256": "455559354825066de060d4dfe518d0a2ee4ebb7a182562296df64c7f21ed2a37",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1576,7 +1576,7 @@
       "bytes": 9768,
       "sha256": "88738839a20bf07182216aad7c450f70123eac0a85f5ba352b154d055c1356d7",
       "usedBy": [
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -1591,12 +1591,12 @@
       "bytes": 9626,
       "sha256": "5d8c86f2c479a350776dfdce993c76c6a505e9417d5b0c2303d8e810298fca8b",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1613,11 +1613,11 @@
       "usedBy": [
         "assets/js/data/archive-registry.js",
         "assets/js/data/visual-evidence-data.js",
-        "assets/js/main.js",
         "assets/resources/ASSET_REGISTRY.md",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1632,12 +1632,12 @@
       "bytes": 3612,
       "sha256": "d1e15201f654f167ba299555996d08ce974951c38fb8dd65c97a7920f9097458",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1652,12 +1652,12 @@
       "bytes": 7864,
       "sha256": "b55150a921588144205b9e1d8005d057247de0b7f01650f36ac1a32d246c468c",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1672,12 +1672,12 @@
       "bytes": 9092,
       "sha256": "dcc3697930eb49692e5fa45b00d1c2b5bca24cb2999c9b639633d562d08accc0",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1694,8 +1694,8 @@
       "usedBy": [
         "assets/js/data/archive-document-data.js",
         "assets/js/data/visual-evidence-data.js",
-        "assets/js/main.js",
         "assets/resources/ASSET_REGISTRY.md",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -1712,10 +1712,10 @@
       "sha256": "634da67b67b2f6b664a6df77c2a68a7f9640e5a70b1a3731783a93821d0539cc",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1731,10 +1731,10 @@
       "sha256": "cd51ca3fb0662ccc7aa3a73431c0b18c1e7a3b17168e6f84de4414607a3d006f",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1750,10 +1750,10 @@
       "sha256": "023da8f0f8c52aed984af57b7c3081708dbfe290eb3fe8a027ae46ffa759a79e",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -1768,10 +1768,10 @@
       "bytes": 167406,
       "sha256": "36fb0468a33ab4c5a2735eb16058be4e7bcfd7bd28af924fa1f0e083cd6ddfa4",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/media-manifest.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -2374,10 +2374,10 @@
       "sha256": "bff4f024e0ab00e997eac2e5f9771b6a095b503ab63dd067e5da8168bb546692",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -2392,12 +2392,12 @@
       "bytes": 8402,
       "sha256": "7135d0e2d79c181adb4843a26e0a44b63f33575c57dc258756b7b0f1e6ec020e",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
         "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -2414,10 +2414,10 @@
       "sha256": "f12c14b0cca22a7844199b36b3ea1f1592e57e6ebbab2f8d77fe725b9ae81976",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -2433,10 +2433,10 @@
       "sha256": "4f561b54c4f8c3471865d2588618d1f8afa00c1af1c1b25c69443660e5c8d9f3",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -2451,7 +2451,7 @@
       "bytes": 209368,
       "sha256": "d4999bcaef867ae597aa9d77631c7da833901103e0edcd7e0ea1d1b4e6be018f",
       "usedBy": [
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2467,10 +2467,10 @@
       "sha256": "cdef046820e72bee49a93ea2948a87f05a22334a9a3755595f25289d0e014a30",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -2486,10 +2486,10 @@
       "sha256": "0d30b917105d14eb98c283c8860c550d060480c37d252179bd76bd292fb681fd",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -3227,7 +3227,7 @@
       "sha256": "f4a24b82dc5aab26afa296c51db87e497aeb903ef30b98057f82817f12acd055",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3243,10 +3243,10 @@
       "sha256": "fc6f495cbc88d312f3f3f5659d65a5b06823916092de311ceefd3f8e64ed928e",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -3262,10 +3262,10 @@
       "sha256": "d1bf11edf85c4f0ca832b4a9413f70cc941b3451415463dc2cd9874505dc6e32",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -3281,10 +3281,10 @@
       "sha256": "b743dd815d27eb2f4770de81415e05bee2f90bcf6bbe20f8ff2a902a44cd2261",
       "usedBy": [
         "assets/js/data/immortality-storyboard.js",
-        "assets/js/main.js",
         "canon/originals/Immortality_860201.article.html",
         "canon/originals/Immortality_860201.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -3299,7 +3299,7 @@
       "bytes": 11588,
       "sha256": "759a998a18969b447b45f3a5b6493f84684bd4943d6775e15bf584ff4a02ff75",
       "usedBy": [
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3314,13 +3314,13 @@
       "bytes": 335631,
       "sha256": "7e59f285b44d3c77b251d576a2bad2c24363261b71e8e1275620371c0fae367a",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/media-manifest.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -3335,13 +3335,13 @@
       "bytes": 303726,
       "sha256": "3dc94d47f3b3e989cf8f61f46df238366861df4b70fffa08931fed74cc2509e5",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/media-manifest.js",
-        "assets/js/main.js",
         "canon/originals/Cults_871104.article.html",
         "canon/originals/Cults_871104.docs.html",
-        "index.html"
+        "index.html",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -4796,8 +4796,8 @@
       "bytes": 9297920,
       "sha256": "93723dfab5866b2b1125feb0da0cf0994ed82bdbefb9fabe99c056102e76faaf",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4844,8 +4844,8 @@
       "usedBy": [
         "assets/app/js/cinematic/cinematic-cults.js",
         "assets/app/js/cinematic/cinematic-ferals.js",
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -4864,8 +4864,8 @@
         "assets/app/js/cinematic/cinematic-cults.js",
         "assets/app/js/cinematic/cinematic-ferals.js",
         "assets/app/js/cinematic/cinematic-sakuma.js",
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -4896,7 +4896,7 @@
       "sha256": "a0a3154b1662d7b0e14264b2e122bf0ab32a142296f512eaa185786b3b0d73de",
       "usedBy": [
         "assets/app/js/cinematic/cinematic-immortality.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "referenced": true,
       "protectedScope": true
@@ -4917,7 +4917,7 @@
       "sha256": "c36e55d8c0d75d7ec4623f2d03ff19b419345bb5a90fe9d380bfbf33a05d3bed",
       "usedBy": [
         "assets/app/js/cinematic/cinematic-immortality.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 109,
@@ -4937,7 +4937,7 @@
       "sha256": "582b23ae0af63c89616d51ba3cbc0c5b550b4c7bd43b1f956aa10023b64d75a0",
       "usedBy": [
         "assets/app/js/cinematic/cinematic-cults.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 109,
@@ -4958,8 +4958,8 @@
       "usedBy": [
         "assets/app/js/cinematic/cinematic-cults.js",
         "assets/app/js/cinematic/cinematic-ferals.js",
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 101,
@@ -4981,8 +4981,8 @@
         "assets/app/js/cinematic/cinematic-cults.js",
         "assets/app/js/cinematic/cinematic-ferals.js",
         "assets/app/js/cinematic/cinematic-sakuma.js",
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 101,
       "priorityReason": "보호 기록에 연결된 영상 · 영상과 내장 음향 권리를 함께 확인"
@@ -5001,7 +5001,7 @@
       "sha256": "a0a3154b1662d7b0e14264b2e122bf0ab32a142296f512eaa185786b3b0d73de",
       "usedBy": [
         "assets/app/js/cinematic/cinematic-immortality.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 98,
       "priorityReason": "보호 기록에 연결된 영상 · 영상과 내장 음향 권리를 함께 확인"
@@ -5037,12 +5037,12 @@
       "bytes": 79056,
       "sha256": "81effbc48a4a46d64699b1ba64a2260dbc54fb90c40ede38e94608d58d82686d",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 94,
@@ -5061,12 +5061,12 @@
       "bytes": 13973,
       "sha256": "56f02dc68089337961497d9191a41a42eae975c51a437276f87c1d9624eaec03",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 94,
@@ -5085,11 +5085,11 @@
       "bytes": 16212,
       "sha256": "15dce06ebad99699c6c54be99b913f3ac8dff9b35dcb3a628e3c8ac59ecab9cb",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 94,
@@ -5108,11 +5108,11 @@
       "bytes": 13921,
       "sha256": "f7f57ea6d38160cb9dcb148b32c53db45569f378af337eefe9acb1c27750004d",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
         "assets/js/data/site-manifest.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 94,
@@ -5131,10 +5131,10 @@
       "bytes": 110328,
       "sha256": "4852eec8d99536584851d2c2c802f0e025461da47c656518625e3c9dd652e9ea",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 93,
@@ -5153,10 +5153,10 @@
       "bytes": 30104,
       "sha256": "50344c9e7f7a2c7e54b458d1a33dec917d31023d42040fc3dfff594103c3fec0",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 93,
@@ -5175,10 +5175,10 @@
       "bytes": 30104,
       "sha256": "fc4b005e78be32541db6793a99c977462bed70de53424a8929f34515291e97b3",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 93,
@@ -5218,10 +5218,10 @@
       "bytes": 3163908,
       "sha256": "791381f008e06a8450b2f9459557dbc56f84b597af634f6b6e170b27be0f4f09",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5239,10 +5239,10 @@
       "bytes": 211758,
       "sha256": "375997a886c16f32fe450403f1b4a013f23779718adc6e9bc7906ef55623941d",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5260,10 +5260,10 @@
       "bytes": 65396,
       "sha256": "3d2b557c7d25b3c60e107d61ffcce3bea3e99392014c6bdb2dcf43acac2585d3",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/archive-cinematic-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5281,10 +5281,10 @@
       "bytes": 54762,
       "sha256": "471bffa0a34f75f36af67d3ddf2257ab4db04c87c93ec8a9516f45f1a4056d94",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
         "assets/js/data/site-manifest.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5302,10 +5302,10 @@
       "bytes": 14156,
       "sha256": "db6c9de68c7f073a254f47521bd493362abacc58ccfffae779602a7407186225",
       "usedBy": [
-        "assets/js/core/base-runtime.js",
-        "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/terminal-fx-data.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/base-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 92,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5323,8 +5323,8 @@
       "bytes": 1118529,
       "sha256": "3ad8d1b5cb05a8599c4b6058d3c79574b5e6df7c8683631d53a5be7227c4f164",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js",
         "tools/verify-data.mjs"
       ],
       "priorityScore": 91,
@@ -5343,8 +5343,8 @@
       "bytes": 60376,
       "sha256": "f60e316c0aa08612115654a45f51664542103c160a904751556f218fe86ee612",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/data/archive-cinematic-data.js"
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js"
       ],
       "priorityScore": 90,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5362,8 +5362,8 @@
       "bytes": 49091,
       "sha256": "372c256723f7ef6c9561b5de14555beabe9329141519460ba39f2fc1757c7154",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/data/archive-cinematic-data.js"
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js"
       ],
       "priorityScore": 90,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5381,8 +5381,8 @@
       "bytes": 45491,
       "sha256": "32d5c745cfc28f9a22b8942d6b77b9b5543e177cac0e2b7f24b059bf63de120a",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 90,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5400,8 +5400,8 @@
       "bytes": 13982,
       "sha256": "b96d16b57ce28e099e486b9fc90d73338cb0835a86bc7f2ba66a978b125b2ba6",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/data/archive-cinematic-data.js"
+        "assets/js/data/archive-cinematic-data.js",
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js"
       ],
       "priorityScore": 90,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5455,7 +5455,7 @@
       "bytes": 110328,
       "sha256": "af8fd8e3c1b73a303569d3021a7820f85f1bef5d029c692c903d04782c1106ef",
       "usedBy": [
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 89,
       "priorityReason": "재생 가능한 음향 · 제작자, 원출처와 공개 허가 범위 확인"
@@ -5473,8 +5473,8 @@
       "bytes": 9297920,
       "sha256": "93723dfab5866b2b1125feb0da0cf0994ed82bdbefb9fabe99c056102e76faaf",
       "usedBy": [
-        "assets/js/core/record-cinematic-runtime.js",
-        "assets/js/main.js"
+        "tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js",
+        "tools/fixtures/legacy-app/assets/js/main.js"
       ],
       "priorityScore": 80,
       "priorityReason": "재생 가능한 영상 · 영상과 내장 음향의 제작·사용 범위 확인"

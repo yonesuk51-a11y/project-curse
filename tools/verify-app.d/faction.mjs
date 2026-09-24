@@ -8,7 +8,7 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
   const D = context.ProjectCurseFactionDisplay;
   const P = context.ProjectCursePersonnel;
   const source = read('assets/app/js/screens/faction.js');
-  const legacy = read('assets/js/pages/faction-analysis.js');
+  const legacy = read('tools/fixtures/legacy-app/assets/js/pages/faction-analysis.js');
   const keys = F.order;
   add('seventeen-dossiers', keys.length === 17 && Object.keys(F.factions).length === 17);
   add('five-groups-cover-every-dossier-once', F.groups.length === 5 && F.groups.flatMap((group) => group.keys).join('|') === keys.join('|') && new Set(keys).size === keys.length);

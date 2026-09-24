@@ -5,8 +5,8 @@ import assert from 'node:assert/strict';
 export default function verifyMap({add,read,context,app,historyIds,archiveIds,opIds}) {
   const source=read('assets/app/js/screens/map.js').replace(/\r\n/g,'\n');
   const stateSource=read('assets/app/js/pc-state.js').replace(/\r\n/g,'\n');
-  const legacyMap=read('assets/js/pages/map-room.js').replace(/\r\n/g,'\n');
-  const stateSources=['operation-state','pilgrimage-state','verdict-archive-state'].map(n=>read(`assets/js/core/${n}.js`));
+  const legacyMap=read('tools/fixtures/legacy-app/assets/js/pages/map-room.js').replace(/\r\n/g,'\n');
+  const stateSources=['operation-state','pilgrimage-state','verdict-archive-state'].map(n=>read(`tools/fixtures/legacy-app/assets/js/core/${n}.js`));
   const equal=(a,b)=>assert.equal(JSON.stringify(a),JSON.stringify(b));
   const check=(name,run)=>{try{const result=run();add(name,true,result||'');}catch(error){add(name,false,error.message);}};
   function runtime(modern,seed={}) {

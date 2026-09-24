@@ -45,6 +45,8 @@
         boot:'pc5152f_boot_access_oldpc.wav'
       }
     },
+    // owners의 옛 앱 경로(assets/css/, assets/js/core·pages/, assets/js/main.js)는 옛 구조 기록이다.
+    // 2026-09-24 해당 파일은 tools/fixtures/legacy-app/으로 옮겼다(화면별 검사의 대조 기준).
     owners:{
       buildInfo:'assets/js/data/build-info.js',
       manifest:'assets/js/data/site-manifest.js',
