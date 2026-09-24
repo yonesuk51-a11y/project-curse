@@ -273,7 +273,8 @@
   function screenHead(id, options = {}) {
     const info = channel(id) || {};
     const meta = options.meta || info.telemetry || [];
-    const hero = options.hero === false ? null : (options.hero || root.ProjectCurseChannelHeroes?.[id] || null);
+    const hero = options.hero === false ? null
+      : (options.hero && typeof options.hero === 'object' ? options.hero : root.ProjectCurseChannelHeroes?.[id] || null);
     return h('header.tc-screenhead.tc-bracket', hero ? { class: 'has-hero' } : null,
       hero ? h('div.tc-screenhead-hero', { 'aria-hidden': 'true' },
         img(hero.src, { alt: '', loading: 'eager', sizes: '(max-width: 760px) 100vw, 1200px', style: hero.position ? `object-position:${hero.position}` : null })) : null,

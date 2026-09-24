@@ -21,7 +21,7 @@
       },
       {
         id:'map-room',index:'01',code:'CARTOGRAPHY',label:'작전 지도',shortLabel:'지도',theme:'cartography',glyph:'MR',
-        description:'권역·현장·작전 좌표를 겹쳐 보고 생존 가능한 이동 경로를 판독한다.',
+        description:'지역·현장·작전 좌표를 겹쳐 보고 생존 가능한 이동 경로를 확인한다.',
         telemetry:[['GRID','ACTIVE'],['LAYERS','SYNCHRONIZED'],['SIGNAL','UNSTABLE']]
       },
       {

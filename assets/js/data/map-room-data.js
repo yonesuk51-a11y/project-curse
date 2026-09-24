@@ -30,13 +30,13 @@
     regions:[
       {
         id:'world',label:'세계',code:'WORLD CONTROL',viewBox:'0 0 1200 620',
-        status:'권역 선택',confidence:'관측망 63%',
-        description:'폐쇄 서버에 남은 권역 신호를 표시한다. 세부 좌표는 권역 진입 후 확인한다.'
+        status:'지역 선택',confidence:'관측망 63%',
+        description:'폐쇄 서버에 남은 지역별 신호를 표시한다. 세부 좌표는 지역을 연 뒤 확인한다.'
       },
       {
         id:'eastasia',label:'동아시아',code:'EAST ASIA WATCH',viewBox:'665 45 520 290',
         status:'북부 전선 / 도시 감시',confidence:'관측 신뢰도 78%',
-        description:'이 권역에서는 도쿄 감시권, 란저우 레드존과 북부 전쟁 신호가 동시에 유지된다.'
+        description:'이 지역에서는 도쿄 감시권, 란저우 레드존과 북부 전쟁 신호가 동시에 유지된다.'
       },
       {
         id:'europe',label:'유럽',code:'EUROPE SEA LOCK',viewBox:'390 55 500 280',

@@ -464,8 +464,15 @@ html.tc-immersive .tc-main {
     gap: var(--s2);
     padding-right: 0;
   }
+  /* 375px에서 바가 꽉 찬다. 대체 글꼴로 글자가 넓어지면 브랜드 글자를 줄여 가로 넘침을 막는다 */
   .tc-brand {
+    flex: 0 1 auto;
+    min-width: 0;
     padding: 0 var(--s3);
+  }
+  .tc-brand-text b {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .tc-brand-text small,
   .tc-bar-channel {
