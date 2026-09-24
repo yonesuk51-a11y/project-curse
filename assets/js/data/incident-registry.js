@@ -11,23 +11,23 @@
   const incidents={
     'evt-amarion-foundation':{
       id:'evt-amarion-foundation',code:'EVT-1975-0912',date:'1975.09.12',status:'HISTORICAL',confidence:'confirmed',
-      title:'아마리온 설립',summary:'공간 개척과 자원 독점을 목표로 한 초기 연구기업 설립.',
+      title:'아마리온 설립',summary:'초기 연구기업 설립. 목표는 공간 개척과 자원 독점이었다.',
       region:'northamerica',coordinates:[-98,39],history:'1975-09-12-amarion',factions:['amarion','fhc'],records:['Unknown_Record1_860204']
     },
     'evt-blood-lake':{
       id:'evt-blood-lake',code:'EVT-1986-0201',date:'1986.02.01',status:'RESIDUAL',confidence:'confirmed',
-      title:'피의 호수 사건',summary:'F.H.C 조사팀이 북해권 혈액성 수역에 진입한 뒤 발생한 회수·실종 사건.',
+      title:'피의 호수 사건',summary:'F.H.C 조사팀이 북해권 혈액성 수역에 진입했다. 이후 회수·실종 사건이 발생했다.',
       region:'europe',coordinates:[9.2,55.5],history:'1986-02-01-immortality',factions:['fhc','uac','nhc','blood-cult'],
       records:['Immortality_860201','Unknown_Record2_860205'],operation:'op-immortality'
     },
     'evt-tokyo-record':{
       id:'evt-tokyo-record',code:'EVT-1989-0823',date:'1989.08.23',status:'ARCHIVED',confidence:'observed',
-      title:'도쿄 지부 기록',summary:'교육기관 내부의 의식 교육과 인간 위장형 괴이 피해가 확인된 기록.',
+      title:'도쿄 지부 기록',summary:'교육기관 내부의 의식 교육과 인간 위장형 괴이 피해가 확인됐다.',
       region:'eastasia',coordinates:[139.69,35.68],history:'1989-08-23-tokyo',factions:['sid','fhc','ushinoda','corruption-cult','shadow-cult'],records:['Sakuma_Tape_991028','Cults_871104']
     },
     'evt-deadzone-raid':{
       id:'evt-deadzone-raid',code:'EVT-2006-0820',date:'2006.08.20',status:'SITE LOST',confidence:'historical',
-      title:'위버멘시 미국 지부 습격',summary:'방랑자 10명과 일부 연구자료가 회수된 뒤 시설 좌표가 소실된 사건.',
+      title:'위버멘시 미국 지부 습격',summary:'방랑자 10명과 일부 연구자료가 회수됐다. 이후 시설 좌표가 소실됐다.',
       region:'northamerica',coordinates:[-96,37],history:'2006-08-20-ubermensch-raid',factions:['uac','syndicate'],records:['Unknown_Record3_920711']
     },
     'evt-northern-front':{
@@ -37,17 +37,17 @@
     },
     'evt-gbf-unlit':{
       id:'evt-gbf-unlit',code:'EVT-GBF-UNLIT',date:'DATE LOST',status:'ROUTE UNSTABLE',confidence:'testimony',
-      title:'불빛 없는 성채 접근',summary:'몬수르 교회의 요청을 받은 순례자 경로가 검은 강과 무광 성채에서 중첩된 사건.',
+      title:'불빛 없는 성채 접근',summary:'몬수르 교회의 요청을 받은 순례자 경로가 검은 강과 무광 성채에서 중첩됐다.',
       region:'southamerica',coordinates:[-66,-18],factions:['sid'],records:[],operation:'op-unlit-fortress'
     },
     'evt-deadzone-return':{
       id:'evt-deadzone-return',code:'EVT-2029-0412',date:'2029.04.12',status:'QUARANTINE ACTIVE',confidence:'observed',
-      title:'검문소 07 귀환자 신원 상충',summary:'네 명의 귀환자와 다섯 번째 생체 신호가 서부 귀환 회랑의 동일 출입 요청으로 감지된 사건.',
+      title:'검문소 07 귀환자 신원 상충',summary:'서부 귀환 회랑에서 네 명의 귀환자와 다섯 번째 생체 신호가 감지됐다. 출입 요청은 동일했다.',
       region:'northamerica',coordinates:[-124,44],history:'2029-04-12-checkpoint-07',factions:['uac','deadzone-blood'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-return'
     },
     'evt-deadzone-recovery':{
       id:'evt-deadzone-recovery',code:'EVT-DZ-OUTBOUND-R05',date:'AFTER 06:03',status:'SEALED / VERDICT REQUIRED',confidence:'disputed',
-      title:'검문소 07 지하 구조 신호',summary:'역방향 순례 판정에서 복원된 좌표가 데드존 내륙이 아니라 검문소 07 아래의 존재하지 않는 층을 가리킨 사건.',
+      title:'검문소 07 지하 구조 신호',summary:'역방향 순례 판정에서 좌표가 복원됐다. 데드존 내륙이 아니라 검문소 07 아래의 존재하지 않는 층을 가리켰다.',
       region:'northamerica',coordinates:[-124,44],history:'2029-04-12-checkpoint-07',factions:['uac'],records:['Dead_Zone_Pilgrimage'],operation:'op-deadzone-recovery'
     },
     'evt-southern-mobilization':{
@@ -57,8 +57,8 @@
       region:'southamerica',coordinates:[-46,-23],history:'2030-01-17-broken-crown',factions:['sid','nhc','ushinoda','southern-blood'],records:['Cults_871104'],operation:'op-southern-coup',
       participants:['남부 혈교 전시망','남방권 해안 세력','성위대 내부 공작망','몬수르 교회 일부','우시노다 잔존 인원'],
       intelligence:[
-        '남부 혈교 특수부대는 적 전력을 분산시키기 위한 동시다발 소환을 준비 중이다.',
-        '성위대 지휘관 한 명이 특수부대 공작원으로 지목됐으나 명령 출처가 상충한다.',
+        '남부 혈교 특수부대는 적 전력을 분산시키려고 동시다발 소환을 준비 중이다.',
+        '성위대 지휘관 한 명이 특수부대 공작원으로 지목됐다. 명령 출처가 상충한다.',
         '남부 혈교 지휘부는 북부 전선에서 일본 동맹권이 우세해지는 상황을 위협으로 본다.',
         '데드존 분파의 순례자 지원·평화 노선이 남부 혈교 지휘부와 충돌하고 있다.',
         '우시노다 잔존망은 F.H.C 내부 분쟁을 통제하지 못하며 일부 인원만 남방권 전시망에 편입될 것으로 추정된다.'
@@ -69,8 +69,8 @@
   const operation={
     id:'op-southern-coup',incident:'evt-southern-mobilization',label:'남방권 집단 소환 차단',code:'OP-BROKEN-CROWN',region:'남방권 / 대서양 해안·대흑림 외연',
     classification:'BLACK / COMMAND CONTESTED',status:'ACTIVE INTELLIGENCE',
-    summary:'도시권 집단 소환과 성위대 지휘부 침투를 분리 확인하고, 남부 특수부대의 전력 분산 계획을 추적하는 진행 중 작전.',
-    directive:'성위대 지휘관에 대한 처형 명령은 발신 계통 검증 전 집행 금지. 생존 여부와 공작 신분을 분리 확인할 것.',
+    summary:'작전은 진행 중이다. 도시권 집단 소환과 성위대 지휘부 침투를 분리 확인한다. 남부 특수부대의 전력 분산 계획을 추적한다.',
+    directive:'발신 계통 검증 전에는 성위대 지휘관 처형 명령 집행 금지. 생존 여부와 공작 신분을 분리 확인할 것.',
     objectives:['도시별 소환 앵커 식별','해안 특수부대 이동 경로 차단','성위대 명령 계통 검증','북부 전선 교란 신호 분리','민간 정착지 철수 회랑 확보'],
     sites:[
       {x:94,y:426,label:'해안 감청소',kind:'facility'},

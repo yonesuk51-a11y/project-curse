@@ -36,7 +36,7 @@
       {
         id:'eastasia',label:'동아시아',code:'EAST ASIA WATCH',viewBox:'665 45 520 290',
         status:'북부 전선 / 도시 감시',confidence:'관측 신뢰도 78%',
-        description:'도쿄 감시권, 란저우 레드존과 북부 전쟁 신호가 동시에 유지되는 권역.'
+        description:'이 권역에서는 도쿄 감시권, 란저우 레드존과 북부 전쟁 신호가 동시에 유지된다.'
       },
       {
         id:'europe',label:'유럽',code:'EUROPE SEA LOCK',viewBox:'390 55 500 280',
@@ -46,13 +46,13 @@
       {
         id:'northamerica',label:'북미 데드존',code:'DEAD ZONE / NORTH',viewBox:'15 35 520 290',
         status:'내륙 응답 없음',confidence:'지도 신뢰도 22%',
-        description:'북아메리카 내륙에서 과거 국가 지도와 현재 순례자 귀환 기록이 일치하지 않는 무응답권.',
+        description:'북아메리카 내륙의 무응답권. 과거 국가 지도와 현재 순례자 귀환 기록이 일치하지 않는다.',
         nomenclature:geography.deadZone
       },
       {
         id:'southamerica',label:'대흑림',code:'GREAT BLACK FOREST / SOUTH AMERICA',viewBox:'190 275 570 320',
         status:'공간 측량 불가',confidence:'지도 신뢰도 31%',
-        description:'남아메리카의 외부 해안선과 달리 내부 거리와 정착지 좌표가 반복적으로 어긋나는 내륙 이상권.',
+        description:'남아메리카 내륙 이상권. 외부 해안선과 달리 내부 거리와 정착지 좌표가 반복적으로 어긋난다.',
         nomenclature:geography.greatBlackForest
       }
     ],
@@ -73,7 +73,7 @@
       {
         id:'three-night-silence',code:'SYNC-2042-1031',date:'2042.10.31',title:'삼야 무응답',duration:'61H 01M',
         status:'OBSERVED / CAUSE UNRESOLVED',confidence:'observed',history:'2042-10-31-three-night-silence',connection:'UNRESOLVED',route:null,
-        summary:'대흑림 성채 여섯 곳과 데드존 검문소 네 곳이 61시간 1분 동안 외부 교신을 잃었다. 복구 장부에는 상대 권역의 호출 부호가 남았지만, 중계 경로는 확인되지 않았다.',
+        summary:'대흑림 성채 여섯 곳과 데드존 검문소 네 곳이 61시간 1분 동안 외부 교신을 잃었다. 복구 장부에는 상대 권역의 호출 부호가 남았다. 중계 경로는 확인되지 않았다.',
         boundary:'열 개 표식은 같은 시간대의 독립 관측점이다. 대륙 사이의 통로·항로·지리적 연결을 뜻하지 않는다.',
         points:[
           {id:'gbf-bell-01',region:'southamerica',x:338,y:362,code:'G01',kind:'castle',label:'성채 종 장부 01',site:'대흑림 북서 성채권',callsign:'DZ-GATE-07',log:'검문소 호출 부호 1회 기록'},
@@ -117,7 +117,7 @@
       ...(network?.operations||[]),
       {
         id:'op-deadzone-return',label:'돌아온 자의 이름',code:'DZ-RETURN-SCREEN-07',region:'북미 데드존',
-        summary:'서부 귀환 신호에서 검문소 07 내측문까지 네 귀환자와 다섯 번째 생체 반응을 분리한 검문 경로.',
+        summary:'서부 귀환 신호에서 검문소 07 내측문까지의 검문 경로. 네 귀환자와 다섯 번째 생체 반응을 분리했다.',
         sites:[
           {x:92,y:112,label:'서부 귀환 신호',kind:'unknown'},
           {x:244,y:168,label:'백색 재 검문소',kind:'facility'},
@@ -127,18 +127,18 @@
           {x:874,y:402,label:'최종 귀환 판정',kind:'facility'}
         ],
         steps:[
-          {time:'04:12',title:'서부 귀환 신호',note:'육안 인원은 4명, 열원과 출입 요청은 5개로 확인됐다.',route:[[92,112]],units:[{id:'R-01',x:92,y:112,status:'normal'},{id:'X-05',x:112,y:126,status:'unknown'}]},
+          {time:'04:12',title:'서부 귀환 신호',note:'육안 인원은 4명. 열원과 출입 요청은 5개로 확인됐다.',route:[[92,112]],units:[{id:'R-01',x:92,y:112,status:'normal'},{id:'X-05',x:112,y:126,status:'unknown'}]},
           {time:'04:26',title:'백색 재 분리',note:'귀환 물질이 출발 기록 사진의 얼굴을 순차적으로 지웠다.',route:[[92,112],[244,168]],units:[{id:'R-01',x:244,y:168,status:'normal'},{id:'X-05',x:226,y:184,status:'unknown'}]},
           {time:'04:51',title:'진술 대조',note:'격리된 네 사람이 같은 왕국의 기억을 한 문장으로 진술했다.',route:[[92,112],[244,168],[397,231]],units:[{id:'R-01',x:397,y:231,status:'unstable'},{id:'R-02',x:418,y:246,status:'unstable'}]},
           {time:'05:17',title:'기억 체크섬',note:'네 번째 귀환자가 개봉하지 않은 다섯 번째 봉인의 문장을 읽었다.',route:[[92,112],[244,168],[397,231],[548,282]],alternate:[[397,231],[548,240]],units:[{id:'R-04',x:548,y:282,status:'split'},{id:'X-05',x:548,y:240,status:'unknown'}]},
           {time:'05:44',title:'격리 회랑 봉쇄',note:'검문소 밖에서 내부 인원과 동일한 네 호출 부호가 구조 신호를 보냈다.',route:[[92,112],[244,168],[397,231],[548,282],[704,348]],alternate:[[92,112],[704,310]],units:[{id:'R-01/04',x:704,y:348,status:'unstable'},{id:'EXT-05',x:704,y:310,status:'unknown'}]},
-          {time:'06:03',title:'최종 귀환 판정',note:'네 명을 통과시키기 위해 시스템이 다섯 번째 운영자 승인을 요구했다.',route:[[92,112],[244,168],[397,231],[548,282],[704,348],[874,402]],units:[{id:'R-01/04',x:874,y:402,status:'split'},{id:'OP-05',x:850,y:379,status:'unknown'}]}
+          {time:'06:03',title:'최종 귀환 판정',note:'시스템이 네 명을 통과시키는 데 다섯 번째 운영자 승인을 요구했다.',route:[[92,112],[244,168],[397,231],[548,282],[704,348],[874,402]],units:[{id:'R-01/04',x:874,y:402,status:'split'},{id:'OP-05',x:850,y:379,status:'unknown'}]}
         ]
       },
       {
         id:'op-deadzone-recovery',label:'검문소 아래의 구조 신호',code:'DZ-OUTBOUND-R05',region:'북미 데드존 · 검문소 지하',
         incident:'evt-deadzone-recovery',scenario:'deadzone-recovery',unlockVerdict:'DZ-VR-04',classification:'BLACK / VERDICT GATED',status:'SEALED UNTIL DZ-VR-04',
-        summary:'검문소 07 지하의 존재하지 않는 층에서 최초 구조 신호와 먼저 도착한 회수팀을 추적하는 전진 회수 작전.',
+        summary:'전진 회수 작전. 검문소 07 지하의 존재하지 않는 층에서 최초 구조 신호와 먼저 도착한 회수팀을 추적한다.',
         directive:'DZ-VR-04 판정 기록을 복호화하기 전에는 출발 좌표를 개방하지 않는다. 물리 견인선이 끊기면 미래 흔적을 따라가지 말고 현 위치를 봉쇄한다.',
         objectives:['검문소 07 지하 출발 좌표 확인','매몰 검문소 06 시간 기록 격리','팀 호출 부호와 가족 음성 분리','역행 고속도로 물리 장력 유지','원신호 송신기 회수 또는 봉쇄'],
         sites:[
@@ -153,14 +153,14 @@
           {time:'06:21',title:'지하 출발 좌표',note:'화물 승강기 아래의 도면상 빈 공간에서 회수팀의 출발 보고가 17분 먼저 수신됐다.',route:[[82,92]],units:[{id:'R05-A',x:82,y:92,status:'normal'},{id:'OP-05',x:104,y:108,status:'unknown'}]},
           {time:'06:38',title:'매몰 검문소 06',note:'현재 회수팀의 귀환 기록이 출발보다 열아홉 해 빠른 시각으로 남아 있다.',route:[[82,92],[225,150]],units:[{id:'R05-A/D',x:225,y:150,status:'unstable'},{id:'X-05',x:206,y:169,status:'unknown'}]},
           {time:'07:04',title:'이름 없는 주거지',note:'네 채의 집에서 각 팀원이 가장 오래 듣지 못한 가족의 목소리가 확인됐다.',route:[[82,92],[225,150],[370,218]],alternate:[[225,150],[370,180]],units:[{id:'R05-A/D',x:370,y:218,status:'unstable'}]},
-          {time:'07:37',title:'역행 고속도로',note:'이동 방향과 반대로 흐르는 차량 사이에서 아직 남기지 않은 팀 발자국이 발견됐다.',route:[[82,92],[225,150],[370,218],[517,270]],alternate:[[370,218],[517,231]],units:[{id:'R05-A/D',x:517,y:270,status:'split'},{id:'ECHO-04',x:517,y:231,status:'unknown'}]},
+          {time:'07:37',title:'역행 고속도로',note:'차량은 이동 방향과 반대로 흘렀다. 그 사이에서 아직 남기지 않은 팀 발자국이 발견됐다.',route:[[82,92],[225,150],[370,218],[517,270]],alternate:[[370,218],[517,231]],units:[{id:'R05-A/D',x:517,y:270,status:'split'},{id:'ECHO-04',x:517,y:231,status:'unknown'}]},
           {time:'08:05',title:'원신호 발생점',note:'구조 송신기는 현재 회수팀과 동일한 일련번호의 장비로 조립돼 있었다.',route:[[82,92],[225,150],[370,218],[517,270],[668,326]],units:[{id:'R05-A/D',x:668,y:326,status:'unstable'},{id:'BEACON-05',x:643,y:301,status:'unknown'}]},
           {time:'08:22',title:'다섯 번째 중계',note:'열아홉 해 늙은 동일 회수팀 네 명과 운영자용 중계 슬롯 하나가 확인됐다.',route:[[82,92],[225,150],[370,218],[517,270],[668,326],[818,362]],alternate:[[818,362],[668,326],[82,92]],units:[{id:'R05-A/H',x:818,y:362,status:'split'},{id:'OP-05',x:792,y:339,status:'unknown'}]}
         ]
       },
       {
         id:'op-unlit-fortress',label:'불빛 없는 성채',code:'GBF-WESTERN-ROUTE',region:'대흑림 · 서부 순례 회랑',
-        summary:'S.I.D 기록 담당자와 귀환 순례자가 몬수르 교회의 부탁을 받아 불빛 없는 성채로 향한 경로.',
+        summary:'S.I.D 기록 담당자와 귀환 순례자가 몬수르 교회의 부탁을 받았다. 불빛 없는 성채로 향한 경로다.',
         sites:[
           {x:88,y:420,label:'외곽 관측소',kind:'facility'},
           {x:248,y:337,label:'몬수르 교회',kind:'cult'},
@@ -174,10 +174,10 @@
           {time:'16:43',title:'몬수르 교회',note:'교회에서 작은 종을 인계받았다. 생체신호는 잠시 5명으로 표시됐다.',route:[[88,420],[248,337]],units:[{id:'T-01',x:248,y:337,status:'normal'},{id:'X-05',x:231,y:352,status:'unknown'}]},
           {time:'17:18',title:'귀환자의 결투',note:'결투 영상 프레임마다 참가 인원이 달라진다.',route:[[88,420],[248,337],[409,278]],units:[{id:'T-01',x:409,y:278,status:'unstable'},{id:'R-02',x:431,y:264,status:'normal'}]},
           {time:'17:41',title:'비현실감 구역',note:'같은 경로가 교회와 검은 강 양쪽으로 이어진다.',route:[[88,420],[248,337],[409,278],[505,318]],alternate:[[409,278],[248,337]],units:[{id:'T-01',x:505,y:318,status:'unstable'},{id:'X-05',x:486,y:301,status:'unknown'}]},
-          {time:'18:06',title:'검은 강',note:'현재 조사팀과 동일한 일련번호의 장비가 강둑에서 회수됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344]],units:[{id:'T-01',x:575,y:344,status:'unstable'},{id:'X-05',x:596,y:331,status:'unknown'}]},
+          {time:'18:06',title:'검은 강',note:'강둑에서 현재 조사팀과 동일한 일련번호의 장비가 회수됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344]],units:[{id:'T-01',x:575,y:344,status:'unstable'},{id:'X-05',x:596,y:331,status:'unknown'}]},
           {time:'18:29',title:'피의 호수 흔적',note:'순례로의 복수 보고 중 한 곳에서 북부 전쟁 사망자 장비와 남부 특수부대 표식이 함께 발견됐다. 북해 사건과의 연결은 확인되지 않았다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244]],units:[{id:'T-01',x:716,y:244,status:'unstable'}]},
-          {time:'18:51',title:'성채 진입',note:'외부에서는 불이 꺼졌으나 내부 주민들은 정상적으로 생활하고 있었다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244],[876,132]],units:[{id:'T-01',x:876,y:132,status:'split'},{id:'X-05',x:854,y:149,status:'unknown'}]},
-          {time:'19:00',title:'처형 명령',note:'철수 경로가 사라지고 등록 인원은 4명에서 5명으로 변경됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244],[876,132]],alternate:[[876,132],[575,344],[248,337]],units:[{id:'T-01',x:876,y:132,status:'split'},{id:'X-05',x:876,y:132,status:'unknown'}]}
+          {time:'18:51',title:'성채 진입',note:'외부에서는 불이 꺼졌다. 내부 주민들은 정상적으로 생활하고 있었다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244],[876,132]],units:[{id:'T-01',x:876,y:132,status:'split'},{id:'X-05',x:854,y:149,status:'unknown'}]},
+          {time:'19:00',title:'처형 명령',note:'철수 경로가 사라졌다. 등록 인원은 4명에서 5명으로 변경됐다.',route:[[88,420],[248,337],[409,278],[505,318],[575,344],[716,244],[876,132]],alternate:[[876,132],[575,344],[248,337]],units:[{id:'T-01',x:876,y:132,status:'split'},{id:'X-05',x:876,y:132,status:'unknown'}]}
         ]
       },
       {
@@ -195,9 +195,9 @@
           {time:'17:02',title:'버려진 텐트',note:'민간인 체류 흔적과 다량의 혈흔을 확인했다.',route:[[104,410],[302,330]],units:[{id:'U2-A',x:302,y:330,status:'normal'},{id:'U2-B',x:286,y:343,status:'normal'}]},
           {time:'17:41',title:'강변 접근',note:'강물에서 혈액과 유사한 점도와 응고 반응이 관측됐다.',route:[[104,410],[302,330],[533,260]],units:[{id:'U2-A',x:533,y:260,status:'unstable'},{id:'U2-B',x:511,y:276,status:'normal'}]},
           {time:'17:58',title:'피의 호수',note:'대규모 혈액성 웅덩이와 거대한 개체의 실루엣이 포착됐다.',route:[[104,410],[302,330],[533,260],[748,192]],units:[{id:'U2-A',x:748,y:192,status:'unstable'},{id:'U2-B',x:718,y:213,status:'unstable'}]},
-          {time:'18:37',title:'밀로 신호 활성',note:'밀로가 예거트 후방 약 300m에서 비정상적인 이동을 시작했다.',route:[[104,410],[302,330],[533,260],[748,192],[824,236]],units:[{id:'U2-A',x:824,y:236,status:'unstable'},{id:'U2-B',x:747,y:293,status:'split'}]},
+          {time:'18:37',title:'밀로 신호 활성',note:'예거트 후방 약 300m에서 밀로가 비정상적으로 이동하기 시작했다.',route:[[104,410],[302,330],[533,260],[748,192],[824,236]],units:[{id:'U2-A',x:824,y:236,status:'unstable'},{id:'U2-B',x:747,y:293,status:'split'}]},
           {time:'18:42',title:'이상 이동',note:'밀로의 신호가 짧은 시간에 복수 좌표로 나타났다.',route:[[104,410],[302,330],[533,260],[748,192],[824,236],[895,286]],units:[{id:'U2-A',x:895,y:286,status:'unstable'},{id:'U2-B',x:842,y:312,status:'split'},{id:'U2-B',x:881,y:331,status:'split'}]},
-          {time:'19:00',title:'임무 완료 처리',note:'통신이 끝났음에도 시스템은 임무를 완료로 기록했다.',route:[[104,410],[302,330],[533,260],[748,192],[824,236],[895,286]],units:[{id:'U2-A',x:895,y:286,status:'lost'},{id:'U2-B',x:895,y:286,status:'unknown'}]}
+          {time:'19:00',title:'임무 완료 처리',note:'통신이 끝났다. 그런데도 시스템은 임무를 완료로 기록했다.',route:[[104,410],[302,330],[533,260],[748,192],[824,236],[895,286]],units:[{id:'U2-A',x:895,y:286,status:'lost'},{id:'U2-B',x:895,y:286,status:'unknown'}]}
         ]
       }
     ]
