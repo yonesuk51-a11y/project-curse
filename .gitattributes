@@ -2,3 +2,5 @@
 canon/originals/** -text
 docs/Cults_871104/index.html -text
 docs/Immortality_860201/index.html -text
+# 출처 대장에 해시가 적힌 SVG — 줄바꿈 변환을 막아 어느 작업 폴더에서 받아도 바이트가 같게 한다
+*.svg -text
