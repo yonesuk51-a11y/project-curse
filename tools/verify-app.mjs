@@ -120,23 +120,37 @@ const archiveIds = new Set([
 const opIds = new Set((context.ProjectCurseMapRoom?.operations || []).map((op) => op.id));
 const historySet = new Set(historyIds);
 const screenSources = tree('assets/app/js/screens/').filter((p) => p.endsWith('.js')).map((p) => [p, read(p)]);
+// 새 앱이 만든 데이터 파일(app.html에서 ?v=6.x로 부르는 assets/js/data/*). 화면 문구와 이동 대상이 여기에도 있다.
+const newDataFiles = [...new Set([...app.matchAll(/src="(assets\/js\/data\/[^"?]+\.js)\?v=6\./g)].map((m) => m[1]))];
 const brokenTargets = [];
-for (const [file, source] of screenSources) {
+for (const [file, source] of [...screenSources, ...newDataFiles.map((file) => [file, read(file)])]) {
   for (const m of source.matchAll(/\['history',\s*'([^']+)'\]/g)) if (!historySet.has(m[1])) brokenTargets.push(`${file}: history/${m[1]}`);
   for (const m of source.matchAll(/\['archive-entry',\s*'([^']+)'\]/g)) if (!archiveIds.has(m[1])) brokenTargets.push(`${file}: archive-entry/${m[1]}`);
   for (const m of source.matchAll(/\['map-room',\s*'op',\s*'([^']+)'\]/g)) if (!opIds.has(m[1])) brokenTargets.push(`${file}: map-room/op/${m[1]}`);
 }
-const turns = read('assets/app/js/screens/history.js').match(/const TURNS = \[([\s\S]*?)\n  \];/);
-for (const m of (turns ? turns[1] : '').matchAll(/\['([^']+)',/g)) if (!historySet.has(m[1])) brokenTargets.push(`history.js TURNS: ${m[1]}`);
+const turns = context.ProjectCurseHistoryScreen?.turns || [];
+if (turns.length !== 4) brokenTargets.push(`history-screen-data turns: ${turns.length}/4`);
+for (const [id] of turns) if (!historySet.has(id)) brokenTargets.push(`history-screen-data turns: ${id}`);
 add('screen-link-targets-exist', brokenTargets.length === 0, brokenTargets.join(' | '));
 const homeIntel = context.ProjectCurseHomeIntelligence;
 const badSignals = (homeIntel?.signals || []).filter((signal) => (signal.operation && !opIds.has(signal.operation)) || (signal.record && !archiveIds.has(signal.record)));
 add('home-signal-targets-exist', badSignals.length === 0 && opIds.has(homeIntel?.alert?.operation), badSignals.map((s) => s.label).join(' | '));
+// 홈의 진행 채널 — 순례·작전·판정 키가 실제 데이터에 있고, 수신 데이터 첫 네 행과 짝이 맞는다
+const homeScreen = context.ProjectCurseHomeScreen;
+const scenarioIds = new Set(Object.keys(context.ProjectCursePilgrimageData?.scenarios || {}));
+const verdictIds = new Set((context.ProjectCurseVerdictArchiveData?.records || []).map((record) => record.id));
+const contactOp = (context.ProjectCurseMapRoom?.operations || []).find((op) => op.id === homeScreen?.contact?.operation);
+const badChannels = (homeScreen?.channels || []).filter((channel) =>
+  (channel.scenario && !scenarioIds.has(channel.scenario)) ||
+  (channel.operation && !opIds.has(channel.operation)) ||
+  (channel.unlockVerdict && !verdictIds.has(channel.unlockVerdict)));
+add('home-live-channels-resolve',
+  homeScreen?.channels?.length === 4 && homeIntel?.signals?.length >= 4 && homeIntel.signals[0].operation === homeIntel.alert.operation &&
+  badChannels.length === 0 && !!contactOp?.steps?.[homeScreen.contact.step] && !!homeScreen?.keyArt?.src && existsSync(ROOT + homeScreen.keyArt.src),
+  badChannels.map((channel) => channel.scenario || channel.kind).join(' | '));
 
 /* ---------- 6. 공개 문구 — 메타 용어 금지 ---------- */
 const FORBIDDEN = ['정사', '캐논', '플레이어', '독자 선택', '시나리오 모드', '메인 스토리', 'AI 이미지', '생성 이미지'];
-// 새 앱이 만든 데이터 파일(app.html에서 ?v=6.x로 부르는 assets/js/data/*)도 모두 검사한다. 옛 데이터는 verify-package가 본다.
-const newDataFiles = [...new Set([...app.matchAll(/src="(assets\/js\/data\/[^"?]+\.js)\?v=6\./g)].map((m) => m[1]))];
 const stripComments = (source) => source.replace(/^\s*\/\/.*$/gm, '');
 const publicSources = [publicApp, ...newDataFiles.map((file) => stripComments(read(file))), ...screenSources.map(([, source]) => stripComments(source))].join('\n');
 const foundForbidden = FORBIDDEN.filter((term) => publicSources.includes(term));

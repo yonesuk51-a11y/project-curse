@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 // Replay the original state owners as an independent oracle, including reactive variants.
 export default function verifyMap({add,read,context,app,historyIds,archiveIds,opIds}) {
   const source=read('assets/app/js/screens/map.js').replace(/\r\n/g,'\n');
-  const uiStart=source.lastIndexOf('(function(root){');
+  const stateSource=read('assets/app/js/pc-state.js').replace(/\r\n/g,'\n');
   const legacyMap=read('assets/js/pages/map-room.js').replace(/\r\n/g,'\n');
   const stateSources=['operation-state','pilgrimage-state','verdict-archive-state'].map(n=>read(`assets/js/core/${n}.js`));
   const equal=(a,b)=>assert.equal(JSON.stringify(a),JSON.stringify(b));
@@ -18,9 +18,8 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
       CustomEvent:class {constructor(type,options){this.type=type;Object.assign(this,options);}}
     };
     c.window=c;vm.createContext(c);
-    if(modern)vm.runInContext(source.slice(0,uiStart),c);
+    if(modern)vm.runInContext(stateSource,c);
     else stateSources.forEach(s=>vm.runInContext(s,c));
-    if(modern)c.document.addEventListener('projectcurse:pilgrimage-state-change',c.ProjectCurseVerdictArchiveState.onPilgrimageChange);
     return {P:c.ProjectCursePilgrimageState,V:c.ProjectCurseVerdictArchiveState,O:c.ProjectCurseOperationState,storage};
   }
   check('copied-operation-text-verbatim',()=>{
@@ -126,7 +125,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
       setInterval:fn=>{const id=++nextTimer;timers.set(id,fn);return id;},clearInterval:id=>timers.delete(id)};
     const media=new Target();media.matches=false;c.matchMedia=()=>media;
     c.PCApp={h,screen:s=>{screen=s;},href:(...p)=>'#'+p.join('/'),go(){},back(){},setTitle(){},clear:el=>{el.replaceChildren();return el;},tag:t=>h('span',null,t),verdictTone:()=> 'info',missing:(code,key,text)=>h('div',null,code,key,text),screenHead:()=>h('header')};
-    c.window=c;vm.createContext(c);vm.runInContext(source,c);const host=h('main');screen.mount(host);
+    c.window=c;vm.createContext(c);vm.runInContext(stateSource,c);vm.runInContext(source,c);const host=h('main');screen.mount(host);
     const show=p=>screen.show(p,c.PCApp),button=name=>host.all().find(n=>n.dataset.action===name),click=(name,key)=>{const b=host.all().find(n=>n.dataset.action===name&&(key===undefined||n.dataset.key===key));assert.ok(b,name);host.emit('click',b);};
     show([]);assert.ok(host.textContent.includes('북부전선'));
     const search=host.querySelector('#tc-map-search');search.value='no-such-map-record';host.emit('input',search);assert.ok(host.textContent.includes('MAP RECORD NOT FOUND'));click('clear-search');assert.ok(host.querySelector('#tc-map-count').textContent.includes('29'));click('filter','synchrony');assert.ok(host.querySelector('#tc-map-count').textContent.includes('10'));

@@ -12,15 +12,7 @@
   const japan = () => root.ProjectCurseJapanTechnology;
   const core = () => root.ProjectCurseWorldHistoryCore;
 
-  // 먼저 볼 네 전환점
-  const TURNS = [
-    ['deep-citadel-charters', '기원 불명–1974', '문보다 오래된 금기', '성채의 피난권과 봉인 관습은 현대 기관보다 먼저 존재했다.'],
-    ['1975-09-12-amarion', '1975–1992', '기술이 금기를 계측하다', '아마리온과 일본의 계측 계획이 오래된 현상을 산업과 도시 설비의 언어로 바꿨다.'],
-    ['1999-07-12-ubermensch', '1993–2006', '대응기관이 적을 닮다', '공식 대응 체계는 확장됐지만, 살아남기 위해 교단의 방식을 모방하기 시작했다.'],
-    ['2008-09-06-dead-zone-designation', '2007–2042', '중앙이 사라진 뒤', '대륙 침묵 이후 성채와 검문소, 전선은 하나의 명령 없이 각자의 생존법을 만들었다.']
-  ];
-
-  const LIMIT_DEFAULT = '후대 결과와 미회수 자료는 이 문서의 판정 범위에 포함하지 않는다.';
+  const screenCopy = () => root.ProjectCurseHistoryScreen || {};
 
   /* ---------- 기록 조립 — 5.54 화면과 같은 순서로 합친다 ---------- */
 
@@ -117,7 +109,7 @@
       h('header.tc-panel-head', null,
         h('div', null, h('span.tc-label', { text: 'READING PATH' }), h('h2#tc-hist-turns-title', { text: '먼저 볼 네 전환점' }))
       ),
-      h('ol.tc-hist-turn-list', null, TURNS.map(([id, range, title, text]) => {
+      h('ol.tc-hist-turn-list', null, (screenCopy().turns || []).map(([id, range, title, text]) => {
         const exists = findIndex(id) >= 0;
         return h('li', null, h(exists ? 'a' : 'div', { class: 'tc-hist-turn', href: exists ? PC.href('history', id) : null },
           h('time', { text: range }),
@@ -386,7 +378,10 @@
   const STATUS_RANK = { normal: 0, unstable: 1, unknown: 2, split: 3, lost: 4 };
   const STATUS_CLASS = { normal: 'is-done', unstable: 'is-contact', unknown: 'is-unknown', split: 'is-loss', lost: 'is-loss' };
   const STATUS_LABEL = { normal: '정상', unstable: '불안정', unknown: '미상', split: '분열', lost: '소실' };
-  const isSealed = (op) => Boolean(op.unlockVerdict) || /SEALED/.test(op.status || '');
+  // 판정 사본이 보관되면(상황 관제에서 판정을 마치면) 봉인이 풀린다.
+  const isSealed = (op) => (op.unlockVerdict
+    ? !root.ProjectCurseVerdictArchiveState?.isUnlocked(op.unlockVerdict)
+    : /SEALED/.test(op.status || ''));
 
   function worstStatus(step) {
     return (step.units || []).reduce((worst, unit) => ((STATUS_RANK[unit.status] ?? 0) > (STATUS_RANK[worst] ?? 0) ? unit.status : worst), 'normal');
@@ -497,7 +492,7 @@
             h('div', null, h('dt', { text: '수신' }), h('dd', { text: record.recipient || '수신 기록 없음' })),
             h('div', null, h('dt', { text: '목적' }), h('dd', { text: record.purpose || '편찬 목적 미등록' }))
           ),
-          h('div.tc-note.tc-note--caution', null, h('b', { text: '이 기록으로 확정할 수 없는 것' }), h('p', { text: record.archiveLimit || LIMIT_DEFAULT }))
+          h('div.tc-note.tc-note--caution', null, h('b', { text: '이 기록으로 확정할 수 없는 것' }), h('p', { text: record.archiveLimit || screenCopy().limitDefault }))
         )
       ),
       h('div.tc-hist-body', null,
