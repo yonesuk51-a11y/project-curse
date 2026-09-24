@@ -10,43 +10,43 @@
 
   const screens={
     'terminal-home':{
-      code:'COMMAND',label:'단말 상태',accent:'#c84951',theme:'command',
+      code:'COMMAND',label:'단말 상태',accent:'#c98a2e',theme:'command',
       enter:'command-online',exit:'command-handoff',
       request:'COMMAND CHANNEL REQUESTED',status:'LOCAL CONTROL RESTORED',sound:'channel.command',
       symbol:'00',signal:'LOCAL COMMAND BUS',phases:['CONTROL RELEASE','KERNEL HANDOFF','COMMAND RESTORE']
     },
     'map-room':{
-      code:'CARTOGRAPHY',label:'상황 관제',accent:'#6e9b91',theme:'cartography',
+      code:'CARTOGRAPHY',label:'상황 관제',accent:'#7fa39a',theme:'cartography',
       enter:'coordinate-acquire',exit:'signal-collapse',
       request:'CARTOGRAPHIC CHANNEL REQUESTED',status:'COORDINATE LAYER ACQUIRED',sound:'channel.cartography',
       symbol:'01',signal:'CARTOGRAPHIC ARRAY',phases:['SIGNAL COLLAPSE','COORDINATE LOCK','LAYER ASSEMBLY']
     },
     history:{
-      code:'CHRONOLOGY',label:'세계 기록',accent:'#b29a68',theme:'chronology',
+      code:'CHRONOLOGY',label:'세계 기록',accent:'#a8875a',theme:'chronology',
       enter:'chronology-rewind',exit:'timeline-park',
       request:'CHRONOLOGY INDEX REQUESTED',status:'DATE RANGE ORIGIN?–2042',sound:'channel.chronology',
       symbol:'02',signal:'CHRONOLOGY INDEX',phases:['TIMELINE PARK','INDEX REWIND','DATE RANGE LOCK']
     },
     'faction-info':{
-      code:'INTELLIGENCE',label:'세력 분석',accent:'#7393a0',theme:'intelligence',
+      code:'INTELLIGENCE',label:'세력 분석',accent:'#8b9a66',theme:'intelligence',
       enter:'dossier-assemble',exit:'file-seal',
       request:'INTELLIGENCE NODE REQUESTED',status:'CROSS-REFERENCE ACTIVE',sound:'channel.intelligence',
       symbol:'03',signal:'INTELLIGENCE MESH',phases:['FILE SEAL','NODE CROSS-CHECK','DOSSIER ASSEMBLY']
     },
     'archive-entry':{
-      code:'ARCHIVE',label:'기록보관소',accent:'#a85a52',theme:'archive',
+      code:'ARCHIVE',label:'기록보관소',accent:'#b7a98a',theme:'archive',
       enter:'vault-unseal',exit:'vault-lock',
       request:'ARCHIVE VAULT REQUESTED',status:'PUBLIC INDEX MOUNTED',sound:'channel.archive',
       symbol:'04',signal:'DOUBLE-SEALED VAULT',phases:['VAULT LOCK','RECORD MOUNT','SEAL RELEASE']
     },
     'media-audit':{
-      code:'CLEARANCE',label:'미디어 감사',accent:'#65aaa3',theme:'clearance',
+      code:'CLEARANCE',label:'미디어 감사',accent:'#7fa39a',theme:'clearance',
       enter:'evidence-index',exit:'review-seal',
       request:'CLEARANCE LEDGER REQUESTED',status:'EVIDENCE QUEUE MOUNTED',sound:'channel.archive',
       symbol:'U1',signal:'RELEASE CONTROL LEDGER',phases:['REVIEW SEAL','EVIDENCE CHECK','LEDGER MOUNT']
     },
     personnel:{
-      code:'PERSONNEL',label:'인물 기록',accent:'#aa8f68',theme:'personnel',
+      code:'PERSONNEL',label:'인물 기록',accent:'#b29466',theme:'personnel',
       enter:'register-index',exit:'identity-seal',
       request:'PERSONNEL REGISTER REQUESTED',status:'PARTIAL IDENTITIES INDEXED',sound:'channel.intelligence',
       symbol:'05',signal:'PERSONNEL RELATION GRID',phases:['IDENTITY SEAL','RELATION CROSS-CHECK','DOSSIER INDEX']

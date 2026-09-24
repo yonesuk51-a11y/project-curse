@@ -1,0 +1,366 @@
+/* Project Curse 리메이크 — 현대 전술 × 오컬트 판타지 × 호러
+   기준: PROJECT_CURSE_ART_DIRECTION_GUIDE.md (2026-09-24 개정)
+   이 파일은 모든 스타일시트 뒤에 로드되는 테마 층이다. 기존 규칙을 지우지 않고 덮어쓴다.
+   셸(현대 전술)만 다룬다. 증거·이상 층의 손상 연출은 각 화면 파일에 남긴다. */
+
+:root {
+  --rt-bg: #0a0c0b;
+  --rt-panel: #111513;
+  --rt-panel-2: #171c19;
+  --rt-line: rgba(216, 214, 204, .14);
+  --rt-line-2: rgba(216, 214, 204, .26);
+  --rt-text: #d8d6cc;
+  --rt-text-2: #a3a596;
+  --rt-text-3: #7a8070;
+  --rt-od: #56613f;
+  --rt-od-2: #8b9a66;
+  --rt-coyote: #9a7b50;
+  --rt-amber: #c98a2e;
+  --rt-red: #9e2f2a;
+  --rt-blood: #6e1f2a;
+  --rt-ir: #7fa39a;
+  --rt-font: "IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --rt-label: "Barlow Condensed", "Arial Narrow", "IBM Plex Sans KR", sans-serif;
+  --rt-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --rt-bracket: var(--rt-od-2);
+
+  /* 기존 토큰을 리메이크 팔레트로 옮긴다. 이 토큰을 쓰는 규칙은 자동으로 따라온다. */
+  --pc-panel: rgba(17, 21, 19, .96);
+  --pc-line: var(--rt-line);
+  --pc-line-strong: var(--rt-line-2);
+  --pc-text: var(--rt-text);
+  --pc-muted: var(--rt-text-2);
+  --pc-dim: var(--rt-text-3);
+  --pc-amber: var(--rt-amber);
+  --pc-green: var(--rt-od-2);
+  --pc-radius: 0;
+}
+
+/* ---------- 바탕과 글꼴 ---------- */
+html, body {
+  background: var(--rt-bg);
+}
+body {
+  color: var(--rt-text);
+  font-family: var(--rt-font);
+  font-feature-settings: "tnum" 1;
+}
+.uac-shell {
+  background:
+    linear-gradient(rgba(216, 214, 204, .028) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, rgba(216, 214, 204, .028) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--rt-bg);
+}
+.content-page.panel {
+  background: transparent;
+  border-color: var(--rt-line);
+}
+
+/* 모서리 괄호 — 조준경 모서리처럼 네 귀퉁이에 짧은 선 */
+.pc-channel-identity,
+.pc5152ca1-home-shell,
+.pc-terminal-first-record,
+.pc-terminal-story-entry {
+  --rt-b: var(--rt-bracket);
+  background:
+    linear-gradient(var(--rt-b), var(--rt-b)) top left / 14px 1px no-repeat,
+    linear-gradient(var(--rt-b), var(--rt-b)) top left / 1px 14px no-repeat,
+    linear-gradient(var(--rt-b), var(--rt-b)) top right / 14px 1px no-repeat,
+    linear-gradient(var(--rt-b), var(--rt-b)) top right / 1px 14px no-repeat,
+    linear-gradient(var(--rt-b), var(--rt-b)) bottom left / 14px 1px no-repeat,
+    linear-gradient(var(--rt-b), var(--rt-b)) bottom left / 1px 14px no-repeat,
+    linear-gradient(var(--rt-b), var(--rt-b)) bottom right / 14px 1px no-repeat,
+    linear-gradient(var(--rt-b), var(--rt-b)) bottom right / 1px 14px no-repeat,
+    var(--rt-panel) !important;
+  border: 1px solid var(--rt-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ---------- 상단 바 ---------- */
+.uac-shell-bar {
+  background: #0d100f;
+  border-bottom: 1px solid var(--rt-line);
+  box-shadow: inset 0 2px 0 var(--rt-od);
+}
+.uac-shell-brand b {
+  color: var(--rt-text);
+  font-family: var(--rt-label);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+.uac-shell-brand small {
+  color: var(--rt-od-2);
+  font-family: var(--rt-mono);
+  letter-spacing: .06em;
+}
+.uac-shell-quick a {
+  color: var(--rt-text-2);
+  font-family: var(--rt-font);
+  border-radius: 0;
+}
+.uac-shell-quick a i {
+  color: var(--rt-od-2);
+  font-family: var(--rt-mono);
+  font-style: normal;
+}
+.uac-shell-quick a:hover,
+.uac-shell-quick a:focus-visible {
+  color: var(--rt-text);
+  background: rgba(86, 97, 63, .16);
+}
+.uac-shell-quick a[aria-current="page"],
+.uac-shell-quick a.active,
+.uac-shell-quick a.is-active {
+  color: var(--rt-text);
+  box-shadow: inset 0 -2px 0 var(--rt-amber);
+}
+.uac-shell-status span {
+  color: var(--rt-text-3);
+  font-family: var(--rt-mono);
+  letter-spacing: .06em;
+}
+
+/* ---------- 화면 머리글 ---------- */
+.pc-channel-identity small,
+.pc-channel-identity-copy small {
+  color: var(--rt-od-2) !important;
+  font-family: var(--rt-label);
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.pc-channel-identity-copy small i {
+  color: var(--rt-amber);
+  font-family: var(--rt-mono);
+  font-style: normal;
+}
+.pc-channel-identity strong,
+.pc-channel-identity-copy strong {
+  color: var(--rt-text);
+  font-family: var(--rt-font);
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+.pc-channel-identity p {
+  color: var(--rt-text-2);
+}
+.pc-channel-identity dl dt {
+  color: var(--rt-text-3);
+  font-family: var(--rt-label);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.pc-channel-identity dl dd {
+  color: var(--rt-amber);
+  font-family: var(--rt-mono);
+}
+
+/* ---------- 홈 ---------- */
+.pc5152ca1-home-kicker {
+  color: var(--rt-od-2);
+  font-family: var(--rt-label);
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.pc5152ca1-home-title span {
+  color: var(--rt-text-3);
+  font-family: var(--rt-mono);
+  letter-spacing: .08em;
+}
+.pc5152ca1-home-title h1 {
+  color: var(--rt-text);
+  font-family: var(--rt-font);
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.12;
+}
+.pc5152ca1-home-title p {
+  color: var(--rt-text-2);
+}
+.pc-terminal-system-strip {
+  background: var(--rt-panel-2);
+  border-color: var(--rt-line);
+}
+.pc-terminal-system-strip small {
+  color: var(--rt-text-3);
+  font-family: var(--rt-label);
+  letter-spacing: .16em;
+}
+.pc-terminal-system-strip b {
+  color: var(--rt-amber);
+  font-family: var(--rt-mono);
+}
+
+/* 첫 기록 — 증거 층. 민간 증거라 핏빛 대신 코요테 괄호 */
+.pc-terminal-first-record {
+  --rt-b: var(--rt-coyote);
+}
+.pc-terminal-first-record > header small {
+  color: var(--rt-coyote);
+  font-family: var(--rt-label);
+  letter-spacing: .18em;
+}
+.pc-terminal-first-record blockquote {
+  border-left: 2px solid var(--rt-coyote);
+  background: rgba(154, 123, 80, .06);
+}
+
+/* 사건 진입 세 갈래 */
+.pc-terminal-story-entry > header small {
+  color: var(--rt-od-2);
+  font-family: var(--rt-label);
+  letter-spacing: .18em;
+}
+.pc-terminal-story-entry > div {
+  background: var(--rt-line);
+}
+.pc-terminal-story-entry article {
+  --story-accent: var(--rt-od);
+  background: var(--rt-panel) !important;
+}
+.pc-terminal-story-entry article[data-story-phase="collapse"] {
+  --story-accent: var(--rt-coyote);
+}
+.pc-terminal-story-entry article[data-story-phase="current"] {
+  --story-accent: var(--rt-amber);
+}
+.pc-terminal-story-entry article small {
+  color: var(--story-accent);
+  font-family: var(--rt-mono);
+  letter-spacing: .08em;
+}
+
+/* 전술 버튼 — 직사각형, 1px, 대문자 라벨 느낌 */
+.pc-terminal-first-record nav button,
+.pc-terminal-story-entry nav button {
+  min-height: 36px;
+  padding: 7px 14px;
+  border: 1px solid var(--rt-line-2);
+  border-radius: 0;
+  color: var(--rt-text);
+  background: transparent;
+  font-family: var(--rt-font);
+  font-size: .76rem;
+  box-shadow: none;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+.pc-terminal-first-record nav button:first-child,
+.pc-terminal-story-entry nav button:first-child {
+  border-color: var(--rt-od-2);
+  background: rgba(86, 97, 63, .22);
+}
+.pc-terminal-first-record nav button:hover,
+.pc-terminal-story-entry nav button:hover {
+  background: rgba(86, 97, 63, .3);
+  outline: none;
+}
+.pc-terminal-first-record nav button i,
+.pc-terminal-story-entry nav button i {
+  color: var(--rt-amber);
+}
+
+/* 홈 메뉴 목록 */
+.uac-terminal-menu a {
+  border-radius: 0;
+  box-shadow: none;
+}
+.uac-terminal-menu a i {
+  color: var(--rt-amber);
+  font-family: var(--rt-mono);
+  font-style: normal;
+}
+.uac-terminal-menu a em {
+  color: var(--rt-od-2);
+  font-family: var(--rt-label);
+  font-style: normal;
+  letter-spacing: .12em;
+}
+
+/* ---------- 공통 목록·카드 — 그림자 없는 평평한 파일 블록 ---------- */
+.pc-archive-card,
+.pc-faction-card,
+.pc-faction-relation,
+.pc-archive-index-head,
+.pc-personnel-controls {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.pc-archive-card:hover,
+.pc-faction-card:hover,
+.pc-faction-relation:hover {
+  background-color: rgba(86, 97, 63, .12);
+}
+.pc-faction-card i,
+.pc-faction-relation i {
+  color: var(--rt-od-2);
+}
+
+/* ---------- 포커스와 모션 ---------- */
+:focus-visible {
+  outline: 1px solid var(--rt-amber) !important;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-terminal-first-record nav button,
+  .pc-terminal-story-entry nav button,
+  .uac-shell-quick a {
+    transition: none;
+  }
+}
+
+/* ---------- 모바일 ---------- */
+@media (max-width: 760px) {
+  .pc5152ca1-home-title h1 {
+    font-size: clamp(1.7rem, 8vw, 2.2rem);
+  }
+}
+
+/* ---------- 화면별 강조색 — 채도 낮은 전술 계열로 재배정 ----------
+   화면 구분은 남기되 빨강은 위험·봉인·오컬트 표시로만 돌려준다. */
+:root {
+  --pc-channel: #c98a2e;
+  --pc-channel-rgb: 201, 138, 46;
+}
+:root[data-pc-channel-theme="command"]      { --pc-channel: #c98a2e; --pc-channel-rgb: 201, 138, 46;  --pc-channel-soft: #7a5620; }
+:root[data-pc-channel-theme="cartography"]  { --pc-channel: #7fa39a; --pc-channel-rgb: 127, 163, 154; --pc-channel-soft: #4d6660; }
+:root[data-pc-channel-theme="chronology"]   { --pc-channel: #a8875a; --pc-channel-rgb: 168, 135, 90;  --pc-channel-soft: #5f4c32; }
+:root[data-pc-channel-theme="intelligence"] { --pc-channel: #8b9a66; --pc-channel-rgb: 139, 154, 102; --pc-channel-soft: #56613f; }
+:root[data-pc-channel-theme="archive"]      { --pc-channel: #b7a98a; --pc-channel-rgb: 183, 169, 138; --pc-channel-soft: #6f6752; }
+:root[data-pc-channel-theme="clearance"]    { --pc-channel: #7fa39a; --pc-channel-rgb: 127, 163, 154; --pc-channel-soft: #4d6660; }
+:root[data-pc-channel-theme="personnel"]    { --pc-channel: #b29466; --pc-channel-rgb: 178, 148, 102; --pc-channel-soft: #6c5b43; }
+
+/* 상단 이름이 칸을 넘치지 않게 */
+.uac-shell-brand b {
+  font-size: 13px;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+/* 품질 설정 버튼, 키아트 캡션 */
+.pc-preference-trigger i,
+.pc-preference-trigger em {
+  color: var(--rt-amber);
+}
+.pc-terminal-orientation-visual figcaption b {
+  color: var(--rt-coyote);
+  font-family: var(--rt-label);
+  letter-spacing: .16em;
+}
+
+/* 상단 이름과 부제를 두 줄로 쌓는다 — 가로로 나란히 두면 부제가 이름을 밀어낸다 */
+@media (min-width: 761px) {
+  .uac-shell-brand {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 3px;
+  }
+  .uac-shell-brand b {
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
