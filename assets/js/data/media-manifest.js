@@ -44,7 +44,14 @@
     'assets/resources/derived/sid-memory-check-booth-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
-    'assets/resources/derived/corrupted-isolation-observation-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
+    'assets/resources/derived/corrupted-isolation-observation-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    // 2026-09-24 사용자 채택 — 1차 묶음 6장(세계 기록 전환점 3, 세력 3)
+    'assets/resources/derived/amarion-1975-test-hall-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/ubermensch-1999-shared-cell-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/deadzone-2008-broken-line-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/uac-coordination-office-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/fhc-split-command-lab-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/ushinoda-basement-rite-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
   };
 
   const normalize=src=>{

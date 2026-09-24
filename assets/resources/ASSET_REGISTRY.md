@@ -131,3 +131,16 @@ The user adopted the 17 faction marks redrawn as images (`output/imagegen/202609
 | `faction_marks/v3/first-apostle.png` | RECONSTRUCTED | Faction dossier mark board (첫 번째 사도) | Registered symbols: 닫힌 이중환 · 삼권능 중첩 · 상부 선행점. Confidence D. Forensic reconstruction, not an approved emblem. | `감식 D` |
 | `faction_marks/v3/southern-blood.png` | RECONSTRUCTED | Faction dossier mark board (남부 혈교) | Registered symbols: 뒤집힌 전시 왕관 · 폐쇄된 혈액핵 · 세 작전축. Confidence B. | `감식 B` |
 | `faction_marks/v3/deadzone-blood.png` | RECONSTRUCTED | Faction dossier mark board (데드존 혈교) | Registered symbols: 열린 혈액 방울 · 관통 순례로 · 두 피난 거점. Confidence B. | `감식 B` |
+
+## 2026-09-24 batch A adoption
+
+The user adopted all six images of Codex batch A (`output/imagegen/20260924-batchA-*`), drawn after the `참고용/지옥` stills and the eight reference videos. They fill three world-history turning points and three faction dossiers that had no image. Generation mode: Codex image generation. No readable text, logos, real unit marks, invented insignia, children or sexual content. Responsive 480px and 960px WebP derivatives were encoded with the browser WebP encoder and registered in `media-manifest.js` with `tone:'low-key'`.
+
+| Asset | Class | Used by | Source and handling | Required public label |
+|---|---|---|---|---|
+| `derived/amarion-1975-test-hall-concept-v1.png` | RECONSTRUCTED | World record `1975-09-12-amarion` | A 1970s industrial test hall with a large magnetic coil apparatus and analog panels; three small researchers. Does not show the device opening any space. | `분석 재구성` |
+| `derived/ubermensch-1999-shared-cell-concept-v1.png` | RECONSTRUCTED | World record `1999-07-12-ubermensch` | A 1999 observation room with CRT monitors looking into an isolation cell where one adult sits apart from a blurred shadow figure. No torture close-up. | `분석 재구성` |
+| `derived/deadzone-2008-broken-line-concept-v1.png` | RECONSTRUCTED | World record `2008-09-06-dead-zone-designation` | A coastal road at dusk: broken fencing, an abandoned barrier, one pilgrim walking inland, one unmarked vehicle. Vehicle markings were removed in v2. | `분석 재구성` |
+| `derived/uac-coordination-office-concept-v1.png` | RECONSTRUCTED | U.A.C faction dossier | A dark coordination office: phone calls, a document handover, a wall of monitors showing closed doors. Deadpan administration. | `분석 재구성` |
+| `derived/fhc-split-command-lab-concept-v1.png` | RECONSTRUCTED | F.H.C faction dossier | Specimen tanks with dark red tissue; three researchers and three armed TAD personnel standing apart. Not a photograph of the 2021 Submassacre. | `분석 재구성` |
+| `derived/ushinoda-basement-rite-concept-v1.png` | RECONSTRUCTED | 우시노다교 faction dossier | Hooded adults in ordinary clothes around a lavender fire in an office basement. No school, no sect emblem drawn. | `분석 재구성` |

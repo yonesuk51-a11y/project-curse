@@ -441,6 +441,27 @@
   };
 
   const recordVisuals={
+    '1975-09-12-amarion':{
+      src:'assets/resources/derived/amarion-1975-test-hall-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'대형 코일과 굵은 케이블, 아날로그 계기가 놓인 어두운 산업 연구동에서 성인 연구원 세 명이 제어반 앞에 서 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / MAGNETIC DISTORTION TEST HALL',
+      caption:'아마리온이 1975년에 등록한 연구 목적을 바탕으로 상정한 시험동이다. 장치의 원리와 실제 실험 인원, 신규 공간 개방의 성공 여부를 확정하지 않는다.'
+    },
+    '1999-07-12-ubermensch':{
+      src:'assets/resources/derived/ubermensch-1999-shared-cell-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'CRT가 놓인 관찰실 너머 격리실에서 성인 한 명이 무릎을 끌어안고 앉아 있고, 반대편 벽 쪽에 윤곽이 흐린 그림자 형체가 서 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / SHARED ISOLATION CELL',
+      caption:'포획한 그림자를 사람과 같은 격리실에 넣었다는 위버멘시 기록을 장면으로 옮긴 분석 재구성이다. 대상자의 신원, 전체 대상자·사망자 수, 실험 결과를 확정하지 않는다.'
+    },
+    '2008-09-06-dead-zone-designation':{
+      src:'assets/resources/derived/deadzone-2008-broken-line-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'황혼의 해안 도로에서 끊긴 철망과 방치된 차단기 너머로 배낭을 멘 성인 한 명이 내륙을 향해 걷고, 표기 없는 차량 한 대가 멈춰 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / DISCONTINUOUS LINE',
+      caption:'2008년 통제 절차가 멈출 무렵 이미 이어지지 않던 경계선을 해안 통행로로 상정한 분석 재구성이다. 검문소 위치, 마지막 순찰 여부, 순례자의 신원과 생환을 확정하지 않는다.'
+    },
     'deep-citadel-charters':{
       src:'assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png',
       className:'RECONSTRUCTED',

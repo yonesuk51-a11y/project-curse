@@ -581,6 +581,24 @@
     alt:'유리 부스 안에서 관자와 손목에 센서를 붙인 귀환자가 두 팔을 책상에 내려놓고 앉아 있다. 유리 건너편 가족은 빈 카드를 들고 있고, 모니터의 열상 윤곽만 한 팔을 들고 있다.',
     caption:'귀환자의 신원·기억·생체 신호를 따로 대조하는 분리 심사를 재구성한 장면이다. 화면 윤곽과 실제 자세가 다른 것은 계측 불일치를 보여 주는 예시다. 특정 귀환자와 가족의 신원, 실제 질문과 답을 확정하지 않는다.'
   };
+  factions.uac.visual={
+    src:'assets/resources/derived/uac-coordination-office-concept-v1.png',
+    className:'RECONSTRUCTED',label:'COORDINATION OFFICE / 분석 재구성',
+    alt:'어두운 관제 행정실에서 직원들이 유선 통화와 서류 인계를 하고, 벽의 화면들에는 닫힌 출입구가 비친다.',
+    caption:'격리 명령과 출입 인증을 조정하는 U.A.C의 업무를 관제 행정실로 옮긴 장면이다. 특정 명령의 승인, 직원 신원, 협력 기관에 대한 직접 지휘권을 확정하지 않는다.'
+  };
+  factions.fhc.visual={
+    src:'assets/resources/derived/fhc-split-command-lab-concept-v1.png',
+    className:'RECONSTRUCTED',label:'SPLIT COMMAND / 분석 재구성',
+    alt:'검붉은 조직이 든 표본 수조 사이에서 서류를 든 연구원 세 명과 총을 든 무장 인원 세 명이 떨어져 마주 서 있다.',
+    caption:'중앙 지휘를 잃은 F.H.C 시설에서 같은 표식 아래 서로 다른 명령을 받은 연구원과 TAD의 대치를 상정했다. 특정 사건의 실재, 명령의 정당성, 시설 통제자와 충돌 결과를 확정하지 않는다.'
+  };
+  factions.ushinoda.visual={
+    src:'assets/resources/derived/ushinoda-basement-rite-concept-v1.png',
+    className:'RECONSTRUCTED',label:'BASEMENT RITE / 분석 재구성',
+    alt:'서류 선반과 배관이 있는 사무 건물 지하에서 평상복에 두건을 쓴 성인들이 라벤더색 불 주위에 무릎 꿇거나 서서 조용히 의식을 치른다.',
+    caption:'평범한 기관 안에 잠복한 우시노다교의 의식을 사무 건물 지하로 상정한 장면이다. 참가자의 신원과 파벌, 특정 기관의 공모, 의식의 결과를 확정하지 않는다.'
+  };
 
   root.ProjectCurseFactionAnalysis = freeze({
     version: root.ProjectCurseBuild?.version||'5.42.0',

@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 254,
-    "referenced": 254,
+    "registered": 272,
+    "referenced": 272,
     "unreferenced": 0,
     "review": 150,
-    "managed": 104,
+    "managed": 122,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 224,
+      "image": 242,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 86,
+      "PROJECT_GENERATED": 104,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 78,
+      "DELIVERY_DERIVATIVE": 90,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 44,
+      "RECONSTRUCTED": 50,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2583,6 +2583,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/amarion-1975-test-hall-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "아마리온 설립 기록(1975-09-12-amarion) 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "1975년 등록 서류의 연구 목적을 바탕으로 상정한 시험동이다. 장치 원리, 실험 인원, 신규 공간 개방의 성공 여부를 확정하지 않는다.",
+      "credit": "Project Curse batch A scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1818012,
+      "sha256": "ff2598a40a2dd659c78018390b6e9ccbe189f756501c7e6223b81ca5c7fb81d4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/ash-crew-aftermath-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2841,6 +2862,48 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/deadzone-2008-broken-line-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "대륙 무응답 선언 기록(2008-09-06-dead-zone-designation) 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "끊긴 경계선과 내륙으로 향하는 순례자를 상정했다. 검문소 위치, 마지막 순찰 여부, 순례자의 신원과 생환을 확정하지 않는다.",
+      "credit": "Project Curse batch A scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2001284,
+      "sha256": "60ebb18314656dec3fdf2c28be476ebb4c78809878896dae410d6a7ccf24ad32",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/fhc-split-command-lab-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "F.H.C 중앙 지휘 상실·시설별 통제권 상충 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "연구원과 TAD 무장 인원의 대치로 상충 명령을 상정했다. 특정 사건의 실재, 명령의 정당성, 시설 통제자와 충돌 결과를 확정하지 않는다.",
+      "credit": "Project Curse batch A scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1632972,
+      "sha256": "72c300dc8384712ee3db84291cc86c26a7db5479259d002ea5e84737bf944d5e",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/first-apostle-three-traces-reconstruction-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3080,6 +3143,69 @@
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "bytes": 1515275,
       "sha256": "57bc498005351aa77db300071c6c2eddb61821f1f598968684507df0699d35be",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/uac-coordination-office-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "U.A.C 격리 명령·출입 인증 조정 업무 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "관제 행정실의 서류 인계와 감시 화면으로 조정 업무를 옮겼다. 특정 명령의 승인, 직원 신원, 협력 기관에 대한 직접 지휘권을 확정하지 않는다.",
+      "credit": "Project Curse batch A scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1709798,
+      "sha256": "ea1d7e4a258e7a2a6accc8a4165139d7f61e97a0a014e35edbb7504ac93bca10",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/ubermensch-1999-shared-cell-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "위버멘시 프로젝트 기록(1999-07-12-ubermensch) 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "그림자 형체와 사람을 같은 격리실에 넣은 기록을 옮겼다. 대상자 신원, 전체 대상자·사망자 수, 실험 결과를 확정하지 않는다.",
+      "credit": "Project Curse batch A scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1694762,
+      "sha256": "03df173a3fd5083699085505252a629de7b6d6433422554c444d6b1a02769296",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/ushinoda-basement-rite-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "우시노다교 기관 침투·의식 활동 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "사무 건물 지하의 의식으로 잠복 활동을 상정했다. 참가자의 신원과 파벌, 특정 기관의 공모, 의식의 결과를 확정하지 않는다.",
+      "credit": "Project Curse batch A scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1478199,
+      "sha256": "5718546c6a3f56213086ad151380e853703cbf818119309147fb722b696a059c",
       "usedBy": [
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
@@ -3861,6 +3987,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/amarion-1975-test-hall-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/amarion-1975-test-hall-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7364,
+      "sha256": "70eddb579140a84f30c8cd7399dd11ccce2a907c4bc459f7dc21d51b0be45ec5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/amarion-1975-test-hall-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/amarion-1975-test-hall-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/amarion-1975-test-hall-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 26654,
+      "sha256": "826d54280b464fee1ec96b4b88b05f436dd8d841957e8ceecde3c0ee0994444a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/amarion-1975-test-hall-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/ash-crew-aftermath-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -4181,6 +4339,70 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/deadzone-2008-broken-line-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/deadzone-2008-broken-line-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7416,
+      "sha256": "65c48d175b9c94481c31828d120f87fa12e694fed6c9d59acb1933383780da7b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/deadzone-2008-broken-line-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/deadzone-2008-broken-line-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/deadzone-2008-broken-line-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 26792,
+      "sha256": "c1641336d34a4610328ce14b94c4cfa80635f5a66952a88bf1211aefccddc077",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/deadzone-2008-broken-line-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/fhc-split-command-lab-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/fhc-split-command-lab-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 8202,
+      "sha256": "20c78f3b0b8063d774cb906b0846bd23d251b14c0f22a762de178e7c866a62bb",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/fhc-split-command-lab-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/fhc-split-command-lab-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/fhc-split-command-lab-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 22648,
+      "sha256": "cb448e9a83d963cbef3215c00cd13cd98ddbbcf765235a832409414409c11bf1",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/fhc-split-command-lab-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/great-black-forest_reconstructed-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -4401,6 +4623,102 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/sid-memory-check-booth-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/uac-coordination-office-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/uac-coordination-office-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 4412,
+      "sha256": "58315aca2926cb6a149c3ebb2556bd343837bbed1c297dff74ad0b83585e0a70",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/uac-coordination-office-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/uac-coordination-office-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/uac-coordination-office-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 14340,
+      "sha256": "97e01e106bb9411af35b41e9a385824ce68249c5faddc7006fa19fee72505995",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/uac-coordination-office-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ubermensch-1999-shared-cell-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ubermensch-1999-shared-cell-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 4352,
+      "sha256": "a40b7c04a2a2cedcc2e554afebc85bfc56a599c3a530cd5f62c1a27481606ac4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ubermensch-1999-shared-cell-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ubermensch-1999-shared-cell-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ubermensch-1999-shared-cell-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12954,
+      "sha256": "4afb808b3164d8b1caf2c1eb71075a6d4527e51be697911cf246ee6ab6244f7f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ubermensch-1999-shared-cell-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ushinoda-basement-rite-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ushinoda-basement-rite-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6222,
+      "sha256": "cbb54bb800b58f6489d4e14c893dbe8cd08640b2e5cf88871c6dd8aa5c1039c2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ushinoda-basement-rite-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ushinoda-basement-rite-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ushinoda-basement-rite-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 18544,
+      "sha256": "5a22cbebe168d52770f9c3a6844a107384ea4faf0b9350b1b7ec9fae76fc481a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ushinoda-basement-rite-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

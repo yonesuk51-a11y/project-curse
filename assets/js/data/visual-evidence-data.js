@@ -103,6 +103,24 @@
     }),
     'assets/resources/derived/corrupted-isolation-observation-concept-v1.png':Object.freeze({
       assetId:'VEA-COR-ISO-01',className:'RECONSTRUCTED',source:'세계 기본 규칙의 타락자 정의 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'타락자 분류를 격리 관찰 장면으로 옮겼다. 특정 피격리자의 신원, 변질 원인과 경과, 실제 관찰 기록을 확정하지 않으며 괴이와 같은 범주로 다루지 않는다.'
+    }),
+    'assets/resources/derived/amarion-1975-test-hall-concept-v1.png':Object.freeze({
+      assetId:'VEA-AMR-1975-01',className:'RECONSTRUCTED',source:'아마리온 설립 기록(1975-09-12-amarion) 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'1975년 등록 서류의 연구 목적을 바탕으로 상정한 시험동이다. 장치 원리, 실험 인원, 신규 공간 개방의 성공 여부를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/ubermensch-1999-shared-cell-concept-v1.png':Object.freeze({
+      assetId:'VEA-UBM-1999-01',className:'RECONSTRUCTED',source:'위버멘시 프로젝트 기록(1999-07-12-ubermensch) 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'그림자 형체와 사람을 같은 격리실에 넣은 기록을 옮겼다. 대상자 신원, 전체 대상자·사망자 수, 실험 결과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/deadzone-2008-broken-line-concept-v1.png':Object.freeze({
+      assetId:'VEA-DZ-2008-01',className:'RECONSTRUCTED',source:'대륙 무응답 선언 기록(2008-09-06-dead-zone-designation) 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'끊긴 경계선과 내륙으로 향하는 순례자를 상정했다. 검문소 위치, 마지막 순찰 여부, 순례자의 신원과 생환을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/uac-coordination-office-concept-v1.png':Object.freeze({
+      assetId:'VEA-UAC-OPS-01',className:'RECONSTRUCTED',source:'U.A.C 격리 명령·출입 인증 조정 업무 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'관제 행정실의 서류 인계와 감시 화면으로 조정 업무를 옮겼다. 특정 명령의 승인, 직원 신원, 협력 기관에 대한 직접 지휘권을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/fhc-split-command-lab-concept-v1.png':Object.freeze({
+      assetId:'VEA-FHC-SPLIT-01',className:'RECONSTRUCTED',source:'F.H.C 중앙 지휘 상실·시설별 통제권 상충 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'연구원과 TAD 무장 인원의 대치로 상충 명령을 상정했다. 특정 사건의 실재, 명령의 정당성, 시설 통제자와 충돌 결과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/ushinoda-basement-rite-concept-v1.png':Object.freeze({
+      assetId:'VEA-USH-RITE-01',className:'RECONSTRUCTED',source:'우시노다교 기관 침투·의식 활동 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'사무 건물 지하의 의식으로 잠복 활동을 상정했다. 참가자의 신원과 파벌, 특정 기관의 공모, 의식의 결과를 확정하지 않는다.'
     })
   });
 
