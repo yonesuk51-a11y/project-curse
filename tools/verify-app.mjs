@@ -2,6 +2,7 @@
 // Project Curse 6 — 새 단말(index.html + assets/app/) 검증.
 // 옛 verify-package.mjs 가운데 보호 기록·데이터·정사 검사를 새 구조로 옮기고, 새 앱의 화면·디자인 규칙을 더한다.
 // 개수 단언은 기록을 추가·삭제했을 때만 새 값으로 고치고, 그 이유를 커밋 메시지에 적는다.
+import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -133,6 +134,9 @@ const badStubs = docsIds.filter((id) => {
 });
 add('docs-pages-forward-to-archive', docsIds.length === 9 && badStubs.length === 0, badStubs.join(' | ') || `${docsIds.length} pages`);
 add('app-html-retired', !existsSync(ROOT + 'app.html'), '새 단말은 index.html 하나다');
+// 안내 페이지는 기록 요약이 바뀌면 다시 만들어야 한다 — 생성기 결과와 글자 그대로 같은지 본다.
+const stubCheck = spawnSync(process.execPath, [ROOT + 'tools/build-docs-stubs.mjs', '--check'], { encoding: 'utf8' });
+add('docs-pages-match-generator', stubCheck.status === 0, (stubCheck.stdout || '').split(/\r?\n/).filter((line) => line.startsWith('STALE') || line.startsWith('MISSING')).join(' | '));
 
 const turns = context.ProjectCurseHistoryScreen?.turns || [];
 if (turns.length !== 4) brokenTargets.push(`history-screen-data turns: ${turns.length}/4`);
