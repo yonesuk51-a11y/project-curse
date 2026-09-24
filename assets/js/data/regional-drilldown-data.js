@@ -14,7 +14,7 @@
       {
         id:'eastasia-northern-front',region:'eastasia',terrain:'front',
         label:'북부 연속 차단선',code:'NORTH / CONTINUOUS BARRIER',status:'ADVANTAGE / WAR ACTIVE',confidence:'78%',
-        description:'2018년 개전 당시 붕괴한 감시선, 2026년 탈환선과 2038년 분산 감시망을 겹쳐 복원한 북동아시아 전구. 선의 번호가 높아져도 전쟁이 끝났다는 뜻은 아니다.',
+        description:'북동아시아 전구. 2018년 개전 당시 붕괴한 감시선, 2026년 탈환선과 2038년 분산 감시망을 겹쳐 복원했다. 선의 번호가 높아져도 전쟁이 끝났다는 뜻은 아니다.',
         warning:'구조 요청자의 목소리나 호출명만으로 예비대를 이동시키지 말 것. 서로 떨어진 두 계측 노드의 반환 지문이 일치해야 한다.',
         visual:{
           src:'assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png',history:'2026-08-20-northern-reversal',assetId:'VEA-NF-DUP-01',
@@ -25,7 +25,7 @@
         },
         signalBrief:{
           label:'DUAL NODE VERIFICATION',title:'동일 음성 / 상충 경로',
-          summary:'두 노드는 같은 구조 요청을 기록했지만 신호가 통과한 공간의 반환 지문은 서로 달랐다.',
+          summary:'두 노드는 같은 구조 요청을 기록했다. 신호가 통과한 공간의 반환 지문은 서로 달랐다.',
           siteIds:['north-distributed-nodes','north-false-rescue-origin','north-reclaimed-sites'],
           lanes:[
             {code:'NODE A',state:'VOICE MATCH',fingerprint:'PATH FINGERPRINT A',pattern:[3,6,4,8,5,2,7,4,6,3,8,5]},
@@ -62,8 +62,8 @@
       {
         id:'europe-north-sea-blockade',region:'europe',terrain:'northsea',
         label:'북해 피의 호수 봉쇄축',code:'EUROPE / BLOOD LAKE BLOCKADE',status:'RESIDUAL / BLOCKADE ACTIVE',confidence:'84%',
-        description:'1986년 유닛2의 진입 경로와 F.H.C 회수 기록, 후대 북해 봉쇄선을 겹쳐 놓은 사건권. 현장 위치 일부가 검열돼 있으므로 지점 간 거리는 항법값이 아니다.',
-        warning:'호수의 기원과 실종 인원의 최종 상태는 확인되지 않았다. 잔류 반응이 있다는 사실을 호수가 이동하거나 증식했다는 결론으로 확대하지 말 것.',
+        description:'1986년 유닛2의 진입 경로와 F.H.C 회수 기록, 후대 북해 봉쇄선을 겹쳐 놓은 사건권. 현장 위치 일부는 검열됐다. 지점 간 거리는 항법값이 아니다.',
+        warning:'호수의 기원과 실종 인원의 최종 상태는 확인되지 않았다. 잔류 반응만으로 호수가 이동하거나 증식했다고 결론짓지 말 것.',
         operation:'op-immortality',
         visual:{
           src:'assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png',history:'1986-02-01-immortality',assetId:'VEA-NS-BL-01',
@@ -74,7 +74,7 @@
         },
         signalBrief:{
           label:'RECOVERY TIMELINE SPLIT',title:'회수 접근 / 마지막 신호 역전',
-          summary:'7분대의 회수 접근은 유닛2 마지막 영상보다 먼저 시작됐고, 임무 완료 처리는 인원 상태가 확인되지 않은 채 뒤따랐다.',
+          summary:'7분대의 회수 접근은 유닛2 마지막 영상보다 먼저 시작됐다. 임무 완료 처리가 뒤따랐다. 당시 인원 상태는 확인되지 않았다.',
           siteIds:['europe-ipd-split','europe-last-signal','europe-seventh-line','europe-blood-lake'],
           lanes:[
             {code:'UNIT 2',state:'LAST VIDEO 18:56',fingerprint:'PERSONNEL STATUS UNKNOWN',pattern:[3,6,4,7,5,8,2,6,4,7,3,5]},
@@ -92,8 +92,8 @@
           ]
         },
         routes:[
-          {id:'immortality-unit-two',className:'hostile',label:'UNIT 2 / LAST TRANSMISSION',risk:'critical',signal:'recovered',rule:'복원된 시간 순서는 확인 경로이며 안전한 재진입 경로가 아니다',siteIds:['europe-entry-s','europe-abandoned-tent','europe-river-reaction','europe-blood-lake','europe-ipd-split','europe-last-signal'],points:[[76,433],[239,365],[407,302],[596,229],[742,286],[850,351]]},
-          {id:'fhc-recovery-priority',className:'broken',label:'F.H.C RECOVERY PRIORITY',risk:'critical',signal:'partial',rule:'회수 순서는 생존자 구조보다 표본과 의식 잔류물을 우선한 기관 기록이다',siteIds:['europe-seventh-line','europe-last-signal','europe-blood-lake','europe-analysis-zone'],points:[[890,424],[850,351],[596,229],[904,151]]},
+          {id:'immortality-unit-two',className:'hostile',label:'UNIT 2 / LAST TRANSMISSION',risk:'critical',signal:'recovered',rule:'복원된 시간 순서는 확인 경로다. 안전한 재진입 경로가 아니다',siteIds:['europe-entry-s','europe-abandoned-tent','europe-river-reaction','europe-blood-lake','europe-ipd-split','europe-last-signal'],points:[[76,433],[239,365],[407,302],[596,229],[742,286],[850,351]]},
+          {id:'fhc-recovery-priority',className:'broken',label:'F.H.C RECOVERY PRIORITY',risk:'critical',signal:'partial',rule:'기관 기록의 회수 순서다. 생존자 구조보다 표본과 의식 잔류물을 우선했다',siteIds:['europe-seventh-line','europe-last-signal','europe-blood-lake','europe-analysis-zone'],points:[[890,424],[850,351],[596,229],[904,151]]},
           {id:'north-sea-blockade',className:'front',label:'NORTH SEA BLOCKADE AXIS',risk:'high',signal:'observed',rule:'봉쇄 유지가 사건 종결이나 현상 위치의 고정을 뜻하지 않는다',siteIds:['europe-analysis-zone','europe-blockade-line','europe-blood-lake'],points:[[904,151],[742,92],[596,229]]}
         ],
         sites:[
@@ -111,7 +111,7 @@
       {
         id:'gbf-western-marches',region:'southamerica',terrain:'forest',
         label:'서부 순례 회랑',code:'GBF / WESTERN MARCHES',status:'ROUTE OVERLAP',confidence:'31%',
-        description:'순례자 증언과 몬수르 교회의 종 운반 기록을 겹쳐 복원한 서부 진입로. 같은 길이 서로 다른 목적지로 이어진다.',
+        description:'서부 진입로는 순례자 증언과 몬수르 교회의 종 운반 기록을 겹쳐 복원했다. 같은 길이 서로 다른 목적지로 이어진다.',
         warning:'비현실감이 발생하면 기존 경로를 역행하지 말 것. 검은 강의 강둑은 지도상 안전지대가 아니다. 이 회랑의 피의 호수 흔적을 북해 사건과 연결하지 말 것.',
         visual:{
           src:'assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png',history:'2032-08-14-three-bells-compact',assetId:'VEA-GBF-BELL-01',
@@ -122,7 +122,7 @@
         },
         signalBrief:{
           label:'BELL ROUTE COMPARISON',title:'같은 타종 / 다른 목적지',
-          summary:'서부 교회가 기록한 운반 요청과 귀환자 장부는 같은 타종 순서를 남겼지만 마지막 목적지를 서로 다르게 적었다.',
+          summary:'서부 교회가 기록한 운반 요청과 귀환자 장부는 같은 타종 순서를 남겼다. 마지막 목적지는 서로 다르게 적었다.',
           siteIds:['gbf-monsur-chapel','gbf-derealization','gbf-unlit-fortress'],
           lanes:[
             {code:'LEDGER A',state:'BELL ORDER MATCH',fingerprint:'FORTRESS ROUTE',pattern:[2,7,3,8,2,5,7,3,8,4,6,2]},
@@ -157,7 +157,7 @@
       {
         id:'gbf-coastal-belt',region:'southamerica',terrain:'coast',
         label:'남방권 해안 동원선',code:'SOUTHERN THEATER / COASTAL MOBILIZATION',status:'ACTIVE OPERATION',confidence:'46%',
-        description:'남부 특수부대의 집결, 도시 집단 소환과 성위대 침투 신호가 만나는 해안 작전망. 남방권은 국가나 자연지리가 아니라 동원·통신 범위를 뜻한다.',
+        description:'해안 작전망에서 남부 특수부대의 집결, 도시 집단 소환과 성위대 침투 신호가 만난다. 남방권은 국가나 자연지리가 아니라 동원·통신 범위를 뜻한다.',
         warning:'표시 상태는 OP-BROKEN-CROWN 최종 판단에 따라 갱신된다. 남부 혈교, 해안 세력과 협력 성채를 하나의 지휘조직으로 묶어 판정하지 말 것.',
         operation:'op-southern-coup',
         visual:{
@@ -169,7 +169,7 @@
         },
         signalBrief:{
           label:'COMMAND SIGNATURE SPLIT',title:'동일 서명 / 분리 발신',
-          summary:'공작원 식별 보고와 생존 시 처형 명령은 같은 지휘 서명을 사용했지만 서로 다른 승인망에서 도착했다.',
+          summary:'공작원 식별 보고와 생존 시 처형 명령은 같은 지휘 서명을 사용했다. 서로 다른 승인망에서 도착했다.',
           siteIds:['coast-listening-post','coast-guard-command','coast-summon-a','coast-summon-b'],
           lanes:[
             {code:'ORDER COPY A',state:'SIGNATURE MATCH',fingerprint:'IDENTIFY OPERATIVE',pattern:[6,3,7,2,8,4,6,3,7,5,2,8]},
@@ -203,18 +203,18 @@
       {
         id:'gbf-inner-refuges',region:'southamerica',terrain:'deep-forest',
         label:'내부 피난 성채권',code:'GBF / INNER REFUGES',status:'NO CENTRAL AUTHORITY',confidence:'18%',
-        description:'국가 대신 성채, 촌락, 교회가 서로의 피난처 역할을 하는 내부 정착권. 지도상의 거리는 도보 기록과 일치하지 않는다.',
+        description:'내부 정착권에서는 국가 대신 성채, 촌락, 교회가 서로 피난처를 제공한다. 지도상의 거리는 도보 기록과 일치하지 않는다.',
         warning:'성채 자체가 하나의 교단일 수 있다. 불빛이 없는 성채와 오래된 전장은 우회할 것.',
         visual:{
           src:'assets/resources/derived/great-black-forest_reconstructed-v1.png',history:'2032-08-14-three-bells-compact',assetId:'VEA-GBF-R01',
           label:'복원 추정 / 항법 사진 아님',title:'피난 성채권 거리 측정 재구성',
           alt:'거대한 나무 사이의 젖은 숲길에 측량 장비가 세워져 있고 멀리 작은 불빛과 성채가 보이는 복원 추정 이미지',
-          caption:'성채권 도보 기록과 반복 측량 실패를 설명하기 위한 편집 재구성이다. 보이는 숲길과 성채의 실제 거리나 위치를 증명하지 않는다.',
+          caption:'성채권 도보 기록과 반복 측량 실패를 설명하는 편집 재구성이다. 보이는 숲길과 성채의 실제 거리나 위치를 증명하지 않는다.',
           siteIds:['inner-sanctuary-castle','inner-distance-fork','inner-old-citadel']
         },
         signalBrief:{
           label:'LANDMARK TRIANGULATION',title:'같은 성채 / 세 거리값',
-          summary:'세 측량조가 같은 문양의 성채를 관측했지만 도보 시간과 방위각은 하나의 위치로 수렴하지 않았다.',
+          summary:'세 측량조가 같은 문양의 성채를 관측했다. 도보 시간과 방위각은 하나의 위치로 수렴하지 않았다.',
           siteIds:['inner-sanctuary-castle','inner-distance-fork','inner-old-citadel'],
           lanes:[
             {code:'SURVEY A',state:'CREST MATCH',fingerprint:'42 MINUTES EAST',pattern:[3,4,6,8,5,3,7,2,6,4,8,3]},
@@ -248,7 +248,7 @@
       {
         id:'deadzone-return-corridor',region:'northamerica',terrain:'dead',
         label:'서부 귀환 회랑',code:'DEAD ZONE / RETURN CORRIDOR',status:'QUARANTINE ACTIVE',confidence:'22%',
-        description:'귀환한 순례자 일곱 명의 진술이 유일하게 겹치는 서부 경로. 왕복 경로 중 귀환 구간만 지도에 남아 있다.',
+        description:'서부 경로에서만 귀환한 순례자 일곱 명의 진술이 겹친다. 왕복 경로 중 귀환 구간만 지도에 남아 있다.',
         warning:'전진 경로를 역산하지 말 것. 무전에서 자신의 목소리를 들으면 현재 진행 방향을 즉시 변경할 것.',
         visual:{
           src:'assets/resources/derived/checkpoint-07-five-thermal-concept-v1.png',history:'2029-04-12-checkpoint-07',assetId:'VEA-DZ-CP07-01',
@@ -259,7 +259,7 @@
         },
         signalBrief:{
           label:'RETURNER COUNT MISMATCH',title:'가시 인원 4 / 생체 반응 5',
-          summary:'명단·장비·기억 기록은 네 명과 일치했지만 검문 스캐너는 대열 안에서 독립된 다섯 번째 반응을 분리했다.',
+          summary:'명단·장비·기억 기록은 네 명과 일치했다. 검문 스캐너는 대열 안에서 독립된 다섯 번째 반응을 분리했다.',
           siteIds:['dead-checkpoint-07','dead-quarantine-ring','dead-sublevel-08'],
           lanes:[
             {code:'VISUAL GATE',state:'FOUR RETURNERS',fingerprint:'MANIFEST 04',pattern:[2,5,2,5,2,5,2,5,2,5,2,5]},
@@ -299,7 +299,7 @@
       {
         id:'deadzone-kingdom-graves',region:'northamerica',terrain:'ruins',
         label:'고대 왕국 묘역',code:'DEAD ZONE / KINGDOM GRAVES',status:'HISTORICAL SIGNALS',confidence:'14%',
-        description:'멸망한 왕국과 버려진 요새가 겹쳐 있는 묘역. 일부 성채는 이름과 주인이 사라진 뒤에도 순례자를 받아들인다.',
+        description:'묘역에는 멸망한 왕국과 버려진 요새가 겹쳐 있다. 일부 성채는 이름과 주인이 사라진 뒤에도 순례자를 받아들인다.',
         warning:'불빛 없는 요새에 응답하지 말 것. 고유 무기는 봉인 주체가 확인되기 전까지 회수 금지다.',
         visual:{
           src:'assets/resources/derived/dead-zone-pilgrimage_reconstructed-v1.png',history:'2034-04-22-inland-beacon-31',assetId:'VEA-DZ-R01',
@@ -310,7 +310,7 @@
         },
         signalBrief:{
           label:'INLAND BEACON OVERLAP',title:'서른한 호출 / 하나의 중첩 좌표',
-          summary:'폐쇄된 해안 중계기에 돌아온 호출부호들은 서로 다른 폐허를 가리켰지만 계산 좌표는 왕국 묘역 한 점에 겹쳤다.',
+          summary:'폐쇄된 해안 중계기에 돌아온 호출부호들은 서로 다른 폐허를 가리켰다. 계산 좌표는 왕국 묘역 한 점에 겹쳤다.',
           siteIds:['grave-throne','grave-refuge','grave-unlit','grave-last-kingdom'],
           lanes:[
             {code:'BEACON PASS 01',state:'94 SECOND LOOP',fingerprint:'OLD RESCUE CODES',pattern:[7,2,6,3,8,4,7,2,6,3,8,4]},
@@ -344,7 +344,7 @@
       {
         id:'deadzone-silent-interior',region:'northamerica',terrain:'silent',
         label:'내륙 무응답권',code:'DEAD ZONE / SILENT INTERIOR',status:'MAP TERMINATES HERE',confidence:'7%',
-        description:'지도, 위성, 순례자 진술이 모두 끊기는 내륙. 표식 대부분은 위치가 아니라 마지막 통신 시각을 지리 좌표처럼 환산한 것이다.',
+        description:'내륙에서는 지도, 위성, 순례자 진술이 모두 끊긴다. 표식 대부분은 위치가 아니다. 마지막 통신 시각을 지리 좌표처럼 환산한 값이다.',
         warning:'이 지도는 경로 안내가 아니다. 자신이 보내지 않은 구조 신호와 개인 식별 신호에 응답하지 말 것.',
         visual:{
           src:'assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png',history:'2042-10-31-three-night-silence',assetId:'VEA-DZ-SI-01',
@@ -355,7 +355,7 @@
         },
         signalBrief:{
           label:'PERSONAL ECHO COMPARISON',title:'자기 목소리 / 좌표가 된 통신 시각',
-          summary:'개인 식별 반향은 실종자의 호출 지문을 되돌렸지만, 지도 종결선 너머의 좌표 필드는 장소 대신 마지막 통신 시각을 반환했다.',
+          summary:'개인 식별 반향은 실종자의 호출 지문을 되돌렸다. 지도 종결선 너머의 좌표 필드는 장소 대신 마지막 통신 시각을 반환했다.',
           siteIds:['silent-personal-echo','silent-black-highway','silent-force-boundary','silent-false-rescue','silent-no-return'],
           lanes:[
             {code:'PERSONAL ECHO',state:'CALLSIGN MATCH',fingerprint:'SELF DISTRESS SIGNAL',pattern:[6,3,7,4,8,2,6,3,7,4,8,2]},
