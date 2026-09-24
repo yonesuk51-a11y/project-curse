@@ -4,7 +4,9 @@
   'use strict';
   root.ProjectCursePersonnelDisplay = Object.freeze({
     year: '2006',
-    intro: '2006년까지 확인된 인물과 그들이 남긴 사건을 모았다. 이름을 선택하면 핵심 기록부터 읽을 수 있다.',
+    intro: '2006년까지 확인된 인물과 그들이 남긴 사건을 모았다. 이름을 누르면 주요 기록부터 읽을 수 있다.',
+    // 기억 소실·신원 재현 불능이 대가에 명시된 세 파일의 표시 대상이다. 사실 문장은 원자료를 읽는다.
+    identityAnomalies: Object.freeze(['reiki', 'apostle-luke-eugene', 'apostle-alvarez']),
     statusLabels: Object.freeze({
       active: '2006년 활동 확인',
       deceased: '2006년 사망 기재',

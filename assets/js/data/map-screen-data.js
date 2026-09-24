@@ -1,4 +1,4 @@
-// Project Curse 6 — 옛 map/operation/verdict 모듈의 설정 원문. 글자 변경 없이 이전.
+// Project Curse 6 — 옛 지도·작전·판정 모듈의 설정 원문. 화면 안내는 copy에서 따로 다룬다.
 (function(root){
 'use strict';
   const canonBoundary=Object.freeze({
@@ -125,9 +125,9 @@ const id=entry.id;
 root.ProjectCurseMapScreenData=Object.freeze({
  canonBoundary, decisions:Object.freeze(decisions), theaters, scenarioStageByItem, markerDetails:markerDetails(), verdictDocument,
  copy:{
- navigation:'표시 좌표는 항법용이 아니다. 신뢰도와 상충 기록을 함께 판독할 것.',
- withheld:'POSITION WITHHELD 항목은 사건을 부정하지 않는다. 승인된 지도 표식이 없어 위치 이동만 제한한다.',
- index:'표식·작전·독립 관측과 위치 보류 기록을 하나의 판독 목록으로 묶는다.',
+ navigation:'표시 좌표는 길을 찾는 데 쓰지 않는다. 신뢰도와 서로 맞지 않는 기록을 함께 확인한다.',
+ withheld:'위치 보류는 사건이 없었다는 뜻이 아니다. 지도에 표시할 지점이 승인되지 않아 위치로 이동할 수 없다.',
+ index:'지도 지점, 작전, 독립 관측, 위치가 보류된 기록을 함께 찾는다.',
  intro:'지도는 세계를 설명하지 않는다. 남아 있는 신호와 돌아오지 못한 사람들의 경로만 표시한다.',
  archive:'직접 확인한 결과만 열린다. 최종 판정 순간의 선택과 측정값은 원본 기록과 분리한 판정 사본으로 보존된다.',
  archiveManage:'현재 작전 진행을 초기화해도 여기 보존된 판정 기록은 남는다. 아래 작업은 판정 보관소에만 적용된다.'
