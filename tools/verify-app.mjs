@@ -164,6 +164,21 @@ add('design-guide-palette', ['#0a0c0b', '#111513', '#d8d6cc', '#56613f', '#9a7b5
 const blankLinks = screenSources.filter(([, source]) => source.includes("target: '_blank'"));
 add('external-links-noopener', blankLinks.every(([, source]) => source.includes("rel: 'noopener noreferrer'")));
 
+/* ---------- 10. 화면별 추가 검사 — tools/verify-app.d/<화면>.mjs ----------
+   각 파일은 default export로 ({add, read, context, app, historyIds, archiveIds, opIds}) => void 를 내보낸다.
+   화면 담당자가 자기 파일에만 검사를 더해 서로 충돌하지 않게 한다. */
+const extensionDir = 'tools/verify-app.d/';
+if (existsSync(ROOT + extensionDir)) {
+  for (const file of readdirSync(ROOT + extensionDir).filter((name) => name.endsWith('.mjs')).sort()) {
+    try {
+      const module = await import(new URL(`../${extensionDir}${file}`, import.meta.url));
+      await module.default({ add: (name, pass, detail) => add(`${file.replace('.mjs', '')}:${name}`, pass, detail), read, context, app, historyIds: historySet, archiveIds, opIds });
+    } catch (error) {
+      add(`extension-load:${file}`, false, error.message);
+    }
+  }
+}
+
 console.log('Project Curse 6 app verification');
 checks.forEach((check) => console.log(`${check.pass ? 'PASS' : 'FAIL'}  ${check.name}${check.detail && !check.pass ? `  ${check.detail}` : ''}`));
 const failed = checks.filter((check) => !check.pass);

@@ -7,6 +7,7 @@
 |---|---|
 | 세계관 사실·용어·판정 등급·자료 우선순위 | `WORLD_CANON_LEDGER.md` |
 | 화면·색·소리·상호작용 | `PROJECT_CURSE_ART_DIRECTION_GUIDE.md` |
+| 새 앱 코드 구조·화면별 요구 | `PROJECT_CURSE_APP_SPEC.md` |
 | 기록 본문 문체 | `WRITING_STYLE_GUIDE.md` |
 | 이미지·영상·음원 편입 | `ASSET_POLICY.md`, `MEDIA_CREDITS.md` |
 
@@ -22,7 +23,7 @@
 ## 2. 세계관 규칙
 
 - 자료 우선순위는 `WORLD_CANON_LEDGER.md`를 따른다. 낮은 순위 자료가 높은 순위 자료를 덮어쓰지 않는다.
-- 보호 원문 `Cults_871104`, `Immortality_860201`은 수정하지 않는다. `index.html` 인라인 기록, `docs/` 독립 문서, `main.js` 시네마틱 대본이 해시로 잠겨 있다.
+- 보호 원문 `Cults_871104`, `Immortality_860201`은 수정하지 않는다. `index.html`과 `app.html`의 인라인 기록, `docs/` 독립 문서가 해시로 잠겨 있다. 기록 영상 연출(`cinematic-*.js`)의 대사와 기록 문장도 바꾸지 않는다.
 - 확인되지 않은 것을 확정문으로 쓰지 않는다. 기록끼리 충돌하면 지우거나 합치지 말고 `상충 기록` 또는 `결정 대기`로 남긴다.
 - 리버스(사건), 괴이(비인간 존재), 타락자(변질된 인간), 능력자(변칙을 쓰는 인간)를 동의어로 쓰지 않는다.
 - 능력에는 반드시 대가가 있고, 대가는 대부분 지각·기억·신원으로 지불된다. 능력을 많이 쓴 사람일수록 관측 자격을 잃는다.
@@ -31,38 +32,41 @@
 
 ## 3. 코드 규칙
 
-- 사실 데이터는 `assets/js/data/`, 화면 로직은 `assets/js/pages/`에 둔다.
-- `assets/js/main.js`에는 이미 패치 블록이 81개 쌓여 있다. 새 기능을 여기에 덧붙이지 않는다.
-- 화면 이동은 `ProjectCurseShell.navigate()`를 쓴다. 이미 5개인 `routeTo` 함수를 새로 만들지 않는다.
-- 없는 키를 다른 값으로 조용히 바꾸는 폴백을 쓰지 않는다. 예를 들어 없는 세력을 U.A.C 문서로 열면 안 된다. 없으면 없다고 표시한다.
-- 영문→한글 용어 치환은 토큰 단위로만 한다. 부분 문자열로 바꾸면 `CLASSIFICATION` 같은 단어가 깨진다.
-- 이벤트 리스너와 타이머는 화면을 떠날 때 정리한다. 같은 화면에 두 번 들어와도 중복으로 붙지 않게 한다.
+표시층을 새로 만드는 중이다. 새 작업은 새 앱에서 한다. 구조와 화면별 요구는 `PROJECT_CURSE_APP_SPEC.md`가 정한다.
 
-### 화면별 담당 모듈
+- 사실 데이터는 `assets/js/data/`에 둔다. 화면 코드에 설정 문장을 박지 않는다.
+- 새 앱: `app.html`, `assets/app/css/`, `assets/app/js/pc-core.js`(`PCApp`), `assets/app/js/screens/<화면>.js`.
+- 화면은 `PCApp.screen({id, mount, show, hide})`로 등록한다. 이동은 `PCApp.href()` 링크, 스크립트 이동은 `PCApp.go()`.
+- 없는 키를 다른 값으로 조용히 바꾸는 폴백을 쓰지 않는다. 예를 들어 없는 세력을 U.A.C 문서로 열면 안 된다. `PCApp.missing()`으로 없다고 표시한다.
+- DOM은 `PCApp.h()`로 만들고 `innerHTML`을 쓰지 않는다.
+- 이벤트 리스너와 타이머는 화면의 `hide()`에서 정리한다. 같은 화면에 두 번 들어와도 중복으로 붙지 않게 한다.
+- 옛 앱(`index.html`, `assets/css/`, `assets/js/main.js`, `assets/js/core/`, `assets/js/pages/`)은 교체 전까지 고치지 않는다. 잠긴 docs 두 페이지가 `assets/css/style.css`와 `assets/js/main.js`를 부르므로 이 두 파일을 지우지 않는다.
 
-| 화면 | 모듈 |
-|---|---|
-| 셸·탐색 | `assets/js/core/app-shell.js` (`ProjectCurseShell`) |
-| 화면 전환 | `assets/js/core/transition-controller.js` |
-| 화면 머리글 | `assets/js/core/channel-identity.js` |
-| 단말 상태(홈) | `index.html` 마크업 + `assets/js/pages/terminal-home.js` |
-| 상황 관제 | `assets/js/pages/map-room.js` |
-| 세계 기록 | `assets/js/pages/world-history.js` |
-| 세력 분석 | `assets/js/pages/faction-analysis.js` |
-| 기록보관소 | `assets/js/pages/archive-consolidation.js`, 문서 뷰어 `archive-document.js` |
-| 인물 기록 | `assets/js/pages/personnel-archive.js` |
-| 순례 시나리오 | `assets/js/pages/pilgrimage-scenario.js` |
+### 화면별 담당 파일
+
+| 화면 | 새 앱 파일 | 담당 |
+|---|---|---|
+| 셸·주소·공용 부품 | `app.html`, `pc-core.js`, `tokens.css`·`base.css`·`shell.css`·`components.css` | Claude |
+| 단말 상태(홈) | `screens/home.*` | Claude |
+| 세계 기록 | `screens/history.*`, `assets/js/data/world-history-core-data.js` | Claude |
+| 상황 관제 | `screens/map.*` | Codex |
+| 세력 분석 | `screens/faction.*` | Codex |
+| 기록보관소 | `screens/archive.*` | Codex |
+| 인물 기록 | `screens/personnel.*` | Codex |
+
+공용 파일을 바꿔야 하면 직접 고치지 말고 인계 메모에 제안으로 적는다.
 
 ## 4. 검증 — 커밋 전에 반드시
 
-- `node tools/verify-package.mjs`가 전부 통과해야 한다.
+- `node tools/verify-app.mjs`(새 앱)와 `node tools/verify-package.mjs`(옛 앱)가 전부 통과해야 한다.
 - 검증 조건을 약하게 바꿔서 통과시키지 않는다. 기록이나 세력을 추가해 개수가 바뀐 경우에만 개수 단언을 새 값으로 고치고, 그 이유를 커밋 메시지에 적는다.
-- 화면을 바꿨으면 브라우저에서 아래를 확인한다. 화면 전환 애니메이션이 있어서 전환 결과 확인까지 3~6초가 걸린다.
+- 화면을 바꿨으면 브라우저에서 `app.html#<화면>`을 열어 아래를 확인한다.
   - 데스크톱(1280px)과 모바일(375px) 표시, 가로 넘침 없음
-  - 바꾼 화면으로 들어갔다가 다른 화면으로 나오는 왕복 이동
+  - 목록 → 상세 → 뒤로 가기 왕복, 다른 화면으로 나갔다 돌아오기
   - 키보드 탭 이동과 포커스 표시
-  - `prefers-reduced-motion` 설정에서 전환·스캔 효과가 꺼지는지
+  - `prefers-reduced-motion` 설정에서 전환·재생·스캔 효과가 꺼지는지
   - 콘솔 오류 0
+  - 같은 페이지에서 해시만 바꾸면 스크립트가 다시 로드되지 않는다. 파일을 고친 뒤에는 새로고침한다.
 
 ## 5. 이미지 생성
 
