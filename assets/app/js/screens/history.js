@@ -441,13 +441,13 @@
           .filter(([, value]) => value)
           .map(([term, value]) => h('div', null, h('dt', { text: term }), h('dd', { text: value })))
       ),
+      visualBlock(counter.visual),
       h('div.tc-hist-counter-body', null, (counter.fragments || []).map((fragment) => fragmentBlock(fragment, true))),
       counter.limit ? h('div.tc-note.tc-note--caution', null, h('b', { text: '두 기록을 대조할 때' }), h('p', { text: counter.limit })) : null
     );
   }
 
-  function visualBlock(record) {
-    const visual = record.visual;
+  function visualBlock(visual) {
     if (!visual?.src) return null;
     return h('figure.tc-evidence.tc-hist-visual', { dataset: { evidenceClass: visual.className || 'RECONSTRUCTED' } },
       h('div.tc-evidence-media', null, PC.img(visual.src, { alt: visual.alt || '' })),
@@ -501,7 +501,7 @@
         )
       ),
       h('div.tc-hist-body', null,
-        visualBlock(record),
+        visualBlock(record.visual),
         fragments.map((fragment) => fragmentBlock(fragment, false)),
         counterPanel(record)
       ),

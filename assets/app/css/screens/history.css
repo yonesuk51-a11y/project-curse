@@ -656,6 +656,13 @@ a.tc-hist-turn:hover {
 .tc-hist-counter blockquote {
   border-left-color: var(--blood-ink);
 }
+.tc-hist-counter .tc-hist-visual,
+.tc-hist-counter .tc-hist-visual figcaption {
+  border-color: rgba(110, 31, 42, .55);
+}
+.tc-hist-counter .tc-hist-visual figcaption b {
+  color: var(--blood-ink);
+}
 
 /* 작전 경과 */
 .tc-hist-optracks {
