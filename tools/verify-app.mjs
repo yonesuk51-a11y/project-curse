@@ -155,6 +155,30 @@ add('home-live-channels-resolve',
   badChannels.length === 0 && !!contactOp?.steps?.[homeScreen.contact.step] && !!homeScreen?.keyArt?.src && existsSync(ROOT + homeScreen.keyArt.src),
   badChannels.map((channel) => channel.scenario || channel.kind).join(' | '));
 
+// 음향·연출 — terminal-fx-data.js가 부르는 사건은 audio-manifest.js에, 소리 파일은 assets/audio/에 있어야 한다.
+const terminalFx = context.ProjectCurseTerminalFx;
+const audioEvents = context.ProjectCurseAudioManifest?.events || {};
+const fxEventNames = new Set(['channel.request', 'boot.start', 'system.alert', 'system.denied', 'screening.mismatch', 'evidence.open', 'evidence.filter', 'evidence.compare', 'archive.filter']);
+const collectEvents = (value) => {
+  if (typeof value === 'string') fxEventNames.add(value);
+  else if (value && typeof value === 'object') Object.values(value).forEach(collectEvents);
+};
+collectEvents(terminalFx?.navigation);
+collectEvents(terminalFx?.stepCues);
+collectEvents(terminalFx?.scenarioCues);
+collectEvents(terminalFx?.verdictCue);
+Object.values(context.ProjectCurseTransitions?.screens || {}).forEach((screen) => fxEventNames.add(screen.sound));
+Object.values(terminalFx?.handoff || {}).forEach((screen) => fxEventNames.add(screen.sound));
+const missingEvents = [...fxEventNames].filter((name) => !audioEvents[name]);
+const missingCues = [...new Set(Object.values(audioEvents).map((event) => event.cue))].filter((cue) => !terminalFx?.cues?.[cue]);
+const missingSounds = [...Object.values(terminalFx?.cues || {}).map((cue) => cue.file), terminalFx?.ambient?.file].filter((file) => !file || !existsSync(ROOT + (terminalFx.audioBase || 'assets/audio/') + file));
+const loudCues = Object.entries(terminalFx?.cues || {}).filter(([, cue]) => !(cue.volume > 0 && cue.volume <= 0.12)).map(([name]) => name);
+add('fx-sound-events-and-files', !!terminalFx && !missingEvents.length && !missingCues.length && !missingSounds.length && !loudCues.length && terminalFx.ambient.volume <= 0.1,
+  [...missingEvents, ...missingCues.map((cue) => `cue:${cue}`), ...missingSounds.map((file) => `file:${file}`), ...loudCues.map((cue) => `loud:${cue}`)].join(' | '));
+const screenIdsForFx = ['terminal-home', 'map-room', 'history', 'faction-info', 'archive-entry', 'personnel', 'field-manual', 'media-audit'];
+const noHandoff = screenIdsForFx.filter((id) => !(context.ProjectCurseTransitions?.screens?.[id] || terminalFx?.handoff?.[id]));
+add('fx-every-channel-has-handoff', noHandoff.length === 0, noHandoff.join(' | '));
+
 /* ---------- 6. 공개 문구 — 메타 용어 금지 ---------- */
 const FORBIDDEN = ['정사', '캐논', '플레이어', '독자 선택', '시나리오 모드', '메인 스토리', 'AI 이미지', '생성 이미지'];
 const stripComments = (source) => source.replace(/^\s*\/\/.*$/gm, '');
