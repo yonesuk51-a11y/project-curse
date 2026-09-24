@@ -18,7 +18,8 @@
   - SF는 2042년 현실 기술(센서·열상·자동 판정·신원 대조·계측)로 보여준다. 네온·홀로그램 SF가 아니다.
   - 블랙 코미디는 농담이 아니라 무표정한 행정이다. 절차와 방송은 침착하고 결과는 참혹하다. 실제 참사와 피해자, 기록 속 희생자의 고통을 웃음거리로 삼지 않는다.
   - 바디호러는 몸이 바뀌는 공포다(타락자 변질, 기생체, 이식, 능력의 대가로 변한 몸). 고어는 상처와 훼손이다. 둘 다 증거·이상 층에서 구체적으로 보여준다. 글은 감식 보고처럼 건조하게 쓴다. 아이와 성적 요소는 넣지 않는다.
-- 화면은 세 층으로 나뉜다. 셸(현대 전술), 증거(오컬트·옛 매체), 이상(호러)이다. 손상 효과는 증거와 이상 층에만 쓴다.
+- 화면은 세 층으로 나뉜다. 셸(현대 전술), 증거(오컬트·옛 매체), 이상(호러)이다. 글자를 가리는 손상 효과는 증거와 이상 층에만 쓴다.
+- 2026-09-25 사용자 결정: 옛 5.54의 분위기(붉은 검정 색조, 채널별 색·바탕 결, 8초 기동, 화면 인계 막, 기본 켜진 효과음)를 되살렸다. 연출·소리·색을 줄이는 변경은 사용자에게 먼저 묻는다. 한 화면에 한꺼번에 보이는 양은 줄이고, 영문 코드·부가 수치는 간략 보기에서 숨긴다.
 - 네온·홀로그램 SF, 게임 메뉴(미션 카드·레벨·보상 연출), 점프 스케어를 쓰지 않는다.
 - 밀리터리는 장식이 아니라 실제 운용 정보로 드러낸다. DTG, 좌표, 호출부호, 교전 규칙, 판정 태그가 그 정보다.
 - 주력 용도는 카카오스토리 자캐 교류다. 참가자가 읽어야 할 정보는 연출로 가리지 않는다.
@@ -53,11 +54,11 @@
 
 | 화면 | 새 앱 파일 | 담당 |
 |---|---|---|
-| 셸·주소·공용 부품 | `index.html`, `pc-core.js`, `pc-audio.js`, `pc-state.js`, `tokens.css`·`base.css`·`shell.css`·`components.css` | Claude |
-| 단말 상태(홈) | `screens/home.*` | Claude |
+| 셸·주소·공용 부품 | `index.html`, `pc-core.js`, `pc-prefs.js`, `pc-audio.js`, `pc-fx.js`, `pc-anomaly.js`, `pc-inspect.js`, `pc-updates.js`, `pc-settings.js`, `pc-state.js`, `tokens.css`·`base.css`·`shell.css`·`components.css`·`fx.css`, `tools/build-share-stubs.mjs`, 공유 페이지 `share/` | Claude |
+| 상황판(홈, 입문 카드·자캐 설정 안내 포함) | `screens/home.*`, `community-guide-data.js` | Claude |
 | 세계 기록 | `screens/history.*`, `assets/js/data/world-history-core-data.js` | Claude |
-| 교전 교범 | `screens/manual.*` | Claude |
-| 상황 관제 | `screens/map.*` | Codex |
+| 현장 지침(옛 교전 교범) | `screens/manual.*` | Claude |
+| 작전 지도(옛 상황 관제) | `screens/map.*` | Codex |
 | 세력 분석 | `screens/faction.*` | Codex |
 | 기록보관소 | `screens/archive.*` | Codex |
 | 인물 기록 | `screens/personnel.*` | Codex |
@@ -68,12 +69,14 @@
 
 - `node tools/verify-app.mjs`(새 단말·보호 기록·화면별 검사)와 `node tools/verify-data.mjs`(데이터·정사·매체)가 전부 통과해야 한다. 옛 `verify-package.mjs`는 교체와 함께 은퇴했다. 그 데이터·정사·매체 검사는 `verify-data.mjs`로, 보호 기록 해시는 `verify-app.mjs`로 옮겼다.
 - 새 단말이 부르는 스크립트·스타일(`assets/**/*.js`, `*.css`)을 고쳤으면 `node tools/stamp-assets.mjs`로 `index.html`의 주소 끝 내용 해시(`?v=<버전>-<8자>`)를 다시 찍는다. 방문자 브라우저가 옛 파일을 섞어 쓰지 않게 하려는 것이다. `verify-app`의 `asset-stamps-current`가 확인한다.
+- 인물·세계 기록·세력·기록보관소의 이름·요약·그림을 바꿨으면 `node tools/build-share-stubs.mjs`로 링크 미리보기 공유 페이지(`share/`)를 다시 만든다. `verify-app`의 `share-stubs-current`가 확인한다.
 - 검증 조건을 약하게 바꿔서 통과시키지 않는다. 기록이나 세력을 추가해 개수가 바뀐 경우에만 개수 단언을 새 값으로 고치고, 그 이유를 커밋 메시지에 적는다.
 - 화면을 바꿨으면 브라우저에서 `index.html#<화면>`을 열어 아래를 확인한다.
   - 데스크톱(1280px)과 모바일(375px) 표시, 가로 넘침 없음
   - 목록 → 상세 → 뒤로 가기 왕복, 다른 화면으로 나갔다 돌아오기
   - 키보드 탭 이동과 포커스 표시
-  - `prefers-reduced-motion` 설정에서 전환·재생·스캔 효과가 꺼지는지
+  - 효과 줄임(기기의 `prefers-reduced-motion` 또는 설정 창의 '효과: 줄임' → `html[data-fx="reduced"]`)에서 움직임이 멈추는지, '효과: 전체'에서 연출이 도는지. 이 작업 PC는 Windows 애니메이션 효과가 꺼져 있어 자동이면 줄임이다
+  - 간략·전체 보기 둘 다에서 읽어야 할 정보가 보이는지
   - 콘솔 오류 0
   - 같은 페이지에서 해시만 바꾸면 스크립트가 다시 로드되지 않는다. 파일을 고친 뒤에는 새로고침한다.
 

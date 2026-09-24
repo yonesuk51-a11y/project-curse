@@ -1,6 +1,6 @@
 # PROJECT CURSE 6 — 새 앱 명세
 
-Status: `2026-09-24 / 표시층 재작성 진행 중`
+Status: `2026-09-24 / 표시층 재작성` · `2026-09-25 / 옛 5.54 분위기 복원, 화면 덜어내기, 채널 이름·단어·세력 이름 정리(사용자 결정)`
 
 표시층(화면·셸·스타일)을 새로 만든다. 데이터(`assets/js/data/`)와 보호 기록은 그대로 둔다.
 화면의 모양과 느낌은 `PROJECT_CURSE_ART_DIRECTION_GUIDE.md`가 정하고, 이 문서는 코드 구조와 화면별 요구를 정한다.
@@ -23,10 +23,17 @@ Status: `2026-09-24 / 표시층 재작성 진행 중`
 | `assets/app/css/components.css` | 공용 부품 |
 | `assets/app/css/screens/<화면>.css` | 화면 전용 배치 |
 | `assets/app/js/pc-core.js` | `PCApp` — DOM 도우미, 화면 등록, 주소 규칙, 셸 표시 |
-| `assets/app/js/pc-audio.js` | `PCAudio` — 음향 토글(기본 꺼짐). 사건 이름으로 소리를 낸다(`cue`). 채널 이동·상세 열람·목록 복귀 소리는 `pc:route` 알림을 듣고 스스로 낸다 |
-| `assets/app/js/pc-fx.js` · `assets/app/css/fx.css` | 연출 — 채널 인계(상단 바), 단말 기동(세션 첫 홈), 증거 현상, 공용 연출 부품(`tc-fx-live`, `tc-fx-stagger`). 모션 감소면 없음 |
-| `assets/js/data/terminal-fx-data.js` | 소리 이름→파일·음량, 화면 이동 사건, 작전·순례 소리, 새 채널 인계 문구, 기동 문구 |
-| `assets/app/js/pc-state.js` | 진행 상태 저장소 — `ProjectCurseOperationState`(부서진 왕관 판정), `ProjectCursePilgrimageState`(순례), `ProjectCurseVerdictArchiveState`(현장 판정 보관). 상황 관제가 쓰고 홈·세계 기록이 읽는다. 옛 저장 키와 `projectcurse:*-change` 이벤트를 그대로 쓴다 |
+| `assets/app/js/pc-prefs.js` | `PCPrefs` — `<head>`에서 먼저 불러 `html[data-fx="full\|reduced"]`(효과: 자동·전체·줄임)과 `html[data-density="brief\|full"]`(보기: 간략·전체)을 정한다 |
+| `assets/app/js/pc-audio.js` | `PCAudio` — 음향(기본 켜짐, 2026-09-25). 사건 이름으로 소리를 낸다(`cue`). 채널 이동·상세 열람·목록 복귀 소리는 `pc:route` 알림을 듣고 스스로 낸다. 이상 신호 잡음·심각 등급 울림은 Web Audio 합성 |
+| `assets/app/js/pc-fx.js` · `assets/app/css/fx.css` | 연출 — 접속 확인·단말 기동·세션 복원·기록 언마운트, 채널 인계 막, 채널별 등장, 돌아오면 화면 켜짐, 증거 현상, 감식 보기·설정 창 스타일 |
+| `assets/app/js/pc-anomaly.js` | 드문 이상 신호(`data-tc-anomaly`, 시계), 자리 비움 탭 제목, 삼야 무응답 기념일(`html[data-silence]`) |
+| `assets/app/js/pc-inspect.js` | 증거 사진 감식 보기 |
+| `assets/app/js/pc-updates.js` | 새 기록 알림 — 지난 방문 뒤 새 기록 링크에 '새 기록' 표지, 홈의 지난 방문 이후(`site-updates-data.js`) |
+| `assets/app/js/pc-settings.js` | 상단 바 보기·링크·설정 단추와 설정 창 |
+| `assets/js/data/terminal-fx-data.js` | 소리 이름→파일·음량, 화면 이동 사건, 작전·순례 소리, 새 채널 인계 문구, 기동 문구, 이상 신호·자리 비움·기념일 설정 |
+| `assets/js/data/channel-hero-data.js` · `open-canon-data.js` · `community-guide-data.js` · `site-updates-data.js` · `share-index-data.js` | 채널 대표 그림, 자유 해석 목록, 입문 카드·자캐 설정 안내, 갱신 기록, 공유 주소 목록(생성) |
+| `tools/build-share-stubs.mjs` | 인물·기록·세력·기록보관소 링크 미리보기 공유 페이지 `share/<p\|h\|f\|a>/<id>/` 생성 |
+| `assets/app/js/pc-state.js` | 진행 상태 저장소 — `ProjectCurseOperationState`(부서진 왕관 판정), `ProjectCursePilgrimageState`(순례), `ProjectCurseVerdictArchiveState`(현장 판정 보관). 작전 지도가 쓰고 상황판·세계 기록이 읽는다. 옛 저장 키와 `projectcurse:*-change` 이벤트를 그대로 쓴다 |
 | `assets/app/js/screens/<화면>.js` | 화면 모듈 |
 | `tools/verify-app.mjs` | 새 앱 검증 |
 
@@ -56,20 +63,32 @@ PCApp.screen({
 - 제목은 `app.setTitle(글)`. 상세 화면의 제목 요소에 `data-tc-focus`를 달면 이동 뒤 초점이 간다.
 - 화면 머리는 `PCApp.screenHead(id, {title, desc, meta})`. 채널 코드와 설명은 `channel-identity-data.js`에서 온다.
 - 판정 태그는 `PCApp.tag(글, 톤, {latin, mark})`, 기록 판정 키의 톤은 `PCApp.verdictTone(키)`.
-- 소리는 `window.PCAudio?.cue('사건')`. 사건 이름은 `audio-manifest.js`의 events(예: `operation.step`, `pilgrimage.danger`, `evidence.open`, `system.denied`)이고, 버스·게인·쿨다운·덕킹도 거기 있다. 음향은 기본 꺼짐이고 꺼져 있으면 아무 일도 하지 않는다. 채널 이동·상세 열람·목록 복귀 소리는 `pc-audio.js`가 이미 낸다. 버튼에는 `data-tc-cue="사건"`을 달아 기본 접점음 대신 쓸 수 있다. 화면에서는 의미 있는 순간에만 부른다.
-- 연출은 `pc-fx.js`와 `fx.css`가 맡는다. 화면이 따로 연출을 만들 때도 조작을 막지 않고, 짧게, 모션 감소면 없게 한다. 셸에는 손상 효과를 쓰지 않는다.
+- 소리는 `window.PCAudio?.cue('사건')`. 사건 이름은 `audio-manifest.js`의 events(예: `operation.step`, `pilgrimage.danger`, `evidence.open`, `system.denied`)이고, 버스·게인·쿨다운·덕킹도 거기 있다. 음향은 기본 켜짐이고(2026-09-25) 꺼져 있으면 아무 일도 하지 않는다. 채널 이동·상세 열람·목록 복귀 소리는 `pc-audio.js`가 이미 낸다. 버튼에는 `data-tc-cue="사건"`을 달아 기본 접점음 대신 쓸 수 있다. 화면에서는 의미 있는 순간에만 부른다.
+- 연출은 `pc-fx.js`와 `fx.css`가 맡는다. 화면이 따로 연출을 만들 때도 조작을 막지 않고 짧게 한다. 셸에는 글자를 가리는 손상 효과를 쓰지 않는다.
+
+### 셸 공용 규칙 (2026-09-25) — 화면은 쓰기만 한다
+
+- 효과 모드 `html[data-fx="full|reduced"]`: 움직임은 `html[data-fx="reduced"] …` 선택자로 멈춘다(`@media (prefers-reduced-motion)`를 쓰지 않는다 — 그러면 '효과: 전체'를 골라도 꺼진다). JS는 `PCApp.fx()`와 document의 `pc:fx` 이벤트. 줄임에서도 정보는 그대로다.
+- 보기 밀도 `html[data-density="brief|full"]`(기본 brief): `.tc-full-only`는 간략 보기에서 숨는다. 겹친 영어 표지의 영어 쪽, 내부 식별 코드, 장식 수치에만 붙인다. 이름·소속·상태·날짜·본문·링크와 실제 운용 정보(DTG·좌표·호출부호·판정 태그·위협 등급)에는 붙이지 않는다.
+- 위협 등급 `PCApp.threat(level)`: critical·high·elevated·guarded·low. 상세 화면 show()에서 데이터에 등급이 있을 때만 부른다. 셸이 이동마다 채널 기본값으로 되돌린다.
+- 이상 신호 `data-tc-anomaly="name|count|text"`(+ `data-tc-anomaly-alt`): 화면당 1~4곳, 세계관상 판독이 흔들릴 만한 곳. 링크·버튼·제목·입력칸에는 붙이지 않는다.
+- 몰입 재생 `html.tc-immersive`: 기록 영상 전체 화면 동안. 셸이 상단 바·레일을 숨긴다.
+- 감식 보기: `.tc-evidence-media` 안의 그림(링크 밖)을 누르면 열린다. figure에 아는 값만 `data-dtg`·`data-place`·`data-coords`·`data-record`.
+- 자유 해석 `PCApp.openCanon(목록)`: 자료는 `ProjectCurseOpenCanon`(정사 대장의 결정 대기만).
+- 대표 그림: `PCApp.screenHead`가 `channel-hero-data.js`로 자동으로 그린다. 상세 화면은 `hero:false`.
+- 링크 복사 `PCApp.copyLink()`, 알림 `PCApp.toast(글)`, 공유 주소 `PCApp.shareUrl()`.
 
 ### 주소
 
 | 주소 | 화면 |
 |---|---|
-| `#terminal-home` | 홈 |
+| `#terminal-home`, `#terminal-home/intro`, `#terminal-home/guide` | 상황판(옛 이름 단말 상태), 입문 카드, 자캐 설정 안내 |
 | `#history`, `#history/<기록 id>` | 세계 기록 |
-| `#map-room`, `#map-room/op/<작전 id>`, `#map-room/incident/<사건 id>`, `#map-room/synchrony/<관측 id>`, `#map-room/pilgrimage/<id>`, `#map-room/region/<권역 id>` | 상황 관제 |
+| `#map-room`, `#map-room/op/<작전 id>`, `#map-room/incident/<사건 id>`, `#map-room/synchrony/<관측 id>`, `#map-room/pilgrimage/<id>`, `#map-room/region/<권역 id>` | 작전 지도(옛 이름 상황 관제) |
 | `#faction-info`, `#faction-info/<세력 키>` | 세력 분석 |
 | `#archive-entry`, `#archive-entry/<기록 id>` | 기록보관소 |
 | `#personnel`, `#personnel/<인물 id>` | 인물 기록 |
-| `#field-manual` | 교전 교범 |
+| `#field-manual` | 현장 지침(옛 이름 교전 교범) |
 | `#media-audit` | 매체 검수 |
 
 옛 주소 `#faction-relation`, `#region-map`, `#zone-map`, `#operation-map`은 셸이 새 화면으로 잇는다. 옛 딥링크 속성(`data-uac-route` + `data-uac-history-record` 등)도 셸이 새 주소로 바꾼다.
@@ -101,15 +120,15 @@ PCApp.screen({
 ## 4. 색과 모양
 
 - 색은 `tokens.css`만 쓴다. 기본값(`--red`)은 선·면용, `-ink` 변형(`--red-ink`)은 글자용이다.
-- 빨강은 위험·봉인·상충에, 핏빛(`--blood`)은 교단·오컬트에만 쓴다. 셸의 강조는 화면 강조색 `--ch`.
-- 모서리 최대 2px, 번짐 있는 그림자·글자 그림자 금지(`verify-app`이 검사), 전환 150~250ms, `prefers-reduced-motion`에서 전환·재생을 끈다.
-- 손상 효과(스캔선·노이즈·가림)는 증거 층에만 쓴다. 셸과 목록은 멀쩡해야 한다.
+- 빨강은 단말 강조(포커스, 적색 채널)와 위험·봉인·상충에, 핏빛(`--blood`)은 교단·오컬트에만 쓴다. 셸의 강조는 화면 강조색 `--ch`(옛 5.54 채널색, 2026-09-25).
+- 모서리 최대 2px, 번짐 있는 그림자·글자 그림자 금지(`verify-app`이 검사 — 번짐은 그라데이션으로), 작은 반응 150~250ms. 움직임은 `html[data-fx="reduced"]`에서 멈춘다.
+- 글자를 가리는 손상 효과(스캔선·노이즈·가림)는 증거 층에만 쓴다. 셸의 붉은 분위기·바탕 결·위협 가장자리·신호 띠는 글자를 가리지 않는다.
 - 가장 작은 글자는 11px, 한국어 본문은 15px 이상. 탭 영역 40px 이상.
 
 ## 5. 화면별 요구
 
-### 홈 `terminal-home` — 완료(Claude)
-현재 경보, 최근 수신, 접촉 보고, 민간 재난 방송, 작전 기록, 사건 진입, 신규 열람 안내, 증거 두 점.
+### 상황판 `terminal-home` — 완료(Claude)
+2026-09-25 재구성: 화면 머리 → 처음 온 사람 바로가기(입문 카드·자캐 설정 안내·현장 지침) → 보관함 쪽지와 키아트(신호 복구·레이더, 옛 5.54처럼 '이상한 것 하나'부터) → 긴급 경보(요약, 작전 정보는 접음)·최근 들어온 신호 → 지난 방문 이후 → 사건부터 읽기 → 접은 판(귀환 신호 접촉 보고, 민간 재난 방송, 작전 기록). 하위 쪽 입문 카드·자캐 설정 안내(`community-guide-data.js`).
 - 현재 경보와 최근 수신은 진행 상태를 따른다. 우선순위: 미열람 판정 기록 → 저장된 작전 판정 → 정보 회수 진행 → 기본 경보. 수신 첫 네 행은 부서진 왕관·불빛 없는 성채·귀환 심사·전진 회수 채널이다. 봉인 작전은 필요한 판정 사본이 보관되면 풀린다.
 - 민간 재난 방송은 이미 있는 민간 규칙(경보색·창문 봉인·기억 대조·배급·통행 서류·장례)만 방송 문안으로 쓴다. 경보색 뜻은 `Civil_Child_Drill` 표에서 읽는다.
 - 문구와 기록선은 `home-screen-data.js`에 있다.
@@ -117,12 +136,12 @@ PCApp.screen({
 ### 세계 기록 `history` — 완료(Claude)
 목록(네 전환점, 참고 묶음 3종, 시대 필터, 판정 범례·미해결 설정, 시대별 기록)과 사건 기록(증거 파일 표지, 근거와 한계, 본문 조각, 교단 상충 기록, 관련 기록, 이전·다음).
 
-### 교전 교범 `field-manual` — 완료(Claude)
+### 현장 지침 `field-manual` — 완료(Claude, 옛 이름 교전 교범)
 새 설정을 쓰지 않는다. N.H.C 현장 교범(`NHC_Manual_891219`)과 세계 기본 규칙을 투입 전 참조판으로 다시 배치한다: 첫 원칙, 철수 조건 판정기, 접촉과 교전, 표식 체계, 진입 전 준비·이동, 장비군, 능력과 대가, 현장 편성과 인계, 현장 인원 등록 양식(복사용). 교범 문장은 절 제목으로 찾아 읽고, 절 제목은 `verify-app`이 검사한다.
 
 ### 상황 관제 `map-room` — Codex
 - 데이터: `ProjectCurseMapRoom`(viewBox, geography, regions, zones, routes, synchronyEvents, markers, drilldowns, operations), `ProjectCurseRegionalDrilldown`, `ProjectCurseIncidentNetwork`, `map-signal-index-data.js`, `pilgrimage-scenario-data.js`.
-- 전술 상황판이다. SVG 지도, 격자와 좌표, 설명은 측면 패널. 확대·드래그는 넣지 않는다.
+- 전술 상황판이다. SVG 지도, 격자와 좌표, 설명은 측면 패널. 2026-09-25: 확대·이동, 연도 막대, 작전 부호 틀, 관측 불가 안개, 관측점 신호 흐름, 지점 사진 미리보기(아트 가이드 10절).
 - 표식은 전술 지도 기호처럼 기하 도형으로 그린다. 아군 사각형, 적대 마름모, 미상 사엽형. 사건·시설 등 나머지 종류도 도형을 정하고 범례를 둔다.
 - **작전 경과 재생**: `operation.steps`를 단계별로 보여준다. 단계마다 시각, 제목, 기입, 이동 경로(`route`), 부대 위치와 상태(`units[].status`: normal·unstable·split·unknown). 이전·다음 단계, 재생·정지, 키보드 조작. 자동 재생은 모션 감소 설정에서 끈다. 부대 상태는 모양과 색을 함께 바꾼다(unstable 앰버, split 적색, unknown 미상 사엽형).
 - 측면 패널: 작전 표지(code, classification, status, directive, objectives), 현재 단계 기입, 관련 기록 링크.
@@ -139,7 +158,7 @@ PCApp.screen({
 - 색인: 증거 목록(증거 코드, 형식, 분류, 날짜, 위험도, 출처 판정), 검색, 분류 필터.
 - 뷰어는 증거 파일이다. 증거 번호, 보안 등급, 출처, 인계 기록, 관련 작전·세력, 첨부, 판정 주석을 표지에 둔다.
 - **보호 기록 두 건**: `#tc-vault` 안의 `article` 노드를 뷰어로 옮겨 보여주고, 닫을 때 되돌린다. HTML을 고치지 않는다. 안의 `page-tab`·`sub-tab` 전환은 클래스·`hidden` 토글로 구현한다. 스타일은 뷰어 범위 선택자로만 입힌다.
-- 영상 기록(Cults, Immortality, Ferals, Sakuma)은 옛 매체 손상 연출을 유지한다(증거 층).
+- 영상 기록(Cults, Immortality, Ferals, Sakuma)은 옛 매체 손상 연출을 유지한다(증거 층). 2026-09-25: 화면 전체 몰입 재생(`html.tc-immersive`)과 옛 음량을 되살렸다.
 
 ### 인물 기록 `personnel` — Codex
 - 데이터: `ProjectCursePersonnel`, `ProjectCursePersonnelProfiles`, `ProjectCursePersonnelRemake`.
@@ -154,8 +173,10 @@ PCApp.screen({
 - `node tools/verify-app.mjs` 전부 통과. 새 화면을 만들면 그 화면의 데이터 무결성·이동 대상 검사를 추가한다.
 - `node tools/verify-data.mjs`(데이터·정사·매체) 전부 통과. 옛 `verify-package.mjs`는 2026-09-24 교체와 함께 은퇴했다.
 - 옛 문서 주소 안내 페이지는 `node tools/build-docs-stubs.mjs --check`로 생성 결과와 같은지 본다.
-- 브라우저: `npx --yes http-server . -p 4174 -c-1` → `http://localhost:4174/index.html#<화면>`.
+- 공유 페이지는 `node tools/build-share-stubs.mjs --check`로 생성 결과와 같은지 본다(verify-app의 share-stubs-current).
+- 브라우저: `.claude/launch.json`의 `project-curse`(4173) → `http://localhost:4173/index.html#<화면>`. 기동 없이 보려면 `?boot=skip`.
+  - 효과 모드 두 가지로 본다: 자동(기기 설정)과 설정 창의 '효과: 전체'. 이 작업 PC는 Windows 애니메이션 효과가 꺼져 있어 자동이면 줄임이다.
   - 데스크톱 1280px, 모바일 375px, 가로 넘침 없음
   - 목록 → 상세 → 뒤로 가기 왕복, 다른 화면으로 나갔다 돌아오기
-  - 키보드 탭 이동과 초점 표시, 모션 감소 설정, 콘솔 오류 0
+  - 키보드 탭 이동과 초점 표시, 효과 줄임에서 움직임이 멈추는지, 간략·전체 보기, 콘솔 오류 0
   - 같은 페이지에서 해시만 바꾸면 스크립트가 다시 로드되지 않는다. 파일을 고친 뒤에는 새로고침한다.
