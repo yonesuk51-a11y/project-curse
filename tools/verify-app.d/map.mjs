@@ -81,7 +81,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     for(const r of [a,b])r.V.clearAll();equal(a.V.list(),b.V.list());
   });
   check('slot-and-new-runtime-only',()=>{
-    assert.match(app,/<!-- slot:map-data -->\s*<script src="assets\/js\/data\/map-screen-data\.js\?v=6.0.0"><\/script>/);
+    assert.match(app,/<!-- slot:map-data -->\s*<script src="assets\/js\/data\/map-screen-data\.js\?v=6\.0\.0(?:-[0-9a-f]{8})?"><\/script>/);
     assert.doesNotMatch(app,/<script src="assets\/js\/(?:pages\/map-room|pages\/pilgrimage-scenario|core\/(?:pilgrimage|operation|verdict-archive)-state)/);
     assert.doesNotMatch(source,/innerHTML|insertAdjacentHTML|createElement\(/);
   });

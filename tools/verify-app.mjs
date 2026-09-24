@@ -50,6 +50,11 @@ const localRefs = [...app.matchAll(/(?:src|href)="([^"#?]+)(?:\?[^"]*)?"/g)].map
 const missingRefs = localRefs.filter((p) => !existsSync(ROOT + p));
 add('app-local-files-exist', missingRefs.length === 0, missingRefs.join(' | '));
 add('app-no-legacy-runtime', !/assets\/css\/style\.css|assets\/js\/main\.js/.test(publicApp), '새 앱은 옛 style.css와 main.js를 불러오지 않는다');
+// 파일 주소 끝의 내용 해시 — 내용이 바뀐 파일만 새 주소가 되어 방문자 브라우저가 옛 파일을 섞어 쓰지 않는다.
+// 파일을 고친 뒤 node tools/stamp-assets.mjs를 실행하지 않으면 여기서 멈춘다.
+const stampCheck = spawnSync(process.execPath, [ROOT + 'tools/stamp-assets.mjs', '--check'], { encoding: 'utf8' });
+add('asset-stamps-current', stampCheck.status === 0 && /\?v=6\.0\.0-[0-9a-f]{8}"/.test(app),
+  (stampCheck.stdout || '').split(/\r?\n/).filter((line) => line.startsWith('STALE')).join(' | ') || 'stamped');
 add('app-social-metadata', ['name="description"', 'rel="canonical"', 'property="og:title"', 'property="og:image"', 'name="twitter:card"', 'project-curse-world-keyart-concept-v1.png'].every((needle) => app.includes(needle)));
 
 /* ---------- 3. 데이터 적재 ---------- */

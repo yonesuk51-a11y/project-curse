@@ -41,7 +41,8 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   add('legacy-display-copy-exact', D?.year === '2006' && [D.intro, D.limitDefault, D.abilityCostMissing, ...Object.values(D.statusLabels)].every((text) => legacy.includes(text)));
   const incidents = context.ProjectCurseIncidentNetwork.incidentList;
   add('cross-reference-targets-exist', incidents.every((item) => (!item.history || historyIds.has(item.history)) && (!item.operation || opIds.has(item.operation)) && item.records.every((id) => archiveIds.has(id))));
-  add('own-data-slot-only', /<!-- slot:personnel-data -->\r?\n<script src="assets\/js\/data\/personnel-display-data\.js\?v=6.0.0"><\/script>/.test(app));
+  // 주소 끝의 내용 해시(-8자)는 tools/stamp-assets.mjs가 찍는다.
+  add('own-data-slot-only', /<!-- slot:personnel-data -->\r?\n<script src="assets\/js\/data\/personnel-display-data\.js\?v=6\.0\.0(?:-[0-9a-f]{8})?"><\/script>/.test(app));
   let syntax = true;
   try { new vm.Script(source); } catch { syntax = false; }
   add('screen-javascript-parses', syntax);

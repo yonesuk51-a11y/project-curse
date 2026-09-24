@@ -67,6 +67,7 @@
 ## 4. 검증 — 커밋 전에 반드시
 
 - `node tools/verify-app.mjs`(새 단말·보호 기록·화면별 검사)와 `node tools/verify-data.mjs`(데이터·정사·매체)가 전부 통과해야 한다. 옛 `verify-package.mjs`는 교체와 함께 은퇴했다. 그 데이터·정사·매체 검사는 `verify-data.mjs`로, 보호 기록 해시는 `verify-app.mjs`로 옮겼다.
+- 새 단말이 부르는 스크립트·스타일(`assets/**/*.js`, `*.css`)을 고쳤으면 `node tools/stamp-assets.mjs`로 `index.html`의 주소 끝 내용 해시(`?v=<버전>-<8자>`)를 다시 찍는다. 방문자 브라우저가 옛 파일을 섞어 쓰지 않게 하려는 것이다. `verify-app`의 `asset-stamps-current`가 확인한다.
 - 검증 조건을 약하게 바꿔서 통과시키지 않는다. 기록이나 세력을 추가해 개수가 바뀐 경우에만 개수 단언을 새 값으로 고치고, 그 이유를 커밋 메시지에 적는다.
 - 화면을 바꿨으면 브라우저에서 `index.html#<화면>`을 열어 아래를 확인한다.
   - 데스크톱(1280px)과 모바일(375px) 표시, 가로 넘침 없음

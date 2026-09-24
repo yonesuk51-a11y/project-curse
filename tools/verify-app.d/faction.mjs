@@ -27,7 +27,8 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
   add('incident-history-operation-targets', incidents.every((item) => (!item.history || historyIds.has(item.history)) && (!item.operation || opIds.has(item.operation))));
   add('personnel-links-resolve', Object.entries(P.factionIndex).filter(([key]) => keys.includes(key)).every(([, ids]) => ids.every((id) => P.byId[id])));
   add('legacy-display-copy-exact', !!D?.intro && legacy.includes(D.intro) && F.groups.every((group) => D.groupLabels[group.label] && legacy.includes(`'${group.label}':'${D.groupLabels[group.label]}'`)));
-  add('own-data-slot-only', app.includes('<!-- slot:faction-data -->\n<script src="assets/js/data/faction-display-data.js?v=6.0.0"></script>') || app.includes('<!-- slot:faction-data -->\r\n<script src="assets/js/data/faction-display-data.js?v=6.0.0"></script>'));
+  // 주소 끝의 내용 해시(-8자)는 tools/stamp-assets.mjs가 찍는다.
+  add('own-data-slot-only', /<!-- slot:faction-data -->\r?\n<script src="assets\/js\/data\/faction-display-data\.js\?v=6\.0\.0(?:-[0-9a-f]{8})?"><\/script>/.test(app));
   let syntax = true;
   try { new vm.Script(source); } catch { syntax = false; }
   add('screen-javascript-parses', syntax);
