@@ -1,0 +1,664 @@
+/* Project Curse 6 — 공용 부품
+   모든 화면이 이 부품을 쓴다. 화면 파일에서 부품의 색·모양을 바꾸지 않는다.
+   이름 규칙: tc-<부품>, 변형은 tc-<부품>--<변형>, 상태는 is-<상태>. */
+
+/* ---------- 라벨·코드 ---------- */
+.tc-label {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .18em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.tc-code {
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  letter-spacing: .02em;
+}
+.tc-muted {
+  color: var(--text-2);
+}
+.tc-dim {
+  color: var(--text-3);
+}
+
+/* ---------- 패널 ---------- */
+.tc-panel {
+  position: relative;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+/* 조준경 모서리 — 주 패널에만. 자식 위에 겹쳐 그린다 */
+.tc-bracket::after {
+  --b: var(--ch);
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--b), var(--b)) top left / 14px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) top left / 1px 14px no-repeat,
+    linear-gradient(var(--b), var(--b)) top right / 14px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) top right / 1px 14px no-repeat,
+    linear-gradient(var(--b), var(--b)) bottom left / 14px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) bottom left / 1px 14px no-repeat,
+    linear-gradient(var(--b), var(--b)) bottom right / 14px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) bottom right / 1px 14px no-repeat;
+}
+.tc-bracket--evidence::after { --b: var(--coyote); }
+.tc-bracket--danger::after { --b: var(--red); }
+.tc-bracket--occult::after { --b: var(--blood-ink); }
+
+.tc-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s2) var(--s4);
+  padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--line);
+}
+.tc-panel-head > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.tc-panel-head h2,
+.tc-panel-head h3 {
+  font-size: var(--fs-l);
+}
+.tc-panel-head p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-panel-body {
+  padding: var(--s4);
+}
+
+/* 구역 제목 — 패널 밖의 절 구분 */
+.tc-section {
+  margin: 0 0 var(--s6);
+}
+.tc-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s2) var(--s4);
+  margin: 0 0 var(--s3);
+  padding: 0 0 var(--s2);
+  border-bottom: 1px solid var(--line);
+}
+.tc-section-head > div {
+  display: grid;
+  gap: 2px;
+}
+.tc-section-head h2 {
+  font-size: var(--fs-xl);
+}
+.tc-section-head p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+
+/* ---------- 판정·상태 태그 — 글자가 주 정보, 색과 선 모양은 보조 ---------- */
+.tc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: max-content;
+  max-width: 100%;
+  min-height: 20px;
+  padding: 1px 7px;
+  border: 1px solid var(--line-2);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.tc-tag--latin {
+  font-family: var(--label);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.tc-tag--ok       { border-color: rgba(139, 154, 102, .6); color: var(--od-ink); background: var(--fill-od); }
+.tc-tag--info     { border-color: rgba(127, 163, 154, .5); color: var(--ir-ink); }
+.tc-tag--evidence { border-color: rgba(154, 123, 80, .6); color: var(--coyote-ink); }
+.tc-tag--caution  { border-color: rgba(201, 138, 46, .6); color: var(--amber-ink); background: var(--fill-amber); }
+.tc-tag--danger   { border-color: var(--red); color: var(--red-ink); background: var(--fill-red); }
+.tc-tag--occult   { border-color: var(--blood-ink); color: var(--blood-ink); background: var(--fill-blood); }
+.tc-tag--dim      { border-style: dashed; color: var(--text-3); }
+.tc-tag--dotted   { border-style: dotted; border-color: var(--text-3); }
+/* 사각 표식 — 태그 앞의 작은 상태 칸 */
+.tc-tag--mark::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+}
+
+/* ---------- 버튼 — 직사각형 1px. 채운 버튼은 화면당 하나 이하 ---------- */
+.tc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  min-height: var(--tap);
+  padding: 8px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  color: var(--text);
+  background: transparent;
+  font-size: var(--fs-s);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease);
+}
+.tc-btn:hover {
+  border-color: var(--od-2);
+  background: var(--fill-od);
+}
+.tc-btn i {
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-style: normal;
+}
+.tc-btn--primary {
+  border-color: var(--od-2);
+  background: var(--fill-od-2);
+}
+.tc-btn--primary:hover {
+  background: rgba(86, 97, 63, .4);
+}
+.tc-btn--caution {
+  border-color: rgba(201, 138, 46, .6);
+}
+.tc-btn--caution:hover {
+  border-color: var(--amber);
+  background: var(--fill-amber);
+}
+.tc-btn--danger {
+  border-color: var(--red);
+}
+.tc-btn--danger:hover {
+  border-color: var(--red-ink);
+  background: var(--fill-red);
+}
+.tc-btn:disabled {
+  opacity: .35;
+  pointer-events: none;
+}
+.tc-btnrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+
+/* 분절 선택 — 필터 */
+.tc-seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tc-seg button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  min-height: var(--tap);
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  color: var(--text-2);
+  background: transparent;
+  font-size: var(--fs-s);
+  font-weight: 600;
+  transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease);
+}
+.tc-seg button i {
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  font-style: normal;
+}
+.tc-seg button:hover {
+  border-color: var(--od-2);
+  color: var(--text);
+  background: var(--fill-od);
+}
+.tc-seg button[aria-pressed="true"] {
+  border-color: var(--od-2);
+  color: var(--text);
+  background: var(--fill-od-2);
+}
+.tc-seg button[aria-pressed="true"] i {
+  color: var(--amber-ink);
+}
+
+/* ---------- 행 목록 — 시각 | 본문 | 판정 | 이동 ---------- */
+.tc-rows {
+  display: grid;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.tc-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) auto 20px;
+  align-items: center;
+  gap: var(--s1) var(--s4);
+  min-height: 64px;
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--line);
+  color: inherit;
+  text-align: left;
+  transition: background-color var(--t) var(--ease);
+}
+.tc-row:first-child {
+  border-top: 0;
+}
+.tc-row::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: transparent;
+  transition: background-color var(--t) var(--ease);
+}
+a.tc-row:hover,
+button.tc-row:hover {
+  background: var(--fill-od);
+}
+a.tc-row:hover::before,
+button.tc-row:hover::before,
+.tc-row.is-current::before {
+  background: var(--ch);
+}
+.tc-row-time {
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+.tc-row-main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.tc-row-main b {
+  color: var(--text);
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.tc-row-main span {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.5;
+}
+.tc-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.tc-row-go {
+  color: var(--text-3);
+  font-family: var(--mono);
+}
+button.tc-row {
+  width: 100%;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  background: transparent;
+}
+
+/* ---------- 키·값 — 증거 파일 표지, 운용 수치 ---------- */
+.tc-kv {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.tc-kv > div {
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  padding: var(--s3) var(--s4);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 0 -1px -1px 0;
+}
+.tc-kv dt {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.tc-kv dd {
+  margin: 0;
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.5;
+}
+.tc-kv dd.tc-code {
+  color: var(--ch-ink);
+}
+
+/* ---------- 교신·경과 기록 — 시각 열이 있는 기록 ---------- */
+.tc-log {
+  display: grid;
+  border: 1px solid rgba(127, 163, 154, .22);
+  background:
+    repeating-linear-gradient(0deg, rgba(216, 214, 204, .02) 0 1px, transparent 1px 3px),
+    var(--sunken);
+}
+.tc-log li {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: var(--s3);
+  padding: 7px var(--s4);
+  border-top: 1px solid rgba(216, 214, 204, .06);
+  font-family: var(--mono);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
+.tc-log li:first-child {
+  border-top: 0;
+}
+.tc-log time {
+  color: var(--ir-ink);
+}
+.tc-log span {
+  color: #c4cfc9;
+}
+.tc-log li.is-contact time,
+.tc-log li.is-contact span {
+  color: var(--amber-ink);
+}
+.tc-log li.is-loss time,
+.tc-log li.is-loss span {
+  color: var(--red-ink);
+}
+.tc-log--occult {
+  border-color: rgba(110, 31, 42, .55);
+  background:
+    repeating-linear-gradient(0deg, rgba(216, 214, 204, .02) 0 1px, transparent 1px 3px),
+    rgba(40, 10, 14, .45);
+}
+.tc-log--occult time {
+  color: var(--blood-ink);
+}
+.tc-log--occult span {
+  color: #d6c3c5;
+}
+
+/* 작전 경과 — 투입·접촉·교전·이탈을 가로 위상선으로 */
+.tc-phase {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  border: 1px solid var(--line);
+  background: var(--line);
+  gap: 1px;
+}
+.tc-phase li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: var(--s4) var(--s3) var(--s3);
+  background: var(--panel);
+}
+.tc-phase li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: var(--line-2);
+}
+.tc-phase li.is-done::before { background: var(--od-2); }
+.tc-phase li.is-contact::before { background: var(--amber); }
+.tc-phase li.is-loss::before { background: var(--red); }
+.tc-phase time {
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+}
+.tc-phase b {
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-phase span {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+
+/* ---------- 주석·경고 ---------- */
+.tc-note {
+  display: grid;
+  gap: 4px;
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--line-3);
+  background: var(--panel);
+}
+.tc-note > b {
+  color: var(--text-2);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.tc-note p {
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.65;
+}
+.tc-note--caution { border-left-color: var(--amber); background: var(--fill-amber); }
+.tc-note--caution > b { color: var(--amber-ink); }
+.tc-note--danger { border-left-color: var(--red); background: var(--fill-red); }
+.tc-note--danger > b { color: var(--red-ink); }
+.tc-note--occult { border-left-color: var(--blood-ink); background: var(--fill-blood); }
+.tc-note--occult > b { color: var(--blood-ink); }
+.tc-note--evidence { border-left-color: var(--coyote); background: var(--fill-coyote); }
+.tc-note--evidence > b { color: var(--coyote-ink); }
+
+/* 가림 막대 — 본문 안의 삭제 구간 */
+.tc-redact {
+  display: inline-block;
+  min-width: 3em;
+  height: 1em;
+  margin: 0 2px;
+  background: #1b1d1a;
+  box-shadow: inset 0 0 0 1px rgba(216, 214, 204, .08);
+  vertical-align: -.12em;
+}
+
+/* 센서 불일치 — 이상 층. 어긋난 값만 적색 */
+.tc-sensor {
+  display: inline-grid;
+  grid-auto-flow: column;
+  border: 1px solid var(--line-2);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+.tc-sensor span {
+  display: grid;
+  gap: 1px;
+  padding: 4px 10px;
+}
+.tc-sensor span + span {
+  border-left: 1px solid var(--line-2);
+}
+.tc-sensor small {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.tc-sensor b {
+  color: var(--text);
+  font-weight: 500;
+}
+.tc-sensor .is-mismatch b {
+  color: var(--red-ink);
+}
+
+/* ---------- 증거 틀 — 사진·영상. 손상 연출은 이 층에서만 ---------- */
+.tc-evidence {
+  position: relative;
+  border: 1px solid var(--line);
+  background: var(--sunken);
+}
+.tc-evidence-media {
+  position: relative;
+  overflow: hidden;
+}
+.tc-evidence-media img {
+  width: 100%;
+  object-fit: cover;
+  filter: grayscale(.3) contrast(1.06) brightness(.82);
+}
+.tc-evidence-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .14) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+.tc-evidence figcaption {
+  display: grid;
+  gap: 4px;
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--line);
+}
+.tc-evidence figcaption b {
+  color: var(--coyote-ink);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.tc-evidence figcaption span {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
+
+/* ---------- 펼침 ---------- */
+.tc-disclosure {
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.tc-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+  min-height: 56px;
+  padding: var(--s3) var(--s4);
+  list-style: none;
+  cursor: pointer;
+  transition: background-color var(--t) var(--ease);
+}
+.tc-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+.tc-disclosure > summary > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.tc-disclosure > summary b {
+  color: var(--text);
+  font-size: var(--fs);
+  font-weight: 600;
+}
+.tc-disclosure > summary::after {
+  content: "+";
+  flex: 0 0 auto;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.tc-disclosure[open] > summary::after {
+  content: "−";
+}
+.tc-disclosure > summary:hover {
+  background: var(--fill-od);
+}
+.tc-disclosure[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+.tc-disclosure-body {
+  padding: var(--s4);
+}
+
+/* ---------- 빈 상태 — 없는 키는 없다고 적는다 ---------- */
+.tc-missing {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s5);
+  border: 1px dashed var(--line-2);
+  color: var(--text-2);
+}
+.tc-missing b {
+  color: var(--amber-ink);
+  font-family: var(--label);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.tc-missing code {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: var(--fs-s);
+}
+
+@media (max-width: 720px) {
+  .tc-row {
+    grid-template-columns: minmax(0, 1fr) 16px;
+    gap: 6px var(--s3);
+    padding: var(--s3);
+  }
+  .tc-row-time {
+    grid-column: 1;
+  }
+  .tc-row-main {
+    grid-column: 1;
+  }
+  .tc-row-meta {
+    grid-column: 1;
+    justify-content: flex-start;
+  }
+  .tc-row-go {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+  .tc-log li {
+    grid-template-columns: 52px minmax(0, 1fr);
+    padding: 7px var(--s3);
+  }
+  .tc-phase {
+    grid-auto-flow: row;
+  }
+}

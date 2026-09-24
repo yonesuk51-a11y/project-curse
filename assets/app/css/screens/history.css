@@ -1,0 +1,814 @@
+/* Project Curse 6 — history 화면 (담당: Claude)
+   공용 부품(components.css)의 색·모양을 바꾸지 않는다. 이 화면에만 필요한 배치와 부품을 둔다.
+   목록(셸)은 건조하게, 사건 기록 본문은 증거 층으로. 빨강은 상충 판정·봉인 표시·교단 기록에만. */
+
+/* ---------- 먼저 볼 네 전환점 — 위상선 ---------- */
+.tc-hist-turns {
+  margin: 0 0 var(--s4);
+}
+.tc-hist-turn-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+}
+.tc-hist-turn {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: var(--s2);
+  height: 100%;
+  min-height: 176px;
+  padding: var(--s5) var(--s4) var(--s4);
+  background: var(--panel);
+  transition: background-color var(--t) var(--ease);
+}
+.tc-hist-turn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ch) 0 32px, var(--line-2) 32px);
+}
+a.tc-hist-turn:hover {
+  background: var(--fill-od);
+}
+.tc-hist-turn time {
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+.tc-hist-turn b {
+  color: var(--text);
+  font-size: var(--fs-l);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.tc-hist-turn span {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-hist-turn em {
+  color: var(--od-ink);
+  font-size: var(--fs-xs);
+  font-style: normal;
+  font-weight: 600;
+}
+.tc-hist-turn em.is-missing,
+.tc-hist-cases .is-missing {
+  color: var(--amber-ink);
+}
+
+/* ---------- 참고 묶음 ---------- */
+.tc-hist-refs {
+  display: grid;
+  gap: var(--s2);
+  margin: 0 0 var(--s4);
+}
+.tc-hist-refbox > summary > span {
+  gap: 3px;
+}
+.tc-hist-refbox > summary small {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-hist-refbox > summary .tc-label {
+  color: var(--ir-ink);
+}
+.tc-hist-ref {
+  display: grid;
+  gap: var(--s4);
+}
+.tc-hist-ref-lead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, .5fr);
+  align-items: start;
+  gap: var(--s4);
+}
+.tc-hist-ref-lead > p {
+  max-width: 72ch;
+  color: var(--text);
+  font-size: var(--fs);
+}
+.tc-hist-grid {
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.tc-hist-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tc-hist-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.tc-hist-grid--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.tc-hist-grid li {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  padding: var(--s3) var(--s4);
+  background: var(--panel);
+}
+.tc-hist-grid .tc-label {
+  color: var(--ir-ink);
+}
+.tc-hist-grid b {
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.tc-hist-grid p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
+.tc-hist-coyote {
+  color: var(--coyote-ink) !important;
+}
+.tc-hist-sub {
+  background: transparent;
+}
+.tc-hist-sub > summary {
+  min-height: 48px;
+}
+.tc-hist-sub > summary b {
+  font-size: var(--fs-s);
+}
+.tc-hist-baseline {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+
+/* 확인되지 않은 세 규칙 */
+.tc-hist-rule {
+  display: grid;
+  gap: var(--s3);
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--amber);
+  background: var(--panel);
+}
+.tc-hist-rule > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+}
+.tc-hist-rule > header b {
+  color: var(--text);
+  font-size: var(--fs);
+}
+.tc-hist-rule > p {
+  max-width: 76ch;
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-hist-cases {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1px;
+  padding: 1px;
+}
+.tc-hist-cases li {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: var(--s3);
+  background: var(--panel-2);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.tc-hist-cases a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  min-height: var(--tap);
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-hist-cases a:hover {
+  color: var(--od-ink);
+}
+.tc-hist-cases a i {
+  color: var(--od-ink);
+  font-style: normal;
+}
+.tc-hist-cases p {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+}
+.tc-hist-caution {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+
+/* 일본 기술 계보 — 기술·계측은 센서 청록 */
+.tc-hist-tech-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s4);
+}
+.tc-hist-tech-head > div {
+  display: grid;
+  gap: 4px;
+  max-width: 64ch;
+}
+.tc-hist-tech-head .tc-label {
+  color: var(--ir-ink);
+}
+.tc-hist-tech-head b {
+  color: var(--text);
+  font-size: var(--fs-l);
+}
+.tc-hist-tech-head p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-hist-tech-head dl {
+  display: flex;
+  align-self: start;
+  border: 1px solid var(--line);
+}
+.tc-hist-tech-head dl > div {
+  display: grid;
+  gap: 2px;
+  padding: var(--s2) var(--s3);
+}
+.tc-hist-tech-head dl > div + div {
+  border-left: 1px solid var(--line);
+}
+.tc-hist-tech-head dt {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.tc-hist-tech-head dd {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+/* 폐쇄된 본부 — 봉인 표시 */
+.tc-hist-tech-head dd.is-sealed {
+  color: var(--red-ink);
+}
+.tc-hist-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  padding: 1px;
+}
+.tc-hist-track li {
+  box-shadow: 0 0 0 1px var(--line);
+}
+.tc-hist-track li > * {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  height: 100%;
+  min-height: 150px;
+  padding: var(--s4) var(--s3) var(--s3);
+  background: var(--panel);
+  transition: background-color var(--t) var(--ease);
+}
+.tc-hist-track li > a:hover {
+  background: var(--fill-ir);
+}
+/* 단계 표식 — 사각형. 판정별로 선 모양과 색을 바꾼다 */
+.tc-hist-track i {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  margin-bottom: var(--s2);
+  border: 1px solid var(--ir);
+  color: var(--ir-ink);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  font-style: normal;
+}
+.tc-hist-track li[data-state="derived"] i {
+  border-style: dashed;
+}
+.tc-hist-track li[data-state="contested"] i {
+  border-color: var(--red);
+  color: var(--red-ink);
+}
+.tc-hist-track li[data-state="classified"] i {
+  border-color: var(--red);
+  color: var(--text);
+  background: rgba(158, 47, 42, .35);
+}
+.tc-hist-track .tc-code {
+  color: var(--ir-ink);
+  font-size: var(--fs-2xs);
+}
+.tc-hist-track b {
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.4;
+}
+.tc-hist-track p {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+}
+/* 공개 사업과 비밀 부문의 경계 — 비공개 표시라 적색 선 */
+.tc-hist-boundary {
+  padding-left: var(--s3);
+  border-left: 1px solid var(--red);
+  color: var(--text) !important;
+}
+.tc-hist-source {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--ir-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+.tc-hist-source:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* ---------- 필터와 판정 범례 ---------- */
+.tc-hist-controls {
+  display: grid;
+  gap: var(--s3);
+  margin: 0 0 var(--s4);
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.tc-hist-controls-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+.tc-hist-filter-status {
+  color: var(--amber-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+.tc-hist-key {
+  background: transparent;
+}
+.tc-hist-levels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2) var(--s4);
+  margin: 0 0 var(--s4);
+}
+.tc-hist-levels li {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s3);
+}
+.tc-hist-levels p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-hist-unresolved {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2);
+}
+
+/* ---------- 시대 목록 ---------- */
+.tc-hist-index {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-hist-era {
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.tc-hist-era[open] {
+  border-color: var(--line-2);
+  box-shadow: inset 2px 0 0 var(--ch);
+}
+.tc-hist-era-head {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s4);
+  min-height: 88px;
+  padding: var(--s3) var(--s4);
+  list-style: none;
+  cursor: pointer;
+  transition: background-color var(--t) var(--ease);
+}
+.tc-hist-era-head::-webkit-details-marker {
+  display: none;
+}
+.tc-hist-era-head:hover {
+  background: var(--fill-od);
+}
+.tc-hist-era-head > i {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line-2);
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-style: normal;
+}
+.tc-hist-era[open] .tc-hist-era-head > i {
+  border-color: var(--ch);
+  background: rgba(168, 135, 90, .12);
+}
+.tc-hist-era-head > span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.tc-hist-era-head > span b {
+  color: var(--text);
+  font-size: var(--fs);
+  font-weight: 600;
+}
+.tc-hist-era-head > span small {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.5;
+}
+.tc-hist-era-head > span em {
+  overflow: hidden;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tc-hist-era-count {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+}
+.tc-hist-era-count b {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+.tc-hist-era-count::after {
+  content: "펼쳐 보기 +";
+}
+.tc-hist-era[open] .tc-hist-era-count::after {
+  content: "접기 −";
+}
+.tc-hist-era-rows {
+  border-width: 1px 0 0;
+  background: var(--panel-2);
+}
+.tc-hist-row .tc-row-go {
+  font-size: var(--fs-2xs);
+}
+.tc-hist-row-source {
+  color: var(--text-3) !important;
+  font-size: var(--fs-xs) !important;
+}
+/* 기술 기록 — 청록 표지 */
+.tc-hist-row.is-technology::before {
+  background: var(--ir);
+}
+.tc-hist-row.is-technology .tc-row-time {
+  color: var(--ir-ink);
+}
+
+/* ---------- 사건 기록 ---------- */
+.tc-hist-detail {
+  display: grid;
+  gap: var(--s4);
+  max-width: 1040px;
+}
+.tc-hist-back {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: var(--tap);
+  border-bottom: 1px solid var(--line-2);
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  transition: color var(--t) var(--ease), border-color var(--t) var(--ease);
+}
+.tc-hist-back:hover {
+  border-bottom-color: var(--ch);
+  color: var(--text);
+}
+.tc-hist-dossier {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s5);
+}
+.tc-hist-dossier-code {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+.tc-hist-dossier-code .tc-label:first-child {
+  color: var(--ch-ink);
+}
+.tc-hist-date {
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-s);
+  letter-spacing: .06em;
+}
+.tc-hist-dossier h1 {
+  font-size: var(--fs-2xl);
+  letter-spacing: -.02em;
+}
+.tc-hist-summary {
+  max-width: 64ch;
+  color: var(--text-2);
+}
+.tc-hist-kv {
+  margin-top: var(--s3);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.tc-hist-detail.is-technology .tc-hist-dossier .tc-bracket::after,
+.tc-hist-detail.is-technology .tc-hist-dossier::after {
+  --b: var(--ir);
+}
+.tc-hist-detail.is-technology .tc-hist-date,
+.tc-hist-detail.is-technology .tc-hist-dossier-code .tc-label:first-child {
+  color: var(--ir-ink);
+}
+.tc-hist-context > summary .tc-label {
+  color: var(--coyote-ink);
+}
+.tc-hist-context .tc-disclosure-body {
+  display: grid;
+  gap: var(--s3);
+}
+.tc-hist-basis {
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-hist-provenance {
+  border-color: rgba(154, 123, 80, .3);
+  background: var(--fill-coyote);
+}
+
+/* 본문 — 증거 층 */
+.tc-hist-body {
+  display: grid;
+  gap: var(--s5);
+  max-width: 78ch;
+  padding: var(--s3) 0;
+  font-size: 1rem;
+  line-height: 1.9;
+}
+.tc-hist-fragment {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-hist-fragment-label {
+  color: var(--coyote-ink);
+  font-family: var(--label);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.tc-hist-fragment.is-directive .tc-hist-fragment-label { color: var(--amber-ink); }
+.tc-hist-fragment.is-log .tc-hist-fragment-label,
+.tc-hist-fragment.is-analysis .tc-hist-fragment-label,
+.tc-hist-fragment.is-finding .tc-hist-fragment-label { color: var(--ir-ink); }
+.tc-hist-fragment.is-quote .tc-hist-fragment-label { color: var(--text-2); }
+.tc-hist-fragment.is-anomaly .tc-hist-fragment-label,
+.tc-hist-fragment.is-hostile .tc-hist-fragment-label,
+.tc-hist-fragment.is-withheld .tc-hist-fragment-label { color: var(--red-ink); }
+.tc-hist-fragment.is-cult .tc-hist-fragment-label { color: var(--blood-ink); }
+.tc-hist-fragment.is-annotation {
+  padding-left: var(--s4);
+  border-left: 1px solid rgba(154, 123, 80, .45);
+}
+.tc-hist-fragment p {
+  color: var(--text);
+}
+.tc-hist-fragment blockquote {
+  padding: var(--s1) 0 var(--s1) var(--s4);
+  border-left: 2px solid var(--line-3);
+  color: var(--text);
+}
+.tc-hist-log-plain li {
+  grid-template-columns: minmax(0, 1fr);
+}
+.tc-hist-visual .tc-evidence-media img {
+  max-height: 520px;
+}
+
+/* 상충 기록 — 교단이 남긴 반대 기록. 오컬트라 핏빛 */
+.tc-hist-counter {
+  display: grid;
+  gap: var(--s4);
+  padding: var(--s4);
+  border-color: rgba(110, 31, 42, .7);
+  background:
+    linear-gradient(var(--fill-blood), var(--fill-blood)),
+    var(--panel);
+}
+.tc-hist-counter-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+}
+.tc-hist-counter-head .tc-label {
+  color: var(--blood-ink);
+}
+.tc-hist-counter-head b {
+  color: var(--text);
+}
+.tc-hist-counter-kv {
+  border-color: rgba(110, 31, 42, .45);
+  background: rgba(40, 10, 14, .35);
+}
+.tc-hist-counter-kv dt {
+  color: var(--blood-ink);
+}
+.tc-hist-counter-body {
+  display: grid;
+  gap: var(--s4);
+}
+.tc-hist-counter .tc-hist-fragment-label {
+  color: var(--blood-ink);
+}
+.tc-hist-counter blockquote {
+  border-left-color: var(--blood-ink);
+}
+
+/* 관련 기록 */
+.tc-hist-link-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1px;
+}
+.tc-hist-link-list li {
+  box-shadow: 0 0 0 1px var(--line);
+}
+.tc-hist-link-list a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 12px;
+  align-content: start;
+  gap: 3px var(--s2);
+  height: 100%;
+  min-height: 64px;
+  padding: var(--s3) var(--s4);
+  background: var(--panel);
+  transition: background-color var(--t) var(--ease);
+}
+.tc-hist-link-list a:hover {
+  background: var(--fill-od);
+}
+.tc-hist-link-list small {
+  grid-column: 1;
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.tc-hist-link-list b {
+  grid-column: 1;
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-hist-link-list i {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: var(--text-3);
+  font-style: normal;
+}
+.tc-hist-link-list a.is-op small { color: var(--amber-ink); }
+/* 2042 현재 신호층 — 현재 작전으로 넘어가는 연결 */
+.tc-hist-link-list a.is-signal {
+  box-shadow: inset 2px 0 0 var(--amber);
+}
+.tc-hist-link-list a.is-signal small { color: var(--amber-ink); }
+
+/* 이전·다음 */
+.tc-hist-nav {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: var(--s2);
+  padding-top: var(--s4);
+  border-top: 1px solid var(--line);
+}
+.tc-hist-nav .tc-btn {
+  min-height: 56px;
+}
+.tc-hist-nav .tc-btn span {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.tc-hist-nav .tc-btn small {
+  color: var(--text-3);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+}
+.tc-hist-nav .tc-btn b {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tc-hist-nav-next {
+  justify-content: flex-end;
+  text-align: right;
+}
+.tc-hist-nav-end {
+  display: grid;
+  place-items: center;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+
+/* ---------- 반응형 ---------- */
+@media (max-width: 1100px) {
+  .tc-hist-grid--5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .tc-hist-turn-list,
+  .tc-hist-grid--4,
+  .tc-hist-grid--5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tc-hist-ref-lead,
+  .tc-hist-levels,
+  .tc-hist-unresolved {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-hist-kv {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .tc-hist-turn-list,
+  .tc-hist-grid--2,
+  .tc-hist-grid--4,
+  .tc-hist-grid--5 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-hist-turn {
+    min-height: 0;
+  }
+  .tc-hist-eras {
+    flex-wrap: nowrap;
+    margin: 0 calc(var(--s4) * -1);
+    padding: 0 var(--s4) 4px;
+    overflow-x: auto;
+  }
+  .tc-hist-eras button {
+    flex: 0 0 auto;
+  }
+  .tc-hist-era-head {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: var(--s3);
+  }
+  .tc-hist-era-count {
+    grid-column: 2;
+    justify-items: start;
+  }
+  .tc-hist-era-head > span em {
+    white-space: normal;
+  }
+  .tc-hist-levels li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .tc-hist-dossier {
+    padding: var(--s4);
+  }
+  .tc-hist-nav {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .tc-hist-nav > :nth-child(2) {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+}

@@ -1,0 +1,430 @@
+/* Project Curse 6 — 셸: 상단 명령 바, 채널 레일, 화면 틀
+   셸은 끝까지 멀쩡해야 한다. 손상 효과를 여기에 쓰지 않는다. */
+
+.tc-app {
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  grid-template-rows: var(--bar-h) auto;
+  min-height: 100dvh;
+}
+
+/* ---------- 상단 명령 바 ---------- */
+.tc-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: stretch;
+  gap: var(--s4);
+  height: var(--bar-h);
+  padding: 0 var(--s4) 0 0;
+  border-bottom: 1px solid var(--line);
+  background: #0d100f;
+  box-shadow: inset 0 2px 0 var(--od);
+}
+.tc-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  width: var(--rail-w);
+  flex: 0 0 auto;
+  padding: 0 var(--s4);
+  border-right: 1px solid var(--line);
+}
+.tc-brand-mark {
+  position: relative;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--od-2);
+}
+.tc-brand-mark::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  background: var(--amber);
+}
+.tc-brand-text {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.tc-brand-text b {
+  color: var(--text);
+  font-family: var(--label);
+  font-size: .875rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.tc-brand-text small {
+  color: var(--od-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.tc-bar-channel {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  min-width: 0;
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-bar-channel i {
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-style: normal;
+}
+.tc-bar-channel span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tc-bar-status {
+  display: flex;
+  align-items: stretch;
+  margin: 0 0 0 auto;
+}
+.tc-bar-status > div {
+  display: grid;
+  align-content: center;
+  gap: 1px;
+  padding: 0 var(--s4);
+  border-left: 1px solid var(--line);
+}
+.tc-bar-status dt {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+  line-height: 1.1;
+}
+.tc-bar-status dd {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.tc-bar-status .is-alert dd {
+  color: var(--red-ink);
+}
+.tc-bar-status .is-live dd::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 6px 1px 0;
+  background: var(--od-2);
+  vertical-align: middle;
+}
+
+/* ---------- 채널 레일 ---------- */
+.tc-rail {
+  position: sticky;
+  top: var(--bar-h);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--bar-h));
+  overflow-y: auto;
+  border-right: 1px solid var(--line);
+  background: rgba(10, 12, 11, .94);
+}
+.tc-rail-head {
+  padding: var(--s4) var(--s4) var(--s2);
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .2em;
+}
+.tc-rail-list {
+  display: grid;
+}
+.tc-rail-list a {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s2);
+  min-height: 56px;
+  padding: var(--s2) var(--s4);
+  border-bottom: 1px solid rgba(216, 214, 204, .06);
+  color: var(--text-2);
+  transition: background-color var(--t) var(--ease), color var(--t) var(--ease);
+}
+.tc-rail-list a i {
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-style: normal;
+}
+.tc-rail-list a span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.tc-rail-list a b {
+  color: inherit;
+  font-size: var(--fs-s);
+  font-weight: 600;
+  line-height: 1.25;
+}
+.tc-rail-list a small {
+  display: none;
+}
+.tc-rail-list a em {
+  overflow: hidden;
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: .14em;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tc-rail-list a:hover {
+  color: var(--text);
+  background: var(--fill-od);
+}
+.tc-rail-list a[aria-current="page"] {
+  color: var(--text);
+  background: var(--panel-2);
+}
+.tc-rail-list a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--ch);
+}
+.tc-rail-list a[aria-current="page"] i {
+  color: var(--ch-ink);
+}
+.tc-rail-foot {
+  display: grid;
+  gap: var(--s2);
+  margin: auto 0 0;
+  padding: var(--s4);
+  border-top: 1px solid var(--line);
+}
+.tc-rail-foot > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+.tc-rail-foot dt {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.tc-rail-foot dd {
+  margin: 0;
+  color: var(--text-2);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+}
+
+/* ---------- 화면 틀 ---------- */
+.tc-main {
+  min-width: 0;
+  padding: var(--s6) clamp(16px, 3vw, 44px) var(--s7);
+}
+.tc-main:focus {
+  outline: none;
+}
+.tc-screen {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  animation: tc-screen-enter var(--t-screen) var(--ease) both;
+}
+@keyframes tc-screen-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* 화면 머리 — 채널 표지, 제목, 한 줄 설명, 운용 수치 */
+.tc-screenhead {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s2) var(--s6);
+  margin: 0 0 var(--s5);
+  padding: var(--s5);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.tc-screenhead-code {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .2em;
+}
+.tc-screenhead-code i {
+  padding: 1px 6px;
+  border: 1px solid var(--ch);
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  font-style: normal;
+  letter-spacing: .04em;
+}
+.tc-screenhead h1 {
+  font-size: var(--fs-2xl);
+  letter-spacing: -.02em;
+}
+.tc-screenhead-desc {
+  grid-column: 1;
+  max-width: 64ch;
+  color: var(--text-2);
+  font-size: var(--fs);
+}
+.tc-screenhead-meta {
+  grid-column: 2;
+  grid-row: 2 / span 2;
+  align-self: end;
+  display: flex;
+  border: 1px solid var(--line);
+}
+.tc-screenhead-meta > div {
+  display: grid;
+  gap: 2px;
+  min-width: 96px;
+  padding: var(--s2) var(--s3);
+}
+.tc-screenhead-meta > div + div {
+  border-left: 1px solid var(--line);
+}
+.tc-screenhead-meta dt {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.tc-screenhead-meta dd {
+  margin: 0;
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+/* ---------- 태블릿·모바일: 레일을 아래 도크로 ---------- */
+@media (max-width: 960px) {
+  .tc-app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-brand {
+    width: auto;
+    border-right: 0;
+  }
+  .tc-bar-status .is-wide {
+    display: none;
+  }
+  .tc-rail {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    height: auto;
+    padding-bottom: env(safe-area-inset-bottom);
+    overflow: visible;
+    border-top: 1px solid var(--line-2);
+    border-right: 0;
+    background: #0d100f;
+  }
+  .tc-rail-head,
+  .tc-rail-foot {
+    display: none;
+  }
+  .tc-rail-list {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .tc-rail-list a {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 2px;
+    min-height: var(--dock-h);
+    padding: 6px 2px;
+    border-bottom: 0;
+    text-align: center;
+  }
+  .tc-rail-list a span {
+    justify-items: center;
+  }
+  .tc-rail-list a b,
+  .tc-rail-list a em {
+    display: none;
+  }
+  .tc-rail-list a small {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .tc-rail-list a[aria-current="page"]::before {
+    top: 0;
+    right: 0;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+  }
+  .tc-main {
+    padding: var(--s5) var(--s4) calc(var(--dock-h) + var(--s6) + env(safe-area-inset-bottom));
+  }
+  .tc-screenhead {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--s4);
+  }
+  .tc-screenhead-meta {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+@media (max-width: 560px) {
+  .tc-bar {
+    gap: var(--s2);
+    padding-right: 0;
+  }
+  .tc-brand {
+    padding: 0 var(--s3);
+  }
+  .tc-brand-text small,
+  .tc-bar-channel {
+    display: none;
+  }
+  .tc-bar-status > div {
+    padding: 0 var(--s3);
+  }
+  .tc-screenhead-meta > div {
+    min-width: 0;
+  }
+}

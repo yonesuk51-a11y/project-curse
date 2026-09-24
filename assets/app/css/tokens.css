@@ -1,0 +1,100 @@
+/* Project Curse 6 — 디자인 토큰
+   기준: PROJECT_CURSE_ART_DIRECTION_GUIDE.md 5~7절.
+   색은 기능이다. 기본값(선·면용)과 글자용 밝은 변형(-ink)을 나눈다.
+   글자용 값은 패널(#111513) 위에서 대비 4.5:1 이상이다. */
+
+:root {
+  color-scheme: dark;
+
+  /* 바탕 */
+  --bg: #0a0c0b;
+  --bg-grid: rgba(216, 214, 204, .028);
+  --panel: #111513;
+  --panel-2: #171c19;
+  --panel-3: #1e2420;
+  --sunken: #070908;
+
+  /* 선 — 뼈색 14~40% */
+  --line: rgba(216, 214, 204, .14);
+  --line-2: rgba(216, 214, 204, .26);
+  --line-3: rgba(216, 214, 204, .4);
+
+  /* 글자 */
+  --text: #d8d6cc;
+  --text-2: #a3a596;
+  --text-3: #7a8070;
+
+  /* 기능색 — 선·면용 */
+  --od: #56613f;       /* 활성·아군 */
+  --od-2: #8b9a66;
+  --coyote: #9a7b50;   /* 증거·인계 */
+  --amber: #c98a2e;    /* 주의 */
+  --red: #9e2f2a;      /* 위험·봉인·오염 */
+  --blood: #6e1f2a;    /* 오컬트 */
+  --ir: #7fa39a;       /* 센서·정보 */
+
+  /* 기능색 — 글자용 */
+  --od-ink: #9aab72;
+  --coyote-ink: #b39468;
+  --amber-ink: #d39a45;
+  --red-ink: #c66a5f;
+  --blood-ink: #b86a78;
+  --ir-ink: #8fb3aa;
+
+  /* 면 채움 — 호버·선택 */
+  --fill-od: rgba(86, 97, 63, .14);
+  --fill-od-2: rgba(86, 97, 63, .28);
+  --fill-amber: rgba(201, 138, 46, .07);
+  --fill-red: rgba(158, 47, 42, .12);
+  --fill-blood: rgba(110, 31, 42, .14);
+  --fill-ir: rgba(127, 163, 154, .08);
+  --fill-coyote: rgba(154, 123, 80, .07);
+
+  /* 화면 강조색 — 화면마다 body[data-screen]에서 바꾼다 */
+  --ch: var(--amber);
+  --ch-ink: var(--amber-ink);
+
+  /* 글꼴 */
+  --font: "IBM Plex Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --label: "Barlow Condensed", "Arial Narrow", "IBM Plex Sans KR", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, "IBM Plex Sans KR", monospace;
+
+  /* 글자 크기 — 한국어 본문은 15px, 가장 작은 글자도 11px 이상 */
+  --fs-2xs: .6875rem;  /* 11px — 라벨 */
+  --fs-xs: .75rem;     /* 12px */
+  --fs-s: .8125rem;    /* 13px */
+  --fs: .9375rem;      /* 15px */
+  --fs-l: 1.0625rem;   /* 17px */
+  --fs-xl: 1.375rem;   /* 22px */
+  --fs-2xl: clamp(1.6rem, 2.6vw, 2.25rem);
+
+  /* 간격 */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+
+  /* 모션 — 150~250ms, 튀는 움직임 없음 */
+  --t: 180ms;
+  --t-screen: 220ms;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+
+  /* 셸 치수 */
+  --bar-h: 52px;
+  --rail-w: 216px;
+  --dock-h: 60px;
+  --content-max: 1320px;
+  --tap: 40px;
+}
+
+/* 화면별 강조색 — 채도 낮은 전술 계열. 빨강은 쓰지 않는다 */
+body[data-screen="terminal-home"] { --ch: #c98a2e; --ch-ink: #d39a45; }
+body[data-screen="map-room"]      { --ch: #7fa39a; --ch-ink: #8fb3aa; }
+body[data-screen="history"]       { --ch: #a8875a; --ch-ink: #b8976a; }
+body[data-screen="faction-info"]  { --ch: #8b9a66; --ch-ink: #9aab72; }
+body[data-screen="archive-entry"] { --ch: #b7a98a; --ch-ink: #c2b594; }
+body[data-screen="personnel"]     { --ch: #b29466; --ch-ink: #bea173; }
+body[data-screen="media-audit"]   { --ch: #7fa39a; --ch-ink: #8fb3aa; }
