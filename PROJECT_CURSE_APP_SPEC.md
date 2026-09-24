@@ -52,6 +52,7 @@ PCApp.screen({
 - 제목은 `app.setTitle(글)`. 상세 화면의 제목 요소에 `data-tc-focus`를 달면 이동 뒤 초점이 간다.
 - 화면 머리는 `PCApp.screenHead(id, {title, desc, meta})`. 채널 코드와 설명은 `channel-identity-data.js`에서 온다.
 - 판정 태그는 `PCApp.tag(글, 톤, {latin, mark})`, 기록 판정 키의 톤은 `PCApp.verdictTone(키)`.
+- 소리는 `window.PCAudio?.play(신호)`. 신호는 `site-manifest.js`의 audio.effects 키다(`contact`, `analog`, `mount`, `projector`, `scan`, `marker`, `radio`, `denied`, `boot`). 음향은 기본 꺼짐이고 꺼져 있으면 아무 일도 하지 않는다. 채널 이동과 링크 클릭 소리는 `pc-audio.js`가 이미 낸다. 화면에서는 기록 열람(`mount`), 재생 단계(`marker`), 봉인·거부(`denied`)처럼 의미 있는 순간에만 부른다.
 
 ### 주소
 
