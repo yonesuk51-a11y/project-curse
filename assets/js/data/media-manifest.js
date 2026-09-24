@@ -81,7 +81,10 @@
     'assets/resources/derived/returner-note-locker-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/alullim-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
-    'assets/resources/derived/mikage-shiori-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'}
+    'assets/resources/derived/mikage-shiori-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    // 2026-09-25 사용자 채택 — 피탈자 장면 2장
+    'assets/resources/derived/pitalja-roe-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/pitalja-blood-exit-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
   };
 
   const normalize=src=>{

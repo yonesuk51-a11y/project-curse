@@ -186,3 +186,12 @@ The user adopted the six archive scenes of Codex batch C (`output/imagegen/20260
 | `derived/pilgrim-rule-05-forest-path-concept-v1.png` | RECONSTRUCTED | Field dossier `Pilgrim_Rules_GBF` | A dark Great Black Forest path: three adult pilgrims with one lantern walk on, leaving a small cloth bundle by a root. No entity drawn. | `분석 재구성` |
 | `derived/alullim-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `alullim` | A faceless dark brown-black hood, plain disc medallion and a horned shadow on the wall by a dark red lamp. | `인물 재구성` |
 | `derived/mikage-shiori-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `mikage-shiori` | An adult woman (the design's school uniform was replaced by dark everyday clothes) with choker, blank ID lanyard, card and doll charm; the father's ghost with one red eye and many clawed hands stays behind her without touching. | `인물 재구성` |
+
+## 2026-09-25 taken-civilian scenes adoption
+
+The user adopted both scenes of the taken-civilian (피탈자) pass (`output/imagegen/20260925-pitalja-*`), drawn after the world rule `리버스 지점의 피탈자` and the N.H.C manual section `피탈자 교전 규칙`. All taken civilians are adults. No readable text, logos, real unit marks, invented insignia, children or sexual content. 480px and 960px WebP derivatives registered with `tone:'low-key'`.
+
+| Asset | Class | Used by | Source and handling | Required public label |
+|---|---|---|---|---|
+| `derived/pitalja-roe-concept-v1.png` | RECONSTRUCTED | Field manual section `피탈자 교전 규칙` | Two N.H.C operators keep distance, one raising a warning hand and one readying restraints, as three adult taken civilians in everyday clothes shamble closer. | `분석 재구성` |
+| `derived/pitalja-blood-exit-concept-v1.png` | RECONSTRUCTED | World rules `리버스 지점의 피탈자` | A dark red clot leaves a fallen taken body and crawls along blood trails; an A.R.F worker covers the floor drain first while another opens a sealed case. | `분석 재구성` |

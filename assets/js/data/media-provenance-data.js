@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 356,
-    "referenced": 356,
+    "registered": 362,
+    "referenced": 362,
     "unreferenced": 0,
     "review": 150,
-    "managed": 206,
+    "managed": 212,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 326,
+      "image": 332,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 188,
+      "PROJECT_GENERATED": 194,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 146,
+      "DELIVERY_DERIVATIVE": 150,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 78,
+      "RECONSTRUCTED": 80,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2828,6 +2828,7 @@
         "assets/js/data/field-dossier-data.js",
         "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-data.mjs"
@@ -2850,6 +2851,7 @@
         "assets/js/data/field-dossier-data.js",
         "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-data.mjs"
@@ -3173,6 +3175,7 @@
         "assets/js/data/field-dossier-data.js",
         "assets/js/data/regional-drilldown-data.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-data.mjs"
@@ -3457,6 +3460,48 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/pitalja-blood-exit-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기본 규칙 리버스 지점의 피탈자(worldFramework.reverseSiteCivilians) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "피탈자의 몸이 죽은 뒤 괴이가 핏덩이로 빠져나오는 과정과 A.R.F의 배수구 차단 절차를 한 장면으로 옮긴 분석 재구성이다. 특정 현장과 피탈자의 신원, 핏덩이가 향한 곳은 확정하지 않는다.",
+      "credit": "Project Curse taken-civilian scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1878390,
+      "sha256": "6803ccfcb38e3b02620f65823c43235f7f9a4dbc5f10f8cbfb366b7735082c3d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/pitalja-roe-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "N.H.C 교범 피탈자 교전 규칙(NHC_Manual_891219) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "피탈자 교전 규칙의 경고와 구속 단계를 한 장면으로 옮긴 분석 재구성이다. 특정 작전 기록이 아니며, 피탈자의 신원과 빙의 해제 여부를 확정하지 않는다.",
+      "credit": "Project Curse taken-civilian scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1640800,
+      "sha256": "6b9f3e40e998cbe8e148270cb0218473d57492d679637c53f0a38f465238868d",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/project-curse-world-keyart-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3504,6 +3549,7 @@
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -3567,6 +3613,7 @@
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -5691,6 +5738,70 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/pilgrim-rule-05-forest-path-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/pitalja-blood-exit-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/pitalja-blood-exit-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9620,
+      "sha256": "e2e4bd17dd340320fdb0c32a0e54a6abdb3d5d54335773cc019f7d6622cfe548",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/pitalja-blood-exit-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/pitalja-blood-exit-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/pitalja-blood-exit-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 32254,
+      "sha256": "ae8d3c247ebdf219429446589b3f8196f685af6886b32237ec6ea399c6557898",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/pitalja-blood-exit-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/pitalja-roe-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/pitalja-roe-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6400,
+      "sha256": "1656c5d84f99b584ba833abfa52e4b7e2b7b1923ad90806ba85d3e292befeeab",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/pitalja-roe-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/pitalja-roe-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/pitalja-roe-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 19422,
+      "sha256": "38fdd330938553c47cc803f94d3ea775345036142f3000fc2f57fd2d7b8613ae",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/pitalja-roe-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

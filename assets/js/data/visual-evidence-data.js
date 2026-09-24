@@ -205,6 +205,12 @@
     }),
     'assets/resources/derived/mikage-shiori-portrait-concept-v1.png':Object.freeze({
       assetId:'VEA-PER-MKS-01',className:'RECONSTRUCTED',source:'인물 기록(mikage-shiori)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 아버지의 이름과 사망 경위, 저주의 내용은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/pitalja-roe-concept-v1.png':Object.freeze({
+      assetId:'VEA-PTJ-ROE-01',className:'RECONSTRUCTED',source:'N.H.C 교범 피탈자 교전 규칙(NHC_Manual_891219) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'피탈자 교전 규칙의 경고와 구속 단계를 한 장면으로 옮긴 분석 재구성이다. 특정 작전 기록이 아니며, 피탈자의 신원과 빙의 해제 여부를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/pitalja-blood-exit-concept-v1.png':Object.freeze({
+      assetId:'VEA-PTJ-BLD-01',className:'RECONSTRUCTED',source:'세계 기본 규칙 리버스 지점의 피탈자(worldFramework.reverseSiteCivilians) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'피탈자의 몸이 죽은 뒤 괴이가 핏덩이로 빠져나오는 과정과 A.R.F의 배수구 차단 절차를 한 장면으로 옮긴 분석 재구성이다. 특정 현장과 피탈자의 신원, 핏덩이가 향한 곳은 확정하지 않는다.'
     })
   });
 

@@ -136,6 +136,7 @@
     const rec = sec.record || {};
     return panel('ROE / TAKEN CIVILIANS', '피탈자 교전 규칙', [
       paragraphs(sec.paragraphs),
+      scene(sec.image),
       list(sec.items, 'tc-man-list tc-man-list--rules'),
       sec.quote ? h('blockquote.tc-man-quote', null, h('p', { text: sec.quote })) : null,
       sec.warning ? h('div.tc-note.tc-note--danger', null, h('b', { text: 'MISSION FAILURE' }), h('p', { text: sec.warning })) : null,
