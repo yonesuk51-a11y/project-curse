@@ -46,7 +46,7 @@
     },
     {
       id:'tanaka-yui',name:'타나카 유이',group:'personal',role:'재난통신 정비사',status:'active',certainty:'partial',
-      overview:'비상방송 장비를 수리하고 미등록 호출부호를 추적하는 기술자다.',
+      overview:'비상방송 장비를 수리하는 기술자다. 미등록 호출부호를 추적한다.',
       relationships:[{target:'tanaka-chihiro',relation:'딸',certainty:'partial'},{target:'maya',relation:'현장 기록 협조',certainty:'partial'}],
       limits:['모녀 관계와 마야와의 협조 이력은 보완 신원 기록의 잠정 배치다.']
     },
@@ -58,13 +58,13 @@
     },
     {
       id:'jeong-ria',name:'정리아',group:'personal',role:'개인 관계자',status:'unknown',certainty:'partial',
-      overview:'초기 명부에서 남매 관계 표기와 함께 남은 인물이다.',
+      overview:'초기 명부에 남매 관계 표기와 함께 남아 있다.',
       relationships:[{target:'ryu-youngho',relation:'남매 표기',certainty:'partial'}],
       limits:['류영호 외 다른 인물까지 남매 관계에 포함되는지는 불명이다.']
     },
     {
       id:'ryu-youngho',name:'류영호',group:'personal',role:'개인 관계자',status:'unknown',certainty:'partial',
-      overview:'초기 명부에서 정리아와 인접한 남매 관계자로 기록된 인물이다.',
+      overview:'초기 명부에서 정리아와 인접한 남매 관계자로 기록됐다.',
       relationships:[{target:'jeong-ria',relation:'남매 표기',certainty:'partial'}],
       limits:['관계의 정확한 범위와 소속·능력은 확인되지 않았다.']
     },
@@ -72,13 +72,13 @@
     {id:'sasaki',name:'사사키',group:'personal',role:'의료표본 운송원',status:'active',certainty:'partial',overview:'봉인된 의료표본을 분석실로 운송하는 민간 계약자다.',limits:['전체 이름과 경력은 보완 신원 기록에서 잠정 확장됐다.']},
     {
       id:'nina-gregory',name:'니나 그레고리',group:'personal',role:'기생생물학 고문',status:'active',certainty:'listed',
-      overview:'예셀 그레고리의 어머니로 기재된 인물이다.',
+      overview:'예셀 그레고리의 어머니로 기재됐다.',
       relationships:[{target:'yesel-gregory',relation:'어머니',certainty:'listed'}],
       limits:['소속, 능력과 현재 상태가 제공되지 않았다.']
     },
     {
       id:'yesel-gregory',name:'예셀 그레고리',group:'personal',role:'이상언어학 연구자',status:'active',certainty:'listed',
-      overview:'니나 그레고리의 딸이며 의식문과 숙주 언어를 연구한다.',
+      overview:'니나 그레고리의 딸이다. 의식문과 숙주 언어를 연구한다.',
       relationships:[{target:'nina-gregory',relation:'딸',certainty:'listed'}],
       limits:['연구 경력과 활동 이력은 보완 신원 기록에서 확장됐다.']
     },
@@ -110,27 +110,27 @@
     },
     {
       id:'jake',name:'제이크',group:'fhc-union',role:'경호원',status:'unknown',certainty:'listed',
-      overview:'F.H.C-유니온 인물군에 경호원으로 기재된 인물이다.',
+      overview:'F.H.C-유니온 인물군에 경호원으로 기재됐다.',
       affiliations:[{key:'fhc',label:'F.H.C-유니온',role:'경호원',certainty:'listed'}],
       relationships:[{target:'alma-kara',relation:'전담 경호',certainty:'partial'}],
       limits:['전체 이름과 경호 이력은 보완 신원 기록에서 확장됐다.']
     },
     {
       id:'alma-koenig',name:'알마 코니그',group:'fhc-union',secondaryGroups:['alma'],role:'본부장',status:'active',certainty:'listed',
-      overview:'F.H.C-유니온 본부장이자 알마 가문의 장남으로 재정리된 인물이다.',
+      overview:'F.H.C-유니온 본부장이자 알마 가문의 장남으로 재정리됐다.',
       affiliations:[{key:'fhc',label:'F.H.C-유니온',role:'본부장',certainty:'listed'}],
       relationships:[{target:'alma-wade',relation:'아들',certainty:'partial'},{target:'alma-kara',relation:'손자',certainty:'partial'},{target:'alma-damian',relation:'형제',certainty:'partial'},{target:'alma-bennett',relation:'남매',certainty:'partial'},{target:'alma-griffon',relation:'형제',certainty:'partial'}],
       limits:['가족 구조와 현시점 재임 여부는 보완 신원 기록에서 잠정 재구성됐다.']
     },
     {
       id:'ezekiel-kalp',name:'에제키엘 칼프',group:'fhc-ark',role:'아크의 보스',status:'active',certainty:'listed',
-      overview:'F.H.C-아크의 보스로 기재된 인물이다.',
+      overview:'F.H.C-아크의 보스로 기재됐다.',
       affiliations:[{key:'fhc',label:'F.H.C-아크',role:'보스',certainty:'listed'}],
       limits:['능력, 지휘 범위와 유니온과의 관계는 제공되지 않았다.']
     },
     {
       id:'sakuma-yuta',name:'사쿠마 유타',aliases:['레드 마우스'],group:'fhc-ark',secondaryGroups:['haiman'],role:'U.A.C 정보원 / 하이문 리더',status:'active',certainty:'partial',
-      overview:'F.H.C-아크 구간에서는 U.A.C 정보원으로, 하이문 구간에서는 “레드 마우스”라는 이름의 리더이자 오리진 실험체로 기재된다. 두 기록은 동일 인물을 가리키는 것으로 직접 연결되어 있다.',
+      overview:'F.H.C-아크 구간에서는 U.A.C 정보원으로 기재된다. 하이문 구간에서는 “레드 마우스”라는 이름의 리더이자 오리진 실험체로 기재된다. 두 기록은 동일 인물을 가리키는 것으로 직접 연결돼 있다.',
       affiliations:[
         {key:'uac',label:'U.A.C',role:'정보원',certainty:'listed'},
         {key:'fhc',label:'F.H.C-아크',role:'잠입·전향 경위 미확인',certainty:'partial'},
@@ -142,13 +142,13 @@
     },
     {
       id:'karl-maxwell',name:'칼 맥스웰',group:'fhc-ark',role:'사냥꾼',status:'active',certainty:'listed',
-      overview:'F.H.C-아크 소속 사냥꾼으로 기재된 인물이다.',
+      overview:'F.H.C-아크 소속 사냥꾼으로 기재됐다.',
       affiliations:[{key:'fhc',label:'F.H.C-아크',role:'사냥꾼',certainty:'listed'}],equipment:['봉'],
       limits:['“봉”의 규격과 별도 능력은 제공되지 않았다.']
     },
     {
       id:'brian-alberoz',name:'브리안 알베로즈',group:'fhc-ark',role:'사냥꾼',status:'active',certainty:'listed',
-      overview:'F.H.C-아크 소속 사냥꾼으로 기재된 인물이다.',
+      overview:'F.H.C-아크 소속 사냥꾼으로 기재됐다.',
       affiliations:[{key:'fhc',label:'F.H.C-아크',role:'사냥꾼',certainty:'listed'}],equipment:['카드'],
       limits:['카드의 용도와 별도 능력은 제공되지 않았다.','제7사도 알베레즈와의 이름 유사성만으로 관계를 확정하지 않는다.']
     },
@@ -158,9 +158,9 @@
       affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],capabilities:['염동력'],
       limits:['사망 시점·원인과 미즈미 야나미와의 관계는 확인되지 않았다.']
     },
-    {id:'duka',name:'두카',group:'fhc-ark',role:'소속 인물',status:'deceased',certainty:'listed',overview:'F.H.C-아크 인물군에 사망자로 기재되어 있다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['전체 이름, 역할, 능력과 사망 경위가 제공되지 않았다.']},
-    {id:'reiki',name:'레이키',group:'fhc-ark',role:'소속 인물',status:'deceased',certainty:'listed',overview:'F.H.C-아크 인물군에 사망자로 기재되어 있다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['전체 이름, 역할, 능력과 사망 경위가 제공되지 않았다.']},
-    {id:'sebastian-clark',name:'세바스찬 클라크',group:'fhc-ark',role:'소속 인물',status:'unknown',certainty:'listed',overview:'F.H.C-아크 인물군에 이름이 남아 있는 인물이다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['직책, 능력과 현재 상태가 제공되지 않았다.']},
+    {id:'duka',name:'두카',group:'fhc-ark',role:'소속 인물',status:'deceased',certainty:'listed',overview:'F.H.C-아크 인물군에 사망자로 기재됐다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['전체 이름, 역할, 능력과 사망 경위가 제공되지 않았다.']},
+    {id:'reiki',name:'레이키',group:'fhc-ark',role:'소속 인물',status:'deceased',certainty:'listed',overview:'F.H.C-아크 인물군에 사망자로 기재됐다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['전체 이름, 역할, 능력과 사망 경위가 제공되지 않았다.']},
+    {id:'sebastian-clark',name:'세바스찬 클라크',group:'fhc-ark',role:'소속 인물',status:'unknown',certainty:'listed',overview:'F.H.C-아크 인물군에 이름이 남아 있다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['직책, 능력과 현재 상태가 제공되지 않았다.']},
     {
       id:'baranto',name:'바란토',group:'nhc',role:'국장',status:'active',certainty:'listed',
       overview:'N.H.C 국장으로 기재된 생기 사용자다.',
@@ -211,14 +211,14 @@
     },
     {
       id:'natalia',name:'나탈리아',group:'uac',role:'위원회 비서 / 정보원',status:'active',certainty:'listed',
-      overview:'U.A.C 위원회 비서이자 정보원으로 기재된 인물이다.',
+      overview:'U.A.C 위원회 비서이자 정보원으로 기재됐다.',
       affiliations:[{key:'uac',label:'U.A.C',role:'위원회 비서 / 정보원',certainty:'listed'}],
       relationships:[{target:'pierce',relation:'보좌 대상 / 위원회 대표',certainty:'listed'}],
       limits:['정보 활동의 대상과 별도 능력은 제공되지 않았다.']
     },
     {
       id:'aaron-uac',name:'아론',group:'uac',role:'소속 전투원',status:'active',certainty:'listed',
-      overview:'U.A.C 인물군에 쌍창 사용자로 기재된 인물이다.',
+      overview:'U.A.C 인물군에 쌍창 사용자로 기재됐다.',
       affiliations:[{key:'uac',label:'U.A.C',role:'소속 전투원',certainty:'listed'}],capabilities:['쌍창'],
       relationships:[{target:'aaron-syndicate',relation:'동명이인 또는 동일 인물 여부 미확인',certainty:'unresolved'}],
       limits:['신디케이트의 아론과 동일 인물인지 확인되지 않았다.']
@@ -239,9 +239,9 @@
     },
     {
       id:'dennis',name:'데니스',group:'sid-us',role:'타이런트',status:'active',certainty:'partial',
-      overview:'S.I.D 미국 지부의 타이런트로 기재되었으나 능력 메모가 미완성 상태다.',
+      overview:'S.I.D 미국 지부의 타이런트로 기재됐다. 능력 메모는 미완성 상태다.',
       affiliations:[{key:'sid',label:'S.I.D 미국 지부',role:'타이런트',certainty:'listed'}],capabilities:['초감각 더미 — 표기 미완'],
-      limits:['“초감각더미/” 이후의 원문이 누락되어 능력 기능을 확정할 수 없다.']
+      limits:['“초감각더미/” 이후의 원문이 누락됐다. 능력 기능은 확정할 수 없다.']
     },
     {
       id:'alma-millen',name:'알마 밀렌',group:'syndicate',role:'요원',status:'active',certainty:'listed',
@@ -251,26 +251,26 @@
     },
     {
       id:'violet',name:'바이올렛',group:'syndicate',role:'정보원',status:'active',certainty:'listed',
-      overview:'신디케이트 정보원으로 기재된 인물이다.',
+      overview:'신디케이트 정보원으로 기재됐다.',
       affiliations:[{key:'syndicate',label:'신디케이트',role:'정보원',certainty:'listed'}],
       limits:['전체 이름, 능력과 정보 활동 범위가 제공되지 않았다.']
     },
     {
       id:'aaron-syndicate',name:'아론',group:'syndicate',role:'소속 전투원',status:'active',certainty:'listed',
-      overview:'신디케이트 인물군에 창술 사용자로 기재된 인물이다.',
+      overview:'신디케이트 인물군에 창술 사용자로 기재됐다.',
       affiliations:[{key:'syndicate',label:'신디케이트',role:'소속 전투원',certainty:'listed'}],capabilities:['창술'],
       relationships:[{target:'aaron-uac',relation:'동명이인 또는 동일 인물 여부 미확인',certainty:'unresolved'}],
       limits:['U.A.C의 아론과 동일 인물인지 확인되지 않았다.']
     },
     {
       id:'saxon',name:'작센',group:'syndicate',role:'소속 인물',status:'active',certainty:'listed',
-      overview:'신디케이트 인물군에 투시 사용자로 기재된 인물이다.',
+      overview:'신디케이트 인물군에 투시 사용자로 기재됐다.',
       affiliations:[{key:'syndicate',label:'신디케이트',role:'소속 인물',certainty:'listed'}],capabilities:['투시'],
       limits:['투시의 범위와 역할이 제공되지 않았다.']
     },
     {
       id:'isaac',name:'아이작',group:'syndicate',role:'소속 인물',status:'active',certainty:'listed',
-      overview:'신디케이트 인물군에 괴력 사용자로 기재된 인물이다.',
+      overview:'신디케이트 인물군에 괴력 사용자로 기재됐다.',
       affiliations:[{key:'syndicate',label:'신디케이트',role:'소속 인물',certainty:'listed'}],capabilities:['괴력'],
       limits:['괴력의 발현 조건과 역할이 제공되지 않았다.']
     },
@@ -283,7 +283,7 @@
     },
     {
       id:'ramus-manson',name:'라무스 맨슨',group:'ushinoda',role:'타락교 교주',status:'active',certainty:'partial',
-      overview:'우시노다교 인물군에서 타락교 교주로 기재된 인물이다.',
+      overview:'우시노다교 인물군에서 타락교 교주로 기재됐다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'소속 기록',certainty:'listed'},{key:'corruption-cult',label:'타락교',role:'교주',certainty:'listed'}],capabilities:['미확인'],
       limits:['능력과 세부 활동이 물음표로 남아 있다.']
     },
@@ -352,7 +352,7 @@
     },
     {
       id:'semyon-reyes',name:'세묜 레예스',group:'haiman',role:'소속 인물',status:'unknown',certainty:'partial',
-      overview:'하이문 인물군에서 이름만 남아 있는 인물이다.',
+      overview:'하이문 인물군에는 이름만 남아 있다.',
       affiliations:[{key:'haimun',label:'하이문',role:'소속 인물',certainty:'partial'}],
       limits:['직책, 능력, 사쿠마 유타와의 관계 및 현재 상태가 제공되지 않았다.']
     }
@@ -400,7 +400,7 @@
 
   root.ProjectCursePersonnel=freeze({
     version:'5.54.0',schema:'project-curse-personnel-v3',sourceClass:'LEGACY REGISTER + SUPPLEMENTAL IDENTITY + CANON REVISION',
-    editorialRule:'개편 정본명·작전 분류와 2006년 원 명부명을 함께 보존하며, 능력은 발현 경로와 대가를 분리해 판독한다.',
+    editorialRule:'개편 정본명·작전 분류와 2006년 원 명부명을 함께 보존한다. 능력은 발현 경로와 대가를 분리해 판독한다.',
     groups,statuses,certainties,records,byId,groupById,factionIndex,stats
   });
 })(window);
