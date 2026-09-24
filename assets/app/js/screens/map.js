@@ -1,4 +1,4 @@
-// Project Curse 6 — 상황 관제. 상태 저장소는 pc-state.js에 있다.
+// Project Curse 6 — 작전 지도. 상태 저장소는 pc-state.js에 있다.
 (function(root){
 'use strict';
 
@@ -71,9 +71,9 @@ function operationTerrain(operation){
   const scenarios=root.ProjectCursePilgrimageData.scenarios;
   const signals=root.ProjectCurseMapSignalIndex;
   const sessionKey='project_curse_map_session_v1', recentKey='project_curse_map_recent_v1';
-  const confidence={confirmed:'확인 자료',corroborated:'교차 확인 자료',observed:'관측 자료',estimated:'추정 좌표',disputed:'상충 진술',testimony:'순례자 증언',historical:'과거 기록'};
+  const confidence={confirmed:'확인 자료',corroborated:'함께 맞춰 본 자료',observed:'관측 자료',estimated:'추정 좌표',disputed:'상충 진술',testimony:'순례자 증언',historical:'과거 기록'};
   const risks={critical:'치명',high:'높음',medium:'주의',low:'낮음'};
-  const statusLabels={normal:'정상',unstable:'불안정',split:'신호 분열',unknown:'미상',lost:'신호 소실'};
+  const statusLabels={normal:'정상',unstable:'불안정',split:'신호 분열',unknown:'알 수 없음',lost:'신호 소실'};
   const uncertain=c=>['estimated','testimony','disputed'].includes(c);
   const traceTone=c=>['broken','compromised'].includes(c)?'hostile':c==='contained'?'contained':['kept','verified','secured'].includes(c)?'secured':'unknown';
   const readStorage=(storage,key,empty)=>{try{return JSON.parse(root[storage].getItem(key)||'null')||empty;}catch(_){return empty;}};
@@ -104,10 +104,11 @@ function operationTerrain(operation){
   const link=(label,...path)=>h('a.tc-btn.tc-map-link',{href:PC.href(...path)},label);
   const action=(label,name,key='',props={})=>h('button.tc-btn',{type:'button',dataset:{action:name,key,control:`${name}:${key}`},...props},label);
   const kv=rows=>h('dl.tc-kv.tc-map-kv',null,rows.filter(([,v])=>v!=null&&v!=='').map(([k,v,options={}])=>h('div',{class:options.fullOnly?'tc-full-only':null},h('dt',{text:k}),h('dd',{'data-tc-anomaly':options.anomaly},v))));
+  const verdictRecord=record=>kv([['기록 코드',record.code,{fullOnly:true}],['문서 종류',record.type],['보낸 곳',record.author],['받는 곳',record.recipient],['근거',record.evidence],['기록 한계',record.limit]]);
   const panel=(code,title,...children)=>h('section.tc-panel.tc-map-panel',null,h('header.tc-panel-head',null,h('div',null,h('span.tc-label.tc-full-only',{text:code}),h('h2',{text:title}))),h('div.tc-panel-body.tc-map-stack',null,...children));
   const disclosure=(code,title,children,props={})=>h('details.tc-disclosure.tc-map-disclosure',props,h('summary',null,h('span',null,h('span.tc-label.tc-full-only',{text:code}),h('b',{text:title}))),h('div.tc-disclosure-body.tc-map-stack',null,children));
   const intelPanel=(...children)=>h('aside.tc-map-stack',null,disclosure('SELECTED INFORMATION','선택 정보',children,{open:!state.intelCollapsed,dataset:{disclosure:'intel'}}));
-  const missing=(key)=>PC.missing('MAP RECORD NOT FOUND',key,'요청한 관제 자료가 없습니다. 주소를 다시 확인해 주세요.');
+  const missing=(key)=>PC.missing('MAP RECORD NOT FOUND',key,'요청한 지도 자료가 없습니다. 주소를 다시 확인해 주세요.');
   const list=items=>h('ul.tc-map-bullets',null,items.map(t=>h('li',{text:t})));
   const bodyTitle=(code,title,description)=>h('header.tc-map-title',null,h('span.tc-label.tc-full-only',{text:code}),h('h2',{'data-tc-focus':true,text:title}),description?txt(description):null);
   const row=(code,title,summary,path,status,tone='info',unread=false)=>h('a.tc-row.tc-map-row',{href:PC.href('map-room',...path)},h('span.tc-row-time.tc-full-only',{text:code}),h('span.tc-row-main',null,h('b',{text:title}),h('span.tc-map-copy',{text:summary})),h('span.tc-row-meta',null,unread?h('span.tc-tag.tc-tag--evidence.tc-map-new',null,'새 기록',h('span.tc-full-only',{text:' / NEW'})):status?tag(status,tone):null),h('span.tc-row-go',{'aria-hidden':'true',text:'›'}));
@@ -167,7 +168,7 @@ function operationTerrain(operation){
       if(model.previewContact&&timeState(model.previewContact.year)==='future')closePreview(model);
     }
     const contacts=[...mapModels.values()].flatMap(m=>m.contacts),unknown=contacts.filter(c=>c.year==null).length,future=contacts.filter(c=>timeState(c.year)==='future').length;
-    const status=host.querySelector('.tc-map-year-status');if(status)status.textContent=`${mapYear}년까지 ${contacts.length-unknown-future}곳 · 연도 미상 ${unknown}곳 · 이후 기록 ${future}곳`;
+    const status=host.querySelector('.tc-map-year-status');if(status)status.textContent=`${mapYear}년까지 ${contacts.length-unknown-future}곳 · 연도 알 수 없음 ${unknown}곳 · 이후 기록 ${future}곳`;
     const playButton=host.querySelector('[data-action="year-play"]');if(playButton){playButton.textContent=reducedFx()?'2042년으로 이동':yearTimer?'연도 재생 멈춤':'연도 재생';playButton.setAttribute('aria-pressed',String(!!yearTimer));}
     syncSignals();
   }
@@ -189,7 +190,7 @@ function operationTerrain(operation){
     const historyId=item.history||inc.history;
     if(historyId)links.push(link('세계 기록에서 사건 열기','history',historyId));
     for(const id of inc.factions||[])links.push(link(root.ProjectCurseCanon.factions[id]?.name||id,'faction-info',id));
-    if(item.operation)links.push(link('연결 작전 경과','map-room','op',item.operation));
+    if(item.operation)links.push(link('연결 작전 진행','map-room','op',item.operation));
     return links.length?h('nav.tc-btnrow',{'aria-label':'관련 기록'},links):null;
   }
   function canonical(path){
@@ -204,7 +205,7 @@ function operationTerrain(operation){
   }
   function resolve(raw){
     const p=canonical(raw),[kind,id,sub,site]=p;
-    if(!p.length)return {kind:'index',title:'상황 관제'};
+    if(!p.length)return {kind:'index',title:'작전 지도'};
     if(kind==='op'&&p.length===2&&operation(id))return {kind:'op',item:operation(id),title:operation(id).label};
     if(kind==='region'){
       const d=detail(id),r=region(id);
@@ -226,7 +227,7 @@ function operationTerrain(operation){
     if(kind==='pilgrimage'&&p.length===2&&scenarios[id])return {kind:'pilgrimage',item:scenarios[id],title:scenarios[id].title};
     if(kind==='verdict'&&p.length===1)return {kind:'verdicts',title:'현장 판정 보관'};
     if(kind==='verdict'&&p.length===2&&V.getEntry(id))return {kind:'verdict',item:V.getEntry(id),title:V.getEntry(id).unlocked?V.getEntry(id).title:V.getEntry(id).lockedTitle};
-    return {kind:'missing',title:'관제 자료 없음',key:raw.join('/')};
+    return {kind:'missing',title:'지도 자료 없음',key:raw.join('/')};
   }
   function legacyPath(v){
     if(v.kind==='op')return ['operation',v.item.id];
@@ -382,7 +383,7 @@ function operationTerrain(operation){
     for(const entry of model.entries)entry.node.classList[entry.c.id===contact.id?'add':'remove']('is-selected');
     const figure=visual?h('figure.tc-evidence',{'data-dtg':visual.dtg,'data-place':visual.place,'data-coords':visual.coords,'data-record':visual.record||visual.assetId},
       h('div.tc-evidence-media',null,PC.img(visual.src,{alt:visual.alt||visual.title||contact.title,sizes:'(max-width: 600px) 90vw, 320px'})),
-      h('figcaption',null,h('b',null,bilingual(visual.label)),h('span',{text:visual.title}),h('span',{text:`촬영 시각: ${visual.dtg||'미상'}`}),h('span',{text:`자료 번호: ${visual.record||visual.assetId||'미상'}`}))):txt(X.copy.noPhoto);
+      h('figcaption',null,h('b',null,bilingual(visual.label)),h('span',{text:visual.title}),h('span',{text:`촬영 시각: ${visual.dtg||'알 수 없음'}`}),h('span',{text:`자료 번호: ${visual.record||visual.assetId||'알 수 없음'}`}))):txt(X.copy.noPhoto);
     PC.clear(model.preview).append(h('div.tc-map-preview-head',null,h('h3',{tabindex:-1,text:contact.title}),action('닫기','preview-close',model.canvas.dataset.mapId)),figure,
       h('div.tc-btnrow',null,link('지점 기록 열기','map-room',...contact.path),visual?.history?link('연결된 세계 기록','history',visual.history):null));
     if(focus)model.preview.querySelector('h3')?.focus({preventScroll:true});
@@ -392,9 +393,9 @@ function operationTerrain(operation){
     const silence=root.document.documentElement?.dataset.silence==='on';
     for(const model of mapModels.values())for(const {c,node,signal} of model.entries)if(signal){
       const silent=!!(silence&&c.synchrony),lost=lostSignal===c.id;node.dataset.signalState=silent?'silent':lost?'lost':'active';
-      node.querySelector('.tc-map-signal-status').textContent=silent?'무응답':lost?'수신 끊김':'신호';
+      node.querySelector('.tc-map-signal-status').textContent=silent?'무응답':lost?'신호 끊김':'신호';
       const when=c.year==null?X.copy.timelineUnknown:`${c.year}년 기록`;
-      node.setAttribute('aria-label',`${c.title} · ${frameLabels[contactFrame(c)]} · ${when} · X ${c.x} Y ${c.y}${silent?' · 무응답':lost?' · 수신 끊김':''}`);
+      node.setAttribute('aria-label',`${c.title} · ${frameLabels[contactFrame(c)]} · ${when} · X ${c.x} Y ${c.y}${silent?' · 무응답':lost?' · 신호 끊김':''}`);
     }
   }
   function stopSignals(){root.clearTimeout(signalTimer);root.clearTimeout(signalRestoreTimer);signalTimer=0;signalRestoreTimer=0;lostSignal=null;syncSignals();}
@@ -408,11 +409,11 @@ function operationTerrain(operation){
     },display.signalGapMs+Math.floor(Math.random()*12000));
   }
   function legend(){
-    const p=palette();return h('ul.tc-map-legend',{'aria-label':'지도 기호 범례'},[['normal','아군 / 정상'],['hostile','적대'],['unknown','미상 / 상충'],['unstable','불안정'],['split','신호 분열'],['lost','신호 소실'],['facility','시설'],['incident','사건'],['cult','교단'],['fortress','성채'],['anomaly','이상현상'],['returned','귀환'],['line','관측선'],['zone','권역'],['signal','동시 관측'],['ruin','폐허'],['settlement','정착지']].map(([k,t])=>h('li',null,h('img',{src:uri(symbol(k,20,20,'',p),'0 0 40 40',p),alt:'',width:26,height:26}),h('span',{text:t}))));
+    const p=palette();return h('ul.tc-map-legend',{'aria-label':'지도 기호 범례'},[['normal','아군 / 정상'],['hostile','적대'],['unknown','알 수 없음 / 상충'],['unstable','불안정'],['split','신호 분열'],['lost','신호 소실'],['facility','시설'],['incident','사건'],['cult','교단'],['fortress','성채'],['anomaly','이상현상'],['returned','귀환'],['line','관측선'],['zone','지역'],['signal','동시 관측'],['ruin','폐허'],['settlement','정착지']].map(([k,t])=>h('li',null,h('img',{src:uri(symbol(k,20,20,'',p),'0 0 40 40',p),alt:'',width:26,height:26}),h('span',{text:t}))));
   }
-  function frameLegend(){const p=palette();return h('div.tc-map-frame-legend',null,h('ul.tc-map-legend',{'aria-label':'작전 부호 틀 범례'},Object.entries(frameLabels).map(([kind,label])=>h('li',null,h('img',{src:frameIcon({affiliation:kind},p),alt:'',width:32,height:32}),h('span',{text:label})))),txt('점선 틀·점선 구역: 연도 미상'),txt(X.copy.signalBoundary));}
+  function frameLegend(){const p=palette();return h('div.tc-map-frame-legend',null,h('ul.tc-map-legend',{'aria-label':'작전 부호 틀 범례'},Object.entries(frameLabels).map(([kind,label])=>h('li',null,h('img',{src:frameIcon({affiliation:kind},p),alt:'',width:32,height:32}),h('span',{text:label})))),txt('점선 틀·점선 구역: 연도 알 수 없음'),txt(X.copy.signalBoundary));}
   function layers(group,labels){return h('div.tc-seg.tc-map-layers',{role:'group','aria-label':group==='layers'?'지도 레이어':'상세 지도 레이어'},labels.map(([key,label])=>action(label,'layer',`${group}:${key}`,{'aria-pressed':String(state[group][key])})));}
-  const mapFrame=(code,status,graphic,...tail)=>h('section.tc-panel.tc-bracket.tc-map-board',null,h('header.tc-map-board-head',null,h('span.tc-map-live',null,h('i',{'aria-hidden':'true',text:'●'}),'관제',h('span.tc-full-only',{text:'LIVE'})),h('span.tc-code.tc-full-only',{text:code}),h('span',{text:status})),graphic,h('p.tc-map-coordinates',null,'복원 좌표 · 길을 찾는 데 쓰지 마세요.',h('span.tc-full-only',{text:' / RECONSTRUCTED COORDINATES / NOT FOR NAVIGATION'})),...tail);
+  const mapFrame=(code,status,graphic,...tail)=>h('section.tc-panel.tc-bracket.tc-map-board',null,h('header.tc-map-board-head',null,h('span.tc-map-live',null,h('i',{'aria-hidden':'true',text:'●'}),'지도',h('span.tc-full-only',{text:'LIVE'})),h('span.tc-code.tc-full-only',{text:code}),h('span',{text:status})),graphic,h('p.tc-map-coordinates',null,'복원 좌표 · 길을 찾는 데 쓰지 마세요.',h('span.tc-full-only',{text:' / RECONSTRUCTED COORDINATES / NOT FOR NAVIGATION'})),...tail);
   function resolveSite(item){
     let out={...item};const [id,idx]=X.scenarioStageByItem[item.id]||[];
     if(id){const s=P.get(id),end=P.getEnding(id),scenario=scenarios[id];const choice=s.choices.find(c=>c.stage===scenario.stages[idx].id);
@@ -433,24 +434,24 @@ function operationTerrain(operation){
     if(state.layers.synchrony)for(const e of syncEvent?[syncEvent]:D.synchronyEvents)for(const point of e.points.filter(pt=>r.id==='world'||pt.region===r.id)){
       contacts.push({...point,source:{...point,history:e.history},year:itemYear(e),synchrony:true,title:point.label,path:['synchrony',e.id,point.id],selected:point.id===syncPoint?.id});
     }
-    return {board:mapFrame(r.code,r.status,mapGraphic(r.label,r.viewBox,body,contacts,p,routes,[],{id:r.id,zones:state.layers.zones?D.zones.filter(z=>r.id==='world'||z.region===r.id):[]}),yearBar(),layers('layers',[['confirmed','확인'],['estimated','추정·증언'],['zones','오염 권역'],['routes','이동 경로'],['synchrony','2042 동시 관측']]),frameLegend()),contacts};
+    return {board:mapFrame(r.code,r.status,mapGraphic(r.label,r.viewBox,body,contacts,p,routes,[],{id:r.id,zones:state.layers.zones?D.zones.filter(z=>r.id==='world'||z.region===r.id):[]}),yearBar(),layers('layers',[['confirmed','확인'],['estimated','추정·증언'],['zones','오염 지역'],['routes','이동 경로'],['synchrony','2042 동시 관측']]),frameLegend()),contacts};
   }
   function directory(contacts){
-    const entries=items=>items.map(c=>dated(h('div.tc-map-catalog-entry',null,row(c.id,c.title,`${c.year==null?X.copy.timelineUnknown:c.year+'년 기록'} · X ${c.x} / Y ${c.y}`,c.path,c.status||'관측점')),{year:c.year}));
+    const entries=items=>items.map(c=>dated(h('div.tc-map-catalog-entry',null,row(c.id,c.title,`${c.year==null?X.copy.timelineUnknown:c.year+'년 기록'} · X ${c.x} / Y ${c.y}`,c.path,c.status||'관측 지점')),{year:c.year}));
     return panel('CONTACT DIRECTORY','지도 지점 목록',h('div.tc-rows',null,entries(contacts.filter(c=>c.year!=null))),disclosure('UNDATED',X.copy.timelineUnknown,h('div.tc-rows',null,entries(contacts.filter(c=>c.year==null)))));
   }
   function regionIntel(r){
-    const n=r.nomenclature;return panel(r.code,r.label,txt(r.description),kv([['관제 상태',r.status],['자료 상태',r.confidence],...(n?[['기록 표제',`${n.primary} / ${n.short}`],['지리 범위',n.scope],['현지·구어',n.aliases.map(a=>a.label).join(' · ')],['폐기 표기',n.legacy.map(a=>a.label).join(' · ')]]:[])]),note('판독 한계',n?.boundary||X.copy.navigation),h('div.tc-btnrow',null,D.drilldowns.filter(d=>d.region===r.id).map(d=>link(d.label,'map-room','region',d.id))));
+    const n=r.nomenclature;return panel(r.code,r.label,txt(r.description),kv([['현재 상태',r.status],['자료 상태',r.confidence],...(n?[['기록 표제',`${n.primary} / ${n.short}`],['지리 범위',n.scope],['현지·구어',n.aliases.map(a=>a.label).join(' · ')],['폐기 표기',n.legacy.map(a=>a.label).join(' · ')]]:[])]),note('확인 한계',n?.boundary||X.copy.navigation),h('div.tc-btnrow',null,D.drilldowns.filter(d=>d.region===r.id).map(d=>link(d.label,'map-room','region',d.id))));
   }
   function markerIntel(m){
     const s=resolveSite(m),inc=incident(m.incident);const near=detail(X.markerDetails[m.id]);const scenario=X.scenarioStageByItem[m.id]?.[0];
-    return panel('SELECTED CONTACT',m.title,txt(m.meta),kv([['좌표',`X ${m.x} / Y ${m.y}`],['상태',s.status],['판정',confidence[m.confidence]],['사건 코드',inc?.code,{fullOnly:true}]]),inc?txt(inc.summary):null,references(m),h('div.tc-btnrow',null,link('권역 개요','map-room','region',m.region),near?link(near.label,'map-room','region',near.id):null,scenario?link(scenarios[scenario].title,'map-room','pilgrimage',scenario):null));
+    return panel('SELECTED CONTACT',m.title,txt(m.meta),kv([['좌표',`X ${m.x} / Y ${m.y}`],['상태',s.status],['판정',confidence[m.confidence]],['사건 코드',inc?.code,{fullOnly:true}]]),inc?txt(inc.summary):null,references(m),h('div.tc-btnrow',null,link('지역 개요','map-room','region',m.region),near?link(near.label,'map-room','region',near.id):null,scenario?link(scenarios[scenario].title,'map-room','pilgrimage',scenario):null));
   }
-  function synchronyIntel(e,point){return panel(e.code,e.title,txt(e.summary),kv([['관측 시각',e.date],['무응답',e.duration],['판정',confidence[e.confidence]],['관측점',`${e.points.length}곳`,{anomaly:'count'}],['성채 종 장부',String(e.points.filter(pt=>pt.region==='southamerica').length)],['검문소 무응답 기록',String(e.points.filter(pt=>pt.region==='northamerica').length)],...(point?[['현장',point.site],['수신 호출',point.callsign],['복구 장부',point.log]]:[])]),note('이동 경로로 연결하지 않음',e.boundary),link('세계 기록에서 삼야 무응답 열기','history',e.history),h('div.tc-rows',null,e.points.map(pt=>row(pt.code,pt.label,pt.site,['synchrony',e.id,pt.id],pt.log))));}
+  function synchronyIntel(e,point){return panel(e.code,e.title,txt(e.summary),kv([['관측 시각',e.date],['무응답',e.duration],['판정',confidence[e.confidence]],['관측 지점',`${e.points.length}곳`,{anomaly:'count'}],['성채 타종 장부',String(e.points.filter(pt=>pt.region==='southamerica').length)],['검문소 무응답 기록',String(e.points.filter(pt=>pt.region==='northamerica').length)],...(point?[['현장',point.site],['호출부호',point.callsign],['복구 장부',point.log]]:[])]),note('이동 경로로 연결하지 않음',e.boundary),link('세계 기록에서 삼야 무응답 열기','history',e.history),h('div.tc-rows',null,e.points.map(pt=>row(pt.code,pt.label,pt.site,['synchrony',e.id,pt.id],pt.log))));}
   function regionView(v){
     const r=v.kind==='region'?v.item:v.kind==='synchrony'?region(v.point?.region||'world'):v.region;
     const m=worldMap(r,v.kind==='marker'?v.item:null,v.kind==='synchrony'?v.item:null,v.point);
-    return h('div.tc-map-stack',null,h('nav.tc-btnrow',{'aria-label':'관제 권역'},D.regions.map(x=>link(x.label,'map-room','region',x.id))),h('div.tc-map-layout.tc-map-contact-layout',null,h('div.tc-map-stack',null,m.board,directory(m.contacts)),intelPanel(v.kind==='marker'?markerIntel(v.item):v.kind==='synchrony'?synchronyIntel(v.item,v.point):regionIntel(r))));
+    return h('div.tc-map-stack',null,h('nav.tc-btnrow',{'aria-label':'지역 목록'},D.regions.map(x=>link(x.label,'map-room','region',x.id))),h('div.tc-map-layout.tc-map-contact-layout',null,h('div.tc-map-stack',null,m.board,directory(m.contacts)),intelPanel(v.kind==='marker'?markerIntel(v.item):v.kind==='synchrony'?synchronyIntel(v.item,v.point):regionIntel(r))));
   }
   function briefing(d,site){
     const visible=b=>b&&(!site||!b.siteIds?.length||b.siteIds.includes(site.id));const b=d.signalBrief;
@@ -489,10 +490,10 @@ function operationTerrain(operation){
     const contacts=d.sites.map(s=>({...resolveSite(s),source:s,district:d,year:itemYear(s),title:s.label,path:['region',d.id,'site',s.id],selected:site?.id===s.id}));
     const info=site?resolveSite(site):d,inc=site?incident(site.incident):null;
     const scenario=site?X.scenarioStageByItem[site.id]?.[0]:null;
-    return h('div.tc-map-stack',null,h('nav.tc-btnrow',{'aria-label':'권역 경로'},link('세계','map-room','region','world'),link(region(d.region).label,'map-room','region',d.region),site?link('구역 개요','map-room','region',d.id):null),h('div.tc-map-layout.tc-map-contact-layout',null,
+    return h('div.tc-map-stack',null,h('nav.tc-btnrow',{'aria-label':'지역 경로'},link('세계','map-room','region','world'),link(region(d.region).label,'map-room','region',d.region),site?link('구역 개요','map-room','region',d.id):null),h('div.tc-map-layout.tc-map-contact-layout',null,
       h('div.tc-map-stack',null,mapFrame(d.code,d.status,mapGraphic(d.label,box,body,contacts,p,routes,[],{id:d.id,confidence:d.confidence,zones:overlays}),yearBar(),layers('detailLayers',[['routes','경로'],['threats','위험 반경'],['comms','통신권'],['distortion','공간 왜곡']]),frameLegend()),directory(contacts)),
-      intelPanel(panel(site?'SELECTED SITE':'REGIONAL DRILLDOWN',site?.label||d.label,txt(site?.meta||d.description),kv([['현재 상태',info.status],['사건 지점',`${d.sites.length}곳`],['복원 신뢰도',site?confidence[site.confidence]:d.confidence],...(site?[['좌표',`X ${site.x} / Y ${site.y}`],['위험도',risks[riskFor(site)]],['통신',commFor(site).toUpperCase()],['연결 경로',String(d.routes.filter(r=>r.siteIds.includes(site.id)).length)],['사건 코드',inc?.code,{fullOnly:true}]]:[])]),note('판독 한계',d.warning),inc?txt(inc.summary):null,references(site||d),scenario?link(scenarios[scenario].title,'map-room','pilgrimage',scenario):null),...briefing(d,site),site?routeSequence(d,site):null)),
-      disclosure('REGIONAL INDEX','다른 권역 상세도',h('div.tc-rows',null,D.drilldowns.map(x=>row(x.code,x.label,x.description,['region',x.id],x.confidence)))));
+      intelPanel(panel(site?'SELECTED SITE':'REGIONAL DRILLDOWN',site?.label||d.label,txt(site?.meta||d.description),kv([['현재 상태',info.status],['사건 지점',`${d.sites.length}곳`],['복원 신뢰도',site?confidence[site.confidence]:d.confidence],...(site?[['좌표',`X ${site.x} / Y ${site.y}`],['위험도',risks[riskFor(site)]],['통신',commFor(site).toUpperCase()],['연결 경로',String(d.routes.filter(r=>r.siteIds.includes(site.id)).length)],['사건 코드',inc?.code,{fullOnly:true}]]:[])]),note('확인 한계',d.warning),inc?txt(inc.summary):null,references(site||d),scenario?link(scenarios[scenario].title,'map-room','pilgrimage',scenario):null),...briefing(d,site),site?routeSequence(d,site):null)),
+      disclosure('REGIONAL INDEX','다른 지역 상세 지도',h('div.tc-rows',null,D.drilldowns.map(x=>row(x.code,x.label,x.description,['region',x.id],x.confidence)))));
   }
   function initStep(o){
     const id=scenarioForOperation(o);const summary=id?P.getSummary(id):null;
@@ -539,8 +540,8 @@ function operationTerrain(operation){
     routes.push({points:s.route});
     if(decision?.route)routes.push({points:decision.route,kind:decision.id==='execute'?'hostile':'normal',alternate:true});
     for(const u of s.units)body+=symbol(u.status,u.x,u.y,u.id,p);
-    const control=h('div.tc-map-playback',{role:'group','aria-label':'작전 경과 재생'},action('← 이전 단계','previous','',{disabled:adjacent(o,-1)===step}),action(playing?'정지':'재생','play','',{disabled:reducedFx()||o.steps.filter((_,i)=>reachable(o,i)).length<2,'aria-pressed':String(playing)}),action('다음 단계 →','next','',{disabled:adjacent(o,1)===step}),h('span.tc-code',{'aria-live':'polite',text:`${s.time} · ${step+1} / ${o.steps.length}`}),h('p.tc-map-help',{text:reducedFx()?'효과 줄임: 이전·다음 단추로 기록을 읽어 주세요.':'← / → 단계 이동 · 스페이스 재생·정지'}));
-    const steps=h('ol.tc-phase.tc-map-phases',null,o.steps.map((item,i)=>h('li',{class:i<step?'is-done':i===step?'is-contact':null},action(`${item.time} · ${item.title}`,'step',String(i),{'aria-current':i===step?'step':null,disabled:!reachable(o,i)}),ss?.choices[i]?tag(ss.choices[i].ruleOutcome,'evidence'):stepPhase(o,i)==='locked'?tag('기입 대기'):null)));
+    const control=h('div.tc-map-playback',{role:'group','aria-label':'작전 진행 재생'},action('← 이전 단계','previous','',{disabled:adjacent(o,-1)===step}),action(playing?'정지':'재생','play','',{disabled:reducedFx()||o.steps.filter((_,i)=>reachable(o,i)).length<2,'aria-pressed':String(playing)}),action('다음 단계 →','next','',{disabled:adjacent(o,1)===step}),h('span.tc-code',{'aria-live':'polite',text:`${s.time} · ${step+1} / ${o.steps.length}`}),h('p.tc-map-help',{text:reducedFx()?'효과 줄임: 이전·다음 단추로 기록을 읽어 주세요.':'← / → 단계 이동 · 스페이스 재생·정지'}));
+    const steps=h('ol.tc-phase.tc-map-phases',null,o.steps.map((item,i)=>h('li',{class:i<step?'is-done':i===step?'is-contact':null},action(`${item.time} · ${item.title}`,'step',String(i),{'aria-current':i===step?'step':null,disabled:!reachable(o,i)}),ss?.choices[i]?tag(ss.choices[i].ruleOutcome,'evidence'):stepPhase(o,i)==='locked'?tag('기록 대기'):null)));
     return h('div.tc-map-stack',null,mapFrame(o.code,s.time,mapGraphic(o.label,box,body,[],p,routes,s.units.map(u=>({...u,selected:true}))),control),steps,
       panel('UNIT STATUS','부대 상태',h('ul.tc-map-units',null,s.units.map(u=>h('li',null,h('img',{src:uri(symbol(u.status,20,20,'',p),'0 0 40 40',p),width:40,height:40,alt:''}),h('b.tc-code',{text:u.id}),h('span',{text:statusLabels[u.status]||u.status}),h('span.tc-code',{text:`X ${u.x} / Y ${u.y}`}))))),disclosure('SYMBOL KEY','지도 기호 범례',legend()),
       panel('SITE INDEX','작전 지점',h('ol.tc-map-bullets',null,o.sites.map((s,i)=>h('li',{text:`${String(i+1).padStart(2,'0')} · ${s.label} · X ${s.x} / Y ${s.y}${decision?.siteStates[i]?' · '+decision.siteStates[i]:''}`})))));
@@ -548,8 +549,8 @@ function operationTerrain(operation){
   function operationIntel(o){
     const decision=o.id===O.operationId?O.getDecision():null,id=scenarioForOperation(o),ending=id?P.getEnding(id):null;
     const inc=incident(o.incident)||root.ProjectCurseIncidentNetwork.incidentList.find(i=>i.operation===o.id);
-    return intelPanel(panel(o.code,o.label,txt(o.summary),kv([['분류',o.classification],['기록 상태',o.status],['현장 판정',decision?.status||ending?.status],['권역',o.region]]),o.directive?note('현장 명령',o.directive):null,o.objectives?list(o.objectives):null,references(o,inc),id?link(scenarios[id].title,'map-room','pilgrimage',id):null,inc?.region?link('해당 권역에서 보기','map-room','region',inc.region):null,o.id===O.operationId?link('작전 판단 원문','archive-entry','Operation_Broken_Crown'):null),
-      panel('COMMUNICATION LOG','현재까지의 교신 기록',h('ol.tc-log.tc-map-log',{'aria-label':'단계별 교신 기록'},o.steps.slice(0,step+1).map((s,i)=>h('li',{class:s.units.some(u=>['lost','split'].includes(u.status))?'is-loss':s.units.some(u=>u.status==='unstable')?'is-contact':null,'aria-current':i===step?'step':null},h('time',{text:s.time}),h('div',null,h('b',{text:s.title}),h('p.tc-map-copy',{text:s.note})))))),
+    return intelPanel(panel(o.code,o.label,txt(o.summary),kv([['분류',o.classification],['기록 상태',o.status],['현장 판정',decision?.status||ending?.status],['지역',o.region]]),o.directive?note('현장 명령',o.directive):null,o.objectives?list(o.objectives):null,references(o,inc),id?link(scenarios[id].title,'map-room','pilgrimage',id):null,inc?.region?link('해당 지역에서 보기','map-room','region',inc.region):null,o.id===O.operationId?link('작전 판단 원문','archive-entry','Operation_Broken_Crown'):null),
+      panel('COMMUNICATION LOG','현재까지의 통신 기록',h('ol.tc-log.tc-map-log',{'aria-label':'단계별 통신 기록'},o.steps.slice(0,step+1).map((s,i)=>h('li',{class:s.units.some(u=>['lost','split'].includes(u.status))?'is-loss':s.units.some(u=>u.status==='unstable')?'is-contact':null,'aria-current':i===step?'step':null},h('time',{text:s.time}),h('div',null,h('b',{text:s.title}),h('p.tc-map-copy',{text:s.note})))))),
       decision?panel(decision.code,decision.title,txt(decision.summary),txt(decision.observed),txt(decision.immediate),note('승인 대기',decision.unresolved),note('작전 영향',decision.consequence),note('후속 지침',decision.directive),note(O.canonBoundary.status,O.canonBoundary.scope)):null,
       ending?panel(ending.code,ending.title,txt(ending.summary),txt(ending.consequence),note('현장 판정',scenarios[id].canonBoundary)):null);
   }
@@ -580,7 +581,7 @@ function operationTerrain(operation){
     if(s.id==='deadzone-recovery')return m.echo>=58||m.team<=45||m.tether<=30?'critical':m.echo>=30||m.team<=70||m.tether<=55?'unstable':'nominal';
     return m.corruption>=55||m.signal<=35?'critical':m.corruption>=28||m.fear>=58?'unstable':'nominal';
   }
-  function metricPanel(s,st){return panel('FIELD MEASUREMENT','현장 측정값',h('div.tc-map-meters',null,s.metrics.map(m=>h('label',null,h('span',{text:m.label}),h('b',{text:`${st.metrics[m.key]}%`}),h('meter',{min:0,max:100,value:st.metrics[m.key],'aria-label':m.label})))),kv([['채널',s.channel],['기입',`${st.choices.length} / ${s.stages.length}`],['규칙 위반',String(st.violations)],['상태',st.status.toUpperCase()],['현장 신호',severity(s,st).toUpperCase()],['진행도',`${P.getSummary(s.id).progress}%`]]));}
+  function metricPanel(s,st){return panel('FIELD MEASUREMENT','현장 측정값',h('div.tc-map-meters',null,s.metrics.map(m=>h('label',null,h('span',{text:m.label}),h('b',{text:`${st.metrics[m.key]}%`}),h('meter',{min:0,max:100,value:st.metrics[m.key],'aria-label':m.label})))),kv([['채널',s.channel],['기록',`${st.choices.length} / ${s.stages.length}`],['규칙 위반',String(st.violations)],['상태',st.status.toUpperCase()],['현장 신호',severity(s,st).toUpperCase()],['진행도',`${P.getSummary(s.id).progress}%`]]));}
   function decisionFeedback(s){
     if(feedback?.scenarioId!==s.id)return null;
     const changes=s.metrics.filter(m=>feedback.deltas[m.key]).map(m=>[m.label,`${feedback.deltas[m.key]>0?'+':''}${feedback.deltas[m.key]} · ${feedback.after[m.key]}%`]);
@@ -597,15 +598,15 @@ function operationTerrain(operation){
   function pilgrimageView(s){
     if(!allowedScenario(s.id))return h('div.tc-map-stack',null,bodyTitle(s.code,s.title),sealed(s.unlock.id));
     const st=P.get(s.id),summary=P.getSummary(s.id);let content;
-    if(st.status==='idle')content=panel(s.entryLabel,s.title,txt(s.summary),kv([['권역',s.region],['연결 사건',s.incident],['상태','NOT STARTED']]),note(s.directiveLabel,s.directive),list(s.fixedFacts),note('기록 범위',s.canonBoundary),action('현장 기록 시작','start',s.id),recordLink('관련 기록 먼저 확인',s.guideRecord));
+    if(st.status==='idle')content=panel(s.entryLabel,s.title,txt(s.summary),kv([['지역',s.region],['연결 사건',s.incident],['상태','NOT STARTED']]),note(s.directiveLabel,s.directive),list(s.fixedFacts),note('기록 범위',s.canonBoundary),action('현장 기록 시작','start',s.id),recordLink('관련 기록 먼저 확인',s.guideRecord));
     else if(st.status==='complete'){
       const e=P.getEnding(s.id),v=V.list().find(v=>v.scenarioId===s.id&&v.endingId===st.ending&&v.unlocked);
-      content=panel(e.code,e.title,tag(e.status,'evidence'),txt(e.summary),note('관제 결과',e.consequence),note('현장 판정 · 중앙 기록 미승인',s.canonBoundary),v?link('보관된 판정 기록 열기','map-room','verdict',v.id):null,link('관제도에서 결과 확인','map-room','region',s.mapTarget.detail,'site',s.mapTarget.site),recordLink('관련 지역 기록 열기',s.primaryRecord),action(resetArm===s.id?'한 번 더 누르면 현재 진행이 초기화됩니다':'현재 진행 초기화','reset-pilgrimage',s.id,{class:'tc-btn--danger'}));
+      content=panel(e.code,e.title,tag(e.status,'evidence'),txt(e.summary),note('현장 결과',e.consequence),note('현장 판정 · 중앙 기록 미승인',s.canonBoundary),v?link('보관된 판정 기록 열기','map-room','verdict',v.id):null,link('지도에서 결과 확인','map-room','region',s.mapTarget.detail,'site',s.mapTarget.site),recordLink('관련 지역 기록 열기',s.primaryRecord),action(resetArm===s.id?'한 번 더 누르면 현재 진행이 초기화됩니다':'현재 진행 초기화','reset-pilgrimage',s.id,{class:'tc-btn--danger'}));
     }else{
       const stage=P.getStage(s.id);
-      content=panel(stage.code,stage.title,h('time.tc-code',{text:stage.time}),txt(stage.location),stage!==s.stages[st.step]?note('앞선 판단의 영향','이전 현장 판단이 현재 신호를 변경했습니다.','evidence'):null,note('수신 내용',stage.signal,'evidence'),txt(stage.narrative),note(stage.rule.code,stage.rule.text),note('판단 기준',s.decisionStandard),h('div.tc-map-choices',null,stage.choices.map((c,i)=>h('button.tc-btn.tc-map-choice',{type:'button',dataset:{action:'choice',key:c.id,control:`choice:${c.id}`}},h('span.tc-code.tc-full-only',{text:String(i+1).padStart(2,'0')}),h('b',{text:c.label}),h('span',{text:c.description}),tag(({safe:'접촉 최소화',neutral:'통제된 손실',risk:'규칙 이탈 가능',danger:'직접 노출'})[c.tone]||'현장 판단',['risk','danger'].includes(c.tone)?'caution':'info')))));
+      content=panel(stage.code,stage.title,h('time.tc-code',{text:stage.time}),txt(stage.location),stage!==s.stages[st.step]?note('앞선 판단의 영향','이전 현장 판단이 현재 신호를 변경했습니다.','evidence'):null,note('들어온 신호',stage.signal,'evidence'),txt(stage.narrative),note(stage.rule.code,stage.rule.text),note('판단 기준',s.decisionStandard),h('div.tc-map-choices',null,stage.choices.map((c,i)=>h('button.tc-btn.tc-map-choice',{type:'button',dataset:{action:'choice',key:c.id,control:`choice:${c.id}`}},h('span.tc-code.tc-full-only',{text:String(i+1).padStart(2,'0')}),h('b',{text:c.label}),h('span',{text:c.description}),tag(({safe:'접촉 최소화',neutral:'통제된 손실',risk:'규칙 이탈 가능',danger:'직접 노출'})[c.tone]||'현장 판단',['risk','danger'].includes(c.tone)?'caution':'info')))));
     }
-    return h('div.tc-map-stack',null,bodyTitle(s.code,s.title),h('div.tc-btnrow',null,link('작전 경과 보기','map-room','op',s.operation),...s.records.map(id=>recordLink(id,id)),link('현장 판정 보관','map-room','verdict')),decisionFeedback(s),h('div.tc-map-layout',null,h('div.tc-map-stack',null,pilgrimageMap(s,st),metricPanel(s,st),choiceLog(s,st)),h('div.tc-map-stack',null,content)));
+    return h('div.tc-map-stack',null,bodyTitle(s.code,s.title),h('div.tc-btnrow',null,link('작전 진행 보기','map-room','op',s.operation),...s.records.map(id=>recordLink(id,id)),link('현장 판정 보관','map-room','verdict')),decisionFeedback(s),h('div.tc-map-layout',null,h('div.tc-map-stack',null,pilgrimageMap(s,st),metricPanel(s,st),choiceLog(s,st)),h('div.tc-map-stack',null,content)));
   }
   function recordLink(label,id){return V.getEntry(id)?link(label,'map-room','verdict',id):link(label,'archive-entry',id);}
   function verdictsView(){
@@ -614,7 +615,7 @@ function operationTerrain(operation){
   function verdictView(entry){
     if(!entry.unlocked)return h('div.tc-map-stack',null,bodyTitle(entry.id,entry.lockedTitle,entry.requirement),link('필요한 현장 기록 보기','map-room','pilgrimage',entry.scenarioId),link('판정 보관 목록','map-room','verdict'));
     const d=V.getDocument(entry.id);
-    return h('article.tc-map-stack',null,bodyTitle(d.code,d.title,d.summary),kv([['보관 시각',d.date],['작성',d.owner],['분류',d.classification],...d.telemetry]),d.sections.map(s=>panel('FIELD VERDICT',s.title,s.record?kv(Object.entries(s.record)):null,...(s.paragraphs||[]).map(txt),s.warning?note('판정 한계',s.warning):null,s.table?h('div.tc-map-table-wrap',null,h('table.tc-map-table',null,h('thead',null,h('tr',null,s.table.headers.map(t=>h('th',{scope:'col',text:t})))),h('tbody',null,s.table.rows.map(row=>h('tr',null,row.map(t=>h('td',{text:t}))))))):null,s.quote?h('blockquote.tc-map-quote',{text:s.quote}):null)),h('div.tc-btnrow',null,link('판정 보관 목록','map-room','verdict'),link('현재 현장 기록','map-room','pilgrimage',entry.scenarioId),d.unlockScenario?link('후속 현장 기록','map-room','pilgrimage',d.unlockScenario):null));
+    return h('article.tc-map-stack',null,bodyTitle(d.code,d.title,d.summary),kv([['보관 시각',d.date],['작성',d.owner],['분류',d.classification],...d.telemetry]),d.sections.map(s=>panel('FIELD VERDICT',s.title,s.record?verdictRecord(s.record):null,...(s.paragraphs||[]).map(txt),s.warning?note('판정 한계',s.warning):null,s.table?h('div.tc-map-table-wrap',null,h('table.tc-map-table',null,h('thead',null,h('tr',null,s.table.headers.map(t=>h('th',{scope:'col',text:t})))),h('tbody',null,s.table.rows.map(row=>h('tr',null,row.map(t=>h('td',{text:t}))))))):null,s.quote?h('blockquote.tc-map-quote',{text:s.quote}):null)),h('div.tc-btnrow',null,link('판정 보관 목록','map-room','verdict'),link('현재 현장 기록','map-room','pilgrimage',entry.scenarioId),d.unlockScenario?link('후속 현장 기록','map-room','pilgrimage',d.unlockScenario):null));
   }
   function indexTarget(item){
     const t=item.target;
@@ -634,32 +635,32 @@ function operationTerrain(operation){
   }
   const filtered=()=>signals.items.filter(s=>timeState(itemYear(s))!=='future'&&matchesFilter(s)&&(!state.indexQuery.trim()||s.search.includes(state.indexQuery.trim().toLocaleLowerCase('ko-KR'))));
   function indexRows(){const rows=filtered();return rows.length?rows.map(s=>row(s.code,s.title,s.meta,indexTarget(s),signals.confidenceLabels[s.confidence]||confidence[s.confidence],PC.verdictTone(s.confidence))):[missing(state.indexQuery||state.indexFilter)];}
-  function signalIndex(){return disclosure('SIGNAL INDEX',`신호 색인 · ${signals.items.length}개`,[
-    txt(X.copy.index),h('div.tc-map-search',null,h('label',{for:'tc-map-search',text:'사건·권역·세력·호출부호 검색'}),h('input#tc-map-search',{type:'search',value:state.indexQuery,maxlength:80,autocomplete:'off',dataset:{control:'search'}}),action('검색 지우기','clear-search')),
-    h('div.tc-seg',{role:'group','aria-label':'신호 색인 필터'},signals.filters.map(f=>action(f.label,'filter',f.id,{'aria-pressed':String(f.id===state.indexFilter)}))),h('p.tc-code#tc-map-count',{'aria-live':'polite',text:`${filtered().length}개 접촉 정보`}),h('div.tc-rows#tc-map-search-results',null,indexRows()),note('위치 보류',X.copy.withheld,'evidence')
+  function signalIndex(){return disclosure('SIGNAL INDEX',`신호 목록 · ${signals.items.length}개`,[
+    txt(X.copy.index),h('div.tc-map-search',null,h('label',{for:'tc-map-search',text:'사건·지역·세력·호출부호 검색'}),h('input#tc-map-search',{type:'search',value:state.indexQuery,maxlength:80,autocomplete:'off',dataset:{control:'search'}}),action('검색 지우기','clear-search')),
+    h('div.tc-seg',{role:'group','aria-label':'신호 목록 필터'},signals.filters.map(f=>action(f.label,'filter',f.id,{'aria-pressed':String(f.id===state.indexFilter)}))),h('p.tc-code#tc-map-count',{'aria-live':'polite',text:`${filtered().length}개 접촉 정보`}),h('div.tc-rows#tc-map-search-results',null,indexRows()),note('위치 공개 보류',X.copy.withheld,'evidence')
   ],{open:state.indexOpen,dataset:{disclosure:'index'}});}
   function updateIndex(){const results=host.querySelector('#tc-map-search-results');if(results)PC.clear(results).append(...indexRows());const count=host.querySelector('#tc-map-count');if(count)count.textContent=`${filtered().length}개 접촉 정보`;host.querySelectorAll('[data-action="filter"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.key===state.indexFilter)));saveSession();}
   function operationDirectory(){
     const entries=items=>items.map(o=>dated(h('div.tc-map-catalog-entry',null,row(o.code,o.label,`${itemYear(o)==null?X.copy.timelineUnknown:itemYear(o)+'년 기록'} · ${o.region}`,['op',o.id],o.status||`${o.steps.length}단계`,lockedOperation(o)?'danger':'info')),o));
-    return panel('OPERATIONS INDEX','작전 경과',h('div.tc-rows',null,entries(D.operations.filter(o=>itemYear(o)!=null))),disclosure('UNDATED',X.copy.timelineUnknown,h('div.tc-rows',null,entries(D.operations.filter(o=>itemYear(o)==null)))));
+    return panel('OPERATIONS INDEX','작전 진행',h('div.tc-rows',null,entries(D.operations.filter(o=>itemYear(o)!=null))),disclosure('UNDATED',X.copy.timelineUnknown,h('div.tc-rows',null,entries(D.operations.filter(o=>itemYear(o)==null)))));
   }
   function overview(){
     const map=worldMap(region('world'));const locations=recent.map(p=>({p:canonical(p),v:resolve(p)})).filter(x=>x.v.kind!=='missing');
-    return h('div.tc-map-stack',null,h('div.tc-map-layout',null,h('div.tc-map-stack',null,map.board,operationDirectory()),h('aside.tc-map-stack',null,panel('OPERATIONAL THEATERS','주요 지역 상황',txt(X.copy.intro),h('div.tc-rows',null,X.theaters.map(t=>h('a.tc-map-theater',{href:PC.href('map-room',t.target.kind==='operation'?'op':'region',t.target.id)},h('span.tc-code.tc-full-only',{text:t.number+' / '+t.eyebrow}),h('b',{text:t.title}),txt(t.summary),h('span.tc-map-copy',{text:t.note}),h('span.tc-btnrow',null,tag(t.status,t.id==='south'?'danger':'info'),tag(t.confidence)))))),panel('REGIONAL CONTROL','관제 권역',h('div.tc-btnrow',null,D.regions.map(r=>link(r.label,'map-room','region',r.id))),h('div.tc-btnrow',null,D.synchronyEvents.map(e=>dated(link(e.title,'map-room','synchrony',e.id),e)))),locations.length?panel('RECENT COORDINATES','최근 열람한 좌표',h('div.tc-rows',null,locations.map(({p,v},i)=>row(v.item?.code||String(i+1).padStart(2,'0'),v.title,'',p)))):null)),
-      panel('REGIONAL DRILLDOWN','권역 상세도',h('div.tc-rows',null,D.drilldowns.map(d=>row(d.code,d.label,d.description,['region',d.id],d.confidence)))),
+    return h('div.tc-map-stack',null,h('div.tc-map-layout',null,h('div.tc-map-stack',null,map.board,operationDirectory()),h('aside.tc-map-stack',null,panel('OPERATIONAL THEATERS','주요 지역 상황',txt(X.copy.intro),h('div.tc-rows',null,X.theaters.map(t=>h('a.tc-map-theater',{href:PC.href('map-room',t.target.kind==='operation'?'op':'region',t.target.id)},h('span.tc-code.tc-full-only',{text:t.number+' / '+t.eyebrow}),h('b',{text:t.title}),txt(t.summary),h('span.tc-map-copy',{text:t.note}),h('span.tc-btnrow',null,tag(t.status,t.id==='south'?'danger':'info'),tag(t.confidence)))))),panel('REGIONAL CONTROL','지역 목록',h('div.tc-btnrow',null,D.regions.map(r=>link(r.label,'map-room','region',r.id))),h('div.tc-btnrow',null,D.synchronyEvents.map(e=>dated(link(e.title,'map-room','synchrony',e.id),e)))),locations.length?panel('RECENT COORDINATES','최근 본 좌표',h('div.tc-rows',null,locations.map(({p,v},i)=>row(v.item?.code||String(i+1).padStart(2,'0'),v.title,'',p)))):null)),
+      panel('REGIONAL DRILLDOWN','지역 상세 지도',h('div.tc-rows',null,D.drilldowns.map(d=>row(d.code,d.label,d.description,['region',d.id],d.confidence)))),
       panel('FIELD RECORDS','순례·검문·회수',h('div.tc-rows',null,Object.values(scenarios).map(s=>row(s.code,s.title,s.summary,['pilgrimage',s.id],allowedScenario(s.id)?P.get(s.id).status.toUpperCase():s.unlock.label,allowedScenario(s.id)?'info':'danger'))),link('현장 판정 보관','map-room','verdict')));
   }
   function render(){
     stopSignals();cancelGesture();mapModels.clear();view=resolve(parts);PC.clear(host);PC.setTitle(view.title);
-    const head=PC.screenHead('map-room',{title:view.title,hero:view.kind==='index',meta:[['MAP',D.version],['OPERATIONS',String(D.operations.length)],['SIGNALS',String(signals.items.length)]]});
+    const head=PC.screenHead('map-room',{title:view.title,hero:view.kind==='index'?undefined:false,meta:[['MAP',D.version],['OPERATIONS',String(D.operations.length)],['SIGNALS',String(signals.items.length)]]});
     head.querySelector('.tc-screenhead-code')?.classList.add('tc-full-only');
     head.querySelector('.tc-screenhead-meta')?.classList.add('tc-full-only');
     host.append(head);
-    host.append(h('nav.tc-map-toolbar',{'aria-label':'상황 관제 탐색'},action('← 뒤로','back'),link('관제 목록','map-room'),link('세계 지도','map-room','region','world'),link('판정 보관','map-room','verdict'),action('좌표 링크 복사','copy')));
+    host.append(h('nav.tc-map-toolbar',{'aria-label':'작전 지도 탐색'},action('← 뒤로','back'),link('지도 목록','map-room'),link('세계 지도','map-room','region','world'),link('판정 보관','map-room','verdict'),action('좌표 링크 복사','copy')));
     if(view.kind!=='missing')host.append(signalIndex());
-    const content=view.kind==='index'?overview():['region','marker','synchrony'].includes(view.kind)?regionView(view):view.kind==='detail'?detailView(view):view.kind==='op'?operationView(view.item):view.kind==='pilgrimage'?pilgrimageView(view.item):view.kind==='verdicts'?verdictsView():view.kind==='verdict'?verdictView(view.item):view.kind==='withheld'?panel('POSITION WITHHELD',view.item.title,txt(view.item.meta),note('위치 보류',X.copy.withheld),references(view.item,{history:view.item.history,factions:view.item.factionKeys}),link('관측 권역','map-room','region',view.item.regionId)):missing(view.key);
+    const content=view.kind==='index'?overview():['region','marker','synchrony'].includes(view.kind)?regionView(view):view.kind==='detail'?detailView(view):view.kind==='op'?operationView(view.item):view.kind==='pilgrimage'?pilgrimageView(view.item):view.kind==='verdicts'?verdictsView():view.kind==='verdict'?verdictView(view.item):view.kind==='withheld'?panel('POSITION WITHHELD',view.item.title,txt(view.item.meta),note('위치 공개 보류',X.copy.withheld),references(view.item,{history:view.item.history,factions:view.item.factionKeys}),link('관측 지역','map-room','region',view.item.regionId)):missing(view.key);
     host.append(h('div.tc-map-content',null,content));
-    if(storageFailed)host.append(note('이 단말의 저장 상태','저장소에 접근할 수 없습니다. 현재 탭의 열람 상태만 유지됩니다.'));
+    if(storageFailed)host.append(note('이 단말의 저장 상태','저장소에 접근할 수 없습니다. 현재 탭의 읽음 상태만 유지됩니다.'));
     setYear(mapYear);startSignals();saveSession();
   }
   function focusContent(){const el=host.querySelector('.tc-map-content [data-tc-focus], .tc-map-content h2');if(el){el.setAttribute('tabindex','-1');el.focus({preventScroll:true});}}

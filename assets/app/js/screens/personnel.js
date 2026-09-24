@@ -151,7 +151,7 @@
       groupKeys.map((key) => {
         const target = own(root.ProjectCurseFactionAnalysis?.factions, key);
         return target ? h('a.tc-per-connection', { href: PC.href('faction-info', key) }, h('b', { text: target.name }))
-          : PC.missing('FACTION NOT FOUND', key, '소속 편제에 연결된 세력 문서가 없습니다.');
+          : PC.missing('FACTION NOT FOUND', key, '소속 조직에 연결된 세력 문서가 없습니다.');
       }));
   }
   function relationshipsSection(record) {
@@ -176,21 +176,21 @@
     const archiveIds = [...new Set(events.flatMap((item) => item.records || []))];
     const archives = root.ProjectCurseArchive?.publicRecords || [];
     return section('CROSS REFERENCE', '관련 사건·기록',
-      record.incident ? kv([['인물 파일에 기재된 사건', record.incident]]) : null,
-      h('div.tc-btnrow', null, link('세계 기록 색인 ↗', 'history')),
+      record.incident ? kv([['인물 파일에 기록된 사건', record.incident]]) : null,
+      h('div.tc-btnrow', null, link('세계 기록 목록 ↗', 'history')),
       events.length ? h('details.tc-disclosure.tc-per-crossref', null,
-        h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'AFFILIATION CROSS REFERENCE' }), h('b', { text: '소속 세력의 사건 색인' }))),
+        h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'AFFILIATION CROSS REFERENCE' }), h('b', { text: '소속 세력의 사건 목록' }))),
         h('div.tc-disclosure-body.tc-per-copy', null,
           h('p', { text: '소속 세력과 관련된 사건입니다. 이 인물이 직접 참여했는지는 각 기록에서 확인해 주세요.' }),
           events.map((item) => h('section.tc-per-event', null, h('time.tc-code', { text: item.date }), h('h3', { text: item.title }),
             h('div.tc-btnrow', null,
               item.history ? link('연표 ↗', 'history', item.history) : null,
               mapped.has(item.id) ? link('지도 ↗', 'map-room', 'incident', item.id) : null,
-              item.operation && operations.has(item.operation) ? link('작전 경과 ↗', 'map-room', 'op', item.operation) : null))),
+              item.operation && operations.has(item.operation) ? link('작전 진행 ↗', 'map-room', 'op', item.operation) : null))),
           archiveIds.length ? h('div.tc-per-copy', null, h('h3', { text: '연결 기록보관소' }), archiveIds.map((id) => {
             const target = archives.find((item) => item.id === id) || own(root.ProjectCurseArchiveDocuments?.documents, id);
             return target ? h('a.tc-per-connection', { href: PC.href('archive-entry', id) }, h('span.tc-code', { class: target.title ? 'tc-full-only' : null, text: id }), h('b', { text: target.title || id }))
-              : PC.missing('ARCHIVE NOT FOUND', id, '연결된 기록의 색인 자료가 없습니다.');
+              : PC.missing('ARCHIVE NOT FOUND', id, '연결된 기록의 목록 자료가 없습니다.');
           })) : null)) : null);
   }
 
@@ -219,7 +219,7 @@
           h('div.tc-per-tags', null, statusTag(record.status, record), certaintyTag(record.certainty)),
           record.aliases?.length ? kv([['별칭·기존 명부명', record.aliases.join(' · ')]]) : null),
         photoPlate(record),
-        kv([['기준 연도', record.registerYear || display().year], ['등록', isAddition(record) ? source().additionLabel : null], ['편제', groupOf(record.group)?.label || record.group], ['소속', record.affiliationSummary], ['출신', identity?.origin]])),
+        kv([['기준 연도', record.registerYear || display().year], ['등록', isAddition(record) ? source().additionLabel : null], ['조직', groupOf(record.group)?.label || record.group], ['소속', record.affiliationSummary], ['출신', identity?.origin]])),
       section('PROFILE / KEY RECORD', '주요 기록', h('p', { text: record.overview }),
         kv([['소속', record.unit], ['연결 사건', record.incident]])),
       (record.capabilities?.length || record.equipment?.length || record.abilitySource) ? section('CAPABILITY / COST', '능력과 대가',
@@ -310,8 +310,8 @@
           h('button', { type: 'button', 'aria-pressed': String(id === state.status), dataset: { perStatus: id } }, label)))),
       h('div.tc-per-workspace', null,
         h('aside.tc-panel.tc-per-groups', { 'aria-label': '소속 분류 필터' },
-          h('header.tc-panel-head', null, h('div', null, h('span.tc-label.tc-full-only', { text: 'CLASSIFICATION' }), h('h2', { text: '소속·관계군' }))),
-          h('div.tc-per-group-buttons', { role: 'group', 'aria-label': '소속·관계군' },
+          h('header.tc-panel-head', null, h('div', null, h('span.tc-label.tc-full-only', { text: 'CLASSIFICATION' }), h('h2', { text: '소속과 관계' }))),
+          h('div.tc-per-group-buttons', { role: 'group', 'aria-label': '소속과 관계' },
             h('button.tc-per-group-button', { type: 'button', 'aria-pressed': 'true', dataset: { perGroup: 'all' } }, h('span', { text: '전체 명부' }), h('b', { text: `${everyone().length}` })),
             allGroups.map((group) => h('button.tc-per-group-button', { type: 'button', 'aria-pressed': 'false', dataset: { perGroup: group.id }, title: group.label },
               h('span', { text: group.short }), h('b', { text: `${everyone().filter((record) => groupsOf(record).includes(group.id)).length}` }))))),

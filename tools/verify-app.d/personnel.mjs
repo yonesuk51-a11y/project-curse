@@ -103,6 +103,20 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     }
     screen.hide();
   });
+  check('approved-screen-words-and-record-text-preserved', () => {
+    const { c, host, screen } = screenHarness(context, source);
+    screen.show([], c.PCApp);
+    assert.equal(host.querySelector('.tc-per-group-buttons').getAttribute('aria-label'), '소속과 관계');
+    assert.ok(host.visibleText(true).includes('소속과 관계'));
+    screen.show(['sakuma-yuta'], c.PCApp);
+    assert.ok(host.querySelectorAll('dt').some(node => node.textContent === '조직'));
+    assert.ok(host.querySelectorAll('a').some(node => node.textContent === '세계 기록 목록 ↗' && node.attrs.href === '#history'));
+    assert.ok(host.textContent.includes('소속 세력의 사건 목록'));
+    assert.ok(host.querySelectorAll('a').some(node => node.textContent === '작전 진행 ↗' && node.attrs.href.startsWith('#map-room/op/')));
+    for (const text of [P.byId['sakuma-yuta'].overview, ...P.byId['sakuma-yuta'].background]) assert.ok(host.textContent.includes(text));
+    assert.doesNotMatch(source, /소속·관계군|세계 기록 색인|사건 색인|작전 경과|\['편제',/);
+    screen.hide();
+  });
   check('detail-anomaly-open-canon-and-fx-lifecycle', () => {
     const { c, host, screen, frames, media } = screenHarness(context, source);
     const show = (parts) => screen.show(parts, c.PCApp, { reason: 'navigate' });
