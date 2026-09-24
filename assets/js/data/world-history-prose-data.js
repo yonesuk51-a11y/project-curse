@@ -289,7 +289,8 @@
       fragments:[
         {label:'상황일지',kind:'log',text:'02:14  제2 거점에서 구조 요청 수신\n02:19  같은 음성의 요청이 제4 거점에서 반복\n02:31  예비대가 제4 거점으로 이동\n03:02  제2 거점 통신 두절\n03:20  구조 요청 발신자가 전날 사망한 통신병으로 확인'},
         {label:'초동 평가',kind:'analysis',text:'짐승의 길 전력은 통신을 끊지 않았다. 신뢰할 수 있는 구조 신호를 복제해 예비대를 비웠다. 일본 공동지휘소는 도시 침투 추적을 S.I.D에, 차단선 복구를 N.H.C에 배정했다. 교전 규칙이 달라 첫 반격은 승인 단계에서 멈췄다.'},
-        {label:'전선 등록',kind:'annotation',text:'이날의 공격 이후 북동아시아 차단선은 임시 사건지가 아니라 북부전선으로 기록됐다.'}
+        {label:'전선 등록',kind:'annotation',text:'이날의 공격 이후 북동아시아 차단선은 임시 사건지가 아니라 북부전선으로 기록됐다.'},
+        {label:'도시권 확산',kind:'annotation',text:'차단선이 무너진 뒤 교전은 중국 북부의 도시권까지 번졌다. 아파트 단지와 도로가 방어선이 됐다. 도시별 피해와 전선의 정확한 범위는 검열됐다.'}
       ]
     },
     '2021-05-04-fhc-submassacres':{
@@ -441,6 +442,42 @@
   };
 
   const recordVisuals={
+    // 2026-09-25 사용자 승인(1~5번 진행) — 이미 채택한 그림을 사건 기록에 다시 쓴다.
+    '1989-08-23-tokyo':{
+      src:'assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'회보라색 어둠에 잠긴 건물 입구에서 갈색 머리와 검은 정장의 성인이 안쪽 천장 등빛을 배경으로 문턱을 넘는 뒷모습이 보인다.',
+      label:'SAKUMA ENTRY / 분석 재구성',
+      caption:'도쿄 교육기관의 이상 징후를 조사하던 조사관이 기관 안으로 들어간 순간을 옮긴 분석 재구성이다. 건물의 실제 외관, 마지막 이동 경로와 실종 이후의 생존 여부를 확정하지 않는다.'
+    },
+    '2005-09-01-red-wolf':{
+      src:'assets/resources/derived/redwolf-waiting-room-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'천장 구석에서 내려다본 임시 대기실에 전투복 차림의 두 성인이 각각 서고 앉아 있고 창밖으로 무너진 도시의 윤곽이 보인다.',
+      label:'CCTV ROOM / 분석 재구성',
+      caption:'이탈 직전 임시 대기실의 두 사람을 암호화 CCTV 기록에 맞춰 옮긴 분석 재구성이다. 실제 CCTV 원본이 아니며, 얼굴과 인물별 위치를 확정하지 않는다.'
+    },
+    '2029-04-12-checkpoint-07':{
+      src:'assets/resources/derived/checkpoint-07-five-thermal-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'검문소 07의 귀환자 네 명 뒤에서 다섯 번째 열 신호가 감지되는 분석 재구성 스케치',
+      label:'THERMAL MISMATCH / 분석 재구성',
+      caption:'한 출입 요청에서 육안 인원 넷과 열상 반응 다섯이 함께 기록된 불일치를 도식으로 옮겼다. 다섯 번째 신호의 신원과 적대 여부를 확정하지 않는다.'
+    },
+    '2030-01-17-broken-crown':{
+      src:'assets/resources/derived/broken-crown-erased-commander-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'얼굴이 지워진 성위대 지휘관이 봉인 명령서를 든 채 네 개의 감시 화면 앞에 서 있는 분석 재구성 스케치',
+      label:'ERASED COMMANDER / 분석 재구성',
+      caption:'작전 개시와 함께 회수된 처형 명령과 신원이 비어 있는 성위대 지휘관을 상징화했다. 지휘관의 외형과 명령의 진위, 작전의 최종 결과를 확정하지 않는다.'
+    },
+    '2032-08-14-three-bells-compact':{
+      src:'assets/resources/derived/great-black-forest-unlit-fortress-bell-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'세 순례자가 덮개를 씌운 종을 불빛 없는 성채 앞으로 옮기는 분석 재구성 스케치',
+      label:'BELL ROUTE / 분석 재구성',
+      caption:'성채들이 사람의 말 대신 종의 순서로 위험을 알리게 된 관습을 종을 옮기는 순례 장면으로 옮겼다. 협약 문서의 원본 장면이 아니며 특정 성채와 순례단을 확정하지 않는다.'
+    },
     'deep-outer-god-war':{
       src:'assets/resources/derived/outer-god-war-wall-host-concept-v1.png',
       className:'RECONSTRUCTED',
