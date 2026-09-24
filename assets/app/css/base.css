@@ -43,6 +43,10 @@ img, svg, video {
   display: block;
   max-width: 100%;
 }
+/* width·height 속성은 비율 확보용이다. 실제 크기는 CSS가 정한다 */
+img[width][height] {
+  height: auto;
+}
 button, input, select, textarea {
   font: inherit;
   color: inherit;

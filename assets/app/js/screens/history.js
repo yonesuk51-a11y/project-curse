@@ -450,7 +450,7 @@
     const visual = record.visual;
     if (!visual?.src) return null;
     return h('figure.tc-evidence.tc-hist-visual', { dataset: { evidenceClass: visual.className || 'RECONSTRUCTED' } },
-      h('div.tc-evidence-media', null, h('img', { src: visual.src, alt: visual.alt || '', loading: 'lazy', decoding: 'async' })),
+      h('div.tc-evidence-media', null, PC.img(visual.src, { alt: visual.alt || '' })),
       h('figcaption', null, h('b', { text: visual.label || 'INTERPRETIVE RECONSTRUCTION' }), h('span', { text: visual.caption || '' }))
     );
   }

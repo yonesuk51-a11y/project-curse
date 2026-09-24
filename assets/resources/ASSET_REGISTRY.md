@@ -82,3 +82,15 @@ Design and authentication metadata are owned by `assets/js/data/faction-mark-reg
 `responsive/` contains 56 WebP delivery copies generated from 28 high-cost PNG or JPEG files. Each source has a 480px candidate and either a 960px candidate or a no-upscale candidate at its native width. The 2026-08-31 additions include 480px and 960px delivery copies for the Ash Crew handoff, central callsign loss, Sixth Northern Line node reset, and Three-Night Silence comparison reconstructions; the preserved PNGs remain the sources used for full inspection.
 
 These files do not replace, reclassify, or authorize removal of their sources. `assets/js/data/media-manifest.js` is the delivery relationship registry. Archive cards, document figures, and cinematic frames may use these candidates; the Visual Evidence Archive requests the preserved source file for original inspection and comparison.
+
+## 2026-09-24 remake adoption
+
+The user adopted five images from the Codex image job (`output/imagegen/20260924-*`). Generation mode: Codex image generation. The images contain no readable text, logos, real unit marks or invented unit insignia. Responsive 480px and 960px WebP derivatives were encoded with the browser WebP encoder and registered in `media-manifest.js`. None of them replaces protected Cults or Immortality media.
+
+| Asset | Class | Used by | Source and handling | Required public label |
+|---|---|---|---|---|
+| `derived/remake-keyart-checkpoint-07-concept-v1.png` | RECONSTRUCTED | Terminal home (remake) | Editorial key art for the remake terminal: Checkpoint 07 screening with a thermal count of five against four visible returners. It is not an event image; the fifth signature is not identified. | `편집 키아트 / 사건 원본 아님` |
+| `derived/blood-lake-rite-1986-concept-v1.png` | RECONSTRUCTED | `1986-02-01-immortality` counter record | Interpretive reconstruction of the cult-side counter record (calling at the lake shore, two recovered tags). Not a source image of the rite or its participants. | `분석 재구성 / 교단 측 기록 해석` |
+| `derived/ash-crew-aftermath-concept-v1.png` | RECONSTRUCTED | Ash Crew faction dossier | Interpretive reconstruction of Ash Crew recovery and remote incineration procedures described in the N.H.C field manual. | `분석 재구성 / 특정 현장 아님` |
+| `derived/cpd-screening-line-concept-v1.png` | RECONSTRUCTED | C.P.D faction dossier | Interpretive reconstruction of C.P.D civilian separation and screening lanes. Wristband colors do not establish verdicts. | `분석 재구성 / 판정 기준 아님` |
+| `derived/civil-child-drill-empty-classroom-concept-v1.png` | RECONSTRUCTED | `Civil_Child_Drill` | An empty classroom after a civil drill; no people are depicted. Interpretive reconstruction, not a record of a specific school. | `분석 재구성 / 인물 없음` |

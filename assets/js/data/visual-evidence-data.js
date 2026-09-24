@@ -70,6 +70,21 @@
     }),
     'assets/resources/83d311da1ab7310a567c6023f6151e6c.webp':Object.freeze({
       assetId:'VEA-CULT-LEGACY-01',className:'UNVERIFIED',source:'Cults_871104 보호 기록 내 구형 사본',date:'UNKNOWN',integrity:'LEGACY CROP',originalState:'available',handling:'원본을 덮어쓰지 않고 IMAGE-241HS Archive ENEX 사본과 비교한다.',comparison:Object.freeze({src:'assets/resources/archive-enex/feral-classification/image-241hs-angel-presence.png',label:'IMAGE-241HS SOURCE',className:'ORIGINAL',relationship:'LEGACY CROP TO SOURCE'})
+    }),
+    'assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png':Object.freeze({
+      assetId:'VEA-PC-KEY-02',className:'RECONSTRUCTED',source:'검문소 07 귀환 심사 장면을 바탕으로 한 리메이크 편집 키아트',date:'2026-09-24',integrity:'EDITORIAL SYNTHETIC',originalState:'missing',handling:'단말 방향을 소개하는 편집 이미지다. 사건 원본이나 감시 화면으로 사용하지 않으며, 다섯 번째 열원의 신원과 적대 여부를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/blood-lake-rite-1986-concept-v1.png':Object.freeze({
+      assetId:'VEA-BL-1986-02',className:'RECONSTRUCTED',source:'1986 피의 호수 교단 측 상충 기록 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'교단 측 기록의 부름 장면을 해석한 이미지다. 의식의 원본 장면, 참가자 신원, 호수 위치의 증거로 취급하지 않는다.'
+    }),
+    'assets/resources/derived/ash-crew-aftermath-concept-v1.png':Object.freeze({
+      assetId:'VEA-ASH-02',className:'RECONSTRUCTED',source:'애시 크루 회수·소각 절차 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'N.H.C 현장 교범의 회수·소각 절차를 한 장면으로 묶었다. 특정 현장, 사망자, 대원 신원을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/cpd-screening-line-concept-v1.png':Object.freeze({
+      assetId:'VEA-CPD-01',className:'RECONSTRUCTED',source:'C.P.D 민간 분리·선별 절차 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'선별 통로의 절차를 재구성한 장면이다. 특정 검문소, 피난민 신원, 개별 표식 판정을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png':Object.freeze({
+      assetId:'VEA-DRILL-01',className:'RECONSTRUCTED',source:'민간 아동 대피 훈련 기록 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인물이 없는 교실 장면이다. 특정 학교, 학생, 훈련 결과의 기록으로 취급하지 않는다.'
     })
   });
 

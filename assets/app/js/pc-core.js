@@ -278,6 +278,29 @@
     return VERDICT_TONES[key] || 'dim';
   }
 
+  // 이미지 — media-manifest.js에 반응형 파생본(480·960px WebP)이 있으면 srcset으로 쓴다.
+  // 원본 경로는 data-original에 남겨 증거 확대·원본 비교에 쓴다. docs 기준 상대 경로(../../)도 받는다.
+  function img(src, props = {}) {
+    const manifest = root.ProjectCurseMediaManifest;
+    const clean = manifest?.normalize ? manifest.normalize(src) : String(src || '').replace(/^(\.\.\/)+/, '');
+    const entry = manifest?.resolve?.(clean);
+    const attrs = { alt: '', loading: 'lazy', decoding: 'async', ...props, 'data-original': clean };
+    delete attrs.sizes;
+    if (entry?.variants?.length) {
+      const largest = entry.variants[entry.variants.length - 1];
+      attrs.src = largest.src;
+      attrs.srcset = entry.variants.map((variant) => `${variant.src} ${variant.width}w`).join(', ');
+      attrs.sizes = props.sizes || '(max-width: 760px) 94vw, 960px';
+      if (entry.width && entry.height) {
+        attrs.width = String(entry.width);
+        attrs.height = String(entry.height);
+      }
+    } else {
+      attrs.src = clean;
+    }
+    return h('img', attrs);
+  }
+
   function missing(code, key, message) {
     return h('div.tc-missing', { role: 'status' },
       h('b', { text: code }),
@@ -384,6 +407,7 @@
     screenHead,
     tag,
     verdictTone,
+    img,
     missing,
     current: () => current
   });

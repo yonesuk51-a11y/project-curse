@@ -590,6 +590,7 @@
         title:'아이들의 대피 수업',
         summary:'초등 학급의 대피 훈련 수업에서 쓰는 진행 순서와 표준 문답.',
         date:'2011.09.05 초판 / 2027.03 개정', owner:'도시권 학교보건연합 / 대피훈련 교사 공동편찬', classification:'민간 배포본',
+        hero:{src:"../../assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png",alt:"창틀에 테이프를 덧댄 빈 교실. 벽 앞에 책가방 다섯 개가 나란히 놓여 있다.",caption:"CIVIL DRILL ROOM / INTERPRETIVE RECONSTRUCTION — 인물 없음"},
         sections:[
           {title:'수업을 시작하기 전에',paragraphs:[
             '이 수업은 무엇이 오는지를 가르치지 않는다. 무엇을 할지만 가르친다. 괴이의 이름, 생김새와 사건 사진은 교재에 넣지 않는다.',

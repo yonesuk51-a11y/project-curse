@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 204,
-    "referenced": 204,
+    "registered": 219,
+    "referenced": 219,
     "unreferenced": 0,
     "review": 150,
-    "managed": 54,
+    "managed": 69,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 174,
+      "image": 189,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 36,
+      "PROJECT_GENERATED": 51,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 56,
+      "DELIVERY_DERIVATIVE": 66,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 16,
+      "RECONSTRUCTED": 21,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -1016,6 +1016,7 @@
       "bytes": 316,
       "sha256": "16ec9a62d16a91bda73b7c64745922f99ca2e5583ee12ba5d912ddeb458941ed",
       "usedBy": [
+        "app.html",
         "index.html",
         "tools/build-media-provenance.mjs",
         "tools/verify-package.mjs"
@@ -1033,9 +1034,12 @@
       "bytes": 2524,
       "sha256": "c68d6ca6bf38833e88404fb04e2a62a5880efb27af123f923d619755f8c26cfc",
       "usedBy": [
+        "app.html",
         "assets/js/data/archive-registry.js",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -1069,8 +1073,11 @@
       "bytes": 5156,
       "sha256": "6acaa7e0ecc097cedb9247908bf04fe8d97946ff6795f89c75dd563889e882f5",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -1087,8 +1094,11 @@
       "bytes": 6728,
       "sha256": "1d7487d34a052d8e0979bb6c1731d69df5007041d1fe3b2b296df0f5dd07afad",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1120,8 +1130,11 @@
       "bytes": 8344,
       "sha256": "2f0ecad48aef5c07e3a8e767a257ae4756528070329056d58e8b1b56a84f6a6d",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1138,8 +1151,11 @@
       "bytes": 2312,
       "sha256": "f7770413116a8ed55fea833ec12adeabc5eaf1d5170f0f5e170dfd1021583ff4",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -1204,8 +1220,11 @@
       "bytes": 7438,
       "sha256": "b778166e06efa4f4760fe584b01eaa5a28f59f7d1208857dbdf309bf87f2c777",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1222,8 +1241,11 @@
       "bytes": 7268,
       "sha256": "455559354825066de060d4dfe518d0a2ee4ebb7a182562296df64c7f21ed2a37",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1255,8 +1277,11 @@
       "bytes": 9626,
       "sha256": "5d8c86f2c479a350776dfdce993c76c6a505e9417d5b0c2303d8e810298fca8b",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1273,10 +1298,13 @@
       "bytes": 14742,
       "sha256": "d39a3d9f1059b1a6f94ac6aa202ba6319cb4db27f5f870d5755a7e4ddcdd317e",
       "usedBy": [
+        "app.html",
         "assets/js/data/archive-registry.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/js/main.js",
         "assets/resources/ASSET_REGISTRY.md",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1293,8 +1321,11 @@
       "bytes": 3612,
       "sha256": "d1e15201f654f167ba299555996d08ce974951c38fb8dd65c97a7920f9097458",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1311,8 +1342,11 @@
       "bytes": 7864,
       "sha256": "b55150a921588144205b9e1d8005d057247de0b7f01650f36ac1a32d246c468c",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1329,8 +1363,11 @@
       "bytes": 9092,
       "sha256": "dcc3697930eb49692e5fa45b00d1c2b5bca24cb2999c9b639633d562d08accc0",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -1366,8 +1403,11 @@
       "bytes": 2658,
       "sha256": "634da67b67b2f6b664a6df77c2a68a7f9640e5a70b1a3731783a93821d0539cc",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -1384,8 +1424,11 @@
       "bytes": 13190,
       "sha256": "cd51ca3fb0662ccc7aa3a73431c0b18c1e7a3b17168e6f84de4414607a3d006f",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -1402,8 +1445,11 @@
       "bytes": 13650,
       "sha256": "023da8f0f8c52aed984af57b7c3081708dbfe290eb3fe8a027ae46ffa759a79e",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2024,8 +2070,11 @@
       "bytes": 2540,
       "sha256": "bff4f024e0ab00e997eac2e5f9771b6a095b503ab63dd067e5da8168bb546692",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2042,8 +2091,11 @@
       "bytes": 8402,
       "sha256": "7135d0e2d79c181adb4843a26e0a44b63f33575c57dc258756b7b0f1e6ec020e",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html",
         "tools/verify-package.mjs"
@@ -2061,8 +2113,11 @@
       "bytes": 4270,
       "sha256": "f12c14b0cca22a7844199b36b3ea1f1592e57e6ebbab2f8d77fe725b9ae81976",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2079,8 +2134,11 @@
       "bytes": 2750,
       "sha256": "4f561b54c4f8c3471865d2588618d1f8afa00c1af1c1b25c69443660e5c8d9f3",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2112,8 +2170,11 @@
       "bytes": 4006,
       "sha256": "cdef046820e72bee49a93ea2948a87f05a22334a9a3755595f25289d0e014a30",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2130,8 +2191,11 @@
       "bytes": 4624,
       "sha256": "0d30b917105d14eb98c283c8860c550d060480c37d252179bd76bd292fb681fd",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2231,6 +2295,47 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/ash-crew-aftermath-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "애시 크루 회수·소각 절차(N.H.C 현장 교범) 기반 분석 재구성",
+      "handling": "특정 현장, 사망자, 대원 신원의 증거로 표시 금지",
+      "credit": "Project Curse Ash Crew post-incident brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2148945,
+      "sha256": "5c14dd0f8eb463e1049fa2fb0c00f65d2eec5e0505e6b07ac167d592dd23e674",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "1986 피의 호수 교단 측 상충 기록(부름 기입) 기반 분석 재구성",
+      "handling": "교단 의식의 원본 장면, 참가자 신원, 호수 위치의 증거로 표시 금지",
+      "credit": "Project Curse Blood Lake counter-record brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1872269,
+      "sha256": "b1852f5dc88ad94489205dbf8e8d02f6849f8cb43d1d01b94f112627686291b4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/broken-crown-erased-commander-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2270,6 +2375,48 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "민간 아동 대피 훈련 기록 기반 분석 재구성 — 인물 없음",
+      "handling": "특정 학교, 학생, 훈련 결과의 증거로 표시 금지",
+      "credit": "Project Curse civil child drill brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1755603,
+      "sha256": "108c6038eb18df08b40b63aad8cfc9e6076917238a1381949303adf745442e19",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/cpd-screening-line-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "C.P.D 민간 분리·선별 절차 기반 분석 재구성",
+      "handling": "특정 검문소, 피난민 신원, 손목 표식 판정의 증거로 표시 금지",
+      "credit": "Project Curse C.P.D civilian screening brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2060650,
+      "sha256": "a4913d011d210479acd6d70d2a98e6ef24e58c3e7fde8be31ae90379f62cdb62",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2488,12 +2635,35 @@
       "bytes": 1852611,
       "sha256": "473ee8fe8882177ca523249f3f37640ad848a1254b98b75fa27d9323315fc798",
       "usedBy": [
+        "app.html",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "index.html",
+        "tools/verify-app.mjs",
         "tools/verify-package.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "검문소 07 귀환 심사 장면을 바탕으로 한 리메이크 편집 키아트",
+      "handling": "사건 원본·감시 화면으로 표시 금지. 다섯 번째 열원의 신원과 적대 여부를 확정하지 않음",
+      "credit": "Project Curse remake key-art brief (Checkpoint 07) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2074931,
+      "sha256": "cc9ca3b2942e3d9aeed28cc1397caccf2a4894976d165ea07e7eb062303469ea",
+      "usedBy": [
+        "assets/app/js/screens/home.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2524,8 +2694,11 @@
       "bytes": 2852,
       "sha256": "fc6f495cbc88d312f3f3f5659d65a5b06823916092de311ceefd3f8e64ed928e",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2542,8 +2715,11 @@
       "bytes": 2658,
       "sha256": "d1bf11edf85c4f0ca832b4a9413f70cc941b3451415463dc2cd9874505dc6e32",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2560,8 +2736,11 @@
       "bytes": 4826,
       "sha256": "b743dd815d27eb2f4770de81415e05bee2f90bcf6bbe20f8ff2a902a44cd2261",
       "usedBy": [
+        "app.html",
         "assets/js/data/immortality-storyboard.js",
         "assets/js/main.js",
+        "canon/originals/Immortality_860201.article.html",
+        "canon/originals/Immortality_860201.docs.html",
         "docs/Immortality_860201/index.html",
         "index.html"
       ],
@@ -2593,9 +2772,12 @@
       "bytes": 335631,
       "sha256": "7e59f285b44d3c77b251d576a2bad2c24363261b71e8e1275620371c0fae367a",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/media-manifest.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -2612,9 +2794,12 @@
       "bytes": 303726,
       "sha256": "3dc94d47f3b3e989cf8f61f46df238366861df4b70fffa08931fed74cc2509e5",
       "usedBy": [
+        "app.html",
         "assets/js/core/record-cinematic-runtime.js",
         "assets/js/data/media-manifest.js",
         "assets/js/main.js",
+        "canon/originals/Cults_871104.article.html",
+        "canon/originals/Cults_871104.docs.html",
         "docs/Cults_871104/index.html",
         "index.html"
       ],
@@ -3262,6 +3447,134 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/ash-crew-aftermath-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ash-crew-aftermath-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 26402,
+      "sha256": "a901c9a0d5324e8cfbf7699511d425f7b89907d0d42a4abc5c06ec50f1bbbe8a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ash-crew-aftermath-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ash-crew-aftermath-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ash-crew-aftermath-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 78048,
+      "sha256": "4d8346e78baaba2d8ed57711078ba1af0b8dc9097f8ae02f4fd186ead9e704d4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ash-crew-aftermath-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/blood-lake-rite-1986-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 18714,
+      "sha256": "9e0a8f60d4eb7b04579ce195bd46d3522991ef5945b404cd3ea6dc41beb8f45c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/blood-lake-rite-1986-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 58462,
+      "sha256": "d03413a2f2075fc458da79e144261dbdc224a5bab982631751cd24f062acad0f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/blood-lake-rite-1986-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/civil-child-drill-empty-classroom-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 16044,
+      "sha256": "0e86b2ce2a9084be82a09ac38b3dc49b184b35505a96452859549acbab7661e1",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/civil-child-drill-empty-classroom-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 45880,
+      "sha256": "003f7b36e28a2561ce388340f38c27e94779148c80a6d5a0fc8da9e17e804c79",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/cpd-screening-line-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/cpd-screening-line-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 26076,
+      "sha256": "c42a563856bf71f29301b815247352dfe804592b21bae666e4a8a717f742e61f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/cpd-screening-line-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/cpd-screening-line-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/cpd-screening-line-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 75024,
+      "sha256": "5d66e53283d1d8439ae1f9a467ff8ef0a1674226375e8a19cd2d8bfba0f2ff8f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/cpd-screening-line-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/dead-zone-pilgrimage_reconstructed-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -3450,6 +3763,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/project-curse-world-keyart-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/remake-keyart-checkpoint-07-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 21314,
+      "sha256": "7acb395e12c06e048480005131493f27caf1735b120b3af4b4d838242db77edc",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/remake-keyart-checkpoint-07-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 66300,
+      "sha256": "6c50d222f50579f660527a6cecd2145f177e72499daf7d2fab05ff4628ca2ff9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

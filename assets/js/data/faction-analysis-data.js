@@ -562,6 +562,18 @@
     alt:'세 갈래 권능 흔적을 한 인물 형상에 겹쳐 본 첫 번째 사도 분석 재구성 스케치',
     caption:'복수 증언의 타락·혈액·그림자 흔적을 한 화면에 겹친 분석용 도식이다. 외형·신원·단일 개체 여부를 확정하지 않는다.'
   };
+  factions.ashcrew.visual={
+    src:'assets/resources/derived/ash-crew-aftermath-concept-v1.png',
+    className:'RECONSTRUCTED',label:'POST-INCIDENT PROCEDURE / 분석 재구성',
+    alt:'밀폐 방호복과 방독면을 착용한 대원 셋이 훼손된 시신을 봉인 운반함으로 옮기고, 한 명이 원격 소각기로 잔류 조직을 태우는 장면의 분석 재구성',
+    caption:'N.H.C 현장 교범의 회수·소각 절차를 한 장면으로 묶은 분석 재구성이다. 특정 현장, 사망자, 대원 신원을 확정하지 않는다.'
+  };
+  factions.cpd.visual={
+    src:'assets/resources/derived/cpd-screening-line-concept-v1.png',
+    className:'RECONSTRUCTED',label:'SCREENING LANE / 분석 재구성',
+    alt:'철망으로 나뉜 선별 통로에서 방독면을 쓴 인원이 피난민의 손목에 흰색과 붉은색 표식을 채우는 장면의 분석 재구성',
+    caption:'민간 분리와 선별 통로의 절차를 재구성한 장면이다. 특정 검문소, 피난민 신원, 개별 표식 판정을 확정하지 않는다.'
+  };
 
   root.ProjectCurseFactionAnalysis = freeze({
     version: root.ProjectCurseBuild?.version||'5.42.0',

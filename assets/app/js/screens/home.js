@@ -263,16 +263,14 @@
   function keyArt() {
     return h('figure.tc-evidence.tc-home-keyart', null,
       h('div.tc-evidence-media', null,
-        h('img', {
-          src: 'assets/resources/derived/project-curse-world-keyart-concept-v1.png',
-          alt: '폐쇄 관제실의 화면에 대흑림 성채와 데드존 도로가 동시에 표시된 편집 키아트',
-          decoding: 'async',
-          loading: 'lazy'
+        PC.img('assets/resources/derived/remake-keyart-checkpoint-07-concept-v1.png', {
+          alt: '검문소 07 출입문 앞에 귀환자 네 명이 서 있고, 대원이 든 열상 판독 단말에는 인체 형상 다섯 개가 표시된 편집 키아트',
+          sizes: '(max-width: 860px) 94vw, 58vw'
         })
       ),
       h('figcaption', null,
-        h('b', { text: 'EDITORIAL KEY ART / ARCHIVE ORIENTATION' }),
-        h('span', { text: '설정 기반 편집 키아트 · 사건 원본이나 감시 화면으로 취급하지 않음' })
+        h('b', { text: 'EDITORIAL KEY ART / CHECKPOINT 07' }),
+        h('span', { text: '설정 기반 편집 키아트 · 사건 원본이나 감시 화면으로 취급하지 않음 · 다섯 번째 열원의 신원은 확정되지 않았다' })
       )
     );
   }

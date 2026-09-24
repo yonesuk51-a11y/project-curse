@@ -198,7 +198,7 @@
           h('summary', null, h('span', null, h('span.tc-label', { text: code }), h('b', { text: title }))),
           h('div.tc-disclosure-body.tc-man-fold', null,
             sec.image ? h('figure.tc-evidence.tc-man-plate', null,
-              h('div.tc-evidence-media', null, h('img', { src: assetPath(sec.image.src), alt: sec.image.alt || '', loading: 'lazy', decoding: 'async' })),
+              h('div.tc-evidence-media', null, PC.img(assetPath(sec.image.src), { alt: sec.image.alt || '', sizes: '200px' })),
               h('figcaption', null, h('b', { text: sec.image.caption || '' }))
             ) : null,
             h('div', null,
