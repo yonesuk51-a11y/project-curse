@@ -109,6 +109,10 @@
     scope.on(img, 'error', () => { status.hidden = false; status.replaceChildren('시각 자료를 불러오지 못했습니다. ', button('다시 요청', () => { status.hidden = true; img.src = path; }, {}, scope)); });
     scope.on(img, 'load', () => { status.hidden = true; }); wrapper.append(status); img.src = path; return wrapper;
   }
+  // 첨부 썸네일은 가장 작은 반응형 파생본을 쓴다. 파생본이 없으면 원본 경로 그대로다.
+  function thumbSrc(path) {
+    return root.ProjectCurseMediaManifest?.resolve(path)?.variants?.[0]?.src || path;
+  }
   function registerImage(src, caption, alt, recordId = activeId) {
     images.push(evidence().resolve(src, { recordId, sequence: images.length + 1, caption, alt })); return images.length - 1;
   }
@@ -127,7 +131,7 @@
     function render() {
       listLife.end(); listLife = lifetime();
       controls.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.source === selected)));
-      list.replaceChildren(...images.map((item, index) => ({ item, index })).filter(({ item }) => selected === 'ALL' || item.className === selected).map(({ item, index }) => button([h('img.tc-arc-thumb', { src: item.path, alt: '', loading: 'lazy', decoding: 'async', width: 72, height: 64 }), h('span', null, h('small.tc-code', { text: item.assetId }), h('b', { text: item.caption || item.alt || item.path }), sourceTag(item.className))], e => openEvidence(index, e.currentTarget), { class: 'tc-arc-attachment', dataset: { arcEvidence: String(index) } }, listLife)));
+      list.replaceChildren(...images.map((item, index) => ({ item, index })).filter(({ item }) => selected === 'ALL' || item.className === selected).map(({ item, index }) => button([h('img.tc-arc-thumb', { src: thumbSrc(item.path), alt: '', loading: 'lazy', decoding: 'async', width: 72, height: 64 }), h('span', null, h('small.tc-code', { text: item.assetId }), h('b', { text: item.caption || item.alt || item.path }), sourceTag(item.className))], e => openEvidence(index, e.currentTarget), { class: 'tc-arc-attachment', dataset: { arcEvidence: String(index) } }, listLife)));
       status.textContent = `${list.childElementCount} / ${images.length}개 첨부`;
       if (!list.childElementCount) list.append(PC.missing('NO MATCHING EVIDENCE', selected, '이 출처 등급의 첨부가 없습니다.'));
     }
@@ -399,8 +403,8 @@
     const shell = h('section.tc-arc-cinema', { 'aria-label': '기록 영상 뷰어' }), stage = h('div.tc-evidence.tc-arc-cinema-stage', { tabindex: '0', 'aria-label': '영상 기록면 · 좌우 화살표 이동, P 재생·정지, R 처음' });
     const status = h('p.tc-code', { role: 'status', 'aria-live': 'polite' }), audioState = h('p.tc-arc-media-status', { role: 'status' });
     const chooser = h('select#tc-arc-scene', { 'aria-label': '영상 기록면 선택' }, pages.map((p, i) => h('option', { value: String(i), text: `${String(i + 1).padStart(2, '0')} / ${p.code}` })));
-    let index = 0, playing = false, sound = false, introSeen = false, altered = false, inBridge = false, frameLife = lifetime();
-    const bgm = h('audio', { src: config.bgm, preload: 'none', loop: true }); bgm.volume = Math.min(.25, config.bgmVolume || .2); bgm.muted = true;
+    let index = 0, playing = false, sound = Boolean(root.PCAudio?.isOn?.()), introSeen = false, altered = false, inBridge = false, frameLife = lifetime();
+    const bgm = h('audio', { src: config.bgm, preload: 'none', loop: true }); bgm.volume = Math.min(.25, config.bgmVolume || .2); bgm.muted = !sound;
     function releaseMedia(media) { media.pause(); media.removeAttribute('src'); media.load(); }
     life.dispose(() => { frameLife.end(); releaseMedia(bgm); });
     function safePlay(media) { const request = media.play(); if (request?.catch) request.catch(error => { if (!life?.live || !media.isConnected || error.name === 'AbortError') return; if (media.tagName === 'VIDEO' && !media.muted && error.name === 'NotAllowedError') { media.muted = true; safePlay(media); audioState.textContent = '손상 영상 구간을 음소거로 재시도합니다.'; } else audioState.textContent = '재생 요청을 완료하지 못했습니다. 재생 버튼으로 다시 요청하거나 기록면을 직접 열람할 수 있습니다.'; }); }
@@ -438,7 +442,8 @@
     const toggle = button('영상 재생', () => { if (playing) pause(); else start(); });
     const previous = button('← 이전 기록면', () => step(-1));
     const next = button('다음 기록면 →', advance);
-    const soundControl = button('음향 꺼짐', () => { sound = !sound; bgm.muted = !sound; soundControl.textContent = sound ? '음향 켜짐 · 낮은 볼륨' : '음향 꺼짐'; soundControl.setAttribute('aria-pressed', String(sound)); if (sound && playing && !motion.matches) safePlay(bgm); else bgm.pause(); if (!inBridge) render(); });
+    const soundLabel = () => (sound ? '음향 켜짐 · 낮은 볼륨' : '음향 꺼짐');
+    const soundControl = button(soundLabel(), () => { sound = !sound; bgm.muted = !sound; soundControl.textContent = soundLabel(); soundControl.setAttribute('aria-pressed', String(sound)); if (sound && playing && !motion.matches) safePlay(bgm); else bgm.pause(); if (!inBridge) render(); }); soundControl.setAttribute('aria-pressed', String(sound));
     function sync() {
       chooser.value = String(index); previous.disabled = index <= 0;
       next.textContent = index === pages.length - 1 ? '기록 색인으로 →' : '다음 기록면 →';
