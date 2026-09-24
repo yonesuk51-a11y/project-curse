@@ -23,6 +23,8 @@ Status: `2026-09-24 / 표시층 재작성 진행 중`
 | `assets/app/css/components.css` | 공용 부품 |
 | `assets/app/css/screens/<화면>.css` | 화면 전용 배치 |
 | `assets/app/js/pc-core.js` | `PCApp` — DOM 도우미, 화면 등록, 주소 규칙, 셸 표시 |
+| `assets/app/js/pc-audio.js` | `PCAudio` — 음향 토글(기본 꺼짐), 채널 이동·링크 클릭 소리 |
+| `assets/app/js/pc-state.js` | 진행 상태 저장소 — `ProjectCurseOperationState`(부서진 왕관 판정), `ProjectCursePilgrimageState`(순례), `ProjectCurseVerdictArchiveState`(현장 판정 보관). 상황 관제가 쓰고 홈·세계 기록이 읽는다. 옛 저장 키와 `projectcurse:*-change` 이벤트를 그대로 쓴다 |
 | `assets/app/js/screens/<화면>.js` | 화면 모듈 |
 | `tools/verify-app.mjs` | 새 앱 검증 |
 
@@ -104,7 +106,10 @@ PCApp.screen({
 ## 5. 화면별 요구
 
 ### 홈 `terminal-home` — 완료(Claude)
-긴급 경보, 최근 수신, 접촉 보고, 작전 기록, 사건 진입, 신규 열람 안내, 증거 두 점.
+현재 경보, 최근 수신, 접촉 보고, 민간 재난 방송, 작전 기록, 사건 진입, 신규 열람 안내, 증거 두 점.
+- 현재 경보와 최근 수신은 진행 상태를 따른다. 우선순위: 미열람 판정 기록 → 저장된 작전 판정 → 정보 회수 진행 → 기본 경보. 수신 첫 네 행은 부서진 왕관·불빛 없는 성채·귀환 심사·전진 회수 채널이다. 봉인 작전은 필요한 판정 사본이 보관되면 풀린다.
+- 민간 재난 방송은 이미 있는 민간 규칙(경보색·창문 봉인·기억 대조·배급·통행 서류·장례)만 방송 문안으로 쓴다. 경보색 뜻은 `Civil_Child_Drill` 표에서 읽는다.
+- 문구와 기록선은 `home-screen-data.js`에 있다.
 
 ### 세계 기록 `history` — 완료(Claude)
 목록(네 전환점, 참고 묶음 3종, 시대 필터, 판정 범례·미해결 설정, 시대별 기록)과 사건 기록(증거 파일 표지, 근거와 한계, 본문 조각, 교단 상충 기록, 관련 기록, 이전·다음).
