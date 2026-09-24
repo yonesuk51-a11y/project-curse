@@ -3628,7 +3628,7 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/derived/pitalja-blood-exit-concept-v1.png",
+      "path": "assets/resources/derived/pitalja-blood-exit-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
@@ -3636,8 +3636,8 @@
       "handling": "피탈자의 몸이 죽은 뒤 괴이가 핏덩이로 빠져나오는 과정과 A.R.F의 배수구 차단 절차를 한 장면으로 옮긴 분석 재구성이다. 특정 현장과 피탈자의 신원, 핏덩이가 향한 곳은 확정하지 않는다.",
       "credit": "Project Curse taken-civilian scene brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
-      "bytes": 1878390,
-      "sha256": "6803ccfcb38e3b02620f65823c43235f7f9a4dbc5f10f8cbfb366b7735082c3d",
+      "bytes": 2048934,
+      "sha256": "a30929b57c3229136aa8fbdb5882db6a529097b9c418f00ab6e42356152f2ab1",
       "usedBy": [
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
@@ -3649,7 +3649,7 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/derived/pitalja-roe-concept-v1.png",
+      "path": "assets/resources/derived/pitalja-roe-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
@@ -3657,8 +3657,8 @@
       "handling": "피탈자 교전 규칙의 경고와 구속 단계를 한 장면으로 옮긴 분석 재구성이다. 특정 작전 기록이 아니며, 피탈자의 신원과 빙의 해제 여부를 확정하지 않는다.",
       "credit": "Project Curse taken-civilian scene brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
-      "bytes": 1640800,
-      "sha256": "6b9f3e40e998cbe8e148270cb0218473d57492d679637c53f0a38f465238868d",
+      "bytes": 1785488,
+      "sha256": "baed9492fc6b71f6fc5300299571b70aaf6aea0c4fa50e9d5a8acbf38e12dee3",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
@@ -6208,66 +6208,66 @@
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/pitalja-blood-exit-concept-v1-w480.webp",
+      "path": "assets/resources/responsive/derived/pitalja-blood-exit-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/pitalja-blood-exit-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/pitalja-blood-exit-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 9620,
-      "sha256": "e2e4bd17dd340320fdb0c32a0e54a6abdb3d5d54335773cc019f7d6622cfe548",
+      "bytes": 11212,
+      "sha256": "b300f59e10f6171299a6b388ed31b7385ed82606e8982ee731dd8ab4d590c16c",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/pitalja-blood-exit-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/pitalja-blood-exit-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/pitalja-blood-exit-concept-v1-w960.webp",
+      "path": "assets/resources/responsive/derived/pitalja-blood-exit-concept-v2-w960.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/pitalja-blood-exit-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/pitalja-blood-exit-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 32254,
-      "sha256": "ae8d3c247ebdf219429446589b3f8196f685af6886b32237ec6ea399c6557898",
+      "bytes": 39726,
+      "sha256": "f3d1298203e8f368a0dfca9f6b6a93a67a045a94d70488694535613d9c20c1a9",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/pitalja-blood-exit-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/pitalja-blood-exit-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/pitalja-roe-concept-v1-w480.webp",
+      "path": "assets/resources/responsive/derived/pitalja-roe-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/pitalja-roe-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/pitalja-roe-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 6400,
-      "sha256": "1656c5d84f99b584ba833abfa52e4b7e2b7b1923ad90806ba85d3e292befeeab",
+      "bytes": 6154,
+      "sha256": "94ad5a0d565a2d691e0146e19b8063764c17b3a5256bafe096b0f911607d6e0a",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/pitalja-roe-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/pitalja-roe-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },
     {
-      "path": "assets/resources/responsive/derived/pitalja-roe-concept-v1-w960.webp",
+      "path": "assets/resources/responsive/derived/pitalja-roe-concept-v2-w960.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
       "release": "PROJECT_GENERATED",
-      "source": "assets/resources/derived/pitalja-roe-concept-v1.png의 반응형 WebP 전송 파생본",
+      "source": "assets/resources/derived/pitalja-roe-concept-v2.png의 반응형 WebP 전송 파생본",
       "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
-      "bytes": 19422,
-      "sha256": "38fdd330938553c47cc803f94d3ea775345036142f3000fc2f57fd2d7b8613ae",
+      "bytes": 20838,
+      "sha256": "cd5934a415c673d863a111fa6addf363eeebc8e99f0307e3c833827d2b1311ad",
       "usedBy": [
         "assets/js/data/media-manifest.js"
       ],
-      "derivedFrom": "assets/resources/derived/pitalja-roe-concept-v1.png",
+      "derivedFrom": "assets/resources/derived/pitalja-roe-concept-v2.png",
       "referenced": true,
       "protectedScope": false
     },

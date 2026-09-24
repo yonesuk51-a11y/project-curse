@@ -193,8 +193,8 @@ The user adopted both scenes of the taken-civilian (피탈자) pass (`output/ima
 
 | Asset | Class | Used by | Source and handling | Required public label |
 |---|---|---|---|---|
-| `derived/pitalja-roe-concept-v1.png` | RECONSTRUCTED | Field manual section `피탈자 교전 규칙` | Two N.H.C operators keep distance, one raising a warning hand and one readying restraints, as three adult taken civilians in everyday clothes shamble closer. | `분석 재구성` |
-| `derived/pitalja-blood-exit-concept-v1.png` | RECONSTRUCTED | World rules `리버스 지점의 피탈자` | A dark red clot leaves a fallen taken body and crawls along blood trails; an A.R.F worker covers the floor drain first while another opens a sealed case. | `분석 재구성` |
+| `derived/pitalja-roe-concept-v2.png` | RECONSTRUCTED | Field manual section `피탈자 교전 규칙` | Replaced 2026-09-25 with the redraw after the user's reference feel: three adult taken civilians with hollow black eyes, blood from eyes and mouths and long blackened fingertips (one crawls over a table) approach two N.H.C operators at a doorway, one raising a warning hand and one holding restraints. | `분석 재구성` |
+| `derived/pitalja-blood-exit-concept-v2.png` | RECONSTRUCTED | World rules `리버스 지점의 피탈자` | Replaced 2026-09-25 with the redraw: a long tendril-like dark red clot leaves the mouth of a fallen taken civilian with hollow black eyes and crawls toward the drain; an A.R.F worker covers the drain while another opens a sealed case. | `분석 재구성` |
 
 ## 2026-09-25 batch D adoption
 
@@ -212,3 +212,7 @@ The user adopted all ten world-history scenes of Codex batch D (`output/imagegen
 | `derived/ushinoda-fabrication-2024-review-concept-v1.png` | RECONSTRUCTED | World record `2024-03-17-ushinoda-fabrication` | Two analysts compare four teal monitors showing the same doorway and figure with mismatched outlines. No text or timecodes. | `분석 재구성` |
 | `derived/mass-summoning-2028-rehearsal-site-concept-v1.png` | RECONSTRUCTED | World record `2028-07-25-mass-summoning-rehearsal` | A night city plaza with a rough scratched circle and a low lavender afterglow; response vehicle lights approach from a distant street. | `분석 재구성` |
 | `derived/inland-beacon-31-relay-concept-v1.png` | RECONSTRUCTED | World record `2034-04-22-inland-beacon-31` | One operator sits before a lit receiver in a dark coastal relay room; the inland beyond the window is hazy. No readable displays. | `분석 재구성` |
+
+## 2026-09-25 taken-civilian scenes replaced
+
+The user asked to change the look of the taken civilians (피탈자) after a reference image ("이런느낌으로 바꿔야할듯") and approved the redraw (`output/imagegen/20260925-pitalja-v2-*`). `pitalja-roe-concept-v2.png` and `pitalja-blood-exit-concept-v2.png` replace the `-v1` files, which were removed from `assets/` (kept in git history and in `output/imagegen/20260925-pitalja-*`). The world rule and manual text gained the matching possession signs.
