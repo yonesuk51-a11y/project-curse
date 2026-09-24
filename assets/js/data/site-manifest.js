@@ -89,12 +89,12 @@
       shellRuntime:'assets/js/core/app-shell.js',
       channelIdentityRuntime:'assets/js/core/channel-identity.js',
       cinematicRuntime:'assets/js/core/record-cinematic-runtime.js',
-      cinematicRegistry:'assets/js/core/record-cinematic-registry.js',
+      cinematicRegistry:'assets/app/js/cinematic/record-cinematic-registry.js',
       cinematicRecords:[
-        'assets/js/pages/cinematic-cults.js',
-        'assets/js/pages/cinematic-immortality.js',
-        'assets/js/pages/cinematic-ferals.js',
-        'assets/js/pages/cinematic-sakuma.js'
+        'assets/app/js/cinematic/cinematic-cults.js',
+        'assets/app/js/cinematic/cinematic-immortality.js',
+        'assets/app/js/cinematic/cinematic-ferals.js',
+        'assets/app/js/cinematic/cinematic-sakuma.js'
       ],
       shellCSS:'assets/css/app-shell.css',
       foundationCSS:'assets/css/terminal-foundation.css',

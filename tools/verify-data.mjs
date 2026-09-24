@@ -288,7 +288,7 @@ function verify(){
   add('signal-index-twenty-nine-contacts',mapSignalIndex?.items?.length===29&&mapSignalIndex.items.filter(item=>item.category==='event').length===8&&mapSignalIndex.items.filter(item=>item.category==='site').length===5&&mapSignalIndex.items.filter(item=>item.category==='operation').length===5&&mapSignalIndex.items.filter(item=>item.category==='synchrony').length===10&&mapSignalIndex.items.filter(item=>item.category==='withheld').length===1,mapSignalIndex?.items?.length);
   // D 혼합: signal-index-canon-boundary의 데이터/매체 조건.
   add('signal-index-canon-boundary:data',mapSignalIndex?.items?.filter(item=>item.mapStatus==='withheld').map(item=>item.target.id).join('|')==='evt-amarion-foundation'&&mapSignalIndex.items.filter(item=>item.category==='synchrony').every(item=>item.mapStatus==='independent'&&item.unresolved)&&mapSignalIndexSource.includes("status:'MAP POSITION WITHHELD'"));
-  // cinematic-registry-four-records: 옛 런타임 등록 검사 이관 방식 확인 중.
+  // cinematic-registry-four-records: 실행 모듈 검사라 verify-app.d/archive.mjs의 four-independent-cinematics가 등록 순서까지 이어받았다.
   [
     'assets/resources/archive-enex/source-records/16b74a6d9fb1cab8522e4ed557cd0b84.mp3',
     'assets/resources/archive-enex/source-records/74b0e497277cdc48a4daf4df1b9241d4.mp3',

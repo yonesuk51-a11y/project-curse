@@ -27,11 +27,12 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   vm.runInContext(read('assets/js/core/operation-state.js'), test);
   const operation = test.ProjectCurseOperationState;
   add('operation-boundary-verbatim', ['operationId', 'storageKey', 'branchIds', 'canonBoundary', 'decisions'].every(key => JSON.stringify(operation[key]) === JSON.stringify(migrated.operation[key])));
-  ['record-cinematic-registry.js'].forEach(file => vm.runInContext(read(`assets/js/core/${file}`), test));
-  ['cults', 'immortality', 'ferals', 'sakuma'].forEach(name => vm.runInContext(read(`assets/js/pages/cinematic-${name}.js`), test));
+  ['record-cinematic-registry.js'].forEach(file => vm.runInContext(read(`assets/app/js/cinematic/${file}`), test));
+  ['cults', 'immortality', 'ferals', 'sakuma'].forEach(name => vm.runInContext(read(`assets/app/js/cinematic/cinematic-${name}.js`), test));
   const registry = test.ProjectCurseCinematicRegistry;
   const expected = ['Cults_871104', 'Immortality_860201', 'Ferals_860722', 'Sakuma_Tape_991028'];
-  add('four-independent-cinematics', expected.every(id => registry.pages(id).length > 0) && registry.ids().length === 4, expected.map(id => `${id}:${registry.pages(id).length}`).join(', '));
+  // 옛 verify-package의 cinematic-registry-four-records(등록 순서 포함)를 여기서 이어받는다.
+  add('four-independent-cinematics', expected.every(id => registry.pages(id).length > 0) && registry.ids().length === 4 && registry.ids().join('|') === expected.join('|'), expected.map(id => `${id}:${registry.pages(id).length}`).join(', '));
   add('all-records-openable', archiveIds.size === 17 && [...archiveIds].every(id => test.ProjectCurseArchiveDocuments.documents[id] || app.includes(`data-record="${id}"`)));
   add('reading-groups-complete', new Set(migrated.chapters.flatMap(c => c.ids)).size === 15 && migrated.chapters.every(c => c.ids.every(id => archiveIds.has(id))));
   const brokenLinks = (context.ProjectCurseIncidentNetwork?.incidentList || []).filter(i => i.records?.some(id => archiveIds.has(id))).flatMap(i => [i.operation && !opIds.has(i.operation) ? i.operation : '', i.history && !historyIds.has(i.history) ? i.history : ''].filter(Boolean));
@@ -42,7 +43,7 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   const root = fileURLToPath(new URL('../../', import.meta.url)), missing = [...paths].filter(p => !existsSync(root + p));
   add('all-document-cinematic-media-exist', !missing.length, missing.join(', '));
   const moduleStart = app.indexOf('<!-- slot:archive-modules'), screenStart = app.indexOf('assets/app/js/screens/archive.js');
-  add('registry-before-screen-no-old-runtime', app.indexOf('assets/js/core/record-cinematic-registry.js') > moduleStart && app.indexOf('assets/js/pages/cinematic-sakuma.js') < screenStart && !app.includes('assets/js/core/record-cinematic-runtime.js'));
+  add('registry-before-screen-no-old-runtime', app.indexOf('assets/app/js/cinematic/record-cinematic-registry.js') > moduleStart && app.indexOf('assets/app/js/cinematic/cinematic-sakuma.js') < screenStart && !app.includes('assets/js/core/record-cinematic-runtime.js'));
 
   // Exercise the actual new state reader and old report generator against identical completed snapshots.
   const states = {};

@@ -47,7 +47,7 @@
 - 없는 키를 다른 값으로 조용히 바꾸는 폴백을 쓰지 않는다. 예를 들어 없는 세력을 U.A.C 문서로 열면 안 된다. `PCApp.missing()`으로 없다고 표시한다.
 - DOM은 `PCApp.h()`로 만들고 `innerHTML`을 쓰지 않는다.
 - 이벤트 리스너와 타이머는 화면의 `hide()`에서 정리한다. 같은 화면에 두 번 들어와도 중복으로 붙지 않게 한다.
-- 옛 앱 파일(`assets/css/`, `assets/js/main.js`, `assets/js/core/`, `assets/js/pages/`)은 새 단말이 불러오지 않는다. 다만 기록보관소가 재사용하는 기록 영상 모듈(`core/record-cinematic-registry.js`, `pages/cinematic-*.js`)과 화면별 검사가 옛 기능과 대조하려고 읽는 파일이 있으므로, 정리 작업 전까지 지우지 않는다.
+- 옛 앱 파일(`assets/css/`, `assets/js/main.js`, `assets/js/core/`, `assets/js/pages/`)은 새 단말이 불러오지 않는다. 다만 화면별 검사가 옛 기능과 대조하려고 읽는 파일이 있으므로, 정리 작업 전까지 지우지 않는다. 기록보관소가 쓰는 기록 영상 모듈은 `assets/app/js/cinematic/`로 옮겼다(내용 그대로).
 
 ### 화면별 담당 파일
 
