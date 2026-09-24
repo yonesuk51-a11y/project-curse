@@ -6,7 +6,7 @@ Status: `5.54.0 / deep history, world-law baseline, fractured factions and revis
 
 ## 자료 우선순위
 
-1. 보호된 원문 기록 `Cults_871104`, `Immortality_860201`
+1. 보호된 원문 기록 `Cults_871104`, `Immortality_860201` — 봉인 원본(`canon/originals/`) 기준
 2. `assets/js/data/canon-registry.js`에 등록된 조직 정사
 3. `assets/js/data/world-history-data.js`의 연대기 판정
 4. `assets/js/data/japan-technology-data.js`의 제6계측계획·실제 역사 경계·기술 계보
@@ -197,6 +197,7 @@ Status: `5.54.0 / deep history, world-law baseline, fractured factions and revis
 - 확정되지 않은 정보를 확정문으로 쓰지 않는다.
 - 기존 기록과 충돌하면 충돌 사실을 데이터에 남긴다.
 - 보호 기록의 본문은 별도 승인 없이 수정하지 않는다.
+- 2026-09-24 사용자 승인: 보호 기록을 포함한 전체 기록의 문장 흐름 개정을 허용한다. 보호 기록 원본은 `canon/originals/`에 봉인 보관하고 해시로 잠근다. 사이트의 개정판은 원본의 사실·순서·발화의 뜻을 바꾸지 않으며, 원본과 개정판이 어긋나면 원본이 정사다.
 - 공개 UI는 판정 등급을 숨기지 않으며, 추정과 사실을 동일한 색상으로 표시하지 않는다.
 - 새 본문은 `WRITING_STYLE_GUIDE.md`의 작성자·수신자·목적·정보 한계를 등록한다.
 - 정사 데이터와 서술 대장을 분리하고 문체 수정만으로 날짜·세력·판정을 바꾸지 않는다.

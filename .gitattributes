@@ -1,0 +1,4 @@
+# 해시로 잠긴 원본 — 줄바꿈 자동 변환을 막아 어느 환경에서 받아도 바이트가 같게 한다
+canon/originals/** -text
+docs/Cults_871104/index.html -text
+docs/Immortality_860201/index.html -text

@@ -2,12 +2,13 @@
 // Project Curse — 문장 흐름 개정 대조 검사.
 // 사용: node tools/check-prose.mjs <기준 커밋> <데이터 파일...>
 // 기준 커밋의 데이터와 작업 폴더의 데이터를 각각 불러와, 바뀐 문자열마다 아래를 원문과 대조한다.
-//   실패(FAIL): 숫자·영문 약어·괄호 인용·판정 표현·고유명사가 빠졌거나, 손대지 않는 글(증언·현장 기입·교단 상충 기록)이 바뀌었거나, 구조가 달라졌다.
-//   확인(WARN): 부정 표현 수가 줄었거나 길이가 크게 달라졌다. 사람이 읽고 판단한다.
+//   실패(FAIL): 숫자·영문 약어·괄호 인용·판정 표현·고유명사가 빠졌거나 구조가 달라졌다.
+//   확인(WARN): 빠졌을 수 있는 내용어, 부정 표현 감소, 길이 변화, 화자가 있는 글(증언·현장 기입·교단 상충 기록)의 변경. 사람이 읽고 판단한다.
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { compareFacts, dictionary } from './prose-facts.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const [base, ...targets] = process.argv.slice(2);
@@ -52,52 +53,7 @@ function globalsOf(file) {
   return [...new Set([...source.matchAll(/root\.(ProjectCurse[A-Za-z0-9_]+)\s*=/g)].map((m) => m[1]))];
 }
 
-/* ---------- 대조 기준 ---------- */
-const MARKERS = ['확인되지', '확인하지', '확인된 적', '미확인', '추정', '가능성', '정황', '주장', '알려지지', '알 수 없', '불명', '판정되지', '공개되지', '밝혀지지', '의혹', '의심', '보인다', '보였다', '보이는', '듯', '모른다', '미상', '결정 대기', '상충'];
-const NEGATION = /않|없|못|아니/g;
-// 숫자는 종류만 대조한다. 겹친 문단을 합치면 같은 숫자의 등장 횟수는 줄어들 수 있다.
-const numbers = (s) => [...new Set(s.match(/\d+(?:[.,:·]\d+)*/g) || [])].sort();
-const latin = (s) => [...new Set(s.match(/[A-Za-z][A-Za-z0-9.\-']*[A-Za-z0-9]|[A-Za-z]/g) || [])];
-const quoted = (s) => [...new Set(s.match(/「[^」]*」|『[^』]*』|“[^”]*”|‘[^’]*’|"[^"]*"/g) || [])];
-const count = (s, re) => (s.match(re) || []).length;
-
-// 내용어 — 형태소 분석 없이 조사를 떼어 낸 명사 줄기만 비교한다. 동사·어미로 끝나는 말은 건너뛴다.
-// 표현을 바꾸면 소음이 생기므로 실패가 아니라 확인(WARN)으로 알린다.
-const PARTICLES = ['에서부터', '으로부터', '에게서', '에서는', '에서도', '으로는', '으로도', '까지는', '부터는', '에서', '으로', '에게', '한테', '처럼', '보다', '까지', '부터', '마다', '조차', '이나', '이며', '이고', '에는', '에도', '와', '과', '은', '는', '이', '가', '을', '를', '의', '에', '로', '도', '만', '나'];
-const VERBISH = /(다|고|며|면|서|지|게|니|어|아|했|였|된|한|는|은|을|던|할|될|인|적|록|듯|며|자|요)$/;
-function stems(s) {
-  const out = new Set();
-  for (const word of s.match(/[가-힣]{2,}/g) || []) {
-    let stem = word;
-    for (const particle of PARTICLES) {
-      if (stem.length > particle.length + 1 && stem.endsWith(particle)) {
-        stem = stem.slice(0, -particle.length);
-        break;
-      }
-    }
-    if (stem.length >= 2 && !VERBISH.test(stem)) out.add(stem);
-  }
-  return [...out];
-}
-
-// 고유명사 사전 — 세력 이름, 인물 이름, 지명
-function dictionary(ctx) {
-  const words = new Set(['대흑림', '데드존', '피의 호수', '순례 회랑', '북해', '검문소', '성채', '리버스', '괴이', '타락자', '능력자', '방랑자', '위버멘시', '레드울프', '우시노다교', '아마리온', '제6계측계획']);
-  Object.values(ctx.ProjectCurseCanon?.factions || {}).forEach((f) => f?.name && words.add(f.name));
-  const walk = (value, depth) => {
-    if (!value || depth > 6) return;
-    if (Array.isArray(value)) return value.forEach((item) => walk(item, depth + 1));
-    if (typeof value === 'object') {
-      for (const [key, item] of Object.entries(value)) {
-        if ((key === 'name' || key === 'koreanName' || key === 'nameKo') && typeof item === 'string' && item.length >= 2 && item.length <= 16) words.add(item.trim());
-        else walk(item, depth + 1);
-      }
-    }
-  };
-  walk(ctx.ProjectCursePersonnel, 0);
-  walk(ctx.ProjectCursePersonnelProfiles, 0);
-  return [...words].filter((w) => w.length >= 2);
-}
+/* ---------- 대조 기준 — tools/prose-facts.mjs ---------- */
 const DICT = dictionary(before);
 
 /* ---------- 손대지 않는 글 ---------- */
@@ -126,29 +82,12 @@ function compare(oldValue, newValue, pathKeys, parents) {
     }
     if (oldValue === newValue) return;
     changed += 1;
+    // 화자가 있는 글도 개정 대상이다. 다만 목소리를 살렸는지 사람이 읽고 확인하도록 알린다.
     const reason = frozen(pathKeys, parents);
-    if (reason) {
-      fails.push([where, `손대지 않는 글(${reason})이 바뀌었다`]);
-      return;
-    }
-    const n0 = numbers(oldValue).join(' ');
-    const n1 = numbers(newValue).join(' ');
-    if (n0 !== n1) fails.push([where, `숫자가 다르다: [${n0}] → [${n1}]`]);
-    const lostLatin = latin(oldValue).filter((t) => !newValue.includes(t));
-    if (lostLatin.length) fails.push([where, `영문 약어·이름이 빠졌다: ${lostLatin.join(', ')}`]);
-    const lostQuoted = quoted(oldValue).filter((q) => !newValue.includes(q));
-    if (lostQuoted.length) fails.push([where, `괄호 인용이 빠졌다: ${lostQuoted.join(', ')}`]);
-    const lostMarkers = MARKERS.filter((m) => oldValue.includes(m) && !newValue.includes(m));
-    if (lostMarkers.length) fails.push([where, `판정 표현이 빠졌다: ${lostMarkers.join(', ')}`]);
-    const lostNames = DICT.filter((w) => oldValue.includes(w) && !newValue.includes(w));
-    if (lostNames.length) fails.push([where, `고유명사가 빠졌다: ${lostNames.join(', ')}`]);
-    const lostStems = stems(oldValue).filter((stem) => !newValue.includes(stem));
-    if (lostStems.length) warns.push([where, `빠졌을 수 있는 말: ${lostStems.join(', ')}`]);
-    const neg0 = count(oldValue, NEGATION);
-    const neg1 = count(newValue, NEGATION);
-    if (neg1 < neg0) warns.push([where, `부정 표현이 ${neg0} → ${neg1}개로 줄었다: ${snippet(newValue)}`]);
-    const ratio = newValue.length / oldValue.length;
-    if (oldValue.length > 40 && (ratio < 0.7 || ratio > 1.3)) warns.push([where, `길이가 ${Math.round(ratio * 100)}%로 달라졌다: ${snippet(newValue)}`]);
+    if (reason) warns.push([where, `화자가 있는 글(${reason}) — 말투·어휘·시각 형식을 살렸는지 확인`]);
+    const result = compareFacts(oldValue, newValue, DICT);
+    result.fails.forEach((message) => fails.push([where, message]));
+    result.warns.forEach((message) => warns.push([where, `${message}: ${snippet(newValue)}`]));
     return;
   }
   // 문단 배열 — 문장을 문단 사이로 옮기거나 겹친 문단을 합칠 수 있으므로, 문단 목록은 늘 전체를 이어 대조한다.

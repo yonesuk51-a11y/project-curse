@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { compareFacts, dictionary, htmlText } from './prose-facts.mjs';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const read = (p) => readFileSync(ROOT + p, 'utf8');
@@ -23,17 +24,22 @@ function article(source, id) {
   return start < 0 || end < 0 ? '' : source.slice(start, end + '</article>'.length);
 }
 
-/* ---------- 1. 보호 기록 — 글자 한 개도 바꾸지 않는다 ---------- */
+/* ---------- 1. 보호 기록 ----------
+   원본은 canon/originals/에 봉인 보관하고 해시로 잠근다(2026-09-24 사용자 승인으로 개정판 작성 허용).
+   사이트에 싣는 개정판은 원본의 사실을 바꾸지 않는다 — 숫자·약어·인용·판정 표현·고유명사를 원본과 대조한다. */
 const LOCKED = {
   Cults_871104: { inline: 'aefa15d45fd74b868223144455da4dae59b5545f61fd5687a3132d8cf27c3429', standalone: '71b052533c33f3c4d9838a55633be82bb64030d4028be2304a48154fa049a740' },
   Immortality_860201: { inline: '38cd38c7db213c15517284155e7a70f98092cf9cae52e18d0be40b85fe73e993', standalone: '1d6c0fb57135631deb7feed3c4f6845f4bd1337e3b7ad34db78f95b8d5855626' }
 };
 const app = read('app.html');
+const editions = [];
 for (const [id, expected] of Object.entries(LOCKED)) {
-  const inline = hash(article(app, id));
-  add(`locked-inline:${id}`, inline === expected.inline, inline);
-  const standalone = hash(read(`docs/${id}/index.html`));
-  add(`locked-standalone:${id}`, standalone === expected.standalone, standalone);
+  const originalArticle = read(`canon/originals/${id}.article.html`);
+  const originalDocs = read(`canon/originals/${id}.docs.html`);
+  add(`original-sealed:${id}`, hash(originalArticle) === expected.inline, hash(originalArticle));
+  add(`original-docs-sealed:${id}`, hash(originalDocs) === expected.standalone, hash(originalDocs));
+  editions.push([id, originalArticle, article(app, id), 'app.html']);
+  editions.push([id, originalDocs, read(`docs/${id}/index.html`), 'docs']);
 }
 // 잠긴 두 docs 페이지는 HTML을 고칠 수 없으므로, 그 페이지가 부르는 파일이 있어야 한다.
 for (const id of Object.keys(LOCKED)) {
@@ -43,6 +49,7 @@ for (const id of Object.keys(LOCKED)) {
   add(`locked-page-assets:${id}`, missing.length === 0, missing.join(' | '));
 }
 const publicApp = Object.keys(LOCKED).reduce((source, id) => source.replace(article(source, id), ''), app);
+// 개정판 사실 대조는 데이터(고유명사 사전)를 불러온 뒤에 한다 — 아래 3절 끝.
 
 /* ---------- 2. app.html이 부르는 파일 ---------- */
 const localRefs = [...app.matchAll(/(?:src|href)="([^"#?]+)(?:\?[^"]*)?"/g)].map((m) => m[1]).filter((p) => !/^(https?:)?\/\//.test(p));
@@ -66,6 +73,17 @@ for (const file of dataScripts) {
   }
 }
 add('data-scripts-load', !loadError, loadError || `${dataScripts.length} files`);
+
+// 보호 기록 개정판 — 원본과 사실 대조
+const factDict = dictionary(context);
+for (const [id, original, edition, where] of editions) {
+  if (!edition) {
+    add(`edition-present:${id}:${where}`, false, '개정판을 찾지 못했다');
+    continue;
+  }
+  const result = compareFacts(htmlText(original), htmlText(edition), factDict);
+  add(`edition-facts:${id}:${where}`, result.fails.length === 0, result.fails.join(' | '));
+}
 
 /* ---------- 4. 세계 기록 ---------- */
 const W = context.ProjectCurseWorldHistoryData;
