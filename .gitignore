@@ -1,1 +1,4 @@
 .codex-tmp/
+.codex-remote-attachments/
+output/
+.claude/settings.local.json
