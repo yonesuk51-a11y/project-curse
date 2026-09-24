@@ -97,7 +97,7 @@
         {label:'닫힌 혈액 방울',text:'피를 소모품이 아니라 기억과 통로를 보존하는 그릇으로 본다.'},
         {label:'좌우 유입축',text:'희생자와 의식자가 같은 혈액 좌표에 묶이는 구조를 나타낸다.'},
         {label:'하부 결속점',text:'의식이 끝난 뒤에도 혈연과 기억의 연결이 남는다는 표시다.'}
-      ],note:'남부·데드존 변형과 구분하기 위한 중앙 종파 감식형이다. 실제 교단 승인본 여부는 확인되지 않았다.'
+      ],note:'남방 혈맹·데드존 변형과 구분하기 위한 중앙 종파 감식형이다. 실제 교단 승인본 여부는 확인되지 않았다.'
     },
     'shadow-cult':{
       name:'그림자교',asset:'assets/faction_marks/v3/shadow-cult.png',previousAsset:'assets/faction_marks/shadow-cult.svg',type:'종파 의식문양 / 감식 재구성',source:'빙의 현장·반사면 기록·조작 영상 원본 대조',assetState:'파생 이미지 / 이중 노출형',
@@ -130,7 +130,7 @@
       name:'데드존 혈교',asset:'assets/faction_marks/v3/deadzone-blood.png',previousAsset:'assets/faction_marks/deadzone-blood.svg',type:'지역 자치분파 문양',source:'순례자 숙영지·구호표식·2016년 결별문',assetState:'파생 이미지 / 열린 회랑형',
       firstSeen:'2016.02.21 이전',confidence:'B',usage:'순례로·응급 숙영지·혈맹 명령 거부문',accent:'#9f3340',
       symbols:[
-        {label:'열린 혈액 방울',text:'혈액 의례를 유지하면서도 남부의 폐쇄 지휘를 거부한다는 표시다.'},
+        {label:'열린 혈액 방울',text:'혈액 의례를 유지하면서도 남방 혈맹의 폐쇄 지휘를 거부한다는 표시다.'},
         {label:'관통 순례로',text:'중립 순례자에게 이동과 귀환의 가능성을 남겨두는 현장 원칙을 뜻한다.'},
         {label:'두 피난 거점',text:'교단 구성원과 외부 생존자가 제한적으로 같은 보호선을 쓸 수 있음을 나타낸다.'}
       ],note:'구조 행위가 확인된 거점의 공통형이다. 이 표식만으로 안전이나 우호를 보증할 수 없다.'

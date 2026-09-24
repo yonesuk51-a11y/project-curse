@@ -362,7 +362,7 @@
       ),
       entries.length ? h('ol.tc-home-update-list', null, entries.map((entry) =>
         h('li', null,
-          h('time.tc-code', { text: entry.date }),
+          h('time.tc-code', { text: String(entry.date).replace(/-/g, '.'), datetime: entry.date }),
           h('div', null, h('b', { text: entry.title }), entry.text ? h('p', { text: entry.text }) : null),
           (entry.links || []).length ? h('div.tc-btnrow', null, entry.links.map((item) => h('a.tc-btn', { href: PC.href(item.route, ...(item.parts || [])) }, item.label))) : null
         )

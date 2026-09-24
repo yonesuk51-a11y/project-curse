@@ -536,7 +536,7 @@
             {time:'22:14:41',speaker:'애셔',tone:'witness',text:'동료들 시신까지 결국 거기 두고 왔잖아.'},
             {time:'22:14:49',speaker:'밀렌',tone:'command',text:'애초부터 우리가 그러려고 이곳에 투입된 게 아니었는데 말이지.'}
           ]},
-          {title:'명령 체계에 대한 결별',transcript:[
+          {title:'명령 체계와의 결별',transcript:[
             {time:'22:15:10',speaker:'밀렌',tone:'command',text:'우린 사람들을 저버려선 안 돼. 우리의 임무는 이 도시를 지키는 거야. 자기들 안위만 챙기는 윗대가리 때문에 동료를 버리는 게 아니라고.'},
             {time:'22:15:28',speaker:'애셔',tone:'witness',text:'나도 네 말이 무슨 뜻인지는 알아. 나도 그들이 내린 명령이 달갑지 않은 건 맞는데.'},
             {time:'22:15:39',speaker:'밀렌',tone:'command',text:'이제 그들과 따로 행동해야 한다는 거야.'},
