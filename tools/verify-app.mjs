@@ -135,7 +135,10 @@ add('home-signal-targets-exist', badSignals.length === 0 && opIds.has(homeIntel?
 
 /* ---------- 6. 공개 문구 — 메타 용어 금지 ---------- */
 const FORBIDDEN = ['정사', '캐논', '플레이어', '독자 선택', '시나리오 모드', '메인 스토리', 'AI 이미지', '생성 이미지'];
-const publicSources = [publicApp, read('assets/js/data/world-history-core-data.js'), ...screenSources.map(([, source]) => source.replace(/^\s*\/\/.*$/gm, ''))].join('\n');
+// 새 앱이 만든 데이터 파일(app.html에서 ?v=6.x로 부르는 assets/js/data/*)도 모두 검사한다. 옛 데이터는 verify-package가 본다.
+const newDataFiles = [...new Set([...app.matchAll(/src="(assets\/js\/data\/[^"?]+\.js)\?v=6\./g)].map((m) => m[1]))];
+const stripComments = (source) => source.replace(/^\s*\/\/.*$/gm, '');
+const publicSources = [publicApp, ...newDataFiles.map((file) => stripComments(read(file))), ...screenSources.map(([, source]) => stripComments(source))].join('\n');
 const foundForbidden = FORBIDDEN.filter((term) => publicSources.includes(term));
 add('public-copy-no-meta-language', foundForbidden.length === 0, foundForbidden.join(' | '));
 
