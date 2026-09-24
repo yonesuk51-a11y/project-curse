@@ -2329,6 +2329,7 @@
       "usedBy": [
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
