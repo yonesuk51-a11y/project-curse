@@ -252,6 +252,49 @@
     );
   }
 
+  /* ---------- 민간 재난 방송 ---------- */
+  // 경보색 이름은 글자로도 적는다. 색만으로 뜻을 전하지 않는다.
+  const ALERT_TONES = { '초록': 'ok', '노랑': 'caution', '빨강': 'danger', '하양': 'dotted', '검정': 'dim' };
+
+  // 경보색의 뜻은 학교 대피 수업 표(Civil_Child_Drill)에서 그대로 읽는다.
+  function alertColors() {
+    const docs = root.ProjectCurseArchiveDocuments?.documents || {};
+    const drill = Array.isArray(docs) ? docs.find((doc) => doc.id === 'Civil_Child_Drill') : docs.Civil_Child_Drill;
+    return drill?.sections?.find((section) => section.title === '경보색과 할 일')?.table?.rows || null;
+  }
+
+  function civilPanel() {
+    const civil = copy().civil;
+    if (!civil) return PC.missing('CIVIL RELAY MISSING', 'ProjectCurseHomeScreen.civil', '민간 방송 수신본이 없습니다.');
+    const colors = alertColors();
+    return h('section.tc-panel.tc-home-civil', { 'aria-labelledby': 'tc-home-civil-title' },
+      h('header.tc-panel-head', null,
+        h('div', null, h('span.tc-label', { text: civil.code }), h('h2#tc-home-civil-title', { text: civil.title })),
+        h('span.tc-code.tc-dim', { text: civil.relay })
+      ),
+      h('div.tc-home-civil-body', null,
+        h('ol.tc-home-civil-list', null, civil.broadcasts.map((item) =>
+          h('li', null,
+            h('time.tc-code', { text: item.time }),
+            item.color ? PC.tag(`경보색 ${item.color}`, ALERT_TONES[item.color] || 'dim') : PC.tag(item.kind, 'info'),
+            h('div', null, h('b', { text: item.region }), h('p', { text: item.text }))
+          )
+        )),
+        h('aside.tc-home-civil-legend', { 'aria-labelledby': 'tc-home-civil-legend-title' },
+          h('h3#tc-home-civil-legend-title', { text: civil.legendTitle }),
+          colors
+            ? h('dl', null, colors.map(([name, action]) => h('div', null, h('dt', null, PC.tag(name, ALERT_TONES[name] || 'dim')), h('dd', { text: action }))))
+            : PC.missing('ALERT TABLE MISSING', 'Civil_Child_Drill / 경보색과 할 일', '경보색 기준 표를 찾지 못했습니다.'),
+          civil.legendLink ? link(civil.legendLink[0], civil.legendLink[1]) : null
+        )
+      ),
+      h('footer.tc-home-civil-foot', null,
+        h('dl.tc-kv', null, kv('발신', civil.author), kv('수신', civil.recipient), kv('목적', civil.purpose)),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: '수신본의 한계' }), h('p', { text: civil.limit }))
+      )
+    );
+  }
+
   /* ---------- 접촉 보고 ---------- */
   function contactPanel() {
     const contact = copy().contact;
@@ -365,6 +408,7 @@
       h('div.tc-home-unknown', { hidden: true }),
       PC.screenHead('terminal-home', { title: '합동작전 단말', desc: copy().lead, meta: nodeState() }),
       h('div.tc-home-grid', null, live.flash, live.signals, contactPanel()),
+      civilPanel(),
       live.ops,
       entryPanel(),
       readingPanel(),
