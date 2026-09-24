@@ -555,7 +555,7 @@ function verify(){
   add('history-deep-world-framework:data',worldHistoryData?.deepHistoryRecords?.length===8&&worldHistoryData?.worldFramework?.ontology?.length===4&&worldHistoryData.worldFramework.abilitySources?.length===7&&worldHistoryData.worldFramework.civilianSystems?.length===5);
   // 2026-09-25 사용자 설정: 리버스 지점의 민간인 빙의. 네 구분에 끼워 넣지 않고, 분류 근거 기록과 미확인 범위를 함께 둔다.
   const possession=worldHistoryData?.worldFramework?.reverseSiteCivilians;
-  add('history-reverse-site-possession:data',Boolean(possession?.label&&possession.rule&&possession.handling&&possession.caution)&&possession.record==='Ferals_860722'&&Boolean(context.window.ProjectCurseArchiveDocuments?.documents?.Ferals_860722?.sections?.some(s=>(s.items||[]).some(t=>t.includes('빙의 상태의 생존자를 자동으로 괴이 분류에 넣지 않는다')))));
+  add('history-reverse-site-possession:data',Boolean(possession?.label&&possession.rule&&possession.handling&&possession.caution)&&possession.record==='Ferals_860722'&&possession.rule.includes('몸을 빼앗는 힘은 리버스다')&&Boolean(context.window.ProjectCurseArchiveDocuments?.documents?.NHC_Manual_891219?.sections?.some(s=>s.title===possession.manualSection&&s.record?.limit&&(s.items||[]).length>=5))&&Boolean(context.window.ProjectCurseArchiveDocuments?.documents?.Ferals_860722?.sections?.some(s=>(s.items||[]).some(t=>t.includes('빙의 상태의 생존자를 자동으로 괴이 분류에 넣지 않는다')))));
   const japanTechRecords=japanTechnology?.records||[];
   const japanTechIds=japanTechRecords.map(record=>record.id).join('|');
   const expectedJapanTechIds='1982-04-06-sixth-instrumentation|1985-09-18-optical-return-test|1987-11-04-jid87-standard|1990-04-12-municipal-mesh-pilot|1992-10-30-sixth-program-dispersal';

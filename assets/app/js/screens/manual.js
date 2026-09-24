@@ -128,6 +128,22 @@
     ], { slug: 'roe' });
   }
 
+  /* ---------- 빙의 민간인 교전 규칙 ---------- */
+  // 리버스 지점의 민간인 빙의(2026-09-25 사용자 설정). 세계 기본 규칙의 같은 항목과 서로 링크한다.
+  function possessionPanel() {
+    const sec = section('빙의 민간인 교전 규칙');
+    if (!sec) return missingSection('빙의 민간인 교전 규칙');
+    const rec = sec.record || {};
+    return panel('ROE / POSSESSED CIVILIANS', '빙의 민간인 교전 규칙', [
+      paragraphs(sec.paragraphs),
+      list(sec.items, 'tc-man-list tc-man-list--rules'),
+      sec.quote ? h('blockquote.tc-man-quote', null, h('p', { text: sec.quote })) : null,
+      sec.warning ? h('div.tc-note.tc-note--danger', null, h('b', { text: 'MISSION FAILURE' }), h('p', { text: sec.warning })) : null,
+      rec.limit ? h('div.tc-note.tc-note--caution', null, h('b', { text: 'INFORMATION LIMIT' }), h('p', { text: rec.limit })) : null,
+      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 리버스 지점의 민간인 빙의 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+    ], { bracket: 'danger', slug: 'possessed' });
+  }
+
   /* ---------- 표식 체계 ---------- */
   const TAG_CLASS = { 'White Tag': 'white', 'Gray Tag': 'gray', 'Red Tag': 'red', 'Black Tag': 'black', 'Null Tag': 'null' };
 
@@ -409,6 +425,7 @@
       }),
       doctrine(),
       h('div.tc-man-pair', null, breakPanel(), engagementPanel()),
+      possessionPanel(),
       tagPanel(),
       entryPanels(),
       loadoutPanel(),

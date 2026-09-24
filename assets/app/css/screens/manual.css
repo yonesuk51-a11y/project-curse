@@ -84,6 +84,17 @@
 .tc-man-list--rules li::before {
   background: var(--amber);
 }
+/* 빙의 민간인 교전 규칙 — 교범 절의 인용 한 줄 */
+.tc-man-quote {
+  margin: var(--s4) 0;
+  padding: var(--s3) var(--s4);
+  border-left: 2px solid var(--red-ink);
+  background: var(--panel-2);
+}
+.tc-man-quote p {
+  color: var(--text);
+  font-weight: 600;
+}
 .tc-man-list--check li::before {
   top: .42em;
   width: 11px;

@@ -161,7 +161,8 @@
         h('p', { text: item.rule }),
         h('p', { text: item.handling }),
         h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
-        item.record ? h('p', null, h('a', { href: PC.href('archive-entry', item.record) }, '괴이 판정표 원문 열기', h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
+        item.record ? h('p', null, h('a', { href: PC.href('archive-entry', item.record) }, '괴이 판정표 원문 열기', h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null,
+        item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `교전 교범의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
       )
     );
   }
