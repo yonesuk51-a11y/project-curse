@@ -112,6 +112,72 @@ function operationTerrain(operation){
   const bodyTitle=(code,title,description)=>h('header.tc-map-title',null,h('span.tc-label.tc-full-only',{text:code}),h('h2',{'data-tc-focus':true,text:title}),description?txt(description):null);
   const row=(code,title,summary,path,status,tone='info',unread=false)=>h('a.tc-row.tc-map-row',{href:PC.href('map-room',...path)},h('span.tc-row-time.tc-full-only',{text:code}),h('span.tc-row-main',null,h('b',{text:title}),h('span.tc-map-copy',{text:summary})),h('span.tc-row-meta',null,unread?h('span.tc-tag.tc-tag--evidence.tc-map-new',null,'새 기록',h('span.tc-full-only',{text:' / NEW'})):status?tag(status,tone):null),h('span.tc-row-go',{'aria-hidden':'true',text:'›'}));
   const unique=items=>[...new Set(items.filter(Boolean))];
+  const display=X.display, yearLimits=[display.yearMin,display.yearMax];
+  let mapYear=yearLimits[1],yearTimer=0,signalTimer=0,signalRestoreTimer=0,silenceObserver=null,lostSignal=null;
+  let gesture=null,suppressClick=false;
+  const mapModels=new Map(),mapViews=new Map();
+  const historyRecord=id=>({...root.ProjectCurseWorldHistoryCore?.records?.find(r=>r.id===id),...root.ProjectCurseWorldHistoryData?.getRecord?.(id),...root.ProjectCurseWorldHistoryProse?.getRecord?.(id)});
+  const yearFromDate=value=>{const m=/^(\d{4})(?:[.\/-]|년|$)/.exec(String(value||''));return m?Number(m[1]):null;};
+  // 절대 날짜가 없는 원기록은 연결된 후대 기록의 연도로 채우지 않는다.
+  function itemYear(item,seen=new Set()){
+    if(!item||seen.has(item))return null;seen.add(item);
+    if(item.date!=null)return yearFromDate(item.date);
+    if(Object.prototype.hasOwnProperty.call(item,'year'))return Number.isInteger(item.year)?item.year:null;
+    if(item.incident)return itemYear(incident(item.incident),seen);
+    if(item.history)return itemYear(historyRecord(item.history),seen);
+    if(item.operation)return itemYear(operation(item.operation),seen);
+    const linked=item.id&&root.ProjectCurseIncidentNetwork?.incidentList?.find(i=>i.operation===item.id);
+    return linked?itemYear(linked,seen):null;
+  }
+  const timeState=year=>year==null?'unknown':year>mapYear?'future':'known';
+  const dated=(el,item)=>{const year=itemYear(item);el.dataset.mapYear=String(year??'');el.dataset.timeState=timeState(year);return el;};
+  // 소속·분류가 명시된 값만 읽는다. 시설이라는 이유로 아군, 교단이라는 이유로 적대라고 하지 않는다.
+  const affiliationTable={
+    affiliation:{friendly:'friendly',allied:'friendly',hostile:'hostile',civilian:'civilian',unknown:'unknown'},
+    type:{friendly:'friendly',hostile:'hostile',civilian:'civilian',settlement:'civilian'},
+    tone:{allied:'friendly',hostile:'hostile'}
+  };
+  const frameLabels={friendly:'아군',hostile:'적대',unknown:'미확인',civilian:'민간'};
+  const contactFrame=item=>affiliationTable.affiliation[item.affiliation]||affiliationTable.type[item.type]||affiliationTable.tone[item.tone]||'unknown';
+  const contactWord=item=>({facility:'시설',fortress:'성채',castle:'성채',checkpoint:'검문',settlement:'마을',incident:'사건',anomaly:'이상',cult:'교단',returned:'귀환',signal:'관측',line:'관측',zone:'구역',ruin:'폐허'})[item.type||item.kind]||'';
+  const observation=item=>!!item.synchrony||/관측|검문|성채|감청|계측|감시/.test(item.title||item.label||'');
+  function frameIcon(item,p){
+    const kind=contactFrame(item),stroke=color(kind,p);
+    const shape=kind==='civilian'?svg('circle',{cx:20,cy:20,r:15}):svg('path',{d:shapes[kind],transform:'translate(20 20) scale(1.25)'});
+    return uri(svg('g',{fill:p.bg,stroke,'stroke-width':1.5,'stroke-dasharray':Object.prototype.hasOwnProperty.call(item,'year')&&item.year==null?'3 3':'none'},shape),'0 0 40 40',p);
+  }
+  function yearBar(){return h('div.tc-map-timeline',null,
+    h('label',{for:'tc-map-year',text:'기록 연도'}),h('output#tc-map-year-value',{for:'tc-map-year',text:`${mapYear}년`}),
+    h('input#tc-map-year',{type:'range',min:yearLimits[0],max:yearLimits[1],step:1,value:mapYear,'aria-valuetext':`${mapYear}년`}),
+    h('div.tc-map-year-ends',{'aria-hidden':'true'},h('span',{text:`${yearLimits[0]}년`}),h('span',{text:`${yearLimits[1]}년 · 현재`})),
+    h('div.tc-btnrow',null,action('연도 재생','year-play'),action('현재 연도','year-current')),
+    txt(X.copy.timeline),h('p.tc-map-year-status',{'aria-live':'polite','aria-atomic':'true'}));}
+  function stopYears(){root.clearInterval(yearTimer);yearTimer=0;}
+  function setYear(value){
+    mapYear=Math.max(yearLimits[0],Math.min(yearLimits[1],Math.round(Number(value))||yearLimits[1]));
+    updateIndex();
+    const slider=host.querySelector('#tc-map-year');if(slider){slider.value=mapYear;slider.setAttribute('aria-valuetext',`${mapYear}년`);}
+    const output=host.querySelector('#tc-map-year-value');if(output)output.textContent=`${mapYear}년`;
+    for(const el of host.querySelectorAll('[data-map-year]')){
+      const year=el.dataset.mapYear===''?null:Number(el.dataset.mapYear),phase=timeState(year);el.dataset.timeState=phase;
+      if(el.classList.contains('tc-map-catalog-entry'))el.hidden=phase==='future';
+      if(el.tagName==='A'){el.setAttribute('tabindex',phase==='future'?'-1':'0');el.setAttribute('aria-hidden',String(phase==='future'));}
+    }
+    for(const model of mapModels.values()){
+      if(model.previewContact&&timeState(model.previewContact.year)==='future')closePreview(model);
+    }
+    const contacts=[...mapModels.values()].flatMap(m=>m.contacts),unknown=contacts.filter(c=>c.year==null).length,future=contacts.filter(c=>timeState(c.year)==='future').length;
+    const status=host.querySelector('.tc-map-year-status');if(status)status.textContent=`${mapYear}년까지 ${contacts.length-unknown-future}곳 · 연도 미상 ${unknown}곳 · 이후 기록 ${future}곳`;
+    const playButton=host.querySelector('[data-action="year-play"]');if(playButton){playButton.textContent=reducedFx()?'2042년으로 이동':yearTimer?'연도 재생 멈춤':'연도 재생';playButton.setAttribute('aria-pressed',String(!!yearTimer));}
+    syncSignals();
+  }
+  function playYears(){
+    if(yearTimer){stopYears();setYear(mapYear);return;}
+    if(reducedFx()){setYear(yearLimits[1]);return;}
+    setYear(yearLimits[0]);
+    yearTimer=root.setInterval(()=>{if(!active||root.document.hidden||reducedFx()){stopYears();setYear(mapYear);return;}if(mapYear+1>=yearLimits[1])stopYears();setYear(mapYear+1);},display.yearStepMs);
+    setYear(mapYear);
+  }
   function bilingual(text){
     const pair=/^([A-Z][A-Z\s/-]+)\s*\/\s*([가-힣].*)$/.exec(text||'');
     return pair?[h('span.tc-full-only',{text:pair[1]+' / '}),h('span',{text:pair[2]})]:text;
@@ -212,7 +278,8 @@ function operationTerrain(operation){
       return h('i.tc-map-route-segment',{class:route.alternate?'is-alternate':null,style:`left:${(ax-x)/w*100}%;top:${(ay-y)/ht*100}%;width:${Math.hypot(dx,dy)/w*100}%;transform:rotate(${Math.atan2(dy,dx)}rad);color:var(${route.kind==='hostile'?'--red-ink':route.kind==='unstable'?'--amber-ink':'--ch-ink'});opacity:${route.muted ? .4 : 1}`});
     }));
   }
-  function mapGraphic(title,box,body,contacts=[],p=palette(),routes=[],pulses=[]){
+  function mapGraphic(title,box,body,contacts=[],p=palette(),routes=[],pulses=[],options=null){
+    if(options)return interactiveMap(title,box,body,contacts,p,routes,options);
     const [x,y,w,ht]=box.split(/\s+/).map(Number);
     const inFrame=c=>c.x>=x&&c.x<=x+w&&c.y>=y&&c.y<=y+ht;
     return h('div.tc-map-canvas',{style:`aspect-ratio:${w}/${ht}`},h('img.tc-map-svg',{src:uri(body,box,p),alt:title,width:w,height:ht,draggable:'false'}),
@@ -220,9 +287,130 @@ function operationTerrain(operation){
         [...contacts.filter(c=>c.selected||c.synchrony),...pulses].filter(inFrame).map(c=>h('img.tc-map-ring',{alt:'',src:uri(svg('circle',{cx:12,cy:12,r:10,fill:'none',stroke:c.selected?p.ch:p['red-ink'],'stroke-width':1}),'0 0 24 24',p),class:c.selected?'is-selected':null,style:`left:${(c.x-x)/w*100}%;top:${(c.y-y)/ht*100}%` }))),
       contacts.filter(inFrame).map(c=>h('a.tc-map-point',{href:PC.href('map-room',...c.path),'aria-label':`${c.title} · ${c.status||''} · X ${c.x} Y ${c.y}`,title:c.title,style:`left:${(c.x-x)/w*100}%;top:${(c.y-y)/ht*100}%`,class:c.selected?'is-selected':null},h('span.tc-sr',{text:c.title}))));
   }
+  function fogLayer(confidence,p){
+    const value=/^(\d+)%$/.exec(confidence||'');if(!value)return null;
+    const reliability=Math.max(0,Math.min(100,Number(value[1]))),opacity=(1-reliability/100)*.88;
+    const body=svg('defs',{},svg('filter',{id:'noise',x:0,y:0,width:'100%',height:'100%'},
+      svg('feTurbulence',{type:'fractalNoise',baseFrequency:'.045 .11',numOctaves:3,seed:17,stitchTiles:'stitch'})+
+      svg('feColorMatrix',{type:'saturate',values:0})))+
+      svg('rect',{width:1000,height:540,fill:p.bg,opacity:.82})+
+      svg('rect',{width:1000,height:540,filter:'url(#noise)',opacity:.2});
+    return h('img.tc-map-fog',{src:uri(body,'0 0 1000 540',p),alt:'','aria-hidden':'true',draggable:'false',style:`opacity:${opacity.toFixed(4)}`,dataset:{confidence:reliability}});
+  }
+  function interactiveMap(title,box,body,contacts,p,routes,options){
+    const base=box.split(/\s+/).map(Number),savedBox=mapViews.get(options.id),camera=savedBox?[...savedBox]:[...base];
+    const terrain=h('img.tc-map-svg',{src:uri(body,box,p),alt:title,draggable:'false'});
+    const effects=h('div.tc-map-effects',{'aria-hidden':'true'}),points=h('div.tc-map-points');
+    const zones=(options.zones||[]).map(z=>({item:z,node:dated(h('img.tc-map-zone',{src:uri(zoneGraphic(z,p),box,p),alt:'','aria-hidden':'true',draggable:'false'}),z)}));
+    const canvas=h('div.tc-map-canvas',{style:`aspect-ratio:${base[2]}/${base[3]}`,tabindex:0,role:'group','aria-label':`${title} · 확대와 이동`,'aria-describedby':`tc-map-help-${options.id}`,dataset:{mapId:options.id}},terrain,zones.map(z=>z.node),fogLayer(options.confidence,p),effects,points);
+    const preview=h('section.tc-map-preview',{hidden:true,'aria-label':'지점 사진 미리보기'});
+    const model={canvas,terrain,effects,points,preview,body,p,routes,zones,base,camera,contacts,previewContact:null};
+    model.entries=contacts.map(c=>{
+      const frame=contactFrame(c),year=c.year,signal=observation(c),when=year==null?X.copy.timelineUnknown:`${year}년 기록`;
+      const node=dated(h('a.tc-map-point.tc-map-framed',{href:PC.href('map-room',...c.path),'aria-label':`${c.title} · ${frameLabels[frame]} · ${when} · X ${c.x} Y ${c.y}`,title:`${c.title} · ${when}`,draggable:'false',dataset:{contact:c.id,affiliation:frame},class:c.selected?'is-selected':null},
+        h('img.tc-map-frame-icon',{src:frameIcon(c,p),alt:'',draggable:'false'}),h('span.tc-map-frame-word',{'aria-hidden':'true',text:contactWord(c)}),
+        signal?h('span.tc-map-observation',{'aria-hidden':'true'},h('i.tc-map-signal-line'),h('i.tc-map-signal-flow'),h('span.tc-map-signal-status',{text:'신호'})):null),{year});
+      points.append(node);return {c,node,signal};
+    });
+    mapModels.set(canvas,model);updateCamera(model);
+    if(contacts.some(c=>c.selected))openPreview(model,contacts.find(c=>c.selected),false);
+    return h('div.tc-map-interactive',null,canvas,
+      h('div.tc-map-zoom-tools',null,action('＋ 확대','zoom-in',options.id,{'aria-label':`${title} 확대`}),action('− 축소','zoom-out',options.id,{'aria-label':`${title} 축소`}),action('원래대로','zoom-reset',options.id),h('output.tc-map-zoom-value',{text:`${(base[2]/camera[2]).toFixed(1)}배`})),
+      h('p.tc-map-help',{id:`tc-map-help-${options.id}`,text:X.copy.mapControls}),preview);
+  }
+  const zoneGraphic=(z,p)=>z.markup||svg('path',{d:z.d,fill:p.red,'fill-opacity':.18,stroke:p['red-ink'],'stroke-width':1,'stroke-dasharray':itemYear(z)==null?'4 6':'none'});
+  function updateCamera(model){
+    const [bx,by,bw,bh]=model.base,cam=model.camera;
+    cam[2]=Math.max(bw/display.zoomMax,Math.min(bw,cam[2]));cam[3]=cam[2]*bh/bw;
+    cam[0]=Math.max(bx,Math.min(bx+bw-cam[2],cam[0]));cam[1]=Math.max(by,Math.min(by+bh-cam[3],cam[1]));
+    const [x,y,w,ht]=cam,box=cam.join(' ');model.canvas.dataset.viewbox=box;
+    model.terrain.setAttribute('src',uri(model.body,box,model.p));
+    for(const z of model.zones)z.node.setAttribute('src',uri(zoneGraphic(z.item,model.p),box,model.p));
+    PC.clear(model.effects).append(...routeOverlay(model.routes,box),h('i.tc-map-scan'));
+    for(const {c,node} of model.entries){
+      const inside=c.x>=x&&c.x<=x+w&&c.y>=y&&c.y<=y+ht;
+      node.hidden=!inside;node.setAttribute('style',`left:${(c.x-x)/w*100}%;top:${(c.y-y)/ht*100}%`);
+      if(inside&&(c.selected||c.synchrony))model.effects.append(dated(h('img.tc-map-ring',{alt:'',src:uri(svg('circle',{cx:12,cy:12,r:10,fill:'none',stroke:c.selected?model.p.ch:model.p['red-ink'],'stroke-width':1}),'0 0 24 24',model.p),class:c.selected?'is-selected':null,style:`left:${(c.x-x)/w*100}%;top:${(c.y-y)/ht*100}%`,dataset:{timeState:timeState(c.year)} }),{year:c.year}));
+    }
+    mapViews.set(model.canvas.dataset.mapId,[...cam]);
+    const output=model.canvas.parentElement?.querySelector('.tc-map-zoom-value');if(output)output.textContent=`${(bw/w).toFixed(1)}배`;
+  }
+  function zoomMap(model,factor,at={x:.5,y:.5}){
+    const [x,y,w,ht]=model.camera,nw=Math.max(model.base[2]/display.zoomMax,Math.min(model.base[2],w/factor)),nh=nw*ht/w;
+    model.camera=[x+at.x*(w-nw),y+at.y*(ht-nh),nw,nh];updateCamera(model);
+  }
+  function pointerAt(canvas,event){const r=canvas.getBoundingClientRect();return {x:(event.clientX-r.left)/r.width,y:(event.clientY-r.top)/r.height};}
+  function onWheel(event){
+    const canvas=event.target.closest('.tc-map-canvas[data-map-id]'),model=mapModels.get(canvas);if(!model)return;
+    event.preventDefault();const delta=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?canvas.clientHeight:1);
+    zoomMap(model,Math.exp(-Math.max(-400,Math.min(400,delta))*.002),pointerAt(canvas,event));
+  }
+  function onPointerDown(event){
+    const canvas=event.target.closest('.tc-map-canvas[data-map-id]'),model=mapModels.get(canvas);if(!model||event.button!==0)return;
+    if(!gesture||gesture.canvas!==canvas){cancelGesture();suppressClick=false;gesture={canvas,model,pointers:new Map(),moved:false};}
+    gesture.pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});gesture.origin={x:event.clientX,y:event.clientY};
+    if(gesture.pointers.size>1){gesture.moved=true;suppressClick=true;for(const id of gesture.pointers.keys())canvas.setPointerCapture?.(id);}
+  }
+  function onPointerMove(event){
+    if(!gesture?.pointers.has(event.pointerId))return;
+    const g=gesture,previous=[...g.pointers.values()],old=g.pointers.get(event.pointerId),next={x:event.clientX,y:event.clientY};
+    if(!g.moved&&Math.hypot(next.x-g.origin.x,next.y-g.origin.y)<5)return;
+    g.moved=true;suppressClick=true;g.canvas.setPointerCapture?.(event.pointerId);event.preventDefault();
+    g.pointers.set(event.pointerId,next);const current=[...g.pointers.values()],r=g.canvas.getBoundingClientRect();
+    if(current.length===2){
+      const distance=pts=>Math.hypot(pts[1].x-pts[0].x,pts[1].y-pts[0].y),center=pts=>({x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2}),a=center(previous),b=center(current),before=distance(previous);
+      if(before>0)zoomMap(g.model,distance(current)/before,{x:(a.x-r.left)/r.width,y:(a.y-r.top)/r.height});
+      g.model.camera[0]-=(b.x-a.x)/r.width*g.model.camera[2];g.model.camera[1]-=(b.y-a.y)/r.height*g.model.camera[3];
+    }else{g.model.camera[0]-=(next.x-old.x)/r.width*g.model.camera[2];g.model.camera[1]-=(next.y-old.y)/r.height*g.model.camera[3];}
+    updateCamera(g.model);
+  }
+  function onPointerUp(event){if(!gesture?.pointers.has(event.pointerId))return;const canvas=gesture.canvas;gesture.pointers.delete(event.pointerId);if(canvas.hasPointerCapture?.(event.pointerId))canvas.releasePointerCapture(event.pointerId);if(!gesture.pointers.size)gesture=null;}
+  function cancelGesture(){if(gesture)for(const id of gesture.pointers.keys())if(gesture.canvas.hasPointerCapture?.(id))gesture.canvas.releasePointerCapture(id);gesture=null;}
+  function evidenceFor(contact){
+    const d=contact.district,site=contact.source||contact;
+    if(site.visual?.src)return site.visual;
+    if(d){const visual=[d.visual,...d.visuals||[]].find(v=>v?.src&&v.siteIds?.includes(site.id));if(visual)return visual;}
+    const historyId=site.history||incident(site.incident)?.history;
+    const record=historyId?historyRecord(historyId):null;if(record?.visual?.src)return {...record.visual,history:historyId};
+    const near=detail(X.markerDetails[site.id]),stage=X.scenarioStageByItem[site.id];
+    const match=near?.sites.find(s=>s.label===site.title||stage&&JSON.stringify(X.scenarioStageByItem[s.id])===JSON.stringify(stage));
+    return match?[near.visual,...near.visuals||[]].find(v=>v?.src&&v.siteIds?.includes(match.id))||null:null;
+  }
+  function openPreview(model,contact,focus=true){
+    if(timeState(contact.year)==='future')return;
+    const visual=evidenceFor(contact);model.previewContact=contact;model.preview.hidden=false;
+    for(const entry of model.entries)entry.node.classList[entry.c.id===contact.id?'add':'remove']('is-selected');
+    const figure=visual?h('figure.tc-evidence',{'data-dtg':visual.dtg,'data-place':visual.place,'data-coords':visual.coords,'data-record':visual.record||visual.assetId},
+      h('div.tc-evidence-media',null,PC.img(visual.src,{alt:visual.alt||visual.title||contact.title,sizes:'(max-width: 600px) 90vw, 320px'})),
+      h('figcaption',null,h('b',null,bilingual(visual.label)),h('span',{text:visual.title}),h('span',{text:`촬영 시각: ${visual.dtg||'미상'}`}),h('span',{text:`자료 번호: ${visual.record||visual.assetId||'미상'}`}))):txt(X.copy.noPhoto);
+    PC.clear(model.preview).append(h('div.tc-map-preview-head',null,h('h3',{tabindex:-1,text:contact.title}),action('닫기','preview-close',model.canvas.dataset.mapId)),figure,
+      h('div.tc-btnrow',null,link('지점 기록 열기','map-room',...contact.path),visual?.history?link('연결된 세계 기록','history',visual.history):null));
+    if(focus)model.preview.querySelector('h3')?.focus({preventScroll:true});
+  }
+  function closePreview(model,focus=false){const id=model.previewContact?.id;model.previewContact=null;model.preview.hidden=true;PC.clear(model.preview);for(const entry of model.entries){entry.node.classList[entry.c.selected?'add':'remove']('is-selected');if(focus&&entry.c.id===id)entry.node.focus({preventScroll:true});}}
+  function syncSignals(){
+    const silence=root.document.documentElement?.dataset.silence==='on';
+    for(const model of mapModels.values())for(const {c,node,signal} of model.entries)if(signal){
+      const silent=!!(silence&&c.synchrony),lost=lostSignal===c.id;node.dataset.signalState=silent?'silent':lost?'lost':'active';
+      node.querySelector('.tc-map-signal-status').textContent=silent?'무응답':lost?'수신 끊김':'신호';
+      const when=c.year==null?X.copy.timelineUnknown:`${c.year}년 기록`;
+      node.setAttribute('aria-label',`${c.title} · ${frameLabels[contactFrame(c)]} · ${when} · X ${c.x} Y ${c.y}${silent?' · 무응답':lost?' · 수신 끊김':''}`);
+    }
+  }
+  function stopSignals(){root.clearTimeout(signalTimer);root.clearTimeout(signalRestoreTimer);signalTimer=0;signalRestoreTimer=0;lostSignal=null;syncSignals();}
+  function startSignals(){
+    stopSignals();if(!active||reducedFx()||root.document.hidden||![...mapModels.values()].some(m=>m.entries.some(e=>e.signal)))return;
+    signalTimer=root.setTimeout(()=>{
+      signalTimer=0;if(!active||reducedFx()||root.document.hidden)return;
+      const candidates=[...mapModels.values()].flatMap(m=>m.entries).filter(e=>e.signal&&!e.node.hidden&&timeState(e.c.year)!=='future'&&e.node.dataset.signalState!=='silent');
+      if(!candidates.length){startSignals();return;}lostSignal=candidates[Math.floor(Math.random()*candidates.length)].c.id;syncSignals();
+      signalRestoreTimer=root.setTimeout(startSignals,display.signalLossMs);
+    },display.signalGapMs+Math.floor(Math.random()*12000));
+  }
   function legend(){
     const p=palette();return h('ul.tc-map-legend',{'aria-label':'지도 기호 범례'},[['normal','아군 / 정상'],['hostile','적대'],['unknown','미상 / 상충'],['unstable','불안정'],['split','신호 분열'],['lost','신호 소실'],['facility','시설'],['incident','사건'],['cult','교단'],['fortress','성채'],['anomaly','이상현상'],['returned','귀환'],['line','관측선'],['zone','권역'],['signal','동시 관측'],['ruin','폐허'],['settlement','정착지']].map(([k,t])=>h('li',null,h('img',{src:uri(symbol(k,20,20,'',p),'0 0 40 40',p),alt:'',width:26,height:26}),h('span',{text:t}))));
   }
+  function frameLegend(){const p=palette();return h('div.tc-map-frame-legend',null,h('ul.tc-map-legend',{'aria-label':'작전 부호 틀 범례'},Object.entries(frameLabels).map(([kind,label])=>h('li',null,h('img',{src:frameIcon({affiliation:kind},p),alt:'',width:32,height:32}),h('span',{text:label})))),txt('점선 틀·점선 구역: 연도 미상'),txt(X.copy.signalBoundary));}
   function layers(group,labels){return h('div.tc-seg.tc-map-layers',{role:'group','aria-label':group==='layers'?'지도 레이어':'상세 지도 레이어'},labels.map(([key,label])=>action(label,'layer',`${group}:${key}`,{'aria-pressed':String(state[group][key])})));}
   const mapFrame=(code,status,graphic,...tail)=>h('section.tc-panel.tc-bracket.tc-map-board',null,h('header.tc-map-board-head',null,h('span.tc-map-live',null,h('i',{'aria-hidden':'true',text:'●'}),'관제',h('span.tc-full-only',{text:'LIVE'})),h('span.tc-code.tc-full-only',{text:code}),h('span',{text:status})),graphic,h('p.tc-map-coordinates',null,'복원 좌표 · 길을 찾는 데 쓰지 마세요.',h('span.tc-full-only',{text:' / RECONSTRUCTED COORDINATES / NOT FOR NAVIGATION'})),...tail);
   function resolveSite(item){
@@ -238,17 +426,19 @@ function operationTerrain(operation){
   function worldMap(r,selected=null,syncEvent=null,syncPoint=null){
     const p=palette(),routes=[];let body=grid(r.viewBox,p,true);
     body+=D.geography.map(g=>svg('path',{d:g.d,fill:p['panel-2'],stroke:p['line-2'],'stroke-width':1})).join('');
-    if(state.layers.zones)body+=D.zones.filter(z=>r.id==='world'||z.region===r.id).map(z=>svg('path',{d:z.d,fill:p.red,opacity:.18,stroke:p['red-ink'],'stroke-width':1})).join('');
     if(state.layers.routes&&!syncEvent)routes.push(...D.routes.filter(z=>r.id==='world'||z.region===r.id).map(z=>({points:z.points,kind:z.className==='hostile'?'hostile':'normal'})));
-    const markers=D.markers.filter(m=>(r.id==='world'?m.overview:m.region===r.id&&!m.overview)&&(uncertain(m.confidence)?state.layers.estimated:state.layers.confirmed));
+    const markers=D.markers.filter(m=>(r.id==='world'||m.region===r.id&&!m.overview)&&(uncertain(m.confidence)?state.layers.estimated:state.layers.confirmed));
     if(selected&&!markers.some(m=>m.id===selected.id))markers.push(selected);
-    const contacts=markers.map((m,i)=>{const resolved=resolveSite(m);body+=symbol(m.type,m.x,m.y,String(i+1).padStart(2,'0'),p,resolved.tone||m.type);return {...resolved,title:m.title,path:m.overview?['region',m.region]:['marker',m.id],selected:selected?.id===m.id};});
+    const contacts=markers.map(m=>({...resolveSite(m),source:m,year:itemYear(m),title:m.title,path:m.overview?['region',m.region]:['marker',m.id],selected:selected?.id===m.id}));
     if(state.layers.synchrony)for(const e of syncEvent?[syncEvent]:D.synchronyEvents)for(const point of e.points.filter(pt=>r.id==='world'||pt.region===r.id)){
-      body+=symbol('signal',point.x,point.y,'',p);contacts.push({...point,synchrony:true,title:point.label,path:['synchrony',e.id,point.id],selected:point.id===syncPoint?.id});
+      contacts.push({...point,source:{...point,history:e.history},year:itemYear(e),synchrony:true,title:point.label,path:['synchrony',e.id,point.id],selected:point.id===syncPoint?.id});
     }
-    return {board:mapFrame(r.code,r.status,mapGraphic(r.label,r.viewBox,body,contacts,p,routes),layers('layers',[['confirmed','확인'],['estimated','추정·증언'],['zones','오염 권역'],['routes','이동 경로'],['synchrony','2042 동시 관측']]),disclosure('SYMBOL KEY','지도 기호 범례',legend())),contacts};
+    return {board:mapFrame(r.code,r.status,mapGraphic(r.label,r.viewBox,body,contacts,p,routes,[],{id:r.id,zones:state.layers.zones?D.zones.filter(z=>r.id==='world'||z.region===r.id):[]}),yearBar(),layers('layers',[['confirmed','확인'],['estimated','추정·증언'],['zones','오염 권역'],['routes','이동 경로'],['synchrony','2042 동시 관측']]),frameLegend()),contacts};
   }
-  function directory(contacts){return panel('CONTACT DIRECTORY','지도 지점 목록',h('div.tc-rows',null,contacts.map((c,i)=>row(String(i+1).padStart(2,'0'),c.title,`X ${c.x} / Y ${c.y}`,c.path,c.status||'관측점'))));}
+  function directory(contacts){
+    const entries=items=>items.map(c=>dated(h('div.tc-map-catalog-entry',null,row(c.id,c.title,`${c.year==null?X.copy.timelineUnknown:c.year+'년 기록'} · X ${c.x} / Y ${c.y}`,c.path,c.status||'관측점')),{year:c.year}));
+    return panel('CONTACT DIRECTORY','지도 지점 목록',h('div.tc-rows',null,entries(contacts.filter(c=>c.year!=null))),disclosure('UNDATED',X.copy.timelineUnknown,h('div.tc-rows',null,entries(contacts.filter(c=>c.year==null)))));
+  }
   function regionIntel(r){
     const n=r.nomenclature;return panel(r.code,r.label,txt(r.description),kv([['관제 상태',r.status],['자료 상태',r.confidence],...(n?[['기록 표제',`${n.primary} / ${n.short}`],['지리 범위',n.scope],['현지·구어',n.aliases.map(a=>a.label).join(' · ')],['폐기 표기',n.legacy.map(a=>a.label).join(' · ')]]:[])]),note('판독 한계',n?.boundary||X.copy.navigation),h('div.tc-btnrow',null,D.drilldowns.filter(d=>d.region===r.id).map(d=>link(d.label,'map-room','region',d.id))));
   }
@@ -290,16 +480,17 @@ function operationTerrain(operation){
     }):note('연결 경로','연결 경로가 복원되지 않았다.');
   }
   function detailView(v){
-    const d=v.item,site=v.site,p=palette(),box='0 0 1000 540',routes=[];let body=grid(box,p)+detailTerrain(d);
-    if(state.detailLayers.threats)for(const s of d.sites)body+=svg('circle',{cx:s.x,cy:s.y,r:{critical:78,high:62,medium:48,low:34}[riskFor(s)],fill:'none',stroke:riskFor(s)==='critical'?p['red-ink']:p.amber,'stroke-width':1,'stroke-dasharray':'3 5','vector-effect':'non-scaling-stroke'});
-    if(state.detailLayers.comms)for(const s of d.sites){const comm=commFor(s);if(['open','partial'].includes(comm))body+=svg('circle',{cx:s.x,cy:s.y,r:comm==='open'?88:66,fill:'none',stroke:p.ir,'stroke-width':1,'stroke-dasharray':comm==='open'?'none':'8 6','vector-effect':'non-scaling-stroke'});}
-    if(state.detailLayers.distortion)for(const [i,s] of d.sites.entries())if(['anomaly','unknown'].includes(s.type)||s.confidence==='disputed')body+=svg('ellipse',{cx:s.x,cy:s.y,rx:74+i%2*15,ry:42+i%3*8,fill:'none',stroke:p.coyote,'stroke-dasharray':'2 6','vector-effect':'non-scaling-stroke'});
+    const d=v.item,site=v.site,p=palette(),box='0 0 1000 540',routes=[],overlays=[];let body=grid(box,p)+detailTerrain(d);
+    const overlay=(s,markup)=>overlays.push({year:itemYear(s),markup});
+    if(state.detailLayers.threats)for(const s of d.sites)overlay(s,svg('circle',{cx:s.x,cy:s.y,r:{critical:78,high:62,medium:48,low:34}[riskFor(s)],fill:'none',stroke:riskFor(s)==='critical'?p['red-ink']:p.amber,'stroke-width':1,'stroke-dasharray':'3 5','vector-effect':'non-scaling-stroke'}));
+    if(state.detailLayers.comms)for(const s of d.sites){const comm=commFor(s);if(['open','partial'].includes(comm))overlay(s,svg('circle',{cx:s.x,cy:s.y,r:comm==='open'?88:66,fill:'none',stroke:p.ir,'stroke-width':1,'stroke-dasharray':comm==='open'?'none':'8 6','vector-effect':'non-scaling-stroke'}));}
+    if(state.detailLayers.distortion)for(const [i,s] of d.sites.entries())if(['anomaly','unknown'].includes(s.type)||s.confidence==='disputed')overlay(s,svg('ellipse',{cx:s.x,cy:s.y,rx:74+i%2*15,ry:42+i%3*8,fill:'none',stroke:p.coyote,'stroke-dasharray':'2 6','vector-effect':'non-scaling-stroke'}));
     if(state.detailLayers.routes)for(const r of d.routes)routes.push({points:r.points,kind:r.className==='hostile'?'hostile':'normal',muted:!!site&&!r.siteIds.includes(site.id)});
-    const contacts=d.sites.map((s,i)=>{const resolved=resolveSite(s);body+=symbol(s.type,s.x,s.y,String(i+1).padStart(2,'0'),p,resolved.tone||s.type);return {...resolved,title:s.label,path:['region',d.id,'site',s.id],selected:site?.id===s.id};});
+    const contacts=d.sites.map(s=>({...resolveSite(s),source:s,district:d,year:itemYear(s),title:s.label,path:['region',d.id,'site',s.id],selected:site?.id===s.id}));
     const info=site?resolveSite(site):d,inc=site?incident(site.incident):null;
     const scenario=site?X.scenarioStageByItem[site.id]?.[0]:null;
     return h('div.tc-map-stack',null,h('nav.tc-btnrow',{'aria-label':'권역 경로'},link('세계','map-room','region','world'),link(region(d.region).label,'map-room','region',d.region),site?link('구역 개요','map-room','region',d.id):null),h('div.tc-map-layout.tc-map-contact-layout',null,
-      h('div.tc-map-stack',null,mapFrame(d.code,d.status,mapGraphic(d.label,box,body,contacts,p,routes),layers('detailLayers',[['routes','경로'],['threats','위험 반경'],['comms','통신권'],['distortion','공간 왜곡']]),disclosure('SYMBOL KEY','지도 기호 범례',legend())),directory(contacts)),
+      h('div.tc-map-stack',null,mapFrame(d.code,d.status,mapGraphic(d.label,box,body,contacts,p,routes,[],{id:d.id,confidence:d.confidence,zones:overlays}),yearBar(),layers('detailLayers',[['routes','경로'],['threats','위험 반경'],['comms','통신권'],['distortion','공간 왜곡']]),frameLegend()),directory(contacts)),
       intelPanel(panel(site?'SELECTED SITE':'REGIONAL DRILLDOWN',site?.label||d.label,txt(site?.meta||d.description),kv([['현재 상태',info.status],['사건 지점',`${d.sites.length}곳`],['복원 신뢰도',site?confidence[site.confidence]:d.confidence],...(site?[['좌표',`X ${site.x} / Y ${site.y}`],['위험도',risks[riskFor(site)]],['통신',commFor(site).toUpperCase()],['연결 경로',String(d.routes.filter(r=>r.siteIds.includes(site.id)).length)],['사건 코드',inc?.code,{fullOnly:true}]]:[])]),note('판독 한계',d.warning),inc?txt(inc.summary):null,references(site||d),scenario?link(scenarios[scenario].title,'map-room','pilgrimage',scenario):null),...briefing(d,site),site?routeSequence(d,site):null)),
       disclosure('REGIONAL INDEX','다른 권역 상세도',h('div.tc-rows',null,D.drilldowns.map(x=>row(x.code,x.label,x.description,['region',x.id],x.confidence)))));
   }
@@ -441,21 +632,25 @@ function operationTerrain(operation){
     if(f==='linked')return item.linked;
     return true;
   }
-  const filtered=()=>signals.items.filter(s=>matchesFilter(s)&&(!state.indexQuery.trim()||s.search.includes(state.indexQuery.trim().toLocaleLowerCase('ko-KR'))));
+  const filtered=()=>signals.items.filter(s=>timeState(itemYear(s))!=='future'&&matchesFilter(s)&&(!state.indexQuery.trim()||s.search.includes(state.indexQuery.trim().toLocaleLowerCase('ko-KR'))));
   function indexRows(){const rows=filtered();return rows.length?rows.map(s=>row(s.code,s.title,s.meta,indexTarget(s),signals.confidenceLabels[s.confidence]||confidence[s.confidence],PC.verdictTone(s.confidence))):[missing(state.indexQuery||state.indexFilter)];}
   function signalIndex(){return disclosure('SIGNAL INDEX',`신호 색인 · ${signals.items.length}개`,[
     txt(X.copy.index),h('div.tc-map-search',null,h('label',{for:'tc-map-search',text:'사건·권역·세력·호출부호 검색'}),h('input#tc-map-search',{type:'search',value:state.indexQuery,maxlength:80,autocomplete:'off',dataset:{control:'search'}}),action('검색 지우기','clear-search')),
     h('div.tc-seg',{role:'group','aria-label':'신호 색인 필터'},signals.filters.map(f=>action(f.label,'filter',f.id,{'aria-pressed':String(f.id===state.indexFilter)}))),h('p.tc-code#tc-map-count',{'aria-live':'polite',text:`${filtered().length}개 접촉 정보`}),h('div.tc-rows#tc-map-search-results',null,indexRows()),note('위치 보류',X.copy.withheld,'evidence')
   ],{open:state.indexOpen,dataset:{disclosure:'index'}});}
   function updateIndex(){const results=host.querySelector('#tc-map-search-results');if(results)PC.clear(results).append(...indexRows());const count=host.querySelector('#tc-map-count');if(count)count.textContent=`${filtered().length}개 접촉 정보`;host.querySelectorAll('[data-action="filter"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.key===state.indexFilter)));saveSession();}
+  function operationDirectory(){
+    const entries=items=>items.map(o=>dated(h('div.tc-map-catalog-entry',null,row(o.code,o.label,`${itemYear(o)==null?X.copy.timelineUnknown:itemYear(o)+'년 기록'} · ${o.region}`,['op',o.id],o.status||`${o.steps.length}단계`,lockedOperation(o)?'danger':'info')),o));
+    return panel('OPERATIONS INDEX','작전 경과',h('div.tc-rows',null,entries(D.operations.filter(o=>itemYear(o)!=null))),disclosure('UNDATED',X.copy.timelineUnknown,h('div.tc-rows',null,entries(D.operations.filter(o=>itemYear(o)==null)))));
+  }
   function overview(){
     const map=worldMap(region('world'));const locations=recent.map(p=>({p:canonical(p),v:resolve(p)})).filter(x=>x.v.kind!=='missing');
-    return h('div.tc-map-stack',null,h('div.tc-map-layout',null,h('div.tc-map-stack',null,map.board,panel('OPERATIONS INDEX','작전 경과',h('div.tc-rows',null,D.operations.map(o=>row(o.code,o.label,o.region,['op',o.id],o.status||`${o.steps.length}단계`,lockedOperation(o)?'danger':'info'))))),h('aside.tc-map-stack',null,panel('OPERATIONAL THEATERS','주요 지역 상황',txt(X.copy.intro),h('div.tc-rows',null,X.theaters.map(t=>h('a.tc-map-theater',{href:PC.href('map-room',t.target.kind==='operation'?'op':'region',t.target.id)},h('span.tc-code.tc-full-only',{text:t.number+' / '+t.eyebrow}),h('b',{text:t.title}),txt(t.summary),h('span.tc-map-copy',{text:t.note}),h('span.tc-btnrow',null,tag(t.status,t.id==='south'?'danger':'info'),tag(t.confidence)))))),panel('REGIONAL CONTROL','관제 권역',h('div.tc-btnrow',null,D.regions.map(r=>link(r.label,'map-room','region',r.id))),h('div.tc-btnrow',null,D.synchronyEvents.map(e=>link(e.title,'map-room','synchrony',e.id)))),locations.length?panel('RECENT COORDINATES','최근 열람한 좌표',h('div.tc-rows',null,locations.map(({p,v},i)=>row(v.item?.code||String(i+1).padStart(2,'0'),v.title,'',p)))):null)),
+    return h('div.tc-map-stack',null,h('div.tc-map-layout',null,h('div.tc-map-stack',null,map.board,operationDirectory()),h('aside.tc-map-stack',null,panel('OPERATIONAL THEATERS','주요 지역 상황',txt(X.copy.intro),h('div.tc-rows',null,X.theaters.map(t=>h('a.tc-map-theater',{href:PC.href('map-room',t.target.kind==='operation'?'op':'region',t.target.id)},h('span.tc-code.tc-full-only',{text:t.number+' / '+t.eyebrow}),h('b',{text:t.title}),txt(t.summary),h('span.tc-map-copy',{text:t.note}),h('span.tc-btnrow',null,tag(t.status,t.id==='south'?'danger':'info'),tag(t.confidence)))))),panel('REGIONAL CONTROL','관제 권역',h('div.tc-btnrow',null,D.regions.map(r=>link(r.label,'map-room','region',r.id))),h('div.tc-btnrow',null,D.synchronyEvents.map(e=>dated(link(e.title,'map-room','synchrony',e.id),e)))),locations.length?panel('RECENT COORDINATES','최근 열람한 좌표',h('div.tc-rows',null,locations.map(({p,v},i)=>row(v.item?.code||String(i+1).padStart(2,'0'),v.title,'',p)))):null)),
       panel('REGIONAL DRILLDOWN','권역 상세도',h('div.tc-rows',null,D.drilldowns.map(d=>row(d.code,d.label,d.description,['region',d.id],d.confidence)))),
       panel('FIELD RECORDS','순례·검문·회수',h('div.tc-rows',null,Object.values(scenarios).map(s=>row(s.code,s.title,s.summary,['pilgrimage',s.id],allowedScenario(s.id)?P.get(s.id).status.toUpperCase():s.unlock.label,allowedScenario(s.id)?'info':'danger'))),link('현장 판정 보관','map-room','verdict')));
   }
   function render(){
-    view=resolve(parts);PC.clear(host);PC.setTitle(view.title);
+    stopSignals();cancelGesture();mapModels.clear();view=resolve(parts);PC.clear(host);PC.setTitle(view.title);
     const head=PC.screenHead('map-room',{title:view.title,hero:view.kind==='index',meta:[['MAP',D.version],['OPERATIONS',String(D.operations.length)],['SIGNALS',String(signals.items.length)]]});
     head.querySelector('.tc-screenhead-code')?.classList.add('tc-full-only');
     head.querySelector('.tc-screenhead-meta')?.classList.add('tc-full-only');
@@ -465,16 +660,35 @@ function operationTerrain(operation){
     const content=view.kind==='index'?overview():['region','marker','synchrony'].includes(view.kind)?regionView(view):view.kind==='detail'?detailView(view):view.kind==='op'?operationView(view.item):view.kind==='pilgrimage'?pilgrimageView(view.item):view.kind==='verdicts'?verdictsView():view.kind==='verdict'?verdictView(view.item):view.kind==='withheld'?panel('POSITION WITHHELD',view.item.title,txt(view.item.meta),note('위치 보류',X.copy.withheld),references(view.item,{history:view.item.history,factions:view.item.factionKeys}),link('관측 권역','map-room','region',view.item.regionId)):missing(view.key);
     host.append(h('div.tc-map-content',null,content));
     if(storageFailed)host.append(note('이 단말의 저장 상태','저장소에 접근할 수 없습니다. 현재 탭의 열람 상태만 유지됩니다.'));
-    saveSession();
+    setYear(mapYear);startSignals();saveSession();
   }
   function focusContent(){const el=host.querySelector('.tc-map-content [data-tc-focus], .tc-map-content h2');if(el){el.setAttribute('tabindex','-1');el.focus({preventScroll:true});}}
   function confirmAction(key,fn){if(resetArm!==key){resetArm=key;preserveFocus(render);return;}resetArm='';fn();preserveFocus(render);}
   let handling=false;
+  function parentMapPath(){
+    if(view.kind==='detail')return ['region',view.site?view.item.id:view.item.region];
+    if(view.kind==='marker')return ['region',view.region.id];
+    if(view.kind==='synchrony')return view.point?['synchrony',view.item.id]:['region','world'];
+    if(view.kind==='region'&&view.item.id!=='world')return ['region','world'];
+    return [];
+  }
   function onClick(event){
+    const point=event.target.closest('a.tc-map-point[data-contact]'),canvas=event.target.closest('.tc-map-canvas[data-map-id]');
+    if(suppressClick&&canvas){event.preventDefault();suppressClick=false;return;}
+    if(point&&host.contains(point)&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey){
+      event.preventDefault();const model=mapModels.get(canvas),contact=model?.contacts.find(c=>c.id===point.dataset.contact);if(contact)openPreview(model,contact);return;
+    }
     const b=event.target.closest('[data-action]');if(!b||!host.contains(b)||b.disabled)return;
     const a=b.dataset.action,key=b.dataset.key;event.preventDefault();handling=true;
     try{
-      if(a==='back'){PC.back('map-room');return;}
+      if(a==='year-play'){playYears();return;}
+      if(a==='year-current'){stopYears();setYear(yearLimits[1]);return;}
+      if(['zoom-in','zoom-out','zoom-reset','preview-close'].includes(a)){
+        const model=[...mapModels.values()].find(m=>m.canvas.dataset.mapId===key);if(!model)return;
+        if(a==='preview-close'){closePreview(model,true);return;}
+        if(a==='zoom-reset'){cancelGesture();model.camera=[...model.base];updateCamera(model);}else zoomMap(model,a==='zoom-in'?1.4:1/1.4);return;
+      }
+      if(a==='back'){PC.back('map-room',...parentMapPath());return;}
       if(a==='layer'){const [group,k]=key.split(':');state[group][k]=!state[group][k];preserveFocus(render);sfx('map.layer');return;}
       if(a==='filter'){state.indexFilter=key;updateIndex();sfx('archive.filter');return;}
       if(a==='clear-search'){state.indexQuery='';host.querySelector('#tc-map-search').value='';updateIndex();host.querySelector('#tc-map-search').focus();return;}
@@ -499,6 +713,18 @@ function operationTerrain(operation){
     }finally{handling=false;}
   }
   function onKey(event){
+    suppressClick=false;
+    if(event.key==='Escape'){
+      const model=[...mapModels.values()].find(m=>m.previewContact);if(model){event.preventDefault();closePreview(model,true);return;}
+    }
+    const canvas=event.target.closest('.tc-map-canvas[data-map-id]'),model=mapModels.get(canvas);
+    if(model&&!event.altKey&&!event.ctrlKey&&!event.metaKey){
+      const key=event.key;if(['+','=','-','−','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(key)){
+        event.preventDefault();if(key==='0'){model.camera=[...model.base];updateCamera(model);}
+        else if(['+','=','-','−'].includes(key))zoomMap(model,['+','='].includes(key)?1.3:1/1.3);
+        else{model.camera[0]+=({ArrowLeft:-1,ArrowRight:1}[key]||0)*model.camera[2]*.12;model.camera[1]+=({ArrowUp:-1,ArrowDown:1}[key]||0)*model.camera[3]*.12;updateCamera(model);}return;
+      }
+    }
     if(event.key===' '&&event.target.closest('a.tc-map-point')){event.preventDefault();event.target.closest('a.tc-map-point').click();return;}
     if(event.key==='Escape'&&state.indexOpen){event.preventDefault();state.indexOpen=false;preserveFocus(render);host.querySelector('[data-disclosure="index"] summary')?.focus();return;}
     if(event.key==='Escape'&&['pilgrimage','verdict'].includes(view.kind)){event.preventDefault();PC.back('map-room');return;}
@@ -507,25 +733,29 @@ function operationTerrain(operation){
     if(['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();stop();setStep(adjacent(view.item,event.key==='ArrowRight'?1:-1));}
     if(event.key===' '&&!event.target.closest('a,summary,button:not([data-action="play"])')){event.preventDefault();play();}
   }
-  function onInput(event){if(event.target.id==='tc-map-search'){state.indexQuery=event.target.value.slice(0,80);updateIndex();}}
+  function onInput(event){if(event.target.id==='tc-map-year'){stopYears();setYear(event.target.value);return;}if(event.target.id==='tc-map-search'){state.indexQuery=event.target.value.slice(0,80);updateIndex();}}
   function onToggle(event){const key=event.target.dataset.disclosure;if(key==='index')state.indexOpen=event.target.open;else if(key==='intel')state.intelCollapsed=!event.target.open;else return;saveSession();}
   function onStore(event){
     if(event.type==='projectcurse:operation-state-change'&&event.detail.reason==='map-step'){if(view?.kind==='op'&&view.item.id===O.operationId)step=O.get().mapStep;return;}
     if(active&&!handling)preserveFocus(render);
   }
-  function onMotion(){const reduced=reducedFx();host.dataset.mapFx=reduced?'reduced':'full';if(reduced){stop();clearReaction();}if(active&&view.kind==='op')renderOperationFrame();}
-  function onVisibility(){if(root.document.hidden){stop();if(active&&view.kind==='op')renderOperationFrame();}}
+  function onMotion(){const reduced=reducedFx();host.dataset.mapFx=reduced?'reduced':'full';if(reduced){stop();stopYears();clearReaction();}if(active&&view.kind==='op')renderOperationFrame();setYear(mapYear);startSignals();}
+  function onVisibility(){if(root.document.hidden){stop();stopYears();stopSignals();cancelGesture();if(active&&view.kind==='op')renderOperationFrame();setYear(mapYear);}else if(active)startSignals();}
   function bind(){
     controller?.abort();controller=new AbortController();const options={signal:controller.signal};
     host.addEventListener('click',onClick,options);host.addEventListener('input',onInput,options);host.addEventListener('keydown',onKey,options);host.addEventListener('toggle',onToggle,{...options,capture:true});
+    host.addEventListener('wheel',onWheel,{...options,passive:false});
+    host.addEventListener('pointerdown',onPointerDown,options);host.addEventListener('pointermove',onPointerMove,{...options,passive:false});host.addEventListener('pointerup',onPointerUp,options);host.addEventListener('pointercancel',onPointerUp,options);
     for(const name of ['projectcurse:operation-state-change','projectcurse:pilgrimage-state-change','projectcurse:verdict-archive-change'])root.document.addEventListener(name,onStore,options);
     root.document.addEventListener('visibilitychange',onVisibility,options);
     root.document.addEventListener('pc:fx',onMotion,options);
     motionQuery?.addEventListener?.('change',onMotion,options);
+    silenceObserver?.disconnect();
+    if(root.MutationObserver&&root.document.documentElement){silenceObserver=new root.MutationObserver(syncSignals);silenceObserver.observe(root.document.documentElement,{attributes:true,attributeFilter:['data-silence']});}
   }
   function mount(el){host=el;}
   function show(next,app){
-    stop();clearReaction();controller?.abort();active=true;parts=canonical(next);view=resolve(parts);handling=true;
+    stop();stopYears();stopSignals();clearReaction();controller?.abort();active=true;parts=canonical(next);view=resolve(parts);handling=true;
     try{Object.keys(scenarios).forEach(id=>V.capture(id,{silent:true}));if(view.kind==='verdict'&&view.item.unlocked)V.markRead(view.item.id);}finally{handling=false;}
     if(view.kind==='pilgrimage')P.select(view.item.id);
     if(view.kind==='op'){
@@ -538,6 +768,6 @@ function operationTerrain(operation){
     resetArm='';remember();render();app.setTitle(view.title);bind();onMotion();
     if(view.kind==='verdict'&&!view.item.unlocked||view.kind==='op'&&lockedOperation(view.item)||view.kind==='pilgrimage'&&!allowedScenario(view.item.id)){sfx('system.denied');react('denied');}
   }
-  function hide(){active=false;stop();clearReaction();controller?.abort();controller=null;resetArm='';feedback=null;}
+  function hide(){active=false;stop();stopYears();stopSignals();cancelGesture();silenceObserver?.disconnect();silenceObserver=null;mapModels.clear();clearReaction();controller?.abort();controller=null;resetArm='';feedback=null;suppressClick=false;}
   PC.screen({id:'map-room',mount,show,hide});
 })(window);

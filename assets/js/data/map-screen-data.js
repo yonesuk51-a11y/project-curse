@@ -124,7 +124,13 @@ const id=entry.id;
 }
 root.ProjectCurseMapScreenData=Object.freeze({
  canonBoundary, decisions:Object.freeze(decisions), theaters, scenarioStageByItem, markerDetails:markerDetails(), verdictDocument,
+ display:Object.freeze({yearMin:1975,yearMax:2042,yearStepMs:1100,zoomMax:6,signalGapMs:42000,signalLossMs:3400}),
  copy:{
+ timeline:'선택한 해까지 날짜가 남은 기록을 표시합니다. 연도 미상은 점선으로 남습니다.',
+ timelineUnknown:'연도 미상',
+ mapControls:'휠·두 손가락으로 확대, 끌어서 이동. 지도에 초점을 두고 + / − / 0 / 방향키로도 조작합니다.',
+ signalBoundary:'짧은 선은 각 관측점의 신호입니다. 지점 사이의 통로를 뜻하지 않습니다.',
+ noPhoto:'연결된 현장 사진 없음',
  navigation:'표시 좌표는 길을 찾는 데 쓰지 않는다. 신뢰도와 서로 맞지 않는 기록을 함께 확인한다.',
  withheld:'위치 보류는 사건이 없었다는 뜻이 아니다. 지도에 표시할 지점이 승인되지 않아 위치로 이동할 수 없다.',
  index:'지도 지점, 작전, 독립 관측, 위치가 보류된 기록을 함께 찾는다.',
