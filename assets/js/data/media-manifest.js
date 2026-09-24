@@ -95,7 +95,25 @@
     'assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
-    'assets/resources/derived/inland-beacon-31-relay-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
+    'assets/resources/derived/inland-beacon-31-relay-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    // 2026-09-25 사용자 채택 — 5차 묶음 세계 기록 17장
+    'assets/resources/derived/plague-copies-margin-seals-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/industrial-occult-plate-lab-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/cold-war-divided-labs-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/uac-founding-1993-assembly-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/son-formation-1993-backroom-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/classification-1997-sorting-room-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/nhc-sid-independence-2001-two-convoys-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/ground-forces-2002-handover-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/castle-asylum-2014-seven-lights-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/branch-seal-2031-four-files-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
   };
 
   const normalize=src=>{

@@ -241,6 +241,57 @@
     }),
     'assets/resources/derived/inland-beacon-31-relay-concept-v1.png':Object.freeze({
       assetId:'VEA-HIS-BEACON-01',className:'RECONSTRUCTED',source:'세계 기록(2034-04-22-inland-beacon-31) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'폐쇄된 해안 중계기의 정비 시험 중 응답열을 듣는 운용자 한 명을 그렸다. 응답의 발신자와 실제 위치, 구조 요청의 진위 또는 구조 승인은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/plague-copies-margin-seals-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-PLAGUE-01',className:'RECONSTRUCTED',source:'세계 기록(deep-plague-copies) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'14세기 장부 여백에 남은 봉인 절차와 기억 대조문의 재필사를 촛불 아래의 작업으로 옮겼다. 필사자의 신원·장소·기호의 정확한 형태를 확정하지 않는다. 대역병은 사본이 쓰인 시대 배경이며, 역병의 원인과 봉인 기록은 관계가 없다.'
+    }),
+    'assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-SEALWAR-01',className:'RECONSTRUCTED',source:'세계 기록(deep-sealing-wars) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'삼십년전쟁기 보급망을 따라 이동한 봉인 상자를 평범한 수레 행렬 안의 경계 장면으로 옮겼다. 전쟁은 이동의 배경일 뿐이며 전쟁의 원인과 봉인 상자는 관계가 없다. 이동 경로·총수량·상자 내용물과 인계 성공은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/industrial-occult-plate-lab-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-INDUST-01',className:'RECONSTRUCTED',source:'세계 기록(deep-industrial-occult) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'전신 장치와 사진 건판이 설명되지 않은 흔적을 함께 기록하기 시작한 산업 계측기의 장면이다. 전력이 현상을 만들었다는 인과, 손상 속 존재의 신원과 실험의 정확한 장소·배치를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/cold-war-divided-labs-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-COLDWAR-01',className:'RECONSTRUCTED',source:'세계 기록(deep-cold-war-programs) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'같은 현상을 서로 다른 위협으로 분류한 세 연구 갈래를 나뉜 작업 칸으로 병치했다. 실제 기관·연구원 신원·총원을 확정하지 않으며, 냉전의 원인과 변칙 현상은 관계가 없다.'
+    }),
+    'assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-DISTORT-01',className:'RECONSTRUCTED',source:'세계 기록(1975-distortion-system) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'왜곡 시스템 실행 뒤 흩어져 접수된 이상 신고를 연구 단지 외곽의 불명확한 흔적 조사로 가정했다. 이 장소·인원·흔적의 실재와 실험·교단 활동 사이의 인과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-FHC82-01',className:'RECONSTRUCTED',source:'세계 기록(1982-03-22-fhc) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'아마리온의 인력·자료·장비가 F.H.C 기반으로 이어진 과정을 야간 하역 작업으로 옮겼다. 창설자와 작업자의 신원, 실제 사옥·운송 날짜·총수량과 개별 상자 내용물을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-UACW-01',className:'RECONSTRUCTED',source:'세계 기록(1982-uac-watch) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'비인가 감시망의 기록 기능을 1980년대의 작은 아날로그 감시실로 가정했다. 방의 실재, 인물이 레스작인지 여부와 감시망 구성·자금·권한을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/uac-founding-1993-assembly-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-UAC93-01',className:'RECONSTRUCTED',source:'세계 기록(1993-11-02-uac) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'비밀 감시망이 독립적인 초국가 대응 기관으로 공개된 전환을 차분한 대표 회의로 옮겼다. 실제 행사장·참가국·대표 신원·총원·표결 결과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/son-formation-1993-backroom-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-SON93-01',className:'RECONSTRUCTED',source:'세계 기록(1993-syndicate) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'반 U.A.C 국가 인맥과 기업·연구 지원 경로의 결집을 익명 연락 회합으로 옮겼다. 단일 창설 회의·지휘부의 존재, 참석자 신원·실제 인원·국가·장소·날짜를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/classification-1997-sorting-room-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-CLASS-01',className:'RECONSTRUCTED',source:'세계 기록(1997-01-27-classification) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'리버스와 괴이의 대응 용어를 정리하며 사례 자료를 비교하는 분류실이다. 분류에 참여한 인원과 자료의 실제 내용, 분류 회의의 장소는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/nhc-sid-independence-2001-two-convoys-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-INDEP-01',className:'RECONSTRUCTED',source:'세계 기록(2001-07-21-independence) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'공통 지원 아래 두 갈래로 이관되는 기록으로 독립 지휘체계 개편을 표현했다. 실제 이관 장소와 날짜, 차량과 인원의 수는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/ground-forces-2002-handover-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-GROUND-01',className:'RECONSTRUCTED',source:'세계 기록(2002-02-20-ground-forces) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'협력 지상군에 현장 대응 장비와 절차를 인계하는 합동 훈련장이다. 참여 국가와 부대, 장비의 실제 기종은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-COMPACT-01',className:'RECONSTRUCTED',source:'세계 기록(2010-04-12-returner-compact) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'남아 있는 증언을 바탕으로 상상한 첫 귀환자 협정의 절차 협의다. 협의 장소와 참석자, 합의 문안의 원본은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/castle-asylum-2014-seven-lights-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-ASYLUM-01',className:'RECONSTRUCTED',source:'세계 기록(2014-06-08-castle-asylum-right) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'일곱 성채로 전하는 야간 피난 관습을 숲속에 흩어진 불빛으로 표현한 원경이다. 성채의 실제 위치와 거리, 동시 점등 여부는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-SCHISM-01',className:'RECONSTRUCTED',source:'세계 기록(2016-02-21-blood-cult-atlantic-schism) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'데드존 지부의 순례자 보호 노선과 남부 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-OATH-01',className:'RECONSTRUCTED',source:'세계 기록(2027-11-02-southern-allegiance) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'감청으로 추정된 남부 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/branch-seal-2031-four-files-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-BRANCH-01',className:'RECONSTRUCTED',source:'세계 기록(2031-02-03-branch-seal) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'같은 인계 절차를 통과한 네 결과철을 어느 하나도 원본으로 고르지 않고 봉인하는 기록보관실이다. 네 결과철의 내용과 어느 결말이 실제였는지는 확정하지 않는다.'
     })
   });
 

@@ -216,3 +216,27 @@ The user adopted all ten world-history scenes of Codex batch D (`output/imagegen
 ## 2026-09-25 taken-civilian scenes replaced
 
 The user asked to change the look of the taken civilians (피탈자) after a reference image ("이런느낌으로 바꿔야할듯") and approved the redraw (`output/imagegen/20260925-pitalja-v2-*`). `pitalja-roe-concept-v2.png` and `pitalja-blood-exit-concept-v2.png` replace the `-v1` files, which were removed from `assets/` (kept in git history and in `output/imagegen/20260925-pitalja-*`). The world rule and manual text gained the matching possession signs.
+
+## 2026-09-25 batch E adoption
+
+The user adopted all seventeen world-history scenes of Codex batch E (`output/imagegen/20260925-batchE-*`). Records touching real history (the Black Death era, the Thirty Years' War, the Cold War) show only the side-lines the records describe; captions state that the real causes are unrelated. No readable text, logos, real unit marks, invented insignia, children or sexual content. 480px and 960px WebP derivatives registered with `tone:'low-key'`. With this set, 44 of 46 world-history records carry an image (1995-03-20 is intentionally left without one; 1986-02-01 already shows its counter-record image).
+
+| Asset | Class | Used by | Source and handling | Required public label |
+|---|---|---|---|---|
+| `derived/plague-copies-margin-seals-concept-v1.png` | RECONSTRUCTED | World record `deep-plague-copies` | 어두운 수도원 필사실에서 성인 필사자가 촛불 하나 아래 두 장부를 대조하며 읽히지 않는 필획을 옮겨 적는다. | `분석 재구성` |
+| `derived/sealing-wars-lead-box-convoy-concept-v1.png` | RECONSTRUCTED | World record `deep-sealing-wars` | 나무와 생울타리 사이 진창길에서 성인이 등불 달린 보급 수레의 끈 묶인 납 상자를 지키며 걷는다. | `분석 재구성` |
+| `derived/industrial-occult-plate-lab-concept-v1.png` | RECONSTRUCTED | World record `deep-industrial-occult` | 세기 전환기의 어두운 계측실에서 한 성인이 빈 의자와 전신 장치를 지켜보고 앞쪽 사진 건판에는 비슷한 세로 손상이 남아 있다. | `분석 재구성` |
+| `derived/cold-war-divided-labs-concept-v1.png` | RECONSTRUCTED | World record `deep-cold-war-programs` | 흰 형광등 아래 불투명 칸막이로 나뉜 세 작업 칸에서 성인 연구원들이 비슷한 표본 사진을 각자 다른 아날로그 장비와 대조한다. | `분석 재구성` |
+| `derived/distortion-system-1975-field-trace-concept-v1.png` | RECONSTRUCTED | World record `1975-distortion-system` | 연구 단지 바깥 도랑에서 성인 조사자들이 손전등 하나로 눌린 풀과 놓인 무전기를 살펴본다. | `분석 재구성` |
+| `derived/fhc-founding-1982-loading-dock-concept-v1.png` | RECONSTRUCTED | World record `1982-03-22-fhc` | 표기 없는 연구 기업 하역장 안으로 성인 작업자들이 봉인된 문서 상자와 장비 케이스를 옮기고 연구자가 동행한다. | `분석 재구성` |
+| `derived/uac-watch-1982-listening-room-concept-v1.png` | RECONSTRUCTED | World record `1982-uac-watch` | 작은 감시실에서 성인 한 명이 등을 보인 채 시설 사진과 글자 없는 지도 앞의 녹음기와 전화를 다룬다. | `분석 재구성` |
+| `derived/uac-founding-1993-assembly-concept-v1.png` | RECONSTRUCTED | World record `1993-11-02-uac` | 어두운 회의장의 성인 대표들이 긴 책상에 앉아 흰 사각형 조명 아래의 무표기 발표대를 바라본다. | `분석 재구성` |
+| `derived/son-formation-1993-backroom-concept-v1.png` | RECONSTRUCTED | World record `1993-syndicate` | 창고 뒷방을 내려다보는 시점에서 정장·표장 없는 근무복·연구복을 입은 성인 네 명이 한 탁자 위로 무표기 자료를 주고받는다. | `분석 재구성` |
+| `derived/classification-1997-sorting-room-concept-v1.png` | RECONSTRUCTED | World record `1997-01-27-classification` | 어두운 분류실에서 연구원들이 글자 없는 윤곽 자료를 벽의 세 무리로 나누고 탁자에 현장사진철을 펼쳐 놓는다. | `분석 재구성` |
+| `derived/nhc-sid-independence-2001-two-convoys-concept-v1.png` | RECONSTRUCTED | World record `2001-07-21-independence` | 한 본부의 적재장에서 성인 작업자들이 같은 기록 상자들을 표식 없는 두 차량으로 나누어 옮긴다. | `분석 재구성` |
+| `derived/ground-forces-2002-handover-concept-v1.png` | RECONSTRUCTED | World record `2002-02-20-ground-forces` | 야간 합동 훈련장 차양 아래에서 교관이 서로 다른 군복의 성인 병사들에게 운반함과 계측 장비 사용을 보여 준다. | `분석 재구성` |
+| `derived/returner-compact-2010-tent-table-concept-v1.png` | RECONSTRUCTED | World record `2010-04-12-returner-compact` | 해안 검문소 천막의 작은 탁자를 사이에 두고 성인 검문소 인원과 순례자 대표가 앉아 있으며 멀리 성인 귀환자 한 명이 기다린다. | `분석 재구성` |
+| `derived/castle-asylum-2014-seven-lights-concept-v1.png` | RECONSTRUCTED | World record `2014-06-08-castle-asylum-right` | 회보라 연무가 낀 대흑림의 여러 능선 사이로 일곱 성채의 작은 산호색 불빛이 흩어져 보인다. | `분석 재구성` |
+| `derived/atlantic-schism-2016-cut-line-concept-v1.png` | RECONSTRUCTED | World record `2016-02-21-blood-cult-atlantic-schism` | 조용한 무전실에서 성인 교단원이 통신 장비의 플러그를 빼 들고 창밖의 성인 순례자들은 짐 곁에서 쉬고 있다. | `분석 재구성` |
+| `derived/southern-allegiance-2027-vessel-concept-v1.png` | RECONSTRUCTED | World record `2027-11-02-southern-allegiance` | 어두운 해안 창고에 모인 성인 무장 분파 대표들이 라벤더 불빛 아래 검붉은 그릇을 향해 손을 내밀거나 거리를 유지한다. | `분석 재구성` |
+| `derived/branch-seal-2031-four-files-concept-v1.png` | RECONSTRUCTED | World record `2031-02-03-branch-seal` | 형광등 아래 기록보관실 탁자에 똑같이 생긴 서류함 네 개가 나란히 놓이고 무표정한 성인 담당자가 마지막 봉인을 누른다. | `분석 재구성` |

@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 392,
-    "referenced": 392,
+    "registered": 443,
+    "referenced": 443,
     "unreferenced": 0,
     "review": 150,
-    "managed": 242,
+    "managed": 293,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 362,
+      "image": 413,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 224,
+      "PROJECT_GENERATED": 275,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 170,
+      "DELIVERY_DERIVATIVE": 204,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 90,
+      "RECONSTRUCTED": 107,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2730,6 +2730,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2016-02-21-blood-cult-atlantic-schism) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "데드존 지부의 순례자 보호 노선과 남부 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1701659,
+      "sha256": "dcf28abc2ad992a081bfef02887efe1080da5bd40aca58d947ae9410af555046",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2814,6 +2835,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/branch-seal-2031-four-files-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2031-02-03-branch-seal) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "같은 인계 절차를 통과한 네 결과철을 어느 하나도 원본으로 고르지 않고 봉인하는 기록보관실이다. 네 결과철의 내용과 어느 결말이 실제였는지는 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1579108,
+      "sha256": "4da9f2d09390df56f2adab94789c79c66e6eb1b32a1d4a0a6d72ed78f9cb194c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/broken-crown-erased-commander-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2832,6 +2874,27 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-data.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/castle-asylum-2014-seven-lights-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2014-06-08-castle-asylum-right) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "일곱 성채로 전하는 야간 피난 관습을 숲속에 흩어진 불빛으로 표현한 원경이다. 성채의 실제 위치와 거리, 동시 점등 여부는 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1900511,
+      "sha256": "4a43690de742d2aedb6e77bd40b71c82245f2977f10dc6957c197144438b9fe1",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2916,6 +2979,48 @@
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/classification-1997-sorting-room-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(1997-01-27-classification) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "리버스와 괴이의 대응 용어를 정리하며 사례 자료를 비교하는 분류실이다. 분류에 참여한 인원과 자료의 실제 내용, 분류 회의의 장소는 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1647857,
+      "sha256": "dda0c280abd2b0ef819ba38e3ecec558c3a47e8d6ebe11a553309bd63a881d5d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/cold-war-divided-labs-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(deep-cold-war-programs) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "같은 현상을 서로 다른 위협으로 분류한 세 연구 갈래를 나뉜 작업 칸으로 병치했다. 실제 기관·연구원 신원·총원을 확정하지 않으며, 냉전의 원인과 변칙 현상은 관계가 없다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1864893,
+      "sha256": "5c881e9352f5fbd6726321c9e8434916fb92db1721a27f588ed2fb05589f2c04",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -3095,6 +3200,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(1975-distortion-system) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "왜곡 시스템 실행 뒤 흩어져 접수된 이상 신고를 연구 단지 외곽의 불명확한 흔적 조사로 가정했다. 이 장소·인원·흔적의 실재와 실험·교단 활동 사이의 인과를 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2157207,
+      "sha256": "280d66b8487c43e91254a3daa974b503cdc2f4b70b15af8e3289d1513d160911",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/enrilbani-portrait-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3130,6 +3256,27 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(1982-03-22-fhc) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "아마리온의 인력·자료·장비가 F.H.C 기반으로 이어진 과정을 야간 하역 작업으로 옮겼다. 창설자와 작업자의 신원, 실제 사옥·운송 날짜·총수량과 개별 상자 내용물을 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1584820,
+      "sha256": "485eca1fc8d4ff47e1e0d75331a61221af0d6911e8e250da809d2a5c9b9eda70",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -3289,6 +3436,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/ground-forces-2002-handover-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2002-02-20-ground-forces) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "협력 지상군에 현장 대응 장비와 절차를 인계하는 합동 훈련장이다. 참여 국가와 부대, 장비의 실제 기종은 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1887950,
+      "sha256": "e087ee5620c76817caeb221cfb794e94e4b911790a0b6311ebf8c03f01e9f345",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/haimun-night-transfer-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3303,6 +3471,27 @@
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/industrial-occult-plate-lab-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(deep-industrial-occult) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "전신 장치와 사진 건판이 설명되지 않은 흔적을 함께 기록하기 시작한 산업 계측기의 장면이다. 전력이 현상을 만들었다는 인과, 손상 속 존재의 신원과 실험의 정확한 장소·배치를 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1975119,
+      "sha256": "81c3d87a1342b8dcc44ec492dcfb1307e1fc0519b7f01003ed14969e3013b00b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -3499,6 +3688,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/nhc-sid-independence-2001-two-convoys-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2001-07-21-independence) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "공통 지원 아래 두 갈래로 이관되는 기록으로 독립 지휘체계 개편을 표현했다. 실제 이관 장소와 날짜, 차량과 인원의 수는 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1905178,
+      "sha256": "c1db2e606159f4a3c3e74a60e34ce38d99e3401bcb94110c99ac88f89a886b4b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3670,6 +3880,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/plague-copies-margin-seals-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(deep-plague-copies) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "14세기 장부 여백에 남은 봉인 절차와 기억 대조문의 재필사를 촛불 아래의 작업으로 옮겼다. 필사자의 신원·장소·기호의 정확한 형태를 확정하지 않는다. 대역병은 사본이 쓰인 시대 배경이며, 역병의 원인과 봉인 기록은 관계가 없다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1734310,
+      "sha256": "d8edc1c6b9b8e99077f936ae9a2f1eac6332c4fc8c26ff35d4f54c07e2ecbaa6",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/project-curse-world-keyart-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3746,6 +3977,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2010-04-12-returner-compact) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "남아 있는 증언을 바탕으로 상상한 첫 귀환자 협정의 절차 협의다. 협의 장소와 참석자, 합의 문안의 원본은 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1763736,
+      "sha256": "8abcaeb8337bd3151b394ef478d69b8b817c6c9fdbff7f0b90b10bec667a8d0b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/returner-note-locker-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3810,6 +4062,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(deep-sealing-wars) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "삼십년전쟁기 보급망을 따라 이동한 봉인 상자를 평범한 수레 행렬 안의 경계 장면으로 옮겼다. 전쟁은 이동의 배경일 뿐이며 전쟁의 원인과 봉인 상자는 관계가 없다. 이동 경로·총수량·상자 내용물과 인계 성공은 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2063406,
+      "sha256": "50ef2d56a139ea51e001b69d3bc4ae5e8a2a7794e6beb50d6a6309f854dd2d17",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3852,6 +4125,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/son-formation-1993-backroom-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(1993-syndicate) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "반 U.A.C 국가 인맥과 기업·연구 지원 경로의 결집을 익명 연락 회합으로 옮겼다. 단일 창설 회의·지휘부의 존재, 참석자 신원·실제 인원·국가·장소·날짜를 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1825362,
+      "sha256": "c5a925543871db5f1d714041acfa680e35474847e17f87dd93be7f224294f134",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/son-hidden-depot-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3887,6 +4181,27 @@
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2027-11-02-southern-allegiance) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "감청으로 추정된 남부 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1765713,
+      "sha256": "6fb37973ac2589e714205e273cb621f9648df41dd2f4a6555d62849205fde23c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -3950,6 +4265,48 @@
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/uac-founding-1993-assembly-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(1993-11-02-uac) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "비밀 감시망이 독립적인 초국가 대응 기관으로 공개된 전환을 차분한 대표 회의로 옮겼다. 실제 행사장·참가국·대표 신원·총원·표결 결과를 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1658438,
+      "sha256": "c58b4f7d05a1962092ee5a74f50352599681b8720c37e4a5c03d7433d62927d1",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(1982-uac-watch) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "비인가 감시망의 기록 기능을 1980년대의 작은 아날로그 감시실로 가정했다. 방의 실재, 인물이 레스작인지 여부와 감시망 구성·자금·권한을 확정하지 않는다.",
+      "credit": "Project Curse batch E scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1601543,
+      "sha256": "63af00bdd5872f39fdc1ba987a6b6d444f760fbd3cb77840983510932dd50983",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -5056,6 +5413,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/atlantic-schism-2016-cut-line-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7466,
+      "sha256": "b1005d8bfa015a82e15460cb0fc3d156e68686d725f571b31b19c80c24f07890",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/atlantic-schism-2016-cut-line-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 23472,
+      "sha256": "c564c28d5d063d3d5020ae39af453aa1b95164f7fd218b026a7074832450012c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/black-forest-citadel-night-refuge-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5184,6 +5573,70 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/branch-seal-2031-four-files-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/branch-seal-2031-four-files-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6766,
+      "sha256": "dde8d30654777ff50bfe2a22cfe3b5bacac773fa9c82ddfa91362cc6d329d0fc",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/branch-seal-2031-four-files-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/branch-seal-2031-four-files-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/branch-seal-2031-four-files-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 19568,
+      "sha256": "8b398553f587bcbbe0da4d1a4837787e966ec19a9b86d19854e2ff8cf54b27c0",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/branch-seal-2031-four-files-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/castle-asylum-2014-seven-lights-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/castle-asylum-2014-seven-lights-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7002,
+      "sha256": "c6b77fed607f8797c625c073540c6be1a4b1593837b4972d09f5dbf07cedfce9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/castle-asylum-2014-seven-lights-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/castle-asylum-2014-seven-lights-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/castle-asylum-2014-seven-lights-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 22108,
+      "sha256": "8f5dc89d8075e4b68b816e63b7a7260c2e63d8bbb33c80c048aabbc120cf721a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/castle-asylum-2014-seven-lights-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/checkpoint-07-night-queue-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5276,6 +5729,70 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/classification-1997-sorting-room-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/classification-1997-sorting-room-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7982,
+      "sha256": "39e07d42f020eceb32f9956c0c125d596c61da58a303859b184fbf4fb56c77de",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/classification-1997-sorting-room-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/classification-1997-sorting-room-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/classification-1997-sorting-room-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 23584,
+      "sha256": "7b5fc96c45f888ad5b38243c2c2b524208298ac4d35e3549391af0166cf63e0d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/classification-1997-sorting-room-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/cold-war-divided-labs-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/cold-war-divided-labs-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7912,
+      "sha256": "f567e5ca4137981d0a33901a813df97f4d3bce4c38150b484899af09d7a5815c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/cold-war-divided-labs-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/cold-war-divided-labs-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/cold-war-divided-labs-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 26298,
+      "sha256": "efec0171cfffa93965a938fa69fedbb8ee408942703c035b4018b5c3cb7b83ad",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/cold-war-divided-labs-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -5536,6 +6053,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/distortion-system-1975-field-trace-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10864,
+      "sha256": "19efbe7354a9911fcaff57969f21c263a0abb667abd47f4c7dac78fd917eefbe",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/distortion-system-1975-field-trace-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 47220,
+      "sha256": "544382d07c9c4a7fe941c97b50bed6d774481cb35b0b572b3cacd8b5d94eaa02",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/enrilbani-portrait-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5596,6 +6145,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/epoptes-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/fhc-founding-1982-loading-dock-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6402,
+      "sha256": "455697a651365b6e41a95c6e44c18290f1516d81c4db8fa9b77e07402820fcc7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/fhc-founding-1982-loading-dock-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 21082,
+      "sha256": "adb0a637a2033faa522b419ec9879386d176c8ff2f33b8cd9704bf65e7107e5e",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -5760,6 +6341,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/ground-forces-2002-handover-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ground-forces-2002-handover-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10546,
+      "sha256": "35609261cb66ea22c6a1026beb584b6e56905248adbfe185d180bf9ed1d41d00",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ground-forces-2002-handover-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ground-forces-2002-handover-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ground-forces-2002-handover-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 33246,
+      "sha256": "fb41d432185fa3e01be166d4638be72031abf823765e7194db0b68022e6264b3",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ground-forces-2002-handover-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/haimun-night-transfer-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5788,6 +6401,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/haimun-night-transfer-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/industrial-occult-plate-lab-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/industrial-occult-plate-lab-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7584,
+      "sha256": "e1afa2d6124068f21c4b6dd3c1764106b8a9da3247e3b687bd2481f0eef709ad",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/industrial-occult-plate-lab-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/industrial-occult-plate-lab-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/industrial-occult-plate-lab-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 27320,
+      "sha256": "3c142e05dfd4d5f9081524c39c1ed6a17d2dbc75d30c980b0f7045dd417a0b2d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/industrial-occult-plate-lab-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -6048,6 +6693,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/nhc-sid-independence-2001-two-convoys-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/nhc-sid-independence-2001-two-convoys-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12206,
+      "sha256": "bc7e5324fd950ca1eb1e60c1fd7c002fb599df183d51680f734dd2f1235f61e2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/nhc-sid-independence-2001-two-convoys-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/nhc-sid-independence-2001-two-convoys-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/nhc-sid-independence-2001-two-convoys-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 36340,
+      "sha256": "1a023eede20381e66e67ba1aa1da730104088d7a183afda985eb6096cd779e94",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/nhc-sid-independence-2001-two-convoys-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -6272,6 +6949,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/plague-copies-margin-seals-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/plague-copies-margin-seals-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6398,
+      "sha256": "d6a3c4072ce1779a40bc2e8ce3a40f0f8bc8660e7a8c0feee052910a8e3f4399",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/plague-copies-margin-seals-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/plague-copies-margin-seals-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/plague-copies-margin-seals-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 22492,
+      "sha256": "d33589ed844c33d5dfcde709d2d55cbb3f8d204ef3b36822711cbd812747b742",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/plague-copies-margin-seals-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/project-curse-world-keyart-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -6364,6 +7073,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/returner-compact-2010-tent-table-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 8500,
+      "sha256": "b18bb3add8d4564c9b36bb1fcc4e600e7c61637d3cceecfc9ea5f9b987f94064",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/returner-compact-2010-tent-table-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 26900,
+      "sha256": "2c80d5a8299f92a5c0c7bbd8b9a21915cc34d99898a1418ba4d3dc633ccdf378",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -6464,6 +7205,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/sealing-wars-lead-box-convoy-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 13166,
+      "sha256": "b0e7e456f9e94a916cc3c33604d9ac307cc7dbcdf05888ce3827f957048ea61b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/sealing-wars-lead-box-convoy-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 43942,
+      "sha256": "987ee8acbb676ed89796b8d11193e7849210a8a0f5917a74616786e7746e44d2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/shadow-cult-mismatched-reflection-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -6528,6 +7301,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/son-formation-1993-backroom-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/son-formation-1993-backroom-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9142,
+      "sha256": "4116d0bb4e2b6630a5b1b15da6f826513172f7cca92417925718d7d6479be264",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/son-formation-1993-backroom-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/son-formation-1993-backroom-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/son-formation-1993-backroom-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 31442,
+      "sha256": "ed7e562322ccd59a71715b9956c919d586dd30069d533dae0eaffad3b58fa385",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/son-formation-1993-backroom-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/son-hidden-depot-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -6588,6 +7393,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/son-quarantine-shelf-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/southern-allegiance-2027-vessel-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5570,
+      "sha256": "d6dc029d1ddbc9f7a671e593345da3166e216b7305315534caa3c26bed421ff3",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/southern-allegiance-2027-vessel-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 17738,
+      "sha256": "2a7d04ed2d36d2e7829985789934fcbf68dd5eabd7babba4dcd72272013b7165",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -6684,6 +7521,70 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/uac-coordination-office-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/uac-founding-1993-assembly-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/uac-founding-1993-assembly-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5018,
+      "sha256": "accf69e4e27a980a40fcd262d22b7a809dde05c16549b667248b82c3e4a40bbd",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/uac-founding-1993-assembly-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/uac-founding-1993-assembly-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/uac-founding-1993-assembly-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 16394,
+      "sha256": "5fcd9a0fccf345de4008aaf72c109939893db18f7be0afb729a9550a79bb93be",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/uac-founding-1993-assembly-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/uac-watch-1982-listening-room-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 8294,
+      "sha256": "0d3d7206dc2e1048f0ab08640238e01346a1613af40e329df360c16e25d620d7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/uac-watch-1982-listening-room-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 24134,
+      "sha256": "8a9a16dea237278e68f39c5ca396e2ba7410e3a3212eedbbd8bdd5bbc024eae8",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

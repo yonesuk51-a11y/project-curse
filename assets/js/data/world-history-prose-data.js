@@ -442,6 +442,126 @@
   };
 
   const recordVisuals={
+    // 2026-09-25 사용자 채택 — 5차 묶음 세계 기록 17장
+    'deep-plague-copies':{
+      src:'assets/resources/derived/plague-copies-margin-seals-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 수도원 필사실에서 성인 필사자가 촛불 하나 아래 두 장부를 대조하며 읽히지 않는 필획을 옮겨 적는다.',
+      label:'INTERPRETIVE RECONSTRUCTION / MARGIN SEALS',
+      caption:'14세기 장부 여백에 남은 봉인 절차와 기억 대조문의 재필사를 촛불 아래의 작업으로 옮겼다. 필사자의 신원·장소·기호의 정확한 형태를 확정하지 않는다. 대역병은 사본이 쓰인 시대 배경이며, 역병의 원인과 봉인 기록은 관계가 없다.'
+    },
+    'deep-sealing-wars':{
+      src:'assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'나무와 생울타리 사이 진창길에서 성인이 등불 달린 보급 수레의 끈 묶인 납 상자를 지키며 걷는다.',
+      label:'INTERPRETIVE RECONSTRUCTION / SEALED CONVOY',
+      caption:'삼십년전쟁기 보급망을 따라 이동한 봉인 상자를 평범한 수레 행렬 안의 경계 장면으로 옮겼다. 전쟁은 이동의 배경일 뿐이며 전쟁의 원인과 봉인 상자는 관계가 없다. 이동 경로·총수량·상자 내용물과 인계 성공은 확정하지 않는다.'
+    },
+    'deep-industrial-occult':{
+      src:'assets/resources/derived/industrial-occult-plate-lab-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'세기 전환기의 어두운 계측실에서 한 성인이 빈 의자와 전신 장치를 지켜보고 앞쪽 사진 건판에는 비슷한 세로 손상이 남아 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / PLATE AND WIRE',
+      caption:'전신 장치와 사진 건판이 설명되지 않은 흔적을 함께 기록하기 시작한 산업 계측기의 장면이다. 전력이 현상을 만들었다는 인과, 손상 속 존재의 신원과 실험의 정확한 장소·배치를 확정하지 않는다.'
+    },
+    'deep-cold-war-programs':{
+      src:'assets/resources/derived/cold-war-divided-labs-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'흰 형광등 아래 불투명 칸막이로 나뉜 세 작업 칸에서 성인 연구원들이 비슷한 표본 사진을 각자 다른 아날로그 장비와 대조한다.',
+      label:'INTERPRETIVE RECONSTRUCTION / DIVIDED LABS',
+      caption:'같은 현상을 서로 다른 위협으로 분류한 세 연구 갈래를 나뉜 작업 칸으로 병치했다. 실제 기관·연구원 신원·총원을 확정하지 않으며, 냉전의 원인과 변칙 현상은 관계가 없다.'
+    },
+    '1975-distortion-system':{
+      src:'assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'연구 단지 바깥 도랑에서 성인 조사자들이 손전등 하나로 눌린 풀과 놓인 무전기를 살펴본다.',
+      label:'INTERPRETIVE RECONSTRUCTION / FIELD TRACE — 상충 기록',
+      caption:'왜곡 시스템 실행 뒤 흩어져 접수된 이상 신고를 연구 단지 외곽의 불명확한 흔적 조사로 가정했다. 이 장소·인원·흔적의 실재와 실험·교단 활동 사이의 인과를 확정하지 않는다.'
+    },
+    '1982-03-22-fhc':{
+      src:'assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'표기 없는 연구 기업 하역장 안으로 성인 작업자들이 봉인된 문서 상자와 장비 케이스를 옮기고 연구자가 동행한다.',
+      label:'INTERPRETIVE RECONSTRUCTION / SUCCESSION DOCK',
+      caption:'아마리온의 인력·자료·장비가 F.H.C 기반으로 이어진 과정을 야간 하역 작업으로 옮겼다. 창설자와 작업자의 신원, 실제 사옥·운송 날짜·총수량과 개별 상자 내용물을 확정하지 않는다.'
+    },
+    '1982-uac-watch':{
+      src:'assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'작은 감시실에서 성인 한 명이 등을 보인 채 시설 사진과 글자 없는 지도 앞의 녹음기와 전화를 다룬다.',
+      label:'INTERPRETIVE RECONSTRUCTION / LISTENING ROOM — 증언 기반',
+      caption:'비인가 감시망의 기록 기능을 1980년대의 작은 아날로그 감시실로 가정했다. 방의 실재, 인물이 레스작인지 여부와 감시망 구성·자금·권한을 확정하지 않는다.'
+    },
+    '1993-11-02-uac':{
+      src:'assets/resources/derived/uac-founding-1993-assembly-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 회의장의 성인 대표들이 긴 책상에 앉아 흰 사각형 조명 아래의 무표기 발표대를 바라본다.',
+      label:'INTERPRETIVE RECONSTRUCTION / ASSEMBLY 1993',
+      caption:'비밀 감시망이 독립적인 초국가 대응 기관으로 공개된 전환을 차분한 대표 회의로 옮겼다. 실제 행사장·참가국·대표 신원·총원·표결 결과를 확정하지 않는다.'
+    },
+    '1993-syndicate':{
+      src:'assets/resources/derived/son-formation-1993-backroom-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'창고 뒷방을 내려다보는 시점에서 정장·표장 없는 근무복·연구복을 입은 성인 네 명이 한 탁자 위로 무표기 자료를 주고받는다.',
+      label:'INTERPRETIVE RECONSTRUCTION / BACKROOM COMPACT',
+      caption:'반 U.A.C 국가 인맥과 기업·연구 지원 경로의 결집을 익명 연락 회합으로 옮겼다. 단일 창설 회의·지휘부의 존재, 참석자 신원·실제 인원·국가·장소·날짜를 확정하지 않는다.'
+    },
+    '1997-01-27-classification':{
+      src:'assets/resources/derived/classification-1997-sorting-room-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 분류실에서 연구원들이 글자 없는 윤곽 자료를 벽의 세 무리로 나누고 탁자에 현장사진철을 펼쳐 놓는다.',
+      label:'INTERPRETIVE RECONSTRUCTION / SORTING ROOM',
+      caption:'리버스와 괴이의 대응 용어를 정리하며 사례 자료를 비교하는 분류실이다. 분류에 참여한 인원과 자료의 실제 내용, 분류 회의의 장소는 확정하지 않는다.'
+    },
+    '2001-07-21-independence':{
+      src:'assets/resources/derived/nhc-sid-independence-2001-two-convoys-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'한 본부의 적재장에서 성인 작업자들이 같은 기록 상자들을 표식 없는 두 차량으로 나누어 옮긴다.',
+      label:'INTERPRETIVE RECONSTRUCTION / TWO CONVOYS',
+      caption:'공통 지원 아래 두 갈래로 이관되는 기록으로 독립 지휘체계 개편을 표현했다. 실제 이관 장소와 날짜, 차량과 인원의 수는 확정하지 않는다.'
+    },
+    '2002-02-20-ground-forces':{
+      src:'assets/resources/derived/ground-forces-2002-handover-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'야간 합동 훈련장 차양 아래에서 교관이 서로 다른 군복의 성인 병사들에게 운반함과 계측 장비 사용을 보여 준다.',
+      label:'INTERPRETIVE RECONSTRUCTION / EQUIPMENT HANDOVER',
+      caption:'협력 지상군에 현장 대응 장비와 절차를 인계하는 합동 훈련장이다. 참여 국가와 부대, 장비의 실제 기종은 확정하지 않는다.'
+    },
+    '2010-04-12-returner-compact':{
+      src:'assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'해안 검문소 천막의 작은 탁자를 사이에 두고 성인 검문소 인원과 순례자 대표가 앉아 있으며 멀리 성인 귀환자 한 명이 기다린다.',
+      label:'INTERPRETIVE RECONSTRUCTION / TENT TABLE — 증언 기반',
+      caption:'남아 있는 증언을 바탕으로 상상한 첫 귀환자 협정의 절차 협의다. 협의 장소와 참석자, 합의 문안의 원본은 확정하지 않는다.'
+    },
+    '2014-06-08-castle-asylum-right':{
+      src:'assets/resources/derived/castle-asylum-2014-seven-lights-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'회보라 연무가 낀 대흑림의 여러 능선 사이로 일곱 성채의 작은 산호색 불빛이 흩어져 보인다.',
+      label:'INTERPRETIVE RECONSTRUCTION / SEVEN LIGHTS',
+      caption:'일곱 성채로 전하는 야간 피난 관습을 숲속에 흩어진 불빛으로 표현한 원경이다. 성채의 실제 위치와 거리, 동시 점등 여부는 확정하지 않는다.'
+    },
+    '2016-02-21-blood-cult-atlantic-schism':{
+      src:'assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'조용한 무전실에서 성인 교단원이 통신 장비의 플러그를 빼 들고 창밖의 성인 순례자들은 짐 곁에서 쉬고 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / CUT LINE',
+      caption:'데드존 지부의 순례자 보호 노선과 남부 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다.'
+    },
+    '2027-11-02-southern-allegiance':{
+      src:'assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 해안 창고에 모인 성인 무장 분파 대표들이 라벤더 불빛 아래 검붉은 그릇을 향해 손을 내밀거나 거리를 유지한다.',
+      label:'INTERPRETIVE RECONSTRUCTION / VESSEL OATH — 정보 추정',
+      caption:'감청으로 추정된 남부 임시 충성망을 서로 거리를 둔 대표자들의 모임으로 표현했다. 서약의 실제 방식과 참석 분파, 모임의 장소는 확정하지 않는다.'
+    },
+    '2031-02-03-branch-seal':{
+      src:'assets/resources/derived/branch-seal-2031-four-files-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'형광등 아래 기록보관실 탁자에 똑같이 생긴 서류함 네 개가 나란히 놓이고 무표정한 성인 담당자가 마지막 봉인을 누른다.',
+      label:'INTERPRETIVE RECONSTRUCTION / FOUR FILES',
+      caption:'같은 인계 절차를 통과한 네 결과철을 어느 하나도 원본으로 고르지 않고 봉인하는 기록보관실이다. 네 결과철의 내용과 어느 결말이 실제였는지는 확정하지 않는다.'
+    },
     // 2026-09-25 사용자 채택 — 4차 묶음 세계 기록 10장
     'deep-first-breach':{
       src:'assets/resources/derived/first-breach-sealed-gate-concept-v1.png',
