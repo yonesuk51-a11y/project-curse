@@ -328,6 +328,10 @@
 .tc-man-plate figcaption b {
   font-size: var(--fs-2xs);
 }
+/* 교범 절의 장면 그림 — 분석 재구성 */
+.tc-man-scene {
+  max-width: 720px;
+}
 
 /* 현장 인원 등록 양식 */
 .tc-man-register {

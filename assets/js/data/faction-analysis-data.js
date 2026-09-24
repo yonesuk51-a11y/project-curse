@@ -574,6 +574,12 @@
     alt:'철망으로 나뉜 선별 통로에서 방독면을 쓴 인원이 피난민의 손목에 흰색과 붉은색 표식을 채우는 장면의 분석 재구성',
     caption:'민간 분리와 선별 통로의 절차를 재구성한 장면이다. 특정 검문소, 피난민 신원, 개별 표식 판정을 확정하지 않는다.'
   };
+  factions.sid.visual={
+    src:'assets/resources/derived/sid-memory-check-booth-concept-v1.png',
+    className:'RECONSTRUCTED',label:'RETURNEE SCREENING / 분석 재구성',
+    alt:'유리 부스 안에서 관자와 손목에 센서를 붙인 귀환자가 두 팔을 책상에 내려놓고 앉아 있다. 유리 건너편 가족은 빈 카드를 들고 있고, 모니터의 열상 윤곽만 한 팔을 들고 있다.',
+    caption:'귀환자의 신원·기억·생체 신호를 따로 대조하는 분리 심사를 재구성한 장면이다. 화면 윤곽과 실제 자세가 다른 것은 계측 불일치를 보여 주는 예시다. 특정 귀환자와 가족의 신원, 실제 질문과 답을 확정하지 않는다.'
+  };
 
   root.ProjectCurseFactionAnalysis = freeze({
     version: root.ProjectCurseBuild?.version||'5.42.0',

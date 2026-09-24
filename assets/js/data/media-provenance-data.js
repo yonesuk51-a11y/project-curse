@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 219,
-    "referenced": 219,
+    "registered": 237,
+    "referenced": 237,
     "unreferenced": 0,
     "review": 150,
-    "managed": 69,
+    "managed": 87,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 189,
+      "image": 207,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 51,
+      "PROJECT_GENERATED": 69,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 66,
+      "DELIVERY_DERIVATIVE": 78,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 21,
+      "RECONSTRUCTED": 27,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2281,6 +2281,48 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "성채 피난헌장·대흑림 성채 야간 피난 관습 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "헌장 작성 당시(4–9세기)의 장면, 특정 성채의 모습·위치, 피난민 신원의 증거로 표시 금지",
+      "credit": "Project Curse citadel refuge charter brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1802686,
+      "sha256": "f568218808eef1d8f442d6e38283e9657b96a88295a9bc9203783642c698d878",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "피의 호수 부검 기록(Unknown_Record2_860205) 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "회수 영상의 프레임이나 부검 원본으로 표시 금지. 연구원 외모, 사체 신원, 시설 배치를 확정하지 않음",
+      "credit": "Project Curse Blood Lake autopsy record brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1635807,
+      "sha256": "7d19228080b031d69aa2d80f03d15d8225f8cea0c73f4b19de140831f55b8389",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/blood-lake-rite-1986-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2346,6 +2388,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/checkpoint-07-night-queue-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "검문소 07 야간 통행 기록 확인 절차 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "2029년 검문소 07 귀환자 상충 사건의 장면으로 표시 금지. 대기열 형체의 신원·분류·통과 여부를 확정하지 않음",
+      "credit": "Project Curse Checkpoint 07 passage procedure brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1990088,
+      "sha256": "fd92207aa9410963766007f88d113cd1f656e90fcbadc30774d86655fb9161dd",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/regional-drilldown-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2358,6 +2421,27 @@
       "sha256": "04d1389217ff2ace8a4f3a0e246c2acaa1ded5239ebe0cf08d66858bb59fbb93",
       "usedBy": [
         "assets/js/data/archive-document-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/corrupted-isolation-observation-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기본 규칙의 타락자 정의 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "특정 피격리자의 신원, 변질 원인·경과, 실제 관찰 기록의 증거로 표시 금지. 괴이와 같은 범주로 표시하지 않음",
+      "credit": "Project Curse corrupted-person ontology brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1638128,
+      "sha256": "956281a52a3b4c092760c2ddac128f6201b5a316f5dfe903e4b62511e47e780c",
+      "usedBy": [
+        "assets/js/data/history-screen-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -2522,6 +2606,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "N.H.C 현장 교범 접촉·교전 원칙 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "특정 작전의 교전, 대원 신원, 괴이의 종류, 철수 결과의 증거로 표시 금지",
+      "credit": "Project Curse N.H.C contact and engagement brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1638599,
+      "sha256": "1c426258abd045930a193e1270a6cb4ed0f57097b915f65b674055ff150beece",
+      "usedBy": [
+        "assets/js/data/archive-document-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/nhc-young-soldiers-forward-base-group-photo-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2633,6 +2738,27 @@
       "sha256": "b9e044f420b51fe2debae364b560a738f7fe46f982263796d6343d7e8e2f2977",
       "usedBy": [
         "assets/js/data/home-screen-data.js",
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/sid-memory-check-booth-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "S.I.D 귀환자 분리 심사·가족 기억 대조문 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "특정 귀환자·가족의 신원, 실제 질문과 답, 기록된 사건의 증거로 표시 금지",
+      "credit": "Project Curse S.I.D returnee screening brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1515275,
+      "sha256": "57bc498005351aa77db300071c6c2eddb61821f1f598968684507df0699d35be",
+      "usedBy": [
+        "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
@@ -3444,6 +3570,70 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/black-forest-citadel-night-refuge-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5546,
+      "sha256": "35241f7c387a45ef834cb1fbf02b30c30ab406e1218ba7c52914cfa7e26a8b4e",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/black-forest-citadel-night-refuge-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 20418,
+      "sha256": "730a165b71f16d43260d0b5524ae00789ffe5cff8250c46a1dd8a99cbbe10fc4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/blood-lake-autopsy-1986-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6840,
+      "sha256": "195039a027d75d54ebeb7d05b8be03a28bdebbaee963092665a29e9e86d9bd5c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/blood-lake-autopsy-1986-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 22984,
+      "sha256": "37de2b9d758901e274237a30e13c02bb2302ff0a879d781d1455fe82117b6bc9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/blood-lake-rite-1986-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -3476,6 +3666,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/checkpoint-07-night-queue-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/checkpoint-07-night-queue-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5898,
+      "sha256": "17fe84e4c2ab03d3d9efb7fdac88e6fb11530ef077fc2df30b3aff177a8837e3",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/checkpoint-07-night-queue-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/checkpoint-07-night-queue-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/checkpoint-07-night-queue-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 20800,
+      "sha256": "5f02524d5a12aacae557796b81d7235d231b87dd8480fae22216b4081a9c7b4d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/checkpoint-07-night-queue-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/civil-child-drill-empty-classroom-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -3504,6 +3726,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/corrupted-isolation-observation-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/corrupted-isolation-observation-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5066,
+      "sha256": "b29b3bac3cf8fc89396f5dcd5685029cd3c6a89ff98e54e590f61f9f29c56dc9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/corrupted-isolation-observation-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/corrupted-isolation-observation-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/corrupted-isolation-observation-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 15010,
+      "sha256": "5964e5b570dff5a599156295b941d7ab5a3ef2db61cccaecdb4ccc3aadc2067f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/corrupted-isolation-observation-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -3636,6 +3890,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/nhc-close-quarters-stairwell-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6760,
+      "sha256": "3375a6e2a8b43367e325c9479c27a1a8f6a0cbf8c584c383116281438fe8e8e0",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/nhc-close-quarters-stairwell-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 21096,
+      "sha256": "064d208ce50f20e49bbf3e408348d91fcf02c690ad0f3ec60102b9ad1fc09013",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -3760,6 +4046,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/sid-memory-check-booth-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/sid-memory-check-booth-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 4210,
+      "sha256": "b965f163dbcb99343baf4e6232c4b9c61aefbcef954f1997c82a2c6dec8a6a86",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/sid-memory-check-booth-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/sid-memory-check-booth-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/sid-memory-check-booth-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12152,
+      "sha256": "c4507e1b19ece57ba2851ecd0f4edc05e0e4174f0ab1f9b462ad6e8bfbc95fc7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/sid-memory-check-booth-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

@@ -204,6 +204,54 @@
       "release": "PROJECT_GENERATED",
       "source": "민간 아동 대피 훈련 기록 기반 분석 재구성 — 인물 없음 (2026-09-24 지옥 그림체 재작업 v2)",
       "handling": "특정 학교, 학생, 훈련 결과의 증거로 표시 금지"
+    },
+    "assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png": {
+      "credit": "Project Curse Blood Lake autopsy record brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "피의 호수 부검 기록(Unknown_Record2_860205) 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "회수 영상의 프레임이나 부검 원본으로 표시 금지. 연구원 외모, 사체 신원, 시설 배치를 확정하지 않음"
+    },
+    "assets/resources/derived/checkpoint-07-night-queue-concept-v1.png": {
+      "credit": "Project Curse Checkpoint 07 passage procedure brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "검문소 07 야간 통행 기록 확인 절차 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "2029년 검문소 07 귀환자 상충 사건의 장면으로 표시 금지. 대기열 형체의 신원·분류·통과 여부를 확정하지 않음"
+    },
+    "assets/resources/derived/sid-memory-check-booth-concept-v1.png": {
+      "credit": "Project Curse S.I.D returnee screening brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "S.I.D 귀환자 분리 심사·가족 기억 대조문 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "특정 귀환자·가족의 신원, 실제 질문과 답, 기록된 사건의 증거로 표시 금지"
+    },
+    "assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png": {
+      "credit": "Project Curse N.H.C contact and engagement brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "N.H.C 현장 교범 접촉·교전 원칙 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "특정 작전의 교전, 대원 신원, 괴이의 종류, 철수 결과의 증거로 표시 금지"
+    },
+    "assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png": {
+      "credit": "Project Curse citadel refuge charter brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "성채 피난헌장·대흑림 성채 야간 피난 관습 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "헌장 작성 당시(4–9세기)의 장면, 특정 성채의 모습·위치, 피난민 신원의 증거로 표시 금지"
+    },
+    "assets/resources/derived/corrupted-isolation-observation-concept-v1.png": {
+      "credit": "Project Curse corrupted-person ontology brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기본 규칙의 타락자 정의 기반 분석 재구성 (2026-09-24 지옥 그림체)",
+      "handling": "특정 피격리자의 신원, 변질 원인·경과, 실제 관찰 기록의 증거로 표시 금지. 괴이와 같은 범주로 표시하지 않음"
     }
   }
 }

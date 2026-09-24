@@ -106,11 +106,23 @@
   }
 
   /* ---------- 교전 원칙 ---------- */
+  // 교범 절에 붙은 장면 그림(분석 재구성)은 원칙 문단 뒤에 싣는다. 한계 문장은 증거 대장(visual-evidence-data.js)에서 읽는다.
+  function scene(image) {
+    if (!image?.src) return null;
+    const src = assetPath(image.src);
+    const handling = root.ProjectCurseVisualEvidence?.resolve?.(src)?.handling;
+    return h('figure.tc-evidence.tc-man-scene', null,
+      h('div.tc-evidence-media', null, PC.img(src, { alt: image.alt || '', sizes: '(max-width: 760px) 94vw, 720px' })),
+      h('figcaption', null, h('b', { text: image.caption || '' }), handling ? h('span', { text: handling }) : null)
+    );
+  }
+
   function engagementPanel() {
     const sec = section('접촉과 교전');
     if (!sec) return missingSection('접촉과 교전');
     return panel('RULES OF ENGAGEMENT', '접촉과 교전', [
       paragraphs(sec.paragraphs),
+      scene(sec.image),
       list(sec.items, 'tc-man-list tc-man-list--rules'),
       sec.warning ? h('div.tc-note.tc-note--danger', null, h('b', { text: 'MISSION FAILURE' }), h('p', { text: sec.warning })) : null
     ], { slug: 'roe' });

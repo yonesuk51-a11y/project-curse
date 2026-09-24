@@ -124,7 +124,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
       getComputedStyle:()=>({getPropertyValue:()=> '#8d9c77'}),scrollY:0,scrollTo(){},location:{href:'http://localhost/index.html#map-room'},navigator:{},
       setInterval:fn=>{const id=++nextTimer;timers.set(id,fn);return id;},clearInterval:id=>timers.delete(id)};
     const media=new Target();media.matches=false;c.matchMedia=()=>media;
-    c.PCApp={h,screen:s=>{screen=s;},href:(...p)=>'#'+p.join('/'),go(){},back(){},setTitle(){},clear:el=>{el.replaceChildren();return el;},tag:t=>h('span',null,t),verdictTone:()=> 'info',missing:(code,key,text)=>h('div',null,code,key,text),screenHead:()=>h('header')};
+    c.PCApp={h,screen:s=>{screen=s;},href:(...p)=>'#'+p.join('/'),go(){},back(){},setTitle(){},clear:el=>{el.replaceChildren();return el;},tag:t=>h('span',null,t),verdictTone:()=> 'info',missing:(code,key,text)=>h('div',null,code,key,text),screenHead:()=>h('header'),img:(src,props={})=>h('img',{alt:'',...props,src})};
     c.window=c;vm.createContext(c);vm.runInContext(stateSource,c);vm.runInContext(source,c);const host=h('main');screen.mount(host);
     const show=p=>screen.show(p,c.PCApp),button=name=>host.all().find(n=>n.dataset.action===name),click=(name,key)=>{const b=host.all().find(n=>n.dataset.action===name&&(key===undefined||n.dataset.key===key));assert.ok(b,name);host.emit('click',b);};
     show([]);assert.ok(host.textContent.includes('북부전선'));

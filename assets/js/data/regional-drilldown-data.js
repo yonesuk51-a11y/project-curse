@@ -257,6 +257,16 @@
           caption:'귀환자 네 명과 독립된 다섯 번째 생체 반응의 불일치를 시각화했다. 추가 신호의 신원과 적대 여부는 확정하지 않는다.',
           siteIds:['dead-checkpoint-07','dead-quarantine-ring','dead-sublevel-08']
         },
+        // 지점 그림 — 해당 지점을 골랐을 때만 대표 그림 아래에 붙는다(2026-09-24 사용자 채택).
+        visuals:[
+          {
+            src:'assets/resources/derived/checkpoint-07-night-queue-concept-v1.png',assetId:'VEA-DZ-CP07-02',
+            label:'절차 재구성 / 특정 사건 아님',title:'검문소 07 야간 통행 심사 재구성',
+            alt:'철망으로 나뉜 야간 대기 통로에서 귀환자 다섯 명이 빈 서류를 들고 줄을 서 있다. 줄 가운데 한 명은 머리가 작은 눈이 박힌 검붉은 살덩이로 변해 있고, 창구의 방독면 요원 두 명은 동요 없이 서류를 처리한다.',
+            caption:'검문소 07의 야간 통행 기록 확인 절차를 상정한 분석 재구성이다. 2029년 검문소 07 귀환자 상충 사건의 장면이 아니다. 줄 가운데 형체의 신원, 괴이·타락자 분류, 통과 여부를 확정하지 않는다.',
+            siteIds:['dead-checkpoint-07']
+          }
+        ],
         signalBrief:{
           label:'RETURNER COUNT MISMATCH',title:'가시 인원 4 / 생체 반응 5',
           summary:'명단·장비·기억 기록은 네 명과 일치했다. 검문 스캐너는 대열 안에서 독립된 다섯 번째 반응을 분리했다.',

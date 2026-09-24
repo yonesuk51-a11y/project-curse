@@ -421,6 +421,13 @@
   };
 
   const recordVisuals={
+    'deep-citadel-charters':{
+      src:'assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'대흑림의 검은 숲 사이로 열린 성채 문에 분홍빛 등불이 번지고, 성인 여행자 다섯 명이 파수꾼 두 명 사이로 들어오는 야간 피난 장면의 분석 재구성. 문 위 종탑에 종이 걸려 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / NIGHT REFUGE CUSTOM',
+      caption:'성채 피난헌장의 야간 피난 관습이 2040년대 대흑림 성채에서 이어지는 모습을 상정한 분석 재구성이다. 4–9세기 헌장 작성 당시의 장면이 아니다. 특정 성채의 모습과 위치, 피난민의 신원을 확정하지 않는다.'
+    },
     '2005-01-21-ash-crew':{
       src:'assets/resources/derived/2005-01-21-ash-crew_001_reconstructed.png',
       className:'RECONSTRUCTED',

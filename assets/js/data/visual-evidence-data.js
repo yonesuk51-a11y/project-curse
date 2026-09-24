@@ -85,6 +85,24 @@
     }),
     'assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png':Object.freeze({
       assetId:'VEA-DRILL-01',className:'RECONSTRUCTED',source:'민간 아동 대피 훈련 기록 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인물이 없는 교실 장면이다. 특정 학교, 학생, 훈련 결과의 기록으로 취급하지 않는다.'
+    }),
+    'assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png':Object.freeze({
+      assetId:'VEA-BL-AUT-01',className:'RECONSTRUCTED',source:'피의 호수 부검 기록(Unknown_Record2_860205) 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'부검 기록에 서술된 절차와 비정상 조직 소견을 한 장면으로 옮겼다. 회수 영상의 프레임이 아니며, 연구원의 외모와 사체의 신원, 시설 배치를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/checkpoint-07-night-queue-concept-v1.png':Object.freeze({
+      assetId:'VEA-DZ-CP07-02',className:'RECONSTRUCTED',source:'검문소 07 야간 통행 기록 확인 절차 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'통행 심사 절차를 상정한 장면이다. 2029년 검문소 07 귀환자 상충 사건의 장면이 아니며, 줄 가운데 형체의 신원과 분류, 통과 여부를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/sid-memory-check-booth-concept-v1.png':Object.freeze({
+      assetId:'VEA-SID-MEM-01',className:'RECONSTRUCTED',source:'S.I.D 귀환자 분리 심사·가족 기억 대조문 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'신원·기억·생체 신호의 분리 심사를 재구성했다. 화면과 실물의 자세 차이는 계측 불일치의 예시이며, 특정 귀환자와 가족의 신원, 실제 질문과 답을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png':Object.freeze({
+      assetId:'VEA-NHC-CQB-01',className:'RECONSTRUCTED',source:'N.H.C 현장 교범 접촉·교전 원칙 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'교범의 접촉·교전 원칙(추격보다 접근 방향 제한, 철수로 유지)을 근거리 대응 장면으로 옮겼다. 특정 작전의 교전, 대원 신원, 괴이의 종류와 철수 결과를 확정하지 않는다.'
+    }),
+    'assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png':Object.freeze({
+      assetId:'VEA-GBF-REFUGE-01',className:'RECONSTRUCTED',source:'성채 피난헌장·대흑림 성채 야간 피난 관습 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'야간 피난 관습이 2040년대 대흑림 성채에서 이어지는 모습을 상정했다. 헌장 작성 당시의 장면이 아니며, 특정 성채의 모습과 위치, 피난민의 신원을 확정하지 않는다.'
+    }),
+    'assets/resources/derived/corrupted-isolation-observation-concept-v1.png':Object.freeze({
+      assetId:'VEA-COR-ISO-01',className:'RECONSTRUCTED',source:'세계 기본 규칙의 타락자 정의 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'타락자 분류를 격리 관찰 장면으로 옮겼다. 특정 피격리자의 신원, 변질 원인과 경과, 실제 관찰 기록을 확정하지 않으며 괴이와 같은 범주로 다루지 않는다.'
     })
   });
 

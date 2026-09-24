@@ -249,9 +249,13 @@ function operationTerrain(operation){
     return h('div.tc-map-stack',null,h('nav.tc-btnrow',{'aria-label':'관제 권역'},D.regions.map(x=>link(x.label,'map-room','region',x.id))),h('div.tc-map-layout.tc-map-contact-layout',null,h('div.tc-map-stack',null,m.board,directory(m.contacts)),intelPanel(v.kind==='marker'?markerIntel(v.item):v.kind==='synchrony'?synchronyIntel(v.item,v.point):regionIntel(r))));
   }
   function briefing(d,site){
-    const visible=b=>b&&(!site||!b.siteIds?.length||b.siteIds.includes(site.id));const visual=d.visual,b=d.signalBrief;
+    const visible=b=>b&&(!site||!b.siteIds?.length||b.siteIds.includes(site.id));const b=d.signalBrief;
     const blocks=[];
-    if(visible(visual))blocks.push(h('figure.tc-evidence',null,h('a.tc-evidence-media',{href:PC.href('history',visual.history||site?.history)},h('img',{src:visual.src,alt:visual.alt||'',loading:'lazy',decoding:'async'})),h('figcaption',null,h('b',{text:visual.label}),h('strong',{text:visual.title}),h('span.tc-map-copy',{text:visual.caption}),h('span.tc-code',{text:visual.assetId})),link('확대·세계 기록 열기','history',visual.history||site?.history)));
+    // 권역 대표 그림(visual)과, 지점을 골랐을 때만 붙는 지점 그림(visuals). 이어 볼 세계 기록이 없으면 링크를 달지 않는다.
+    const figure=visual=>{const target=visual.history||site?.history,img=PC.img(visual.src,{alt:visual.alt||'',sizes:'(max-width: 760px) 94vw, 480px'});
+      return h('figure.tc-evidence',null,target?h('a.tc-evidence-media',{href:PC.href('history',target)},img):h('div.tc-evidence-media',null,img),h('figcaption',null,h('b',{text:visual.label}),h('strong',{text:visual.title}),h('span.tc-map-copy',{text:visual.caption}),h('span.tc-code',{text:visual.assetId})),target?link('확대·세계 기록 열기','history',target):null);};
+    if(visible(d.visual))blocks.push(figure(d.visual));
+    (d.visuals||[]).filter(v=>site&&v.siteIds?.includes(site.id)).forEach(v=>blocks.push(figure(v)));
     if(visible(b)){
       const lanes=h('div.tc-map-signal-lanes',null,b.lanes.map(l=>h('div.tc-map-signal-lane',null,
         h('b.tc-code',{text:l.code}),tag(l.state),

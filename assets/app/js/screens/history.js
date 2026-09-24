@@ -30,7 +30,8 @@
     const pros = prose();
     const jp = japan();
     const list = [
-      ...(chron?.deepHistoryRecords || []).map((record) => ({ ...record })),
+      // 고대 기록에는 기록별 그림(recordVisuals)만 붙인다.
+      ...(chron?.deepHistoryRecords || []).map((record) => ({ ...record, ...(pros?.recordVisuals?.[record.id] ? { visual: pros.recordVisuals[record.id] } : {}) })),
       ...(core()?.records || []).map((record) => ({
         ...record,
         paragraphs: [...record.paragraphs],
@@ -132,6 +133,8 @@
       h('ul.tc-hist-grid.tc-hist-grid--4', null, framework.ontology.map((item) =>
         h('li', null, h('span.tc-label', { text: item.code }), h('b', { text: item.name }), h('p', { text: item.text }))
       )),
+      // 존재 구분 그림 — history-screen-data.js의 ontologyVisuals[구분 코드]
+      framework.ontology.map((item) => visualBlock(screenCopy().ontologyVisuals?.[item.code])),
       h('details.tc-disclosure.tc-hist-sub', null,
         h('summary', null, h('span', null, h('b', { text: '능력의 일곱 발현 경로와 대가' }))),
         h('ul.tc-hist-grid.tc-hist-grid--4', null, framework.abilitySources.map((item) =>

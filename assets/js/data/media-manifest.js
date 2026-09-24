@@ -37,7 +37,14 @@
     'assets/resources/derived/blood-lake-rite-1986-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/ash-crew-aftermath-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/cpd-screening-line-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
-    'assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
+    'assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    // 2026-09-24 사용자 채택 — 장르 증거 그림 6장(지옥 그림체)
+    'assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/checkpoint-07-night-queue-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/sid-memory-check-booth-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/black-forest-citadel-night-refuge-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/corrupted-isolation-observation-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
   };
 
   const normalize=src=>{

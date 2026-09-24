@@ -190,6 +190,18 @@ add('evidence-low-key-tone-unfiltered',
   read('assets/app/js/pc-core.js').includes("if (entry?.tone) attrs['data-tone'] = entry.tone;") &&
   /\.tc-evidence-media img\[data-tone="low-key"\]\s*\{\s*filter:\s*none;/.test(read('assets/app/css/components.css')),
   badTones.join(' | ') || `${toneEntries.length} low-key`);
+// 그림 자리 — 존재 구분 그림의 키, 관제 지점 그림의 지점, 세계 기록 그림의 기록 id가 실제 데이터에 있어야 한다. 틀리면 그림이 조용히 빠진다.
+const ontologyCodes = new Set((W?.worldFramework?.ontology || []).map((item) => item.code));
+const districts = context.ProjectCurseRegionalDrilldown?.districts || [];
+const badSlots = [
+  ...Object.entries(context.ProjectCurseHistoryScreen?.ontologyVisuals || {})
+    .filter(([code, visual]) => !ontologyCodes.has(code) || !existsSync(ROOT + visual.src)).map(([code]) => `ontology:${code}`),
+  ...districts.flatMap((district) => (district.visuals || [])
+    .filter((visual) => !visual.siteIds?.length || visual.siteIds.some((id) => !district.sites.some((site) => site.id === id)) || !existsSync(ROOT + visual.src))
+    .map((visual) => `map:${district.id}:${visual.assetId}`)),
+  ...Object.keys(P?.recordVisuals || {}).filter((id) => !historySet.has(id) || !existsSync(ROOT + P.recordVisuals[id].src)).map((id) => `history:${id}`)
+];
+add('screen-visual-slots-resolve', districts.length > 0 && !badSlots.length, badSlots.join(' | '));
 
 /* ---------- 6. 공개 문구 — 메타 용어 금지 ---------- */
 const FORBIDDEN = ['정사', '캐논', '플레이어', '독자 선택', '시나리오 모드', '메인 스토리', 'AI 이미지', '생성 이미지'];

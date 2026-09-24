@@ -303,7 +303,7 @@
             '헬멧캠과 실제 위치가 다르면 영상보다 동료 확인과 물리 표식을 우선한다.',
             '대원이 명령을 기억하지 못하거나 서로 다른 철수 시각을 말하면 전원을 한곳에 모아 원본 명령서를 확인한다.'
           ]},
-          {title:'접촉과 교전',paragraphs:[
+          {title:'접촉과 교전',image:{src:'../../assets/resources/derived/nhc-close-quarters-stairwell-concept-v1.png',alt:'도시 폐쇄시설 계단실에서 대원 한 명이 다리를 다친 동료를 출입구 쪽으로 끌어내고, 계단참의 사수 두 명이 손전등과 짧은 총구 화염으로 위쪽 복도의 검붉은 괴이를 막고 있다.',caption:'CONTACT AND ENGAGEMENT / INTERPRETIVE RECONSTRUCTION — 특정 작전 기록이 아님'},paragraphs:[
             '괴이와 접촉했을 때 목표는 추격이나 사살이 아니다. 접근 방향을 제한한다. 민간선과 철수로에서 밀어낸다. 개체가 후퇴해도 의식장, 혈액성 잔류물과 통신 오염이 남아 있으면 추격하지 않는다.'
           ],items:[
             '인간의 외형과 정상 언어만으로 비적성 판정을 내리지 않는다.',
@@ -483,7 +483,7 @@
             {time:'01:17',speaker:'레이놀즈',tone:'analysis',text:'혈액은 응고했습니다. 그런데 절개면 주변에서 다시 이동합니다. 용기 바닥의 잔류물과 연결되는 반응도 확인했습니다.'},
             {time:'01:31',cue:'【보고서를 펼치는 소리】'}
           ]},
-          {title:'내부 장기와 배양 반응',transcript:[
+          {title:'내부 장기와 배양 반응',image:{src:'../../assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png',alt:'어두운 준비실 너머 수술등 아래에서 연구원 두 명이 마른 성인 사체의 열린 흉복부를 살핀다. 절개면에서 검붉은 줄기가 부검대 가장자리로 뻗어 있고, 삼각대 위 녹화 카메라가 부검대를 향해 있다.',caption:'BLOOD-LAKE AUTOPSY / INTERPRETIVE RECONSTRUCTION — 회수 영상의 프레임이 아님'},transcript:[
             {time:'01:46',speaker:'스테파니',tone:'witness',text:'간과 폐 표면에 균류처럼 보이는 조직이 붙어 있습니다. 죽은 조직 위에서 자라요. 자극을 주면 살아 있는 조직처럼 수축해요.'},
             {time:'02:05',speaker:'레이놀즈',tone:'analysis',text:'처음에는 Pseudomonas fluorescens를 의심했습니다. 증식 형태가 맞지 않습니다. 변이된 Bacillus 계열에 더 가깝지만 일반 배양으로는 설명할 수 없습니다.'},
             {time:'02:28',speaker:'스테파니',tone:'witness',text:'사망 뒤 배양이 시작됐다는 뜻인가요?'},

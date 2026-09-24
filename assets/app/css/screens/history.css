@@ -81,6 +81,10 @@ a.tc-hist-turn:hover {
   display: grid;
   gap: var(--s4);
 }
+/* 존재 구분 그림 — 참조 상자 안에서는 본문 폭을 넘기지 않는다 */
+.tc-hist-ref > .tc-hist-visual {
+  max-width: 720px;
+}
 .tc-hist-ref-lead {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(220px, .5fr);
