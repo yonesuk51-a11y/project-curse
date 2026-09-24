@@ -207,6 +207,10 @@ const badSlots = [
   ...Object.keys(P?.recordVisuals || {}).filter((id) => !historySet.has(id) || !existsSync(ROOT + P.recordVisuals[id].src)).map((id) => `history:${id}`)
 ];
 add('screen-visual-slots-resolve', districts.length > 0 && !badSlots.length, badSlots.join(' | '));
+// 리버스 지점의 민간인 빙의(2026-09-25 사용자 설정) — 세계 기본 규칙 화면이 데이터 항목과 판정표 연결을 실제로 그린다.
+const historyScreenSource = read('assets/app/js/screens/history.js');
+add('history-renders-reverse-site-possession', Boolean(W?.worldFramework?.reverseSiteCivilians?.rule) &&
+  historyScreenSource.includes('possessionBlock(framework.reverseSiteCivilians)') && historyScreenSource.includes("PC.href('archive-entry', item.record)"));
 
 /* ---------- 6. 공개 문구 — 메타 용어 금지 ---------- */
 const FORBIDDEN = ['정사', '캐논', '플레이어', '독자 선택', '시나리오 모드', '메인 스토리', 'AI 이미지', '생성 이미지'];

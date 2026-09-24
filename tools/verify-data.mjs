@@ -553,6 +553,9 @@ function verify(){
   add('history-base-forty-six-evidence-records',Object.keys(worldHistoryData?.records||{}).length===46&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   // D 혼합: history-deep-world-framework의 데이터/매체 조건.
   add('history-deep-world-framework:data',worldHistoryData?.deepHistoryRecords?.length===8&&worldHistoryData?.worldFramework?.ontology?.length===4&&worldHistoryData.worldFramework.abilitySources?.length===7&&worldHistoryData.worldFramework.civilianSystems?.length===5);
+  // 2026-09-25 사용자 설정: 리버스 지점의 민간인 빙의. 네 구분에 끼워 넣지 않고, 분류 근거 기록과 미확인 범위를 함께 둔다.
+  const possession=worldHistoryData?.worldFramework?.reverseSiteCivilians;
+  add('history-reverse-site-possession:data',Boolean(possession?.label&&possession.rule&&possession.handling&&possession.caution)&&possession.record==='Ferals_860722'&&Boolean(context.window.ProjectCurseArchiveDocuments?.documents?.Ferals_860722?.sections?.some(s=>(s.items||[]).some(t=>t.includes('빙의 상태의 생존자를 자동으로 괴이 분류에 넣지 않는다')))));
   const japanTechRecords=japanTechnology?.records||[];
   const japanTechIds=japanTechRecords.map(record=>record.id).join('|');
   const expectedJapanTechIds='1982-04-06-sixth-instrumentation|1985-09-18-optical-return-test|1987-11-04-jid87-standard|1990-04-12-municipal-mesh-pilot|1992-10-30-sixth-program-dispersal';

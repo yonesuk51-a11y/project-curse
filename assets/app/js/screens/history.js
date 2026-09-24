@@ -147,6 +147,21 @@
         h('ul.tc-hist-grid.tc-hist-grid--5', null, framework.civilianSystems.map((item) =>
           h('li', null, h('b.tc-hist-coyote', { text: item.name }), h('p', { text: item.text }))
         ))
+      ),
+      possessionBlock(framework.reverseSiteCivilians)
+    );
+  }
+
+  // 리버스 지점의 민간인 빙의(2026-09-25 사용자 설정) — 분류 근거는 괴이 판정표로 연결한다.
+  function possessionBlock(item) {
+    if (!item) return null;
+    return h('details.tc-disclosure.tc-hist-sub', null,
+      h('summary', null, h('span', null, h('b', { text: item.label }))),
+      h('div.tc-disclosure-body', null,
+        h('p', { text: item.rule }),
+        h('p', { text: item.handling }),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
+        item.record ? h('p', null, h('a', { href: PC.href('archive-entry', item.record) }, '괴이 판정표 원문 열기', h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
       )
     );
   }
