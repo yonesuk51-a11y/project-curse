@@ -16,6 +16,9 @@
   const relationTone = (label) => /적대|상충|충돌|결별|이단/.test(label) ? 'danger' : /미확정|미확인|주장|감시/.test(label) ? 'caution' : 'info';
   const stateTone = (key) => ({ confirmed: 'ok', disputed: 'danger', split: 'caution', exception: 'occult' })[key];
   const firstSentence = (value) => String(value || '').trim().match(/^.*?[.!?。](?:\s|$)/)?.[0].trim() || value;
+  const threatLevels = { CRITICAL: 'critical', HIGH: 'high', ELEVATED: 'elevated', GUARDED: 'guarded', LOW: 'low' };
+  // 신원 불명 근거가 있는 사람만 대상으로 삼는다. 단순한 행방 불명은 제외한다.
+  const uncertainIdentity = person => person.certainty === 'unresolved' || (person.limits || []).some(text => /본명.*확인되지|육체의 신원/.test(text));
 
   let host, indexView, detailView, rows, count, listeners;
   let filter = 'all', active = false, onIndex = true, indexScroll = 0, restoreFrame = 0;
@@ -32,7 +35,7 @@
   }
   function section(code, title, ...body) {
     return h('section.tc-panel.tc-fac-section', null,
-      h('header.tc-panel-head', null, h('div', null, h('span.tc-label', { text: code }), h('h2', { text: title }))),
+      h('header.tc-panel-head', null, h('div', null, h('span.tc-label.tc-full-only', { text: code }), h('h2', { text: title }))),
       h('div.tc-panel-body.tc-fac-copy', null, body));
   }
   function kv(items) {
@@ -40,8 +43,12 @@
       h('div', null, h('dt', { text: term }), h('dd', null, value))));
   }
   function paragraphs(items) { return items.map((text) => h('p', { text })); }
+  function displayLabel(text) {
+    const parts = String(text || '').match(/^([A-Z\d ._-]+)\s*\/\s*(.*[가-힣].*)$/);
+    return parts ? [h('span.tc-full-only', { text: `${parts[1]} / ` }), parts[2]] : text;
+  }
   function backLink() {
-    return h('a.tc-btn', { href: PC.href('faction-info'), dataset: { facBack: '' } }, '← 세력 목록으로 복귀');
+    return h('a.tc-btn', { href: PC.href('faction-info'), dataset: { facBack: '' } }, '← 세력 목록');
   }
 
   function markBoard(key, compact = false) {
@@ -50,8 +57,8 @@
     // 번호는 source.order의 표시 순번이다. 새 회수 번호나 회수 위치를 설정으로 만들지 않는다.
     const number = String(source().order.indexOf(key) + 1).padStart(2, '0');
     return h('figure.tc-evidence.tc-fac-mark', { class: compact ? 'tc-fac-mark--compact' : null },
-      h('div.tc-fac-mark-image', null, h('span.tc-code', { text: `MARK / ${number}` }),
-        h('img', { src: mark.asset, alt: `${faction(key).name} 표식`, loading: 'lazy', decoding: 'async', width: 160, height: 160 })),
+      h('div.tc-fac-mark-image', null, h('span.tc-code.tc-full-only', { text: `MARK / ${number}` }),
+        h('img', { src: mark.asset, alt: `${faction(key).name} 표식`, loading: 'lazy', decoding: 'async', width: 160, height: 160, 'data-tc-inspect': compact ? null : '' })),
       h('figcaption', null,
         PC.tag(`감식 ${mark.confidence}`, mark.confidence === 'A' ? 'evidence' : 'caution'),
         compact ? null : h('span', { text: mark.source })));
@@ -78,8 +85,8 @@
       total += keys.length;
       rows.append(h('section.tc-fac-group', null,
         h('header.tc-section-head', null,
-          h('div', null, h('span.tc-label', { text: group.label }), h('h2', { text: display().groupLabels[group.label] || group.label })),
-          h('span.tc-code', { text: `${String(keys.length).padStart(2, '0')} FILES` })),
+          h('div', null, h('span.tc-label.tc-full-only', { text: group.label }), h('h2', { text: display().groupLabels[group.label] || group.label })),
+          h('span.tc-code.tc-full-only', { text: `${String(keys.length).padStart(2, '0')} FILES` })),
         h('div.tc-rows', null, keys.map(indexRow))));
     });
     count.textContent = `${total} / ${source()?.order.length || 0}개 문서`;
@@ -91,7 +98,7 @@
     const mark = own(root.ProjectCurseFactionMarks?.marks, key);
     if (!mark) return PC.missing('MARK NOT FOUND', key, '문양 감식 자료가 없습니다.');
     return h('details.tc-disclosure', null,
-      h('summary', null, h('span', null, h('span.tc-label', { text: 'INSIGNIA / AUTHENTICATION' }), h('b', { text: '문양 감식' }))),
+      h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'INSIGNIA / AUTHENTICATION' }), h('b', { text: '문양 감식' }))),
       h('div.tc-disclosure-body.tc-fac-copy', null,
         kv([['종류', mark.type], ['처음 확인', mark.firstSeen], ['사용 방식', mark.usage], ['등록본', mark.assetState]]),
         h('ol.tc-fac-symbols', null, (mark.symbols || []).map((item) => h('li', null, h('b', { text: item.label }), h('p', { text: item.text })))),
@@ -138,13 +145,21 @@
     // 2042 추가 등록 인물은 2006년 명부와 섞지 않고 따로 싣는다(담당: Claude).
     const added = people?.additionIndex?.[key] || [];
     if (!ids.length && !added.length) return null;
+    let anomalyCount = 0;
     const item = (id) => {
       const person = own(people.byId, id);
+      if (person && uncertainIdentity(person) && anomalyCount < 2) {
+        anomalyCount++;
+        return h('li.tc-fac-person-uncertain', null,
+          h('span', { text: person.name, dataset: { tcAnomaly: 'name' } }), h('span', { text: person.role }),
+          h('a.tc-btn', { href: PC.href('personnel', id), 'aria-label': `${person.name} 인물 기록 열기` }, '인물 기록 열기'));
+      }
       return h('li', null, person ? h('a.tc-fac-connection', { href: PC.href('personnel', id) },
         h('b', { text: person.name }), h('span', { text: person.role }))
         : PC.missing('PERSONNEL NOT FOUND', id, '연결된 인물 파일이 없습니다.'));
     };
-    return section(ids.length ? 'PERSONNEL / 2006' : 'PERSONNEL / 2042', '관련 인물',
+    return section('PERSONNEL', '관련 인물',
+      ids.length ? h('p.tc-code', { text: '2006년 명부' }) : null,
       ids.length ? h('ul.tc-fac-people', null, ids.map(item)) : null,
       added.length ? [h('h3', { text: people.additionLabel }), h('ul.tc-fac-people', null, added.map(item))] : null,
       h('div.tc-btnrow', null, link('인물 기록 열기 ↗', 'personnel')));
@@ -176,11 +191,15 @@
     }
     const registered = canon(key);
     const current = node(key);
+    const threat = threatLevels[String(item.threat || item.risk || registered?.threat || registered?.risk || '').toUpperCase()];
+    if (threat) PC.threat?.(threat);
+    const openCanon = root.ProjectCurseOpenCanon?.faction?.[key];
+    const openMarks = (openCanon || []).map(text => PC.openCanon?.(text)).filter(Boolean);
     detailView.dataset.facDossier = key;
     PC.append(detailView, [
       h('header.tc-panel.tc-bracket.tc-fac-cover', null, markBoard(key),
         h('div.tc-fac-cover-copy', null,
-          h('p.tc-label', { text: `FACTION DOSSIER / ${key}` }),
+          h('p.tc-label.tc-full-only', { text: `FACTION DOSSIER / ${key}` }),
           h('h1', { text: item.name, 'data-tc-focus': true }), h('p', { text: item.lead }),
           h('div.tc-fac-tags', null, PC.tag(classification(key), current ? 'occult' : 'info'),
             registered?.status ? PC.tag(registered.status, relationTone(registered.status)) : null,
@@ -203,8 +222,9 @@
         h('li', null, h('time.tc-code', { text: date }), h('span', { text }))))),
       item.visual?.src ? h('figure.tc-evidence.tc-fac-visual', { dataset: { evidenceClass: item.visual.className } },
         h('div.tc-evidence-media', null, PC.img(item.visual.src, { alt: item.visual.alt || '' })),
-        h('figcaption', null, h('b', { text: item.visual.label }), h('span.tc-fac-prose', { text: item.visual.caption }))) : null,
+        h('figcaption', null, h('b', null, displayLabel(item.visual.label)), h('span.tc-fac-prose', { text: item.visual.caption }))) : null,
       markAnalysis(key), lineageSection(key),
+      openMarks.length ? h('aside.tc-fac-open-canon', { 'aria-label': '자유 해석' }, openMarks) : null,
       section('CONNECTED FACTIONS', '다른 세력과의 관계',
         h('ul.tc-fac-relations', null, item.relations.map((relation) => h('li', null,
           faction(relation.target) ? h('a.tc-fac-relation', { href: PC.href('faction-info', relation.target) },
@@ -237,6 +257,7 @@
         h('div.tc-fac-control-head', null, h('h2', { text: '분석 대상 편제' }), count),
         h('div.tc-seg', { role: 'group', 'aria-label': '세력 분류' }, Object.entries(root.ProjectCurseCanon.factionTagLabels).map(([id, label]) =>
           h('button', { type: 'button', 'aria-pressed': String(id === filter), dataset: { facFilter: id } }, label)))), rows);
+    indexView.querySelectorAll('.tc-screenhead-meta, .tc-screenhead-code').forEach(el => el.classList.add('tc-full-only'));
     renderRows();
   }
   function show(parts, app, info) {

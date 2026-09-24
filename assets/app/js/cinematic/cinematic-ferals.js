@@ -1,4 +1,4 @@
-// Project Curse — Ferals_860722 cinematic ownership
+// Project Curse — Ferals_860722 기록 영상 재생 설정
 (function(root){
   'use strict';
   root.ProjectCurseCinematicRegistry?.register({
@@ -10,9 +10,9 @@
     transitionVideo:'assets/video/pc5152m_vhs_transition_18_21_sound.mp4',
     endingVideo:'',
     bgm:root.ProjectCurseFeralCinematic?.bgm||'assets/audio/pc5152cf_feral_dying_memories_bgm.mp3',
-    bgmVolume:.34,
-    introVolume:.18,
-    transitionVolume:.24,
+    bgmVolume:.68,
+    introVolume:.68,
+    transitionVolume:.78,
     introFallback:10450,
     transitionFallback:3750,
     pages:()=>root.ProjectCurseFeralCinematic?.pages||[]

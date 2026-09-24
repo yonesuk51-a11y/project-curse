@@ -1,4 +1,4 @@
-// Project Curse — Sakuma_Tape_991028 cinematic ownership
+// Project Curse — Sakuma_Tape_991028 기록 영상 재생 설정
 (function(root){
   'use strict';
   root.ProjectCurseCinematicRegistry?.register({
@@ -11,11 +11,11 @@
     transitionVideo:'assets/video/pc5152m_vhs_transition_18_21_sound.mp4',
     endingVideo:'',
     bgm:'assets/audio/pc5152cf_sakuma_vcr_hiss_bgm.mp3',
-    bgmVolume:.36,
+    bgmVolume:.54,
     birthdayAudio:'assets/audio/pc5152cf_sakuma_birthday_cue.mp3',
     birthdayVideo:'assets/video/pc5152cf_sakuma_end_transition.mp4',
-    introVolume:.42,
-    transitionVolume:.24,
+    introVolume:.68,
+    transitionVolume:.78,
     transitionFallback:3750,
     pages:()=>root.ProjectCurseSakumaCinematic?.pages||[]
   });
