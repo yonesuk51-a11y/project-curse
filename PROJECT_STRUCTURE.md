@@ -1,4 +1,9 @@
-# Project Curse Structure — 5.53.0
+# Project Curse Structure
+
+> 6.0.0부터 표시층은 새 단말(`index.html` + `assets/app/`)이다. 파일 역할·화면 모듈 규약·주소 규칙은 `PROJECT_CURSE_APP_SPEC.md` 1~2절이 기준이다.
+> 사실 데이터(`assets/js/data/`)의 역할은 아래 표와 같다. 표에서 `assets/js/core/`, `assets/js/pages/`, `assets/css/`를 가리키는 행은 5.53 옛 표시층의 소유 기록이며, 새 단말은 그 파일을 불러오지 않는다.
+
+## 5.53.0 기록
 
 ## 활성 소유권
 

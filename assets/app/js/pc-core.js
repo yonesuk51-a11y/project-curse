@@ -396,7 +396,7 @@
   }
 
   const api = Object.freeze({
-    version: '6.0.0-dev',
+    version: '6.0.0',
     h,
     append,
     clear,

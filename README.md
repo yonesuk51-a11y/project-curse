@@ -1,6 +1,13 @@
 # Project Curse U.A.C Closed Server
 
-Current build: `5.54.0 The World Before Institutions`
+Current build: `6.0.0 합동작전 단말` — 변경 내역은 `CHANGELOG_Remake6_0.md`.
+
+6.0.0은 표시층을 새로 만든 리메이크다. `index.html`은 2042년 합동작전 단말이며, 현대 전술 × 오컬트 판타지 × 호러를 축으로 SF·스릴러·액션·블랙 코미디·재난·아포칼립스·고어를 장치로 드러낸다. 채널은 단말 상태·상황 관제·세계 기록·세력 분석·기록보관소·인물 기록·교전 교범 일곱 개다. 사실 데이터와 보호 기록의 사실은 유지하고 문장·문양·화면을 새로 썼다.
+
+- 작업 규칙: `AGENTS.md` · 화면 기준: `PROJECT_CURSE_ART_DIRECTION_GUIDE.md` · 코드 구조: `PROJECT_CURSE_APP_SPEC.md` · 문체: `WRITING_STYLE_GUIDE.md` · 정사: `WORLD_CANON_LEDGER.md`
+- 검증: `node tools/verify-app.mjs`, `node tools/verify-data.mjs`
+
+## 이전 판 기록 (5.x)
 
 5.54.0은 세계관의 중심을 기관 연혁에서 기관 이전부터 존재한 균열·성채·봉인관습으로 옮긴다. 세계 기록에 기원 불명의 최초 균열부터 냉전기 비인가 대응계획까지 여섯 전사 기록을 추가하고, 실제 전쟁·역병을 초자연 현상의 원인으로 바꾸지 않는 역사 경계를 명시했다. 리버스·괴이·타락자·능력자를 분리하고, 일곱 발현 경로에는 신체·기억·신원·의지의 대가가 따른다는 세계 기본법을 공개 화면에 배치했다. 인물 화면은 현재 이름·역할·상태·핵심 사건을 먼저 보여주며 과거와 관계는 선택해서 펼치는 구조로 축약했다. 구 명부명과 별칭은 검색 호환을 위해 데이터에만 보존한다.
 
