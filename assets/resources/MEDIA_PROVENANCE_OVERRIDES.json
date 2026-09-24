@@ -252,6 +252,142 @@
       "release": "PROJECT_GENERATED",
       "source": "세계 기본 규칙의 타락자 정의 기반 분석 재구성 (2026-09-24 지옥 그림체)",
       "handling": "특정 피격리자의 신원, 변질 원인·경과, 실제 관찰 기록의 증거로 표시 금지. 괴이와 같은 범주로 표시하지 않음"
+    },
+    "assets/faction_marks/v3/uac.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "U.A.C 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(중앙 흑원·이중 격리환·네 접근축) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/nhc.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "N.H.C 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(중앙 방어축·좌우 회랑·네 임무점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/sid.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "S.I.D 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(이중 렌즈·분할 프레임·중앙 증거점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/fhc.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "F.H.C 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(붉은 렌즈·육각 연구틀·세 자산점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/syndicate.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "S.O.N 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(파손된 외곽환·절단축·외향 화살) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/ushinoda.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "우시노다교 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(세 갈래 획·빈 중심·열린 하단) 기준 (2026-09-24 사용자 채택)",
+      "handling": "감식 재구성 표상. 세력이 직접 승인한 공식 휘장으로 표시하지 않는다."
+    },
+    "assets/faction_marks/v3/haimun.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "P.O.H 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(빈 화물칸·세 개의 유입로·절취선) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/ashcrew.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "Ash Crew 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(인식표·잔불·교차 회수구) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/arf.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "A.R.F 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(삼각 회수틀·균열 핵·상부 견인고리) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/cpd.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "C.P.D 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(열린 방패·세 인원점·분기 통로) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/amarion.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "Amarion 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(삼각 좌표·어긋난 중심축·세 관측점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/corruption-cult.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "타락교 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(비대칭 생체 가지·세 갈래 공통축·열린 성장점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/blood-cult.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "혈교 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(닫힌 혈액 방울·좌우 유입축·하부 결속점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/shadow-cult.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "그림자교 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(어긋난 두 축·끊긴 외곽환·공유 하부점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "감식 재구성 표상. 세력이 직접 승인한 공식 휘장으로 표시하지 않는다."
+    },
+    "assets/faction_marks/v3/first-apostle.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "첫 번째 사도 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(닫힌 이중환·삼권능 중첩·상부 선행점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "감식 재구성 표상. 세력이 직접 승인한 공식 휘장으로 표시하지 않는다."
+    },
+    "assets/faction_marks/v3/southern-blood.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "남부 혈교 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(뒤집힌 전시 왕관·폐쇄된 혈액핵·세 작전축) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
+    },
+    "assets/faction_marks/v3/deadzone-blood.png": {
+      "credit": "Project Curse faction mark registry (3rd unification) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "데드존 혈교 세력 마크 3차 통일 이미지 등록본 — 등록 상징 세 개(열린 혈액 방울·관통 순례로·두 피난 거점) 기준 (2026-09-24 사용자 채택)",
+      "handling": "세력 문양 감식 등록본. 실제 부대 마크나 실존 조직의 휘장으로 쓰지 않는다."
     }
   }
 }

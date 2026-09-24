@@ -107,3 +107,27 @@ The user adopted all six genre evidence images from the Codex job `output/imageg
 | `derived/nhc-close-quarters-stairwell-concept-v1.png` | RECONSTRUCTED | `NHC_Manual_891219` section “접촉과 교전”; field manual screen | Close-quarters response in a sealed urban facility illustrating the manual’s contact rules (limit approach, keep the withdrawal route): two covering shooters, one rescuer dragging a wounded operator, a flesh entity above. | `분석 재구성 / 특정 작전 기록 아님` |
 | `derived/black-forest-citadel-night-refuge-concept-v1.png` | RECONSTRUCTED | `deep-citadel-charters` world record | The night-refuge custom as it continues at a 2040s Great Black Forest citadel: five adult travelers entering between two watchmen, a bell tower above the gate. Not a depiction of the original charter period. | `분석 재구성 / 헌장 당시 장면 아님` |
 | `derived/corrupted-isolation-observation-concept-v1.png` | RECONSTRUCTED | World rules, ontology `PERSON` (타락자) | An adult seated behind frosted observation glass; only the backlit silhouette (bone spines, a longer neck, an extra bend in one arm) and a six-fingered handprint show the change. No wounds, restraints or distress are depicted. | `분석 재구성 / 특정 피격리자 아님` |
+
+## 2026-09-24 faction marks v3 adoption
+
+The user adopted the 17 faction marks redrawn as images (`output/imagegen/20260924-marks-v3/`, Codex image generation) and asked for them to replace the site marks. Each mark keeps the three registered symbols of `faction-mark-registry.js`; the cult marks keep the shared three-stroke root, and the C/D-confidence marks (우시노다교, 그림자교, 첫 번째 사도) carry faint grid and dashed construction lines as forensic reconstructions. Flat two-tone emblems (bone white plus one registry accent) on `#141318`, 1024×1024 PNG, no readable text, real unit marks, flags or copied reference emblems. The registry now points `asset` to `faction_marks/v3/<key>.png` and keeps the 2nd-unification vector master as `previousAsset`. The files are small (about 27 KB each), so no responsive derivatives were made. The SVG proposal on branch `codex/marks` was not adopted.
+
+| Asset | Class | Used by | Source and handling | Required public label |
+|---|---|---|---|---|
+| `faction_marks/v3/uac.png` | RECONSTRUCTED | Faction dossier mark board (U.A.C) | Registered symbols: 중앙 흑원 · 이중 격리환 · 네 접근축. Confidence A. | `감식 A` |
+| `faction_marks/v3/nhc.png` | RECONSTRUCTED | Faction dossier mark board (N.H.C) | Registered symbols: 중앙 방어축 · 좌우 회랑 · 네 임무점. Confidence A. | `감식 A` |
+| `faction_marks/v3/sid.png` | RECONSTRUCTED | Faction dossier mark board (S.I.D) | Registered symbols: 이중 렌즈 · 분할 프레임 · 중앙 증거점. Confidence A. | `감식 A` |
+| `faction_marks/v3/fhc.png` | RECONSTRUCTED | Faction dossier mark board (F.H.C) | Registered symbols: 붉은 렌즈 · 육각 연구틀 · 세 자산점. Confidence A. | `감식 A` |
+| `faction_marks/v3/syndicate.png` | RECONSTRUCTED | Faction dossier mark board (S.O.N) | Registered symbols: 파손된 외곽환 · 절단축 · 외향 화살. Confidence B. | `감식 B` |
+| `faction_marks/v3/ushinoda.png` | RECONSTRUCTED | Faction dossier mark board (우시노다교) | Registered symbols: 세 갈래 획 · 빈 중심 · 열린 하단. Confidence C. Forensic reconstruction, not an approved emblem. | `감식 C` |
+| `faction_marks/v3/haimun.png` | RECONSTRUCTED | Faction dossier mark board (P.O.H) | Registered symbols: 빈 화물칸 · 세 개의 유입로 · 절취선. Confidence B. | `감식 B` |
+| `faction_marks/v3/ashcrew.png` | RECONSTRUCTED | Faction dossier mark board (Ash Crew) | Registered symbols: 인식표 · 잔불 · 교차 회수구. Confidence A. | `감식 A` |
+| `faction_marks/v3/arf.png` | RECONSTRUCTED | Faction dossier mark board (A.R.F) | Registered symbols: 삼각 회수틀 · 균열 핵 · 상부 견인고리. Confidence A. | `감식 A` |
+| `faction_marks/v3/cpd.png` | RECONSTRUCTED | Faction dossier mark board (C.P.D) | Registered symbols: 열린 방패 · 세 인원점 · 분기 통로. Confidence A. | `감식 A` |
+| `faction_marks/v3/amarion.png` | RECONSTRUCTED | Faction dossier mark board (Amarion) | Registered symbols: 삼각 좌표 · 어긋난 중심축 · 세 관측점. Confidence A. | `감식 A` |
+| `faction_marks/v3/corruption-cult.png` | RECONSTRUCTED | Faction dossier mark board (타락교) | Registered symbols: 비대칭 생체 가지 · 세 갈래 공통축 · 열린 성장점. Confidence B. | `감식 B` |
+| `faction_marks/v3/blood-cult.png` | RECONSTRUCTED | Faction dossier mark board (혈교) | Registered symbols: 닫힌 혈액 방울 · 좌우 유입축 · 하부 결속점. Confidence B. | `감식 B` |
+| `faction_marks/v3/shadow-cult.png` | RECONSTRUCTED | Faction dossier mark board (그림자교) | Registered symbols: 어긋난 두 축 · 끊긴 외곽환 · 공유 하부점. Confidence C. Forensic reconstruction, not an approved emblem. | `감식 C` |
+| `faction_marks/v3/first-apostle.png` | RECONSTRUCTED | Faction dossier mark board (첫 번째 사도) | Registered symbols: 닫힌 이중환 · 삼권능 중첩 · 상부 선행점. Confidence D. Forensic reconstruction, not an approved emblem. | `감식 D` |
+| `faction_marks/v3/southern-blood.png` | RECONSTRUCTED | Faction dossier mark board (남부 혈교) | Registered symbols: 뒤집힌 전시 왕관 · 폐쇄된 혈액핵 · 세 작전축. Confidence B. | `감식 B` |
+| `faction_marks/v3/deadzone-blood.png` | RECONSTRUCTED | Faction dossier mark board (데드존 혈교) | Registered symbols: 열린 혈액 방울 · 관통 순례로 · 두 피난 거점. Confidence B. | `감식 B` |
