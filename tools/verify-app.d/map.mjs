@@ -8,6 +8,61 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
   const legacyMap=read('tools/fixtures/legacy-app/assets/js/pages/map-room.js').replace(/\r\n/g,'\n');
   const stateSources=['operation-state','pilgrimage-state','verdict-archive-state'].map(n=>read(`tools/fixtures/legacy-app/assets/js/core/${n}.js`));
   const equal=(a,b)=>assert.equal(JSON.stringify(a),JSON.stringify(b));
+  // 2026-09-25 승인된 이름과 표 머리의 전체 문자열만 바꾼 기대값이다.
+  // 단어를 일괄 치환하지 않으므로 다른 문장·식별자·판정·저장값은 여전히 원문과 같아야 한다.
+  const approvedLegacyText = new Map([
+    [
+      "성위대 지휘관이 남방 특수부대 출신이라는 기록과, 그가 생존해 있을 경우 처형하라는 명령문이 함께 회수됐다.",
+      "성위대 지휘관이 혈맹 특수부대 출신이라는 기록과, 그가 생존해 있을 경우 처형하라는 명령문이 함께 회수됐다."
+    ],
+    [
+      "남부 혈교 강경파의 전후 지휘권",
+      "남방 혈맹 강경파의 전후 지휘권"
+    ],
+    [
+      "어느 선택도 남부 혈교를 우시노다 중앙 혈교의 확정 후계로 만들지 않으며, 데드존 혈교를 남부 지휘 아래 재편입시키지 않는다. 같은 표식·의식·일시적 교신은 동일한 지휘 계보의 증거가 아니다.",
+      "어느 선택도 남방 혈맹을 혈교의 확정 후계로 만들지 않으며, 데드존 혈교를 혈맹 지휘 아래 재편입시키지 않는다. 같은 표식·의식·일시적 교신은 동일한 지휘 계보의 증거가 아니다."
+    ],
+    [
+      "처형 명령의 원 발신자와 지휘관의 실제 충성은 확인되지 않았다. 남부 강경파가 전후 지휘권을 장악했다는 결론도 승인되지 않았다.",
+      "처형 명령의 원 발신자와 지휘관의 실제 충성은 확인되지 않았다. 혈맹 강경파가 전후 지휘권을 장악했다는 결론도 승인되지 않았다."
+    ],
+    [
+      "현재 지도 사본에서 지휘망 붕괴와 소환진 재활성 위험을 추적한다. 남부 전체의 권력 승계는 미확정이다.",
+      "현재 지도 사본에서 지휘망 붕괴와 소환진 재활성 위험을 추적한다. 혈맹 전체의 권력 승계는 미확정이다."
+    ],
+    [
+      "지휘관이 남방 명령에 불복한 것인지, 더 깊은 침투를 위해 협조한 것인지는 판단할 수 없다.",
+      "지휘관이 혈맹 명령에 불복한 것인지, 더 깊은 침투를 위해 협조한 것인지는 판단할 수 없다."
+    ],
+    [
+      "남부 강경파의 공개 적대, 지휘관의 장기 충성, 데드존 혈교의 공식 가담 여부는 확정되지 않았다.",
+      "혈맹 강경파의 공개 적대, 지휘관의 장기 충성, 데드존 혈교의 공식 가담 여부는 확정되지 않았다."
+    ],
+    [
+      "현재 지도 사본에 공동 차단선과 비인가 교신을 표시한다. 데드존 혈교가 남부 또는 U.A.C 지휘에 편입된 것은 아니다.",
+      "현재 지도 사본에 공동 차단선과 비인가 교신을 표시한다. 데드존 혈교가 혈맹 또는 U.A.C 지휘에 편입된 것은 아니다."
+    ],
+    [
+      "남부 쿠데타",
+      "남방 쿠데타"
+    ],
+    [
+      "남부 해안의 집단 소환과 성위대 침투가 한 작전으로 수렴한다. 지휘 계통은 이미 오염됐다.",
+      "남방 해안의 집단 소환과 성위대 침투가 한 작전으로 수렴한다. 지휘 계통은 이미 오염됐다."
+    ],
+    [
+      "열람 상태",
+      "읽음 상태"
+    ]
+  ]);
+  const approvedLegacy = value => {
+    if (typeof value === 'string') return approvedLegacyText.get(value) ?? value;
+    if (Array.isArray(value)) return value.map(approvedLegacy);
+    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, approvedLegacy(item)]));
+    return value;
+  };
+  const equalLegacy = (before, after) => equal(approvedLegacy(before), after);
   const check=(name,run)=>{try{const result=run();add(name,true,result||'');}catch(error){add(name,false,error.message);}};
   function runtime(modern,seed={}) {
     const storage=new Map(Object.entries(seed));
@@ -22,14 +77,14 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     else stateSources.forEach(s=>vm.runInContext(s,c));
     return {P:c.ProjectCursePilgrimageState,V:c.ProjectCurseVerdictArchiveState,O:c.ProjectCurseOperationState,storage};
   }
-  check('copied-operation-text-verbatim',()=>{
-    const old=runtime(false);equal(old.O.canonBoundary,context.ProjectCurseMapScreenData.canonBoundary);equal(old.O.decisions,context.ProjectCurseMapScreenData.decisions);
+  check('copied-operation-text-approved-names',()=>{
+    const old=runtime(false);equalLegacy(old.O.canonBoundary,context.ProjectCurseMapScreenData.canonBoundary);equalLegacy(old.O.decisions,context.ProjectCurseMapScreenData.decisions);
   });
-  check('copied-theaters-and-site-mappings-verbatim',()=>{
+  check('copied-theaters-approved-names-and-site-mappings-verbatim',()=>{
     const c={};vm.createContext(c);
     for(const key of ['theaters','scenarioStageByItem']){
       const pattern=key==='theaters'?/const theaters=\[[\s\S]*?\n    \];/:/const scenarioStageByItem=\{[\s\S]*?\n    \};/;
-      const match=legacyMap.match(pattern);assert.ok(match,key);vm.runInContext(match[0]+`;this.result=${key};`,c);equal(c.result,context.ProjectCurseMapScreenData[key]);
+      const match=legacyMap.match(pattern);assert.ok(match,key);vm.runInContext(match[0]+`;this.result=${key};`,c);equalLegacy(c.result,context.ProjectCurseMapScreenData[key]);
     }
   });
   check('operation-four-decisions-and-reload-parity',()=>{
@@ -37,9 +92,9 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
       const old=runtime(false),next=runtime(true);
       assert.equal(next.O.chooseVerdict(decision),false);
       for(const id of old.O.branchIds){old.O.visitBranch(id);next.O.visitBranch(id);equal(old.O.get(),next.O.get());}
-      old.O.chooseVerdict(decision);next.O.chooseVerdict(decision);equal(old.O.getSummary(),next.O.getSummary());
+      old.O.chooseVerdict(decision);next.O.chooseVerdict(decision);equalLegacy(old.O.getSummary(),next.O.getSummary());
       for(const step of [-1,2,99]){old.O.setMapStep(step);next.O.setMapStep(step);equal(old.O.get(),next.O.get());}
-      equal(runtime(true,Object.fromEntries(old.storage)).O.getSummary(),old.O.getSummary());
+      equalLegacy(old.O.getSummary(),runtime(true,Object.fromEntries(old.storage)).O.getSummary());
     }
   });
   check('all-reactive-pilgrimage-paths-and-verdict-documents',()=>{
@@ -52,7 +107,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
         equal(old.P.get(id),next.P.get(id));equal(old.P.getSummary(id),next.P.getSummary(id));equal(old.P.getStage(id),next.P.getStage(id));states++;
         if(old.P.get(id).status==='complete'){
           ends++;reached.add(`${id}/${old.P.get(id).ending}`);equal(old.V.list(),next.V.list());
-          for(const entry of old.V.list().filter(e=>e.unlocked))equal(old.V.getDocument(entry.id),next.V.getDocument(entry.id));
+          for(const entry of old.V.list().filter(e=>e.unlocked))equalLegacy(old.V.getDocument(entry.id),next.V.getDocument(entry.id));
         }else{
           assert.ok(path.length<8,'scenario failed to terminate');
           for(const choice of old.P.getStage(id).choices)queue.push([...path,choice.id]);
@@ -138,6 +193,43 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     assert.ok(host.visibleText(true).includes(op.steps[0].units[0].id));
     assert.ok(host.visibleText(true).includes(`X ${op.steps[0].units[0].x}`));
     screen.hide();return `전체 ${full}개 / 간략 ${brief}개 영문 토큰 · DOM 대역 기준`;
+  });
+  check('approved-screen-words-and-detail-heroes',()=>{
+    const {c,host,screen}=screenHarness(context,source,stateSource),heads=[];
+    const screenHead=c.PCApp.screenHead;
+    c.PCApp.screenHead=(id,options)=>{heads.push({id,...options});return screenHead(id,options);};
+    screen.show([],c.PCApp);
+    assert.equal(heads.at(-1).title,'작전 지도');assert.equal(heads.at(-1).hero,undefined);
+    assert.equal(host.querySelector('.tc-map-toolbar').getAttribute('aria-label'),'작전 지도 탐색');
+    assert.ok(host.querySelectorAll('a').some(a=>a.textContent==='지도 목록'&&a.attrs.href==='#map-room'));
+    for(const word of ['신호 목록','지역 목록','지역 상세 지도','작전 진행'])assert.ok(host.visibleText(true).includes(word),word);
+    const paths=[['region','world'],['region','eastasia-northern-front'],['marker','tokyo'],['synchrony','three-night-silence'],['op','op-immortality'],['pilgrimage','unlit-fortress'],['verdict'],['op','없는-작전']];
+    for(const parts of paths){screen.show(parts,c.PCApp);assert.equal(heads.at(-1).hero,false,parts.join('/'));}
+    screen.show(['synchrony','three-night-silence'],c.PCApp);
+    const terms=()=>host.querySelectorAll('dt').map(node=>node.textContent);
+    assert.ok(terms().includes('성채 타종 장부'));assert.ok(terms().includes('관측 지점'));
+    screen.show(['op','op-immortality'],c.PCApp);
+    assert.ok(host.textContent.includes('현재까지의 통신 기록'));assert.ok(terms().includes('지역'));
+    const operation=context.ProjectCurseMapRoom.operations.find(item=>item.id==='op-immortality');
+    assert.ok(host.textContent.includes(operation.summary));assert.ok(host.textContent.includes(operation.steps[0].note));
+    assert.doesNotMatch(source,/상황 관제|관제 목록|신호 색인|작전 경과|권역 상세도|교신 기록|위치 보류/);
+    const copy=context.ProjectCurseMapScreenData.copy;
+    assert.equal(copy.timelineUnknown,'연도 알 수 없음');assert.ok(copy.withheld.startsWith('위치 공개 보류는'));
+    assert.ok(copy.signalBoundary.includes('관측 지점'));assert.ok(copy.archive.includes('판정 기록'));
+    screen.hide();
+  });
+  check('verdict-korean-fields-and-verbatim-body',()=>{
+    const {c,host,screen}=screenHarness(context,source,stateSource),P=c.ProjectCursePilgrimageState,V=c.ProjectCurseVerdictArchiveState;
+    P.start('deadzone-return');while(P.get('deadzone-return').status==='active')P.choose(P.getStage('deadzone-return').choices[0].id,'deadzone-return');
+    const entry=V.list().find(item=>item.unlocked),document=V.getDocument(entry.id);
+    screen.show(['verdict',entry.id],c.PCApp);
+    const terms=host.querySelectorAll('dt').map(node=>node.textContent);
+    for(const term of ['읽음 상태','기록 코드','문서 종류','보낸 곳','받는 곳','근거','기록 한계'])assert.ok(terms.includes(term),term);
+    const record=document.sections[0].record;
+    for(const [key,value] of Object.entries(record))assert.ok((key==='code'?host.visibleText():host.visibleText(true)).includes(value),key);
+    assert.ok(!host.visibleText(true).includes(record.code));
+    for(const section of document.sections){for(const text of section.paragraphs||[])assert.ok(host.textContent.includes(text));if(section.quote)assert.ok(host.textContent.includes(section.quote));}
+    screen.hide();
   });
   check('fx-override-static-layers-and-listener-cleanup',()=>{
     const {c,host,screen,timers,timeouts,media}=screenHarness(context,source,stateSource);
@@ -263,7 +355,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     const preview=host.querySelector('.tc-map-preview'),figure=preview.querySelector('figure'),visual=context.ProjectCurseMapRoom.drilldowns[0].visual;
     assert.equal(figure.dataset.record,visual.assetId);assert.equal(figure.dataset.dtg,undefined);assert.equal(figure.dataset.place,undefined);
     assert.equal(figure.attrs['data-record'],visual.assetId);assert.equal(figure.querySelector('.tc-evidence-media img').closest('a'),null);
-    assert.ok(preview.textContent.includes('촬영 시각: 미상'));assert.equal(navigations.length,0);
+    assert.ok(preview.textContent.includes('촬영 시각: 알 수 없음'));assert.equal(navigations.length,0);
     const slider=host.querySelector('#tc-map-year');slider.value=1985;host.emit('input',slider);assert.equal(preview.hidden,true);click('north-distributed-nodes');assert.equal(preview.hidden,true);
     slider.value=2042;host.emit('input',slider);
     click('north-lanzhou-perimeter');assert.ok(preview.textContent.includes('연결된 현장 사진 없음'));assert.equal(preview.querySelector('img'),null);
