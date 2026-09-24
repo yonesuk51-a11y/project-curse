@@ -84,7 +84,18 @@
     'assets/resources/derived/mikage-shiori-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     // 2026-09-25 사용자 채택 — 피탈자 장면 2장
     'assets/resources/derived/pitalja-roe-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
-    'assets/resources/derived/pitalja-blood-exit-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
+    'assets/resources/derived/pitalja-blood-exit-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    // 2026-09-25 사용자 채택 — 4차 묶음 세계 기록 10장
+    'assets/resources/derived/first-breach-sealed-gate-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/city-barrier-2003-checkpoint-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/continuity-withdrawal-2007-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/northern-front-2018-breach-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/inland-beacon-31-relay-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'}
   };
 
   const normalize=src=>{

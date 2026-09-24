@@ -195,3 +195,20 @@ The user adopted both scenes of the taken-civilian (피탈자) pass (`output/ima
 |---|---|---|---|---|
 | `derived/pitalja-roe-concept-v1.png` | RECONSTRUCTED | Field manual section `피탈자 교전 규칙` | Two N.H.C operators keep distance, one raising a warning hand and one readying restraints, as three adult taken civilians in everyday clothes shamble closer. | `분석 재구성` |
 | `derived/pitalja-blood-exit-concept-v1.png` | RECONSTRUCTED | World rules `리버스 지점의 피탈자` | A dark red clot leaves a fallen taken body and crawls along blood trails; an A.R.F worker covers the floor drain first while another opens a sealed case. | `분석 재구성` |
+
+## 2026-09-25 batch D adoption
+
+The user adopted all ten world-history scenes of Codex batch D (`output/imagegen/20260925-batchD-*`). The 1995-03-20 Tokyo record was deliberately not drawn because it coincides with a real tragedy. No readable text, logos, real unit marks, invented insignia, children or sexual content. 480px and 960px WebP derivatives registered with `tone:'low-key'`.
+
+| Asset | Class | Used by | Source and handling | Required public label |
+|---|---|---|---|---|
+| `derived/first-breach-sealed-gate-concept-v1.png` | RECONSTRUCTED | World record `deep-first-breach` | An ancient underground gate with layered, re-drawn seal marks; robed adults kneel with a lantern. Nothing beyond the gate is drawn. | `분석 재구성` |
+| `derived/city-barrier-2003-checkpoint-concept-v1.png` | RECONSTRUCTED | World record `2003-02-05-city-barrier` | A 2003 urban screening point under an overpass: cabled barrier equipment and a queue of adult citizens. No neon or holograms. | `분석 재구성` |
+| `derived/ubermensch-raid-2006-extraction-concept-v1.png` | RECONSTRUCTED | World record `2006-08-20-ubermensch-raid` | Armed personnel lead blanket-wrapped adults out of a night facility corridor; one unmarked case suggests the records taken. | `분석 재구성` |
+| `derived/continuity-withdrawal-2007-concept-v1.png` | RECONSTRUCTED | World record `2007-03-11-continuity-withdrawal` | An emptied inland command office at dusk; through the window, adults load records and equipment onto withdrawal vehicles. | `분석 재구성` |
+| `derived/gbf-survey-2012-return-marker-concept-v1.png` | RECONSTRUCTED | World record `2012-11-19-great-black-forest-survey` | A survey team with a tripod and lantern stops before their own notched start marker; footprints loop back to it. No entity drawn. | `분석 재구성` |
+| `derived/northern-front-2018-breach-concept-v1.png` | RECONSTRUCTED | World record `2018-09-12-northern-front` | Dawn at an industrial barrier line: dark red flesh creatures pour through broken fencing while soldiers hold a position. No flags or unit marks. | `분석 재구성` |
+| `derived/fhc-submassacres-2021-corridor-concept-v1.png` | RECONSTRUCTED | World record `2021-05-04-fhc-submassacres` | An isolation corridor after the facilities turned on each other: a toppled cart, partly hidden adult remains and dark red pools under one fluorescent light. | `분석 재구성` |
+| `derived/ushinoda-fabrication-2024-review-concept-v1.png` | RECONSTRUCTED | World record `2024-03-17-ushinoda-fabrication` | Two analysts compare four teal monitors showing the same doorway and figure with mismatched outlines. No text or timecodes. | `분석 재구성` |
+| `derived/mass-summoning-2028-rehearsal-site-concept-v1.png` | RECONSTRUCTED | World record `2028-07-25-mass-summoning-rehearsal` | A night city plaza with a rough scratched circle and a low lavender afterglow; response vehicle lights approach from a distant street. | `분석 재구성` |
+| `derived/inland-beacon-31-relay-concept-v1.png` | RECONSTRUCTED | World record `2034-04-22-inland-beacon-31` | One operator sits before a lit receiver in a dark coastal relay room; the inland beyond the window is hazy. No readable displays. | `분석 재구성` |

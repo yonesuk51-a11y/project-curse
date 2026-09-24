@@ -442,6 +442,77 @@
   };
 
   const recordVisuals={
+    // 2026-09-25 사용자 채택 — 4차 묶음 세계 기록 10장
+    'deep-first-breach':{
+      src:'assets/resources/derived/first-breach-sealed-gate-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 지하문의 틈 앞에서 옛 복장의 성인들이 겹쳐 칠해진 자국을 다시 문지르고 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / FORGOTTEN SEAL',
+      caption:'닫는 법을 잊었다는 전승을 지하문 앞의 반복된 봉인 시도로 옮겼다. 전승들이 같은 사건을 가리키는지, 문 너머에 무엇이 있었는지, 봉인이 작동했는지는 확정하지 않는다.'
+    },
+    '2003-02-05-city-barrier':{
+      src:'assets/resources/derived/city-barrier-2003-checkpoint-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'도시 고가도로 아래 케이블로 연결된 차단 장비와 검색대 앞에 성인 시민들이 줄을 서 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / CITY BARRIER 2003',
+      caption:'2003년 도심 차단 장비와 초기 이상 탐지를 위한 검색 지점을 그렸다. 장비의 상세 구조와 이 검색 지점의 실제 위치, 이후 봉쇄 결과는 확정하지 않는다.'
+    },
+    '2006-08-20-ubermensch-raid':{
+      src:'assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'야간 시설 복도에서 담요를 두른 성인들이 얼굴을 가린 채 무장 인원의 인도를 받아 모퉁이를 돌아 나간다.',
+      label:'INTERPRETIVE RECONSTRUCTION / FACILITY EXTRACTION',
+      caption:'위버멘시 미국 지부에서 성인 방랑자들과 연구자료를 옮기는 대열 일부를 그렸다. 화면 속 인물의 신원, 구출된 열 명의 전체 모습과 이후 행선지는 확정하지 않는다.'
+    },
+    '2007-03-11-continuity-withdrawal':{
+      src:'assets/resources/derived/continuity-withdrawal-2007-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'비워진 내륙 지휘실의 창 너머로 성인 인원들이 철수 차량에 기록과 장비를 싣고 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / INLAND WITHDRAWAL',
+      caption:'내륙 지휘기능을 비우고 대응 자산을 해안권으로 철수시키던 과정을 그렸다. 차량의 최종 도착지와 이동 결과, 국가의 법적 해체 여부는 이 장면으로 확정하지 않는다.'
+    },
+    '2012-11-19-great-black-forest-survey':{
+      src:'assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'측량 장비를 든 성인 대원들이 칼자국 난 출발 말뚝과 그쪽으로 돌아오는 발자국 앞에 멈춰 서 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / RETURN TO MARKER',
+      caption:'출발 표식을 다시 마주친 공동 측량대의 귀환 한 순간을 그렸다. 발자국의 실제 경로, 숲 내부의 거리와 귀환 현상의 원인은 확정하지 않는다.'
+    },
+    '2018-09-12-northern-front':{
+      src:'assets/resources/derived/northern-front-2018-breach-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'새벽 산업지대 차단선의 무너진 철망 너머로 검붉은 살과 이빨의 괴이들이 밀려오고 성인 병사들이 방어진지를 지킨다.',
+      label:'INTERPRETIVE RECONSTRUCTION / NORTHERN LINE BREACH',
+      caption:'북부전선 개전 당시 차단선 돌파를 방어하는 한 국면을 그렸다. 짐승의 길의 전체 전력과 괴이의 확정 외형, 화면 밖 전투의 승패는 확정하지 않는다.'
+    },
+    '2021-05-04-fhc-submassacres':{
+      src:'assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'형광등 하나가 켜진 격리 복도에 넘어진 운반대와 부분적으로 가려진 성인 유해, 검붉은 웅덩이가 남아 있다.',
+      label:'INTERPRETIVE RECONSTRUCTION / ISOLATION CORRIDOR — 상충 기록',
+      caption:'F.H.C 내부 시설의 상호 공격 뒤 남았을 격리 복도를 한 가능성으로 그렸다. 최초 명령자와 가해 주체, 피해자의 신원·오염 여부와 전체 사망자 수는 확정하지 않는다.'
+    },
+    '2024-03-17-ushinoda-fabrication':{
+      src:'assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 판독실의 분석원들이 청록색 화면에 반복된 문과 인물 윤곽의 어긋남을 나란히 대조한다.',
+      label:'INTERPRETIVE RECONSTRUCTION / COMPOSITE REVIEW',
+      caption:'서로 다른 사건을 합성한 영상의 인물 윤곽과 배경을 대조하는 감식 과정을 그렸다. 화면 속 인물의 신원과 실제 회수 프레임의 형태, 교단의 존재 여부는 이 그림으로 확정하지 않는다.'
+    },
+    '2028-07-25-mass-summoning-rehearsal':{
+      src:'assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'밤의 도시 광장에 문양 없는 거친 원형 긁힘과 낮은 라벤더색 잔광이 남고 먼 길목에서 대응 차량 불빛이 접근한다.',
+      label:'INTERPRETIVE RECONSTRUCTION / REHEARSAL SITE',
+      caption:'도시권 집단소환 예행 가운데 한 장소의 잔류 흔적과 접근하는 대응 차량을 그렸다. 실제 잔류물의 구조와 소환 규모, 다른 도시와의 지리적 연결 및 다음 목표는 확정하지 않는다.'
+    },
+    '2034-04-22-inland-beacon-31':{
+      src:'assets/resources/derived/inland-beacon-31-relay-concept-v1.png',
+      className:'RECONSTRUCTED',
+      alt:'어두운 해안 중계실에서 성인 운용자 한 명이 켜진 수신기 앞에 앉아 있고 창 너머 내륙은 흐릿하다.',
+      label:'INTERPRETIVE RECONSTRUCTION / BEACON 31',
+      caption:'폐쇄된 해안 중계기의 정비 시험 중 응답열을 듣는 운용자 한 명을 그렸다. 응답의 발신자와 실제 위치, 구조 요청의 진위 또는 구조 승인은 확정하지 않는다.'
+    },
     // 2026-09-25 사용자 승인(1~5번 진행) — 이미 채택한 그림을 사건 기록에 다시 쓴다.
     '1989-08-23-tokyo':{
       src:'assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png',

@@ -211,6 +211,36 @@
     }),
     'assets/resources/derived/pitalja-blood-exit-concept-v1.png':Object.freeze({
       assetId:'VEA-PTJ-BLD-01',className:'RECONSTRUCTED',source:'세계 기본 규칙 리버스 지점의 피탈자(worldFramework.reverseSiteCivilians) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'피탈자의 몸이 죽은 뒤 괴이가 핏덩이로 빠져나오는 과정과 A.R.F의 배수구 차단 절차를 한 장면으로 옮긴 분석 재구성이다. 특정 현장과 피탈자의 신원, 핏덩이가 향한 곳은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/first-breach-sealed-gate-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-BREACH-01',className:'RECONSTRUCTED',source:'세계 기록(deep-first-breach) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'닫는 법을 잊었다는 전승을 지하문 앞의 반복된 봉인 시도로 옮겼다. 전승들이 같은 사건을 가리키는지, 문 너머에 무엇이 있었는지, 봉인이 작동했는지는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/city-barrier-2003-checkpoint-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-BARRIER-01',className:'RECONSTRUCTED',source:'세계 기록(2003-02-05-city-barrier) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'2003년 도심 차단 장비와 초기 이상 탐지를 위한 검색 지점을 그렸다. 장비의 상세 구조와 이 검색 지점의 실제 위치, 이후 봉쇄 결과는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-RAID-01',className:'RECONSTRUCTED',source:'세계 기록(2006-08-20-ubermensch-raid) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'위버멘시 미국 지부에서 성인 방랑자들과 연구자료를 옮기는 대열 일부를 그렸다. 화면 속 인물의 신원, 구출된 열 명의 전체 모습과 이후 행선지는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/continuity-withdrawal-2007-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-WITHDRAW-01',className:'RECONSTRUCTED',source:'세계 기록(2007-03-11-continuity-withdrawal) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'내륙 지휘기능을 비우고 대응 자산을 해안권으로 철수시키던 과정을 그렸다. 차량의 최종 도착지와 이동 결과, 국가의 법적 해체 여부는 이 장면으로 확정하지 않는다.'
+    }),
+    'assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-SURVEY-01',className:'RECONSTRUCTED',source:'세계 기록(2012-11-19-great-black-forest-survey) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'출발 표식을 다시 마주친 공동 측량대의 귀환 한 순간을 그렸다. 발자국의 실제 경로, 숲 내부의 거리와 귀환 현상의 원인은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/northern-front-2018-breach-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-NFRONT-01',className:'RECONSTRUCTED',source:'세계 기록(2018-09-12-northern-front) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'북부전선 개전 당시 차단선 돌파를 방어하는 한 국면을 그렸다. 짐승의 길의 전체 전력과 괴이의 확정 외형, 화면 밖 전투의 승패는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-SUBMAS-01',className:'RECONSTRUCTED',source:'세계 기록(2021-05-04-fhc-submassacres) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'F.H.C 내부 시설의 상호 공격 뒤 남았을 격리 복도를 한 가능성으로 그렸다. 최초 명령자와 가해 주체, 피해자의 신원·오염 여부와 전체 사망자 수는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-FABRIC-01',className:'RECONSTRUCTED',source:'세계 기록(2024-03-17-ushinoda-fabrication) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'서로 다른 사건을 합성한 영상의 인물 윤곽과 배경을 대조하는 감식 과정을 그렸다. 화면 속 인물의 신원과 실제 회수 프레임의 형태, 교단의 존재 여부는 이 그림으로 확정하지 않는다.'
+    }),
+    'assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-SUMMON-01',className:'RECONSTRUCTED',source:'세계 기록(2028-07-25-mass-summoning-rehearsal) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'도시권 집단소환 예행 가운데 한 장소의 잔류 흔적과 접근하는 대응 차량을 그렸다. 실제 잔류물의 구조와 소환 규모, 다른 도시와의 지리적 연결 및 다음 목표는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/inland-beacon-31-relay-concept-v1.png':Object.freeze({
+      assetId:'VEA-HIS-BEACON-01',className:'RECONSTRUCTED',source:'세계 기록(2034-04-22-inland-beacon-31) 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'폐쇄된 해안 중계기의 정비 시험 중 응답열을 듣는 운용자 한 명을 그렸다. 응답의 발신자와 실제 위치, 구조 요청의 진위 또는 구조 승인은 확정하지 않는다.'
     })
   });
 

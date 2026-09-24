@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 362,
-    "referenced": 362,
+    "registered": 392,
+    "referenced": 392,
     "unreferenced": 0,
     "review": 150,
-    "managed": 212,
+    "managed": 242,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 332,
+      "image": 362,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 194,
+      "PROJECT_GENERATED": 224,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 150,
+      "DELIVERY_DERIVATIVE": 170,
       "INTERFACE": 18,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 80,
+      "RECONSTRUCTED": 90,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -2881,6 +2881,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/city-barrier-2003-checkpoint-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2003-02-05-city-barrier) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "2003년 도심 차단 장비와 초기 이상 탐지를 위한 검색 지점을 그렸다. 장비의 상세 구조와 이 검색 지점의 실제 위치, 이후 봉쇄 결과는 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1785784,
+      "sha256": "578e43a45b5fa178979aaa2c93e546e9c31e05b06ebf99d1a34e6aad60aa4086",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2895,6 +2916,27 @@
         "assets/js/data/archive-document-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/continuity-withdrawal-2007-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2007-03-11-continuity-withdrawal) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "내륙 지휘기능을 비우고 대응 자산을 해안권으로 철수시키던 과정을 그렸다. 차량의 최종 도착지와 이동 결과, 국가의 법적 해체 여부는 이 장면으로 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1545732,
+      "sha256": "f6c19435f793b74cbe95da3ef224f9c021d4d81d85663fdd8f3e874fe90c6ca7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -3116,6 +3158,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2021-05-04-fhc-submassacres) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "F.H.C 내부 시설의 상호 공격 뒤 남았을 격리 복도를 한 가능성으로 그렸다. 최초 명령자와 가해 주체, 피해자의 신원·오염 여부와 전체 사망자 수는 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1741568,
+      "sha256": "e3dec3de8129086beef40afd6f5e231e8271b65179784223f1721b834d45ec7d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/first-apostle-three-traces-reconstruction-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3132,6 +3195,48 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-data.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/first-breach-sealed-gate-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(deep-first-breach) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "닫는 법을 잊었다는 전승을 지하문 앞의 반복된 봉인 시도로 옮겼다. 전승들이 같은 사건을 가리키는지, 문 너머에 무엇이 있었는지, 봉인이 작동했는지는 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1745656,
+      "sha256": "91409aaffc267e65b99904cae94abef2e6b8024f774572d70b0462eee81b2dc1",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2012-11-19-great-black-forest-survey) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "출발 표식을 다시 마주친 공동 측량대의 귀환 한 순간을 그렸다. 발자국의 실제 경로, 숲 내부의 거리와 귀환 현상의 원인은 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 2384405,
+      "sha256": "f858773184db4340211c449d96698b78de087f95543a8b7181c9d9854fa02489",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3198,6 +3303,27 @@
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/inland-beacon-31-relay-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2034-04-22-inland-beacon-31) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "폐쇄된 해안 중계기의 정비 시험 중 응답열을 듣는 운용자 한 명을 그렸다. 응답의 발신자와 실제 위치, 구조 요청의 진위 또는 구조 승인은 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1619565,
+      "sha256": "48e758d8b0ea331c1c258e8d1b29c2da8acf2654774d43200cd61d0734741d71",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -3310,6 +3436,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2028-07-25-mass-summoning-rehearsal) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "도시권 집단소환 예행 가운데 한 장소의 잔류 흔적과 접근하는 대응 차량을 그렸다. 실제 잔류물의 구조와 소환 규모, 다른 도시와의 지리적 연결 및 다음 목표는 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1692005,
+      "sha256": "3fb156203895875e4ffe3e1fd2dbc7e4c9e50e43fd10f1367e1328742e1e36c0",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/mikage-shiori-portrait-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3390,6 +3537,27 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-data.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/northern-front-2018-breach-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2018-09-12-northern-front) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "북부전선 개전 당시 차단선 돌파를 방어하는 한 국면을 그렸다. 짐승의 길의 전체 전력과 괴이의 확정 외형, 화면 밖 전투의 승패는 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1997558,
+      "sha256": "e74f162ac5d056ac3ad9e6cafe6b5cfbf5203e96d4aa7c0a742ae1c2149518c1",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3810,6 +3978,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2006-08-20-ubermensch-raid) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "위버멘시 미국 지부에서 성인 방랑자들과 연구자료를 옮기는 대열 일부를 그렸다. 화면 속 인물의 신원, 구출된 열 명의 전체 모습과 이후 행선지는 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1710112,
+      "sha256": "52092bafa9ec1fd624df675bba20ccb47342e84d250346051ba0a749ef2ccbad",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/ushinoda-basement-rite-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3824,6 +4013,27 @@
         "assets/js/data/faction-analysis-data.js",
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "세계 기록(2024-03-17-ushinoda-fabrication) 기반 분석 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "서로 다른 사건을 합성한 영상의 인물 윤곽과 배경을 대조하는 감식 과정을 그렸다. 화면 속 인물의 신원과 실제 회수 프레임의 형태, 교단의 존재 여부는 이 그림으로 확정하지 않는다.",
+      "credit": "Project Curse batch D scene brief / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1508560,
+      "sha256": "fc9a64eef1bc6bbebc3a1db83c664b651136722eba4139e359ef5969c35bb4eb",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
@@ -5006,6 +5216,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/city-barrier-2003-checkpoint-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/city-barrier-2003-checkpoint-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 8942,
+      "sha256": "27ac3783fa1b0b14480a0657fb642f59a6760d2a5afdb787af9007fd5dc08990",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/city-barrier-2003-checkpoint-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/city-barrier-2003-checkpoint-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/city-barrier-2003-checkpoint-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 27900,
+      "sha256": "a880c44a666fd1f66825ac1e46065ec3a67e3b3dfda1d93220aab26077805339",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/city-barrier-2003-checkpoint-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/civil-child-drill-empty-classroom-concept-v2-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5034,6 +5276,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/civil-child-drill-empty-classroom-concept-v2.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/continuity-withdrawal-2007-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/continuity-withdrawal-2007-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6584,
+      "sha256": "20f279ab30e4e9bde326dbb1ec422f60c9cfbe6fd5249fc8dfe83064d3ef7727",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/continuity-withdrawal-2007-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/continuity-withdrawal-2007-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/continuity-withdrawal-2007-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 19140,
+      "sha256": "7fcacf08ca06d36354f270ea79facd4515adb1399f3c0b4fad8b3f0d48301bb2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/continuity-withdrawal-2007-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -5358,6 +5632,102 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/fhc-submassacres-2021-corridor-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9586,
+      "sha256": "1ad52955dc232ed18b0bbf7a01737359eeda1916edb862ee7dec555ff04c9ba3",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/fhc-submassacres-2021-corridor-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 29242,
+      "sha256": "73f83f5032aca82f576a57e3b609ca59c949420b4190166983ef0ea55170af8b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/first-breach-sealed-gate-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/first-breach-sealed-gate-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7346,
+      "sha256": "446819aae77fb5e09e22d493166c035f18c6c46c7441a369364d3bb936e52b4f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/first-breach-sealed-gate-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/first-breach-sealed-gate-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/first-breach-sealed-gate-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 23700,
+      "sha256": "8b1258edf7cb80a87054e23741e96fa98180c76f49f662b674c2b3a7fdb182f2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/first-breach-sealed-gate-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/gbf-survey-2012-return-marker-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 18980,
+      "sha256": "ccdeb23ae837bc3580c5cc395c1184d89d370fba62dd3cf554363ff3db5fb659",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/gbf-survey-2012-return-marker-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 67470,
+      "sha256": "a1af8988d8fd360151c96f5dd7aea5448fe491ac4a8b4ded836c49b7202f9b76",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/great-black-forest_reconstructed-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5418,6 +5788,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/haimun-night-transfer-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/inland-beacon-31-relay-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/inland-beacon-31-relay-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 5736,
+      "sha256": "f8d834e32278db11b13ed0f6999d2acbebb2d7c6228b5714fc2bc1c5fbe13f02",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/inland-beacon-31-relay-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/inland-beacon-31-relay-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/inland-beacon-31-relay-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 17412,
+      "sha256": "62834d8cbf788379633a61b3068faf9abdc148e965b70126713876f26cc7af9d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/inland-beacon-31-relay-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -5550,6 +5952,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/mass-summoning-2028-rehearsal-site-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6214,
+      "sha256": "db4f8788b3c2576399d3cdd29f9682f5d09b68cebc8a47e1f361fa0d88452d22",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/mass-summoning-2028-rehearsal-site-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 20970,
+      "sha256": "0ee8e4f06f02a7f037c3965262ccca2fd5f4b3c9e27c3e4d709397fbe37f60f5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/mikage-shiori-portrait-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5642,6 +6076,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/north-sea-blood-lake-blockade-reconstruction-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/northern-front-2018-breach-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/northern-front-2018-breach-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 15274,
+      "sha256": "ae098494b79cff15cdf7f1d140a53b30648c9ba68a51282d43cbf9f0eb094c92",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/northern-front-2018-breach-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/northern-front-2018-breach-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/northern-front-2018-breach-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 50866,
+      "sha256": "16c46a4bd32d316e1c159d465fcc8918869d125702fa6d7323b9ad88d3bf76e9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/northern-front-2018-breach-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -6254,6 +6720,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/ubermensch-raid-2006-extraction-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 11444,
+      "sha256": "49766cdbdbcfd3023bc6c6c5d8871d9a6ef549e1953b04c7971747013037ef7b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ubermensch-raid-2006-extraction-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 33420,
+      "sha256": "32826caa0fdf7d23688fccbeffc36f8532a6e2b851822959629d30d7ed3a838b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/ushinoda-basement-rite-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -6282,6 +6780,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/ushinoda-basement-rite-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ushinoda-fabrication-2024-review-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 7304,
+      "sha256": "802906e090bd5b43a689c25d0336f851c4edd1076efdb9ad8c4f8dfd4dcd10b2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ushinoda-fabrication-2024-review-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 21208,
+      "sha256": "35aee81936b8c423d9597419685e0710e5cfacd4649969429e41f3d7f6b9ee06",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
