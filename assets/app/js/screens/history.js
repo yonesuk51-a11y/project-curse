@@ -381,6 +381,51 @@
     );
   }
 
+  /* ---------- 작전 경과 — 연결된 작전의 단계를 위상선으로 ---------- */
+  // 단계마다 가장 나쁜 부대 상태로 색을 정한다. 봉인 작전은 단계 내용을 보여주지 않는다.
+  const STATUS_RANK = { normal: 0, unstable: 1, unknown: 2, split: 3, lost: 4 };
+  const STATUS_CLASS = { normal: 'is-done', unstable: 'is-contact', unknown: 'is-unknown', split: 'is-loss', lost: 'is-loss' };
+  const STATUS_LABEL = { normal: '정상', unstable: '불안정', unknown: '미상', split: '분열', lost: '소실' };
+  const isSealed = (op) => Boolean(op.unlockVerdict) || /SEALED/.test(op.status || '');
+
+  function worstStatus(step) {
+    return (step.units || []).reduce((worst, unit) => ((STATUS_RANK[unit.status] ?? 0) > (STATUS_RANK[worst] ?? 0) ? unit.status : worst), 'normal');
+  }
+
+  function operationTrack(op) {
+    const steps = op.steps;
+    const sealed = isSealed(op);
+    const id = `tc-hist-op-${op.id}`;
+    return h('section.tc-panel.tc-hist-optrack', { 'aria-labelledby': id },
+      h('header.tc-panel-head', null,
+        h('div', null, h('span.tc-label', { text: `OPERATION TRACK · ${op.code}` }), h('h2', { id, text: `${op.label} — 작전 경과` })),
+        h('span.tc-code.tc-dim', { text: `${steps.length} STEPS · ${steps[0].time}–${steps[steps.length - 1].time}` })
+      ),
+      sealed
+        ? h('div.tc-panel-body', null, h('div.tc-note.tc-note--danger', null, h('b', { text: 'SEALED' }), h('p', { text: `${op.status || '판정 봉인'} — 경과 기록은 판정 이후 상황 관제에서 열람한다.` })))
+        : h('ol.tc-phase.tc-hist-phase', null, steps.map((step) => {
+          const status = worstStatus(step);
+          return h('li', { class: STATUS_CLASS[status] || 'is-done' },
+            h('time', { text: step.time }),
+            h('b', { text: step.title }),
+            h('span', { text: STATUS_LABEL[status] || status })
+          );
+        })),
+      h('div.tc-hist-optrack-foot', null,
+        h('a.tc-btn', { href: PC.href('map-room', 'op', op.id) }, sealed ? '상황 관제에서 봉인 상태 확인' : '지도에서 경과 재생', h('i', { 'aria-hidden': 'true', text: '›' }))
+      )
+    );
+  }
+
+  function operationTracks(record) {
+    const incidents = root.ProjectCurseIncidentNetwork?.incidentList?.filter((item) => item.history === record.id) || [];
+    const ops = root.ProjectCurseMapRoom?.operations || [];
+    const linked = [...new Set(incidents.map((incident) => incident.operation).filter(Boolean))]
+      .map((opId) => ops.find((op) => op.id === opId))
+      .filter((op) => op && op.steps && op.steps.length);
+    return linked.length ? h('div.tc-hist-optracks', null, linked.map(operationTrack)) : null;
+  }
+
   function counterPanel(record) {
     const counter = record.counterRecord;
     if (!counter) return null;
@@ -460,6 +505,7 @@
         fragments.map((fragment) => fragmentBlock(fragment, false)),
         counterPanel(record)
       ),
+      operationTracks(record),
       relatedLinks(record),
       h('nav.tc-hist-nav', { 'aria-label': '사건 기록 이동' },
         previous

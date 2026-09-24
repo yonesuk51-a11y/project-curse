@@ -12,8 +12,20 @@
 
   const SIGNAL_TONES = { critical: 'danger', unstable: 'caution', returned: 'info', recovered: 'ok' };
 
-  // 셸 상태 — 옛 홈의 상태 띠를 그대로 옮긴다.
-  const NODE_STATE = [['NETWORK', 'ISOLATED'], ['ARCHIVE', 'PARTIAL'], ['AUTHORITY', 'LIMITED'], ['THREAT', 'ESCALATED']];
+  // 단말 상태 — 옛 홈처럼 실제 데이터에서 센다.
+  function counts() {
+    const map = root.ProjectCurseMapRoom || {};
+    return {
+      records: root.ProjectCurseArchive?.publicRecords?.length || 0,
+      ops: operations().length,
+      regions: Math.max(0, (map.regions?.length || 1) - 1),
+      unresolved: root.ProjectCurseIncidentNetwork?.incidentList?.filter((item) => !['HISTORICAL', 'ARCHIVED'].includes(item.status)).length || 0
+    };
+  }
+  function nodeState() {
+    const c = counts();
+    return [['NETWORK', 'ISOLATED'], ['ARCHIVE', `${c.records} OPEN`], ['OPERATIONS', `${c.ops} ACTIVE`], ['UNRESOLVED', `${c.unresolved} SIGNALS`]];
+  }
 
   // 접촉 보고 — 작전 단계의 기입 문장에서 센서 값을 뽑아 보여준다.
   // 기입 문장이 바뀌어 값이 맞지 않으면 판독 막대를 그리지 않고 문장만 둔다.
@@ -131,16 +143,22 @@
   }
 
   /* ---------- 작전 목록 ---------- */
+  // 판정으로 봉인된 작전은 기입 내용을 보여주지 않는다. 열람은 상황 관제의 판정 절차를 따른다.
+  const isSealed = (op) => Boolean(op.unlockVerdict) || /SEALED/.test(op.status || '');
+
   function operationRow(op) {
     const steps = op.steps || [];
     const last = steps[steps.length - 1];
     const span = steps.length ? `${steps[0].time}–${last.time}` : '';
+    const sealed = isSealed(op);
     return h('a.tc-row.tc-home-op', { href: PC.href('map-room', 'op', op.id) },
       h('span.tc-row-time', { text: op.code }),
       h('span.tc-row-main', null,
         h('b', { text: op.label }),
         h('span', { text: op.region }),
-        last ? h('span.tc-home-op-last', null, h('time.tc-code', { text: last.time }), ` 최종 기입 — ${last.title}`) : null
+        sealed
+          ? h('span.tc-home-op-last', null, '최종 기입 — ', h('span.tc-redact', { role: 'img', 'aria-label': '봉인된 기입' }), ' 판정 이후 열람')
+          : last ? h('span.tc-home-op-last', null, h('time.tc-code', { text: last.time }), ` 최종 기입 — ${last.title}`) : null
       ),
       h('span.tc-row-meta', null,
         op.status ? PC.tag(op.status, /SEALED/.test(op.status) ? 'danger' : 'caution', { latin: true }) : PC.tag('RECOVERED TRACK', 'dim', { latin: true }),
@@ -155,7 +173,7 @@
     return h('section.tc-section.tc-home-ops', { 'aria-labelledby': 'tc-home-ops-title' },
       h('header.tc-section-head', null,
         h('div', null, h('span.tc-label', { text: 'OPERATIONS INDEX' }), h('h2#tc-home-ops-title', { text: '작전 기록' })),
-        h('p', { text: '복구된 이동 경로와 단계별 기입이 남은 작전. 지도에서 경과를 재생한다.' })
+        h('p', { text: `현재 ${counts().regions}개 권역에서 ${counts().ops}개 작전 채널이 응답 중이다. 지도에서 경과를 재생한다.` })
       ),
       ops.length ? h('div.tc-rows', null, ops.map(operationRow)) : PC.missing('NO OPERATIONS', 'ProjectCurseMapRoom.operations', '작전 데이터가 없습니다.')
     );
@@ -268,7 +286,7 @@
       PC.screenHead('terminal-home', {
         title: '합동작전 단말',
         desc: '외부망은 끊겼다. 남은 것은 서로 모순되는 사건철과 아직 응답 중인 관측점뿐이다.',
-        meta: NODE_STATE
+        meta: nodeState()
       }),
       h('div.tc-home-grid', null,
         flashPanel(),

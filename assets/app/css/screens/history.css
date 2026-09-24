@@ -657,6 +657,36 @@ a.tc-hist-turn:hover {
   border-left-color: var(--blood-ink);
 }
 
+/* 작전 경과 */
+.tc-hist-optracks {
+  display: grid;
+  gap: var(--s4);
+}
+.tc-hist-phase {
+  border-width: 0;
+  border-top: 1px solid var(--line);
+}
+.tc-hist-phase li.is-unknown::before {
+  background: repeating-linear-gradient(90deg, var(--red-ink) 0 5px, transparent 5px 9px);
+}
+.tc-hist-phase li.is-loss b {
+  color: var(--red-ink);
+}
+.tc-hist-phase li > span {
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .12em;
+}
+.tc-hist-phase li.is-contact > span { color: var(--amber-ink); }
+.tc-hist-phase li.is-loss > span,
+.tc-hist-phase li.is-unknown > span { color: var(--red-ink); }
+.tc-hist-phase li.is-done > span { color: var(--od-ink); }
+.tc-hist-optrack-foot {
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--line);
+}
+
 /* 관련 기록 */
 .tc-hist-link-list {
   display: grid;
