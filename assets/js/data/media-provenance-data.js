@@ -589,10 +589,159 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "index.html",
+        "share/a/Civil_Child_Drill/index.html",
+        "share/a/Cults_871104/index.html",
+        "share/a/Dead_Zone_Pilgrimage/index.html",
+        "share/a/Ferals_860722/index.html",
+        "share/a/Great_Black_Forest_Region/index.html",
+        "share/a/Immortality_860201/index.html",
+        "share/a/Operation_Broken_Crown/index.html",
+        "share/a/Pilgrim_Rules_GBF/index.html",
+        "share/a/Returner_Note_West/index.html",
+        "share/a/Sakuma_Tape_991028/index.html",
+        "share/a/Unknown_Record1_860204/index.html",
+        "share/a/Unknown_Record2_860205/index.html",
+        "share/a/Unknown_Record3_920711/index.html",
+        "share/a/Unknown_Record4_930314/index.html",
+        "share/a/Zone_870815/index.html",
+        "share/f/amarion/index.html",
+        "share/f/arf/index.html",
+        "share/f/ashcrew/index.html",
+        "share/f/blood-cult/index.html",
+        "share/f/corruption-cult/index.html",
+        "share/f/cpd/index.html",
+        "share/f/deadzone-blood/index.html",
+        "share/f/fhc/index.html",
+        "share/f/first-apostle/index.html",
+        "share/f/haimun/index.html",
+        "share/f/nhc/index.html",
+        "share/f/shadow-cult/index.html",
+        "share/f/sid/index.html",
+        "share/f/southern-blood/index.html",
+        "share/f/syndicate/index.html",
+        "share/f/uac/index.html",
+        "share/f/ushinoda/index.html",
+        "share/h/1975-09-12-amarion/index.html",
+        "share/h/1975-distortion-system/index.html",
+        "share/h/1982-03-22-fhc/index.html",
+        "share/h/1982-04-06-sixth-instrumentation/index.html",
+        "share/h/1982-uac-watch/index.html",
+        "share/h/1985-09-18-optical-return-test/index.html",
+        "share/h/1986-02-01-immortality/index.html",
+        "share/h/1987-11-04-jid87-standard/index.html",
+        "share/h/1989-08-23-tokyo/index.html",
+        "share/h/1990-04-12-municipal-mesh-pilot/index.html",
+        "share/h/1992-10-30-sixth-program-dispersal/index.html",
+        "share/h/1993-11-02-uac/index.html",
+        "share/h/1993-syndicate/index.html",
+        "share/h/1995-03-20-tokyo-subway/index.html",
+        "share/h/1997-01-27-classification/index.html",
+        "share/h/1999-07-12-ubermensch/index.html",
+        "share/h/2001-07-21-independence/index.html",
+        "share/h/2002-02-20-ground-forces/index.html",
+        "share/h/2003-02-05-city-barrier/index.html",
+        "share/h/2005-01-21-ash-crew/index.html",
+        "share/h/2005-09-01-red-wolf/index.html",
+        "share/h/2006-08-20-ubermensch-raid/index.html",
+        "share/h/2006-12-31-aftermath/index.html",
+        "share/h/2007-03-11-continuity-withdrawal/index.html",
+        "share/h/2008-09-06-dead-zone-designation/index.html",
+        "share/h/2010-04-12-returner-compact/index.html",
+        "share/h/2012-11-19-great-black-forest-survey/index.html",
+        "share/h/2014-06-08-castle-asylum-right/index.html",
+        "share/h/2016-02-21-blood-cult-atlantic-schism/index.html",
+        "share/h/2018-09-12-northern-front/index.html",
+        "share/h/2021-05-04-fhc-submassacres/index.html",
+        "share/h/2024-03-17-ushinoda-fabrication/index.html",
+        "share/h/2026-08-20-northern-reversal/index.html",
+        "share/h/2027-11-02-southern-allegiance/index.html",
+        "share/h/2028-07-25-mass-summoning-rehearsal/index.html",
+        "share/h/2029-04-12-checkpoint-07/index.html",
+        "share/h/2030-01-17-broken-crown/index.html",
+        "share/h/2031-02-03-branch-seal/index.html",
+        "share/h/2032-08-14-three-bells-compact/index.html",
+        "share/h/2034-04-22-inland-beacon-31/index.html",
+        "share/h/2036-12-12-central-callsign-loss/index.html",
+        "share/h/2038-06-29-sixth-northern-line/index.html",
+        "share/h/2042-10-31-three-night-silence/index.html",
+        "share/h/deep-angel-descent/index.html",
+        "share/h/deep-citadel-charters/index.html",
+        "share/h/deep-cold-war-programs/index.html",
+        "share/h/deep-first-breach/index.html",
+        "share/h/deep-industrial-occult/index.html",
+        "share/h/deep-outer-god-war/index.html",
+        "share/h/deep-plague-copies/index.html",
+        "share/h/deep-sealing-wars/index.html",
+        "share/p/aaron-syndicate/index.html",
+        "share/p/aaron-uac/index.html",
+        "share/p/alma-bennett/index.html",
+        "share/p/alma-damian/index.html",
+        "share/p/alma-griffon/index.html",
+        "share/p/alma-kara/index.html",
+        "share/p/alma-koenig/index.html",
+        "share/p/alma-millen/index.html",
+        "share/p/alma-wade/index.html",
+        "share/p/alullim/index.html",
+        "share/p/apostle-alvarez/index.html",
+        "share/p/apostle-jade-jackson/index.html",
+        "share/p/apostle-luke-eugene/index.html",
+        "share/p/apostle-moha/index.html",
+        "share/p/apostle-parthea-hill/index.html",
+        "share/p/apostle-shahin/index.html",
+        "share/p/apostle-sharma/index.html",
+        "share/p/apostle-siena-khan/index.html",
+        "share/p/apostle-uro/index.html",
+        "share/p/apostle-urzag/index.html",
+        "share/p/baranto/index.html",
+        "share/p/brian-alberoz/index.html",
+        "share/p/casper/index.html",
+        "share/p/dennis/index.html",
+        "share/p/duka/index.html",
+        "share/p/enrilbani/index.html",
+        "share/p/epoptes/index.html",
+        "share/p/ezekiel-kalp/index.html",
+        "share/p/frost/index.html",
+        "share/p/frux/index.html",
+        "share/p/grinch/index.html",
+        "share/p/isaac/index.html",
+        "share/p/jake/index.html",
+        "share/p/jeong-ria/index.html",
+        "share/p/kagami-itsuki/index.html",
+        "share/p/karl-maxwell/index.html",
+        "share/p/kate/index.html",
+        "share/p/kenevin/index.html",
+        "share/p/kieran-hayward/index.html",
+        "share/p/mason/index.html",
+        "share/p/maya/index.html",
+        "share/p/mikage-shiori/index.html",
+        "share/p/mizumi-yanami/index.html",
+        "share/p/natalia/index.html",
+        "share/p/natsume/index.html",
+        "share/p/nina-gregory/index.html",
+        "share/p/pierce/index.html",
+        "share/p/ramus-manson/index.html",
+        "share/p/reiki/index.html",
+        "share/p/roden/index.html",
+        "share/p/ryu-youngho/index.html",
+        "share/p/sakuma-yuta/index.html",
+        "share/p/sasaki/index.html",
+        "share/p/sato-hajime/index.html",
+        "share/p/saxon/index.html",
+        "share/p/sebastian-clark/index.html",
+        "share/p/semyon-reyes/index.html",
+        "share/p/tachibana-isamu/index.html",
+        "share/p/tanaka-chihiro/index.html",
+        "share/p/tanaka-yui/index.html",
+        "share/p/violet/index.html",
+        "share/p/yanami-shinka/index.html",
+        "share/p/yanan-kes/index.html",
+        "share/p/yesel-gregory/index.html",
+        "share/p/yohan/index.html",
+        "tools/build-share-stubs.mjs",
         "tools/verify-app.mjs"
       ],
       "referenced": true,
-      "protectedScope": false
+      "protectedScope": true
     },
     {
       "path": "assets/brand/icon-192.png",
@@ -646,10 +795,87 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "index.html",
+        "share/a/Civil_Child_Drill/index.html",
+        "share/a/Cults_871104/index.html",
+        "share/a/Dead_Zone_Pilgrimage/index.html",
+        "share/a/Ferals_860722/index.html",
+        "share/a/Great_Black_Forest_Region/index.html",
+        "share/a/Immortality_860201/index.html",
+        "share/a/Operation_Broken_Crown/index.html",
+        "share/a/Pilgrim_Rules_GBF/index.html",
+        "share/a/Returner_Note_West/index.html",
+        "share/a/Sakuma_Tape_991028/index.html",
+        "share/a/Unknown_Record1_860204/index.html",
+        "share/a/Unknown_Record2_860205/index.html",
+        "share/a/Unknown_Record3_920711/index.html",
+        "share/a/Unknown_Record4_930314/index.html",
+        "share/a/Zone_870815/index.html",
+        "share/h/1982-04-06-sixth-instrumentation/index.html",
+        "share/h/1985-09-18-optical-return-test/index.html",
+        "share/h/1986-02-01-immortality/index.html",
+        "share/h/1987-11-04-jid87-standard/index.html",
+        "share/h/1990-04-12-municipal-mesh-pilot/index.html",
+        "share/h/1992-10-30-sixth-program-dispersal/index.html",
+        "share/h/1995-03-20-tokyo-subway/index.html",
+        "share/p/aaron-syndicate/index.html",
+        "share/p/aaron-uac/index.html",
+        "share/p/alma-bennett/index.html",
+        "share/p/alma-damian/index.html",
+        "share/p/alma-griffon/index.html",
+        "share/p/alma-kara/index.html",
+        "share/p/alma-koenig/index.html",
+        "share/p/alma-millen/index.html",
+        "share/p/alma-wade/index.html",
+        "share/p/apostle-alvarez/index.html",
+        "share/p/apostle-jade-jackson/index.html",
+        "share/p/apostle-luke-eugene/index.html",
+        "share/p/apostle-moha/index.html",
+        "share/p/apostle-parthea-hill/index.html",
+        "share/p/apostle-shahin/index.html",
+        "share/p/apostle-sharma/index.html",
+        "share/p/apostle-siena-khan/index.html",
+        "share/p/apostle-uro/index.html",
+        "share/p/apostle-urzag/index.html",
+        "share/p/baranto/index.html",
+        "share/p/brian-alberoz/index.html",
+        "share/p/casper/index.html",
+        "share/p/dennis/index.html",
+        "share/p/duka/index.html",
+        "share/p/ezekiel-kalp/index.html",
+        "share/p/frost/index.html",
+        "share/p/frux/index.html",
+        "share/p/grinch/index.html",
+        "share/p/isaac/index.html",
+        "share/p/jake/index.html",
+        "share/p/jeong-ria/index.html",
+        "share/p/karl-maxwell/index.html",
+        "share/p/kate/index.html",
+        "share/p/maya/index.html",
+        "share/p/mizumi-yanami/index.html",
+        "share/p/natalia/index.html",
+        "share/p/natsume/index.html",
+        "share/p/nina-gregory/index.html",
+        "share/p/pierce/index.html",
+        "share/p/ramus-manson/index.html",
+        "share/p/reiki/index.html",
+        "share/p/roden/index.html",
+        "share/p/ryu-youngho/index.html",
+        "share/p/sasaki/index.html",
+        "share/p/sato-hajime/index.html",
+        "share/p/saxon/index.html",
+        "share/p/sebastian-clark/index.html",
+        "share/p/semyon-reyes/index.html",
+        "share/p/tanaka-chihiro/index.html",
+        "share/p/tanaka-yui/index.html",
+        "share/p/violet/index.html",
+        "share/p/yanami-shinka/index.html",
+        "share/p/yesel-gregory/index.html",
+        "share/p/yohan/index.html",
+        "tools/build-share-stubs.mjs",
         "tools/verify-app.mjs"
       ],
       "referenced": true,
-      "protectedScope": false
+      "protectedScope": true
     },
     {
       "path": "assets/brand/project-curse-emblem-128.png",
@@ -2652,6 +2878,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2005-01-21-ash-crew/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -2674,6 +2901,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2036-12-12-central-callsign-loss/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -2696,6 +2924,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2038-06-29-sixth-northern-line/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -2718,6 +2947,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2042-10-31-three-night-silence/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -2739,7 +2969,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/alullim/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2760,7 +2991,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1975-09-12-amarion/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2781,7 +3013,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/amarion/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2824,7 +3057,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/deep-angel-descent/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2845,7 +3079,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/arf/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2866,7 +3101,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/ashcrew/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2887,7 +3123,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2016-02-21-blood-cult-atlantic-schism/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2908,7 +3145,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/deep-citadel-charters/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2929,7 +3167,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/blood-cult/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2992,7 +3231,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2031-02-03-branch-seal/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3015,6 +3255,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2030-01-17-broken-crown/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -3036,7 +3277,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2014-06-08-castle-asylum-right/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3059,6 +3301,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2029-04-12-checkpoint-07/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -3101,7 +3344,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2003-02-05-city-barrier/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3143,7 +3387,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1997-01-27-classification/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3164,7 +3409,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/deep-cold-war-programs/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3185,7 +3431,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2007-03-11-continuity-withdrawal/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3227,7 +3474,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/corruption-cult/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3248,7 +3496,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/cpd/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3316,7 +3565,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2008-09-06-dead-zone-designation/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3337,7 +3587,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/deadzone-blood/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3358,7 +3609,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1975-distortion-system/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3379,7 +3631,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/enrilbani/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3400,7 +3653,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/epoptes/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3421,7 +3675,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1982-03-22-fhc/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3442,7 +3697,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/fhc/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3463,7 +3719,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2021-05-04-fhc-submassacres/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3484,6 +3741,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/first-apostle/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -3505,7 +3763,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/deep-first-breach/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3526,7 +3785,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2012-11-19-great-black-forest-survey/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3573,6 +3833,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2032-08-14-three-bells-compact/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -3594,7 +3855,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2002-02-20-ground-forces/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3615,7 +3877,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/haimun/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3636,7 +3899,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/deep-industrial-occult/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3657,7 +3921,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2034-04-22-inland-beacon-31/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3678,6 +3943,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2006-12-31-aftermath/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -3699,7 +3965,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/kagami-itsuki/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3720,7 +3987,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/kenevin/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3741,7 +4009,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/kieran-hayward/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3762,7 +4031,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/mason/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3783,7 +4053,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2028-07-25-mass-summoning-rehearsal/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3804,7 +4075,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/mikage-shiori/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3847,7 +4119,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2001-07-21-independence/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3869,6 +4142,7 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/nhc/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -3912,7 +4186,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2018-09-12-northern-front/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3935,6 +4210,7 @@
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2026-08-20-northern-reversal/index.html",
         "tools/verify-data.mjs"
       ],
       "referenced": true,
@@ -3956,7 +4232,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/deep-outer-god-war/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4040,7 +4317,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/deep-plague-copies/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4093,7 +4371,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2005-09-01-red-wolf/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4135,7 +4414,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2010-04-12-returner-compact/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4179,7 +4459,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1989-08-23-tokyo/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4200,7 +4481,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/sakuma-yuta/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4221,7 +4503,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/deep-sealing-wars/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4242,7 +4525,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/shadow-cult/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4263,7 +4547,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/sid/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4284,7 +4569,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1993-syndicate/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4305,7 +4591,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/syndicate/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4347,7 +4634,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2027-11-02-southern-allegiance/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4368,7 +4656,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/southern-blood/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4389,7 +4678,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/tachibana-isamu/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4410,7 +4700,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/uac/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4431,7 +4722,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1993-11-02-uac/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4452,7 +4744,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1982-uac-watch/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4473,7 +4766,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/1999-07-12-ubermensch/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4494,7 +4788,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2006-08-20-ubermensch-raid/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4516,7 +4811,8 @@
         "assets/js/data/media-manifest.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/f/ushinoda/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4537,7 +4833,8 @@
         "assets/js/data/visual-evidence-data.js",
         "assets/js/data/world-history-prose-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/h/2024-03-17-ushinoda-fabrication/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4558,7 +4855,8 @@
         "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/yanan-kes/index.html"
       ],
       "referenced": true,
       "protectedScope": false

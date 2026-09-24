@@ -143,6 +143,9 @@ add('docs-pages-forward-to-archive', docsIds.length === 9 && badStubs.length ===
 add('app-html-retired', !existsSync(ROOT + 'app.html'), '새 단말은 index.html 하나다');
 // 안내 페이지는 기록 요약이 바뀌면 다시 만들어야 한다 — 생성기 결과와 글자 그대로 같은지 본다.
 const stubCheck = spawnSync(process.execPath, [ROOT + 'tools/build-docs-stubs.mjs', '--check'], { encoding: 'utf8' });
+// 인물·기록별 링크 미리보기(2026-09-25 사용자 결정) — share/<종류>/<id>/ 공유 페이지와 목록이 데이터와 맞아야 한다.
+const shareCheck = spawnSync(process.execPath, [ROOT + 'tools/build-share-stubs.mjs', '--check'], { encoding: 'utf8' });
+add('share-stubs-current', shareCheck.status === 0 && app.includes('assets/js/data/share-index-data.js') && read('assets/app/js/pc-core.js').includes('ProjectCurseShareIndex?.resolve?.'), (shareCheck.stdout || '').split(/\r?\n/).filter((line) => /^(STALE|EXTRA)/.test(line)).slice(0, 5).join(' | '));
 add('docs-pages-match-generator', stubCheck.status === 0, (stubCheck.stdout || '').split(/\r?\n/).filter((line) => line.startsWith('STALE') || line.startsWith('MISSING')).join(' | '));
 
 const turns = context.ProjectCurseHistoryScreen?.turns || [];
