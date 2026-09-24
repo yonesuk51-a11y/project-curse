@@ -22,7 +22,7 @@
     const [first, second] = value.split(' / ');
     if (second && latin(first) && !latin(second)) return h('span.tc-label', null, h('span.tc-full-only', { text: `${first} / ` }), h('span', { text: second }));
     if (latin(value)) return h('span.tc-label.tc-full-only', { text: value });
-    return lbl(value);
+    return h('span.tc-label', { text: value });
   }
   // 영문 머리글 + 한글 — 간략 보기에서는 한글만
   const bi = (english, korean) => [h('span.tc-full-only', { text: `${english} / ` }), korean];
