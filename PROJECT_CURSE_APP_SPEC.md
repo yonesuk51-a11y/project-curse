@@ -26,7 +26,7 @@ Status: `2026-09-24 / 표시층 재작성 진행 중`
 | `assets/app/js/screens/<화면>.js` | 화면 모듈 |
 | `tools/verify-app.mjs` | 새 앱 검증 |
 
-화면 파일 이름: `home`, `history`, `map`, `faction`, `archive`, `personnel`.
+화면 파일 이름: `home`, `history`, `map`, `faction`, `archive`, `personnel`, `manual`.
 
 ### 여럿이 동시에 작업할 때
 
@@ -64,6 +64,7 @@ PCApp.screen({
 | `#faction-info`, `#faction-info/<세력 키>` | 세력 분석 |
 | `#archive-entry`, `#archive-entry/<기록 id>` | 기록보관소 |
 | `#personnel`, `#personnel/<인물 id>` | 인물 기록 |
+| `#field-manual` | 교전 교범 |
 | `#media-audit` | 매체 검수 |
 
 옛 주소 `#faction-relation`, `#region-map`, `#zone-map`, `#operation-map`은 셸이 새 화면으로 잇는다. 옛 딥링크 속성(`data-uac-route` + `data-uac-history-record` 등)도 셸이 새 주소로 바꾼다.
@@ -107,6 +108,9 @@ PCApp.screen({
 
 ### 세계 기록 `history` — 완료(Claude)
 목록(네 전환점, 참고 묶음 3종, 시대 필터, 판정 범례·미해결 설정, 시대별 기록)과 사건 기록(증거 파일 표지, 근거와 한계, 본문 조각, 교단 상충 기록, 관련 기록, 이전·다음).
+
+### 교전 교범 `field-manual` — 완료(Claude)
+새 설정을 쓰지 않는다. N.H.C 현장 교범(`NHC_Manual_891219`)과 세계 기본 규칙을 투입 전 참조판으로 다시 배치한다: 첫 원칙, 철수 조건 판정기, 접촉과 교전, 표식 체계, 진입 전 준비·이동, 장비군, 능력과 대가, 현장 편성과 인계, 현장 인원 등록 양식(복사용). 교범 문장은 절 제목으로 찾아 읽고, 절 제목은 `verify-app`이 검사한다.
 
 ### 상황 관제 `map-room` — Codex
 - 데이터: `ProjectCurseMapRoom`(viewBox, geography, regions, zones, routes, synchronyEvents, markers, drilldowns, operations), `ProjectCurseRegionalDrilldown`, `ProjectCurseIncidentNetwork`, `map-signal-index-data.js`, `pilgrimage-scenario-data.js`.

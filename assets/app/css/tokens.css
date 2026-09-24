@@ -97,4 +97,5 @@ body[data-screen="history"]       { --ch: #a8875a; --ch-ink: #b8976a; }
 body[data-screen="faction-info"]  { --ch: #8b9a66; --ch-ink: #9aab72; }
 body[data-screen="archive-entry"] { --ch: #b7a98a; --ch-ink: #c2b594; }
 body[data-screen="personnel"]     { --ch: #b29466; --ch-ink: #bea173; }
+body[data-screen="field-manual"]  { --ch: #a39a62; --ch-ink: #b3aa70; }
 body[data-screen="media-audit"]   { --ch: #7fa39a; --ch-ink: #8fb3aa; }

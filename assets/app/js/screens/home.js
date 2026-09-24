@@ -212,7 +212,13 @@
           h('span', null, h('b', { text: title }), h('small', { text: text })),
           h('em', { 'aria-hidden': 'true', text: '›' })
         ))
-      ))
+      )),
+      h('a.tc-home-manual', { href: PC.href('field-manual') },
+        h('span.tc-label', { text: 'BEFORE DEPLOYMENT' }),
+        h('b', { text: '투입 전 확인 — 교전 교범' }),
+        h('small', { text: '교전 원칙, 철수 조건, 표식, 장비군, 능력과 대가, 현장 인원 등록 양식' }),
+        h('em', { 'aria-hidden': 'true', text: '›' })
+      )
     );
   }
 

@@ -1,0 +1,482 @@
+/* Project Curse 6 — 교전 교범 화면 (담당: Claude)
+   공용 부품(components.css)의 색·모양을 바꾸지 않는다. 이 화면에만 필요한 배치와 부품을 둔다. */
+
+.tc-man-panel {
+  margin: 0 0 var(--s4);
+}
+.tc-man-panel .tc-panel-body {
+  display: grid;
+  gap: var(--s4);
+}
+.tc-man-panel .tc-panel-body > p {
+  max-width: 76ch;
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-man-lead {
+  color: var(--text) !important;
+  font-size: var(--fs) !important;
+}
+.tc-man-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s4);
+  align-items: start;
+}
+.tc-man-pair > .tc-man-panel {
+  margin: 0 0 var(--s4);
+}
+
+/* 첫 원칙 */
+.tc-man-doctrine {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s4) var(--s6);
+  margin: 0 0 var(--s4);
+  padding: var(--s5);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--ch);
+  background: var(--panel);
+}
+.tc-man-doctrine blockquote p {
+  color: var(--text);
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -.01em;
+}
+.tc-man-doctrine-meta {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  max-width: 320px;
+}
+.tc-man-doctrine-meta .tc-label {
+  color: var(--ch-ink);
+}
+.tc-man-doctrine-meta span:not(.tc-label) {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+}
+
+/* 목록 — 사각 표지 */
+.tc-man-list {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-man-list li {
+  position: relative;
+  padding-left: var(--s5);
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.65;
+}
+.tc-man-list li::before {
+  content: "";
+  position: absolute;
+  top: .62em;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  background: var(--line-3);
+}
+.tc-man-list--rules li::before {
+  background: var(--amber);
+}
+.tc-man-list--check li::before {
+  top: .42em;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--od-2);
+  background: transparent;
+}
+
+/* 철수 조건 판정 */
+.tc-man-signals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s2);
+}
+.tc-man-signals button {
+  display: grid;
+  gap: 2px;
+  min-height: 56px;
+  padding: var(--s2) var(--s3);
+  border: 1px solid var(--od-2);
+  color: var(--text);
+  background: var(--fill-od);
+  text-align: left;
+  transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease);
+}
+.tc-man-signals button span {
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-man-signals button b {
+  color: var(--od-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+.tc-man-signals button[aria-pressed="true"] {
+  border-color: var(--red);
+  background: var(--fill-red);
+}
+.tc-man-signals button[aria-pressed="true"] b {
+  color: var(--red-ink);
+}
+.tc-man-verdict {
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line-2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: var(--fs-s);
+}
+.tc-man-verdict.is-abort {
+  border-color: var(--red);
+  color: var(--red-ink);
+  background: var(--fill-red);
+  font-weight: 500;
+}
+
+/* 표식 체계 — 표식마다 모양과 색을 함께 달리한다 */
+.tc-man-table,
+.tc-man-sources {
+  display: grid;
+  border: 1px solid var(--line);
+}
+.tc-man-tr {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s4);
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--line);
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
+.tc-man-tr:first-child {
+  border-top: 0;
+}
+.tc-man-th {
+  color: var(--text-3);
+  background: var(--panel-2);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.tc-man-sources .tc-man-tr {
+  grid-template-columns: 132px minmax(0, 1fr);
+}
+.tc-man-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 2px 8px;
+  border: 1px solid var(--line-2);
+  font-family: var(--label);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tc-man-tag.is-white { border-color: var(--text); color: var(--text); background: rgba(216, 214, 204, .08); }
+.tc-man-tag.is-gray  { border-style: dotted; border-color: var(--text-3); color: var(--text-2); }
+.tc-man-tag.is-red   { border-color: var(--red); color: var(--red-ink); background: var(--fill-red); }
+.tc-man-tag.is-black { border-color: var(--red); color: var(--text); background: #030303; box-shadow: inset 3px 0 0 var(--red); }
+.tc-man-tag.is-null  { border-style: dashed; border-color: var(--amber); color: var(--amber-ink); }
+
+/* 장비군 */
+.tc-man-loadout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+}
+.tc-man-loadout > li {
+  display: grid;
+  align-content: start;
+  gap: var(--s3);
+  padding: var(--s4);
+  background: var(--panel-2);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.tc-man-loadout > li > header {
+  display: grid;
+  gap: 3px;
+}
+.tc-man-loadout > li > header b {
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-man-loadout > li > header span {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+}
+.tc-man-loadout > li.is-kinetic {
+  box-shadow: 0 0 0 1px var(--line), inset 0 2px 0 var(--amber);
+}
+.tc-man-loadout > li > ul {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-man-loadout > li > ul li {
+  display: grid;
+  gap: 2px;
+  padding-top: var(--s2);
+  border-top: 1px solid var(--line);
+}
+.tc-man-item-name {
+  color: var(--ch-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+.tc-man-loadout > li.is-kinetic .tc-man-item-name {
+  color: var(--amber-ink);
+}
+.tc-man-loadout > li > ul li span {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  line-height: 1.55;
+}
+
+/* 능력과 대가 */
+.tc-man-ontology {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+}
+.tc-man-ontology li {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: var(--s3) var(--s4);
+  background: var(--panel-2);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.tc-man-ontology .tc-label {
+  color: var(--ir-ink);
+}
+.tc-man-ontology b {
+  color: var(--text);
+  font-size: var(--fs);
+}
+.tc-man-ontology p {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+}
+.tc-man-ceiling {
+  display: grid;
+  gap: var(--s3);
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--amber);
+  background: var(--fill-amber);
+}
+.tc-man-ceiling > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+}
+.tc-man-ceiling > header b {
+  color: var(--text);
+}
+.tc-man-ceiling p {
+  max-width: 78ch;
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-man-ceiling .tc-man-caution {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+}
+
+/* 현장 편성 — 펼침 */
+.tc-man-folds {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-man-fold {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s4);
+}
+.tc-man-fold > div {
+  display: grid;
+  gap: var(--s3);
+}
+.tc-man-fold p {
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+.tc-man-plate .tc-evidence-media img {
+  aspect-ratio: 1;
+  object-fit: contain;
+  background: var(--sunken);
+  filter: grayscale(.2) contrast(1.02);
+}
+.tc-man-plate figcaption b {
+  font-size: var(--fs-2xs);
+}
+
+/* 현장 인원 등록 양식 */
+.tc-man-register {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s5);
+  align-items: start;
+}
+.tc-man-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s3) var(--s4);
+}
+.tc-man-field {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.tc-man-field > span,
+.tc-man-field > legend {
+  padding: 0;
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.tc-man-field small {
+  color: var(--text-3);
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+}
+.tc-man-field input[type="text"],
+.tc-man-field select {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 8px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  color: var(--text);
+  background: var(--sunken);
+  font-size: var(--fs-s);
+}
+.tc-man-field select:disabled {
+  opacity: .45;
+}
+.tc-man-field input[type="text"]:hover,
+.tc-man-field select:hover {
+  border-color: var(--od-2);
+}
+.tc-man-gear {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.tc-man-gear legend {
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+.tc-man-gear label {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  min-height: var(--tap);
+  padding: 0 var(--s2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+}
+.tc-man-gear input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--od-2);
+}
+.tc-man-output {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-man-preview {
+  margin: 0;
+  padding: var(--s4);
+  overflow-x: auto;
+  border: 1px solid rgba(127, 163, 154, .22);
+  color: #c4cfc9;
+  background:
+    repeating-linear-gradient(0deg, rgba(216, 214, 204, .02) 0 1px, transparent 1px 3px),
+    var(--sunken);
+  font-family: var(--mono);
+  font-size: var(--fs-s);
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+.tc-man-copy-status {
+  align-self: center;
+  color: var(--od-ink);
+  font-size: var(--fs-xs);
+}
+
+@media (max-width: 1100px) {
+  .tc-man-loadout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tc-man-ontology { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tc-man-register { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 860px) {
+  .tc-man-pair,
+  .tc-man-doctrine {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-man-fold {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-man-plate {
+    max-width: 200px;
+  }
+}
+@media (max-width: 600px) {
+  .tc-man-loadout,
+  .tc-man-ontology,
+  .tc-man-form,
+  .tc-man-gear {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-man-signals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-man-doctrine blockquote p {
+    font-size: var(--fs-l);
+  }
+  .tc-man-tr,
+  .tc-man-sources .tc-man-tr {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s1);
+  }
+  .tc-man-th {
+    display: none;
+  }
+  .tc-man-tr [data-head]::before {
+    content: attr(data-head);
+    display: block;
+    color: var(--text-3);
+    font-family: var(--label);
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    letter-spacing: .14em;
+  }
+}

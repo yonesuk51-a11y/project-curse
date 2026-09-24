@@ -4,7 +4,15 @@
   'use strict';
 
   const doc = root.document;
-  const SCREEN_IDS = ['terminal-home', 'map-room', 'history', 'faction-info', 'archive-entry', 'personnel', 'media-audit'];
+  const SCREEN_IDS = ['terminal-home', 'map-room', 'history', 'faction-info', 'archive-entry', 'personnel', 'field-manual', 'media-audit'];
+  // 새 앱에서 생긴 채널 — 옛 앱과 함께 쓰는 channel-identity-data.js에는 넣지 않는다.
+  const APP_CHANNELS = [
+    {
+      id: 'field-manual', index: '06', code: 'FIELD MANUAL', label: '교전 교범', shortLabel: '교범',
+      description: '투입 전에 확인하는 현장 기준. 교전 원칙, 철수 조건, 표식, 장비, 능력 운용과 인원 등록 양식.',
+      telemetry: [['SOURCE', 'N.H.C MANUAL'], ['REVISION', '2005.01.21'], ['FORM', 'FIELD REGISTER']]
+    }
+  ];
   // 옛 주소를 새 화면으로 잇는다. 모르는 주소는 조용히 바꾸지 않고 홈에서 알린다.
   const ALIASES = {
     'faction-relation': 'faction-info',
@@ -173,7 +181,7 @@
   }
 
   function channel(id) {
-    const list = root.ProjectCurseChannelData?.channels || [];
+    const list = [...(root.ProjectCurseChannelData?.channels || []), ...APP_CHANNELS];
     return list.find((item) => item.id === id) || null;
   }
 

@@ -49,6 +49,7 @@
 | 셸·주소·공용 부품 | `app.html`, `pc-core.js`, `tokens.css`·`base.css`·`shell.css`·`components.css` | Claude |
 | 단말 상태(홈) | `screens/home.*` | Claude |
 | 세계 기록 | `screens/history.*`, `assets/js/data/world-history-core-data.js` | Claude |
+| 교전 교범 | `screens/manual.*` | Claude |
 | 상황 관제 | `screens/map.*` | Codex |
 | 세력 분석 | `screens/faction.*` | Codex |
 | 기록보관소 | `screens/archive.*` | Codex |

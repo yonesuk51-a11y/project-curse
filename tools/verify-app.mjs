@@ -121,7 +121,17 @@ const foundForbidden = FORBIDDEN.filter((term) => publicSources.includes(term));
 add('public-copy-no-meta-language', foundForbidden.length === 0, foundForbidden.join(' | '));
 
 /* ---------- 7. 화면 등록 ---------- */
-const SCREEN_FILES = { 'terminal-home': 'home', history: 'history', 'map-room': 'map', 'faction-info': 'faction', 'archive-entry': 'archive', personnel: 'personnel' };
+const SCREEN_FILES = { 'terminal-home': 'home', history: 'history', 'map-room': 'map', 'faction-info': 'faction', 'archive-entry': 'archive', personnel: 'personnel', 'field-manual': 'manual' };
+// 교전 교범은 교범 원문을 절 제목으로 찾아 읽는다. 제목이 바뀌면 화면이 비므로 여기서 먼저 잡는다.
+const manualDoc = (Array.isArray(archiveDocuments) ? archiveDocuments.find((doc) => doc.id === 'NHC_Manual_891219') : archiveDocuments.NHC_Manual_891219) || null;
+const manualSource = read('assets/app/js/screens/manual.js');
+const manualTitles = [...manualSource.matchAll(/section\('([^']+)'\)/g)].map((m) => m[1]);
+const blockTitles = [...(manualSource.match(/const blocks = \[([\s\S]*?)\];/)?.[1] || '').matchAll(/\['([^']+)',/g)].map((m) => m[1]);
+const neededTitles = [...new Set([...manualTitles, ...blockTitles])];
+const sectionTitles = new Set((manualDoc?.sections || []).map((sec) => sec.title));
+const missingTitles = neededTitles.filter((title) => !sectionTitles.has(title));
+add('manual-sections-exist', !!manualDoc && neededTitles.length >= 9 && missingTitles.length === 0, missingTitles.join(' | ') || `${neededTitles.length} sections`);
+add('manual-break-rule-source', (manualDoc?.sections || []).some((sec) => (sec.items || []).some((item) => item.includes('둘을 잃으면 전원 철수'))));
 for (const [id, name] of Object.entries(SCREEN_FILES)) {
   const source = read(`assets/app/js/screens/${name}.js`);
   const registers = /PC\.screen\(\{\s*id:\s*'([^']+)'/.exec(source);

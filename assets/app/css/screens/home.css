@@ -220,6 +220,40 @@
   font-style: normal;
 }
 
+/* 교전 교범 바로가기 */
+.tc-home-manual {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px;
+  gap: 2px var(--s3);
+  padding: var(--s4);
+  border-top: 1px solid var(--line);
+  box-shadow: inset 2px 0 0 var(--od-2);
+  transition: background-color var(--t) var(--ease);
+}
+.tc-home-manual:hover {
+  background: var(--fill-od);
+}
+.tc-home-manual .tc-label {
+  color: var(--od-ink);
+}
+.tc-home-manual b {
+  color: var(--text);
+  font-size: var(--fs);
+  font-weight: 600;
+}
+.tc-home-manual small {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-home-manual em {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-style: normal;
+}
+
 /* ---------- 증거 두 점 ---------- */
 .tc-home-evidence {
   display: grid;
