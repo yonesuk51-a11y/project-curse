@@ -44,7 +44,7 @@
 .tc-fac-chronology li { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: var(--s4); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
 .tc-fac-chronology time { color: var(--coyote-ink); padding-top: 4px; }
 .tc-fac-visual { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: end; }
-.tc-fac-visual > img { width: 100%; max-height: 480px; object-fit: contain; }
+.tc-fac-visual .tc-evidence-media img { width: 100%; max-height: 480px; object-fit: contain; }
 .tc-fac-symbols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 1px; }
 .tc-fac-symbols li { display: grid; align-content: start; gap: var(--s2); padding: var(--s3); box-shadow: 0 0 0 1px var(--line); }
 .tc-fac-symbols b { color: var(--coyote-ink); }

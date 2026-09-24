@@ -197,7 +197,7 @@
       section('CHRONOLOGY', '주요 연혁', h('ol.tc-fac-chronology', null, item.chronology.map(([date, text]) =>
         h('li', null, h('time.tc-code', { text: date }), h('span', { text }))))),
       item.visual?.src ? h('figure.tc-evidence.tc-fac-visual', { dataset: { evidenceClass: item.visual.className } },
-        h('img', { src: item.visual.src, alt: item.visual.alt, loading: 'lazy', decoding: 'async' }),
+        h('div.tc-evidence-media', null, PC.img(item.visual.src, { alt: item.visual.alt || '' })),
         h('figcaption', null, h('b', { text: item.visual.label }), h('span.tc-fac-prose', { text: item.visual.caption }))) : null,
       markAnalysis(key), lineageSection(key),
       section('CONNECTED FACTIONS', '다른 세력과의 관계',

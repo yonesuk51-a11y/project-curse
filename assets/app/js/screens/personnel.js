@@ -105,7 +105,7 @@
     const visual = record.visual;
     if (!visual?.src) return null;
     return h('figure.tc-evidence.tc-per-photo', null,
-      h('img', { src: visual.src, alt: visual.alt || record.name, loading: 'lazy', decoding: 'async' }),
+      h('div.tc-evidence-media', null, PC.img(visual.src, { alt: visual.alt || record.name })),
       h('figcaption', null, h('b', { text: visual.label }), h('span', { text: visual.caption })));
   }
   function affiliationSection(record) {

@@ -214,6 +214,12 @@
         console.error(error);
       }
     });
+    // 아직 등록되지 않은 화면의 'SCREEN NOT BUILT' 표시도 떠날 때 숨긴다
+    SCREEN_IDS.forEach((id) => {
+      if (id === loc.route || registry.has(id)) return;
+      const host = doc.getElementById(id);
+      if (host) host.hidden = true;
+    });
 
     updateChrome(loc.route);
 
