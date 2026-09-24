@@ -141,6 +141,7 @@
 .tc-arc-decisions button > span { display: grid; gap: var(--s3); }
 .tc-arc-decisions button[aria-pressed="true"] { border-color: var(--od-2); background: var(--fill-od); }
 .tc-arc-verdict-row { display: grid; grid-template-columns: minmax(110px, .7fr) minmax(0, 2fr) 120px; align-items: start; gap: var(--s4); padding-block: var(--s4); border-bottom: 1px solid var(--line); }
+.tc-arc-verdict-row > .tc-btn, .tc-arc-verdict-row > .tc-tag { white-space: normal; overflow-wrap: anywhere; }
 .tc-arc-verdict-row p { color: var(--text-2); margin-bottom: 0; }
 .tc-arc-verdict-row > .tc-code { overflow-wrap: anywhere; }
 .tc-arc-audit-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: start; gap: var(--s5); }

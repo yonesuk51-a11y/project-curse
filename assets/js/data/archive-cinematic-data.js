@@ -227,14 +227,14 @@
       {
             "group": "return",
             "code": "SEQUENCE END / RETURN",
-            "title": "기록보관소 복귀",
+            "title": "기록으로 돌아가기",
             "subtitle": "Archive List Ready",
             "image": "",
             "frame": "ARCHIVE LIST / READY",
             "lineDelay": 900,
             "lines": [
-                  "손상 영상 첨부 확인이 끝났습니다.",
-                  "화면 선택 시 기록보관소 목록으로 복귀합니다."
+                  "손상된 첨부 영상 확인이 끝났습니다.",
+                  "화면을 누르면 보고 있던 기록으로 돌아갑니다."
             ]
       }
 ];

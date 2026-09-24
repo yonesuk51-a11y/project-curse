@@ -6,7 +6,7 @@
     groupLabels: Object.freeze({
       'PRIMARY INSTITUTIONS': '주요 기관',
       'EXTERNAL POWERS': '독립 세력',
-      'CULT LINEAGE / COMMAND STATUS': '우시노다 계통',
+      'CULT LINEAGE / COMMAND STATUS': '우시노다 갈래',
       'FIELD RESPONSE LINE': '현장 사후 대응',
       'PREDECESSOR RECORD': '전신 기업 기록'
     })
