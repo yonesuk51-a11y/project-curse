@@ -43,6 +43,58 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
   add('reduced-motion-screen-rule', css.includes('html[data-fx="reduced"]') && !css.includes('@media (prefers-reduced-motion: reduce)'));
   add('brief-labels-and-optional-shell', source.includes('tc-full-only') && source.includes('PC.threat?.(threat)') && source.includes('root.ProjectCurseOpenCanon?.faction?.[key]') && source.includes('PC.openCanon?.(text)'));
   add('uncertain-names-outside-links', source.includes('anomalyCount < 2') && source.includes("h('span', { text: person.name, dataset: { tcAnomaly: 'name' } })") && source.includes("person.certainty === 'unresolved'"));
+  const roleLabels = { uac: '조정 기관', nhc: '현장 전투군', sid: '도시 추적대', fhc: '기업권', syndicate: '이용파 연합', haimun: '범죄조직', ashcrew: '사후 대응조', arf: '회수조', cpd: '민간 분리조' };
+  add('nine-approved-role-labels', keys.filter(key => F.factions[key].roleLabel).length === 9 && Object.entries(roleLabels).every(([key, role]) => F.factions[key]?.roleLabel === role));
+  try {
+    const runtime = screenRuntime({ read, context, screenName: 'faction' });
+    const originalData = JSON.stringify(F);
+    const checkName = (element, item) => {
+      assert.ok(element, `${item.name} 이름 요소가 있어야 한다`);
+      assert.equal(element.textContent, [item.name, item.roleLabel].filter(Boolean).join(' '), '이름 뒤에 등록된 역할만 표시한다');
+      const roles = element.querySelectorAll('.tc-fac-role');
+      assert.equal(roles.length, item.roleLabel ? 1 : 0, '역할이 없는 세력에는 빈 표시도 만들지 않는다');
+      assert.ok(roles.every(role => !role.closest('.tc-full-only,[hidden],[aria-hidden="true"]')), '한글 역할은 간략 보기와 화면 낭독기에서도 읽혀야 한다');
+    };
+    for (const density of ['brief', 'full']) {
+      runtime.c.document.documentElement.dataset.density = density;
+      runtime.show([]);
+      assert.equal(runtime.host.querySelectorAll('.tc-fac-index .tc-fac-role').length, 9, '목록에 아홉 역할을 표시한다');
+      for (const key of keys) checkName(runtime.host.querySelector(`[data-fac-key="${key}"] h3`), F.factions[key]);
+      for (const key of keys) {
+        runtime.show([key]);
+        checkName(runtime.host.querySelector('.tc-fac-cover h1'), F.factions[key]);
+      }
+    }
+    assert.equal(JSON.stringify(F), originalData, '역할을 표시하면서 세력 원문을 바꾸지 않는다');
+    runtime.screen.hide();
+    assert.equal(runtime.host.listeners('click').length, 0);
+    assert.equal(runtime.timers.size, 0);
+    add('role-labels-list-and-detail-execution', true);
+  } catch (error) { add('role-labels-list-and-detail-execution', false, error.stack); }
+  try {
+    const runtime = screenRuntime({ read, context, screenName: 'faction' });
+    const linkedRoles = new Set();
+    for (const key of keys) {
+      runtime.show([key]);
+      const links = runtime.host.querySelectorAll('.tc-fac-detail a').filter(link => link.getAttribute('href')?.startsWith('#faction-info/'));
+      assert.ok(links.length >= F.factions[key].relations.length, '관련 세력 링크가 빠지지 않아야 한다');
+      for (const link of links) {
+        const target = link.getAttribute('href').slice('#faction-info/'.length);
+        const item = F.factions[target];
+        assert.ok(item, '링크가 실제 세력 문서로 이어져야 한다');
+        const name = [item.name, item.roleLabel].filter(Boolean).join(' ');
+        assert.ok(link.textContent.startsWith(name), `${key}의 ${target} 링크 글자에 이름과 역할이 함께 있어야 한다`);
+        const roles = link.querySelectorAll('.tc-fac-role');
+        assert.equal(roles.length, item.roleLabel ? 1 : 0);
+        assert.ok(roles.every(role => !role.closest('.tc-full-only,[hidden],[aria-hidden="true"]')));
+        assert.equal(link.getAttribute('aria-label'), null, '링크의 이름과 역할을 별도 낭독 문구로 가리지 않는다');
+        if (item.roleLabel) linkedRoles.add(target);
+      }
+    }
+    assert.equal([...linkedRoles].sort().join('|'), Object.keys(roleLabels).sort().join('|'), '아홉 세력 모두 관계 링크에서 역할을 읽을 수 있어야 한다');
+    runtime.screen.hide();
+    add('role-labels-in-related-links-execution', true);
+  } catch (error) { add('role-labels-in-related-links-execution', false, error.stack); }
   try {
     const runtime = screenRuntime({ read, context, screenName: 'faction' });
     for (const key of keys) {
