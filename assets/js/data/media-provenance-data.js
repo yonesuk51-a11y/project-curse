@@ -707,7 +707,6 @@
         "share/p/natalia/index.html",
         "share/p/ogawa-nao/index.html",
         "share/p/pierce/index.html",
-        "share/p/ramus-manson/index.html",
         "share/p/reiki/index.html",
         "share/p/sakuma-yuta/index.html",
         "share/p/shinohara-chiharu/index.html",
@@ -795,15 +794,6 @@
         "share/h/1990-04-12-municipal-mesh-pilot/index.html",
         "share/h/1992-10-30-sixth-program-dispersal/index.html",
         "share/h/1995-03-20-tokyo-subway/index.html",
-        "share/p/alma-bennett/index.html",
-        "share/p/alma-damian/index.html",
-        "share/p/alma-griffon/index.html",
-        "share/p/alma-wade/index.html",
-        "share/p/jake/index.html",
-        "share/p/mizumi-yanami/index.html",
-        "share/p/natalia/index.html",
-        "share/p/ramus-manson/index.html",
-        "share/p/reiki/index.html",
         "tools/build-share-stubs.mjs",
         "tools/verify-app.mjs"
       ],
@@ -2903,7 +2893,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/alma-bennett/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2924,7 +2915,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/alma-damian/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -2945,7 +2937,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/alma-griffon/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3032,7 +3025,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/alma-wade/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4313,7 +4307,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/jake/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4531,7 +4526,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/mizumi-yanami/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4574,7 +4570,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/natalia/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4935,7 +4932,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/reiki/index.html"
       ],
       "referenced": true,
       "protectedScope": false

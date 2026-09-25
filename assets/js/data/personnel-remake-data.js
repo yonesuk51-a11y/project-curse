@@ -46,7 +46,6 @@
     'alma-millen':{name:'웨이드 밀렌',unit:'S.O.N 레드울프망',role:'레드울프 이탈대 지휘관',recordFunction:'구조한 사람까지 처분하는 체제에 반기를 든 전직 N.H.C 지휘관.',incident:'2005 레드울프 이탈 / 2006 위버멘시 습격',abilitySource:'리버스 생존 / 무형 이계 접속',abilityCost:'이계에 머문 시간만큼 현실의 신체상과 타인의 얼굴 인식이 흐려짐'},
 
     'mizumi-yanami':{name:'야나미 미즈호',unit:'혈교 / 혈좌 주장자',role:'혈좌 주장자',recordFunction:'교주라는 호칭이 한 사람의 직책인지 계승 가능한 좌석인지 흔드는 인물.',incident:'2003 피의 강 결계 현장',abilitySource:'교단 계약 / 혈좌 의식',abilityCost:'타인의 피를 움직일수록 자신의 기억이 결계 참여자에게 분산'},
-    'ramus-manson':{name:'엘리어스 맨슨',unit:'우시노다 타락교 / 부패좌 주장자',role:'부패좌 주장자',recordFunction:'능력을 드러내지 않고 집단의 죄책감을 의식으로 바꾸는 설교자.',incident:'2006 세 도시 동시 고백집회',abilitySource:'교단 계약 / 집단고백 의식',abilityCost:'청중의 죄책감을 받을수록 자신의 감정과 타인의 감정을 구분하지 못함'},
     'apostle-luke-eugene':{name:'루시앙 유진',unit:'우시노다 제1석 주장자',role:'제1석 주장자 / 삼권능 모방자',recordFunction:'첫 번째 사도가 한 인간인지 시대마다 되풀이되는 좌석인지 판정할 수 없게 만드는 존재.',incident:'1986 피의 호수 삼권능 흔적',abilitySource:'기원 불명 / 삼중 권능 모방',abilityCost:'복제한 기술마다 고유한 기억과 신체 특징 하나가 일시 소실'},
     'apostle-uro':{name:'우로 카인',unit:'우시노다 뇌영석 주장자',role:'뇌영석 주장자',recordFunction:'그림자와 기록선 자체를 전력 통로로 바꾸는 계승 경쟁자.',incident:'2006 시에나 계보문양 대조',abilitySource:'유물 계승 / 그림자뇌격',abilityCost:'전력을 흘린 지도·사진의 경로가 실제 기억 속 장소와 뒤섞임'},
 

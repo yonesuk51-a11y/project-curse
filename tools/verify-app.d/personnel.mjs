@@ -9,9 +9,9 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const legacy = read('tools/fixtures/legacy-app/assets/js/pages/personnel-archive.js');
   const source = read('assets/app/js/screens/personnel.js');
   const records = P.records;
-  // 2026-09-25 사용자 결정으로 2006년 명부에서 35명을 정리했다(56 → 21명, 빈 그룹 두 개 삭제).
-  add('twenty-one-files-eight-groups', records.length === 21 && P.groups.length === 8);
-  add('unique-ids-and-index', new Set(records.map((record) => record.id)).size === 21 && records.every((record) => P.byId[record.id] === record));
+  // 2026-09-25 사용자 결정으로 2006년 명부에서 36명을 정리했다(56 → 20명, 빈 그룹 두 개 삭제, 엘리어스 맨슨 추가 삭제).
+  add('twenty-files-eight-groups', records.length === 20 && P.groups.length === 8);
+  add('unique-ids-and-index', new Set(records.map((record) => record.id)).size === 20 && records.every((record) => P.byId[record.id] === record));
   add('primary-and-secondary-groups-exist', records.every((record) => [record.group, ...(record.secondaryGroups || [])].every((id) => P.groupById[id])));
   add('status-and-certainty-keys', records.every((record) => P.statuses[record.status] && P.certainties[record.certainty] && (record.affiliations || []).every((item) => P.certainties[item.certainty]) && (record.relationships || []).every((item) => P.certainties[item.certainty])));
   add('all-relationship-targets-exist', records.every((record) => (record.relationships || []).every((item) => P.byId[item.target])));
@@ -26,7 +26,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   add('identity-career-and-recorded-age', D?.year === '2006' && records.every((record) => record.identity && (Object.hasOwn(ageExceptions, record.id) ? record.identity.age === ageExceptions[record.id] : record.identity.age.includes('2006')) && record.history.length && record.background.length));
   add('ability-cost-preserved', records.filter((record) => record.abilitySource).every((record) => record.abilityCost));
   add('historical-names-searchable', records.filter((record) => record.sourceName).every((record) => record.aliases.includes(record.sourceName)));
-  // 2026-09-25 사용자 채택: 2006년 명부의 사진은 사쿠마 유타·마커스 콜, 기록 기반 4명, 지휘부 6명, 남은 8명(20명)이다. 엘리어스 맨슨은 다시 그리는 중.
+  // 2026-09-25 사용자 채택: 2006년 명부 20명 모두 사진이 있다(사쿠마 유타·마커스 콜, 기록 기반 4명, 지휘부 6명, 남은 8명).
   // 사진은 매체 목록과 증거 대장에 등록된 재구성 파일만 쓴다(추가 등록 명부도 같다).
   const withPortrait = (list) => list.filter((record) => record.visual?.src);
   const withFormerPortrait = [...records, ...(P.additions || [])].filter((record) => record.formerVisual?.src);
@@ -120,7 +120,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const roster = () => host.querySelectorAll('[data-per-id]');
     const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
     const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
-    show([]); assert.equal(roster().length, initial); assert.equal(initial, 39);
+    show([]); assert.equal(roster().length, initial); assert.equal(initial, 38);
     const ids = () => roster().map((node) => node.dataset.perId);
     for (const group of groups) assert.ok(ids().filter((id) => P.byId[id].group === group.id).length <= 6);
     assert.equal(host.querySelectorAll('[data-per-expand]').length, 1);
