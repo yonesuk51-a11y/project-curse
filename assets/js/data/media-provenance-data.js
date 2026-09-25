@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 462,
-    "referenced": 462,
+    "registered": 504,
+    "referenced": 504,
     "unreferenced": 0,
     "review": 150,
-    "managed": 312,
+    "managed": 354,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 432,
+      "image": 474,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 294,
+      "PROJECT_GENERATED": 336,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 212,
+      "DELIVERY_DERIVATIVE": 240,
       "INTERFACE": 25,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 111,
+      "RECONSTRUCTED": 125,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -715,6 +715,7 @@
         "share/p/jake/index.html",
         "share/p/jeong-ria/index.html",
         "share/p/kagami-itsuki/index.html",
+        "share/p/kamishiro-shuichi/index.html",
         "share/p/karl-maxwell/index.html",
         "share/p/kate/index.html",
         "share/p/kenevin/index.html",
@@ -835,7 +836,6 @@
         "share/p/alma-damian/index.html",
         "share/p/alma-griffon/index.html",
         "share/p/alma-kara/index.html",
-        "share/p/alma-koenig/index.html",
         "share/p/alma-millen/index.html",
         "share/p/alma-wade/index.html",
         "share/p/apostle-alvarez/index.html",
@@ -844,7 +844,6 @@
         "share/p/apostle-kendo/index.html",
         "share/p/apostle-levente-hambas/index.html",
         "share/p/apostle-lisbeth-van-doorn/index.html",
-        "share/p/apostle-luke-eugene/index.html",
         "share/p/apostle-meguro-soichiro/index.html",
         "share/p/apostle-moha/index.html",
         "share/p/apostle-parthea-hill/index.html",
@@ -852,7 +851,6 @@
         "share/p/apostle-shahin/index.html",
         "share/p/apostle-sharma/index.html",
         "share/p/apostle-siena-khan/index.html",
-        "share/p/apostle-uro/index.html",
         "share/p/apostle-urzag/index.html",
         "share/p/apostle-viljar/index.html",
         "share/p/baranto/index.html",
@@ -862,12 +860,12 @@
         "share/p/duka/index.html",
         "share/p/ezekiel-kalp/index.html",
         "share/p/frost/index.html",
-        "share/p/frux/index.html",
         "share/p/grinch/index.html",
         "share/p/hayami/index.html",
         "share/p/isaac/index.html",
         "share/p/jake/index.html",
         "share/p/jeong-ria/index.html",
+        "share/p/kamishiro-shuichi/index.html",
         "share/p/karl-maxwell/index.html",
         "share/p/kate/index.html",
         "share/p/maya/index.html",
@@ -2994,7 +2992,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/alma-koenig/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3110,6 +3109,90 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/apostle-camille-potier-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-camille-potier)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 능력과 대가, 활동 시기는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1807542,
+      "sha256": "410333cbc6bcf0923be0d6c7f1fc0035706bbab8cd70efb2eac47067598d35c4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/apostle-kendo-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-kendo)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 후드 속 얼굴과 능력, 활동 시기는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1875930,
+      "sha256": "9d6b4456c0b1bbdc11ccab004495505241c0a712d2391ec75e2502aa9663fb2d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/apostle-levente-hambas-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-levente-hambas)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 눈과 손이 변한 경위, 활동 시기는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1622879,
+      "sha256": "fb0045d084c0ec8d968a51822d1874579a665f3196b7edbe9507214680046383",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/apostle-lisbeth-van-doorn-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-lisbeth-van-doorn)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 팔을 덮은 가시와 창의 정체, 활동 시기는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1811287,
+      "sha256": "7ca145d4cf7e6d5dc31cc44b8db6b99a18ca1ebf7453be340b692d489b143a7b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3123,6 +3206,49 @@
       "usedBy": [
         "assets/js/data/media-manifest.js",
         "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/apostle-luke-eugene/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/apostle-meguro-soichiro-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-meguro-soichiro)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 여러 눈의 기능과 능력, 활동 시기는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1768031,
+      "sha256": "d37e3dfd9127efec8d4c443bcd20f677993944ec11f1e144b69a52c3eb8a2b13",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/apostle-robin-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-robin)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 가시의 정체와 능력, 활동 시기는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1728409,
+      "sha256": "284a265e51b4ff1c8d052d325e188a04712f158922bd984585815e39af589689",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
@@ -3144,6 +3270,28 @@
       "usedBy": [
         "assets/js/data/media-manifest.js",
         "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/apostle-uro/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/apostle-viljar-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-viljar)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 날개의 정체와 능력, 활동 시기는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1658610,
+      "sha256": "c7446f018a4afc1e9cf5b1a2a3575887106757835cb6f93446ef0023e84c2d44",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
@@ -3873,7 +4021,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/frux/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3993,6 +4142,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/hayami-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(hayami)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 피의 원인과 부대를 옮긴 이유는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1634847,
+      "sha256": "f5dfe53fb38798c83c896036e47051e15cf4987f01cf7f13792f3d1c6040f876",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/industrial-occult-plate-lab-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -4076,6 +4246,48 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "share/p/kagami-itsuki/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/kamishiro-shuichi-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(kamishiro-shuichi)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 다시 세우려는 교단의 이름과 소환 사건은 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1644260,
+      "sha256": "54558c2c2f5c253a6685174795bafcf3f02b19f62c0c85432f2f34b7ce7bce27",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(kenevin)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화(교단 명단의 히라에스)의 외형을 따른 지금 모습의 인물 재구성이다. 제3사도가 된 경위와 시점, 현재 소재는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1816838,
+      "sha256": "ce4a93b2af47975f18d76e9f9d472adbae799c68a8efbf0da411e9ad159ef871",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4186,6 +4398,27 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "share/p/mikage-shiori/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/mizuno-shun-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(mizuno-shun)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 그림 속 장소와 시각, 리버스 발생 뒤의 생사는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1854863,
+      "sha256": "4f2558a16c00b135d6c4b0f81f65001bc380318682ecf362a9e5274217f8d2db",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4321,6 +4554,27 @@
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "share/h/2026-08-20-northern-reversal/index.html",
         "tools/verify-data.mjs"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/ogawa-nao-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(ogawa-nao)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 그림 속 장소와 시각, 리버스 발생 뒤의 생사는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1830322,
+      "sha256": "c3eb6f1550cbd643f024fda50769cb29e33a3d17ed200748d7b728880a030912",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4641,6 +4895,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/shinohara-chiharu-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(shinohara-chiharu)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 피의 원인과 교전 기록은 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1687848,
+      "sha256": "7b8b9e3820155da47f3f893ea5e98691bfde55a0faa637e2536795cea57aedd3",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/sid-memory-check-booth-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -4789,6 +5064,27 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "share/p/tachibana-isamu/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/tonari-nakamura-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(tonari-nakamura)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 대가의 내용과 타락자·능력자 분류는 확정하지 않는다.",
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1769944,
+      "sha256": "abf75c62571c197b1259540684d8ee1a92386c16807f3fbe668ae89901af21bb",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-additions-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -5933,6 +6229,134 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/apostle-camille-potier-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-camille-potier-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 15002,
+      "sha256": "0786c9bb1aa70d0f08299b25414fd17dad673b326ef480f1222c7b3a1478d734",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-camille-potier-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-camille-potier-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-camille-potier-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 49606,
+      "sha256": "688ee75f9bcc0d8edbe26c598dacf47c9115655467dea44d80e3cb0485111fce",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-camille-potier-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-kendo-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-kendo-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12122,
+      "sha256": "a377f28f4e91e977fab3640db1bcc41be0ab75fcbfc487780bd396b107ac4946",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-kendo-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-kendo-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-kendo-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 43206,
+      "sha256": "0cc288a4c34e2eb081381530e6f367837fb9870c77e7ffc125ee32222fc6e117",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-kendo-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-levente-hambas-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-levente-hambas-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6982,
+      "sha256": "0fc8b4aa0fbfdef42f8e0a7f3158c470db3675317746f75d91e0f565680dff75",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-levente-hambas-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-levente-hambas-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-levente-hambas-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 22538,
+      "sha256": "d4335c46c0c5e83ab3e265d72a2afec47bdd6fd604a20f7e6f4173d12bd4ba08",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-levente-hambas-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-lisbeth-van-doorn-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-lisbeth-van-doorn-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 11546,
+      "sha256": "2612b0a771b98b1d528586673acb061208abfe6b3293490d4f2d459c391cadcf",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-lisbeth-van-doorn-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-lisbeth-van-doorn-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-lisbeth-van-doorn-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 38190,
+      "sha256": "748f44027107be170f68c8c43a065116e0b716ab7f7ebf604ec8d3e52f2ed583",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-lisbeth-van-doorn-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/apostle-luke-eugene-portrait-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5965,6 +6389,70 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/apostle-meguro-soichiro-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-meguro-soichiro-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10386,
+      "sha256": "a7872f8834bbc0f9ec48ede9ed9443ae0fe99b6b1d8fb02943534840c8692f61",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-meguro-soichiro-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-meguro-soichiro-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-meguro-soichiro-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 34866,
+      "sha256": "77c72346f51bb3ce510b794d8deac458119f60a1c16d2594c7fb9fd27d723920",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-meguro-soichiro-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-robin-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-robin-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 11048,
+      "sha256": "53ee7ea9c9af26fb2c2f43be857922a5d29619651e342633fa38114a9ce1a860",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-robin-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-robin-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-robin-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 36936,
+      "sha256": "6d91a7bbb5c679799c3de54baf0fbf4920e0aefa8186400fb9c2eb72bdb1cb77",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-robin-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/apostle-uro-portrait-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5993,6 +6481,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/apostle-uro-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-viljar-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-viljar-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9318,
+      "sha256": "cf98978cf9135a07f5799f12bf864f36727b1d4ffc8277c39f9f2a0be7cc0076",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-viljar-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-viljar-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-viljar-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 32496,
+      "sha256": "d34acff407463330a60396f76e5c1f3ab7f98f5c4ee943bf9b2c34129ea69d51",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-viljar-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -7085,6 +7605,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/hayami-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/hayami-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 14126,
+      "sha256": "69e3b3dce02348d5a3e0397b87e1f72652b060751247ae9e2c3c367312747a8e",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/hayami-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/hayami-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/hayami-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 42474,
+      "sha256": "3d6cc5773c600f37375335159f6747b149794d6a64faf9761d4bb7e356d16e46",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/hayami-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/industrial-occult-plate-lab-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -7177,6 +7729,70 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/kagami-itsuki-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kamishiro-shuichi-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kamishiro-shuichi-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 6838,
+      "sha256": "ae9514b3a2ca583c5edc8efeaceb8f53458cc41f3eb6f4cd018fcdf24bf46769",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kamishiro-shuichi-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kamishiro-shuichi-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kamishiro-shuichi-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 21814,
+      "sha256": "f11bf2a5750d44997a3100f7bb3c16355fe79e52c1caf6aaa4a129e73d729801",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kamishiro-shuichi-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kenevin-hiraeth-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10782,
+      "sha256": "dea7cab2a8c6d9b1e993ff8472f7f0a16d5bba2785b45faacf7ff09d0eff1fa5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/kenevin-hiraeth-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 39198,
+      "sha256": "f9d6db90d4bc068c993f849e22ae2bfb87ac30ec08146d3736454fc766d98081",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -7341,6 +7957,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/mizuno-shun-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mizuno-shun-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 16090,
+      "sha256": "0b6bc096737dc3db5067a10dd74037a8fac92d7f70d7bcaab7b2607706dc323e",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mizuno-shun-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/mizuno-shun-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mizuno-shun-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 55186,
+      "sha256": "ae141137c387427cc148968c76fd7deb5abac886ca591dddab29d73e9606acb3",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mizuno-shun-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/nhc-close-quarters-stairwell-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -7497,6 +8145,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ogawa-nao-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ogawa-nao-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 17850,
+      "sha256": "bd63fc43a2a20e129d7ad385b08d0c6d342196ae068620e8e5105f961e071367",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ogawa-nao-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/ogawa-nao-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/ogawa-nao-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 54666,
+      "sha256": "5ea21ca54dbcfa99ab56a25d6812d7dc599232d8a9b9767262f20f937dfe96d6",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/ogawa-nao-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -7949,6 +8629,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/shinohara-chiharu-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/shinohara-chiharu-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 13084,
+      "sha256": "ce0f214d7fe5773dd38e13d0f1d8677e91577947c695d757983aaaafca5ff651",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/shinohara-chiharu-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/shinohara-chiharu-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/shinohara-chiharu-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 40390,
+      "sha256": "fbef10fb1b6037a45d2829809567a62a7d27579b3339eb51344f880e2309bfd9",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/shinohara-chiharu-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/sid-memory-check-booth-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -8169,6 +8881,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/tachibana-isamu-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/tonari-nakamura-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/tonari-nakamura-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12936,
+      "sha256": "4e00385210256e8d4784f99119dee3d839bcde0a785585d1bbe638a946026576",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/tonari-nakamura-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/tonari-nakamura-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/tonari-nakamura-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 41686,
+      "sha256": "a3010a4f4905b8f95acc4318d56ae20f489591e3b31895ae4656215a58a00ef2",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/tonari-nakamura-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

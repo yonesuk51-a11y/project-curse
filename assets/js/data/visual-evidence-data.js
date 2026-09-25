@@ -191,6 +191,48 @@
     'assets/resources/derived/apostle-uro-portrait-concept-v1.png':Object.freeze({
       assetId:'VEA-PER-URO-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-uro) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 기록된 나이·출신·습관(남의 기계를 오래 관찰)으로 외형을 재구성한 인물 재구성이다. 지도의 실제 위치, 계보 문양과 시에나 칸과의 관계는 확정하지 않는다.'
     }),
+    'assets/resources/derived/apostle-camille-potier-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-CMP-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-camille-potier)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 능력과 대가, 활동 시기는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/apostle-viljar-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-VLJ-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-viljar)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 날개의 정체와 능력, 활동 시기는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/apostle-levente-hambas-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-LVH-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-levente-hambas)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 눈과 손이 변한 경위, 활동 시기는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/apostle-robin-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-RBN-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-robin)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 가시의 정체와 능력, 활동 시기는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/apostle-kendo-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-KND-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-kendo)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 후드 속 얼굴과 능력, 활동 시기는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/apostle-lisbeth-van-doorn-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-LSB-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-lisbeth-van-doorn)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 팔을 덮은 가시와 창의 정체, 활동 시기는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/apostle-meguro-soichiro-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-MGR-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-meguro-soichiro)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 여러 눈의 기능과 능력, 활동 시기는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/tonari-nakamura-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-TNR-01',className:'RECONSTRUCTED',source:'인물 기록(tonari-nakamura)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 대가의 내용과 타락자·능력자 분류는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/hayami-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-HYM-01',className:'RECONSTRUCTED',source:'인물 기록(hayami)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 피의 원인과 부대를 옮긴 이유는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/shinohara-chiharu-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-SNH-01',className:'RECONSTRUCTED',source:'인물 기록(shinohara-chiharu)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 피의 원인과 교전 기록은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/mizuno-shun-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-MZN-01',className:'RECONSTRUCTED',source:'인물 기록(mizuno-shun)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 그림 속 장소와 시각, 리버스 발생 뒤의 생사는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/ogawa-nao-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-OGW-01',className:'RECONSTRUCTED',source:'인물 기록(ogawa-nao)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 그림 속 장소와 시각, 리버스 발생 뒤의 생사는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/kamishiro-shuichi-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-KMS-01',className:'RECONSTRUCTED',source:'인물 기록(kamishiro-shuichi)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 다시 세우려는 교단의 이름과 소환 사건은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-KNV-02',className:'RECONSTRUCTED',source:'인물 기록(kenevin)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화(교단 명단의 히라에스)의 외형을 따른 지금 모습의 인물 재구성이다. 제3사도가 된 경위와 시점, 현재 소재는 확정하지 않는다.'
+    }),
     'assets/resources/derived/outer-god-war-wall-host-concept-v1.png':Object.freeze({
       assetId:'VEA-OGW-WALL-01',className:'RECONSTRUCTED',source:'외신 강림과 성벽의 저항(deep-outer-god-war)·커네빈 인물 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'교단 측 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁의 연대·장소·규모와 경과, 우시노다의 모습은 확정하지 않는다.'
     }),

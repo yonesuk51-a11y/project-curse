@@ -980,6 +980,118 @@
       "release": "PROJECT_GENERATED",
       "source": "인물 기록(apostle-uro) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
       "handling": "인상착의 기록이 없어 기록된 나이·출신·습관(남의 기계를 오래 관찰)으로 외형을 재구성한 인물 재구성이다. 지도의 실제 위치, 계보 문양과 시에나 칸과의 관계는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-camille-potier-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-camille-potier)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 능력과 대가, 활동 시기는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-viljar-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-viljar)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 날개의 정체와 능력, 활동 시기는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-levente-hambas-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-levente-hambas)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 눈과 손이 변한 경위, 활동 시기는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-robin-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-robin)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 가시의 정체와 능력, 활동 시기는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-kendo-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-kendo)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 후드 속 얼굴과 능력, 활동 시기는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-lisbeth-van-doorn-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-lisbeth-van-doorn)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 팔을 덮은 가시와 창의 정체, 활동 시기는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-meguro-soichiro-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-meguro-soichiro)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 여러 눈의 기능과 능력, 활동 시기는 확정하지 않는다."
+    },
+    "assets/resources/derived/tonari-nakamura-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(tonari-nakamura)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 대가의 내용과 타락자·능력자 분류는 확정하지 않는다."
+    },
+    "assets/resources/derived/hayami-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(hayami)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 피의 원인과 부대를 옮긴 이유는 확정하지 않는다."
+    },
+    "assets/resources/derived/shinohara-chiharu-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(shinohara-chiharu)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 피의 원인과 교전 기록은 확정하지 않는다."
+    },
+    "assets/resources/derived/mizuno-shun-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(mizuno-shun)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 그림 속 장소와 시각, 리버스 발생 뒤의 생사는 확정하지 않는다."
+    },
+    "assets/resources/derived/ogawa-nao-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(ogawa-nao)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 그림 속 장소와 시각, 리버스 발생 뒤의 생사는 확정하지 않는다."
+    },
+    "assets/resources/derived/kamishiro-shuichi-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(kamishiro-shuichi)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화의 외형을 따른 인물 재구성이다. 다시 세우려는 교단의 이름과 소환 사건은 확정하지 않는다."
+    },
+    "assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png": {
+      "credit": "Project Curse portrait brief after the author's character designs / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(kenevin)과 원작자 인물 설정화 기반 인물 재구성 (2026-09-25 지옥 그림체)",
+      "handling": "원작자 인물 설정화(교단 명단의 히라에스)의 외형을 따른 지금 모습의 인물 재구성이다. 제3사도가 된 경위와 시점, 현재 소재는 확정하지 않는다."
     }
   }
 }
