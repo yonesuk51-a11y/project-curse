@@ -126,7 +126,7 @@
       id:'ezekiel-kalp',name:'에제키엘 칼프',group:'fhc-ark',role:'아크의 보스',status:'active',certainty:'listed',
       overview:'F.H.C-아크의 보스로 기재됐다.',
       affiliations:[{key:'fhc',label:'F.H.C-아크',role:'보스',certainty:'listed'}],
-      limits:['능력, 지휘 범위와 유니온과의 관계는 제공되지 않았다.']
+      limits:['능력, 지휘 범위와 유니온과의 관계는 제공되지 않았다.','젊은 외모를 유지하는 힘의 정체와 대가는 기록되지 않았다.']
     },
     {
       id:'sakuma-yuta',name:'사쿠마 유타',aliases:['레드 마우스'],group:'fhc-ark',secondaryGroups:['haiman'],role:'U.A.C 정보원 / 하이문 리더',status:'active',certainty:'partial',
@@ -207,7 +207,7 @@
       overview:'U.A.C 위원회 대표로 기재된 궁술 사용자다.',
       affiliations:[{key:'uac',label:'U.A.C',role:'위원회 대표',certainty:'listed'}],capabilities:['궁술'],
       relationships:[{target:'natalia',relation:'위원회 비서',certainty:'listed'}],
-      limits:['위원회의 정확한 명칭과 궁술의 초자연적 성질 여부는 제공되지 않았다.']
+      limits:['위원회의 정확한 명칭과 궁술의 초자연적 성질 여부는 제공되지 않았다.','젊은 외모를 유지하는 힘의 정체와 대가는 기록되지 않았다.']
     },
     {
       id:'natalia',name:'나탈리아',group:'uac',role:'위원회 비서 / 정보원',status:'active',certainty:'listed',

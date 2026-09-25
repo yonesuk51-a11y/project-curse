@@ -92,6 +92,13 @@
     'assets/resources/derived/ogawa-nao-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/kamishiro-shuichi-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    // 2026-09-25 사용자 채택 — 2006년 명부 지휘부 6명 사진(인상착의 기록 없음)
+    'assets/resources/derived/alma-millen-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/yohan-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/baranto-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/pierce-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/ezekiel-kalp-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/alma-kara-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     // 2026-09-25 사용자 채택 — 기록보관소 6장, 외신 전쟁, 인물 사진 2장(알룰림·미카게 시오리)
     'assets/resources/derived/outer-god-war-wall-host-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},

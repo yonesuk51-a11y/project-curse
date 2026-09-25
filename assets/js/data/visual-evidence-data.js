@@ -233,6 +233,24 @@
     'assets/resources/derived/kenevin-hiraeth-portrait-concept-v1.png':Object.freeze({
       assetId:'VEA-PER-KNV-02',className:'RECONSTRUCTED',source:'인물 기록(kenevin)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화(교단 명단의 히라에스)의 외형을 따른 지금 모습의 인물 재구성이다. 제3사도가 된 경위와 시점, 현재 소재는 확정하지 않는다.'
     }),
+    'assets/resources/derived/alma-millen-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-MLN-01',className:'RECONSTRUCTED',source:'인물 기록(alma-millen) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 무형 이계를 지나는 방식과 알마 가문과의 관계는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/yohan-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-YHN-01',className:'RECONSTRUCTED',source:'인물 기록(yohan) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 명령서의 내용과 승인자, 전격의 생기가 드러나는 모습은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/baranto-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-BRT-01',className:'RECONSTRUCTED',source:'인물 기록(baranto) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 기록된 나이보다 늙어 보인다. 통화 내용과 철수 결정은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/pierce-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-ASF-01',className:'RECONSTRUCTED',source:'인물 기록(pierce) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 겉모습이 기록된 나이(52세)보다 훨씬 젊다. 젊음을 유지하는 힘의 정체와 대가는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/ezekiel-kalp-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-KRP-01',className:'RECONSTRUCTED',source:'인물 기록(ezekiel-kalp) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 겉모습이 기록된 나이(49세)보다 훨씬 젊다. 젊음을 유지하는 힘의 정체와 대가, 다른 능력의 유무는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/alma-kara-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-KRA-01',className:'RECONSTRUCTED',source:'인물 기록(alma-kara) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 서명하는 문서의 내용과 가문 안의 지위는 확정하지 않는다.'
+    }),
     'assets/resources/derived/outer-god-war-wall-host-concept-v1.png':Object.freeze({
       assetId:'VEA-OGW-WALL-01',className:'RECONSTRUCTED',source:'외신 강림과 성벽의 저항(deep-outer-god-war)·커네빈 인물 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'교단 측 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁의 연대·장소·규모와 경과, 우시노다의 모습은 확정하지 않는다.'
     }),
