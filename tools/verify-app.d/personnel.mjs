@@ -9,8 +9,9 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const legacy = read('tools/fixtures/legacy-app/assets/js/pages/personnel-archive.js');
   const source = read('assets/app/js/screens/personnel.js');
   const records = P.records;
-  add('fifty-six-files-ten-groups', records.length === 56 && P.groups.length === 10);
-  add('unique-ids-and-index', new Set(records.map((record) => record.id)).size === 56 && records.every((record) => P.byId[record.id] === record));
+  // 2026-09-25 사용자 결정으로 2006년 명부에서 35명을 정리했다(56 → 21명, 빈 그룹 두 개 삭제).
+  add('twenty-one-files-eight-groups', records.length === 21 && P.groups.length === 8);
+  add('unique-ids-and-index', new Set(records.map((record) => record.id)).size === 21 && records.every((record) => P.byId[record.id] === record));
   add('primary-and-secondary-groups-exist', records.every((record) => [record.group, ...(record.secondaryGroups || [])].every((id) => P.groupById[id])));
   add('status-and-certainty-keys', records.every((record) => P.statuses[record.status] && P.certainties[record.certainty] && (record.affiliations || []).every((item) => P.certainties[item.certainty]) && (record.relationships || []).every((item) => P.certainties[item.certainty])));
   add('all-relationship-targets-exist', records.every((record) => (record.relationships || []).every((item) => P.byId[item.target])));
@@ -21,11 +22,10 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     return profile && remake && record.name === (remake.name || profile.name) && JSON.stringify(record.identity) === JSON.stringify(remake.identity || profile.identity) && record.incident === remake.incident;
   }));
   // 사망 당시 나이와 실제 연령 미상도 원문이다. 기준 연도에 맞춰 나이를 다시 계산하지 않는다.
-  const ageExceptions = { 'yanami-shinka': '29세 / 2003년 사망 기록', duka: '42세 / 2001년 사망 기록', reiki: '26세 / 2004년 사망 기록', 'apostle-luke-eugene': '외형 37세 / 실제 연령 미상', 'apostle-urzag': '육체별 상이' };
+  const ageExceptions = { reiki: '26세 / 2004년 사망 기록', 'apostle-luke-eugene': '외형 37세 / 실제 연령 미상' };
   add('identity-career-and-recorded-age', D?.year === '2006' && records.every((record) => record.identity && (Object.hasOwn(ageExceptions, record.id) ? record.identity.age === ageExceptions[record.id] : record.identity.age.includes('2006')) && record.history.length && record.background.length));
   add('ability-cost-preserved', records.filter((record) => record.abilitySource).every((record) => record.abilityCost));
   add('historical-names-searchable', records.filter((record) => record.sourceName).every((record) => record.aliases.includes(record.sourceName)));
-  add('distinct-aaron-identities', P.byId['aaron-uac'] && P.byId['aaron-syndicate'] && P.byId['aaron-uac'].name !== P.byId['aaron-syndicate'].name);
   // 2026-09-25 사용자 채택: 2006년 명부의 사진은 사쿠마 유타·마커스 콜, 기록 기반 4명, 지휘부 6명(12명)뿐이다.
   // 사진은 매체 목록과 증거 대장에 등록된 재구성 파일만 쓴다(추가 등록 명부도 같다).
   const withPortrait = (list) => list.filter((record) => record.visual?.src);
@@ -65,7 +65,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const css = read('assets/app/css/screens/personnel.css');
   add('reduced-motion-screen-rule', css.includes('html[data-fx="reduced"]') && !/@media\s*\(prefers-reduced-motion/.test(css) && source.includes("addEventListener('pc:fx'"));
   add('dossier-open-and-responsive-density', css.includes('@keyframes tc-per-file-open') && css.includes('clip-path: inset(0 0 100% 0)') && css.includes('html:not([data-density="full"])') && css.includes('@media (max-width: 720px)') && css.includes('minmax(0, 1fr)'));
-  add('identity-anomalies-backed-by-records', D.identityAnomalies.length === 3 && D.identityAnomalies.every((id) => /기억|신원/.test(P.byId[id]?.abilityCost || '') && /흐려짐|소실|재현하지 못함/.test(P.byId[id]?.abilityCost || '')));
+  add('identity-anomalies-backed-by-records', D.identityAnomalies.length === 2 && D.identityAnomalies.every((id) => /기억|신원/.test(P.byId[id]?.abilityCost || '') && /흐려짐|소실|재현하지 못함/.test(P.byId[id]?.abilityCost || '')));
   const check = (name, run) => { try { add(name, true, run() || ''); } catch (error) { add(name, false, error.message); } };
   check('former-portrait-plates-and-brief-labels', () => {
     const { c, host, screen } = screenHarness(context, source);
@@ -120,16 +120,16 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const roster = () => host.querySelectorAll('[data-per-id]');
     const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
     const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
-    show([]); assert.equal(roster().length, initial); assert.equal(initial, 63);
+    show([]); assert.equal(roster().length, initial); assert.equal(initial, 39);
     const ids = () => roster().map((node) => node.dataset.perId);
     for (const group of groups) assert.ok(ids().filter((id) => P.byId[id].group === group.id).length <= 6);
-    assert.equal(host.querySelectorAll('[data-per-expand]').length, 4);
-    click('perExpand', 'personal'); assert.equal(roster().length, initial + 3); assert.equal(navigations.length, 0);
-    assert.equal(c.document.activeElement.dataset.perExpand, 'personal');
+    assert.equal(host.querySelectorAll('[data-per-expand]').length, 1);
+    click('perExpand', 'ushinoda-figures'); assert.equal(roster().length, initial + 4); assert.equal(navigations.length, 0);
+    assert.equal(c.document.activeElement.dataset.perExpand, 'ushinoda-figures');
     assert.equal(c.document.activeElement.getAttribute('aria-expanded'), 'true');
-    show([records[0].id]); show([]); assert.equal(roster().length, initial + 3);
-    screen.hide(); show([]); assert.equal(roster().length, initial + 3);
-    click('perExpand', 'personal'); assert.equal(roster().length, initial);
+    show([records[0].id]); show([]); assert.equal(roster().length, initial + 4);
+    screen.hide(); show([]); assert.equal(roster().length, initial + 4);
+    click('perExpand', 'ushinoda-figures'); assert.equal(roster().length, initial);
     click('perGroup', 'ushinoda'); assert.equal(roster().length, everyone.filter((person) => [person.group, ...(person.secondaryGroups || [])].includes('ushinoda')).length); assert.equal(host.querySelectorAll('[data-per-expand]').length, 0);
     click('perReset', '');
     const search = host.querySelector('#tc-per-search'); search.value = '사도'; host.emit('input', search);

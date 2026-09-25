@@ -41,7 +41,7 @@
       },
       {
         id:'personnel',index:'05',code:'PERSONNEL REGISTER',label:'인물 기록',shortLabel:'인물',theme:'personnel',glyph:'PR',
-        description:'2006년까지 확인된 56명의 소속과 사건을 인물별로 따라간다.',
+        description:'2006년 명부와 2042 추가 등록 인물의 소속과 사건을 인물별로 따라간다.',
         telemetry:[['BASIS','2006'],['REGISTER','56 FILES'],['STATUS','HISTORICAL']]
       }
     ],
