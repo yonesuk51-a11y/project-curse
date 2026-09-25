@@ -179,6 +179,18 @@
     'assets/resources/derived/mason-portrait-concept-v1.png':Object.freeze({
       assetId:'VEA-PER-MSN-01',className:'RECONSTRUCTED',source:'인물 기록(mason)과 원작자 인물 설정화 기반 인물 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'원작자 인물 설정화의 외형을 따른 인물 재구성이다. 투시의 작동 방식과 대가의 범위는 확정하지 않는다.'
     }),
+    'assets/resources/derived/alma-koenig-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-VLN-01',className:'RECONSTRUCTED',source:'인물 기록(alma-koenig) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 기록된 나이·직책·습관(회의 전 녹음기 전원 분리)으로 외형을 재구성한 인물 재구성이다. 실제 회의의 시각·참석자와 피난소 전환의 완료 여부는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/frux-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-FRX-01',className:'RECONSTRUCTED',source:'인물 기록(frux) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 기록된 나이·직책·습관(다 쓴 부적을 꿰매 보관)으로 외형을 재구성한 인물 재구성이다. 현재 신원과 재임, 부적 작성자의 정체는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-LCN-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-luke-eugene) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 기록된 나이·출신·권능으로 외형을 재구성한 인물 재구성이다. 제6안의 모양, 흔적을 남긴 행위와 알룰림과의 관계는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/apostle-uro-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-URO-01',className:'RECONSTRUCTED',source:'인물 기록(apostle-uro) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 기록된 나이·출신·습관(남의 기계를 오래 관찰)으로 외형을 재구성한 인물 재구성이다. 지도의 실제 위치, 계보 문양과 시에나 칸과의 관계는 확정하지 않는다.'
+    }),
     'assets/resources/derived/outer-god-war-wall-host-concept-v1.png':Object.freeze({
       assetId:'VEA-OGW-WALL-01',className:'RECONSTRUCTED',source:'외신 강림과 성벽의 저항(deep-outer-god-war)·커네빈 인물 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'교단 측 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁의 연대·장소·규모와 경과, 우시노다의 모습은 확정하지 않는다.'
     }),

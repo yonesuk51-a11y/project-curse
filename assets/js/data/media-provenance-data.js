@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 450,
-    "referenced": 450,
+    "registered": 462,
+    "referenced": 462,
     "unreferenced": 0,
     "review": 150,
-    "managed": 300,
+    "managed": 312,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 420,
+      "image": 432,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 282,
+      "PROJECT_GENERATED": 294,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 204,
+      "DELIVERY_DERIVATIVE": 212,
       "INTERFACE": 25,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 107,
+      "RECONSTRUCTED": 111,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -683,15 +683,22 @@
         "share/p/alma-wade/index.html",
         "share/p/alullim/index.html",
         "share/p/apostle-alvarez/index.html",
+        "share/p/apostle-camille-potier/index.html",
         "share/p/apostle-jade-jackson/index.html",
+        "share/p/apostle-kendo/index.html",
+        "share/p/apostle-levente-hambas/index.html",
+        "share/p/apostle-lisbeth-van-doorn/index.html",
         "share/p/apostle-luke-eugene/index.html",
+        "share/p/apostle-meguro-soichiro/index.html",
         "share/p/apostle-moha/index.html",
         "share/p/apostle-parthea-hill/index.html",
+        "share/p/apostle-robin/index.html",
         "share/p/apostle-shahin/index.html",
         "share/p/apostle-sharma/index.html",
         "share/p/apostle-siena-khan/index.html",
         "share/p/apostle-uro/index.html",
         "share/p/apostle-urzag/index.html",
+        "share/p/apostle-viljar/index.html",
         "share/p/baranto/index.html",
         "share/p/brian-alberoz/index.html",
         "share/p/casper/index.html",
@@ -703,6 +710,7 @@
         "share/p/frost/index.html",
         "share/p/frux/index.html",
         "share/p/grinch/index.html",
+        "share/p/hayami/index.html",
         "share/p/isaac/index.html",
         "share/p/jake/index.html",
         "share/p/jeong-ria/index.html",
@@ -715,9 +723,11 @@
         "share/p/maya/index.html",
         "share/p/mikage-shiori/index.html",
         "share/p/mizumi-yanami/index.html",
+        "share/p/mizuno-shun/index.html",
         "share/p/natalia/index.html",
         "share/p/natsume/index.html",
         "share/p/nina-gregory/index.html",
+        "share/p/ogawa-nao/index.html",
         "share/p/pierce/index.html",
         "share/p/ramus-manson/index.html",
         "share/p/reiki/index.html",
@@ -729,9 +739,11 @@
         "share/p/saxon/index.html",
         "share/p/sebastian-clark/index.html",
         "share/p/semyon-reyes/index.html",
+        "share/p/shinohara-chiharu/index.html",
         "share/p/tachibana-isamu/index.html",
         "share/p/tanaka-chihiro/index.html",
         "share/p/tanaka-yui/index.html",
+        "share/p/tonari-nakamura/index.html",
         "share/p/violet/index.html",
         "share/p/yanami-shinka/index.html",
         "share/p/yanan-kes/index.html",
@@ -827,15 +839,22 @@
         "share/p/alma-millen/index.html",
         "share/p/alma-wade/index.html",
         "share/p/apostle-alvarez/index.html",
+        "share/p/apostle-camille-potier/index.html",
         "share/p/apostle-jade-jackson/index.html",
+        "share/p/apostle-kendo/index.html",
+        "share/p/apostle-levente-hambas/index.html",
+        "share/p/apostle-lisbeth-van-doorn/index.html",
         "share/p/apostle-luke-eugene/index.html",
+        "share/p/apostle-meguro-soichiro/index.html",
         "share/p/apostle-moha/index.html",
         "share/p/apostle-parthea-hill/index.html",
+        "share/p/apostle-robin/index.html",
         "share/p/apostle-shahin/index.html",
         "share/p/apostle-sharma/index.html",
         "share/p/apostle-siena-khan/index.html",
         "share/p/apostle-uro/index.html",
         "share/p/apostle-urzag/index.html",
+        "share/p/apostle-viljar/index.html",
         "share/p/baranto/index.html",
         "share/p/brian-alberoz/index.html",
         "share/p/casper/index.html",
@@ -845,6 +864,7 @@
         "share/p/frost/index.html",
         "share/p/frux/index.html",
         "share/p/grinch/index.html",
+        "share/p/hayami/index.html",
         "share/p/isaac/index.html",
         "share/p/jake/index.html",
         "share/p/jeong-ria/index.html",
@@ -852,9 +872,11 @@
         "share/p/kate/index.html",
         "share/p/maya/index.html",
         "share/p/mizumi-yanami/index.html",
+        "share/p/mizuno-shun/index.html",
         "share/p/natalia/index.html",
         "share/p/natsume/index.html",
         "share/p/nina-gregory/index.html",
+        "share/p/ogawa-nao/index.html",
         "share/p/pierce/index.html",
         "share/p/ramus-manson/index.html",
         "share/p/reiki/index.html",
@@ -865,8 +887,10 @@
         "share/p/saxon/index.html",
         "share/p/sebastian-clark/index.html",
         "share/p/semyon-reyes/index.html",
+        "share/p/shinohara-chiharu/index.html",
         "share/p/tanaka-chihiro/index.html",
         "share/p/tanaka-yui/index.html",
+        "share/p/tonari-nakamura/index.html",
         "share/p/violet/index.html",
         "share/p/yanami-shinka/index.html",
         "share/p/yesel-gregory/index.html",
@@ -890,6 +914,7 @@
       "sha256": "9478b934755fdba57ca1a034fc738f0e44ad7766261fc9f70012eb3451f5c252",
       "usedBy": [
         "assets/app/js/pc-fx.js",
+        "assets/app/js/screens/manual-card.js",
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "tools/verify-app.mjs"
@@ -2954,6 +2979,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/alma-koenig-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(alma-koenig) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 기록된 나이·직책·습관(회의 전 녹음기 전원 분리)으로 외형을 재구성한 인물 재구성이다. 실제 회의의 시각·참석자와 피난소 전환의 완료 여부는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief (no character design) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1717499,
+      "sha256": "240d98162519c4726c3928cb2704d4191f6528a7077139cdfc5f15be65d83992",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/alullim-portrait-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -3059,6 +3105,48 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "share/h/deep-angel-descent/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-luke-eugene) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 기록된 나이·출신·권능으로 외형을 재구성한 인물 재구성이다. 제6안의 모양, 흔적을 남긴 행위와 알룰림과의 관계는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief (no character design) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1786816,
+      "sha256": "f388fbc733f1ea9b4f47d13ba94671b2a3ef493d01b133d706cdf36fbc6f7f26",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/apostle-uro-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-uro) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 기록된 나이·출신·습관(남의 기계를 오래 관찰)으로 외형을 재구성한 인물 재구성이다. 지도의 실제 위치, 계보 문양과 시에나 칸과의 관계는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief (no character design) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1719936,
+      "sha256": "3b74c28766e2ef44024819270aa0cd874b0c61b0e464072797748df159a4324f",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3765,6 +3853,27 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "share/h/deep-first-breach/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/frux-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(frux) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 기록된 나이·직책·습관(다 쓴 부적을 꿰매 보관)으로 외형을 재구성한 인물 재구성이다. 현재 신원과 재임, 부적 작성자의 정체는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief (no character design) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1743899,
+      "sha256": "4fd2713a6ccd732b94f98d2d669953c4aa375d70d42b2cfde47021ead5b0cd2d",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -5632,6 +5741,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/alma-koenig-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-koenig-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10124,
+      "sha256": "c1e3d8f1f3c0e302a19df440bba2f4aec29c46deab0b38683407eb625c4457c7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-koenig-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alma-koenig-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-koenig-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 29836,
+      "sha256": "a327c458c02d93434d956fa333fe0e6dfb7f3123645d59710091af7e6e761f9c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-koenig-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/alullim-portrait-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -5788,6 +5929,70 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/angel-descent-red-sky-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-luke-eugene-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10494,
+      "sha256": "b5a0d5bda3bfc286c90a1300bd303b28f1727befcc85b76369d40aa977296d42",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-luke-eugene-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 35350,
+      "sha256": "3acf445457446fbb0e7c4aea378c0b880498adbc4778c7a4859cba3a4d70e69a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-uro-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-uro-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 11906,
+      "sha256": "36d94d5ebf8f3efb6acb5745a75c837c078f8729be50b1c6a4ba70edd67cb989",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-uro-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/apostle-uro-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/apostle-uro-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 39144,
+      "sha256": "bff89d0877715a7aa48b1e16aeeb27c93fe5be30b88368919576e58222754e41",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/apostle-uro-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -6716,6 +6921,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/first-breach-sealed-gate-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/frux-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/frux-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10006,
+      "sha256": "2a7194481fa730826988d56258aa9686886f475d4b10b9780c667a1259686a04",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/frux-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/frux-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/frux-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 31568,
+      "sha256": "8167626b68113f954944d6f02471d281765900854b0ebb199c67d43c8aa1e387",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/frux-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

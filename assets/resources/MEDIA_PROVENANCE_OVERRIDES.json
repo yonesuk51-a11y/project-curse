@@ -948,6 +948,38 @@
       "release": "PROJECT_GENERATED",
       "handling": "증거 이미지가 아닌 로고·인터페이스 자산. 사건·인물·세력의 모습으로 표시하지 않는다",
       "source": "금 간 봉인 엠블럼(투명판)을 기동 화면 표지용 128px로 축소"
+    },
+    "assets/resources/derived/alma-koenig-portrait-concept-v1.png": {
+      "credit": "Project Curse record-based portrait brief (no character design) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(alma-koenig) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 기록된 나이·직책·습관(회의 전 녹음기 전원 분리)으로 외형을 재구성한 인물 재구성이다. 실제 회의의 시각·참석자와 피난소 전환의 완료 여부는 확정하지 않는다."
+    },
+    "assets/resources/derived/frux-portrait-concept-v1.png": {
+      "credit": "Project Curse record-based portrait brief (no character design) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(frux) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 기록된 나이·직책·습관(다 쓴 부적을 꿰매 보관)으로 외형을 재구성한 인물 재구성이다. 현재 신원과 재임, 부적 작성자의 정체는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png": {
+      "credit": "Project Curse record-based portrait brief (no character design) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-luke-eugene) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 기록된 나이·출신·권능으로 외형을 재구성한 인물 재구성이다. 제6안의 모양, 흔적을 남긴 행위와 알룰림과의 관계는 확정하지 않는다."
+    },
+    "assets/resources/derived/apostle-uro-portrait-concept-v1.png": {
+      "credit": "Project Curse record-based portrait brief (no character design) / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(apostle-uro) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 기록된 나이·출신·습관(남의 기계를 오래 관찰)으로 외형을 재구성한 인물 재구성이다. 지도의 실제 위치, 계보 문양과 시에나 칸과의 관계는 확정하지 않는다."
     }
   }
 }

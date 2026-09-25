@@ -92,6 +92,11 @@
   // 2026-09-25 사용자 채택 인물 사진 — 2006년 명부 중 사쿠마 유타·마커스 콜만. 원작자 설정화의 외형을 따른 인물 재구성.
   records['sakuma-yuta'].visual={src:'assets/resources/derived/sakuma-yuta-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'검은 정장과 넥타이의 사쿠마 유타가 어두운 은신처 의자에 비스듬히 앉아 민무늬 동전 하나를 들고 옅게 웃는다.',caption:'대조용 인물 재구성 스케치다. 1989년 기록 표지의 인상을 따른다. 현재 거점과 하이문 안의 지휘 범위는 확정하지 않는다.'};
   records['mason'].visual={src:'assets/resources/derived/mason-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'긴 흑발과 전술 조끼의 메이슨이 도시 시설 창가에서 저격총을 세워 들고 있으며 얼굴 한쪽에서 여러 눈이 박힌 검붉은 잉크가 뒤로 퍼진다.',caption:'대조용 인물 재구성 스케치다. 투시의 작동 방식과 대가의 범위는 확정하지 않는다.'};
+  // 2026-09-25 사용자 채택 — 인상착의 기록이 없는 네 사람의 기록 기반 인물 재구성(콘라트 발렌 A, 알렉세이 프루신 B, 루시앙 유진 A, 우로 카인 B).
+  records['alma-koenig'].visual={src:'assets/resources/derived/alma-koenig-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'어두운 연구시설 회의실에서 긴 코트를 팔에 걸친 콘라트 발렌이 탁자 위 테이프 녹음기의 빠진 전원 플러그를 내려놓는다.',caption:'대조용 인물 재구성 스케치다. 인상착의 기록이 없어 기록된 나이·직책·습관으로 외형을 재구성했다. 실제 회의의 시각·참석자와 피난소 전환의 완료 여부는 확정하지 않는다.'};
+  records['frux'].visual={src:'assets/resources/derived/frux-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'가는 콧수염과 높은 옷깃의 알렉세이 프루신이 책상등 아래에서 글자 없는 부적 종이를 실로 꿰매고 있다.',caption:'대조용 인물 재구성 스케치다. 인상착의 기록이 없어 기록된 나이·직책·습관(다 쓴 부적을 꿰매 보관)으로 외형을 재구성했다. 현재 신원과 재임, 부적 작성자의 정체는 확정하지 않는다.'};
+  records['apostle-luke-eugene'].visual={src:'assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'묶은 긴 머리와 모피 깃 망토의 루시앙 유진이 라벤더 불빛이 비치는 지하문 통로에서 바닥의 검붉은 얼룩을 돌아본다.',caption:'대조용 인물 재구성 스케치다. 인상착의 기록이 없어 기록된 나이·출신·권능으로 외형을 재구성했다. 제6안의 모양, 흔적을 남긴 행위와 알룰림과의 관계는 확정하지 않는다.'};
+  records['apostle-uro'].visual={src:'assets/resources/derived/apostle-uro-portrait-concept-v1.png',className:'RECONSTRUCTED',label:'PORTRAIT RECONSTRUCTION / 인물 재구성',alt:'파란 작업복 상의를 허리에 묶은 마른 우로 카인이 작업대에 기대 기계를 바라보고, 벽의 지도 선을 따라 어두운 번개가 흐른다.',caption:'대조용 인물 재구성 스케치다. 인상착의 기록이 없어 기록된 나이·출신·습관(남의 기계를 오래 관찰)으로 외형을 재구성했다. 지도의 실제 위치, 계보 문양과 시에나 칸과의 관계는 확정하지 않는다.'};
 
   root.ProjectCursePersonnelRemake=freeze({
     version:'5.54.0',schema:'project-curse-personnel-remake-v1',

@@ -72,6 +72,11 @@
     'assets/resources/derived/kenevin-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/sakuma-yuta-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/mason-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    // 2026-09-25 사용자 채택 — 기록 기반 인물 사진 4장(인상착의 기록 없음)
+    'assets/resources/derived/alma-koenig-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/frux-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/apostle-luke-eugene-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/apostle-uro-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     // 2026-09-25 사용자 채택 — 기록보관소 6장, 외신 전쟁, 인물 사진 2장(알룰림·미카게 시오리)
     'assets/resources/derived/outer-god-war-wall-host-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/sakuma-tape-institution-entry-concept-v1.png':{width:1536,height:1024,widths:[480,960],tone:'low-key'},

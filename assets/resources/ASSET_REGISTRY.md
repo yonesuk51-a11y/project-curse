@@ -254,3 +254,14 @@ The user chose logo A "금 간 봉인" (`output/imagegen/20260925-logo-seal-brea
 | `brand/icon-512.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼을 어두운 바탕 512px 아이콘으로 배치 |
 | `brand/project-curse-emblem-64.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼(투명판)을 상단 바 표지용 64px로 축소 |
 | `brand/project-curse-emblem-128.png` | INTERFACE | Brand / logo | 금 간 봉인 엠블럼(투명판)을 기동 화면 표지용 128px로 축소 |
+
+## 2026-09-25 record-based portraits adoption
+
+The user picked one of two candidates for each of four 2006-register people who have no appearance record and no author design (`output/imagegen/20260925-portraits-r1-*`): Konrad Valen A, Aleksei Prusin B, Lucien Eugene A, Uro Kain B. Appearance was reconstructed from recorded sex, apparent age, origin, role, habits and props; wardrobe structure only was borrowed from the user's reference folder. All adults. No readable text, logos, real unit marks, invented insignia, lineage marks, children or sexual content. 480px and 960px WebP derivatives registered with `tone:'low-key'`.
+
+| Asset | Class | Used by | Source and handling | Required public label |
+|---|---|---|---|---|
+| `derived/alma-koenig-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `alma-koenig` | Thin build, swept-back grey-brown hair, white shirt, dark tie and a blank ID lanyard, long coat over one arm; sets down the unplugged plug of a tape recorder in a shelter conference room. | `인물 재구성` |
+| `derived/frux-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `frux` | Long face, grey-streaked swept-back wavy hair and a thin moustache, high-collared double-breasted black coat and leather belt; stitches spent paper talismans (no readable marks) under a desk lamp in a sealed records room. | `인물 재구성` |
+| `derived/apostle-luke-eugene-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `apostle-luke-eugene` | Long dark wavy hair tied back, dark fur-collared cloak, high neck and a thin plain chain; looks back in an underground gate passage lit by lavender fire, a dark red stain on the floor. The sixth eye is not drawn. | `인물 재구성` |
+| `derived/apostle-uro-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `apostle-uro` | Lean build with long limbs, short grey-blond hair, grey tank top, blue coveralls tied at the waist and rubber boots; leans over a workbench machine while dark lightning runs along the black lines of wall maps and photos. No lineage mark drawn. | `인물 재구성` |

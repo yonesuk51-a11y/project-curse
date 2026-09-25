@@ -31,7 +31,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const withPortrait = (list) => list.filter((record) => record.visual?.src);
   const registeredPortrait = (visual) => Boolean(context.ProjectCurseMediaManifest?.resolve(visual.src) &&
     context.ProjectCurseVisualEvidence?.known?.[visual.src] && visual.className === 'RECONSTRUCTED' && visual.alt && visual.caption && visual.label);
-  add('portraits-registered-only', withPortrait(records).map((record) => record.id).sort().join(',') === 'mason,sakuma-yuta' &&
+  add('portraits-registered-only', withPortrait(records).map((record) => record.id).sort().join(',') === 'alma-koenig,apostle-luke-eugene,apostle-uro,frux,mason,sakuma-yuta' &&
     [...withPortrait(records), ...withPortrait(P.additions || [])].every((record) => registeredPortrait(record.visual)),
     `${withPortrait(records).length} legacy / ${withPortrait(P.additions || []).length} additions`);
   // 2042 추가 등록 — 2006년 명부(records)와 섞지 않는다. 인물마다 기준 연도와 확인되지 않은 부분을 적는다.
