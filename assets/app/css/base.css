@@ -12,6 +12,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* 절로 바로 가는 이동(#field-manual/register 등)이 고정된 상단 바 밑에 가리지 않게 한다 */
+  scroll-padding-top: calc(var(--bar-h) + 12px);
   scrollbar-color: var(--line-2) var(--bg);
   color: var(--text);
   background-color: var(--bg);

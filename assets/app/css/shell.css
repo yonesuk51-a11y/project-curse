@@ -351,6 +351,36 @@ html.tc-immersive .tc-main {
   color: var(--text-2);
   font-size: var(--fs);
 }
+/* 열람자 호출부호(2026-09-25 사용자 결정) — 설명 아래 한 줄. 비어 있으면 숨는다 */
+.tc-screenhead-operator {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2);
+  margin: 0;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+.tc-screenhead-operator[hidden] {
+  display: none;
+}
+.tc-screenhead-operator span::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 6px 1px 0;
+  background: var(--red-bright);
+  vertical-align: middle;
+  animation: tc-blink 2.4s steps(1) infinite;
+}
+.tc-screenhead-operator b {
+  color: var(--text);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
 .tc-screenhead-meta {
   grid-column: 2;
   grid-row: 2 / span 2;
@@ -459,7 +489,8 @@ html.tc-immersive .tc-main {
     overflow-x: auto;
   }
 }
-@media (max-width: 560px) {
+/* 좁은 바 — 검색 단추가 들어온 뒤로는 680px까지 이 배치를 쓴다(가로 넘침 방지) */
+@media (max-width: 680px) {
   .tc-bar {
     gap: var(--s2);
     padding-right: 0;
@@ -489,7 +520,21 @@ html.tc-immersive .tc-main {
     min-width: 0;
     padding: 0 var(--s3);
   }
-  /* 좁은 화면에서는 보기·링크를 설정 창으로 옮긴다 */
+}
+/* 아주 작은 휴대폰(320px) — 간격만 더 줄인다 */
+@media (max-width: 360px) {
+  .tc-bar {
+    gap: 4px;
+  }
+  .tc-brand,
+  .tc-bar-status > div,
+  .tc-audio,
+  .tc-barbtn {
+    padding: 0 var(--s2);
+  }
+}
+/* 보기·링크는 설정 창에도 있다. 검색 단추가 들어온 뒤로는 900px 아래에서 바가 넘치므로 설정 창으로 옮긴다 */
+@media (max-width: 900px) {
   .tc-barbtn.is-wide-only {
     display: none;
   }

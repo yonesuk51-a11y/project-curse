@@ -495,3 +495,88 @@
     letter-spacing: .14em;
   }
 }
+
+/* ---------- 등록증 그림(2026-09-25 사용자 결정, manual-card.js) ---------- */
+.tc-man-field--wide {
+  grid-column: 1 / -1;
+}
+.tc-man-notice:empty {
+  display: none;
+}
+.tc-man-card {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: var(--s5);
+  align-items: start;
+  margin-top: var(--s5);
+  padding-top: var(--s5);
+  border-top: 1px solid var(--line);
+}
+.tc-man-card-view {
+  position: relative;
+  overflow: hidden;
+}
+.tc-man-card-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1080 / 1350;
+  border: 1px solid var(--line-2);
+  background: #0c0909;
+}
+/* 저장할 때 찍히는 인장 — 원은 테두리 반경 대신 원형 그라데이션으로 그린다(가이드 2절) */
+.tc-man-card-stamp {
+  position: absolute;
+  right: 10%;
+  bottom: 9%;
+  display: grid;
+  place-items: center;
+  width: 34%;
+  aspect-ratio: 1;
+  color: var(--red-bright);
+  background: radial-gradient(circle, transparent 0 58%, var(--red) 59% 64%, transparent 65%);
+  font-size: clamp(18px, 3.2vw, 34px);
+  font-weight: 700;
+  letter-spacing: .1em;
+  opacity: 0;
+  pointer-events: none;
+  transform: rotate(-10deg);
+}
+.tc-man-card-view.is-stamped .tc-man-card-stamp {
+  animation: tc-man-stamp 1000ms var(--ease) both;
+}
+.tc-man-card-view.is-stamped .tc-man-card-canvas {
+  animation: tc-man-card-flash 420ms linear both;
+}
+@keyframes tc-man-stamp {
+  0% { opacity: 0; transform: rotate(-10deg) scale(1.7); }
+  22% { opacity: 1; transform: rotate(-10deg) scale(1); }
+  78% { opacity: 1; transform: rotate(-10deg) scale(1); }
+  100% { opacity: 0; transform: rotate(-10deg) scale(1); }
+}
+@keyframes tc-man-card-flash {
+  0% { filter: brightness(1.35); }
+  100% { filter: none; }
+}
+.tc-man-card-side {
+  display: grid;
+  align-content: start;
+  gap: var(--s3);
+}
+.tc-man-card-side p {
+  max-width: 60ch;
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-man-card-side .tc-man-card-note {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+@media (max-width: 860px) {
+  .tc-man-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-man-card-view {
+    width: min(100%, 420px);
+  }
+}

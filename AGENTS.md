@@ -54,10 +54,10 @@
 
 | 화면 | 새 앱 파일 | 담당 |
 |---|---|---|
-| 셸·주소·공용 부품 | `index.html`, `pc-core.js`, `pc-prefs.js`, `pc-audio.js`, `pc-fx.js`, `pc-anomaly.js`, `pc-inspect.js`, `pc-updates.js`, `pc-settings.js`, `pc-state.js`, `tokens.css`·`base.css`·`shell.css`·`components.css`·`fx.css`, `tools/build-share-stubs.mjs`, 공유 페이지 `share/` | Claude |
+| 셸·주소·공용 부품 | `index.html`, `pc-core.js`, `pc-prefs.js`, `pc-audio.js`, `pc-fx.js`, `pc-anomaly.js`, `pc-inspect.js`, `pc-updates.js`, `pc-settings.js`, `pc-search.js`, `pc-state.js`, `tokens.css`·`base.css`·`shell.css`·`components.css`·`fx.css`, `tools/build-share-stubs.mjs`, 공유 페이지 `share/` | Claude |
 | 상황판(홈, 입문 카드·자캐 설정 안내 포함) | `screens/home.*`, `community-guide-data.js` | Claude |
 | 세계 기록 | `screens/history.*`, `assets/js/data/world-history-core-data.js` | Claude |
-| 현장 지침(옛 교전 교범) | `screens/manual.*` | Claude |
+| 현장 지침(옛 교전 교범) | `screens/manual.*`, `screens/manual-card.js`(등록증 그림) | Claude |
 | 작전 지도(옛 상황 관제) | `screens/map.*` | Codex |
 | 세력 분석 | `screens/faction.*` | Codex |
 | 기록보관소 | `screens/archive.*` | Codex |

@@ -23,18 +23,20 @@ Status: `2026-09-24 / 표시층 재작성` · `2026-09-25 / 옛 5.54 분위기 �
 | `assets/app/css/components.css` | 공용 부품 |
 | `assets/app/css/screens/<화면>.css` | 화면 전용 배치 |
 | `assets/app/js/pc-core.js` | `PCApp` — DOM 도우미, 화면 등록, 주소 규칙, 셸 표시 |
-| `assets/app/js/pc-prefs.js` | `PCPrefs` — `<head>`에서 먼저 불러 `html[data-fx="full\|reduced"]`(효과: 자동·전체·줄임)과 `html[data-density="brief\|full"]`(보기: 간략·전체)을 정한다 |
+| `assets/app/js/pc-prefs.js` | `PCPrefs` — `<head>`에서 먼저 불러 `html[data-fx="full\|reduced"]`(효과: 자동·전체·줄임)과 `html[data-density="brief\|full"]`(보기: 간략·전체)을 정한다. 열람자 호출부호 `PCPrefs.operator()`·`setOperator()`(2026-09-25, 기기에만 저장, 24자) |
 | `assets/app/js/pc-audio.js` | `PCAudio` — 음향(기본 켜짐, 2026-09-25). 사건 이름으로 소리를 낸다(`cue`). 채널 이동·상세 열람·목록 복귀 소리는 `pc:route` 알림을 듣고 스스로 낸다. 이상 신호 잡음·심각 등급 울림은 Web Audio 합성 |
 | `assets/app/js/pc-fx.js` · `assets/app/css/fx.css` | 연출 — 접속 확인·단말 기동·세션 복원·기록 언마운트, 채널 인계 막, 채널별 등장, 돌아오면 화면 켜짐, 증거 현상, 감식 보기·설정 창 스타일 |
 | `assets/app/js/pc-anomaly.js` | 드문 이상 신호(`data-tc-anomaly`, 시계), 자리 비움 탭 제목, 삼야 무응답 기념일(`html[data-silence]`) |
 | `assets/app/js/pc-inspect.js` | 증거 사진 감식 보기 |
 | `assets/app/js/pc-updates.js` | 새 기록 알림 — 지난 방문 뒤 새 기록 링크에 '새 기록' 표지, 홈의 지난 방문 이후(`site-updates-data.js`) |
-| `assets/app/js/pc-settings.js` | 상단 바 보기·링크·설정 단추와 설정 창 |
+| `assets/app/js/pc-settings.js` | 상단 바 보기·링크·설정 단추와 설정 창(열람자·소리·효과·보기·링크) |
+| `assets/app/js/pc-search.js` | 통합 검색(2026-09-25) — 상단 바 '검색' 단추·'/'·Ctrl(⌘)+K. 인물·세계 기록·세력·기록보관소·작전 지도·안내를 이름·별칭·약어·한글 역할·초성으로 찾는다. 목록은 올라온 데이터에서 처음 열 때 만든다 |
 | `assets/js/data/terminal-fx-data.js` | 소리 이름→파일·음량, 화면 이동 사건, 작전·순례 소리, 새 채널 인계 문구, 기동 문구, 이상 신호·자리 비움·기념일 설정 |
 | `assets/js/data/channel-hero-data.js` · `open-canon-data.js` · `community-guide-data.js` · `site-updates-data.js` · `share-index-data.js` | 채널 대표 그림, 자유 해석 목록, 입문 카드·자캐 설정 안내, 갱신 기록, 공유 주소 목록(생성) |
 | `tools/build-share-stubs.mjs` | 인물·기록·세력·기록보관소 링크 미리보기 공유 페이지 `share/<p\|h\|f\|a>/<id>/` 생성 |
 | `assets/app/js/pc-state.js` | 진행 상태 저장소 — `ProjectCurseOperationState`(부서진 왕관 판정), `ProjectCursePilgrimageState`(순례), `ProjectCurseVerdictArchiveState`(현장 판정 보관). 작전 지도가 쓰고 상황판·세계 기록이 읽는다. 옛 저장 키와 `projectcurse:*-change` 이벤트를 그대로 쓴다 |
 | `assets/app/js/screens/<화면>.js` | 화면 모듈 |
+| `assets/app/js/screens/manual-card.js` | `PCRegisterCard` — 현장 지침의 등록증 그림(1080×1350 PNG). 방문자 사진은 기기 메모리에서만 쓴다(네트워크 요청 없음) |
 | `tools/verify-app.mjs` | 새 앱 검증 |
 
 화면 파일 이름: `home`, `history`, `map`, `faction`, `archive`, `personnel`, `manual`.
@@ -77,6 +79,8 @@ PCApp.screen({
 - 자유 해석 `PCApp.openCanon(목록)`: 자료는 `ProjectCurseOpenCanon`(정사 대장의 결정 대기만).
 - 대표 그림: `PCApp.screenHead`가 `channel-hero-data.js`로 자동으로 그린다. 상세 화면은 `hero:false`.
 - 링크 복사 `PCApp.copyLink()`, 알림 `PCApp.toast(글)`, 공유 주소 `PCApp.shareUrl()`.
+- 열람자 호출부호(2026-09-25): 접속 확인 칸과 설정 창에서 정한다. 셸이 기동 줄(ACCESS)과 `PCApp.screenHead`의 `[data-tc-operator]` 줄에 글자로만 넣는다. 화면은 따로 그리지 않는다.
+- 통합 검색(2026-09-25): 화면이 할 일은 없다. 데이터에 넣은 기록은 목록에 들어간다. 상세 주소로 이어지는 기록만 넣는다.
 
 ### 주소
 
@@ -88,7 +92,7 @@ PCApp.screen({
 | `#faction-info`, `#faction-info/<세력 키>` | 세력 분석 |
 | `#archive-entry`, `#archive-entry/<기록 id>` | 기록보관소 |
 | `#personnel`, `#personnel/<인물 id>` | 인물 기록 |
-| `#field-manual` | 현장 지침(옛 이름 교전 교범) |
+| `#field-manual`, `#field-manual/register` | 현장 지침(옛 이름 교전 교범), 등록 양식·등록증으로 바로 가기 |
 | `#media-audit` | 매체 검수 |
 
 옛 주소 `#faction-relation`, `#region-map`, `#zone-map`, `#operation-map`은 셸이 새 화면으로 잇는다. 옛 딥링크 속성(`data-uac-route` + `data-uac-history-record` 등)도 셸이 새 주소로 바꾼다.
@@ -128,7 +132,7 @@ PCApp.screen({
 ## 5. 화면별 요구
 
 ### 상황판 `terminal-home` — 완료(Claude)
-2026-09-25 재구성: 화면 머리 → 처음 온 사람 바로가기(입문 카드·자캐 설정 안내·현장 지침) → 보관함 쪽지와 키아트(신호 복구·레이더, 옛 5.54처럼 '이상한 것 하나'부터) → 긴급 경보(요약, 작전 정보는 접음)·최근 들어온 신호 → 지난 방문 이후 → 사건부터 읽기 → 접은 판(귀환 신호 접촉 보고, 민간 재난 방송, 작전 기록). 하위 쪽 입문 카드·자캐 설정 안내(`community-guide-data.js`).
+2026-09-25 재구성: 화면 머리 → 처음 온 사람 바로가기(입문 카드·자캐 설정 안내·자캐 등록증 만들기) → 보관함 쪽지와 키아트(신호 복구·레이더, 옛 5.54처럼 '이상한 것 하나'부터) → 긴급 경보(요약, 작전 정보는 접음)·최근 들어온 신호 → 지난 방문 이후 → 사건부터 읽기 → 접은 판(귀환 신호 접촉 보고, 민간 재난 방송, 작전 기록). 하위 쪽 입문 카드·자캐 설정 안내(`community-guide-data.js`).
 - 현재 경보와 최근 수신은 진행 상태를 따른다. 우선순위: 미열람 판정 기록 → 저장된 작전 판정 → 정보 회수 진행 → 기본 경보. 수신 첫 네 행은 부서진 왕관·불빛 없는 성채·귀환 심사·전진 회수 채널이다. 봉인 작전은 필요한 판정 사본이 보관되면 풀린다.
 - 민간 재난 방송은 이미 있는 민간 규칙(경보색·창문 봉인·기억 대조·배급·통행 서류·장례)만 방송 문안으로 쓴다. 경보색 뜻은 `Civil_Child_Drill` 표에서 읽는다.
 - 문구와 기록선은 `home-screen-data.js`에 있다.
@@ -137,7 +141,7 @@ PCApp.screen({
 목록(네 전환점, 참고 묶음 3종, 시대 필터, 판정 범례·미해결 설정, 시대별 기록)과 사건 기록(증거 파일 표지, 근거와 한계, 본문 조각, 교단 상충 기록, 관련 기록, 이전·다음).
 
 ### 현장 지침 `field-manual` — 완료(Claude, 옛 이름 교전 교범)
-새 설정을 쓰지 않는다. N.H.C 현장 교범(`NHC_Manual_891219`)과 세계 기본 규칙을 투입 전 참조판으로 다시 배치한다: 첫 원칙, 철수 조건 판정기, 접촉과 교전, 표식 체계, 진입 전 준비·이동, 장비군, 능력과 대가, 현장 편성과 인계, 현장 인원 등록 양식(복사용). 교범 문장은 절 제목으로 찾아 읽고, 절 제목은 `verify-app`이 검사한다.
+새 설정을 쓰지 않는다. N.H.C 현장 교범(`NHC_Manual_891219`)과 세계 기본 규칙을 투입 전 참조판으로 다시 배치한다: 첫 원칙, 철수 조건 판정기, 접촉과 교전, 표식 체계, 진입 전 준비·이동, 장비군, 능력과 대가, 현장 편성과 인계, 현장 인원 등록 양식(글 양식 복사 + 등록증 그림 PNG 저장. 2026-09-25 사용자 결정 — 사진은 기기 안에서만 쓰고, 그림에 '교류용·공식 기록 아님' 줄을 넣는다). 교범 문장은 절 제목으로 찾아 읽고, 절 제목은 `verify-app`이 검사한다.
 
 ### 상황 관제 `map-room` — Codex
 - 데이터: `ProjectCurseMapRoom`(viewBox, geography, regions, zones, routes, synchronyEvents, markers, drilldowns, operations), `ProjectCurseRegionalDrilldown`, `ProjectCurseIncidentNetwork`, `map-signal-index-data.js`, `pilgrimage-scenario-data.js`.

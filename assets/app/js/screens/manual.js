@@ -10,6 +10,11 @@
 
   const MANUAL_ID = 'NHC_Manual_891219';
   const STORAGE_KEY = 'pc6_field_register_v1';
+  // 화면을 떠날 때(hide) 정리하는 타이머와, 없는 항목 안내를 넣는 자리
+  let drawTimer = 0;
+  let stampTimer = 0;
+  let focusTimer = 0;
+  let notice = null;
   const manual = () => root.ProjectCurseArchiveDocuments?.documents?.[MANUAL_ID] || null;
   const framework = () => root.ProjectCurseWorldHistoryData?.worldFramework || null;
   const factions = () => root.ProjectCurseCanon?.factions || {};
@@ -319,7 +324,9 @@
     const gearGroups = (gear?.groups || []).map((group) => group.title);
 
     const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
-      field('호출부호', h('input', { name: 'callsign', type: 'text', maxlength: '24', autocomplete: 'off', value: saved.callsign || '' })),
+      field('이름', h('input', { name: 'name', type: 'text', maxlength: '24', autocomplete: 'off', value: saved.name || '' }), '캐릭터 이름. 등록증 그림에 크게 들어간다.'),
+      // 호출부호가 비어 있으면 단말 열람자 호출부호(설정·접속 화면)를 먼저 채운다
+      field('호출부호', h('input', { name: 'callsign', type: 'text', maxlength: '24', autocomplete: 'off', value: saved.callsign || root.PCPrefs?.operator?.() || '' })),
       field('소속', select('faction', factionOptions, saved.faction || '')),
       field('배치선', select('line', [['', '선택'], ...LINES.map(([line, unit]) => [line, unit ? `${line} — ${unit}` : line])], saved.line || '')),
       field('분류', select('class', classOptions, saved.class || ''), '괴이는 등록 대상이 아니다.'),
@@ -332,7 +339,10 @@
           h('span', { text: title })
         ))
       ),
-      field('마지막 정상 기준점', h('input', { name: 'anchor', type: 'text', maxlength: '40', autocomplete: 'off', value: saved.anchor || '' }), '교범: 마지막으로 정상 확인된 기준점을 표시한다.')
+      field('마지막 정상 기준점', h('input', { name: 'anchor', type: 'text', maxlength: '40', autocomplete: 'off', value: saved.anchor || '' }), '교범: 마지막으로 정상 확인된 기준점을 표시한다.'),
+      h('label.tc-man-field.tc-man-field--wide', null, h('span', { text: '한 줄 기록 (선택)' }),
+        h('input', { name: 'note', type: 'text', maxlength: '60', autocomplete: 'off', value: saved.note || '' }),
+        h('small', { text: '캐릭터를 한 줄로. 등록증 그림 아래에 들어간다.' }))
     );
 
     const preview = h('pre.tc-man-preview', { 'aria-live': 'polite' });
@@ -342,6 +352,7 @@
     function values() {
       const data = new FormData(form);
       return {
+        name: String(data.get('name') || '').trim(),
         callsign: String(data.get('callsign') || '').trim(),
         faction: data.get('faction') || '',
         line: data.get('line') || '',
@@ -349,7 +360,8 @@
         source: data.get('source') || '',
         tag: data.get('tag') || '',
         gear: data.getAll('gear'),
-        anchor: String(data.get('anchor') || '').trim()
+        anchor: String(data.get('anchor') || '').trim(),
+        note: String(data.get('note') || '').trim()
       };
     }
 
@@ -361,6 +373,7 @@
       const tagRow = (tagSec?.table?.rows || []).find(([name]) => name === v.tag);
       const lines = [
         '■ 현장 인원 등록 — N.H.C 현장 교범(2005.01.21 현장 개정) 기준',
+        `이름     : ${v.name || blank}`,
         `호출부호 : ${v.callsign || blank}`,
         `소속     : ${faction}`,
         `배치선   : ${v.line || blank}`,
@@ -369,7 +382,100 @@
         `장비군   : ${v.gear.length ? v.gear.join(', ') : blank}`,
         `기준점   : ${v.anchor || blank}`
       ];
+      if (v.note) lines.push(`기록     : ${v.note}`);
       return lines.join('\n');
+    }
+
+    /* 등록증 그림(2026-09-25 사용자 결정) — 양식 값으로 manual-card.js가 1080×1350 PNG를 그린다.
+       방문자가 넣은 사진은 이 기기의 메모리에서만 쓰고 저장하지 않는다. */
+    const Card = root.PCRegisterCard || null;
+    let photo = null;
+    const canvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '등록증 미리보기' }) : null;
+    const cardView = Card ? h('div.tc-man-card-view', null, canvas, h('span.tc-man-card-stamp', { 'aria-hidden': 'true', text: '등록' })) : null;
+    const cardStatus = h('span.tc-man-copy-status', { role: 'status' });
+    const photoInput = h('input', { type: 'file', accept: 'image/*', hidden: true, 'aria-hidden': 'true', tabindex: '-1' });
+    const photoButton = h('button.tc-btn', { type: 'button', onclick: () => photoInput.click() }, '사진 넣기');
+    const photoClear = h('button.tc-btn', { type: 'button', hidden: true, onclick: clearPhoto }, '사진 빼기');
+    const saveButton = h('button.tc-btn.tc-btn--primary', { type: 'button', onclick: saveCard }, '등록증 저장 (PNG)');
+    const emblemImage = Card ? Card.emblem(() => redraw()) : null;
+
+    function cardData(v) {
+      const key = v.faction;
+      const lineRow = LINES.find(([line]) => line === v.line);
+      const source = v.class === 'WIELDER' ? (fw?.abilitySources || []).find((item) => item.name === v.source) : null;
+      const tagRow = (tagSec?.table?.rows || []).find(([name]) => name === v.tag);
+      const card = {
+        name: v.name,
+        callsign: v.callsign,
+        faction: key === 'none' ? '무소속·민간' : (factions()[key]?.name || ''),
+        role: key && key !== 'none' ? (root.ProjectCurseFactionAnalysis?.factions?.[key]?.roleLabel || '') : '',
+        line: lineRow ? (lineRow[1] ? `${lineRow[0]} — ${lineRow[1]}` : lineRow[0]) : '',
+        cls: v.class === 'human' ? '인간' : ((fw?.ontology || []).find((item) => item.code === v.class)?.name || ''),
+        source: source?.name || '',
+        cost: source?.cost || '',
+        tag: tagRow?.[0] || '',
+        tagNote: tagRow?.[1] || '',
+        gear: v.gear,
+        anchor: v.anchor,
+        note: v.note
+      };
+      card.regNo = Card.regNo(card);
+      card.issued = Card.dtg();
+      return card;
+    }
+
+    // 글자마다 다시 그리지 않도록 잠깐 모았다가 그린다(창이 가려져 있어도 도는 setTimeout)
+    function redraw() {
+      if (!Card || !canvas) return;
+      root.clearTimeout(drawTimer);
+      drawTimer = root.setTimeout(() => {
+        const card = cardData(values());
+        Card.draw(canvas, card, { photo, emblem: emblemImage });
+        canvas.setAttribute('aria-label', `등록증 미리보기 — ${card.name || '이름 미기재'}, ${card.faction || '소속 미기재'}, ${card.regNo}`);
+      }, 40);
+    }
+
+    function clearPhoto() {
+      photo?.close?.();
+      photo = null;
+      photoClear.hidden = true;
+      cardStatus.textContent = '사진을 뺐습니다.';
+      redraw();
+      photoButton.focus({ preventScroll: true });
+    }
+
+    photoInput.addEventListener('change', () => {
+      const file = photoInput.files?.[0];
+      photoInput.value = '';
+      if (!file) return;
+      Card.loadPhoto(file).then((image) => {
+        photo?.close?.();
+        photo = image;
+        photoClear.hidden = false;
+        cardStatus.textContent = '사진을 넣었습니다. 이 기기 안에서만 쓰입니다.';
+        redraw();
+      }, (error) => {
+        cardStatus.textContent = error?.message === 'size' ? '사진이 너무 큽니다. 20MB까지 넣을 수 있습니다.' : '그림 파일만 넣을 수 있습니다.';
+        root.PCAudio?.cue('system.denied');
+      });
+    });
+
+    function saveCard() {
+      const card = cardData(values());
+      Card.draw(canvas, card, { photo, emblem: emblemImage });
+      Card.save(canvas, Card.filename(card)).then((ok) => {
+        cardStatus.textContent = ok ? '저장했습니다. 카카오스토리에 그대로 올리면 됩니다.' : '저장하지 못했습니다. 그림을 길게 눌러 저장해 보십시오.';
+        if (!ok) {
+          root.PCAudio?.cue('system.denied');
+          return;
+        }
+        root.PCAudio?.cue('channel.command');
+        cardView.classList.remove('is-stamped');
+        void cardView.offsetWidth;
+        cardView.classList.add('is-stamped');
+        root.clearTimeout(stampTimer);
+        stampTimer = root.setTimeout(() => cardView.classList.remove('is-stamped'), 1100);
+      });
     }
 
     function update() {
@@ -378,6 +484,7 @@
       sourceSelect.disabled = v.class !== 'WIELDER';
       preview.textContent = text(v);
       saveForm(v);
+      redraw();
     }
 
     function copy() {
@@ -410,17 +517,30 @@
     form.addEventListener('input', update);
     form.addEventListener('change', update);
     update();
+    // 글꼴이 늦게 오면 한 번 더 그린다
+    Card?.fontsReady().then(redraw);
 
     return panel('FIELD REGISTER', '현장 인원 등록 양식', [
       h('p.tc-man-lead', { text: '현장에 들어가는 인원은 들어가기 전에 호출부호·배치선·표식을 원본 명단에 남긴다. 아래 양식은 교범의 표식과 장비군, 세계 기본 규칙의 발현 경로를 그대로 쓴다.' }),
       h('div.tc-man-register', null,
         form,
         h('div.tc-man-output', null,
-          lbl('REGISTER COPY'),
+          lbl('REGISTER COPY / 글 양식'),
           preview,
           h('div.tc-btnrow', null, copyButton, copyStatus)
         )
-      )
+      ),
+      Card ? h('div.tc-man-card', null,
+        cardView,
+        h('div.tc-man-card-side', null,
+          lbl('REGISTER CARD / 등록증 그림'),
+          h('p', { text: '양식을 채우면 등록증 그림이 바로 바뀝니다. 사진을 넣으면 왼쪽 칸에 들어갑니다. 저장한 그림(PNG, 1080×1350)을 카카오스토리에 올리면 됩니다.' }),
+          h('p.tc-man-card-note', { text: '사진은 이 기기 안에서만 쓰이고 어디로도 보내지 않습니다. 화면을 새로 고치면 사라집니다. 등록증은 교류용이며 공식 기록이 아닙니다.' }),
+          h('div.tc-btnrow', null, saveButton, photoButton, photoClear),
+          cardStatus,
+          photoInput
+        )
+      ) : null
     ], { bracket: true, slug: 'register' });
   }
 
@@ -430,6 +550,7 @@
       el.append(PC.screenHead('field-manual'), PC.missing('MANUAL NOT FOUND', MANUAL_ID, '현장 교범 원문이 이 단말에 없습니다.'));
       return;
     }
+    notice = h('div.tc-man-notice');
     el.append(
       PC.screenHead('field-manual', {
         title: '현장 지침',
@@ -437,6 +558,7 @@
         desc: `N.H.C 교전 교범(2005.01.21 개정)을 옮긴 현장 기준. ${doc.summary}`,
         meta: [['ISSUER', 'N.H.C HQ'], ['REVISION', '2005.01.21'], ['FIRST ED.', '1989.12.19']]
       }),
+      notice,
       doctrine(),
       h('div.tc-man-pair', null, breakPanel(), engagementPanel()),
       possessionPanel(),
@@ -449,9 +571,30 @@
     );
   }
 
-  function show(_parts, app) {
+  // #field-manual/register — 등록 양식·등록증으로 바로 간다(상황판·검색의 '자캐 등록증 만들기'). 없는 항목은 없다고 표시한다.
+  function show(parts, app) {
     app.setTitle('현장 지침');
+    root.clearTimeout(focusTimer);
+    notice?.replaceChildren();
+    const part = parts?.[0];
+    if (!part) return;
+    if (part !== 'register') {
+      notice?.append(PC.missing('SECTION NOT FOUND', `field-manual/${part}`, '현장 지침에 이 항목이 없습니다.'));
+      return;
+    }
+    // 셸이 화면을 맨 위로 올리고 제목에 포커스를 둔 다음에 옮긴다
+    focusTimer = root.setTimeout(() => {
+      const heading = root.document.getElementById('tc-man-register');
+      if (!heading) return;
+      heading.closest('section')?.scrollIntoView({ block: 'start', behavior: PC.fx() === 'reduced' ? 'auto' : 'smooth' });
+      if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    }, 60);
   }
 
-  PC.screen({ id: 'field-manual', mount, show });
+  function hide() {
+    [drawTimer, stampTimer, focusTimer].forEach((timer) => root.clearTimeout(timer));
+  }
+
+  PC.screen({ id: 'field-manual', mount, show, hide });
 })(window);

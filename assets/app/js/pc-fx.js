@@ -80,11 +80,19 @@
     doc.querySelector('.tc-app')?.removeAttribute('inert');
   }
 
+  // 기동 줄의 글 — CHANNEL 줄은 요청 채널 이름, ACCESS 줄은 열람자 호출부호가 있으면 끝에 붙인다(기록 언마운트는 제외)
+  function lineLabel(mode, code, label, extra) {
+    if (code === 'CHANNEL' && extra.channel) return `${extra.channel} 채널 연결`;
+    const who = root.PCPrefs?.operator?.() || '';
+    if (code === 'ACCESS' && who && mode !== 'unmount') return `${label} — ${bootData.operatorAccess || '열람자'} ${who}`;
+    return label;
+  }
+
   function bootPanel(mode, cfg, extra = {}) {
     const lines = (cfg.lines || []).map(([code, label, result, tone]) => {
       const row = h('li', { class: tone ? `is-${tone}` : null, 'data-state': 'wait' },
         h('b', { text: `[${code}]` }),
-        h('span', { text: code === 'CHANNEL' && extra.channel ? `${extra.channel} 채널 연결` : label }),
+        h('span', { text: lineLabel(mode, code, label, extra) }),
         h('em', { text: 'WAIT' })
       );
       row.dataset.result = result;
@@ -243,6 +251,14 @@
     bootActive = true;
     const enterBtn = h('button.tc-btn.tc-btn--primary', { type: 'button', text: cfg.enter });
     const silentBtn = h('button.tc-btn', { type: 'button', text: cfg.silent });
+    // 열람자 호출부호 칸 — 적는 동안에는 키를 눌러도 접속하지 않는다. 칸에서 Enter를 누르면 소리와 함께 접속한다
+    const op = cfg.operator || null;
+    const opInput = op ? h('input.tc-boot-operator-input', {
+      id: 'tc-gate-operator', type: 'text', maxlength: String(root.PCPrefs?.operatorMax || 24), autocomplete: 'off', spellcheck: 'false',
+      placeholder: op.placeholder, value: root.PCPrefs?.operator?.() || null
+    }) : null;
+    const opField = op ? h('label.tc-boot-operator', { for: 'tc-gate-operator' },
+      h('span', { text: op.label }), opInput, op.hint ? h('small', { text: op.hint }) : null) : null;
     const overlay = h('div.tc-boot.is-gate', { role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'tc-gate-title' },
       h('div.tc-boot-panel', null,
         h('header.tc-boot-head', null,
@@ -250,6 +266,7 @@
           h('div', null, h('p.tc-boot-kicker', { text: cfg.kicker }), h('h2', { id: 'tc-gate-title', text: cfg.title }))
         ),
         h('div.tc-boot-gate-copy', null, (cfg.lines || []).map((line) => h('p', { text: line }))),
+        opField,
         h('div.tc-boot-actions', null, enterBtn, silentBtn),
         h('p.tc-boot-note', { text: cfg.note })
       )
@@ -264,6 +281,7 @@
       if (passed) return;
       passed = true;
       doc.removeEventListener('keydown', onKey, true);
+      if (opInput) root.PCPrefs?.setOperator?.(opInput.value);
       if (withSound) {
         root.PCAudio?.unlock?.();
         if (!root.PCAudio?.isOn?.()) root.PCAudio?.set?.(true, { quiet: true });
@@ -275,6 +293,13 @@
     }
     function onKey(event) {
       if (event.key === 'Tab' || event.key === 'Shift') return;
+      if (opInput && (event.target === opInput || doc.activeElement === opInput)) {
+        if (event.key === 'Enter' && !event.isComposing) {
+          event.preventDefault();
+          pass(true);
+        }
+        return;
+      }
       if ((event.key === 'Enter' || event.key === ' ') && doc.activeElement === silentBtn) return;
       if (event.key === 'Enter' || event.key === ' ') event.preventDefault();
       pass(true);
@@ -289,7 +314,7 @@
       }
     });
     overlay.addEventListener('pointerdown', (event) => {
-      if (event.target.closest('button')) return;
+      if (event.target.closest('button, .tc-boot-operator')) return;
       pass(true);
     });
     doc.addEventListener('keydown', onKey, true);

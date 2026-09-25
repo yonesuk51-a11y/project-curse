@@ -408,7 +408,7 @@
     return h('nav.tc-home-quick', { 'aria-label': '처음 온 열람자 안내' },
       h('a', { href: PC.href('terminal-home', 'intro') }, h('b', { text: '처음이라면' }), h('span', { text: '입문 카드' }), h('i', { 'aria-hidden': 'true', text: '›' })),
       h('a', { href: PC.href('terminal-home', 'guide') }, h('b', { text: '캐릭터를 만든다면' }), h('span', { text: '자캐 설정 안내' }), h('i', { 'aria-hidden': 'true', text: '›' })),
-      h('a', { href: PC.href('field-manual') }, h('b', { text: '들어가기 전 확인' }), h('span', { text: '현장 지침' }), h('i', { 'aria-hidden': 'true', text: '›' }))
+      h('a', { href: PC.href('field-manual', 'register') }, h('b', { text: '다 만들었다면' }), h('span', { text: '자캐 등록증 만들기' }), h('i', { 'aria-hidden': 'true', text: '›' }))
     );
   }
 

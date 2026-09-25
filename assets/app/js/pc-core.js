@@ -281,10 +281,27 @@
       h('p.tc-screenhead-code', null, h('i', { text: `CH ${info.index || '--'}` }), h('span.tc-full-only', { text: options.code || info.code || '' })),
       h('h1', { text: options.title || info.label || id, 'data-tc-focus': true }),
       (options.desc || info.description) ? h('p.tc-screenhead-desc', { text: options.desc || info.description }) : null,
+      operatorLine(),
       meta.length ? h('dl.tc-screenhead-meta.tc-full-only', null, meta.map(([term, value]) => h('div', null, h('dt', { text: term }), h('dd', { text: value })))) : null,
       h('span.tc-seal', { 'aria-hidden': 'true' }, h('i', { text: info.index || '--' }))
     );
   }
+
+  // 열람자 호출부호(2026-09-25 사용자 결정) — 설정에서 바꾸면 이미 그려진 머리도 따라 바뀐다. 비어 있으면 숨긴다.
+  function operatorLine() {
+    const name = root.PCPrefs?.operator?.() || '';
+    return h('p.tc-screenhead-operator', { 'data-tc-operator': true, hidden: name ? null : true },
+      h('span', { text: '열람자' }), h('b', { text: name }));
+  }
+  doc.addEventListener('pc:prefs', (event) => {
+    if (event.detail?.name !== 'operator') return;
+    const name = root.PCPrefs?.operator?.() || '';
+    doc.querySelectorAll('[data-tc-operator]').forEach((line) => {
+      line.hidden = !name;
+      const value = line.querySelector('b');
+      if (value) value.textContent = name;
+    });
+  });
 
   /* ---------- 위협 등급 — 2026-09-25 사용자 결정: 기록의 등급에 따라 화면 분위기가 달라진다 ---------- */
 

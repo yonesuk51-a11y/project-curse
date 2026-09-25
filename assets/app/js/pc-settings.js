@@ -1,5 +1,5 @@
 // Project Curse 6 — 상단 바의 보기·링크·설정 단추와 설정 창. 2026-09-25 사용자 결정.
-// 설정: 소리(켜짐·꺼짐), 효과(자동·전체·줄임), 보기(간략·전체), 지금 화면 링크 복사. 모두 이 브라우저에만 저장한다.
+// 설정: 열람자 호출부호, 소리(켜짐·꺼짐), 효과(자동·전체·줄임), 보기(간략·전체), 지금 화면 링크 복사. 모두 이 브라우저에만 저장한다.
 // '효과: 자동'은 기기의 움직임 줄이기 설정을 따른다. '전체'를 고르면 그 설정이 켜진 기기에서도 연출이 움직인다.
 (function (root) {
   'use strict';
@@ -37,10 +37,31 @@
       : '자동은 기기 설정을 따릅니다.';
   }
 
+  // 열람자 호출부호 — 기동 화면의 칸과 같은 값(PCPrefs.operator). 비워서 저장하면 익명으로 돌아간다
+  function operatorRow() {
+    const input = h('input#tc-set-operator', {
+      type: 'text', maxlength: String(prefs.operatorMax || 24), autocomplete: 'off', spellcheck: 'false',
+      placeholder: '비워 두면 익명 열람', value: prefs.operator?.() || null
+    });
+    const save = (event) => {
+      event.preventDefault();
+      const name = prefs.setOperator(input.value);
+      input.value = name;
+      PC.toast(name ? `열람자를 등록했습니다: ${name}` : '열람자를 지웠습니다. 익명으로 엽니다.');
+      root.PCAudio?.cue('menu.select');
+    };
+    return h('div.tc-set-row', null,
+      h('label.tc-set-label', { for: 'tc-set-operator', text: '열람자' }),
+      h('form.tc-set-operator', { onsubmit: save }, input, h('button.tc-btn', { type: 'submit', text: '저장' })),
+      h('p.tc-set-note', { text: '자캐 이름이나 호출부호. 기동 화면과 화면 머리에 표시됩니다.' })
+    );
+  }
+
   function build() {
     const soundNow = root.PCAudio?.isOn?.() ? 'on' : 'off';
     return h('div.tc-settings', { id: 'tc-settings', role: 'dialog', 'aria-label': '표시 설정' },
       h('p.tc-settings-head', null, h('b', { text: '표시 설정' }), h('span', { text: '이 브라우저에만 저장됩니다.' })),
+      operatorRow(),
       seg('소리', 'sound', SOUND, soundNow, (value) => root.PCAudio?.set?.(value === 'on')),
       seg('효과', 'fx', FX, prefs.get('fx'), (value) => prefs.set('fx', value)),
       h('p.tc-set-note', { 'data-tc-set-note': true, text: note() }),
@@ -103,7 +124,8 @@
     doc.addEventListener('keydown', onKey, true);
     root.PCAudio?.cue('menu.open');
     sync();
-    panel.querySelector('button')?.focus({ preventScroll: true });
+    // 휴대폰 자판이 뜨지 않게 글자 칸이 아닌 첫 선택 단추에 포커스를 둔다
+    panel.querySelector('.tc-seg button')?.focus({ preventScroll: true });
   }
 
   doc.addEventListener('click', (event) => {

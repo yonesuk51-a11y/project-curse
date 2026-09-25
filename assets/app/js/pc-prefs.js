@@ -1,6 +1,7 @@
 // Project Curse 6 — 보기 설정. <head>에서 먼저 불러 첫 화면이 그려지기 전에 html 속성을 정한다.
 // 효과(auto·full·reduced) → html[data-fx="full|reduced"]. auto는 시스템의 '움직임 줄이기'를 따른다.
 // 보기(brief·full) → html[data-density]. 간략 보기에서는 .tc-full-only 요소가 숨는다(components.css).
+// 열람자 호출부호 → PCPrefs.operator(). 기동 화면(pc-fx.js)과 화면 머리(PCApp.screenHead)가 읽는다.
 // 2026-09-25 사용자 결정: 움직임 줄이기 환경에서도 연출을 지우지 않고 움직임만 멈춘다. 사용자가 '효과: 전체'를 고르면 시스템 설정과 관계없이 움직인다.
 (function (root) {
   'use strict';
@@ -48,6 +49,28 @@
     emit(name, apply());
   }
 
+  // 열람자 호출부호(2026-09-25 사용자 결정) — 자캐 이름이나 호출부호. 기동 화면과 화면 머리에 글자로만 넣는다.
+  // 이 기기에만 저장한다. 제어 문자와 꺾쇠를 빼고, 공백을 하나로 줄이고, 24자에서 자른다. 비우면 익명 열람이다.
+  const OPERATOR_KEY = 'pc6_operator_v1';
+  const OPERATOR_MAX = 24;
+  function cleanOperator(value) {
+    const text = String(value ?? '').replace(/[\u0000-\u001f\u007f-\u009f<>]/g, '').replace(/\s+/g, ' ').trim();
+    return Array.from(text).slice(0, OPERATOR_MAX).join('').trim();
+  }
+  let operator = '';
+  try {
+    operator = cleanOperator(root.localStorage.getItem(OPERATOR_KEY) || '');
+  } catch (_error) { /* 저장소를 못 읽으면 익명으로 연다 */ }
+  function setOperator(value) {
+    operator = cleanOperator(value);
+    try {
+      if (operator) root.localStorage.setItem(OPERATOR_KEY, operator);
+      else root.localStorage.removeItem(OPERATOR_KEY);
+    } catch (_error) { /* 저장하지 못해도 이번 방문에서는 쓴다 */ }
+    emit('operator', false);
+    return operator;
+  }
+
   if (media) {
     const onSystem = () => emit('system', apply());
     if (media.addEventListener) media.addEventListener('change', onSystem);
@@ -64,6 +87,10 @@
     set,
     fx,
     density: () => state.density,
-    systemReduced
+    systemReduced,
+    operator: () => operator,
+    setOperator,
+    cleanOperator,
+    operatorMax: OPERATOR_MAX
   });
 })(window);

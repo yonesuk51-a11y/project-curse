@@ -255,6 +255,40 @@
   color: var(--text-3);
   font-size: var(--fs-xs);
 }
+/* 열람자 호출부호 칸(2026-09-25) */
+.tc-boot-operator {
+  display: grid;
+  gap: 5px;
+}
+.tc-boot-operator span {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.tc-boot-operator input,
+.tc-set-operator input {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--tap);
+  padding: 8px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  color: var(--text);
+  background: var(--sunken);
+  font-family: var(--mono);
+  font-size: var(--fs-s);
+}
+.tc-boot-operator input:hover,
+.tc-set-operator input:hover {
+  border-color: var(--red);
+}
+.tc-boot-operator small {
+  color: var(--text-3);
+  font-size: var(--fs-2xs);
+  line-height: 1.5;
+}
 .tc-boot.is-gate .tc-boot-panel::after {
   content: "_";
   position: absolute;
@@ -774,6 +808,153 @@ html[data-silence="on"] .tc-bar {
   color: var(--text-2);
   font-size: var(--fs-s);
   font-weight: 600;
+}
+.tc-set-operator {
+  display: flex;
+  gap: var(--s2);
+}
+.tc-set-operator .tc-btn {
+  flex: 0 0 auto;
+}
+
+/* ---------- 12. 통합 검색(2026-09-25 사용자 결정, pc-search.js) ---------- */
+.tc-search {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  padding: calc(var(--bar-h) + 12px) 12px 12px;
+  background: rgba(7, 6, 6, .74);
+  animation: tc-fade-in 140ms linear both;
+}
+.tc-search-box {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: var(--s3);
+  width: min(680px, 100%);
+  max-height: calc(100dvh - var(--bar-h) - 24px);
+  padding: var(--s4);
+  border: 1px solid rgba(179, 60, 69, .55);
+  border-top: 2px solid var(--red);
+  background: #0c0909;
+  animation: tc-search-drop 200ms var(--ease) both;
+}
+.tc-search-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+.tc-search-head h2 {
+  font-size: var(--fs-l);
+}
+.tc-search-head h2 .tc-full-only {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-xs);
+  letter-spacing: .16em;
+}
+.tc-search-field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  color: var(--text);
+  background: var(--sunken);
+  font-size: var(--fs-l);
+}
+.tc-search-field input:focus {
+  border-color: var(--red);
+}
+.tc-search-status {
+  min-height: 1.2em;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-search-results {
+  display: grid;
+  align-content: start;
+  gap: var(--s4);
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.tc-search-group h3 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+  margin-bottom: 4px;
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+.tc-search-group h3 span {
+  font-family: var(--mono);
+  letter-spacing: 0;
+}
+.tc-search-list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-search-hit {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border-left: 2px solid transparent;
+  color: var(--text);
+  text-decoration: none;
+}
+.tc-search-hit:hover,
+.tc-search-hit:focus-visible {
+  border-left-color: var(--red);
+  background: var(--fill-red);
+}
+.tc-search-kind {
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.tc-search-hit b {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.tc-search-hit small {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-search-hit mark {
+  color: var(--text);
+  background: rgba(179, 60, 69, .45);
+}
+.tc-search-empty {
+  display: grid;
+  gap: var(--s3);
+}
+.tc-search-empty p,
+.tc-search-none {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+@keyframes tc-search-drop {
+  from { opacity: 0; transform: translateY(-6px); }
+}
+@media (max-width: 600px) {
+  .tc-search {
+    padding: calc(var(--bar-h) + 6px) 6px 6px;
+  }
+  .tc-search-box {
+    padding: var(--s3);
+  }
 }
 
 /* ---------- 공용 키프레임 ---------- */
