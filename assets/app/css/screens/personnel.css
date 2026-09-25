@@ -71,6 +71,13 @@
 .tc-per-limits { gap: var(--s3); }
 .tc-per-event { display: grid; gap: var(--s2); padding-bottom: var(--s4); border-bottom: 1px solid var(--line); }
 .tc-per-photo .tc-evidence-media img { width: 100%; max-height: 320px; object-fit: contain; }
+/* 지난 모습은 대표 사진 아래에 작은 증거판으로 붙인다. 기존 단일 사진판에는 적용하지 않는다. */
+.tc-per-cover:has(.tc-per-photos) > .tc-per-cover-main { align-self: start; }
+.tc-per-photos { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--s4); min-width: 0; }
+.tc-per-photos > .tc-per-photo { min-width: 0; }
+.tc-per-photo--former { justify-self: end; width: 84%; max-width: 168px; overflow-wrap: anywhere; }
+.tc-per-photo-era { padding: var(--s2) var(--s3); border-bottom: 1px solid var(--line); color: var(--text-2); font-size: var(--fs-s); font-weight: 500; }
+.tc-per-photo--former .tc-evidence-media img { max-height: 220px; }
 .tc-per-detail .tc-missing { overflow-wrap: anywhere; }
 /* 간략 보기에서 코드 열의 빈칸도 없앤다. 이름·별칭·역할·소속·상태는 그대로 둔다. */
 html:not([data-density="full"]) #personnel .tc-full-only { display: none !important; }

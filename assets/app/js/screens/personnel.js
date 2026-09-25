@@ -131,12 +131,12 @@
         next ? h('a.tc-btn', { href: PC.href('personnel', next.id), rel: 'next', 'aria-label': `다음 인물, ${next.name}` }, '다음 ›') : h('button.tc-btn', { type: 'button', disabled: true }, '다음 ›'),
         h('button.tc-btn', { type: 'button', dataset: { perCopy: '' } }, '직접 링크 복사')));
   }
-  function photoPlate(record) {
+  function photoPlate(record, visual = record.visual, former = false) {
     // 등록된 시각 자료가 있는 인물에게만 사진판을 만든다.
-    const visual = record.visual;
     if (!visual?.src) return null;
     const pair = /^([A-Z][A-Z\s/-]+)\s*\/\s*([가-힣].*)$/.exec(visual.label || '');
-    return h('figure.tc-evidence.tc-per-photo', { 'data-record': record.id, 'data-dtg': visual.dtg, 'data-place': visual.place, 'data-coords': visual.coords },
+    return h('figure.tc-evidence.tc-per-photo', { class: former ? 'tc-per-photo--former' : null, 'data-record': record.id, 'data-dtg': visual.dtg, 'data-place': visual.place, 'data-coords': visual.coords },
+      former ? h('h2.tc-per-photo-era', { text: visual.era }) : null,
       h('div.tc-evidence-media', null, PC.img(visual.src, { alt: visual.alt || record.name })),
       h('figcaption', null, h('b', null, pair ? [h('span.tc-full-only', { text: pair[1] + ' / ' }), h('span', { text: pair[2] })] : visual.label), h('span', { text: visual.caption })));
   }
@@ -218,7 +218,8 @@
           h('p.tc-per-name', null, h('span', { text: record.name, 'data-tc-anomaly': identityAnomaly ? 'name' : null })), h('p', { text: record.role }),
           h('div.tc-per-tags', null, statusTag(record.status, record), certaintyTag(record.certainty)),
           record.aliases?.length ? kv([['별칭·기존 명부명', record.aliases.join(' · ')]]) : null),
-        photoPlate(record),
+        // 지난 모습이 있는 파일만 묶는다. 나머지 파일의 사진판과 배치는 그대로 둔다.
+        record.formerVisual?.src ? h('div.tc-per-photos', null, photoPlate(record), photoPlate(record, record.formerVisual, true)) : photoPlate(record),
         kv([['기준 연도', record.registerYear || display().year], ['등록', isAddition(record) ? source().additionLabel : null], ['조직', groupOf(record.group)?.label || record.group], ['소속', record.affiliationSummary], ['출신', identity?.origin]])),
       section('PROFILE / KEY RECORD', '주요 기록', h('p', { text: record.overview }),
         kv([['소속', record.unit], ['연결 사건', record.incident]])),
