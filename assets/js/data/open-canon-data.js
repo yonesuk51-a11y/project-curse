@@ -28,7 +28,7 @@
     // 인물 기록 화면(personnel.js) — 인물 id별
     personnel: {
       alullim: ['알룰림은 한 존재인가, 되풀이되는 현상인가, 이어받는 자리의 이름인가?'],
-      kenevin: ['우시노다에게 검을 겨눈 기사가 어떻게 교단 명단에 제3사도로 올랐는가?']
+      kenevin: ['우시노다에게 검을 겨눈 기사가 언제, 어떻게 우시노다교 제3사도가 됐는가?']
     },
     // 세계 기록 화면(history.js) — 기록 id별
     history: {
@@ -45,7 +45,7 @@
       { title: '혈교와 남방 혈맹', text: '같은 지휘 체계인지, 계승을 주장할 뿐인지 정하지 않았다.', route: ['faction-info', 'southern-blood'] },
       { title: '알룰림(첫 번째 사도)', text: '한 존재인지, 되풀이되는 현상인지, 이어받는 자리의 이름인지 정하지 않았다.', route: ['faction-info', 'first-apostle'] },
       { title: '우시노다와 그녀의 기사', text: '도상 속 모습이 실제인지, 검은 날개의 기사가 누구인지 정하지 않았다.', route: ['faction-info', 'ushinoda'] },
-      { title: '우시노다교 사도 번호', text: '교단 명단의 제2~제9사도와 2006년 명부의 같은 번호 사도가 같은 자리인지, 다른 시대의 명단인지 정하지 않았다. 히라에스가 제3사도로 적힌 까닭도 정하지 않았다.', route: ['faction-info', 'ushinoda'] },
+      { title: '우시노다교 사도 번호', text: '교단 명단의 제2~제9사도와 2006년 명부의 같은 번호 사도가 같은 자리인지, 다른 시대의 명단인지 정하지 않았다. 우시노다에게 맞섰던 기사 히라에스가 제3사도가 된 경위도 정하지 않았다.', route: ['faction-info', 'ushinoda'] },
       { title: '피탈자의 이후', text: '풀려난 뒤 징후가 사라지는지, 몸이 죽은 뒤 들어왔던 존재가 어디로 가는지 정하지 않았다.', route: ['history'] },
       { title: '괴이의 계통', text: '괴이, 타락체, 타락 야생체의 관계를 하나로 정하지 않았다.', route: ['archive-entry', 'Ferals_860722'] },
       { title: '대흑림의 경계', text: '해안과 내륙 사이의 정확한 선과, 경계가 달라지는 까닭을 정하지 않았다.', route: ['history', '2012-11-19-great-black-forest-survey'] },

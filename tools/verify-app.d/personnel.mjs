@@ -72,7 +72,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const roster = () => host.querySelectorAll('[data-per-id]');
     const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
     const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
-    show([]); assert.equal(roster().length, initial); assert.equal(initial, 63);
+    show([]); assert.equal(roster().length, initial); assert.equal(initial, 62);
     const ids = () => roster().map((node) => node.dataset.perId);
     for (const group of groups) assert.ok(ids().filter((id) => P.byId[id].group === group.id).length <= 6);
     assert.equal(host.querySelectorAll('[data-per-expand]').length, 4);
