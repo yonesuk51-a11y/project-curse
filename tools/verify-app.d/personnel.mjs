@@ -29,11 +29,13 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   // 2026-09-25 사용자 채택: 2006년 명부에서는 사쿠마 유타·마커스 콜만 사진이 있다.
   // 사진은 매체 목록과 증거 대장에 등록된 재구성 파일만 쓴다(추가 등록 명부도 같다).
   const withPortrait = (list) => list.filter((record) => record.visual?.src);
+  const withFormerPortrait = [...records, ...(P.additions || [])].filter((record) => record.formerVisual?.src);
   const registeredPortrait = (visual) => Boolean(context.ProjectCurseMediaManifest?.resolve(visual.src) &&
     context.ProjectCurseVisualEvidence?.known?.[visual.src] && visual.className === 'RECONSTRUCTED' && visual.alt && visual.caption && visual.label);
   add('portraits-registered-only', withPortrait(records).map((record) => record.id).sort().join(',') === 'alma-koenig,apostle-luke-eugene,apostle-uro,frux,mason,sakuma-yuta' &&
-    [...withPortrait(records), ...withPortrait(P.additions || [])].every((record) => registeredPortrait(record.visual)),
-    `${withPortrait(records).length} legacy / ${withPortrait(P.additions || []).length} additions`);
+    [...withPortrait(records), ...withPortrait(P.additions || [])].every((record) => registeredPortrait(record.visual)) &&
+    withFormerPortrait.every((record) => registeredPortrait(record.formerVisual) && record.formerVisual.era),
+    `${withPortrait(records).length} legacy / ${withPortrait(P.additions || []).length} additions / ${withFormerPortrait.length} former`);
   // 2042 추가 등록 — 2006년 명부(records)와 섞지 않는다. 인물마다 기준 연도와 확인되지 않은 부분을 적는다.
   const additions = P.additions || [];
   const additionGroupIds = new Set((P.additionGroups || []).map((group) => group.id));
@@ -65,6 +67,52 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   add('dossier-open-and-responsive-density', css.includes('@keyframes tc-per-file-open') && css.includes('clip-path: inset(0 0 100% 0)') && css.includes('html:not([data-density="full"])') && css.includes('@media (max-width: 720px)') && css.includes('minmax(0, 1fr)'));
   add('identity-anomalies-backed-by-records', D.identityAnomalies.length === 3 && D.identityAnomalies.every((id) => /기억|신원/.test(P.byId[id]?.abilityCost || '') && /흐려짐|소실|재현하지 못함/.test(P.byId[id]?.abilityCost || '')));
   const check = (name, run) => { try { add(name, true, run() || ''); } catch (error) { add(name, false, error.message); } };
+  check('former-portrait-plates-and-brief-labels', () => {
+    const { c, host, screen } = screenHarness(context, source);
+    const record = { ...withPortrait(records)[0] };
+    delete record.formerVisual;
+    // 하네스의 조회표만 바꾼다. 실제 명부와 매체 데이터에는 검사용 사진을 넣지 않는다.
+    c.ProjectCursePersonnel = { ...P, byId: { ...P.byId, [record.id]: record } };
+    const show = () => screen.show([record.id], c.PCApp);
+    const plates = () => host.querySelectorAll('.tc-per-photo');
+    show(); assert.equal(plates().length, 1); assert.equal(host.querySelector('.tc-per-photos'), null);
+    const originalText = host.querySelector('.tc-per-detail').textContent;
+    const originalPlateText = plates()[0].textContent;
+    const formerVisual = {
+      src: withPortrait(records)[1].visual.src, className: 'RECONSTRUCTED',
+      label: 'PORTRAIT RECONSTRUCTION / 인물 재구성', era: '기사 시절',
+      alt: '검사용 지난 모습의 대체 설명', caption: '검사용 지난 모습 사진 설명'
+    };
+    c.ProjectCursePersonnel.byId[record.id] = { ...record, formerVisual };
+    show(); assert.equal(plates().length, 2);
+    const [primary, former] = plates();
+    assert.equal(primary.textContent, originalPlateText);
+    assert.equal(primary.querySelector('img').getAttribute('src'), record.visual.src);
+    assert.equal(primary.querySelector('img').getAttribute('alt'), record.visual.alt);
+    assert.ok(former.classList.contains('tc-evidence'));
+    assert.ok(former.classList.contains('tc-per-photo--former'));
+    assert.equal(former.getAttribute('data-record'), record.id);
+    assert.equal(former.querySelector('h2').textContent, formerVisual.era);
+    assert.equal(former.querySelector('.tc-evidence-media img').getAttribute('src'), formerVisual.src);
+    assert.equal(former.querySelector('img').getAttribute('alt'), formerVisual.alt);
+    const caption = former.querySelector('figcaption');
+    for (const brief of [true, false]) {
+      assert.ok(former.visibleText(brief).includes(formerVisual.era));
+      assert.ok(caption.visibleText(brief).includes('인물 재구성'));
+      assert.ok(caption.visibleText(brief).includes(formerVisual.caption));
+      assert.equal(caption.visibleText(brief).includes('PORTRAIT RECONSTRUCTION'), !brief);
+    }
+    screen.hide(); show(); assert.equal(plates().length, 2);
+    c.ProjectCursePersonnel.byId[record.id] = record;
+    show(); assert.equal(plates().length, 1); assert.equal(host.querySelector('.tc-per-photos'), null);
+    assert.equal(host.querySelector('.tc-per-detail').textContent, originalText);
+    // 객체가 있어도 src가 없으면 사진판과 자리표시는 늘지 않는다.
+    c.ProjectCursePersonnel.byId[record.id] = { ...record, formerVisual: { ...formerVisual, src: '' } };
+    show(); assert.equal(plates().length, 1);
+    assert.equal(host.querySelector('.tc-per-detail').textContent, originalText);
+    screen.hide();
+    return '두 사진·시대 제목·alt·캡션·보기 밀도·왕복 / 지난 사진 없을 때 단일 사진 유지';
+  });
   check('six-per-group-expand-search-and-return', () => {
     const { c, host, screen, navigations } = screenHarness(context, source);
     const show = (parts) => screen.show(parts, c.PCApp, { reason: 'navigate' });
