@@ -1,6 +1,8 @@
 // Project Curse 6 — 2042년 단말에 따로 등록된 인물. 2006년 명부(personnel-data.js)와 섞지 않는다.
 // 근거: 사용자 설정글(2026-09-13 ~ 2026-09-22). 2026-09-24 사용자가 인물 기록 반영을 승인했다.
 // 설정글에 없는 사실은 적지 않는다. 확인되지 않은 연결과 연대는 limits에 남긴다.
+// 2026-09-25 카카오스토리 설정글 대조 반영(사용자 추천안 승인): 우시노다교 사도 7명(그림 설명의 교단 명단), N.H.C 대원 5명,
+// 히라에스의 제3사도 표기(해석 보류), 미카게 시오리의 어머니 구절.
 (function (root) {
   'use strict';
 
@@ -109,15 +111,130 @@
           '일곱 살 무렵, 떠난 아버지가 곁에 남아 있다는 것을 처음 알았다. 아버지는 아무 말 없이 다가왔고, 시오리가 울음을 터뜨리면 조용히 모습을 감췄다.',
           '어른이 된 뒤에도 아버지는 곁에 머문다. 손을 내밀 수도 말을 걸 수도 없지만, 지금도 가끔 아무 말 없이 다가온다.'
         ],
-        notes: ['본인 구술: "그날 내가 울었던 이유는 두려움 때문만은 아니었다. 다시는 함께할 수 없다는 사실이 너무 슬펐던 것이다."', '생전의 아버지는 숨바꼭질을 좋아했고, 숨을 때마다 찾을 수 있도록 작은 힌트를 남겼다고 한다.'],
-        limits: ['아버지의 이름과 사망 경위, 영혼이 뒤틀린 이유는 기록되지 않았다.', '저주의 내용과 능력 여부, 현재 소속은 확인되지 않았다.']
+        notes: ['본인 구술: "그날 내가 울었던 이유는 두려움 때문만은 아니었다. 다시는 함께할 수 없다는 사실이 너무 슬펐던 것이다."', '생전의 아버지는 숨바꼭질을 좋아했고, 숨을 때마다 찾을 수 있도록 작은 힌트를 남겼다고 한다.', '본인 구술: "그래도 끝까지 나와 엄마를 지켜 주고 싶었던 게 아닐까."'],
+        limits: ['아버지의 이름과 사망 경위, 영혼이 뒤틀린 이유는 기록되지 않았다.', '어머니의 이름과 지금의 소재는 기록되지 않았다.', '저주의 내용과 능력 여부, 현재 소속은 확인되지 않았다.']
       },
       {
         id: 'kenevin', name: '커네빈', aliases: ['히라에스', 'Hiraeth'], group: 'unaffiliated',
         role: '암흑시대의 잊힌 기사 / 지금은 히라에스라 불리는 이질적 존재', status: 'unknown', certainty: 'unresolved', registerYear: '암흑시대 전승',
         overview: '먼 암흑시대에 이신(異神)에 맞서 성벽에 섰던 기사로 전해진다. 지금은 히라에스라는 이름으로 불리는 이질적 존재가 됐다. 기사였던 시절을 기억하는 존재는 더 이상 남아 있지 않다.',
         notes: ['우시노다를 주군으로 부르는 화자의 구술은 히라에스를 우시노다에게 검을 겨눈 인간 전사로 기억한다. 고향에 아내와 어린 아들이 있었다고 전한다.', '히라에스는 돌아갈 수 없는 고향과 과거를 향한 그리움을 뜻하는 웨일스어다.', '구술 전문은 세계 기록 「외신 강림과 성벽의 저항」에 실려 있다.'],
-        limits: ['기사에서 이질적 존재로 바뀐 경위와 시점은 기록되지 않았다.', '현재 소재와 적대 여부는 확인되지 않았다.']
+        // 2026-09-25 사용자 승인(추천안): 교단 명단은 히라에스를 제3사도로 적는다. 우시노다에게 맞선 기사라는 전승과 어떻게 이어지는지는 해석 보류다
+        affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제3사도(교단 명단)', certainty: 'unresolved' }],
+        relationships: [{ target: 'apostle-jade-jackson', relation: '2006년 명부에 같은 제3사도 번호로 기록된 인물이다. 같은 자리를 이은 것인지, 번호 체계가 다른 것인지 확인되지 않았다.', certainty: 'unresolved' }],
+        limits: ['기사에서 이질적 존재로 바뀐 경위와 시점은 기록되지 않았다.', '현재 소재와 적대 여부는 확인되지 않았다.', '교단 명단은 히라에스를 우시노다교 제3사도로 적는다. 우시노다에게 검을 겨눈 기사가 어떻게 사도 명단에 올랐는지는 확인되지 않았다.']
+      },
+      // 2026-09-25 사용자 승인(추천안): 교단 명단의 우시노다교 사도 7명. 이름과 번호만 기록됐다.
+      // 2006년 명부의 같은 번호 인물은 지우지 않고 상충 기록으로 둔다(정사 대장 '2026-09-25 카카오스토리 설정글 대조 반영').
+      {
+        id: 'apostle-camille-potier', name: '카미유 포티에', group: 'ushinoda-figures',
+        role: '우시노다교 제2사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: '우시노다교 / 교단 명단의 제2사도',
+        overview: '우시노다교 교단 명단에 제2사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제2사도(교단 명단)', certainty: 'listed' }],
+        relationships: [{ target: 'apostle-urzag', relation: '2006년 명부에 같은 제2사도 번호로 기록된 인물이다. 같은 자리를 이은 것인지, 번호 체계가 다른 것인지 확인되지 않았다.', certainty: 'unresolved' }],
+        limits: ['교단 명단의 사도 번호가 2006년 명부의 사도 번호·사도석과 같은 체계인지 확인되지 않았다(상충 기록).', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
+      },
+      {
+        id: 'apostle-viljar', name: '빌야르', group: 'ushinoda-figures',
+        role: '우시노다교 제4사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: '우시노다교 / 교단 명단의 제4사도',
+        overview: '우시노다교 교단 명단에 제4사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제4사도(교단 명단)', certainty: 'listed' }],
+        relationships: [{ target: 'apostle-shahin', relation: '2006년 명부에 같은 제4사도 번호로 기록된 인물이다. 같은 자리를 이은 것인지, 번호 체계가 다른 것인지 확인되지 않았다.', certainty: 'unresolved' }],
+        limits: ['교단 명단의 사도 번호가 2006년 명부의 사도 번호·사도석과 같은 체계인지 확인되지 않았다(상충 기록).', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
+      },
+      {
+        id: 'apostle-levente-hambas', name: '레벤테 함바스', group: 'ushinoda-figures',
+        role: '우시노다교 제5사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: '우시노다교 / 교단 명단의 제5사도',
+        overview: '우시노다교 교단 명단에 제5사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제5사도(교단 명단)', certainty: 'listed' }],
+        relationships: [{ target: 'apostle-moha', relation: '2006년 명부에 같은 제5사도 번호로 기록된 인물이다. 같은 자리를 이은 것인지, 번호 체계가 다른 것인지 확인되지 않았다.', certainty: 'unresolved' }],
+        limits: ['교단 명단의 사도 번호가 2006년 명부의 사도 번호·사도석과 같은 체계인지 확인되지 않았다(상충 기록).', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
+      },
+      {
+        id: 'apostle-robin', name: '로빈', group: 'ushinoda-figures',
+        role: '우시노다교 제6사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: '우시노다교 / 교단 명단의 제6사도',
+        overview: '우시노다교 교단 명단에 제6사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제6사도(교단 명단)', certainty: 'listed' }],
+        relationships: [{ target: 'apostle-siena-khan', relation: '2006년 명부에 같은 제6사도 번호로 기록된 인물이다. 같은 자리를 이은 것인지, 번호 체계가 다른 것인지 확인되지 않았다.', certainty: 'unresolved' }],
+        limits: ['교단 명단의 사도 번호가 2006년 명부의 사도 번호·사도석과 같은 체계인지 확인되지 않았다(상충 기록).', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
+      },
+      {
+        id: 'apostle-kendo', name: '켄도', group: 'ushinoda-figures',
+        role: '우시노다교 제7사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: '우시노다교 / 교단 명단의 제7사도',
+        overview: '우시노다교 교단 명단에 제7사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제7사도(교단 명단)', certainty: 'listed' }],
+        relationships: [{ target: 'apostle-alvarez', relation: '2006년 명부에 같은 제7사도 번호로 기록된 인물이다. 같은 자리를 이은 것인지, 번호 체계가 다른 것인지 확인되지 않았다.', certainty: 'unresolved' }],
+        limits: ['교단 명단의 사도 번호가 2006년 명부의 사도 번호·사도석과 같은 체계인지 확인되지 않았다(상충 기록).', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
+      },
+      {
+        id: 'apostle-lisbeth-van-doorn', name: '리스베트 반 도른', group: 'ushinoda-figures',
+        role: '우시노다교 제8사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: '우시노다교 / 교단 명단의 제8사도',
+        overview: '우시노다교 교단 명단에 제8사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제8사도(교단 명단)', certainty: 'listed' }],
+        relationships: [{ target: 'apostle-parthea-hill', relation: '2006년 명부에 같은 제8사도 번호로 기록된 인물이다. 같은 자리를 이은 것인지, 번호 체계가 다른 것인지 확인되지 않았다.', certainty: 'unresolved' }],
+        limits: ['교단 명단의 사도 번호가 2006년 명부의 사도 번호·사도석과 같은 체계인지 확인되지 않았다(상충 기록).', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
+      },
+      {
+        id: 'apostle-meguro-soichiro', name: '메구로 소이치로', group: 'ushinoda-figures',
+        role: '우시노다교 제9사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: '우시노다교 / 교단 명단의 제9사도',
+        overview: '우시노다교 교단 명단에 제9사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제9사도(교단 명단)', certainty: 'listed' }],
+        relationships: [{ target: 'apostle-sharma', relation: '2006년 명부에 같은 제9사도 번호로 기록된 인물이다. 같은 자리를 이은 것인지, 번호 체계가 다른 것인지 확인되지 않았다.', certainty: 'unresolved' }],
+        limits: ['교단 명단의 사도 번호가 2006년 명부의 사도 번호·사도석과 같은 체계인지 확인되지 않았다(상충 기록).', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
+      },
+      // 2026-09-25 사용자 승인(추천안): N.H.C 대원 5명. 제1·제2타격부대와 카게무샤 프로젝트는 세력 분석 N.H.C에 적었다.
+      {
+        id: 'tonari-nakamura', name: '토나리 나카무라', group: 'nhc-additional',
+        role: 'N.H.C 제2타격부대 지휘관', status: 'active', certainty: 'listed', registerYear: '연대 미확정',
+        unit: 'N.H.C 제2타격부대',
+        overview: '인공 리버스 현상으로 타락을 몸에 융합하고 신체를 강화하는 데 성공한 사례로 기록된 N.H.C 제2타격부대 지휘관이다.',
+        affiliations: [{ key: 'nhc', label: 'N.H.C', role: '제2타격부대 지휘관', certainty: 'listed' }],
+        abilitySource: '인공 리버스 현상을 통한 타락 융합·신체 강화',
+        abilityCost: '대가의 내용은 기록되지 않았다.',
+        limits: ['타락자와 능력자 가운데 어느 분류인지 판정되지 않았다.', '인공 리버스 현상을 일으킨 주체와 시기, 보호 기록 「종교」가 적은 융합성 타락과 같은 과정인지는 확인되지 않았다.']
+      },
+      {
+        id: 'hayami', name: '하야미', group: 'nhc-additional',
+        role: 'N.H.C 제2타격부대 부관', status: 'active', certainty: 'listed', registerYear: '연대 미확정',
+        unit: 'N.H.C 제2타격부대',
+        overview: 'N.H.C 제1타격부대 부관에서 제2타격부대 부관으로 옮겼다. 대괴이전에 특화된 정예 병사를 기르는 카게무샤 프로젝트에서 대괴이 전투부대 적합 판정을 받았다.',
+        affiliations: [{ key: 'nhc', label: 'N.H.C', role: '제2타격부대 부관 / 전 제1타격부대 부관', certainty: 'listed' }],
+        relationships: [{ target: 'tonari-nakamura', relation: '제2타격부대의 지휘관이다.', certainty: 'listed' }],
+        limits: ['성과 이름 가운데 한쪽만 기록됐다.', '부대를 옮긴 시기와 이유, 카게무샤 프로젝트의 선발 기준과 운영 주체는 확인되지 않았다.']
+      },
+      {
+        id: 'shinohara-chiharu', name: '시노하라 치하루', group: 'nhc-additional',
+        role: 'N.H.C 제2타격부대 선행정찰병', status: 'active', certainty: 'listed', registerYear: '연대 미확정',
+        unit: 'N.H.C 제2타격부대',
+        overview: '괴이 출몰 지역을 먼저 정찰하고 진입로를 확보하는 N.H.C 대괴이 전투요원이다.',
+        affiliations: [{ key: 'nhc', label: 'N.H.C', role: '제2타격부대 선행정찰병', certainty: 'listed' }],
+        relationships: [{ target: 'tonari-nakamura', relation: '제2타격부대의 지휘관이다.', certainty: 'listed' }],
+        limits: ['활동 시기와 교전 기록은 확인되지 않았다.']
+      },
+      {
+        id: 'mizuno-shun', name: '미즈노 슌', group: 'nhc-additional',
+        role: 'N.H.C 전선 대원', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: 'N.H.C 전선 대원',
+        overview: '리버스가 발생하기 30분 전에 찍힌 사진에 오가와 나오와 함께 남은 N.H.C의 젊은 대원이다. 사진 당시 21세였다.',
+        affiliations: [{ key: 'nhc', label: 'N.H.C', role: '전선 대원', certainty: 'listed' }],
+        relationships: [{ target: 'ogawa-nao', relation: '같은 사진에 함께 찍힌 대원이다.', certainty: 'listed' }],
+        limits: ['사진이 찍힌 장소와 날짜, 뒤이어 일어난 리버스가 어떤 사건인지는 기록되지 않았다.', '리버스 발생 뒤의 생사와 소재는 확인되지 않았다.']
+      },
+      {
+        id: 'ogawa-nao', name: '오가와 나오', group: 'nhc-additional',
+        role: 'N.H.C 전선 대원', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
+        unit: 'N.H.C 전선 대원',
+        overview: '리버스가 발생하기 30분 전에 찍힌 사진에 미즈노 슌과 함께 남은 N.H.C의 젊은 대원이다. 사진 당시 22세였다.',
+        affiliations: [{ key: 'nhc', label: 'N.H.C', role: '전선 대원', certainty: 'listed' }],
+        relationships: [{ target: 'mizuno-shun', relation: '같은 사진에 함께 찍힌 대원이다.', certainty: 'listed' }],
+        limits: ['사진이 찍힌 장소와 날짜, 뒤이어 일어난 리버스가 어떤 사건인지는 기록되지 않았다.', '리버스 발생 뒤의 생사와 소재는 확인되지 않았다.']
       }
     ])
   });

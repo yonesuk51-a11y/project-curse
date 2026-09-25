@@ -38,7 +38,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const additions = P.additions || [];
   const additionGroupIds = new Set((P.additionGroups || []).map((group) => group.id));
   const legacyIds = new Set(records.map((record) => record.id));
-  add('addition-register-separate', additions.length === 9 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
+  add('addition-register-separate', additions.length === 21 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
     new Set(additions.map((record) => record.id)).size === additions.length && P.groups.every((group) => !additionGroupIds.has(group.id)),
     `${additions.length} additions`);
   add('addition-records-complete', additions.every((record) => record.registerYear && record.role && record.overview && record.limits?.length &&
@@ -72,10 +72,10 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const roster = () => host.querySelectorAll('[data-per-id]');
     const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
     const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
-    show([]); assert.equal(roster().length, initial); assert.equal(initial, 54);
+    show([]); assert.equal(roster().length, initial); assert.equal(initial, 63);
     const ids = () => roster().map((node) => node.dataset.perId);
     for (const group of groups) assert.ok(ids().filter((id) => P.byId[id].group === group.id).length <= 6);
-    assert.equal(host.querySelectorAll('[data-per-expand]').length, 3);
+    assert.equal(host.querySelectorAll('[data-per-expand]').length, 4);
     click('perExpand', 'personal'); assert.equal(roster().length, initial + 3); assert.equal(navigations.length, 0);
     assert.equal(c.document.activeElement.dataset.perExpand, 'personal');
     assert.equal(c.document.activeElement.getAttribute('aria-expanded'), 'true');
