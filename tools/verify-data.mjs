@@ -327,6 +327,12 @@ function verify(){
   add('archive-feral-supplement-discarded',!archiveRegistry.includes('FCR_Archive_890402')&&!archiveDocumentData.includes('FCR_Archive_890402')&&!existsSync(path('docs/FCR_Archive_890402')));
   add('archive-genesis-record-discarded',!archiveRegistry.includes('Unknown_Record5_940626')&&!archiveDocumentData.includes('Unknown_Record5_940626')&&!existsSync(path('docs/Unknown_Record5_940626/app.html'))&&!app.includes('새로운 세계를 위한 유전자 기록'));
   const restoredDocuments=context.window.ProjectCurseArchiveDocuments?.documents||{};
+  // 영상·녹취의 대사·해설·교신·시각(transcript 105줄 — 기록보관소 문서와 지역 문서철)은 원문 목소리로 잠근다 — 2026-09-25 사용자 결정('영상 기록은 기존에 보존했던 패턴대로').
+  // 문장 흐름 개정으로 잘렸던 15줄을 원문으로 되돌린 상태의 해시다. 이름 정리 같은 정사 변경으로 줄을 고치면 이유를 커밋에 적고 이 값을 새로 찍는다.
+  const transcriptRows=[];
+  for(const id of Object.keys(restoredDocuments).sort())(restoredDocuments[id].sections||[]).forEach((s,i)=>(s.transcript||[]).forEach((l,j)=>transcriptRows.push([id,i,j,l.time||'',l.speaker||'',l.text||''].join('|'))));
+  const transcriptHash=hash(transcriptRows.join('\n'));
+  add('archive-recorded-voices-locked',transcriptRows.length===105&&transcriptHash==='6f4a85f529bbebdcc0528385bb5f7fdd748596c38d16e00bc80b0c6fe98fddce',`${transcriptRows.length} lines ${transcriptHash.slice(0,12)}`);
   const greatBlackForest=restoredDocuments.Great_Black_Forest_Region;
   const deadZonePilgrimage=restoredDocuments.Dead_Zone_Pilgrimage;
   const pilgrimRules=restoredDocuments.Pilgrim_Rules_GBF;

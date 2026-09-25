@@ -2,7 +2,7 @@
 // Project Curse — 문장 흐름 개정 대조 검사.
 // 사용: node tools/check-prose.mjs <기준 커밋> <데이터 파일...>
 // 기준 커밋의 데이터와 작업 폴더의 데이터를 각각 불러와, 바뀐 문자열마다 아래를 원문과 대조한다.
-//   실패(FAIL): 숫자·영문 약어·괄호 인용·판정 표현·고유명사가 빠졌거나 구조가 달라졌다.
+//   실패(FAIL): 숫자·영문 약어·괄호 인용·판정 표현·고유명사가 빠졌거나 구조가 달라졌다. 영상·녹취의 대사·해설·교신·시각(transcript)이 바뀌었다.
 //   확인(WARN): 빠졌을 수 있는 내용어, 부정 표현 감소, 길이 변화, 화자가 있는 글(증언·현장 기입·교단 상충 기록)의 변경. 사람이 읽고 판단한다.
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -82,6 +82,12 @@ function compare(oldValue, newValue, pathKeys, parents) {
     }
     if (oldValue === newValue) return;
     changed += 1;
+    // 영상·녹취의 대사·해설·교신·시각(transcript 줄)은 개정하지 않는다 — 2026-09-25 사용자 결정('영상 기록은 기존에 보존했던 패턴대로').
+    // 보호 기록의 교신 〔…〕을 원문으로 둔 것과 같은 규칙이다. 이름 정리 같은 정사 변경은 이 도구가 아니라 별도 커밋으로 한다.
+    if (pathKeys.includes('transcript')) {
+      fails.push([where, '영상·녹취의 대사·해설·교신·시각은 원문 그대로 둔다(문장 흐름 개정 대상이 아니다)']);
+      return;
+    }
     // 화자가 있는 글도 개정 대상이다. 다만 목소리를 살렸는지 사람이 읽고 확인하도록 알린다.
     const reason = frozen(pathKeys, parents);
     if (reason) warns.push([where, `화자가 있는 글(${reason}) — 말투·어휘·시각 형식을 살렸는지 확인`]);

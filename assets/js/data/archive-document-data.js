@@ -451,12 +451,12 @@
           ],transcript:[
             {time:'00:00',cue:'【검은 화면 / 아마리온 표장 표시】'},
             {time:'00:06',speaker:'해설',tone:'analysis',text:'기술은 인류에게 더 긴 수명과 넓은 생활권을 제공했습니다. 그러나 전쟁, 자연재해, 질병, 자원 고갈과 급격한 인구 증가는 지구가 현재의 문명을 감당할 수 있는 기간을 줄이고 있습니다.'},
-            {time:'00:24',speaker:'해설',tone:'analysis',text:'아마리온은 기존의 생존 기반을 보수하는 데 머물지 않습니다. 우리는 인류가 사용할 수 있는 다음 공간을 개척합니다.'},
+            {time:'00:24',speaker:'해설',tone:'analysis',text:'아마리온은 기존의 생존 기반을 보수하는 것에 머물지 않습니다. 우리는 인류가 사용할 수 있는 다음 공간을 개척합니다.'},
             {time:'00:39',cue:'【화면 전환 / NEXT-GENERATION SURVIVAL INFRASTRUCTURE】'}
           ]},
           {title:'저근접 자기 왜곡 시스템',transcript:[
             {time:'00:42',speaker:'해설',tone:'analysis',text:'저근접 자기 왜곡 시스템, Low-Proximity Magnetic Distortion System은 현실과 육안으로 관측할 수 없는 공간 사이에 제한적인 접촉면을 형성합니다.'},
-            {time:'01:03',speaker:'해설',tone:'analysis',text:'형성된 입구를 통해 인력과 장비가 기존 환경 밖으로 접근할 수 있습니다. 고밀도 자원과 새로운 거주 공간을 확보할 수 있습니다.'},
+            {time:'01:03',speaker:'해설',tone:'analysis',text:'형성된 입구를 통해 인력과 장비가 기존 환경 밖으로 접근할 수 있으며, 고밀도 자원과 새로운 거주 공간을 확보할 수 있습니다.'},
             {time:'01:21',cue:'【기술 도식 손상 / 음성 일부 유실】'},
             {time:'01:24',speaker:'해설',tone:'analysis',text:'먼저 임계값을 34……'},
             {time:'01:27',cue:'【영상 손상 / 편집 흔적 11초】'},
@@ -464,8 +464,8 @@
           ]},
           {title:'사업 계획',transcript:[
             {time:'02:04',cue:'【슬라이드 / POPULATION · RESOURCE · ACCESS】'},
-            {time:'02:08',speaker:'해설',tone:'analysis',text:'새로운 공간은 인구를 분산합니다. 기존 자원의 고갈 속도를 늦춥니다. 개척 시설과 통행망은 정부 및 협력 기업과의 계약을 통해 운용됩니다.'},
-            {time:'02:29',speaker:'해설',tone:'analysis',text:'아마리온은 탐사, 채굴, 건설과 이주를 하나의 기반 시설로 연결할 것입니다. 이를 통해 지속 가능한 수익과 인류의 다음 생활권을 동시에 확보할 것입니다.'},
+            {time:'02:08',speaker:'해설',tone:'analysis',text:'새로운 공간은 인구를 분산하고 기존 자원의 고갈 속도를 늦춥니다. 개척 시설과 통행망은 정부 및 협력 기업과의 계약을 통해 운용됩니다.'},
+            {time:'02:29',speaker:'해설',tone:'analysis',text:'탐사, 채굴, 건설과 이주를 하나의 기반 시설로 연결함으로써 아마리온은 지속 가능한 수익과 인류의 다음 생활권을 동시에 확보할 것입니다.'},
             {time:'02:49',speaker:'해설',tone:'analysis',text:'더 나은 내일을 위해, 아마리온은 오늘의 불가능을 연구합니다.'}
           ]},
           {title:'종료 프레임',transcript:[
@@ -497,18 +497,18 @@
           {title:'외부 검사',transcript:[
             {time:'00:41',speaker:'레이놀즈',tone:'analysis',text:'장기간 영양실조가 먼저 보입니다. 체중 감소와 근육 손실이 심하고, 외상은 사망 직전에 생긴 것으로 추정됩니다.'},
             {time:'01:02',speaker:'스테파니',tone:'witness',text:'부패가 진행된 곳과 멈춘 곳이 한 몸에 같이 있어요. 방부 처리 흔적은 없습니다.'},
-            {time:'01:17',speaker:'레이놀즈',tone:'analysis',text:'혈액은 응고했습니다. 그런데 절개면 주변에서 다시 이동합니다. 용기 바닥의 잔류물과 연결되는 반응도 확인했습니다.'},
+            {time:'01:17',speaker:'레이놀즈',tone:'analysis',text:'혈액은 응고했지만 절개면 주변에서 다시 이동합니다. 용기 바닥의 잔류물과 연결되는 반응도 확인했습니다.'},
             {time:'01:31',cue:'【보고서를 펼치는 소리】'}
           ]},
           {title:'내부 장기와 배양 반응',image:{src:'../../assets/resources/derived/blood-lake-autopsy-1986-concept-v1.png',alt:'어두운 준비실 너머 수술등 아래에서 연구원 두 명이 마른 성인 사체의 열린 흉복부를 살핀다. 절개면에서 검붉은 줄기가 부검대 가장자리로 뻗어 있고, 삼각대 위 녹화 카메라가 부검대를 향해 있다.',caption:'BLOOD-LAKE AUTOPSY / INTERPRETIVE RECONSTRUCTION — 회수 영상의 프레임이 아님'},transcript:[
-            {time:'01:46',speaker:'스테파니',tone:'witness',text:'간과 폐 표면에 균류처럼 보이는 조직이 붙어 있습니다. 죽은 조직 위에서 자라요. 자극을 주면 살아 있는 조직처럼 수축해요.'},
-            {time:'02:05',speaker:'레이놀즈',tone:'analysis',text:'처음에는 Pseudomonas fluorescens를 의심했습니다. 증식 형태가 맞지 않습니다. 변이된 Bacillus 계열에 더 가깝지만 일반 배양으로는 설명할 수 없습니다.'},
+            {time:'01:46',speaker:'스테파니',tone:'witness',text:'간과 폐 표면에 균류처럼 보이는 조직이 붙어 있습니다. 죽은 조직 위에서 자라는데 자극을 주면 살아 있는 조직처럼 수축해요.'},
+            {time:'02:05',speaker:'레이놀즈',tone:'analysis',text:'처음에는 Pseudomonas fluorescens를 의심했지만 증식 형태가 맞지 않습니다. 변이된 Bacillus 계열에 더 가깝지만 일반 배양으로는 설명할 수 없습니다.'},
             {time:'02:28',speaker:'스테파니',tone:'witness',text:'사망 뒤 배양이 시작됐다는 뜻인가요?'},
             {time:'02:33',speaker:'레이놀즈',tone:'analysis',text:'아니면 사망이 배양 조건이었을 수도 있죠.'},
             {time:'02:39',cue:'【짧은 침묵 / 페이지를 넘기는 소리】'}
           ]},
           {title:'임시 판정 BL-088',transcript:[
-            {time:'02:51',speaker:'레이놀즈',tone:'analysis',text:'현장 명칭은 피의 호수. 임시 표본명 BL-088로 등록합니다. F.H.C 생체연구 보관선으로 이관합니다. 외부 공유는 전부 막습니다.'},
+            {time:'02:51',speaker:'레이놀즈',tone:'analysis',text:'현장 명칭은 피의 호수. 임시 표본명 BL-088로 등록합니다. F.H.C 생체연구 보관선으로 이관하고 외부 공유는 전부 막습니다.'},
             {time:'03:13',speaker:'스테파니',tone:'witness',text:'공식 사망 원인은 어떻게 적죠?'},
             {time:'03:18',speaker:'레이놀즈',tone:'analysis',text:'영양실조 및 현장 외상.'},
             {time:'03:25',speaker:'스테파니',tone:'witness',text:'그걸로는 이 상태를 설명할 수 없어요.'},
@@ -543,14 +543,14 @@
             {time:'22:15:44',speaker:'애셔',tone:'witness',text:'따로 행동?'},
             {time:'22:15:47',speaker:'밀렌',tone:'command',text:'그들의 방식으론 이 지옥이 계속돼. 그놈들이 우리 모두를 죽이기 전에 족쇄를 끊자는 거야.'},
             {time:'22:15:58',speaker:'애셔',tone:'witness',text:'너 지금 배신을 하자는 거냐?'},
-            {time:'22:16:04',speaker:'밀렌',tone:'command',text:'상식을 이야기하는 거야. 주변을 둘러봐. 모든 게 엉망이야. 남은 것도 없는 도시에서 정작 해야 할 일을 못하게 만들고 있어.'}
+            {time:'22:16:04',speaker:'밀렌',tone:'command',text:'상식을 이야기하는 거야. 주변을 둘러봐. 모든 게 엉망이고, 남은 것도 없는 도시에서 정작 해야 할 일을 못하게 만들고 있어.'}
           ]},
           {title:'선택',transcript:[
             {time:'22:16:31',speaker:'애셔',tone:'witness',text:'그래도 명령 체계가 무너지면 더 큰 혼란이 생겨.'},
             {time:'22:16:36',speaker:'밀렌',tone:'command',text:'이미 무너졌어. 그걸 인정하지 않는 놈들만 지휘실에 앉아 있는 거지. 제 역할도 못하는 놈들이 우릴 소모품처럼 쓰는 건 더 이상 용납 못 해.'},
             {time:'22:16:55',speaker:'애셔',tone:'witness',text:'그래서 뭘 하겠다는 건데?'},
             {time:'22:17:00',speaker:'밀렌',tone:'command',text:'힘을 모아야지. 이건 명령의 문제가 아니라 힘의 문제야. 힘이 있어야 생존할 수 있어.'},
-            {time:'22:17:17',speaker:'밀렌',tone:'command',text:'그들은 끝났어. 난 아니야. 너도 살아남을 수 있어. 나에게 협력한다면.'},
+            {time:'22:17:17',speaker:'밀렌',tone:'command',text:'그들은 끝났지만 난 아니야. 너도 살아남을 수 있어. 나에게 협력한다면.'},
             {time:'22:17:30',speaker:'애셔',tone:'witness',text:'네가 하려는 일이 정말 도시를 위한 거라고 믿는 거냐?'},
             {time:'22:17:37',speaker:'밀렌',tone:'command',text:'적어도 난 도망치기 위해 싸우는 게 아니야. 살아남기 위해 싸우고, 살아남은 뒤 누가 이 도시를 차지할지 결정하려는 거야. 난 더 이상 버려지는 쪽에 서지 않겠어.'},
             {time:'22:18:04',cue:'【침묵 9초】'},
@@ -598,7 +598,7 @@
             {time:'02:43',speaker:'카터',tone:'witness',text:'그게 네가 말하는 질서냐?'},
             {time:'02:48',speaker:'밀렌',tone:'command',text:'문명이 폐허가 되고 서로 살겠다고 싸우는 마당에 질서는 힘을 가진 놈이 만드는 거야.'},
             {time:'03:01',speaker:'밀렌',tone:'command',text:'우리가 만든 걸 직접 뿌릴 필요도 없어. 교단 바깥에는 신앙보다 돈과 공포에 더 쉽게 움직이는 놈들이 있지. 축복이라고 속여 쥐여주면 돼.'},
-            {time:'03:19',speaker:'밀렌',tone:'command',text:'실험 결과는 알아서 세상에 퍼질 거야. 우리는 뒤에서 결과만 확인하면 돼.'},
+            {time:'03:19',speaker:'밀렌',tone:'command',text:'실험 결과는 알아서 세상에 퍼질 거고, 우리는 뒤에서 결과만 확인하면 돼.'},
             {time:'03:27',speaker:'카터',tone:'witness',text:'사람들을 실험장으로 쓰겠다는 거잖아.'},
             {time:'03:33',speaker:'밀렌',tone:'command',text:'세상은 이미 실험장이야. 차이는 누가 기록하고 누가 결과를 가져가느냐뿐이지.'},
             {time:'03:46',speaker:'카터',tone:'witness',text:'그 카드가 우리 목을 물 수도 있어.'},
