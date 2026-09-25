@@ -299,6 +299,7 @@
       overview:'우시노다교 제2사도로 기재된 육체 강탈·변형 계열 능력자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제2사도',certainty:'listed'}],
       capabilities:['육체 강탈','괴력','초재생','신체 변형'],
+      relationships:[{target:'apostle-camille-potier',relation:'2042년 교단 명단의 제2사도다. 자리가 어떻게 넘어갔는지는 기록되지 않았다.',certainty:'partial'}],
       limits:['육체 강탈의 조건과 현재 육체의 신원이 제공되지 않았다.']
     },
     {
@@ -306,42 +307,49 @@
       overview:'우시노다교 제3사도로 기재된 그림자·공간·침투 계열 능력자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제3사도',certainty:'listed'}],
       capabilities:['그림자를 통한 공간술','염력','물질화 공격','육체 침투','정신 침투','어둠 영혼 조종'],
+      relationships:[{target:'kenevin',relation:'2042년 교단 명단의 제3사도다. 자리가 어떻게 넘어갔는지는 기록되지 않았다.',certainty:'partial'}],
       limits:['각 능력의 공통 원리와 동시 사용 가능 여부는 제공되지 않았다.']
     },
     {
       id:'apostle-shahin',name:'샤힌',group:'ushinoda',role:'제4사도',status:'active',certainty:'listed',
       overview:'우시노다교 제4사도로 기재된 쌍날검 사용자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제4사도',certainty:'listed'}],capabilities:['최면','의지 증폭'],equipment:['쌍날검'],
+      relationships:[{target:'apostle-viljar',relation:'2042년 교단 명단의 제4사도다. 자리가 어떻게 넘어갔는지는 기록되지 않았다.',certainty:'partial'}],
       limits:['최면과 의지 증폭의 대상·조건은 제공되지 않았다.']
     },
     {
       id:'apostle-moha',name:'모하',group:'ushinoda',role:'제5사도',status:'active',certainty:'listed',
       overview:'우시노다교 제5사도로 기재된 신체 변형·혈열 계열 능력자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제5사도',certainty:'listed'}],capabilities:['신체 변형','혈열'],
+      relationships:[{target:'apostle-levente-hambas',relation:'2042년 교단 명단의 제5사도다. 자리가 어떻게 넘어갔는지는 기록되지 않았다.',certainty:'partial'}],
       limits:['혈열의 정확한 효과와 신체 변형 범위는 제공되지 않았다.']
     },
     {
       id:'apostle-siena-khan',name:'시에나 칸',group:'ushinoda',role:'제6사도',status:'active',certainty:'listed',
       overview:'우시노다교 제6사도로 기재된 현자의 후손이다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제6사도',certainty:'listed'}],capabilities:['재생','괴력','오토마톤','현자의 후손'],
+      relationships:[{target:'apostle-robin',relation:'2042년 교단 명단의 제6사도다. 자리가 어떻게 넘어갔는지는 기록되지 않았다.',certainty:'partial'}],
       limits:['오토마톤의 수량·기원과 현자 계보의 의미는 제공되지 않았다.']
     },
     {
       id:'apostle-alvarez',name:'알베레즈',group:'ushinoda',role:'제7사도',status:'active',certainty:'listed',
       overview:'우시노다교 제7사도로 기재된 모방·분신 계열 능력자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제7사도',certainty:'listed'}],capabilities:['모방','미믹','그림자 분신 소환'],
+      relationships:[{target:'apostle-kendo',relation:'2042년 교단 명단의 제7사도다. 자리가 어떻게 넘어갔는지는 기록되지 않았다.',certainty:'partial'}],
       limits:['브리안 알베로즈와의 이름 유사성만으로 관계를 확정하지 않는다.','모방과 미믹의 차이는 제공되지 않았다.']
     },
     {
       id:'apostle-parthea-hill',name:'파르테아 힐',group:'ushinoda',role:'제8사도',status:'active',certainty:'listed',
       overview:'우시노다교 제8사도로 기재된 혈액 계열 검사다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제8사도',certainty:'listed'}],capabilities:['혈액 경화','출혈'],equipment:['레이피어'],
+      relationships:[{target:'apostle-lisbeth-van-doorn',relation:'2042년 교단 명단의 제8사도다. 자리가 어떻게 넘어갔는지는 기록되지 않았다.',certainty:'partial'}],
       limits:['출혈 능력의 발동 조건과 혈액 경화의 적용 범위는 제공되지 않았다.']
     },
     {
       id:'apostle-sharma',name:'샤르마',group:'ushinoda',role:'제9사도',status:'active',certainty:'listed',
       overview:'우시노다교 제9사도로 기재된 중대검 사용자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제9사도',certainty:'listed'}],capabilities:['촉수','초재생'],equipment:['중대검'],
+      relationships:[{target:'apostle-meguro-soichiro',relation:'2042년 교단 명단의 제9사도다. 자리가 어떻게 넘어갔는지는 기록되지 않았다.',certainty:'partial'}],
       limits:['촉수의 기원과 재생 한계는 제공되지 않았다.']
     },
     {
