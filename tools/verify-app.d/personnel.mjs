@@ -26,13 +26,13 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   add('identity-career-and-recorded-age', D?.year === '2006' && records.every((record) => record.identity && (Object.hasOwn(ageExceptions, record.id) ? record.identity.age === ageExceptions[record.id] : record.identity.age.includes('2006')) && record.history.length && record.background.length));
   add('ability-cost-preserved', records.filter((record) => record.abilitySource).every((record) => record.abilityCost));
   add('historical-names-searchable', records.filter((record) => record.sourceName).every((record) => record.aliases.includes(record.sourceName)));
-  // 2026-09-25 사용자 채택: 2006년 명부의 사진은 사쿠마 유타·마커스 콜, 기록 기반 4명, 지휘부 6명(12명)뿐이다.
+  // 2026-09-25 사용자 채택: 2006년 명부의 사진은 사쿠마 유타·마커스 콜, 기록 기반 4명, 지휘부 6명, 남은 8명(20명)이다. 엘리어스 맨슨은 다시 그리는 중.
   // 사진은 매체 목록과 증거 대장에 등록된 재구성 파일만 쓴다(추가 등록 명부도 같다).
   const withPortrait = (list) => list.filter((record) => record.visual?.src);
   const withFormerPortrait = [...records, ...(P.additions || [])].filter((record) => record.formerVisual?.src);
   const registeredPortrait = (visual) => Boolean(context.ProjectCurseMediaManifest?.resolve(visual.src) &&
     context.ProjectCurseVisualEvidence?.known?.[visual.src] && visual.className === 'RECONSTRUCTED' && visual.alt && visual.caption && visual.label);
-  add('portraits-registered-only', withPortrait(records).map((record) => record.id).sort().join(',') === 'alma-kara,alma-koenig,alma-millen,apostle-luke-eugene,apostle-uro,baranto,ezekiel-kalp,frux,mason,pierce,sakuma-yuta,yohan' &&
+  add('portraits-registered-only', withPortrait(records).map((record) => record.id).sort().join(',') === 'alma-bennett,alma-damian,alma-griffon,alma-kara,alma-koenig,alma-millen,alma-wade,apostle-luke-eugene,apostle-uro,baranto,ezekiel-kalp,frux,jake,mason,mizumi-yanami,natalia,pierce,reiki,sakuma-yuta,yohan' &&
     [...withPortrait(records), ...withPortrait(P.additions || [])].every((record) => registeredPortrait(record.visual)) &&
     withFormerPortrait.every((record) => registeredPortrait(record.formerVisual) && record.formerVisual.era),
     `${withPortrait(records).length} legacy / ${withPortrait(P.additions || []).length} additions / ${withFormerPortrait.length} former`);

@@ -251,6 +251,30 @@
     'assets/resources/derived/alma-kara-portrait-concept-v1.png':Object.freeze({
       assetId:'VEA-PER-KRA-01',className:'RECONSTRUCTED',source:'인물 기록(alma-kara) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 서명하는 문서의 내용과 가문 안의 지위는 확정하지 않는다.'
     }),
+    'assets/resources/derived/alma-damian-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-DMN-01',className:'RECONSTRUCTED',source:'인물 기록(alma-damian) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 장부의 내용과 실제 감사 사건은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/alma-bennett-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-BNT-01',className:'RECONSTRUCTED',source:'인물 기록(alma-bennett) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 환자의 신원과 이 장소의 실제 치료 사건은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/alma-griffon-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-GRF-01',className:'RECONSTRUCTED',source:'인물 기록(alma-griffon) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 격리문의 개폐 상태와 수동 해제장치의 위치는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/alma-wade-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-WDE-01',className:'RECONSTRUCTED',source:'인물 기록(alma-wade) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 검체의 내용과 원본 검체의 위치는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/jake-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-JKE-01',className:'RECONSTRUCTED',source:'인물 기록(jake) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 2005년 호송대 매복 이후의 생사는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/natalia-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-NTL-01',className:'RECONSTRUCTED',source:'인물 기록(natalia) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 특정 회의와 정보원의 신원은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/reiki-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-REI-01',className:'RECONSTRUCTED',source:'인물 기록(reiki) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 귀환한 신체의 정체와 사망 처리 뒤의 생존 여부는 확정하지 않는다.'
+    }),
+    'assets/resources/derived/mizumi-yanami-portrait-concept-v1.png':Object.freeze({
+      assetId:'VEA-PER-MZH-01',className:'RECONSTRUCTED',source:'인물 기록(mizumi-yanami) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 겉모습이 기록된 나이(44세)보다 훨씬 젊다. 젊음을 유지하는 힘의 정체와 대가, 피의 강 결계의 범위는 확정하지 않는다.'
+    }),
     'assets/resources/derived/outer-god-war-wall-host-concept-v1.png':Object.freeze({
       assetId:'VEA-OGW-WALL-01',className:'RECONSTRUCTED',source:'외신 강림과 성벽의 저항(deep-outer-god-war)·커네빈 인물 기록 기반 분석 재구성',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'교단 측 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁의 연대·장소·규모와 경과, 우시노다의 모습은 확정하지 않는다.'
     }),

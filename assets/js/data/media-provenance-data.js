@@ -25,11 +25,11 @@
   ],
   "referenceExposures": [],
   "stats": {
-    "registered": 522,
-    "referenced": 522,
+    "registered": 546,
+    "referenced": 546,
     "unreferenced": 0,
     "review": 150,
-    "managed": 372,
+    "managed": 396,
     "referenceOnly": 3,
     "referenceExposure": 0,
     "priority": 30,
@@ -37,20 +37,20 @@
     "priorityVideo": 7,
     "byKind": {
       "audio": 23,
-      "image": 492,
+      "image": 516,
       "video": 7
     },
     "byRelease": {
       "CLEARED": 18,
       "LICENSE_REVIEW": 81,
-      "PROJECT_GENERATED": 354,
+      "PROJECT_GENERATED": 378,
       "SOURCE_REVIEW": 69
     },
     "byProvenance": {
-      "DELIVERY_DERIVATIVE": 252,
+      "DELIVERY_DERIVATIVE": 268,
       "INTERFACE": 25,
       "ORIGINAL_SOURCE": 37,
-      "RECONSTRUCTED": 131,
+      "RECONSTRUCTED": 139,
       "UNVERIFIED": 66,
       "UNVERIFIED_LEGACY": 11
     }
@@ -672,8 +672,6 @@
         "share/h/deep-outer-god-war/index.html",
         "share/h/deep-plague-copies/index.html",
         "share/h/deep-sealing-wars/index.html",
-        "share/p/aaron-syndicate/index.html",
-        "share/p/aaron-uac/index.html",
         "share/p/alma-bennett/index.html",
         "share/p/alma-damian/index.html",
         "share/p/alma-griffon/index.html",
@@ -682,73 +680,40 @@
         "share/p/alma-millen/index.html",
         "share/p/alma-wade/index.html",
         "share/p/alullim/index.html",
-        "share/p/apostle-alvarez/index.html",
         "share/p/apostle-camille-potier/index.html",
-        "share/p/apostle-jade-jackson/index.html",
         "share/p/apostle-kendo/index.html",
         "share/p/apostle-levente-hambas/index.html",
         "share/p/apostle-lisbeth-van-doorn/index.html",
         "share/p/apostle-luke-eugene/index.html",
         "share/p/apostle-meguro-soichiro/index.html",
-        "share/p/apostle-moha/index.html",
-        "share/p/apostle-parthea-hill/index.html",
         "share/p/apostle-robin/index.html",
-        "share/p/apostle-shahin/index.html",
-        "share/p/apostle-sharma/index.html",
-        "share/p/apostle-siena-khan/index.html",
         "share/p/apostle-uro/index.html",
-        "share/p/apostle-urzag/index.html",
         "share/p/apostle-viljar/index.html",
         "share/p/baranto/index.html",
-        "share/p/brian-alberoz/index.html",
-        "share/p/casper/index.html",
-        "share/p/dennis/index.html",
-        "share/p/duka/index.html",
         "share/p/enrilbani/index.html",
         "share/p/epoptes/index.html",
         "share/p/ezekiel-kalp/index.html",
-        "share/p/frost/index.html",
         "share/p/frux/index.html",
-        "share/p/grinch/index.html",
         "share/p/hayami/index.html",
-        "share/p/isaac/index.html",
         "share/p/jake/index.html",
-        "share/p/jeong-ria/index.html",
         "share/p/kagami-itsuki/index.html",
         "share/p/kamishiro-shuichi/index.html",
-        "share/p/karl-maxwell/index.html",
-        "share/p/kate/index.html",
         "share/p/kenevin/index.html",
         "share/p/kieran-hayward/index.html",
         "share/p/mason/index.html",
-        "share/p/maya/index.html",
         "share/p/mikage-shiori/index.html",
         "share/p/mizumi-yanami/index.html",
         "share/p/mizuno-shun/index.html",
         "share/p/natalia/index.html",
-        "share/p/natsume/index.html",
-        "share/p/nina-gregory/index.html",
         "share/p/ogawa-nao/index.html",
         "share/p/pierce/index.html",
         "share/p/ramus-manson/index.html",
         "share/p/reiki/index.html",
-        "share/p/roden/index.html",
-        "share/p/ryu-youngho/index.html",
         "share/p/sakuma-yuta/index.html",
-        "share/p/sasaki/index.html",
-        "share/p/sato-hajime/index.html",
-        "share/p/saxon/index.html",
-        "share/p/sebastian-clark/index.html",
-        "share/p/semyon-reyes/index.html",
         "share/p/shinohara-chiharu/index.html",
         "share/p/tachibana-isamu/index.html",
-        "share/p/tanaka-chihiro/index.html",
-        "share/p/tanaka-yui/index.html",
         "share/p/tonari-nakamura/index.html",
-        "share/p/violet/index.html",
-        "share/p/yanami-shinka/index.html",
         "share/p/yanan-kes/index.html",
-        "share/p/yesel-gregory/index.html",
         "share/p/yohan/index.html",
         "tools/build-share-stubs.mjs",
         "tools/verify-app.mjs"
@@ -830,56 +795,15 @@
         "share/h/1990-04-12-municipal-mesh-pilot/index.html",
         "share/h/1992-10-30-sixth-program-dispersal/index.html",
         "share/h/1995-03-20-tokyo-subway/index.html",
-        "share/p/aaron-syndicate/index.html",
-        "share/p/aaron-uac/index.html",
         "share/p/alma-bennett/index.html",
         "share/p/alma-damian/index.html",
         "share/p/alma-griffon/index.html",
-        "share/p/alma-kara/index.html",
-        "share/p/alma-millen/index.html",
         "share/p/alma-wade/index.html",
-        "share/p/apostle-alvarez/index.html",
-        "share/p/apostle-jade-jackson/index.html",
-        "share/p/apostle-moha/index.html",
-        "share/p/apostle-parthea-hill/index.html",
-        "share/p/apostle-shahin/index.html",
-        "share/p/apostle-sharma/index.html",
-        "share/p/apostle-siena-khan/index.html",
-        "share/p/apostle-urzag/index.html",
-        "share/p/baranto/index.html",
-        "share/p/brian-alberoz/index.html",
-        "share/p/casper/index.html",
-        "share/p/dennis/index.html",
-        "share/p/duka/index.html",
-        "share/p/ezekiel-kalp/index.html",
-        "share/p/frost/index.html",
-        "share/p/grinch/index.html",
-        "share/p/isaac/index.html",
         "share/p/jake/index.html",
-        "share/p/jeong-ria/index.html",
-        "share/p/karl-maxwell/index.html",
-        "share/p/kate/index.html",
-        "share/p/maya/index.html",
         "share/p/mizumi-yanami/index.html",
         "share/p/natalia/index.html",
-        "share/p/natsume/index.html",
-        "share/p/nina-gregory/index.html",
-        "share/p/pierce/index.html",
         "share/p/ramus-manson/index.html",
         "share/p/reiki/index.html",
-        "share/p/roden/index.html",
-        "share/p/ryu-youngho/index.html",
-        "share/p/sasaki/index.html",
-        "share/p/sato-hajime/index.html",
-        "share/p/saxon/index.html",
-        "share/p/sebastian-clark/index.html",
-        "share/p/semyon-reyes/index.html",
-        "share/p/tanaka-chihiro/index.html",
-        "share/p/tanaka-yui/index.html",
-        "share/p/violet/index.html",
-        "share/p/yanami-shinka/index.html",
-        "share/p/yesel-gregory/index.html",
-        "share/p/yohan/index.html",
         "tools/build-share-stubs.mjs",
         "tools/verify-app.mjs"
       ],
@@ -2964,6 +2888,69 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/alma-bennett-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(alma-bennett) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 환자의 신원과 이 장소의 실제 치료 사건은 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief with appearance drawn from the user's reference folder / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1680384,
+      "sha256": "a7ab0ccdf0660afc7658a40f362a1eff43fde7e5efad2664c28cb4c20e21a634",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/alma-damian-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(alma-damian) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 장부의 내용과 실제 감사 사건은 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief with appearance drawn from the user's reference folder / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1727517,
+      "sha256": "7cb78ed4ce872b1017088378d285dd46127f089f8a134136162a9e20bd873ad7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/alma-griffon-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(alma-griffon) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 격리문의 개폐 상태와 수동 해제장치의 위치는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief with appearance drawn from the user's reference folder / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1854049,
+      "sha256": "19ef51cdd13653b0ae1f0f97344dfc0be79e436e6804d35de7181fae6ed81a39",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/alma-kara-portrait-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -2979,7 +2966,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/alma-kara/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3017,6 +3005,28 @@
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "bytes": 1591854,
       "sha256": "f7229aff63483bcbb1229c1df54fc52a6e67bc609635e50b443058d51275d41a",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/alma-millen/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/alma-wade-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(alma-wade) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 검체의 내용과 원본 검체의 위치는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief with appearance drawn from the user's reference folder / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1560344,
+      "sha256": "22fc21fb30abd5364d330bd1b9920f7d1df5f18ccef70956cbe9e96f53ac9015",
       "usedBy": [
         "assets/js/data/media-manifest.js",
         "assets/js/data/personnel-remake-data.js",
@@ -3417,7 +3427,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/baranto/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -3968,7 +3979,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/ezekiel-kalp/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4286,6 +4298,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/jake-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(jake) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 2005년 호송대 매복 이후의 생사는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief with appearance drawn from the user's reference folder / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1713698,
+      "sha256": "8879b63470cafd5f137c643771ac8c1700ce67c56aca6a54d85bc296411e40b4",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/joint-response-unit-unlisted-eleventh-group-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -4483,6 +4516,27 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/derived/mizumi-yanami-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(mizumi-yanami) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 겉모습이 기록된 나이(44세)보다 훨씬 젊다. 젊음을 유지하는 힘의 정체와 대가, 피의 강 결계의 범위는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief with appearance drawn from the user's reference folder / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1690024,
+      "sha256": "7fbf0e74a5bf50aa3a368472a4462ef8525056bc7770206ba759e89a03d48c52",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/derived/mizuno-shun-portrait-concept-v1.png",
       "kind": "image",
       "provenance": "RECONSTRUCTED",
@@ -4500,6 +4554,27 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "share/p/mizuno-shun/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/natalia-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(natalia) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 특정 회의와 정보원의 신원은 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief with appearance drawn from the user's reference folder / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1757839,
+      "sha256": "a3d91bc175230bfd0904aab31e3c459a56f97d28b3994d0eeb8a656be2e4af34",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4699,7 +4774,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/pierce/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -4839,6 +4915,27 @@
         "assets/resources/ASSET_REGISTRY.md",
         "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
         "share/h/2005-09-01-red-wolf/index.html"
+      ],
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/derived/reiki-portrait-concept-v1.png",
+      "kind": "image",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "인물 기록(reiki) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
+      "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 귀환한 신체의 정체와 사망 처리 뒤의 생존 여부는 확정하지 않는다.",
+      "credit": "Project Curse record-based portrait brief with appearance drawn from the user's reference folder / Codex image generation",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "bytes": 1661703,
+      "sha256": "e7d8b4bda47ddbd6c7339a3f4643cc904f52ce5863eb2136bfcd53b5dce989d7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js",
+        "assets/js/data/personnel-remake-data.js",
+        "assets/js/data/visual-evidence-data.js",
+        "assets/resources/ASSET_REGISTRY.md",
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
       ],
       "referenced": true,
       "protectedScope": false
@@ -5387,7 +5484,8 @@
         "assets/js/data/personnel-remake-data.js",
         "assets/js/data/visual-evidence-data.js",
         "assets/resources/ASSET_REGISTRY.md",
-        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json"
+        "assets/resources/MEDIA_PROVENANCE_OVERRIDES.json",
+        "share/p/yohan/index.html"
       ],
       "referenced": true,
       "protectedScope": false
@@ -6163,6 +6261,102 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/alma-bennett-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-bennett-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12984,
+      "sha256": "2227255b2e2a7fbb66a9fdf05c2f9174d8b33504afa6cf9da8ca7335ed890679",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-bennett-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alma-bennett-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-bennett-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 39468,
+      "sha256": "570fb07e135b7c63de0c896e439cf43d396e75cc02c652a90047c0e32aa56865",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-bennett-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alma-damian-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-damian-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 12688,
+      "sha256": "f8c75a8fdbd83d66f5316dc7f98720ecffb64ef60fe8688eecf546d50d23f959",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-damian-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alma-damian-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-damian-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 39164,
+      "sha256": "5f211f7f3729c99deb6695c2dd0351c0c3abae0d66ace659003ba5160841c5e6",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-damian-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alma-griffon-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-griffon-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 13306,
+      "sha256": "c03d84bb7ae73a391a96a9ead7bd7c012c8a832b070363a7c68e4706047c9c84",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-griffon-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alma-griffon-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-griffon-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 45102,
+      "sha256": "81c0dae1de147a149176ae20da11393a3f16f75015f894a9b3c327f14027ead5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-griffon-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/alma-kara-portrait-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -6255,6 +6449,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/alma-millen-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alma-wade-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-wade-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 14348,
+      "sha256": "9ec6c1a154f42593fb5fb417586f1e320b0894f754f98db03a987e9fa0cfc17c",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-wade-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/alma-wade-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/alma-wade-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 41658,
+      "sha256": "c40528e262d80d7c9490b73cd5db71570023613b03cf6173b16b14c3c15a7feb",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/alma-wade-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -7955,6 +8181,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/jake-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/jake-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9094,
+      "sha256": "09e30ea46a045c3cae63237a1ba80c3de89c69a40ce2041e26123ed96b02f1c6",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/jake-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/jake-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/jake-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 29230,
+      "sha256": "b4821895531c2f7a3776916834dd5ccda174953e1b4e25f4652c1ab197575754",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/jake-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/kagami-itsuki-portrait-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -8211,6 +8469,38 @@
       "protectedScope": false
     },
     {
+      "path": "assets/resources/responsive/derived/mizumi-yanami-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mizumi-yanami-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 8978,
+      "sha256": "f6d54d02bcc5ad210b3fcecd1f5fc01f7980acf3408027847cb8348c8d0359e7",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mizumi-yanami-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/mizumi-yanami-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/mizumi-yanami-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 29762,
+      "sha256": "ca088e54bd12627df04d5326d58781dfa6ff872cb362f92ead1393504d6db51e",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/mizumi-yanami-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
       "path": "assets/resources/responsive/derived/mizuno-shun-portrait-concept-v1-w480.webp",
       "kind": "image",
       "provenance": "DELIVERY_DERIVATIVE",
@@ -8239,6 +8529,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/mizuno-shun-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/natalia-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/natalia-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 9746,
+      "sha256": "a975b61da2cd7ff3175ac2d9c6a0f82817bb3877ae58b9092a6e487a2d5814b8",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/natalia-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/natalia-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/natalia-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 32236,
+      "sha256": "fe4414e150a5b6f3aff6075c0152bdc6190c6ab5823d4e71047a45dc721906d5",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/natalia-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },
@@ -8687,6 +9009,38 @@
         "assets/js/data/media-manifest.js"
       ],
       "derivedFrom": "assets/resources/derived/redwolf-waiting-room-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/reiki-portrait-concept-v1-w480.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/reiki-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 10150,
+      "sha256": "e7506bbb4fe0d7473052e54102955528d427bebcb43aeb13bb830199294fbd6b",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/reiki-portrait-concept-v1.png",
+      "referenced": true,
+      "protectedScope": false
+    },
+    {
+      "path": "assets/resources/responsive/derived/reiki-portrait-concept-v1-w960.webp",
+      "kind": "image",
+      "provenance": "DELIVERY_DERIVATIVE",
+      "release": "PROJECT_GENERATED",
+      "source": "assets/resources/derived/reiki-portrait-concept-v1.png의 반응형 WebP 전송 파생본",
+      "handling": "출처 등급과 공개 상태를 원본에서 상속하며 증거 원본을 대체하지 않음",
+      "bytes": 34760,
+      "sha256": "f15eb21af67be659cac5573f9c79c4b82a5fa92808b5d840970e7c7e8badf133",
+      "usedBy": [
+        "assets/js/data/media-manifest.js"
+      ],
+      "derivedFrom": "assets/resources/derived/reiki-portrait-concept-v1.png",
       "referenced": true,
       "protectedScope": false
     },

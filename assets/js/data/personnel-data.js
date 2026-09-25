@@ -147,7 +147,7 @@
       overview:'우시노다교 인물군에서 혈교 교주로 기재된 혈술 사용자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'소속 기록',certainty:'listed'},{key:'blood-cult',label:'혈교',role:'교주',certainty:'listed'}],
       capabilities:['혈술 이동기','혈술 탄도 발사','혈술 강화','피의 강 — 결계'],
-      limits:['야나미 신카와의 관계는 성씨만으로 확정하지 않는다.','피의 강의 범위와 대가는 제공되지 않았다.']
+      limits:['야나미 신카와의 관계는 성씨만으로 확정하지 않는다.','피의 강의 범위와 대가는 제공되지 않았다.','젊은 외모를 유지하는 힘의 정체와 대가는 기록되지 않았다.']
     },
     {
       id:'ramus-manson',name:'라무스 맨슨',group:'ushinoda',role:'타락교 교주',status:'active',certainty:'partial',
