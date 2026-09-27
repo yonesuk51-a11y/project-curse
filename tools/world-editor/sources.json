@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "policy": "조사 창구다. 모든 자료의 사용권을 뜻하지 않는다. 개별 자료 확인 전 설정 사실로 인용하지 않는다.",
+  "sources": [
+    { "id": "nara-military", "name": "미국 국립문서기록관리청 — 군사 기록", "url": "https://www.archives.gov/research/military", "hosts": ["www.archives.gov", "archives.gov"], "topics": ["기관 기록", "인계", "통신", "군사 행정"], "rights": "item-review-required", "use": "보고서 구조와 기관의 정보 한계. 실제 피해자를 가공 공포 장치로 삼지 않는다." },
+    { "id": "smithsonian-open", "name": "Smithsonian Open Access", "url": "https://www.si.edu/openaccess", "hosts": ["www.si.edu", "si.edu"], "topics": ["물건", "생활", "산업", "박물관"], "rights": "item-review-required", "use": "생활 물건의 사용 맥락과 공간 참고. 개별 CC0·권리 표시를 먼저 확인한다." },
+    { "id": "loc-folklife", "name": "미국 의회도서관 — American Folklife Center", "url": "https://www.loc.gov/research-centers/american-folklife-center/about-this-research-center/", "hosts": ["www.loc.gov", "loc.gov"], "topics": ["민속", "구술", "공동체"], "rights": "item-review-required", "use": "지역·시대·화자가 있는 자료를 우선한다. 실존 관습을 악한 교단과 동일시하지 않는다." },
+    { "id": "usgs-science", "name": "USGS — Science Explorer", "url": "https://www.usgs.gov/science", "hosts": ["www.usgs.gov", "usgs.gov"], "topics": ["지형", "수계", "관측", "환경"], "rights": "item-review-required", "use": "공간·관측 방식의 참고. 현실 지질 현상을 초자연 원인이라고 바꾸지 않는다." },
+    { "id": "nasa-tech", "name": "NASA Technical Reports Server", "url": "https://ntrs.nasa.gov/", "hosts": ["ntrs.nasa.gov"], "topics": ["센서", "신뢰도", "신호", "절차"], "rights": "item-review-required", "use": "실제 센서·측정의 한계를 조사한다. 현실 기술을 네온 SF 장치로 확대하지 않는다." }
+  ]
+}

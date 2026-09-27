@@ -1,0 +1,32 @@
+name: Project Curse quality gate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+      - name: Use Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Existing app and protected records
+        run: node tools/verify-app.mjs
+      - name: Canon, data, and media rules
+        run: node tools/verify-data.mjs
+      - name: Local editor safety tests
+        run: node --test tools/world-editor/world-editor.test.mjs
+      - name: Local editor UI syntax
+        run: node --check tools/world-editor/ui/app.js
+      - name: Canon evidence snapshot
+        run: node tools/world-editor/cli.mjs audit --no-checks

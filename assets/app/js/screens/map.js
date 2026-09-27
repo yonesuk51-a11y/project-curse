@@ -166,6 +166,7 @@ function operationTerrain(operation){
     }
     for(const model of mapModels.values()){
       if(model.previewContact&&timeState(model.previewContact.year)==='future')closePreview(model);
+      updateCamera(model);
     }
     const contacts=[...mapModels.values()].flatMap(m=>m.contacts),unknown=contacts.filter(c=>c.year==null).length,future=contacts.filter(c=>timeState(c.year)==='future').length;
     const status=host.querySelector('.tc-map-year-status');if(status)status.textContent=`${mapYear}년까지 ${contacts.length-unknown-future}곳 · 연도 알 수 없음 ${unknown}곳 · 이후 기록 ${future}곳`;
@@ -305,17 +306,19 @@ function operationTerrain(operation){
     const zones=(options.zones||[]).map(z=>({item:z,node:dated(h('img.tc-map-zone',{src:uri(zoneGraphic(z,p),box,p),alt:'','aria-hidden':'true',draggable:'false'}),z)}));
     const canvas=h('div.tc-map-canvas',{style:`aspect-ratio:${base[2]}/${base[3]}`,tabindex:0,role:'group','aria-label':`${title} · 확대와 이동`,'aria-describedby':`tc-map-help-${options.id}`,dataset:{mapId:options.id}},terrain,zones.map(z=>z.node),fogLayer(options.confidence,p),effects,points);
     const preview=h('section.tc-map-preview',{hidden:true,'aria-label':'지점 사진 미리보기'});
-    const model={canvas,terrain,effects,points,preview,body,p,routes,zones,base,camera,contacts,previewContact:null};
+    const groupHelp=h('p.tc-map-group-help',{hidden:true,text:'가까운 표식은 지역별로 묶었습니다. 숫자는 추가 관측 지점 수입니다. 지도를 확대하거나 아래 지점 목록에서 각각 열 수 있습니다.'});
+    const model={canvas,terrain,effects,points,preview,groupHelp,body,p,routes,zones,base,camera,contacts,previewContact:null};
     model.entries=contacts.map(c=>{
       const frame=contactFrame(c),year=c.year,signal=observation(c),when=year==null?X.copy.timelineUnknown:`${year}년 기록`;
       const node=dated(h('a.tc-map-point.tc-map-framed',{href:PC.href('map-room',...c.path),'aria-label':`${c.title} · ${frameLabels[frame]} · ${when} · X ${c.x} Y ${c.y}`,title:`${c.title} · ${when}`,draggable:'false',dataset:{contact:c.id,affiliation:frame},class:c.selected?'is-selected':null},
         h('img.tc-map-frame-icon',{src:frameIcon(c,p),alt:'',draggable:'false'}),h('span.tc-map-frame-word',{'aria-hidden':'true',text:contactWord(c)}),
+        c.source?.overview?h('span.tc-map-group-count',{'aria-hidden':'true',text:''}):null,
         signal?h('span.tc-map-observation',{'aria-hidden':'true'},h('i.tc-map-signal-line'),h('i.tc-map-signal-flow'),h('span.tc-map-signal-status',{text:'신호'})):null),{year});
       points.append(node);return {c,node,signal};
     });
     mapModels.set(canvas,model);updateCamera(model);
     if(contacts.some(c=>c.selected))openPreview(model,contacts.find(c=>c.selected),false);
-    return h('div.tc-map-interactive',null,canvas,
+    return h('div.tc-map-interactive',null,canvas,groupHelp,
       h('div.tc-map-zoom-tools',null,action('＋ 확대','zoom-in',options.id,{'aria-label':`${title} 확대`}),action('− 축소','zoom-out',options.id,{'aria-label':`${title} 축소`}),action('원래대로','zoom-reset',options.id),h('output.tc-map-zoom-value',{text:`${(base[2]/camera[2]).toFixed(1)}배`})),
       h('p.tc-map-help',{id:`tc-map-help-${options.id}`,text:X.copy.mapControls}),preview);
   }
@@ -328,10 +331,17 @@ function operationTerrain(operation){
     model.terrain.setAttribute('src',uri(model.body,box,model.p));
     for(const z of model.zones)z.node.setAttribute('src',uri(zoneGraphic(z.item,model.p),box,model.p));
     PC.clear(model.effects).append(...routeOverlay(model.routes,box),h('i.tc-map-scan'));
+    const grouped=model.canvas.dataset.mapId==='world'&&Number(root.innerWidth)<=600&&bw/w<1.8;
+    model.canvas.dataset.clusterMode=grouped?'grouped':'individual';
+    model.groupHelp.hidden=!grouped;
+    const overviews=new Set(model.entries.filter(({c})=>c.source?.overview).map(({c})=>c.source.region));
     for(const {c,node} of model.entries){
       const inside=c.x>=x&&c.x<=x+w&&c.y>=y&&c.y<=y+ht;
-      node.hidden=!inside;node.setAttribute('style',`left:${(c.x-x)/w*100}%;top:${(c.y-y)/ht*100}%`);
-      if(inside&&(c.selected||c.synchrony))model.effects.append(dated(h('img.tc-map-ring',{alt:'',src:uri(svg('circle',{cx:12,cy:12,r:10,fill:'none',stroke:c.selected?model.p.ch:model.p['red-ink'],'stroke-width':1}),'0 0 24 24',model.p),class:c.selected?'is-selected':null,style:`left:${(c.x-x)/w*100}%;top:${(c.y-y)/ht*100}%`,dataset:{timeState:timeState(c.year)} }),{year:c.year}));
+      const bundled=grouped&&!c.source?.overview&&overviews.has(c.source?.region);
+      node.hidden=!inside||bundled;node.setAttribute('style',`left:${(c.x-x)/w*100}%;top:${(c.y-y)/ht*100}%`);
+      const badge=node.querySelector('.tc-map-group-count');
+      if(badge){const count=grouped?model.entries.filter(entry=>!entry.c.source?.overview&&entry.c.source?.region===c.source.region&&timeState(entry.c.year)!=='future').length:0;badge.textContent=count?String(count):'';badge.hidden=!count;}
+      if(inside&&!bundled&&(c.selected||c.synchrony))model.effects.append(dated(h('img.tc-map-ring',{alt:'',src:uri(svg('circle',{cx:12,cy:12,r:10,fill:'none',stroke:c.selected?model.p.ch:model.p['red-ink'],'stroke-width':1}),'0 0 24 24',model.p),class:c.selected?'is-selected':null,style:`left:${(c.x-x)/w*100}%;top:${(c.y-y)/ht*100}%`,dataset:{timeState:timeState(c.year)} }),{year:c.year}));
     }
     mapViews.set(model.canvas.dataset.mapId,[...cam]);
     const output=model.canvas.parentElement?.querySelector('.tc-map-zoom-value');if(output)output.textContent=`${(bw/w).toFixed(1)}배`;
@@ -646,7 +656,7 @@ function operationTerrain(operation){
   }
   function overview(){
     const map=worldMap(region('world'));const locations=recent.map(p=>({p:canonical(p),v:resolve(p)})).filter(x=>x.v.kind!=='missing');
-    return h('div.tc-map-stack',null,h('div.tc-map-layout',null,h('div.tc-map-stack',null,map.board,operationDirectory()),h('aside.tc-map-stack',null,panel('OPERATIONAL THEATERS','주요 지역 상황',txt(X.copy.intro),h('div.tc-rows',null,X.theaters.map(t=>h('a.tc-map-theater',{href:PC.href('map-room',t.target.kind==='operation'?'op':'region',t.target.id)},h('span.tc-code.tc-full-only',{text:t.number+' / '+t.eyebrow}),h('b',{text:t.title}),txt(t.summary),h('span.tc-map-copy',{text:t.note}),h('span.tc-btnrow',null,tag(t.status,t.id==='south'?'danger':'info'),tag(t.confidence)))))),panel('REGIONAL CONTROL','지역 목록',h('div.tc-btnrow',null,D.regions.map(r=>link(r.label,'map-room','region',r.id))),h('div.tc-btnrow',null,D.synchronyEvents.map(e=>dated(link(e.title,'map-room','synchrony',e.id),e)))),locations.length?panel('RECENT COORDINATES','최근 본 좌표',h('div.tc-rows',null,locations.map(({p,v},i)=>row(v.item?.code||String(i+1).padStart(2,'0'),v.title,'',p)))):null)),
+    return h('div.tc-map-stack',null,h('div.tc-map-layout',null,h('div.tc-map-stack',null,map.board,h('div.tc-map-world-directory',null,disclosure('CONTACT DIRECTORY',`세계 지도 지점 · ${map.contacts.length}곳`,h('div.tc-rows',null,map.contacts.map(c=>dated(h('div.tc-map-catalog-entry',null,row(c.id,c.title,`${c.year==null?X.copy.timelineUnknown:c.year+'년 기록'} · X ${c.x} / Y ${c.y}`,c.path,c.status||'관측 지점')),{year:c.year}))))),operationDirectory()),h('aside.tc-map-stack',null,panel('OPERATIONAL THEATERS','주요 지역 상황',txt(X.copy.intro),h('div.tc-rows',null,X.theaters.map(t=>h('a.tc-map-theater',{href:PC.href('map-room',t.target.kind==='operation'?'op':'region',t.target.id)},h('span.tc-code.tc-full-only',{text:t.number+' / '+t.eyebrow}),h('b',{text:t.title}),txt(t.summary),h('span.tc-map-copy',{text:t.note}),h('span.tc-btnrow',null,tag(t.status,t.id==='south'?'danger':'info'),tag(t.confidence)))))),panel('REGIONAL CONTROL','지역 목록',h('div.tc-btnrow',null,D.regions.map(r=>link(r.label,'map-room','region',r.id))),h('div.tc-btnrow',null,D.synchronyEvents.map(e=>dated(link(e.title,'map-room','synchrony',e.id),e)))),locations.length?panel('RECENT COORDINATES','최근 본 좌표',h('div.tc-rows',null,locations.map(({p,v},i)=>row(v.item?.code||String(i+1).padStart(2,'0'),v.title,'',p)))):null)),
       panel('REGIONAL DRILLDOWN','지역 상세 지도',h('div.tc-rows',null,D.drilldowns.map(d=>row(d.code,d.label,d.description,['region',d.id],d.confidence)))),
       panel('FIELD RECORDS','순례·검문·회수',h('div.tc-rows',null,Object.values(scenarios).map(s=>row(s.code,s.title,s.summary,['pilgrimage',s.id],allowedScenario(s.id)?P.get(s.id).status.toUpperCase():s.unlock.label,allowedScenario(s.id)?'info':'danger'))),link('현장 판정 보관','map-room','verdict')));
   }
@@ -742,6 +752,7 @@ function operationTerrain(operation){
   }
   function onMotion(){const reduced=reducedFx();host.dataset.mapFx=reduced?'reduced':'full';if(reduced){stop();stopYears();clearReaction();}if(active&&view.kind==='op')renderOperationFrame();setYear(mapYear);startSignals();}
   function onVisibility(){if(root.document.hidden){stop();stopYears();stopSignals();cancelGesture();if(active&&view.kind==='op')renderOperationFrame();setYear(mapYear);}else if(active)startSignals();}
+  function onResize(){if(active)for(const model of mapModels.values())updateCamera(model);}
   function bind(){
     controller?.abort();controller=new AbortController();const options={signal:controller.signal};
     host.addEventListener('click',onClick,options);host.addEventListener('input',onInput,options);host.addEventListener('keydown',onKey,options);host.addEventListener('toggle',onToggle,{...options,capture:true});
@@ -750,6 +761,7 @@ function operationTerrain(operation){
     for(const name of ['projectcurse:operation-state-change','projectcurse:pilgrimage-state-change','projectcurse:verdict-archive-change'])root.document.addEventListener(name,onStore,options);
     root.document.addEventListener('visibilitychange',onVisibility,options);
     root.document.addEventListener('pc:fx',onMotion,options);
+    root.addEventListener?.('resize',onResize,options);
     motionQuery?.addEventListener?.('change',onMotion,options);
     silenceObserver?.disconnect();
     if(root.MutationObserver&&root.document.documentElement){silenceObserver=new root.MutationObserver(syncSignals);silenceObserver.observe(root.document.documentElement,{attributes:true,attributeFilter:['data-silence']});}

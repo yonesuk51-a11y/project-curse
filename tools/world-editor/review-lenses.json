@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "lenses": [
+    { "id": "causality", "label": "사건의 원인과 결과", "question": "원인과 결과 사이에 어떤 행동이나 근거가 빠져 있는가? 확정하지 않은 원인을 발명하지 않는다.", "kinds": ["history", "document", "operation"] },
+    { "id": "ability-cost", "label": "능력의 대가와 후속 흔적", "question": "대가가 다음 행동·기록·관계에 이어지는가? 대가가 기록되지 않았다는 사실을 무대가 능력으로 오해하지 않는다.", "kinds": ["personnel", "document"] },
+    { "id": "faction-motive", "label": "세력의 행동 논리", "question": "원하는 것, 유지 자원, 협력의 이유, 협력이 깨질 조건이 행동과 맞는가? 모든 세력을 선악으로 단순화하지 않는다.", "kinds": ["faction", "operation"] },
+    { "id": "character-choice", "label": "인물의 선택과 차별화", "question": "능력·장비 외에 기억할 선택이나 타협이 있는가? 중복 역할은 삭제가 아니라 차이와 활용안을 제안한다.", "kinds": ["personnel"] },
+    { "id": "aftermath", "label": "사건 뒤의 생활", "question": "사건이 운송·식량·장례·행정·이동에 남긴 흔적을 기존 규칙으로 보여줄 수 있는가? 불필요한 새 제도를 늘리지 않는다.", "kinds": ["history", "region"] },
+    { "id": "place-logic", "label": "지역과 이동", "question": "봉쇄·거리·연락 두절과 이동이 양립하는가? 비항법용 추정 좌표를 실제 거리로 계산하지 않는다.", "kinds": ["region", "operation", "history"] },
+    { "id": "point-of-view", "label": "작성자의 정보 한계", "question": "누가 누구에게 왜 썼는가? 작성 시점에 알 수 없는 후대 지식이 섞였는가? 관찰과 해석의 주체를 분리한다.", "kinds": ["document", "history"] },
+    { "id": "voice", "label": "문체와 기관별 목소리", "question": "반복된 문장 틀이나 막연한 형용사를 구체적 관찰로 바꿀 수 있는가? AI 작성 여부를 판정하지 않고 녹취는 고치지 않는다.", "kinds": ["document", "history", "faction"] },
+    { "id": "rhythm", "label": "반복과 장면의 리듬", "question": "실종·사망·검열·기억 상실이 같은 결말로 반복되는가? 일상과 이상, 행동과 결과의 대비를 제안한다.", "kinds": ["document", "history"] },
+    { "id": "onboarding", "label": "처음 읽는 사람", "question": "설명 없이 필요한 전제는 무엇인가? 별칭·코드·수치 대신 지금 필요한 정보가 먼저 보이는가? 모의 독해를 실제 독자 조사로 쓰지 않는다.", "kinds": ["faction", "region", "document"] },
+    { "id": "community", "label": "자캐가 개입할 자리", "question": "평범한 요원·순례자·민간인도 선택할 일이 있는가? 주요 인물이 모든 갈등을 해결하지 않는 짧은 교류 소재를 제안한다.", "kinds": ["operation", "region", "personnel"] },
+    { "id": "evidence-media", "label": "이미지와 음향이 필요한 곳", "question": "이미지가 설명을 줄이거나 중요한 증거 관계를 드러내는가? 참고 그림의 구도·인물·문양 복제와 자동 채택은 금지한다.", "kinds": ["document", "region", "faction"] },
+    { "id": "mystery", "label": "회수할 단서와 남길 공백", "question": "회수할 단서와 의도적 미정을 구분한다. 상충 기록의 한쪽을 정답으로 합치지 말고 근거와 반대 근거를 함께 제시한다.", "kinds": ["history", "document", "personnel"] },
+    { "id": "reuse", "label": "기존 소재 재활용", "question": "새 명칭·교단을 만들기 전에 기존 장소·규칙으로 기억할 장면을 만들 수 있는가? 추가 설명 부담이 가장 작은 적용안을 고른다.", "kinds": ["region", "faction", "personnel", "history"] }
+  ]
+}

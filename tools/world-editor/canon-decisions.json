@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "description": "기존 사용자 결정의 검토용 색인. 정사 원본을 대체하지 않는다. 근거가 없어지면 실패로 알린다.",
+  "decisions": [
+    { "id": "possession-release-time", "status": "intentionally-unspecified", "label": "피탈자의 정확한 해제 시간", "file": "WORLD_CANON_LEDGER.md", "needle": "정확한 시간은 결정 대기가 아니라 정하지 않기로 한 것이다", "openQuestion": "풀려나기까지 걸리는 정확한 시간은 얼마인가?", "advice": "정확한 숫자를 새로 만들지 말고, 자유 해석 안내가 기존 결정과 같은 뜻인지 확인한다." },
+    { "id": "possession-postmortem", "status": "confirmed", "label": "피탈자의 몸이 죽은 뒤", "file": "WORLD_CANON_LEDGER.md", "needle": "피탈자의 몸이 죽으면 괴이는 검붉은 핏덩이로 뭉쳐 몸 밖으로 나오고", "openQuestion": "몸이 죽은 뒤 들어왔던 존재는 어디로 가는가?", "advice": "이미 확정된 사망 뒤 잔류 현상과 열린 질문의 범위를 대조한다. 확인되지 않은 추가 원인은 만들지 않는다." },
+    { "id": "possession-signs-after", "status": "open", "label": "풀려난 뒤 징후의 소실", "file": "WORLD_CANON_LEDGER.md", "needle": "풀려난 뒤 징후가 모두 사라지는지는 결정 대기다" },
+    { "id": "ability-observation", "status": "confirmed", "label": "능력 사용과 관측 자격", "file": "WORLD_CANON_LEDGER.md", "needle": "위 상한은 위력의 상한이 아니라 등록 자격의 상한이다" },
+    { "id": "blood-succession", "status": "open", "label": "혈교와 남방 혈맹의 지휘 관계", "file": "WORLD_CANON_LEDGER.md", "needle": "남방권 전시망인 남방 혈맹이 동일한 지휘체계인지 아직 확정하지 않는다" },
+    { "id": "synchrony-not-route", "status": "confirmed", "label": "동시 관측은 이동 경로가 아님", "file": "WORLD_CANON_LEDGER.md", "needle": "열 개 표식 사이에는 이동선·중계선·통로선을 그리지 않는다" },
+    { "id": "local-outcomes", "status": "confirmed", "label": "개인 판정은 공통 연표를 바꾸지 않음", "file": "WORLD_CANON_LEDGER.md", "needle": "현장 선택과 결말은 브라우저 저장소의 지역 판정이다" },
+    { "id": "current-apostles", "status": "confirmed", "label": "2042년 사도 명단", "file": "WORLD_CANON_LEDGER.md", "needle": "지금(2042)의 사도 배치는 교단 명단을 따른다" },
+    { "id": "historical-boundary", "status": "confirmed", "label": "실제 역사와 피해자 보호", "file": "WORLD_CANON_LEDGER.md", "needle": "실제 피해자의 이름·사진·개인사를 가공 캐릭터나 공포 장치로 사용하지 않는다" },
+    { "id": "sealed-transcript", "status": "confirmed", "label": "영상 녹취 원문 보호", "file": "WRITING_STYLE_GUIDE.md", "needle": "데이터의 `transcript` 줄)은 개정하지 않는다" }
+  ]
+}
