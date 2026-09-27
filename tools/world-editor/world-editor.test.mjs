@@ -6,9 +6,34 @@ import http from 'node:http';
 import { ROOT, WORK, within, snapshot, evidence, validateEvidence, hash } from './core.mjs';
 import { ageRange } from './rules.mjs';
 import { approvedUrl, discover, fetchSource } from './research.mjs';
-import { validateReview } from './engine.mjs';
+import { audit, validateReview } from './engine.mjs';
 import { verifyBackup, previewBackup } from './backup.mjs';
 import { createReviewServer } from './server.mjs';
+import { buildCatalog, buildRelations, loadData } from './catalog.mjs';
+import { catalogHash, changedImpact, traceImpact } from './impact.mjs';
+
+test('설정 변경 영향은 명시 연결과 이름 언급을 분리하고 중복 ID를 추정으로 메우지 않는다', () => {
+  const source = file => ({ file, line: 1, quote: 'test', fileHash: 'a'.repeat(64) });
+  const records = [
+    { key: 'personnel:lead', kind: 'personnel', id: 'lead', title: '하린 요원', text: '하린 요원', hash: 'old', source: source('people.js'), value: { relationships: [{ target: 'shared', relation: '동료' }, { target: 'unknown', relation: '행방' }] } },
+    { key: 'personnel:shared', kind: 'personnel', id: 'shared', title: '지안 요원', text: '지안 요원', hash: 'same', source: source('people.js'), value: {} },
+    { key: 'region:shared', kind: 'region', id: 'shared', title: '공유 지역', text: '공유 지역', hash: 'same', source: source('map.js'), value: {} },
+    { key: 'history:event', kind: 'history', id: 'event', title: '사건 기록', text: '하린 요원 목격', hash: 'same', source: source('history.js'), value: {} }
+  ];
+  const relations = buildRelations(records);
+  const preview = traceImpact(records, relations, 'personnel:lead');
+  assert.equal(preview.explicit.find(item => item.kind === '동료').key, 'personnel:shared');
+  assert.equal(preview.unresolved.find(item => item.kind === '행방').resolution, 'missing');
+  assert.equal(preview.mentions.find(item => item.key === 'history:event').direction, 'incoming');
+  assert.match(preview.note, /관계·동맹·인과의 증거가 아니/);
+  assert.equal(traceImpact(records, relations, 'personnel:absent'), null);
+  const next = records.map(record => record.key === 'personnel:lead' ? { ...record, hash: 'new' } : record);
+  const diff = changedImpact({ schema: 1, records, relations }, next, buildRelations(next));
+  assert.equal(diff.entries.length, 1);
+  assert.equal(diff.entries[0].status, 'modified');
+  assert.equal(diff.toCatalogHash, catalogHash(next));
+  assert.equal(changedImpact(null, records, relations), null);
+});
 
 test('경로 경계와 나이 범위는 보수적으로 판정한다', () => {
   assert.throws(() => within(ROOT, '../elsewhere'));
@@ -89,4 +114,51 @@ test('검토 화면은 루프백 호스트·출처·CSRF 토큰을 요구한다'
     const badOrigin = await fetch(url + '/api/feedback', { method: 'POST', headers: { Origin: 'https://attacker.example', 'Content-Type': 'application/json' }, body: '{}' });
     assert.equal(badOrigin.status, 403);
   } finally { await new Promise(resolve => server.close(resolve)); }
+});
+
+test('영향 미리보기 API는 정확한 기록 키만 열고 없는 키를 대체하지 않는다', async () => {
+  await fs.mkdir(WORK, { recursive: true });
+  const work = await fs.mkdtemp(path.join(WORK, 'test-impact-'));
+  const port = 12988;
+  const records = [{ key: 'region:forest', kind: 'region', id: 'forest', title: '검사 숲', text: '검사 숲', hash: 'one', source: null, value: {} }];
+  await fs.writeFile(path.join(work, 'catalog.json'), JSON.stringify({ schema: 1, fingerprint: 'test', records, relations: [] }));
+  const server = createReviewServer({ port, work });
+  await new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
+  try {
+    const origin = `http://127.0.0.1:${port}`;
+    const known = await fetch(`${origin}/api/impact?key=region%3Aforest`);
+    assert.equal(known.status, 200);
+    assert.equal((await known.json()).title, '검사 숲');
+    const absent = await fetch(`${origin}/api/impact?key=region%3Aabsent`);
+    assert.equal(absent.status, 404);
+    const latest = await fetch(`${origin}/api/impact-latest`);
+    assert.equal((await latest.json()).recent, null);
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+    const relative = path.relative(WORK, work);
+    if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) throw new Error('시험 폴더 경계 오류');
+    await fs.rm(work, { recursive: true, force: false });
+  }
+});
+
+test('성공한 두 검사 사이의 기록 변경은 격리된 영향 보고서로 남긴다', async () => {
+  await fs.mkdir(WORK, { recursive: true });
+  const work = await fs.mkdtemp(path.join(WORK, 'test-audit-impact-'));
+  try {
+    const snap = await snapshot();
+    const records = buildCatalog(snap, loadData(snap).context);
+    const previous = structuredClone(records);
+    previous[0].hash = '0'.repeat(64);
+    await fs.writeFile(path.join(work, 'catalog.json'), JSON.stringify({ schema: 1, fingerprint: 'previous', records: previous, relations: buildRelations(previous) }));
+    const report = await audit({ force: true, checks: false, work });
+    assert.equal(report.changedRecordCount, 1);
+    const impact = JSON.parse(await fs.readFile(path.join(work, 'impact.json'), 'utf8'));
+    assert.equal(impact.entries.length, 1);
+    assert.equal(impact.entries[0].key, records[0].key);
+    assert.equal(impact.toCatalogHash, catalogHash(records));
+  } finally {
+    const relative = path.relative(WORK, work);
+    if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) throw new Error('시험 폴더 경계 오류');
+    await fs.rm(work, { recursive: true, force: false });
+  }
 });

@@ -8,6 +8,7 @@ import { collectResearch } from './research.mjs';
 import { searchCatalog } from './catalog.mjs';
 import { createBackup, verifyBackup } from './backup.mjs';
 import { stopWatch } from './watch.mjs';
+import { catalogHash, traceImpact } from './impact.mjs';
 
 const assets = { '/': ['ui/index.html', 'text/html; charset=utf-8'], '/style.css': ['ui/style.css', 'text/css; charset=utf-8'], '/app.js': ['ui/app.js', 'text/javascript; charset=utf-8'] };
 const policy = "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'";
@@ -62,6 +63,20 @@ export function createReviewServer({ port = 8787, work = WORK } = {}) {
         if (query.length > 100) throw new Error('검색어가 너무 깁니다.');
         const catalog = await readJson(path.join(work, 'catalog.json'), null);
         json(response, 200, { query, fingerprint: catalog?.fingerprint || null, results: catalog ? searchCatalog(catalog.records, query) : [] });
+        return;
+      }
+      if (request.method === 'GET' && url.pathname === '/api/impact') {
+        const key = url.searchParams.get('key') || '';
+        if (!key || key.length > 120) { json(response, 400, { error: '기록 키 한 개가 필요합니다.' }); return; }
+        const catalog = await readJson(path.join(work, 'catalog.json'), null);
+        const result = catalog && traceImpact(catalog.records, catalog.relations, key);
+        if (!result) { json(response, 404, { error: '현재 목록에 없는 기록입니다.' }); return; }
+        json(response, 200, { ...result, catalogHash: catalogHash(catalog.records) });
+        return;
+      }
+      if (request.method === 'GET' && url.pathname === '/api/impact-latest') {
+        const [catalog, recent] = await Promise.all([readJson(path.join(work, 'catalog.json'), null), readJson(path.join(work, 'impact.json'), null)]);
+        json(response, 200, { recent: recent ? { ...recent, outdated: !catalog || recent.toCatalogHash !== catalogHash(catalog.records) } : null });
         return;
       }
       if (request.method !== 'POST') { json(response, 404, { error: '요청을 찾지 못했습니다.' }); return; }

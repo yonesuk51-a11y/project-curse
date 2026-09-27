@@ -9,6 +9,7 @@ import { createBackup, verifyBackup, previewBackup } from './backup.mjs';
 import { watch, stopWatch } from './watch.mjs';
 import { serve } from './server.mjs';
 import { serveSite } from './site-preview.mjs';
+import { traceImpact } from './impact.mjs';
 
 const help = `Project Curse 제작자용 로컬 도구
 
@@ -16,6 +17,7 @@ const help = `Project Curse 제작자용 로컬 도구
   node tools/world-editor/cli.mjs research [--force]
   node tools/world-editor/cli.mjs status
   node tools/world-editor/cli.mjs search <검색어>
+  node tools/world-editor/cli.mjs impact <종류:기록-ID>
   node tools/world-editor/cli.mjs review import <저장소 안 JSON 경로>
   node tools/world-editor/cli.mjs feedback <항목 ID> <selected|deferred|rejected|resolved|pending> [사유]
   node tools/world-editor/cli.mjs backup create|verify <백업 ID>|preview <백업 ID>
@@ -61,6 +63,17 @@ export async function main(args = process.argv.slice(2)) {
     const catalog = await readJson(path.join(WORK, 'catalog.json'));
     if (catalog.fingerprint !== report.fingerprint) throw new Error('목록과 보고서의 입력 버전이 다릅니다.');
     console.log(JSON.stringify(searchCatalog(catalog.records, query), null, 2));
+    return;
+  }
+  if (command === 'impact') {
+    const key = rest[0];
+    if (!key || rest.length !== 1) throw new Error('종류:기록-ID 한 개가 필요합니다. 검색 결과의 key를 사용하세요.');
+    const report = await audit({ checks: false });
+    const catalog = await readJson(path.join(WORK, 'catalog.json'));
+    if (catalog.fingerprint !== report.fingerprint) throw new Error('목록과 보고서의 입력 버전이 다릅니다.');
+    const result = traceImpact(catalog.records, catalog.relations, key);
+    if (!result) throw new Error('입력 목록에 없는 기록입니다. 없는 키를 다른 기록으로 열지 않습니다.');
+    console.log(JSON.stringify(result, null, 2));
     return;
   }
   if (command === 'review' && rest[0] === 'import') {

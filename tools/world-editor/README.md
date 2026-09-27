@@ -28,6 +28,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/world-editor/insta
 node tools/world-editor/cli.mjs audit
 node tools/world-editor/cli.mjs status
 node tools/world-editor/cli.mjs search 리버스
+node tools/world-editor/cli.mjs impact region:southamerica
 node tools/world-editor/cli.mjs research
 node tools/world-editor/cli.mjs backup create
 node tools/world-editor/cli.mjs backup verify <백업-ID>
@@ -37,6 +38,8 @@ node tools/world-editor/cli.mjs serve
 
 `serve`는 `http://127.0.0.1:8787`의 이 PC 전용 검토 화면을 연다. 현황, 근거가 달린 허점·소재 후보, 출처 접근 결과, 145건 규모의 설정 색인 검색을 볼 수 있다. 후보를 선택·보류·제외하는 것은 제작자의 메모이며 곧바로 원문을 수정하지 않는다. `serve`는 명령 창을 닫으면 종료된다. 포트를 다른 장치에 공개하거나 프록시로 연결하지 않는다.
 
+검색 결과의 **변경 시 확인 범위**는 명시적 관계, 이름 언급, 대상이 없거나 ID가 중복된 연결을 나눠 보여준다. `impact <종류:기록-ID>`로 같은 내용을 명령줄에서 읽을 수 있다. 이름 언급은 관계·인과를 입증하지 않으며, 제시된 화면과 파일은 수정 지시가 아닌 확인 후보이다. 성공한 검사 사이에 기록 본문이 실제로 달라지면 `impact.json`에 마지막 변경 묶음을 남긴다. 파일을 고치지 않고 코드를 다시 검사할 때는 이전 변경 이력을 지우지 않는다.
+
 `backup preview`는 `output/world-editor/restore-preview/`에 고유한 새 폴더를 만들어 모든 파일의 해시를 다시 확인한다. 사이트 파일 위로 복원하지 않는다. 백업은 52개에 이르면 자동 삭제 없이 생성을 멈춘다. `output/imagegen/`의 대용량 후보 이미지, Git 이력, 시스템 설정은 기본 복사본에 포함되지 않는다. 별도 물리 저장소 백업은 사용자가 마련해야 한다.
 
 AI 검토를 별도 JSON으로 가져올 때에는 최신 `review-packet.json`의 입력 지문과 실제 파일·줄·해시가 일치해야 한다. 형식이 틀리거나 근거가 낡은 입력은 거부한다. `node tools/world-editor/cli.mjs review import <저장소 안 JSON 경로>`를 사용한다. 주간 앱 자동화는 우선 읽기·제안만 하므로 자동으로 이 가져오기를 실행하지 않는다.
@@ -45,6 +48,7 @@ AI 검토를 별도 JSON으로 가져올 때에는 최신 `review-packet.json`�
 
 - `latest.md` / `latest.json`: 최신 검사와 근거·제안. `reports/`: 실행별 기록.
 - `catalog.json`: 기록 색인과 이름 언급 관계. 언급만으로 인과·동맹을 증명하지 않는다.
+- `impact.json`: 마지막으로 내용이 바뀐 기록과 연결된 확인 후보. 처음 실행 또는 내용 변경이 없으면 생성되지 않을 수 있다.
 - `research.json`: 공식 기관 페이지 접근 상태와 발견 링크. 개별 사실과 저작권은 별도 확인한다.
 - `feedback.json`: 제작자 선택과 이유. 변경된 근거는 낡은 선택으로 표시한다.
 - `worker-state.json`: 감시 생존·오류·최근 작업. 실패는 조용히 성공으로 바꾸지 않는다.

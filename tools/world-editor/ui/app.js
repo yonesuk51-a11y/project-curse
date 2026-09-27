@@ -156,25 +156,86 @@ function renderResearch(data) {
     list.append(card);
   });
 }
+function renderRecentImpact(data) {
+  const box = clear($('#impact-recent'));
+  append(box, node('h3', '최근 설정 변경'));
+  if (!data?.recent) { box.append(node('p', '비교 가능한 내용 변경은 아직 기록되지 않았습니다. 아래에서 설정을 찾아 변경 시 확인 범위를 미리 볼 수 있습니다.')); return; }
+  const recent = data.recent;
+  box.append(node('p', `${date(recent.createdAt)} · 내용이 달라진 기록 ${recent.entries.length}건${recent.outdated ? ' · 이후 목록이 바뀌어 다시 확인 필요' : ''}`));
+  const list = node('ul', '', 'impact-list');
+  recent.entries.slice(0, 12).forEach(item => list.append(node('li', `${({ added: '추가', modified: '변경', removed: '제거' })[item.status] || '변경'} · ${item.afterTitle || item.beforeTitle} (${item.key})`)));
+  if (recent.entries.length > 12) list.append(node('li', `외 ${recent.entries.length - 12}건은 output/world-editor/impact.json에서 확인`));
+  box.append(list);
+}
+const kindName = { personnel: '인물', faction: '세력', history: '세계 기록', archive: '기록 목록', document: '기록 본문', operation: '작전', region: '지역' };
+function impactList(parent, heading, items, empty, format) {
+  parent.append(node('h4', heading));
+  if (!items.length) { parent.append(node('p', empty, 'reason')); return; }
+  const list = node('ul', '', 'impact-list');
+  items.slice(0, 8).forEach(item => list.append(node('li', format(item))));
+  parent.append(list);
+  if (items.length > 8) {
+    const rest = node('details', '', 'impact-more');
+    rest.append(node('summary', `나머지 ${items.length - 8}건 보기`));
+    const more = node('ul', '', 'impact-list');
+    items.slice(8).forEach(item => more.append(node('li', format(item))));
+    rest.append(more); parent.append(rest);
+  }
+}
+function renderImpact(data) {
+  const box = clear($('#impact-panel'));
+  box.hidden = false;
+  append(box, node('span', 'CHANGE IMPACT / REVIEW ONLY', 'meta'), node('h3', `${data.title} · 변경 시 확인 범위`));
+  box.append(node('p', data.note));
+  impactList(box, '명시적 연결', data.explicit, '현재 색인에서 명시적 연결을 찾지 못했습니다.', item => `${item.direction === 'incoming' ? '이 기록을 가리킴' : '이 기록에서 가리킴'} · ${item.title} — ${item.kind}`);
+  const incoming = data.mentions.filter(item => item.direction === 'incoming');
+  const outgoing = data.mentions.filter(item => item.direction === 'outgoing');
+  const short = item => `${kindName[item.key?.split(':')[0]] || '기록'} · ${item.title || '제목 미확인'}`;
+  impactList(box, `이 이름을 언급한 기록 ${incoming.length}건`, incoming, '현재 색인에서 찾지 못했습니다.', short);
+  if (outgoing.length) impactList(box, `이 기록에서 언급한 이름 ${outgoing.length}건`, outgoing, '없음', short);
+  impactList(box, '대상 불명·중복 연결', data.unresolved, '현재 색인에서 찾지 못했습니다.', item => `${item.target || '대상 미확인'} — ${item.kind}${item.resolution === 'ambiguous' ? ' / ID 중복' : ' / 대상 없음'}`);
+  if (data.mentionCount > data.mentions.length) box.append(node('p', `이름 언급은 앞의 ${data.mentions.length}건만 표시합니다.`, 'reason'));
+  textRow(box, '확인할 화면 후보:', data.checkSurfaces.join(' · '));
+  const files = node('details', '', 'impact-more');
+  files.append(node('summary', `관련 원본 파일 ${data.relatedFiles.length}개`));
+  const fileList = node('ul', '', 'impact-list');
+  data.relatedFiles.forEach(file => fileList.append(node('li', file)));
+  files.append(fileList); box.append(files);
+}
 async function search(event) {
   event.preventDefault();
   const query = $('#search-input').value.trim();
   const list = clear($('#search-list'));
+  $('#impact-panel').hidden = true;
   if (!query) return;
   try {
     const data = await api(`/api/search?q=${encodeURIComponent(query)}`);
     if (!data.results.length) list.append(node('p', '해당 표현을 찾지 못했습니다.', 'empty'));
     data.results.forEach(result => {
-      const card = node('article', '', 'record-card');
-      append(card, node('span', `${result.kind} / ${result.key} / ${result.source?.file || '원문 위치 미확인'}`, 'meta'), node('h3', result.title), node('p', result.excerpt));
+      const card = node('article', '', 'record-card search-result');
+      append(card, node('span', `${result.kind} / ${result.key} / ${result.source?.file || '원문 위치 미확인'}`, 'meta'), node('h3', result.title));
+      const excerpt = node('details', '', 'search-excerpt');
+      append(excerpt, node('summary', '일치 문맥 보기'), node('p', result.excerpt));
+      card.append(excerpt);
+      const button = node('button', '변경 시 확인 범위');
+      button.type = 'button';
+      button.addEventListener('click', async () => {
+        button.disabled = true;
+        try {
+          renderImpact(await api(`/api/impact?key=${encodeURIComponent(result.key)}`));
+          $('#impact-panel').scrollIntoView({ block: 'start' });
+        } catch (error) { message(error.message, true); }
+        finally { button.disabled = false; }
+      });
+      card.append(button);
       list.append(card);
     });
   } catch (error) { message(error.message, true); }
 }
 async function refresh() {
-  const [status, items, research] = await Promise.all([api('/api/status'), api('/api/review'), api('/api/research')]);
+  const [status, items, research, recent] = await Promise.all([api('/api/status'), api('/api/review'), api('/api/research'), api('/api/impact-latest')]);
   revision = items.revision; review = items;
-  renderOverview(status); renderReview(); renderResearch(research);
+  renderOverview(status); renderReview(); renderResearch(research); renderRecentImpact(recent);
 }
 function setTab(tab) {
   $$('.tabs button').forEach(button => { if (button.dataset.tab === tab) button.setAttribute('aria-current', 'page'); else button.removeAttribute('aria-current'); });

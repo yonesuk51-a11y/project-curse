@@ -26,11 +26,14 @@ export function buildCatalog(snap, context) {
   const recordSource = (id, title, preferred) => {
     const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const definition = new RegExp(`^\\s*(?:(?:['\"]?${escaped}['\"]?)\\s*:\\s*\\{|id\\s*:\\s*['\"]${escaped}['\"])`);
+    const byId = new RegExp(`^\\s*(?:\\{\\s*)?id\\s*:\\s*['\"]${escaped}['\"]`);
     for (const file of preferred) {
       const source = snap.sources[file];
       if (!source) continue;
       const lines = source.text.split(/\r?\n/);
-      const index = lines.findIndex(line => definition.test(line));
+      // Prefer the record declaration to a portrait/metadata object with the same key.
+      let index = lines.findIndex(line => byId.test(line));
+      if (index < 0) index = lines.findIndex(line => definition.test(line));
       if (index >= 0) return { file, line: index + 1, quote: lines[index].trim().slice(0, 1200), fileHash: source.hash };
     }
     return locate(snap, id, preferred) || locate(snap, title, preferred);
@@ -86,11 +89,16 @@ export function searchCatalog(records, query, limit = 40) {
 }
 
 export function buildRelations(records) {
-  const known = new Map(records.map(record => [record.id, record.key]));
+  const known = new Map();
+  for (const record of records) known.set(record.id, [...(known.get(record.id) || []), record.key]);
   const links = [];
   for (const record of records) {
     for (const relation of record.value.relationships || []) {
-      links.push({ from: record.key, to: known.get(relation.target) || null, target: relation.target, kind: relation.relation || '관계', source: record.source });
+      const matches = known.get(relation.target) || [];
+      const personnel = `personnel:${relation.target}`;
+      const to = record.kind === 'personnel' && matches.includes(personnel) ? personnel : matches.length === 1 ? matches[0] : null;
+      links.push({ from: record.key, to, target: relation.target, kind: relation.relation || '관계',
+        resolution: to ? 'resolved' : matches.length ? 'ambiguous' : 'missing', source: record.source });
     }
     for (const other of records) {
       if (other.key === record.key || other.title.length < 3 || !record.text.includes(other.title)) continue;

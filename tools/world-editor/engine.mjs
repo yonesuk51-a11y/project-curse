@@ -4,6 +4,7 @@ import { ROOT, WORK, VERSION, snapshot, readJson, writeAtomic, withLock, now, ha
 import { loadData, buildCatalog, buildRelations } from './catalog.mjs';
 import { checkRules, opportunities, categories, categoryLabels } from './rules.mjs';
 import { editorialSeeds } from './seeds.mjs';
+import { changedImpact } from './impact.mjs';
 
 const jsonConfig = name => readJson(path.join(ROOT, 'tools/world-editor', name));
 export const emptyFeedback = () => ({ schema: 1, revision: 0, decisions: {}, history: [] });
@@ -105,7 +106,7 @@ export async function importReview(input, work = WORK) {
 
 function markdown(report) {
   const lines = ['# Project Curse 제작 검토', '', `생성: ${report.createdAt}`, `기준: ${report.git.commit} / ${report.git.branch}`, `입력: ${report.fingerprint}`, '',
-    `기록 ${report.recordCount}건 · 규칙 검사 ${report.findings.filter(item => item.origin === 'deterministic').length}건 · 제안 ${report.suggestions.length}건`,
+    `기록 ${report.recordCount}건 · 이번 검사에 내용이 바뀐 기록 ${report.changedRecordCount}건 · 규칙 검사 ${report.findings.filter(item => item.origin === 'deterministic').length}건 · 제안 ${report.suggestions.length}건`,
     '', '정적 검사와 선별된 검토입니다. 실제 브라우저 전체 검증, 정사 확정, 그림 채택과 게시를 뜻하지 않습니다.', '', '## 실행한 검사', ''];
   report.checks.forEach(item => lines.push(`- ${item.command}: ${item.status}`));
   if (!report.checks.length) lines.push('- 이번 실행에서는 기존 검증 명령을 생략했습니다.');
@@ -124,6 +125,7 @@ export async function audit({ force = false, checks = true, work = WORK } = {}) 
     const snap = await snapshot();
     const previous = await readJson(path.join(work, 'manifest.json'), null);
     const latest = await readJson(path.join(work, 'latest.json'), null);
+    const previousCatalog = await readJson(path.join(work, 'catalog.json'), null);
     const reviews = await readJson(path.join(work, 'reviews.json'), { schema: 1, batches: [] });
     if (reviews.schema !== 1 || !Array.isArray(reviews.batches)) throw new Error('검토 저장소 형식 오류');
     const reviewHash = hash(JSON.stringify(reviews));
@@ -132,6 +134,7 @@ export async function audit({ force = false, checks = true, work = WORK } = {}) 
     const records = buildCatalog(snap, context);
     if (!records.some(record => record.kind === 'personnel') || !records.some(record => record.kind === 'history')) throw new Error('핵심 데이터 어댑터가 빈 목록을 반환했습니다.');
     const relations = buildRelations(records);
+    const impact = changedImpact(previousCatalog, records, relations);
     const definitions = await jsonConfig('canon-decisions.json');
     const { findings, decisions } = checkRules(snap, records, context, definitions.decisions);
     const changed = changedFiles(previous, snap);
@@ -151,6 +154,7 @@ export async function audit({ force = false, checks = true, work = WORK } = {}) 
     if (end.fingerprint !== snap.fingerprint) throw new Error('검사 중 원본이 바뀌었습니다. 이전 보고서를 보존합니다. 편집이 끝난 뒤 재실행하세요.');
     const report = { schema: 1, version: VERSION, fingerprint: snap.fingerprint, reviewFingerprint: snap.reviewFingerprint, reviewHash, createdAt: now(), git: await gitInfo(), changed,
       recordCount: records.length, counts: records.reduce((all, record) => (all[record.kind] = (all[record.kind] || 0) + 1, all), {}),
+      changedRecordCount: impact?.entries.length || 0,
       findings: [...findings, ...extra.values()], suggestions: [...suggestions.values()], checks: results, decisions,
       opportunities: opportunities(records, relations), staleReviewBatches: reviews.batches.length - activeReviews.length,
       limits: ['모든 설정의 의미를 프로그램이 판정하지 않습니다. 인물 동기·인과·분위기는 AI/사용자 검토가 필요합니다.', '이름 언급 관계는 인과·동맹·이동로를 증명하지 않습니다.', '검토 후보 선택은 정사 확정이나 이미지 공개 채택이 아닙니다.', '실제 브라우저·카카오 인앱·소리 청취 결과는 별도이며 정적 검사로 대체하지 않습니다.'] };
@@ -165,6 +169,7 @@ export async function audit({ force = false, checks = true, work = WORK } = {}) 
     await writeAtomic(`reports/${runId}.json`, report, work);
     await writeAtomic(`reports/${runId}.md`, markdown(report), work);
     await writeAtomic('catalog.json', outputCatalog, work);
+    if (impact?.entries.length) await writeAtomic('impact.json', { ...impact, createdAt: report.createdAt }, work);
     await writeAtomic('review-packet.json', reviewPacket, work);
     await writeAtomic('latest.md', markdown(report), work);
     await writeAtomic('latest.json', report, work);
