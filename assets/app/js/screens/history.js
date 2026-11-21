@@ -115,6 +115,10 @@
   /* ---------- 목록 화면 ---------- */
 
   let activeEra = 'all';
+  // 2026-11-21 사용자 결정: 사건 연표와 세계 설정을 탭으로 나눈다. #history/world, #history/ref/<id>는 세계 설정 탭을 연다.
+  let activeTab = 'chrono';
+  let tabButtons = null;
+  let tabPanels = null;
   let indexView = null;
   let refNotice = null;
   let detailView = null;
@@ -175,7 +179,7 @@
   // 기시체와 잔류 리버스(2026-11-21 사용자 설정) — 피탈자(산 몸)와 가르고, 소각 절차는 교범으로 잇는다.
   function risenBlock(item) {
     if (!item) return null;
-    return h('details.tc-disclosure.tc-hist-sub', null,
+    return h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-rule-risen' },
       h('summary', null, h('span', null, h('b', { text: item.label }))),
       h('div.tc-disclosure-body', null,
         h('p', { text: item.rule }),
@@ -205,7 +209,7 @@
   // 앵커 잔류물의 부름(2026-11-21 사용자 추천안 승인) — 잔류물 곁에 오래 머문 사람의 착란 네 단계. 원인은 확인되지 않았다.
   function anchorBlock(item) {
     if (!item) return null;
-    return h('details.tc-disclosure.tc-hist-sub', null,
+    return h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-rule-anchor' },
       h('summary', null, h('span', null, h('b', { text: item.label }))),
       h('div.tc-disclosure-body', null,
         h('p', { text: item.rule }),
@@ -220,7 +224,7 @@
   // 리버스 정신 반응(2026-11-21 사용자 추천안 승인) — 현실의 정신 질환을 가리키는 말로 쓰지 않는다.
   function mindBlock(item) {
     if (!item) return null;
-    return h('details.tc-disclosure.tc-hist-sub', null,
+    return h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-rule-mind' },
       h('summary', null, h('span', null, h('b', { text: item.label }))),
       h('div.tc-disclosure-body', null,
         h('p', { text: item.rule }),
@@ -236,7 +240,7 @@
   // 리버스 지점의 피탈자(2026-09-25 사용자 설정) — 분류 근거는 괴이 판정표로, 교전은 교범으로 연결한다.
   function possessionBlock(item) {
     if (!item) return null;
-    return h('details.tc-disclosure.tc-hist-sub', null,
+    return h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-rule-possession' },
       h('summary', null, h('span', null, h('b', { text: item.label }))),
       h('div.tc-disclosure-body', null,
         h('p', { text: item.rule }),
@@ -256,7 +260,7 @@
   // 혈술 네 갈래(2026-11-21 사용자 추천안 승인) — 피의 출처로 나눈다. 대응 순서는 현장 지침의 같은 이름 절로 잇는다.
   function bloodBlock(item) {
     if (!item) return null;
-    return h('details.tc-disclosure.tc-hist-sub', null,
+    return h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-rule-blood' },
       h('summary', null, h('span', null, h('b', { text: item.label }))),
       h('div.tc-disclosure-body', null,
         h('p', { text: item.rule }),
@@ -277,7 +281,7 @@
   // 위버멘시(2026-11-21 사용자 설정, 추천안 승인) — 계열별 대가와 수명, 죽은 뒤의 소각 장치. 재개 여부는 상충 기록이다.
   function ubermenschBlock(item) {
     if (!item) return null;
-    return h('details.tc-disclosure.tc-hist-sub', null,
+    return h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-rule-ubermensch' },
       h('summary', null, h('span', null, h('b', { text: item.label }))),
       h('div.tc-disclosure-body', null,
         h('p', { text: item.rule }),
@@ -761,8 +765,8 @@
           h('i', { text: era.index }),
           h('span', null,
             h('b', { text: era.title }),
-            h('small', { text: `${era.range} / ${era.summary}` }),
-            h('em', { text: landmark })
+            h('small', null, era.range, h('span.tc-full-only', { text: ` / ${era.summary}` })),
+            h('em.tc-full-only', { text: landmark })
           ),
           h('span.tc-hist-era-count', null, h('b', { text: `${String(eraRecords.length).padStart(2, '0')}건` }))
         ),
@@ -783,20 +787,42 @@
   function buildIndex() {
     const list = records();
     const eras = chronology()?.eras || [];
-    indexView = h('div.tc-hist-indexview', null,
-      PC.screenHead('history', {
-        title: '세계 기록',
-        desc: '세계는 어느 날 한꺼번에 무너지지 않았다. 오래된 금기, 산업화된 계측, 대응기관의 모방과 대륙의 침묵이 수십 년에 걸쳐 겹쳤다. 먼저 네 전환점으로 흐름을 잡고, 필요한 시대와 사건 기록을 연다.',
-        meta: [['SPAN', 'ORIGIN?–2042'], ['INDEX', `${list.length} RECORDS`], ['ERAS', String(eras.length)]]
-      }),
+    const chrono = h('div.tc-hist-tabpanel', { id: 'tc-hist-tab-chrono', role: 'tabpanel', 'aria-labelledby': 'tc-hist-tabbtn-chrono' },
       turnsPanel(),
-      refNotice = h('div.tc-hist-refnotice'),
-      referenceStack(),
       controls(),
       eraIndex()
     );
+    const world = h('div.tc-hist-tabpanel', { id: 'tc-hist-tab-world', role: 'tabpanel', 'aria-labelledby': 'tc-hist-tabbtn-world', hidden: true },
+      h('p.tc-hist-tab-lead', { text: '사건이 아니라 세계가 돌아가는 방식이다. 규칙, 땅과 나라, 사람들의 삶, 도시와 목소리를 묶음으로 본다.' }),
+      refNotice = h('div.tc-hist-refnotice'),
+      referenceStack()
+    );
+    tabPanels = { chrono, world };
+    const tab = (id, title, hint) => h('button', {
+      type: 'button', role: 'tab', id: `tc-hist-tabbtn-${id}`, 'aria-controls': `tc-hist-tab-${id}`, 'aria-selected': String(id === 'chrono'),
+      onclick: () => setTab(id, true)
+    }, h('b', { text: title }), h('small', { text: hint }));
+    tabButtons = { chrono: tab('chrono', '사건 연표', `${list.length}개 사건 · ${eras.length}개 시대`), world: tab('world', '세계 설정', '규칙·땅과 나라·삶·도시와 목소리') };
+    indexView = h('div.tc-hist-indexview', null,
+      PC.screenHead('history', {
+        title: '세계 기록',
+        desc: '세계는 어느 날 한꺼번에 무너지지 않았다. 오래된 금기, 산업화된 계측, 대응기관의 모방과 대륙의 침묵이 수십 년에 걸쳐 겹쳤다. 사건 연표로 흐름을 잡고, 세계 설정에서 세계가 돌아가는 방식을 본다.',
+        meta: [['SPAN', 'ORIGIN?–2042'], ['INDEX', `${list.length} RECORDS`], ['ERAS', String(eras.length)]]
+      }),
+      h('div.tc-hist-tabs', { role: 'tablist', 'aria-label': '세계 기록 보기' }, tabButtons.chrono, tabButtons.world),
+      chrono,
+      world
+    );
     renderIndex();
     return indexView;
+  }
+
+  function setTab(id, focus) {
+    if (!tabPanels?.[id]) return;
+    activeTab = id;
+    Object.entries(tabPanels).forEach(([key, panel]) => { panel.hidden = key !== id; });
+    Object.entries(tabButtons).forEach(([key, button]) => button.setAttribute('aria-selected', String(key === id)));
+    if (focus) tabButtons[id].focus();
   }
 
   /* ---------- 사건 기록 ---------- */
@@ -1069,12 +1095,15 @@
   function show(parts, app, info) {
     const id = parts[0];
     releaseClock();
-    if (!id || id === 'ref') {
+    if (!id || id === 'ref' || id === 'world') {
       detailView.hidden = true;
       indexView.hidden = false;
       app.setTitle('세계 기록');
+      if (id === 'ref' || id === 'world') setTab('world');
       if (id === 'ref') {
         openRef(parts[1]);
+      } else if (id === 'world') {
+        refNotice?.replaceChildren();
       } else {
         refNotice?.replaceChildren();
         if (!onIndex && info.reason === 'push' && indexScroll) {

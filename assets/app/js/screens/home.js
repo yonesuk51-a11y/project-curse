@@ -334,7 +334,7 @@
         h('h3#tc-home-affair-title', null, '오늘의 정세 회람 — ', affair.title),
         PC.tag(affair.status, 'caution'),
         h('p', { text: affair.text }),
-        link('국가 간 정세 전체 보기', ['history'])
+        link('국가 간 정세 전체 보기', ['history', 'world'])
       ) : null
     );
   }
@@ -378,7 +378,7 @@
       h('footer.tc-home-civil-foot', null,
         h('dl.tc-kv', null, kv('보낸 곳', fear.author), kv('받는 곳', fear.recipient), kv('목적', fear.purpose)),
         h('div.tc-note.tc-note--caution', null, h('b', { text: '이 공시의 한계' }), h('p', { text: fear.limit })),
-        link('공포 관리 행정 보기', ['history'])
+        link('공포 관리 행정 보기', ['history', 'ref', 'fear-office'])
       )
     );
   }
@@ -416,7 +416,7 @@
       h('footer.tc-home-civil-foot', null,
         h('dl.tc-kv', null, kv('보낸 곳', ash.author), kv('받는 곳', ash.recipient), kv('목적', ash.purpose)),
         h('div.tc-note.tc-note--caution', null, h('b', { text: '이 방송의 한계' }), h('p', { text: ash.limit })),
-        link('재 내리는 날 보기', ['history'])
+        link('재 내리는 날 보기', ['history', 'ref', 'ash-fall'])
       )
     );
   }
@@ -605,7 +605,7 @@
       h('footer.tc-home-civil-foot', null,
         h('p.tc-home-wanted-report', { text: head.report }),
         h('div.tc-note.tc-note--caution', null, h('b', { text: '이 회람의 한계' }), h('p', { text: head.limit })),
-        link('수배 목록 원문 보기', ['history'])
+        link('수배 목록 원문 보기', ['history', 'ref', 'wanted-list'])
       )
     );
   }

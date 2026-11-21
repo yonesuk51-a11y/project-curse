@@ -126,9 +126,19 @@ const historySet = new Set(historyIds);
 const screenSources = tree('assets/app/js/screens/').filter((p) => p.endsWith('.js')).map((p) => [p, read(p)]);
 // 새 앱이 만든 데이터 파일(index.html에서 ?v=6.x로 부르는 assets/js/data/*). 화면 문구와 이동 대상이 여기에도 있다.
 const newDataFiles = [...new Set([...app.matchAll(/src="(assets\/js\/data\/[^"?]+\.js)\?v=6\./g)].map((m) => m[1]))];
+// 세계 설정 안의 항목·기본 규칙 이름표(#history/ref/<id>, 2026-11-21)
+const historyFramework = context.ProjectCurseWorldHistoryData?.worldFramework || {};
+const historyRefIds = new Set([
+  ...['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => (historyFramework[key]?.items || []).map((item) => item.id)),
+  ...(historyFramework.oralTestimony?.items || []).map((entry) => entry.id),
+  ...(historyFramework.cities || []).map((city) => city.id), 'diary',
+  ...[...read('assets/app/js/screens/history.js').matchAll(/id: 'tc-ref-(rule-[a-z-]+)'/g)].map((m) => m[1])
+]);
 const brokenTargets = [];
 for (const [file, source] of [...screenSources, ...newDataFiles.map((file) => [file, read(file)])]) {
-  for (const m of source.matchAll(/\['history',\s*'([^']+)'\]/g)) if (!historySet.has(m[1])) brokenTargets.push(`${file}: history/${m[1]}`);
+  // #history/world는 세계 설정 탭이다. 기록 id가 아니다.
+  for (const m of source.matchAll(/\['history',\s*'([^']+)'\]/g)) if (m[1] !== 'world' && !historySet.has(m[1])) brokenTargets.push(`${file}: history/${m[1]}`);
+  for (const m of source.matchAll(/(?:\['history',\s*'ref',\s*'|PC\.href\('history',\s*'ref',\s*')([^']+)'/g)) if (!historyRefIds.has(m[1])) brokenTargets.push(`${file}: history/ref/${m[1]}`);
   for (const m of source.matchAll(/\['archive-entry',\s*'([^']+)'\]/g)) if (!archiveIds.has(m[1])) brokenTargets.push(`${file}: archive-entry/${m[1]}`);
   for (const m of source.matchAll(/\['map-room',\s*'op',\s*'([^']+)'\]/g)) if (!opIds.has(m[1])) brokenTargets.push(`${file}: map-room/op/${m[1]}`);
 }

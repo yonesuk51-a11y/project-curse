@@ -198,7 +198,7 @@
       sec.quote ? h('blockquote.tc-man-quote', null, h('p', { text: sec.quote })) : null,
       sec.warning ? h('div.tc-note.tc-note--danger', null, bi('MISSION FAILURE', '임무 실패'), h('p', { text: sec.warning })) : null,
       rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
-      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 피탈자 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+      h('p', null, h('a', { href: PC.href('history', 'ref', 'rule-possession') }, '세계 기본 규칙에서 피탈자 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
     ], { bracket: 'danger', slug: 'possessed' });
   }
 
@@ -213,7 +213,7 @@
       list(sec.items, 'tc-man-list tc-man-list--rules'),
       sec.warning ? h('div.tc-note.tc-note--danger', null, bi('RECORD RULE', '기록 규칙'), h('p', { text: sec.warning })) : null,
       rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
-      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 기시체 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+      h('p', null, h('a', { href: PC.href('history', 'ref', 'rule-risen') }, '세계 기본 규칙에서 기시체 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
     ], { bracket: 'danger', slug: 'risen' });
   }
 
@@ -239,7 +239,7 @@
       list(sec.items, 'tc-man-list tc-man-list--rules'),
       sec.warning ? h('div.tc-note.tc-note--danger', null, bi('AFTER CONTACT', '쓰러뜨린 뒤'), h('p', { text: sec.warning })) : null,
       rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
-      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 혈술 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+      h('p', null, h('a', { href: PC.href('history', 'ref', 'rule-blood') }, '세계 기본 규칙에서 혈술 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
     ], { bracket: 'danger', slug: 'blood' });
   }
 
@@ -265,7 +265,7 @@
       list(sec.items, 'tc-man-list tc-man-list--rules'),
       sec.warning ? h('div.tc-note.tc-note--caution', null, bi('RECORD RULE', '기록 규칙'), h('p', { text: sec.warning })) : null,
       rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
-      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 앵커 잔류물의 부름 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+      h('p', null, h('a', { href: PC.href('history', 'ref', 'rule-anchor') }, '세계 기본 규칙에서 앵커 잔류물의 부름 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
     ], { bracket: 'danger', slug: 'percept' });
   }
 
