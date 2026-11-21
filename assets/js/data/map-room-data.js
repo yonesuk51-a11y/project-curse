@@ -199,6 +199,66 @@
           {time:'18:42',title:'이상 이동',note:'밀로의 신호가 짧은 시간에 복수 좌표로 나타났다.',route:[[104,410],[302,330],[533,260],[748,192],[824,236],[895,286]],units:[{id:'U2-A',x:895,y:286,status:'unstable'},{id:'U2-B',x:842,y:312,status:'split'},{id:'U2-B',x:881,y:331,status:'split'}]},
           {time:'19:00',title:'임무 완료 처리',note:'통신이 끝났다. 그런데도 시스템은 임무를 완료로 기록했다.',route:[[104,410],[302,330],[533,260],[748,192],[824,236],[895,286]],units:[{id:'U2-A',x:895,y:286,status:'lost'},{id:'U2-B',x:895,y:286,status:'unknown'}]}
         ]
+      },
+      {
+        id:'op-interline-night-patrol',scenario:'interline-night-patrol',label:'선간 지대 야간 순찰',code:'VSK-IL-01',region:'베스카 격리 구역 · 위치 미확정',
+        summary:'베스카 격리 구역의 두 이웃 나라 차단선 사이에서 실시한 N.H.C 야간 순찰. 좌표는 이 작전도 안의 상대 위치다.',
+        sites:[
+          {x:78,y:334,label:'외곽 집결점',kind:'facility'},
+          {x:222,y:278,label:'이웃국 제1 초소',kind:'facility'},
+          {x:354,y:217,label:'복제 신호 관측점',kind:'signal'},
+          {x:492,y:183,label:'국경 교차 지점',kind:'unknown'},
+          {x:646,y:129,label:'독립시계 확인점',kind:'anomaly'},
+          {x:808,y:82,label:'귀환 계수선',kind:'facility'}
+        ],
+        steps:[
+          {time:'23:40',title:'출발 삼중 계수',note:'육안 05, 열상 05, 무전 응답 05를 각각 기록했다.',route:[[78,334]],units:[{id:'PATROL-01',x:78,y:334,status:'normal'},{id:'COUNT-05',x:98,y:350,status:'normal'}]},
+          {time:'00:14',title:'첫 차단선 통과',note:'이웃국 초소가 통행권을 요구했다. N.H.C 호출 부호만으로 통과하지 않았다.',route:[[78,334],[222,278]],units:[{id:'PATROL-01',x:222,y:278,status:'normal'},{id:'CHECKPOINT',x:245,y:292,status:'unknown'}]},
+          {time:'00:39',title:'복제 구조 신호',note:'같은 구조 문장이 다른 호출 부호와 방향으로 반복됐다. 무전 송신은 닫혔다.',route:[[78,334],[222,278],[354,217]],units:[{id:'PATROL-01',x:354,y:217,status:'normal'},{id:'CARRIER-X',x:375,y:201,status:'unknown'}]},
+          {time:'01:02',title:'국경을 넘는 타락자',note:'이웃국 국경 당국이 사격 승인 확인을 요구했다. 현장 계측은 피탈 여부를 확정하지 못했다.',route:[[78,334],[222,278],[354,217],[492,183]],alternate:[[354,217],[492,205]],units:[{id:'PATROL-01',x:492,y:183,status:'unstable'},{id:'CROSSER',x:514,y:165,status:'unknown'}]},
+          {time:'01:31',title:'독립시계 불일치',note:'독립시계 세 개 중 하나가 다른 시각을 남겼다. 시계 담당자를 먼저 확인했다.',route:[[78,334],[222,278],[354,217],[492,183],[646,129]],units:[{id:'PATROL-01',x:646,y:129,status:'unstable'},{id:'CLOCK-C',x:666,y:148,status:'split'}]},
+          {time:'02:11',title:'귀환 계수',note:'외곽 검문선에서 삼중 계수를 다시 시작했다. 통행권과 최종 수치는 미확정 상태였다.',route:[[78,334],[222,278],[354,217],[492,183],[646,129],[808,82]],alternate:[[808,82],[646,129]],units:[{id:'PATROL-01',x:808,y:82,status:'split'},{id:'COUNT-X',x:832,y:99,status:'unknown'}]}
+        ]
+      },
+      {
+        id:'op-red-moat-negotiation',scenario:'red-moat-negotiation',label:'붉은 해자 협상',code:'ORV-BLOCKADE-01',region:'오르비나 봉쇄 구역 · 위치 미확정',
+        summary:'오르비나 결계 외측의 사절 인계, 경계 측정, 말길 시험과 포위 지휘소 결정을 기록했다.',
+        sites:[
+          {x:74,y:275,label:'사절 인계선',kind:'facility'},
+          {x:224,y:217,label:'결계 가장자리',kind:'anomaly'},
+          {x:356,y:174,label:'무응답 방송점',kind:'signal'},
+          {x:502,y:227,label:'혈약 징후 관측점',kind:'unknown'},
+          {x:652,y:160,label:'말길 시험점',kind:'signal'},
+          {x:822,y:113,label:'포위 지휘소',kind:'facility'}
+        ],
+        steps:[
+          {time:'11:06',title:'지부 사절 도착',note:'사절은 봉쇄선 밖에 대기했다. 무장 해제와 봉인 절차가 시작됐다.',route:[[74,275]],units:[{id:'NHC-LIAISON',x:74,y:275,status:'normal'},{id:'ENVOY',x:96,y:258,status:'unknown'}]},
+          {time:'11:29',title:'결계 가장자리 측정',note:'외측 표식 세 곳의 거리가 서로 맞지 않았다. 측량조는 경계 밖에 남았다.',route:[[74,275],[224,217]],units:[{id:'MEASURE-01',x:224,y:217,status:'unstable'},{id:'EDGE-X',x:246,y:234,status:'unknown'}]},
+          {time:'11:42',title:'실종 정찰조 이름 방송',note:'결계 안 방송이 2019년에 돌아오지 않은 정찰조 대원의 이름을 불렀다.',route:[[74,275],[224,217],[356,174]],units:[{id:'NHC-LIAISON',x:356,y:174,status:'unstable'},{id:'VOICE-X',x:376,y:154,status:'unknown'}]},
+          {time:'12:03',title:'사절의 혈약 징후',note:'서열 호칭 뒤 떨어진 열상 표식 여러 개가 같은 순간 반응했다.',route:[[74,275],[224,217],[356,174],[502,227]],alternate:[[356,174],[502,198]],units:[{id:'ENVOY',x:502,y:227,status:'unstable'},{id:'THERMAL-X',x:524,y:208,status:'split'}]},
+          {time:'12:28',title:'결계 안 말길 시험',note:'빈 발신자 칸에서 통신 대기음이 들어왔다. 이름은 송신하지 않았다.',route:[[74,275],[224,217],[356,174],[502,227],[652,160]],units:[{id:'CHANNEL-01',x:652,y:160,status:'unstable'},{id:'VOICE-X',x:674,y:142,status:'unknown'}]},
+          {time:'12:46',title:'포위 지휘소 결정',note:'마르쿠스 아이데에게 현장 자료가 전달됐다. 봉쇄는 유지 중이다.',route:[[74,275],[224,217],[356,174],[502,227],[652,160],[822,113]],alternate:[[822,113],[652,160]],units:[{id:'COMMAND',x:822,y:113,status:'normal'},{id:'CALL-X',x:842,y:134,status:'unknown'}]}
+        ]
+      },
+      {
+        id:'op-empty-seat-returner-screening',scenario:'empty-seat-returner-screening',label:'빈 의자 귀환자 심사',code:'VACANT-RETURN-01',region:'공석 구역 · 위치 미확정',
+        summary:'외곽 관측선에서 기억 대조실과 인계선까지 이어지는 한 방향 검문소 절차를 기록했다.',
+        sites:[
+          {x:70,y:340,label:'외곽 관측선',kind:'facility'},
+          {x:230,y:290,label:'무장 해제·봉인·삼중 계수',kind:'facility'},
+          {x:366,y:228,label:'제독 구획',kind:'facility'},
+          {x:506,y:174,label:'분리 격리실',kind:'unknown'},
+          {x:661,y:121,label:'기억 대조실',kind:'facility'},
+          {x:826,y:72,label:'인계선',kind:'facility'}
+        ],
+        steps:[
+          {time:'06:05',title:'외곽 관측선',note:'접촉 전에 귀환자가 기억하는 길과 소리를 적었다.',route:[[70,340]],units:[{id:'SCREEN-01',x:70,y:340,status:'normal'},{id:'RETURNER',x:92,y:356,status:'unknown'}]},
+          {time:'06:22',title:'무장 해제·봉인·삼중 계수',note:'무기와 물품을 분리했다. 육안·열상·무전 응답값은 별도 칸에 남겼다.',route:[[70,340],[230,290]],units:[{id:'SCREEN-01',x:230,y:290,status:'normal'},{id:'RETURNER',x:252,y:305,status:'unstable'}]},
+          {time:'06:41',title:'제독과 사망 확인',note:'이름 대조가 끝나지 않은 시신 운반함은 귀환자 동선과 분리됐다.',route:[[70,340],[230,290],[366,228]],units:[{id:'SCREEN-01',x:366,y:228,status:'normal'},{id:'SEALED-REMAINS',x:387,y:246,status:'unknown'}]},
+          {time:'07:03',title:'분리 격리',note:'귀환자는 다른 칸으로 이동했다. 한 계수 장비가 열원을 하나 더 표시했다.',route:[[70,340],[230,290],[366,228],[506,174]],alternate:[[366,228],[506,195]],units:[{id:'RETURNER',x:506,y:174,status:'unstable'},{id:'THERMAL-X',x:527,y:193,status:'unknown'}]},
+          {time:'07:31',title:'기억 대조실',note:'길의 순서와 길가 소리를 몸·얼굴·문서보다 먼저 맞춰 봤다.',route:[[70,340],[230,290],[366,228],[506,174],[661,121]],units:[{id:'RETURNER',x:661,y:121,status:'unstable'},{id:'MEMORY-X',x:682,y:140,status:'split'}]},
+          {time:'07:54',title:'인계 판단',note:'세 이름 기록은 서로 달랐다. 인계 창구는 보증인과 받을 곳을 기다렸다.',route:[[70,340],[230,290],[366,228],[506,174],[661,121],[826,72]],units:[{id:'HANDOFF',x:826,y:72,status:'split'},{id:'NAME-X',x:847,y:91,status:'unknown'}]}
+        ]
       }
     ]
   });

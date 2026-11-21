@@ -213,19 +213,24 @@ function verify(){
   const unlitPilgrimage=pilgrimageData?.scenarios?.['unlit-fortress'];
   const deadzoneReturn=pilgrimageData?.scenarios?.['deadzone-return'];
   const deadzoneRecovery=pilgrimageData?.scenarios?.['deadzone-recovery'];
+  const interlinePatrol=pilgrimageData?.scenarios?.['interline-night-patrol'];
+  const redMoatNegotiation=pilgrimageData?.scenarios?.['red-moat-negotiation'];
+  const emptySeatScreening=pilgrimageData?.scenarios?.['empty-seat-returner-screening'];
   const reactiveStages=Object.values(pilgrimageData?.scenarios||{}).flatMap(scenario=>scenario.stages||[]).filter(stage=>stage.variants?.length);
   add('pilgrimage-six-stage-scenario',unlitPilgrimage?.stages?.length===6&&Object.keys(unlitPilgrimage?.endings||{}).sort().join('|')==='breach|retreat|sanctuary'&&unlitPilgrimage.stages.every(stage=>stage.rule&&stage.choices?.length>=2));
   add('deadzone-six-stage-return-screening',deadzoneReturn?.stages?.length===6&&Object.keys(deadzoneReturn?.endings||{}).sort().join('|')==='approved|fifth|reverse|sealed'&&deadzoneReturn.stages.every(stage=>stage.rule&&stage.choices?.length>=2));
   add('deadzone-four-screening-metrics',deadzoneReturn?.metrics?.map(metric=>metric.key).join('|')==='identity|exposure|coherence|trust'&&deadzoneReturn.stages.every(stage=>stage.choices.every(choice=>deadzoneReturn.metrics.some(metric=>Object.hasOwn(choice.deltas||{},metric.key)))));
   add('deadzone-six-stage-outbound-recovery',deadzoneRecovery?.stages?.length===6&&Object.keys(deadzoneRecovery?.endings||{}).sort().join('|')==='buried|recovered|relay'&&deadzoneRecovery?.unlock?.id==='DZ-VR-04'&&deadzoneRecovery.stages.every(stage=>stage.rule&&stage.choices?.length>=2));
   add('deadzone-recovery-four-metrics',deadzoneRecovery?.metrics?.map(metric=>metric.key).join('|')==='team|tether|depth|echo'&&deadzoneRecovery.stages.every(stage=>stage.choices.every(choice=>deadzoneRecovery.metrics.some(metric=>Object.hasOwn(choice.deltas||{},metric.key)))));
+  const newPilgrimages=[['interline-night-patrol','all-returned|extra-count|held-in-band',interlinePatrol],['red-moat-negotiation','channel-opened|name-called|refused',redMoatNegotiation],['empty-seat-returner-screening','accepted|fourth-name|waitlist',emptySeatScreening]];
+  add('three-new-field-scenarios-six-stage-structure',Object.keys(pilgrimageData?.scenarios||{}).length===6&&newPilgrimages.every(([id,endings,scenario])=>scenario?.id===id&&scenario.stages?.length===6&&Object.keys(scenario.endings||{}).sort().join('|')===endings&&scenario.stages.every(stage=>stage.rule&&stage.choices?.length>=2)&&scenario.fixedFacts?.length===3&&scenario.decisionStandard&&scenario.canonBoundary?.includes('\uC911\uC559')));
   // D 혼합: pilgrimage-persistent-state의 데이터/매체 조건.
   add('pilgrimage-persistent-state:data',structureData?.owners?.pilgrimageState==='assets/js/core/pilgrimage-state.js');
   // D 혼합: pilgrimage-reactive-cross-stage-variants의 데이터/매체 조건.
   add('pilgrimage-reactive-cross-stage-variants:data',pilgrimageData?.version==='2.2.0'&&reactiveStages.length>=10&&[unlitPilgrimage,deadzoneReturn,deadzoneRecovery].every(scenario=>scenario.stages.some(stage=>stage.variants?.length)),reactiveStages.length);
   add('pilgrimage-reactive-ending-variants',deadzoneRecovery?.endings?.recovered?.variants?.length>=1&&deadzoneRecovery?.endings?.relay?.variants?.length>=1&&JSON.stringify(deadzoneRecovery.endings).includes('처음부터 있던 중계자'));
-  add('pilgrimage-three-record-boundaries',[unlitPilgrimage,deadzoneReturn,deadzoneRecovery].every(scenario=>scenario.fixedFacts?.length===3&&scenario.decisionStandard&&scenario.canonBoundary?.includes('중앙')));
-  add('verdict-ten-outcome-records',verdictData?.records?.length===10&&new Set(verdictData.records.map(record=>`${record.scenarioId}:${record.endingId}`)).size===10&&verdictData.records.filter(record=>record.scenarioId==='unlit-fortress').length===3&&verdictData.records.filter(record=>record.scenarioId==='deadzone-return').length===4&&verdictData.records.filter(record=>record.scenarioId==='deadzone-recovery').length===3);
+  add('pilgrimage-six-record-boundaries',[unlitPilgrimage,deadzoneReturn,deadzoneRecovery,interlinePatrol,redMoatNegotiation,emptySeatScreening].every(scenario=>scenario.fixedFacts?.length===3&&scenario.decisionStandard&&scenario.canonBoundary?.includes('\uC911\uC559')));
+  add('verdict-nineteen-outcome-records',verdictData?.records?.length===19&&new Set(verdictData.records.map(record=>`${record.scenarioId}:${record.endingId}`)).size===19&&verdictData.records.filter(record=>record.scenarioId==='unlit-fortress').length===3&&verdictData.records.filter(record=>record.scenarioId==='deadzone-return').length===4&&verdictData.records.filter(record=>record.scenarioId==='deadzone-recovery').length===3&&newPilgrimages.every(([id])=>verdictData.records.filter(record=>record.scenarioId===id).length===3));
   // D 혼합: verdict-gated-recovery-chain의 데이터/매체 조건.
   add('verdict-gated-recovery-chain:data',verdictData?.records?.find(record=>record.id==='DZ-VR-04')?.unlockScenario==='deadzone-recovery');
   // D 혼합: verdict-persistent-snapshots의 데이터/매체 조건.
@@ -293,7 +298,7 @@ function verify(){
   add('history-map-rendered-marker-gate:data',context.window.ProjectCurseIncidentNetwork?.incidents?.['evt-amarion-foundation']?.coordinates?.length===2&&!context.window.ProjectCurseMapRoom?.markers?.some(marker=>marker.incident==='evt-amarion-foundation'));
   // D 혼합: signal-index-owner의 데이터/매체 조건.
   add('signal-index-owner:data',structureData?.owners?.mapSignalIndex==='assets/js/data/map-signal-index-data.js');
-  add('signal-index-twenty-nine-contacts',mapSignalIndex?.items?.length===29&&mapSignalIndex.items.filter(item=>item.category==='event').length===8&&mapSignalIndex.items.filter(item=>item.category==='site').length===5&&mapSignalIndex.items.filter(item=>item.category==='operation').length===5&&mapSignalIndex.items.filter(item=>item.category==='synchrony').length===10&&mapSignalIndex.items.filter(item=>item.category==='withheld').length===1,mapSignalIndex?.items?.length);
+  add('signal-index-thirty-two-contacts',mapSignalIndex?.items?.length===32&&mapSignalIndex.items.filter(item=>item.category==='event').length===8&&mapSignalIndex.items.filter(item=>item.category==='site').length===5&&mapSignalIndex.items.filter(item=>item.category==='operation').length===8&&mapSignalIndex.items.filter(item=>item.category==='synchrony').length===10&&mapSignalIndex.items.filter(item=>item.category==='withheld').length===1,mapSignalIndex?.items?.length);
   // D 혼합: signal-index-canon-boundary의 데이터/매체 조건.
   add('signal-index-canon-boundary:data',mapSignalIndex?.items?.filter(item=>item.mapStatus==='withheld').map(item=>item.target.id).join('|')==='evt-amarion-foundation'&&mapSignalIndex.items.filter(item=>item.category==='synchrony').every(item=>item.mapStatus==='independent'&&item.unresolved)&&mapSignalIndexSource.includes("status:'MAP POSITION WITHHELD'"));
   // cinematic-registry-four-records: 실행 모듈 검사라 verify-app.d/archive.mjs의 four-independent-cinematics가 등록 순서까지 이어받았다.

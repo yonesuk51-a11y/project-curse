@@ -28,6 +28,7 @@ function detailTerrain(detail,interlineMarkup=''){
         <path class="pc-detail-silence" d="M555 0 L1000 0 1000 540 716 540 C665 420 607 367 555 248 Z"></path>`;
     }
 function operationTerrain(operation){
+      if(['op-interline-night-patrol','op-red-moat-negotiation','op-empty-seat-returner-screening'].includes(operation.id)) return '';
       if(operation.id==='op-deadzone-recovery'){
         return `
           <path class="pc-op-terrain pc-op-terrain--dead" d="M0 28 C153 72 286 17 426 73 S704 28 1000 86 L1000 540 0 540 Z"></path>
@@ -651,7 +652,7 @@ function operationTerrain(operation){
     if(st.status==='idle')content=panel(s.entryLabel,s.title,txt(s.summary),kv([['지역',s.region],['연결 사건',s.incident],['상태','NOT STARTED']]),note(s.directiveLabel,s.directive),list(s.fixedFacts),note('기록 범위',s.canonBoundary),action('현장 기록 시작','start',s.id),recordLink('관련 기록 먼저 확인',s.guideRecord));
     else if(st.status==='complete'){
       const e=P.getEnding(s.id),v=V.list().find(v=>v.scenarioId===s.id&&v.endingId===st.ending&&v.unlocked);
-      content=panel(e.code,e.title,tag(e.status,'evidence'),txt(e.summary),note('현장 결과',e.consequence),note('현장 판정 · 중앙 기록 미승인',s.canonBoundary),v?link('보관된 판정 기록 열기','map-room','verdict',v.id):null,link('지도에서 결과 확인','map-room','region',s.mapTarget.detail,'site',s.mapTarget.site),recordLink('관련 지역 기록 열기',s.primaryRecord),action(resetArm===s.id?'한 번 더 누르면 현재 진행이 초기화됩니다':'현재 진행 초기화','reset-pilgrimage',s.id,{class:'tc-btn--danger'}));
+      content=panel(e.code,e.title,tag(e.status,'evidence'),txt(e.summary),note('현장 결과',e.consequence),note('현장 판정 · 중앙 기록 미승인',s.canonBoundary),v?link('보관된 판정 기록 열기','map-room','verdict',v.id):null,s.mapTarget?link('\uC9C0\uB3C4\uC5D0\uC11C \uACB0\uACFC \uD655\uC778','map-room','region',s.mapTarget.detail,'site',s.mapTarget.site):link('\uC791\uC804 \uC9C0\uB3C4\uC5D0\uC11C \uACB0\uACFC \uD655\uC778','map-room','op',s.operation),recordLink('관련 지역 기록 열기',s.primaryRecord),action(resetArm===s.id?'한 번 더 누르면 현재 진행이 초기화됩니다':'현재 진행 초기화','reset-pilgrimage',s.id,{class:'tc-btn--danger'}));
     }else{
       const stage=P.getStage(s.id);
       content=panel(stage.code,stage.title,h('time.tc-code',{text:stage.time}),txt(stage.location),stage!==s.stages[st.step]?note('앞선 판단의 영향','이전 현장 판단이 현재 신호를 변경했습니다.','evidence'):null,note('들어온 신호',stage.signal,'evidence'),txt(stage.narrative),note(stage.rule.code,stage.rule.text),note('판단 기준',s.decisionStandard),h('div.tc-map-choices',null,stage.choices.map((c,i)=>h('button.tc-btn.tc-map-choice',{type:'button',dataset:{action:'choice',key:c.id,control:`choice:${c.id}`}},h('span.tc-code.tc-full-only',{text:String(i+1).padStart(2,'0')}),h('b',{text:c.label}),h('span',{text:c.description}),tag(({safe:'접촉 최소화',neutral:'통제된 손실',risk:'규칙 이탈 가능',danger:'직접 노출'})[c.tone]||'현장 판단',['risk','danger'].includes(c.tone)?'caution':'info')))));

@@ -88,7 +88,7 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   test.__archiveTest.loadVerdicts();
   const reportIds = test.ProjectCurseVerdictArchiveState.list().filter(e => e.unlocked).map(e => e.id);
   const mismatches = reportIds.filter(id => JSON.stringify(approvedVerdictDocument(test.ProjectCurseVerdictArchiveState.getDocument(id))) !== JSON.stringify(test.__archiveTest.verdictDocument(id)));
-  add('saved-verdict-render-data-parity', reportIds.length === 3 && !mismatches.length, mismatches.join(', '));
+  add('saved-verdict-render-data-parity', reportIds.length === 6 && !mismatches.length, mismatches.join(', '));
   const existingOwner = test.ProjectCurseVerdictArchiveState;
   const expectedReports = Object.fromEntries(reportIds.map(id => [id, JSON.stringify(approvedVerdictDocument(existingOwner.getDocument(id)))]));
   vm.runInContext('window.ProjectCurseVerdictArchiveState = null;', test);

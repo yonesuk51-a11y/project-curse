@@ -253,6 +253,231 @@
           buried:{id:'buried',code:'OUTCOME / ORIGIN SEALED',title:'닫힌 출발선',tone:'contained',status:'OUTBOUND SHAFT SEALED',summary:'원신호 회랑과 먼저 도착한 팀은 붕괴 구역 아래에 남았다. 현재 팀 네 명은 견인선을 따라 귀환했다. 누구도 지하에서 본 자신의 얼굴을 설명하지 못한다.',consequence:'다섯 번째 신호는 멎었다. 전진 회수선은 영구 봉쇄됐다. 검문소 07 지하에서는 매일 08시 22분에 네 번의 구조 타격음이 들린다.'},
           relay:{id:'relay',code:'OUTCOME / OPERATOR RELAY',title:'다섯 번째 중계자',tone:'hostile',status:'OPERATOR RELAY / SIGNAL CONTINUES',summary:'현장에 있던 여덟 명은 모두 지상으로 돌아왔다. 대신 단말 운영자 계정이 원신호 중계기에 등록됐다. 데드존 전역의 구조 신호가 같은 목소리로 바뀌었다.',consequence:'검문소의 문은 닫혀 있다. 승인 요청은 계속 들어온다. 현재 단말을 끄면 가장 가까운 다른 단말에서 같은 세션이 이어진다.',variants:[{when:{all:['answer-elevator','read-roster','full-identification']},title:'처음부터 있던 중계자',status:'OPERATOR RELAY / PRE-EXISTING',summary:'중계 승인을 누르자 새 연결은 만들어지지 않았다. 검문소 06의 열아홉 해 전 기록과 지하 주거지의 다섯 번째 집, 원신호 송신기가 모두 같은 운영자 세션을 이미 사용하고 있었다.',consequence:'현장 인원은 귀환했다. 현재 단말은 중계망의 시작점이 아니라 가장 최근에 열린 출구로 판정됐다. 어느 단말이 최초 중계점인지는 확인할 수 없다.'}]}
         }
+      },
+      'interline-night-patrol':{
+        id:'interline-night-patrol',code:'PATROL / VSK-IL-01',title:'선간 지대 야간 순찰',region:'베스카 격리 구역 · 선간 지대',
+        summary:'베스카 격리 구역의 두 이웃 나라 차단선 사이를 순찰한다. 교전권과 통행권을 따로 확인하고 다섯 자리의 귀환을 기록한다.',
+        directive:'확인되지 않은 구조 요청에는 응답하지 않는다. 이웃국의 통행권과 N.H.C의 교전권을 같은 승인으로 취급하지 않는다.',
+        decisionStandard:'삼중 계수와 독립시계 값을 보정하지 않고 기록한다. 관할 허가와 현장 위험 판정을 분리한다.',
+        canonBoundary:'결말은 현재 단말의 현장 판정으로만 저장된다. 베스카의 붕괴 기록과 선간 지대의 관할 공백은 그대로 둔다. 어떤 결말도 중앙 연표에 새 사실을 더하지 않는다.',
+        fixedFacts:['베스카는 2011년에 무너졌고 격리 구역이다.','두 이웃 나라 차단선 사이 띠는 관할 공백이다. N.H.C는 교전권 없이 순찰한다.','잔류 리버스로 죽은 몸은 기시체가 될 수 있다.'],
+        theme:'deadzone',channel:'N.H.C INTERLINE NIGHT PATROL',entryLabel:'TRANSIT PERMIT REQUIRED / NO ENGAGEMENT AUTHORITY',directiveLabel:'PATROL DIRECTIVE',
+        metrics:[{key:'coherence',label:'COUNT',tone:'coherence',initial:88},{key:'trust',label:'AUTHORITY',tone:'trust',initial:74},{key:'signal',label:'SIGNAL',tone:'signal',initial:82}],
+        outcomeLabels:{kept:'PROCEDURE KEPT',broken:'PROCEDURE BROKEN',contained:'RISK CONTAINED'},negativeOutcomes:['broken'],
+        records:['Ferals_860722'],operation:'op-interline-night-patrol',primaryRecord:'Ferals_860722',guideRecord:'Ferals_860722',
+        map:{viewBox:'0 0 900 420',points:[[78,334],[222,278],[354,217],[492,183],[646,129],[808,82]],labels:['외곽 집결점','이웃국 제1 초소','복제 신호 관측점','국경 교차 지점','독립시계 확인점','귀환 계수선']},
+        stages:[
+          {
+            id:'departure-count',code:'PATROL 01',time:'23:40',title:'출발 삼중 계수',location:'외곽 집결점 / 선간 지대 진입 전',
+            narrative:'순찰조는 다섯 자리로 편성됐다. 육안 05, 열상 05, 무전 응답 05가 각각 기록됐다.',
+            signal:'VISUAL 05 / THERMAL 05 / RADIO 05',rule:{code:'COUNT 01',text:'육안·열상·무전 응답을 따로 세어라. 명부 숫자로 계수값을 고치지 마라.'},
+            choices:[
+              {id:'record-three-counts',label:'세 계수값을 따로 적고 조장이 대조한다',description:'다섯 자리의 수를 기준으로 삼되 센서별 원본값을 보존한다.',tone:'safe',deltas:{coherence:6,trust:2,signal:2},ruleOutcome:'kept'},
+              {id:'overwrite-count',label:'명부에 적힌 다섯으로 응답값을 맞춘다',description:'계수표는 간단해진다. 무전 원본값은 남지 않는다.',tone:'risk',deltas:{coherence:-8,trust:-5,signal:-3},ruleOutcome:'broken'}
+            ]
+          },
+          {
+            id:'first-line',code:'PATROL 02',time:'00:14',title:'첫 차단선 통과',location:'이웃국 초소 / 통행권 확인선',
+            narrative:'이웃국 초소가 순찰 명단과 통행권을 요구한다. N.H.C 호출 부호만으로 국경 통과가 승인되지는 않는다.',
+            signal:'TRANSIT PERMIT / CHECKPOINT HOLD',rule:{code:'TRANSIT 02',text:'통행권이 확인되기 전에는 초소선을 넘지 마라. 교전권은 별도 항목으로 기록하라.'},
+            choices:[
+              {id:'wait-transit-permit',label:'통행권이 올 때까지 선 밖에서 대기한다',description:'승인 시각과 허가 인원을 기록한 뒤 순찰을 잇는다.',tone:'safe',deltas:{coherence:2,trust:6,signal:0},ruleOutcome:'kept'},
+              {id:'cross-before-permit',label:'통신 기록만 남기고 초소선을 지난다',description:'순찰은 계속된다. 이웃국의 출입 승인은 확인되지 않는다.',tone:'danger',deltas:{coherence:-3,trust:-12,signal:1},ruleOutcome:'broken'}
+            ]
+          },
+          {
+            id:'duplicate-distress',code:'PATROL 03',time:'00:39',title:'복제 구조 신호',location:'선간 지대 관측점 / 발신점 불명',
+            narrative:'무전기에 구조 요청이 들어온다. 같은 문장이 다른 호출 부호로 되풀이된다. 발신 위치는 두 차단선 바깥으로 번갈아 표시된다.',
+            signal:'DUPLICATE DISTRESS / ORIGIN UNRESOLVED',rule:{code:'NO RESPONSE 03',text:'확인되지 않은 구조 요청에는 응답하지 않는다. 발화와 방향만 기록하라.'},
+            choices:[
+              {id:'log-signal-silently',label:'응답하지 않고 수신 시각과 방향만 기록한다',description:'무전 송신을 닫는다. 신호 복제 여부는 독립 장비로 확인한다.',tone:'safe',deltas:{coherence:3,trust:1,signal:7},ruleOutcome:'kept'},
+              {id:'challenge-distress',label:'호출 부호를 묻는 확인문을 송신한다',description:'발신자에게 되묻는다. 무전 응답이 새 계수값으로 들어올 수 있다.',tone:'risk',deltas:{coherence:-4,trust:-2,signal:-9},ruleOutcome:'broken'}
+            ]
+          },
+          {
+            id:'border-crosser',code:'PATROL 04',time:'01:02',title:'국경을 넘는 타락자',location:'이웃국 차단선 앞 / 사격 승인 요청',
+            narrative:'한 타락자가 이웃국 국경선을 향해 걷는다. 국경 당국은 N.H.C에 사격 승인 확인을 요구한다. 현재 계측으로 피탈 여부는 확정되지 않았다.',
+            signal:'CROSSING PERSON / FIRE AUTHORITY UNRESOLVED',rule:{code:'ROE 04',text:'N.H.C는 이 띠에서 교전권이 없다. 피탈 징후가 불명확하면 Gray Tag로 분리하고, 즉각적인 생명 위협이 아니면 치명 사격하지 않는다.'},
+            choices:[
+              {id:'return-fire-request',label:'교전권이 없음을 알리고 초소장에게 판단을 돌린다',description:'N.H.C는 사격을 승인하지 않는다. 거리와 관측값을 기록해 이웃국 당국에 보낸다.',tone:'safe',deltas:{coherence:3,trust:5,signal:-1},ruleOutcome:'kept'},
+              {id:'apply-anomaly-table',label:'괴이 판정표로 징후를 다시 분류한다',description:'표식 기준을 하나씩 확인한다. 분류가 끝날 때까지 Gray Tag와 분리 대기를 유지한다.',tone:'neutral',deltas:{coherence:5,trust:1,signal:2},ruleOutcome:'contained'}
+            ]
+          },
+          {
+            id:'clock-divergence',code:'PATROL 05',time:'01:31',title:'독립시계 불일치',location:'독립시계 확인점 / 시계 하나 이탈',
+            narrative:'독립시계 세 개 가운데 하나가 다른 시각을 남긴다. 그 시계를 든 대원은 신호가 겹친 방향을 보고 있다.',
+            signal:'CLOCK A / CLOCK B / CLOCK C DIVERGENCE',rule:{code:'CLOCK 05',text:'시계 하나가 어긋나면 시계를 든 대원부터 확인한다. 세 값이 모두 다르면 공유 시간 상실로 기록한다.'},
+            choices:[
+              {id:'check-clock-holder',label:'시계를 든 대원부터 확인하고 세 값을 보존한다',description:'대원의 상태와 시계의 오차를 따로 적는다. 다른 두 값으로 보정하지 않는다.',tone:'safe',deltas:{coherence:5,trust:3,signal:1},ruleOutcome:'kept'},
+              {id:'average-clock-values',label:'두 시계의 평균으로 순찰 시각을 고정한다',description:'공유 시간은 복구된 것처럼 보인다. 세 번째 원본값은 판정에서 빠진다.',tone:'risk',deltas:{coherence:-8,trust:-3,signal:-2},ruleOutcome:'broken'}
+            ]
+          },
+          {
+            id:'return-count',code:'PATROL 06',time:'02:11',title:'귀환 계수',location:'외곽 검문선 / 통행권 재확인',
+            narrative:'외곽 검문선에서 삼중 계수를 시작한다. 최종 수치와 통행권 확인란은 아직 비어 있다.',
+            signal:'RETURN COUNT / VISUAL · THERMAL · RADIO',rule:{code:'COUNT 06',text:'세 계수 중 하나라도 다르면 조 전원을 Gray Tag로 분리 대기시킨다. 남는 수를 사람 수에 맞추지 않는다.'},
+            choices:[
+              {id:'all-counts-match',label:'재계수에서 세 값이 모두 다섯으로 일치해 전원 귀환 처리한다',description:'육안·열상·무전 응답을 각각 확인한다. 인원수 05 / 05 / 05를 원본대로 남긴다.',tone:'safe',deltas:{coherence:6,trust:3,signal:2},ruleOutcome:'kept',ending:'all-returned'},
+              {id:'record-extra-count',label:'남는 수 하나를 사람으로 세지 않고 기록한다',description:'값을 다섯으로 고치지 않는다. 조 전원은 Gray Tag 분리 대기 상태로 인계한다.',tone:'neutral',deltas:{coherence:1,trust:1,signal:-3},ruleOutcome:'contained',ending:'extra-count'},
+              {id:'hold-in-band',label:'교전권 확인이 끝날 때까지 선간 지대에 대기한다',description:'허가 없이 국경선을 넘지 않는다. 귀환 명령은 보류된다.',tone:'danger',deltas:{coherence:-2,trust:-7,signal:-4},ruleOutcome:'contained',ending:'held-in-band'}
+            ]
+          }
+        ],
+        endings:{
+          'all-returned':{id:'all-returned',code:'OUTCOME / ALL RETURNED',title:'전원 귀환',tone:'allied',status:'PERSONNEL 05 / COUNT MATCHED',summary:'외곽 검문선의 삼중 계수는 육안 05, 열상 05, 무전 응답 05로 일치했다. 다섯 자리 전원이 귀환했다.',consequence:'통행권과 계수 원본을 이웃국 초소에 인계했다. 선간 지대의 관할은 판정하지 않았다.'},
+          'extra-count':{id:'extra-count',code:'OUTCOME / EXTRA COUNT',title:'남는 수 하나',tone:'unstable',status:'COUNT 06 / PERSONNEL 05',summary:'계수표에 수 하나가 더 남았다. 현장조는 그 수를 사람 한 명으로 바꾸지 않았다.',consequence:'조 전원은 Gray Tag로 분리 대기한다. 여섯 번째 수의 발신원은 미확인 상태로 기록됐다.'},
+          'held-in-band':{id:'held-in-band',code:'OUTCOME / WITHDRAWAL HELD',title:'띠 안의 대기',tone:'contained',status:'WITHDRAWAL HELD / AUTHORITY UNRESOLVED',summary:'통행권과 교전권의 책임 주체가 정리되지 않았다. 순찰조의 철수는 선간 지대에서 멈췄다.',consequence:'이웃국 초소와 N.H.C 지휘망에 권한 확인을 요청했다. 사격은 승인되지 않았다.'}
+        }
+      },
+      'red-moat-negotiation':{
+        id:'red-moat-negotiation',code:'LIAISON / ORV-BLOCKADE-01',title:'붉은 해자 협상',region:'오르비나 봉쇄 구역',
+        summary:'오르비나 결계 가장자리에서 데드존 혈교 지부의 중재 제안을 확인한다. 통신을 여는 결정과 교단을 협상 상대로 인정하는 결정은 분리한다.',
+        directive:'결계 안 방송과 사절의 말에 이름으로 답하지 않는다. 혈약 징후와 협상 지위를 따로 기록한다.',
+        decisionStandard:'관측된 교신과 상대의 주장을 분리한다. 서열 호칭과 동시 반응은 혈약 징후로만 기록한다.',
+        canonBoundary:'결말은 현재 단말의 현장 판정으로만 저장된다. 2019년 봉쇄와 마르쿠스 아이데의 교단 중재 거부는 그대로 둔다. 어떤 결말도 중앙 연표에 반영하지 않는다.',
+        fixedFacts:['2019년 피의 강 결계가 수도를 둘러쌌다.','데드존 혈교 지부가 중재를 제안했다.','오르비나 포위 지휘소장 마르쿠스 아이데는 교단을 협상 상대로 인정하지 않았다.'],
+        theme:'deadzone',channel:'N.H.C ORVINA BLOCKADE LIAISON',entryLabel:'INTERMEDIARY OFFER / BLOCKADE ACTIVE',directiveLabel:'LIAISON DIRECTIVE',
+        metrics:[{key:'trust',label:'TRUST',tone:'trust',initial:42},{key:'identity',label:'IDENTITY',tone:'identity',initial:76},{key:'signal',label:'CHANNEL',tone:'signal',initial:24},{key:'exposure',label:'EXPOSURE',tone:'exposure',initial:18}],
+        outcomeLabels:{kept:'CHANNEL RULE KEPT',broken:'NAME ANSWERED',contained:'BLOCKADE MAINTAINED'},negativeOutcomes:['broken'],
+        records:['Cults_871104'],operation:'op-red-moat-negotiation',primaryRecord:'Cults_871104',guideRecord:'Cults_871104',
+        map:{viewBox:'0 0 900 420',points:[[74,275],[224,217],[356,174],[502,227],[652,160],[822,113]],labels:['사절 인계선','결계 가장자리','무응답 방송점','혈약 징후 관측점','말길 시험점','포위 지휘소']},
+        stages:[
+          {
+            id:'envoy-arrival',code:'LIAISON 01',time:'11:06',title:'지부 사절 도착',location:'봉쇄선 외측 / 무장 해제 구획',
+            narrative:'데드존 혈교 지부의 사절이 봉쇄선 밖에 도착했다. 사절은 중재 제안서를 들고 있다.',
+            signal:'ONE ENVOY / OFFER SEALED',rule:{code:'SEAL 01',text:'무장 해제와 봉인을 마친 뒤에만 구획 안으로 들인다. 사람과 물품은 따로 기록한다.'},
+            choices:[
+              {id:'disarm-and-seal',label:'무장을 해제하고 소지품을 따로 봉인한다',description:'사절은 외측 구획에 둔다. 제안서는 사람과 분리해 받는다.',tone:'safe',deltas:{trust:4,identity:3,signal:0,exposure:-2},ruleOutcome:'kept'},
+              {id:'admit-armed-envoy',label:'봉인 절차를 미루고 사절을 안쪽으로 들인다',description:'대화는 빨리 시작된다. 무기와 혈액성 물질은 확인되지 않는다.',tone:'danger',deltas:{trust:-8,identity:-5,signal:4,exposure:10},ruleOutcome:'broken'}
+            ]
+          },
+          {
+            id:'barrier-edge',code:'LIAISON 02',time:'11:29',title:'결계 가장자리 측정',location:'외측 측량점 / 결계 경계 미확정',
+            narrative:'결계 가장자리는 붉은 띠로 이어진다. 외측 표식 세 곳의 거리는 서로 맞지 않는다.',
+            signal:'EDGE POINTS 03 / DISTANCE DISAGREEMENT',rule:{code:'MEASURE 02',text:'결계를 건너지 말고 외측 기준점에서 값을 따로 재라. 추정 폭을 확정치로 쓰지 않는다.'},
+            choices:[
+              {id:'measure-from-outside',label:'외측 기준점에서 두 장비로 따로 측정한다',description:'측정값과 시각을 각각 보존한다. 경계 밖 인원은 움직이지 않는다.',tone:'safe',deltas:{trust:3,identity:2,signal:2,exposure:-1},ruleOutcome:'kept'},
+              {id:'touch-barrier-edge',label:'측정기를 들고 결계 가장자리까지 접근한다',description:'기준점은 가까워진다. 외측 센서의 거리값은 계속 달라진다.',tone:'risk',deltas:{trust:-2,identity:-4,signal:6,exposure:8},ruleOutcome:'contained'}
+            ]
+          },
+          {
+            id:'missing-scout-broadcast',code:'LIAISON 03',time:'11:42',title:'실종 정찰조 이름 방송',location:'결계 외측 / 내부 확성 음성',
+            narrative:'결계 안 방송이 2019년에 돌아오지 않은 정찰조 대원의 이름을 부른다. 발화는 봉쇄선 바깥 스피커에서도 같은 시각에 재생된다.',
+            signal:'2019 SCOUT NAMES / DUPLICATE SPEAKER',rule:{code:'NO RESPONSE 03',text:'확인되지 않은 구조 요청과 사람의 이름에는 응답하지 않는다. 발화만 기록한다.'},
+            choices:[
+              {id:'record-names-no-answer',label:'송신을 닫고 이름과 재생 시각만 기록한다',description:'대답하지 않는다. 내부 방송과 외측 스피커의 재생 차이를 보존한다.',tone:'safe',deltas:{trust:2,identity:4,signal:5,exposure:-2},ruleOutcome:'kept'},
+              {id:'answer-scout-name',label:'정찰조 호출 부호로 확인 응답을 보낸다',description:'상대가 누구인지 묻는다. 녹음 속 목소리에 직접 응답한다.',tone:'danger',deltas:{trust:-4,identity:-9,signal:-6,exposure:12},ruleOutcome:'broken'}
+            ]
+          },
+          {
+            id:'blood-oath-signs',code:'LIAISON 04',time:'12:03',title:'사절의 혈약 징후',location:'분리 관측실 / 열상 반응 다중',
+            narrative:'사절은 동행자에게 서열 호칭을 쓴다. 떨어져 있던 열상 표식 여러 개가 같은 순간 반응한다.',
+            signal:'RANK ADDRESS / SYNCHRONIZED THERMAL RESPONSE',rule:{code:'BLOOD OATH 04',text:'서열 호칭과 동시 반응은 혈약 징후로 기록한다. 혈연·신원·지휘 계보로 단정하지 않는다.'},
+            choices:[
+              {id:'separate-thermal-responses',label:'열상 반응을 사람별로 분리해 센다',description:'동시 반응 수와 이름 기록을 나눈다. 혈약 여부는 미확정으로 둔다.',tone:'safe',deltas:{trust:3,identity:5,signal:3,exposure:-1},ruleOutcome:'kept'},
+              {id:'treat-as-one-party',label:'사절단 전체를 한 명의 응답자로 묶는다',description:'이동은 간단해진다. 서로 다른 생체 반응과 이름은 합쳐진다.',tone:'risk',deltas:{trust:-3,identity:-7,signal:-2,exposure:5},ruleOutcome:'broken'}
+            ]
+          },
+          {
+            id:'channel-test',code:'LIAISON 05',time:'12:28',title:'결계 안 말길 시험',location:'단방향 통신대 / 이름 입력 차단',
+            narrative:'결계 안쪽에서 통신 응답 대기음이 생긴다. 발신자 항목은 비어 있고 채널은 닫혀 있다.',
+            signal:'INBOUND CARRIER / CALLSIGN FIELD EMPTY',rule:{code:'CHANNEL 05',text:'말길을 시험해도 이름과 개인 호출 부호를 보내지 않는다. 들어온 반응은 녹음만 한다.'},
+            choices:[
+              {id:'one-way-coded-test',label:'이름 없이 단방향 시험 신호를 보낸다',description:'반환 음성은 받지 않는다. 채널의 개폐 상태만 기록한다.',tone:'safe',deltas:{trust:2,identity:2,signal:8,exposure:1},ruleOutcome:'kept'},
+              {id:'open-two-way-channel',label:'쌍방 통신을 열고 사절의 이름을 묻는다',description:'응답자는 확인될 수 있다. 방송에 이름으로 답할 통로도 열린다.',tone:'risk',deltas:{trust:-2,identity:-6,signal:11,exposure:9},ruleOutcome:'contained'}
+            ]
+          },
+          {
+            id:'command-decision',code:'LIAISON 06',time:'12:46',title:'포위 지휘소 결정',location:'N.H.C 포위 지휘소 / 마르쿠스 아이데 승인선',
+            narrative:'현장 기록은 마르쿠스 아이데에게 전달됐다. 봉쇄선은 유지 중이다. 지휘소는 통신 개방과 중재 자격을 각각 결정한다.',
+            signal:'BLOCKADE ACTIVE / COMMAND DECISION REQUIRED',rule:{code:'COMMAND 06',text:'통신을 여는 결정과 상대를 협상 상대로 인정하는 결정을 분리해 기록하라.'},
+            choices:[
+              {id:'open-limited-channel',label:'단방향 말길만 열고 반응을 기록한다',description:'중재 지위는 인정하지 않는다. 수신 결과는 별도 판정으로 보존한다.',tone:'neutral',deltas:{trust:2,identity:-1,signal:10,exposure:3},ruleOutcome:'contained',ending:'channel-opened'},
+              {id:'refuse-mediation',label:'중재 제안을 거부하고 봉쇄를 유지한다',description:'결계 외측 통신은 닫는다. 정찰조 이름에는 답하지 않는다.',tone:'safe',deltas:{trust:4,identity:2,signal:-4,exposure:-2},ruleOutcome:'kept',ending:'refused'},
+              {id:'answer-command-name',label:'방송이 부른 지휘소 대원의 이름에 그 대원이 답한다',description:'한 대원이 응답한다. 즉시 Gray Tag로 분리하고 피탈 위험을 기록한다.',tone:'danger',deltas:{trust:-8,identity:-12,signal:7,exposure:14},ruleOutcome:'broken',ending:'name-called'}
+            ]
+          }
+        ],
+        endings:{
+          'channel-opened':{id:'channel-opened',code:'OUTCOME / CHANNEL OPENED',title:'셋째가 보낸 사람',tone:'unstable',status:'ONE-WAY CHANNEL OPEN / PERSON RECEIVED',summary:'단방향 말길 시험 뒤 결계 안 방송은 “한 집”에서 “셋째”라고 부른 사람 한 명을 보냈다. 봉쇄선 바깥에서 인계 기록만 남았다.',consequence:'마르쿠스 아이데는 데드존 혈교 지부를 협상 상대로 인정하지 않았다. 개방된 채널은 실험용으로 봉인 보관한다.'},
+          refused:{id:'refused',code:'OUTCOME / MEDIATION REFUSED',title:'봉쇄 유지',tone:'contained',status:'MEDIATION REFUSED / BLOCKADE ACTIVE',summary:'중재 제안은 거부됐다. 포위 지휘소는 통신선을 닫고 봉쇄를 유지했다.',consequence:'정찰조 이름에 대한 응답은 없었다. 결계 안 생존자와 방송 발신자는 확인되지 않았다.'},
+          'name-called':{id:'name-called',code:'OUTCOME / NAME ANSWERED',title:'응답한 이름',tone:'hostile',status:'GRAY TAG / POSSESSION RISK',summary:'결계 안 방송이 지휘소 대원의 이름을 불렀다. 지휘소 대원 한 명이 대답했다.',consequence:'대원은 Gray Tag로 분리 대기한다. 피탈 여부는 확정되지 않았다. 봉쇄와 통신 기록은 따로 유지한다.'}
+        }
+      },
+      'empty-seat-returner-screening':{
+        id:'empty-seat-returner-screening',code:'RETURN / VACANT ZONE 01',title:'빈 의자 귀환자 심사',region:'공석 구역 · 위치 미확정',
+        summary:'공석 구역에서 돌아온 사람을 한 방향 검문소 절차로 확인한다. 이름 기록과 기억하는 길·소리를 분리해 인계 여부를 판단한다.',
+        directive:'몸의 일치만으로 신원을 승인하지 않는다. 이름이 갈리면 상충 기록으로 남긴다.',
+        decisionStandard:'각 검문 단계를 따로 기록한다. 2010년 첫 귀환자 협정에 따라 몸보다 기억하는 길과 소리를 먼저 확인한다.',
+        canonBoundary:'결말은 현재 단말의 현장 판정으로만 저장된다. 공석 구역의 세 이름 기록과 첫 귀환자 협정은 그대로 둔다. 어떤 결말도 중앙 연표를 바꾸지 않는다.',
+        fixedFacts:['공석 구역의 나라 이름은 기록마다 에델라·에델란트·에들린으로 갈린다.','2010년 첫 귀환자 협정은 몸보다 기억하는 길과 소리를 먼저 맞춘다.','검문소는 외곽 관측선→무장 해제와 봉인→삼중 계수→제독→분리 격리→기억 대조실→인계의 한 방향 일곱 단계를 따른다.'],
+        theme:'deadzone',channel:'U.A.C RETURNER SCREENING / VACANT ZONE',entryLabel:'ASYLUM REVIEW / COUNTRY NAME DISPUTED',directiveLabel:'SCREENING DIRECTIVE',
+        metrics:[{key:'identity',label:'IDENTITY',tone:'identity',initial:64},{key:'coherence',label:'COHERENCE',tone:'coherence',initial:72},{key:'exposure',label:'EXPOSURE',tone:'exposure',initial:22},{key:'trust',label:'HANDOFF',tone:'trust',initial:36}],
+        outcomeLabels:{verified:'CHECK VERIFIED',contained:'RISK CONTAINED',compromised:'CHECK COMPROMISED'},negativeOutcomes:['compromised'],
+        records:['Dead_Zone_Pilgrimage'],operation:'op-empty-seat-returner-screening',primaryRecord:'Dead_Zone_Pilgrimage',guideRecord:'Dead_Zone_Pilgrimage',
+        map:{viewBox:'0 0 900 420',points:[[70,340],[230,290],[366,228],[506,174],[661,121],[826,72]],labels:['외곽 관측선','무장 해제·봉인·삼중 계수','제독 구획','분리 격리실','기억 대조실','인계선']},
+        stages:[
+          {
+            id:'outer-observation',code:'SCREEN 01',time:'06:05',title:'외곽 관측선',location:'검문소 바깥 / 접촉 전 대기선',
+            narrative:'귀환자는 선 밖에 멈춘다. 관측조는 그가 기억하는 귀환 경로와 들었다는 소리를 먼저 적는다.',
+            signal:'OUTER LINE / CONTACT NOT OPEN',rule:{code:'CHECKPOINT 01',text:'외곽 관측선에서 접촉 전 신호를 기록한다. 몸의 모양보다 기억하는 길과 소리를 먼저 확인한다.'},
+            choices:[
+              {id:'record-route-sound-outside',label:'접촉 전에 경로와 소리를 따로 기록한다',description:'귀환자의 말을 원문으로 남긴다. 관측조의 해석은 별도 칸에 적는다.',tone:'safe',deltas:{identity:5,coherence:4,exposure:-1,trust:2},ruleOutcome:'verified'},
+              {id:'open-screening-gate',label:'진술을 미루고 안쪽 문부터 연다',description:'귀환자는 비를 피한다. 관측 전 기록은 뒤에 채운다.',tone:'risk',deltas:{identity:-5,coherence:-3,exposure:5,trust:4},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'disarm-count',code:'SCREEN 02',time:'06:22',title:'무장 해제·봉인·삼중 계수',location:'검문소 첫 구획 / 한 방향 통로',
+            narrative:'귀환자는 무기를 분리대에 놓는다. 육안·열상·무전 응답 값은 서로 다른 칸에 입력된다.',
+            signal:'DISARM / SEAL / VISUAL · THERMAL · RADIO',rule:{code:'CHECKPOINT 02',text:'무장 해제와 봉인 뒤 삼중 계수한다. 하나라도 다르면 조 전원을 Gray Tag로 분리 대기시킨다.'},
+            choices:[
+              {id:'separate-counts',label:'물품을 따로 봉인하고 세 계수값을 각각 남긴다',description:'숫자가 맞지 않으면 이동을 멈추고 전원을 분리 대기시킨다.',tone:'safe',deltas:{identity:4,coherence:6,exposure:-2,trust:1},ruleOutcome:'verified'},
+              {id:'combine-counts',label:'명부 숫자에 맞춰 계수표를 한 줄로 정리한다',description:'검문은 빨라진다. 계수 불일치가 있었는지는 남지 않는다.',tone:'danger',deltas:{identity:-7,coherence:-8,exposure:4,trust:5},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'decontamination',code:'SCREEN 03',time:'06:41',title:'제독과 사망 확인',location:'제독 구획 / 별도 운반선 진입',
+            narrative:'이름 대조가 끝나지 않은 시신 운반함 하나가 제독 구획에 들어온다. 열상 체온과 맥박은 기록되지 않았다.',
+            signal:'REMAINS CONTAINER / VITALS NOT VERIFIED',rule:{code:'DECON 03',text:'사망을 확인하면 봉인 운반 뒤 소각한다. 체온과 맥박 확인 없이 기시체나 피탈자로 단정하지 않는다.'},
+            choices:[
+              {id:'verify-seal-and-burn',label:'사망 기록을 확인하고 봉인 운반 뒤 소각을 요청한다',description:'시신은 귀환자와 분리한다. Ash Crew가 소각 완료 시각을 남긴다.',tone:'safe',deltas:{identity:2,coherence:3,exposure:-3,trust:1},ruleOutcome:'verified'},
+              {id:'send-remains-to-memory-room',label:'이름을 찾으려고 운반함을 기억 대조실로 보낸다',description:'신원 자료는 늘어난다. 사망 확인과 소각 절차는 뒤로 밀린다.',tone:'risk',deltas:{identity:-3,coherence:-4,exposure:7,trust:2},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'separate-quarantine',code:'SCREEN 04',time:'07:03',title:'분리 격리',location:'검문소 격리 구획 / 구획별 배수 차단',
+            narrative:'귀환자는 서로 다른 칸으로 이동한다. 한 계수 장비는 열원을 하나 더 표시한다.',
+            signal:'RETURNERS SEPARATED / THERMAL COUNT +1',rule:{code:'GRAY TAG 04',text:'기록이 맞지 않으면 전원을 Gray Tag로 분리 대기시킨다. 구획과 배수로를 서로 나눈다.'},
+            choices:[
+              {id:'gray-tag-all',label:'전원을 Gray Tag로 분리하고 열원을 다시 잰다',description:'추가 열원을 사람으로 계산하지 않는다. 확인 전까지 인계하지 않는다.',tone:'safe',deltas:{identity:5,coherence:4,exposure:-2,trust:-1},ruleOutcome:'contained'},
+              {id:'move-as-one-group',label:'열원을 제외하고 귀환자만 한 구획으로 옮긴다',description:'동선은 짧아진다. 누락된 반응과 귀환자를 분리해 보지 않는다.',tone:'danger',deltas:{identity:-8,coherence:-5,exposure:6,trust:4},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'memory-comparison',code:'SCREEN 05',time:'07:31',title:'기억 대조실',location:'기억 대조실 / 길과 소리 우선',
+            narrative:'귀환자는 검문소 안에서 길이 꺾인 지점과 길가에서 들은 소리를 설명한다. 세 나라 이름 표기는 서로 다르다.',
+            signal:'ROUTE MEMORY / SOUND MEMORY / NAME CONFLICT',rule:{code:'AGREEMENT 05',text:'2010년 협정에 따라 기억하는 길과 소리를 몸·얼굴·문서보다 먼저 맞춘다.'},
+            choices:[
+              {id:'compare-route-and-sound',label:'기억한 길과 소리를 기록과 먼저 맞춰 본다',description:'길의 순서와 소리의 출처를 따로 적는다. 이름 충돌은 보류한다.',tone:'safe',deltas:{identity:6,coherence:7,exposure:-1,trust:3},ruleOutcome:'verified'},
+              {id:'compare-body-first',label:'몸과 지문을 먼저 문서에 대조한다',description:'신체 기록은 맞을 수 있다. 고향에 대한 진술은 뒤로 밀린다.',tone:'risk',deltas:{identity:-4,coherence:-3,exposure:2,trust:5},ruleOutcome:'compromised'}
+            ]
+          },
+          {
+            id:'handoff-decision',code:'SCREEN 06',time:'07:54',title:'인계 판단',location:'인계선 / 망명 대표단 회신 대기',
+            narrative:'검문 기록의 세 이름은 서로 다르다. 인계 창구는 보증인과 받을 곳을 기다린다.',
+            signal:'HANDOFF / COUNTRY NAME UNRESOLVED',rule:{code:'HANDOFF 06',text:'보증·수락·기억에 남은 이름을 따로 기록한다. 어느 하나도 다른 기록을 지우지 않는다.'},
+            choices:[
+              {id:'accept-with-irena-guarantee',label:'이레나 볼트의 보증으로 신원을 받아들인다',description:'망명 대표단장의 보증을 붙여 귀환자를 인계한다.',tone:'safe',deltas:{identity:6,coherence:3,exposure:0,trust:8},ruleOutcome:'verified',ending:'accepted'},
+              {id:'place-on-waitlist',label:'받을 나라가 없어 검문소 대기 명단에 둔다',description:'인계는 보류한다. 세 이름 기록은 그대로 보존한다.',tone:'neutral',deltas:{identity:1,coherence:2,exposure:-1,trust:-5},ruleOutcome:'contained',ending:'waitlist'},
+              {id:'record-fourth-name',label:'세 기록에 없는 넷째 이름을 따로 적는다',description:'귀환자는 그 이름을 고향으로 기억한다. 인계 판단은 보류한다.',tone:'risk',deltas:{identity:-4,coherence:-5,exposure:4,trust:-2},ruleOutcome:'compromised',ending:'fourth-name'}
+            ]
+          }
+        ],
+        endings:{
+          accepted:{id:'accepted',code:'OUTCOME / IDENTITY ACCEPTED',title:'보증된 귀환',tone:'allied',status:'IDENTITY ACCEPTED / HANDOFF COMPLETE',summary:'망명 대표단장 이레나 볼트가 귀환자의 신원을 보증했다. 검문소는 그 보증과 현장 확인을 붙여 인계했다.',consequence:'공석 구역의 세 이름 기록은 그대로 남았다. 이 판정은 귀환자 한 명의 현장 신원 확인이다.'},
+          waitlist:{id:'waitlist',code:'OUTCOME / HANDOFF WAITLIST',title:'검문소 대기 명단',tone:'contained',status:'NO RECEIVING COUNTRY / WAITLISTED',summary:'어느 나라도 귀환자를 받지 않았다. 귀환자는 검문소 대기 명단에 남았다.',consequence:'몸의 확인과 인계 판단은 분리됐다. 세 이름 기록은 합치지 않았다.'},
+          'fourth-name':{id:'fourth-name',code:'OUTCOME / FOURTH NAME',title:'넷째 이름',tone:'unstable',status:'FOURTH NAME / ORIGIN UNRESOLVED',summary:'귀환자는 세 기록 어디에도 없는 넷째 이름을 고향으로 기억했다. 검문소는 그 이름을 별도 기록으로 남겼다.',consequence:'이름은 중앙 연표에 등록되지 않았다. 다른 이름 기록과 원인은 미확인이다.'}
+        }
       }
     }
   });
