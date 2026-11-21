@@ -114,7 +114,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
         }
       }
     }
-    assert.equal(reached.size,10);return `${states} states / ${ends} terminal paths / ${reached.size} endings`;
+    assert.equal(reached.size,19);return `${states} states / ${ends} terminal paths / ${reached.size} endings`;
   });
   check('legacy-v1-and-corrupt-save-migration',()=>{
     const seeds=[{pc_pilgrimage_state_v1:JSON.stringify({status:'active',step:2,signal:42,fear:33,corruption:22})},
@@ -141,12 +141,23 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     assert.doesNotMatch(source,/innerHTML|insertAdjacentHTML|createElement\(/);
   });
   check('map-geometry-and-complete-catalog',()=>{
-    const d=context.ProjectCurseMapRoom;assert.equal(d.operations.length,5);assert.equal(d.drilldowns.length,8);
-    assert.equal(d.synchronyEvents[0].points.length,10);assert.equal(context.ProjectCurseMapSignalIndex.items.length,29);
+    const d=context.ProjectCurseMapRoom;assert.equal(d.operations.length,8);assert.equal(d.drilldowns.length,8);
+    assert.equal(d.synchronyEvents[0].points.length,10);assert.equal(context.ProjectCurseMapSignalIndex.items.length,32);
     for(const op of d.operations)for(const s of op.steps){assert.ok(s.time&&s.title&&s.note&&s.route.length);for(const u of s.units)assert.ok(['normal','unstable','split','unknown','lost'].includes(u.status));}
     for(const d of context.ProjectCurseMapRoom.drilldowns)for(const r of d.routes)for(const id of r.siteIds)assert.ok(d.sites.some(s=>s.id===id),id);
     for(const e of d.synchronyEvents)assert.ok(historyIds.has(e.history));
     for(const s of Object.values(context.ProjectCursePilgrimageData.scenarios)){assert.ok(opIds.has(s.operation));for(const id of s.records)assert.ok(archiveIds.has(id)||context.ProjectCurseVerdictArchiveData.records?.some(e=>e.id===id),id);}
+  });
+  check('three-new-field-scenarios-map-links',()=>{
+    const data=context.ProjectCursePilgrimageData.scenarios,verdicts=context.ProjectCurseVerdictArchiveData.records;
+    for(const id of ['interline-night-patrol','red-moat-negotiation','empty-seat-returner-screening']){
+      const scenario=data[id],operation=context.ProjectCurseMapRoom.operations.find(item=>item.id===scenario.operation);
+      assert.ok(operation,id);assert.equal(operation.scenario,id);assert.equal(operation.steps.length,scenario.stages.length,id);
+      assert.equal(operation.steps.map(step=>step.title).join('|'),scenario.stages.map(stage=>stage.title).join('|'),id);
+      const outcomes=verdicts.filter(record=>record.scenarioId===id);assert.equal(outcomes.length,3,id);
+      assert.equal(outcomes.map(record=>record.endingId).sort().join('|'),Object.keys(scenario.endings).sort().join('|'),id);
+    }
+    return '3 scenarios / 18 matched operation steps / 9 verdict outcomes';
   });
   check('regional-zone-grade-display-and-explicit-missing',()=>{
     const {c,host,screen}=screenHarness(context,source,stateSource),grades=context.ProjectCurseWorldHistoryData.worldFramework.zoneGrading.grades;
@@ -184,7 +195,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     const {c,host,screen,timers,media,timeouts,audio}=screenHarness(context,source,stateSource);
     const show=p=>screen.show(p,c.PCApp),button=name=>host.all().find(n=>n.dataset.action===name),click=(name,key)=>{const b=host.all().find(n=>n.dataset.action===name&&(key===undefined||n.dataset.key===key));assert.ok(b,name);host.emit('click',b);};
     show([]);assert.ok(host.textContent.includes('북부전선'));
-    const search=host.querySelector('#tc-map-search');search.value='no-such-map-record';host.emit('input',search);assert.ok(host.textContent.includes('MAP RECORD NOT FOUND'));click('clear-search');assert.ok(host.querySelector('#tc-map-count').textContent.includes('29'));click('filter','synchrony');assert.ok(host.querySelector('#tc-map-count').textContent.includes('10'));
+    const search=host.querySelector('#tc-map-search');search.value='no-such-map-record';host.emit('input',search);assert.ok(host.textContent.includes('MAP RECORD NOT FOUND'));click('clear-search');assert.ok(host.querySelector('#tc-map-count').textContent.includes('32'));click('filter','synchrony');assert.ok(host.querySelector('#tc-map-count').textContent.includes('10'));
     for(const p of [['op','no-such-op'],['region','no-such-region'],['incident','missing'],['synchrony','missing'],['pilgrimage','missing'],['verdict','missing']]){show(p);assert.ok(host.textContent.includes('MAP RECORD NOT FOUND'),p.join('/'));}
     const d=context.ProjectCurseMapRoom;
     for(const r of d.regions)show(['region',r.id]);
