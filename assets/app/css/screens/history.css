@@ -1361,3 +1361,22 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   color: var(--red-ink);
   font-size: var(--fs-xs);
 }
+
+/* 도래자(2026-11-21) — 구분·종족 칸의 이름-값 목록 */
+.tc-hist-kv {
+  display: grid;
+  margin: var(--s2) 0;
+  border: 1px solid var(--line);
+}
+.tc-hist-kv > div {
+  display: grid;
+  grid-template-columns: 9em minmax(0, 1fr);
+  gap: var(--s3);
+  padding: var(--s2) var(--s3);
+}
+.tc-hist-kv > div + div { border-top: 1px solid var(--line); }
+.tc-hist-kv dt { color: var(--text-2); font-size: var(--fs-xs); font-weight: 600; }
+.tc-hist-kv dd { margin: 0; font-size: var(--fs-s); line-height: 1.6; }
+@media (max-width: 520px) {
+  .tc-hist-kv > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}

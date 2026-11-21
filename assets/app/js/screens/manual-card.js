@@ -263,7 +263,7 @@
       y = text(g, value || '—', vx, y + 2, { size: 27, width, max, lineHeight: 36, color: value ? INK.text : INK.text3 }) + 16;
     };
     if (card.source) {
-      row('발현 경로', card.source);
+      row(card.sourceLabel || '발현 경로', card.source);
       row('대가', card.cost, 2);
     } else {
       row('능력', card.cls ? '해당 없음' : '');

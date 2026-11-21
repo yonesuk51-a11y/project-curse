@@ -571,7 +571,10 @@
     );
 
     const factionOptions = [['', '선택'], ...Object.entries(factions()).map(([key, item]) => [key, item.name || key]), ['none', '무소속·민간']];
-    const classOptions = [['', '선택'], ['human', '인간'], ...(fw?.ontology || []).filter((item) => ['PERSON', 'WIELDER'].includes(item.code)).map((item) => [item.code, item.name])];
+    // 도래자(2026-11-21 사용자 결정) — 세계 틀의 arrivals에서 종족을 읽는다. 등록 도래자만 등록 대상이다.
+    const arrivals = fw?.arrivals || null;
+    const classOptions = [['', '선택'], ['human', '인간'], ...(fw?.ontology || []).filter((item) => ['PERSON', 'WIELDER'].includes(item.code)).map((item) => [item.code, item.name]), ...(arrivals ? [[arrivals.code, '도래자 (등록)']] : [])];
+    const raceOptions = [['', '선택'], ...(arrivals?.races || []).map((race) => [race.id, race.name])];
     const sourceOptions = [['', '해당 없음'], ...(fw?.abilitySources || []).map((item) => [item.name, item.name])];
     const tagOptions = [['', '선택'], ...(tagSec?.table?.rows || []).map(([name]) => [name, name])];
     // 출신 목록은 자캐 설정 안내(community-guide-data.js의 origin 항목)에서 읽는다.
@@ -605,6 +608,7 @@
       field('배치선', select('line', [['', '선택'], ...LINES.map(([line, unit]) => [line, unit ? `${line} — ${unit}` : line])], saved.line || '')),
       field('분류', select('class', classOptions, saved.class || ''), '괴이는 등록 대상이 아니다.'),
       field('발현 경로', select('source', sourceOptions, saved.source || ''), '능력자만 적는다. 대가는 교범 기준으로 자동으로 적힌다.'),
+      arrivals ? field('종족', select('race', raceOptions, saved.race || ''), '도래자만 적는다. 머무는 대가는 세계 기록대로 자동으로 적힌다.') : null,
       field('출신', select('origin', originOptions, saved.origin || ''), '자캐 설정 안내의 출신 목록. 고르면 등록증에 한 줄 들어간다.'),
       field('능력 등급', select('grade', gradeOptions, saved.grade || ''), '등급은 세기가 아니라 얼마나 지켜볼지다.'),
       field('소능력', select('minor', minorOptions, saved.minor || ''), '작은 능력 하나. 대가는 교범 표대로 자동으로 적힌다.'),
@@ -669,6 +673,7 @@
         line: data.get('line') || '',
         class: data.get('class') || '',
         source: data.get('source') || '',
+        race: data.get('race') || '',
         tag: data.get('tag') || '',
         origin: data.get('origin') || '',
         grade: data.get('grade') || '',
@@ -741,6 +746,15 @@
       return out;
     }
 
+    function raceOf(v) {
+      return v.class === arrivals?.code ? (arrivals.races || []).find((race) => race.id === v.race) || null : null;
+    }
+    function className(v) {
+      if (v.class === 'human') return '인간';
+      if (arrivals && v.class === arrivals.code) return '도래자';
+      return (fw?.ontology || []).find((item) => item.code === v.class)?.name || '';
+    }
+
     function minorCost(name) {
       const row = [...rowsOf('생활형 소능력'), ...rowsOf('현장형 보조 능력')].find(([item]) => item === name);
       return row ? row[2] : '';
@@ -749,7 +763,7 @@
     function text(v) {
       const blank = '______';
       const faction = v.faction === 'none' ? '무소속·민간' : (factions()[v.faction]?.name || blank);
-      const cls = v.class === 'human' ? '인간' : ((fw?.ontology || []).find((item) => item.code === v.class)?.name || blank);
+      const cls = className(v) || blank;
       const source = (fw?.abilitySources || []).find((item) => item.name === v.source);
       const tagRow = (tagSec?.table?.rows || []).find(([name]) => name === v.tag);
       const lines = [
@@ -758,7 +772,7 @@
         `호출부호 : ${v.callsign || blank}`,
         `소속     : ${faction}`,
         `배치선   : ${v.line || blank}`,
-        `분류     : ${cls}${v.class === 'WIELDER' && source ? ` / ${source.name} — 대가: ${source.cost}` : ''}`,
+        `분류     : ${cls}${v.class === 'WIELDER' && source ? ` / ${source.name} — 대가: ${source.cost}` : ''}${raceOf(v) ? ` / ${raceOf(v).name} — 대가: ${raceOf(v).cost}` : ''}`,
         `출신     : ${v.origin || blank}`,
         `능력 등급: ${v.grade || blank}`,
         `소능력   : ${v.minor ? `${v.minor} — 대가: ${minorCost(v.minor)}` : '없음'}`,
@@ -794,6 +808,7 @@
       const key = v.faction;
       const lineRow = LINES.find(([line]) => line === v.line);
       const source = v.class === 'WIELDER' ? (fw?.abilitySources || []).find((item) => item.name === v.source) : null;
+      const race = raceOf(v);
       const tagRow = (tagSec?.table?.rows || []).find(([name]) => name === v.tag);
       const card = {
         name: v.name,
@@ -801,9 +816,10 @@
         faction: key === 'none' ? '무소속·민간' : (factions()[key]?.name || ''),
         role: key && key !== 'none' ? (root.ProjectCurseFactionAnalysis?.factions?.[key]?.roleLabel || '') : '',
         line: lineRow ? (lineRow[1] ? `${lineRow[0]} — ${lineRow[1]}` : lineRow[0]) : '',
-        cls: v.class === 'human' ? '인간' : ((fw?.ontology || []).find((item) => item.code === v.class)?.name || ''),
-        source: source?.name || '',
-        cost: source?.cost || '',
+        cls: race ? `도래자 · ${race.name}` : className(v),
+        source: source?.name || (race ? `${race.name} — ${race.power}` : ''),
+        cost: source?.cost || race?.cost || '',
+        sourceLabel: race ? '종족' : '',
         tag: tagRow?.[0] || '',
         tagNote: tagRow?.[1] || '',
         origin: v.origin || '',
@@ -907,6 +923,7 @@
       const v = values();
       const sourceSelect = form.elements.source;
       sourceSelect.disabled = v.class !== 'WIELDER';
+      if (form.elements.race) form.elements.race.disabled = !arrivals || v.class !== arrivals.code;
       preview.textContent = text(v);
       saveForm(v);
       redraw();

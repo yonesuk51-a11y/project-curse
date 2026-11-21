@@ -256,6 +256,47 @@
     );
   }
 
+  // 도래자(2026-11-21 사용자 설정·추천안 승인) — 넘어와 머무는 이계 종족. 종족마다 접는 칸, 계약·분대·다툼·거래·골목.
+  function arrivalsBody() {
+    const a = chronology()?.worldFramework?.arrivals;
+    if (!a) return PC.missing('ARRIVALS MISSING', 'worldFramework.arrivals', '도래자 자료가 없습니다.');
+    const index = a.record ? findIndex(a.record) : -1;
+    const kv = (rows) => h('dl.tc-hist-kv', null, rows.filter(([, value]) => value).map(([term, value]) => h('div', null, h('dt', { text: term }), h('dd', { text: value }))));
+    return h('div.tc-hist-ref', { id: 'tc-ref-arrivals' },
+      h('p', { text: a.rule }),
+      kv(a.distinctions),
+      h('div.tc-note.tc-note--caution', null, h('b', { text: '머무는 대가' }), h('p', { text: a.cost })),
+      h('div.tc-hist-parts', { 'aria-label': '도래자 종족' }, a.races.map((race) => h('details.tc-disclosure.tc-hist-sub', { id: `tc-ref-arrival-${race.id}` },
+        h('summary', null, h('span', null, h('b', { text: race.name }), h('small', { text: race.look }))),
+        h('div.tc-disclosure-body', null,
+          kv([['힘', race.power], ['약속', race.bind], ['대가', race.cost], ['주로 보이는 곳', race.region], ['협력', race.work]]),
+          race.note ? h('p.tc-hint', { text: race.note }) : null
+        )
+      ))),
+      h('div.tc-hist-parts', null,
+        h('div.tc-note.tc-note--evidence', { id: 'tc-ref-arrival-contract' }, h('b', { text: a.contract.title }), h('p', { text: a.contract.text }),
+          h('ul.tc-hist-signs', null, a.contract.clauses.map((line) => h('li', { text: line })))),
+        h('div.tc-note.tc-note--evidence', { id: 'tc-ref-arrival-squad' }, h('b', { text: a.squad.title }), h('p', { text: a.squad.text }),
+          h('ul.tc-hist-signs', null, a.squad.rules.map((line) => h('li', { text: line }))))
+      ),
+      h('div.tc-note.tc-note--danger', null, h('b', null, a.dispute.title, ' ', verdictTag(a.dispute.grade)), h('p', { text: a.dispute.text })),
+      h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-affairs', { 'aria-label': '세력과의 거래' }, a.dealings.map((deal) =>
+        h('li', null, h('b', { text: deal.who }), verdictTag(deal.grade), h('p', { text: deal.text }))
+      )),
+      h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-arrival-district' },
+        h('summary', null, h('span', null, h('b', { text: a.district.title }), h('small', { text: '메밀묵 가게, 씨름판, 등록부 창구' }))),
+        h('div.tc-disclosure-body', null,
+          h('p', { text: a.district.text }),
+          h('ul.tc-hist-signs', null, a.district.scenes.map((line) => h('li', { text: line })))
+        )
+      ),
+      a.record ? h('p', null, index >= 0
+        ? h('a', { href: PC.href('history', a.record) }, `첫 계약 — ${records()[index].title}`, h('i', { 'aria-hidden': 'true', text: ' ›' }))
+        : h('span.is-missing', { text: `${a.record} (기록 없음)` })) : null,
+      h('p.tc-hist-caution', { text: `${a.status}. ${a.caution}` })
+    );
+  }
+
   // 레드존 방어선과 시설(2026-11-21 사용자 추천안 승인) — 다섯 겹, 시설 표, 블랙존, 해상 차단선
   function defenseBody() {
     const d = chronology()?.worldFramework?.redzoneDefense;
@@ -746,7 +787,10 @@
     );
     const lifeCount = lifeItems().length;
     return h('div.tc-hist-refs', null,
-      item('WORLD RULES', '세계의 기본 규칙', '존재 구분·발현 대가·몸과 죽음의 규칙', frameworkBody()),
+      item('WORLD RULES', '세계의 기본 규칙', '존재 구분·발현 대가·몸과 죽음의 규칙·도래자', h('div.tc-hist-parts', null,
+        frameworkBody(),
+        sub('도래자 — 건너와 머무는 이들', '도깨비·길손·맡은이·산손·물손·재지기, 이름 계약', arrivalsBody())
+      )),
       item('LAND AND STATES', '땅과 나라', '구역 판정·국가 간 정세·방어선·그늘의 조직', h('div.tc-hist-parts', null,
         sub('구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
         sub('국가 간 정세', '결론이 기록되지 않은 상황', interstateBody()),

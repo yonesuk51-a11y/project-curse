@@ -98,6 +98,14 @@
       }
     });
 
+    // 도래자(2026-11-21) — 종족 이름으로 바로 찾는다
+    const arrivals = W.arrivals;
+    if (arrivals) {
+      add('history', ['history', 'ref', 'arrivals'], '도래자', { sub: '세계의 기본 규칙', keys: ['이계 종족', '이름 계약', '등록표'], text: [arrivals.rule, arrivals.cost] });
+      (arrivals.races || []).forEach((race) => add('history', ['history', 'ref', `arrival-${race.id}`], `도래자 — ${race.name}`, { sub: race.region, keys: [race.name], text: [race.look, race.power, race.cost] }));
+      if (arrivals.district) add('history', ['history', 'ref', 'arrival-district'], arrivals.district.title, { sub: '도래자', keys: ['등불 골목', '메밀묵', '씨름판'], text: [arrivals.district.text, ...arrivals.district.scenes] });
+    }
+
     // 세력 — 약어 세력은 한글 역할(roleLabel)로도 찾는다
     Object.entries(root.ProjectCurseFactionAnalysis?.factions || {}).forEach(([id, faction]) => {
       add('faction', ['faction-info', id], faction.name, {

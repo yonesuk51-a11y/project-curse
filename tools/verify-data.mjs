@@ -576,7 +576,8 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   add('uac-independent-in-history:data',factionAnalysisSource.includes('UN 산하기관은 아니며'));
   add('history-ten-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===10&&worldHistoryData.eras.map(era=>era.id).join('|')==='deep|origin|exposure|institution|separation|fracture|silence|frontiers|mobilization|aftermath');
   // 2026-11-21: 가상 국가 세 기록을 더해 46건에서 49건, 실제 나라 아포칼립스 네 기록을 더해 53건이 됐다(사용자 추천안 승인).
-  add('history-base-fifty-eight-evidence-records',Object.keys(worldHistoryData?.records||{}).length===58&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
+  // 2026-11-21: 도래자 첫 계약 기록(2016 대흑림 길손 계약)을 더해 59건이 됐다(사용자 추천안 승인).
+  add('history-base-fifty-nine-evidence-records',Object.keys(worldHistoryData?.records||{}).length===59&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   // D 혼합: history-deep-world-framework의 데이터/매체 조건.
   add('history-deep-world-framework:data',worldHistoryData?.deepHistoryRecords?.length===8&&worldHistoryData?.worldFramework?.ontology?.length===4&&worldHistoryData.worldFramework.abilitySources?.length===7&&worldHistoryData.worldFramework.civilianSystems?.length===5);
   // 2026-09-25 사용자 설정: 리버스 지점의 피탈자. 네 구분에 끼워 넣지 않고, 분류 근거·교범 교전 규칙·해제 조건·의식과 생사를 함께 둔다.
@@ -589,13 +590,13 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   // 2026-11-21: 우시노다교가 무너뜨린 가상 국가 세 기록을 더해 51건에서 54건이 됐다(사용자 추천안 승인).
   // 2026-11-21: 실제 나라 아포칼립스 네 기록을 더해 58건이 됐다.
   // 2026-11-21: 2031 서일본 해안 대지진, 2033 레드존 징집 증언을 더해 60건이 됐다.
-  add('history-sixty-three-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===63);
+  add('history-sixty-four-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===64);
   add('history-japan-technology-record-depth',japanTechRecords.every(record=>record.id&&record.date&&record.title&&record.summary&&record.author&&record.recipient&&record.purpose&&record.basis&&record.sourceState&&record.fragments?.length>=3&&worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   add('history-japan-technology-chronology',japanTechIds===expectedJapanTechIds,japanTechIds);
   add('history-japan-public-boundaries',japanTechnology?.publicAnchors?.length===4&&japanTechnology.publicAnchors.map(anchor=>anchor.id).join('|')==='fgcs|optical-network|tron|bubble'&&japanTechnology.publicAnchors.every(anchor=>anchor.fact&&anchor.boundary&&anchor.source&&anchor.url.startsWith('https://')));
   add('history-japan-downstream-lineage',japanTechnology?.technologies?.some(item=>item.record==='2003-02-05-city-barrier'&&item.state==='derived')&&japanTechnology.technologies.some(item=>item.record==='2026-08-20-northern-reversal'&&item.state==='derived')&&worldHistoryProse?.records?.['2003-02-05-city-barrier']?.fragments?.some(fragment=>fragment.text.includes('제6계측계획'))&&worldHistoryProse?.records?.['2026-08-20-northern-reversal']?.fragments?.some(fragment=>fragment.text.includes('JID-87')));
   add('history-japan-separation-policy',japanTechRecords[0]?.fragments?.some(fragment=>fragment.text.includes('하위조직으로 활동하지 않으며'))&&japanTechnology?.publicAnchors?.find(anchor=>anchor.id==='bubble')?.boundary?.includes('버블의 발생이나 붕괴를')&&japanTechRecords.every(record=>!record.summary.includes('F.H.C')));
-  add('history-post-2006-chronicle',worldHistoryData?.post2006Records?.length===32&&worldHistoryData.post2006Records.every(record=>record.id&&record.date&&record.title&&record.summary&&record.paragraphs?.length>=3)&&worldHistoryData.records['2030-01-17-broken-crown']?.title==='부서진 왕관 개시');
+  add('history-post-2006-chronicle',worldHistoryData?.post2006Records?.length===33&&worldHistoryData.post2006Records.every(record=>record.id&&record.date&&record.title&&record.summary&&record.paragraphs?.length>=3)&&worldHistoryData.records['2030-01-17-broken-crown']?.title==='부서진 왕관 개시');
   const aftermathRecords=worldHistoryData?.post2006Records?.filter(record=>record.era==='aftermath')||[];
   // 2026-11-21: 도쿄 서부 시간 분열(2035)을 더해 후기 공통 기록이 6건에서 7건이 됐다(사용자 추천안 승인).
   add('history-post-2030-common-chronicle',aftermathRecords.length===12&&aftermathRecords.map(record=>record.id).join('|')==='2031-02-03-branch-seal|2031-06-21-west-japan-quake|2032-08-14-three-bells-compact|2033-09-08-redzone-conscription|2034-04-22-inland-beacon-31|2035-11-19-tokyo-west-time-split|2036-12-12-central-callsign-loss|2034-10-06-free-port-anchor|2037-01-29-second-bunker|2038-06-29-sixth-northern-line|2041-08-19-harbor-delay-zone|2042-10-31-three-night-silence');
@@ -655,14 +656,17 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   const proseText=proseRecords.flatMap(record=>record.fragments||[]).map(fragment=>fragment.text).join('\n');
   const proseTypes=new Set(proseRecords.map(record=>record.documentType));
   const fragmentCounts=new Set(proseRecords.map(record=>record.fragments?.length||0));
-  add('history-authored-prose-sixty-three',worldHistoryProse?.version===VERSION&&proseRecords.length===58&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
+  add('history-authored-prose-sixty-four',worldHistoryProse?.version===VERSION&&proseRecords.length===59&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
   add('history-prose-canon-id-parity',Object.keys(worldHistoryProse?.records||{}).sort().join('|')===Object.keys(worldHistoryData?.records||{}).sort().join('|')&&structureData?.owners?.worldHistoryProse==='assets/js/data/world-history-prose-data.js');
   add('history-eight-document-voices',Object.keys(worldHistoryProse?.documentTypes||{}).length===8&&proseTypes.size===8);
   add('history-variable-fragment-structure',fragmentCounts.size>=3&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='log'))&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='quote')));
   add('history-prose-pattern-audit',!/~의 계기가|결국 .*이어졌다|단순한 .*아니었다|진실은 확인되지|라고 판단했다|에 가까웠다|이때부터|두 번째 이유/.test(proseText));
   const pre2031ProseIds=Object.keys(worldHistoryProse?.records||{}).filter(id=>/^\d{4}/.test(id)&&Number(id.slice(0,4))<=2030);
   // 2026-11-21: 가상 국가 기록 셋(32→35건)과 2009·2027·2029년 실제 나라 기록 셋(35→38건)에도 정보 한계를 적었다.
-  add('history-1975-2030-explicit-record-limits',pre2031ProseIds.length===38&&pre2031ProseIds.every(id=>worldHistoryProse.recordLimits?.[id]&&worldHistoryProse.records[id].archiveLimit===worldHistoryProse.recordLimits[id]));
+  // 2026-11-21: 2016 대흑림 길손 계약에도 정보 한계를 적었다(38→39건).
+  add('history-1975-2030-explicit-record-limits',pre2031ProseIds.length===39&&pre2031ProseIds.every(id=>worldHistoryProse.recordLimits?.[id]&&worldHistoryProse.records[id].archiveLimit===worldHistoryProse.recordLimits[id]));
+  // 2026-11-21 도래자(사용자 설정·추천안 승인) — 여섯 종족 모두 어긋남·힘·약속·대가가 있고, 첫 계약 기록이 연표에 있다. 아이·성적 요소 단어 없음.
+  {const A=worldHistoryData?.worldFramework?.arrivals;add('history-arrivals-six-races-with-cost',!!A&&A.races.length===6&&new Set(A.races.map(r=>r.id)).size===6&&A.races.every(r=>r.name&&r.look&&r.power&&r.bind&&r.cost&&r.region&&r.work)&&A.contract?.clauses?.length>=3&&A.dispute?.grade==='contested'&&A.dealings.every(d=>worldHistoryData.evidenceLevels[d.grade])&&!!worldHistoryData.records[A.record]&&!/아이|어린|소년|소녀|성적/.test(JSON.stringify(A)));}
   // D 혼합: history-2006-reconstruction-boundary의 데이터/매체 조건.
   add('history-2006-reconstruction-boundary:data',worldHistoryProse?.records?.['2006-12-31-aftermath']?.visual?.src?.includes('joint-response-unit-unlisted-eleventh-group')&&worldHistoryProse.records['2006-12-31-aftermath'].visual.caption.includes('실제 단체사진'));
   add('history-northern-front-reconstruction-boundary',worldHistoryProse?.records?.['2026-08-20-northern-reversal']?.visual?.src==='assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png'&&worldHistoryProse.records['2026-08-20-northern-reversal'].visual.className==='RECONSTRUCTED'&&worldHistoryProse.records['2026-08-20-northern-reversal'].visual.caption.includes('실제 전황 사진')&&visualEvidence?.known?.['assets/resources/derived/northern-front-duplicate-signal-reconstruction-concept-v1.png']?.assetId==='VEA-NF-DUP-01');
