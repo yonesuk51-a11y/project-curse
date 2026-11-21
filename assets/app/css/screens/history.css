@@ -947,3 +947,115 @@ a.tc-hist-turn:hover {
 html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   animation: none;
 }
+
+/* 2026-11-21 존 안팎의 삶·구술 증언집·변형/착란 단계 (사용자 추천안 승인) */
+/* 단계 표 — 기시체 변형, 잔류물 착란. 뒤 단계일수록 글자색이 붉어진다 */
+.tc-hist-stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 1px;
+  margin: var(--s3) 0;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.tc-hist-stages li {
+  display: grid;
+  align-content: start;
+  gap: var(--s2);
+  min-width: 0;
+  padding: var(--s3) var(--s4);
+  background: var(--panel);
+}
+.tc-hist-stages b {
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-hist-stages li:nth-child(n+3) b {
+  color: var(--red-ink);
+}
+.tc-hist-stages p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
+/* 유출본 발췌 — 증거 층. 가림 막대는 공용 .tc-redact */
+.tc-hist-excerpt {
+  margin: var(--s2) 0 0;
+  padding: var(--s3);
+  border: 1px solid var(--line-2);
+  border-left: 2px solid var(--red-ink);
+  background: var(--bg);
+}
+.tc-hist-excerpt figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2);
+  margin-bottom: var(--s2);
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-hist-excerpt ol {
+  display: grid;
+  gap: var(--s1, 4px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-hist-excerpt li {
+  /* 바깥 .tc-hist-grid li의 grid를 받지 않는다 — 가림 막대가 글줄 안에 놓여야 한다 */
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  font-family: var(--mono, monospace);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+/* 구술 증언집 — 받아 적은 말은 인용으로, 기록 한계는 작은 글자로 */
+.tc-hist-testimonies {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--s3);
+  margin: var(--s3) 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-hist-testimonies > li {
+  display: grid;
+  align-content: start;
+  gap: var(--s3);
+  min-width: 0;
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.tc-hist-testimonies header {
+  display: grid;
+  gap: var(--s1, 4px);
+  justify-items: start;
+}
+.tc-hist-testimonies header b {
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-hist-testimonies header small {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-hist-testimonies blockquote {
+  display: grid;
+  gap: var(--s2);
+  margin: 0;
+  padding-left: var(--s3);
+  border-left: 1px solid var(--line-2);
+}
+.tc-hist-testimonies blockquote p {
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.7;
+}

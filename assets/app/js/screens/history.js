@@ -165,7 +165,9 @@
         ))
       ),
       possessionBlock(framework.reverseSiteCivilians),
-      risenBlock(framework.risenCorpses)
+      risenBlock(framework.risenCorpses),
+      anchorBlock(framework.anchorCall),
+      mindBlock(framework.reverseMind)
     );
   }
 
@@ -179,8 +181,53 @@
         h('p', { text: item.handling }),
         h('p', { text: item.protocol }),
         h('p', { text: item.boundary }),
+        stageGrid(item.stages, '기시체 변형 단계'),
+        item.stageRule ? h('div.tc-note.tc-note--danger', null, h('b', null, bi('RISEN STAGES', '변형 단계 대응')), h('p', { text: item.stageRule })) : null,
         h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
-        item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `현장 지침의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
+        manualLink(item.manualSection)
+      )
+    );
+  }
+
+  // 단계 표 — 기시체 변형과 잔류물 착란이 같은 모양을 쓴다(2026-11-21 사용자 추천안 승인).
+  function stageGrid(stages, label) {
+    if (!stages?.length) return null;
+    return h('ol.tc-hist-stages', { 'aria-label': label }, stages.map((stage) =>
+      h('li', null, lbl(stage.code), h('b', { text: stage.name }), h('p', { text: stage.text }))
+    ));
+  }
+
+  function manualLink(title) {
+    return title ? h('p', null, h('a', { href: PC.href('field-manual') }, `현장 지침의 ${title} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null;
+  }
+
+  // 앵커 잔류물의 부름(2026-11-21 사용자 추천안 승인) — 잔류물 곁에 오래 머문 사람의 착란 네 단계. 원인은 확인되지 않았다.
+  function anchorBlock(item) {
+    if (!item) return null;
+    return h('details.tc-disclosure.tc-hist-sub', null,
+      h('summary', null, h('span', null, h('b', { text: item.label }))),
+      h('div.tc-disclosure-body', null,
+        h('p', { text: item.rule }),
+        stageGrid(item.stages, '잔류물 착란 단계'),
+        h('p', { text: item.handling }),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
+        manualLink(item.manualSection)
+      )
+    );
+  }
+
+  // 리버스 정신 반응(2026-11-21 사용자 추천안 승인) — 현실의 정신 질환을 가리키는 말로 쓰지 않는다.
+  function mindBlock(item) {
+    if (!item) return null;
+    return h('details.tc-disclosure.tc-hist-sub', null,
+      h('summary', null, h('span', null, h('b', { text: item.label }))),
+      h('div.tc-disclosure-body', null,
+        h('p', { text: item.rule }),
+        h('ul.tc-hist-grid.tc-hist-grid--4', null, item.symptoms.map((symptom) =>
+          h('li', null, lbl(symptom.code), h('b', { text: symptom.name }), h('p', { text: symptom.text }))
+        )),
+        h('p', { text: item.handling }),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution }))
       )
     );
   }
@@ -329,6 +376,60 @@
     );
   }
 
+  // 존 안팎의 삶(2026-11-21 사용자 추천안 승인) — 네 갈래, 항목마다 판정 등급. 교범과 이어지는 항목은 현장 지침으로 잇는다.
+  function zoneLifeBody() {
+    const life = chronology()?.worldFramework?.zoneLife;
+    if (!life) return PC.missing('ZONE LIFE MISSING', 'worldFramework.zoneLife', '존 안팎의 삶 데이터가 없습니다.');
+    const groups = [...new Set(life.items.map((item) => item.group))];
+    return h('div.tc-hist-ref', null,
+      h('div.tc-hist-ref-lead', null,
+        h('p', { text: life.rule }),
+        h('div.tc-note.tc-note--caution', null, h('b', null, bi('LIFE BEHIND THE LINES', '차단선 안팎')), h('p', { text: life.status }))
+      ),
+      groups.map((group) => h('details.tc-disclosure.tc-hist-sub', null,
+        h('summary', null, h('span', null, h('b', { text: group }), h('small', { text: `${life.items.filter((item) => item.group === group).length}건` }))),
+        h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-affairs', null, life.items.filter((item) => item.group === group).map((item) =>
+          h('li', { id: `tc-life-${item.id}` },
+            h('b', { text: item.title }),
+            verdictTag(item.grade),
+            h('p', { text: item.text }),
+            item.excerpt ? h('figure.tc-hist-excerpt', null,
+              h('figcaption', null, lbl('LEAKED EXCERPT'), h('span', { text: item.excerpt.label })),
+              h('ol', null, item.excerpt.lines.map((line) => h('li', null, richText(line))))
+            ) : null,
+            manualLink(item.manualSection)
+          )
+        ))
+      ))
+    );
+  }
+
+  // 구술 증언집(2026-11-21 사용자 추천안 승인) — 받아 적은 말이다. 사실 확인은 하지 않았다. 대사는 문장 개정 대상이 아니다.
+  function testimonyBody() {
+    const oral = chronology()?.worldFramework?.oralTestimony;
+    if (!oral) return PC.missing('ORAL TESTIMONY MISSING', 'worldFramework.oralTestimony', '구술 증언집 데이터가 없습니다.');
+    const life = chronology()?.worldFramework?.zoneLife?.items || [];
+    return h('div.tc-hist-ref', null,
+      h('div.tc-hist-ref-lead', null,
+        h('p', { text: oral.rule }),
+        h('div.tc-note.tc-note--evidence', null, h('b', null, bi('RECORD PURPOSE', '기록 목적')), h('p', { text: oral.purpose }))
+      ),
+      h('ul.tc-hist-testimonies', null, oral.items.map((entry) => {
+        const topic = life.find((item) => item.id === entry.item);
+        return h('li', null,
+          h('header', null,
+            h('b', { text: entry.speaker }),
+            h('small', { text: `${entry.date} · ${entry.place}` }),
+            topic ? PC.tag(topic.title, 'evidence') : h('span.is-missing', { text: `${entry.item} (항목 없음)` })
+          ),
+          h('blockquote', null, entry.lines.map((line) => h('p', { text: line }))),
+          h('p.tc-hist-caution', { text: `기록 한계 — ${entry.limit}` })
+        );
+      })),
+      h('div.tc-note.tc-note--caution', null, h('b', { text: oral.status }), h('p', { text: '증언은 증언자가 겪었다고 말한 것이다. 확정된 사실로 쓰지 않는다.' }))
+    );
+  }
+
   function observationsBody() {
     const framework = chronology()?.worldFramework;
     if (!framework) return PC.missing('FRAMEWORK MISSING', 'worldFramework', '세계 기본 규칙 데이터가 없습니다.');
@@ -405,6 +506,8 @@
       item('ZONE GRADES', '구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
       item('INTERSTATE AFFAIRS', '국가 간 정세', '결론이 기록되지 않은 일곱 상황', interstateBody()),
       item('WORLD DECLINE', '세계가 지고 있다', '종말 시계와 열두 기록', declineBody()),
+      item('ZONE LIFE', '존 안팎의 삶', '행정·존 안쪽·채집과 거래·사람과 사회', zoneLifeBody()),
+      item('ORAL TESTIMONY', '구술 증언집', 'S.I.D 사회 기록반 여섯 증언', testimonyBody()),
       item('UNCONFIRMED PATTERNS', '확인되지 않은 세 규칙', '관측·봉쇄·능력 상한', observationsBody()),
       item('TECHNOLOGY TRACE', '일본 기술 도약의 계보', '1982–1992 계측 계획', technologyBody())
     );

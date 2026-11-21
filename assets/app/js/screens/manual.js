@@ -95,9 +95,10 @@
   }
 
   /* ---------- 목차 (2026-11-21 사용자 결정) ---------- */
-  // 패널이 열셋이라 바로 가기를 둔다. 주소(#field-manual)는 바꾸지 않고 해당 패널로 스크롤한 뒤 제목에 초점을 옮긴다.
+  // 패널이 열여섯이라 바로 가기를 둔다. 주소(#field-manual)는 바꾸지 않고 해당 패널로 스크롤한 뒤 제목에 초점을 옮긴다.
   const TOC = [
-    ['break', '철수 조건'], ['roe', '접촉과 교전'], ['possessed', '피탈자'], ['risen', '기시체'], ['blood', '혈술 대응'], ['tags', '표식 체계'],
+    ['break', '철수 조건'], ['roe', '접촉과 교전'], ['possessed', '피탈자'], ['risen', '기시체'], ['blood', '혈술 대응'],
+    ['percept', '지각 오염'], ['backflow', '역류 대피'], ['cleanup', '청소조'], ['tags', '표식 체계'],
     ['prep', '진입 전 준비'], ['team', '현장조와 계수'], ['loadout', '장비군'], ['wielder', '능력과 대가'],
     ['lines', '편성과 인계'], ['checkpoint', '검문소 배치'], ['register', '등록 양식']
   ];
@@ -240,6 +241,44 @@
       rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
       h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 혈술 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
     ], { bracket: 'danger', slug: 'blood' });
+  }
+
+  /* ---------- 지각 오염 대응 ---------- */
+  // 보면 오염되는 괴이, 잔류물 착란, 리버스 정신 반응(2026-11-21 사용자 추천안 승인). 세계 기본 규칙의 같은 항목과 서로 링크한다.
+  function perceptPanel() {
+    const sec = section('지각 오염 대응');
+    if (!sec?.table) return missingSection('지각 오염 대응');
+    const [, signHead, actHead] = sec.table.headers;
+    const rec = sec.record || {};
+    return panel('ROE / PERCEPTUAL HAZARD', '지각 오염 대응', [
+      paragraphs(sec.paragraphs),
+      h('div.tc-man-table', { role: 'table', 'aria-label': '지각 오염 갈래별 징후와 조치' },
+        h('div.tc-man-tr.tc-man-th', { role: 'row' },
+          sec.table.headers.map((head) => h('span', { role: 'columnheader', text: head }))
+        ),
+        sec.table.rows.map(([kind, sign, act]) => h('div.tc-man-tr', { role: 'row' },
+          h('span', { role: 'cell' }, h('b', { text: kind })),
+          h('span', { role: 'cell', 'data-head': signHead, text: sign }),
+          h('span', { role: 'cell', 'data-head': actHead, text: act })
+        ))
+      ),
+      list(sec.items, 'tc-man-list tc-man-list--rules'),
+      sec.warning ? h('div.tc-note.tc-note--caution', null, bi('RECORD RULE', '기록 규칙'), h('p', { text: sec.warning })) : null,
+      rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
+      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 앵커 잔류물의 부름 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+    ], { bracket: 'danger', slug: 'percept' });
+  }
+
+  /* ---------- 역류 경보와 대피 · 청소조 노출 한도 ---------- */
+  // 같은 모양의 짧은 절 둘(2026-11-21 사용자 추천안 승인). 문단·순서·경고만 그린다.
+  function rulePanel(title, code, slug, noteCode, noteLabel) {
+    const sec = section(title);
+    if (!sec) return missingSection(title);
+    return panel(code, title, [
+      paragraphs(sec.paragraphs),
+      list(sec.items, 'tc-man-list tc-man-list--rules'),
+      sec.warning ? h('div.tc-note.tc-note--caution', null, bi(noteCode, noteLabel), h('p', { text: sec.warning })) : null
+    ], { slug });
   }
 
   /* ---------- 현장조 편성과 계수 ---------- */
@@ -690,6 +729,11 @@
       possessionPanel(),
       risenPanel(),
       bloodPanel(),
+      perceptPanel(),
+      h('div.tc-man-pair', null,
+        rulePanel('역류 경보와 대피', 'BACKFLOW SIREN', 'backflow', 'SHELTER DOOR', '대피소 문'),
+        rulePanel('청소조 노출 한도', 'CLEANUP CREW', 'cleanup', 'SENTENCE CREDIT', '감경 계산')
+      ),
       tagPanel(),
       entryPanels(),
       teamPanel(),
