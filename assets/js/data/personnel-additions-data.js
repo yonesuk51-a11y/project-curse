@@ -58,6 +58,8 @@
       { id: 'fhc-education', label: 'F.H.C 교육기관 감사선', short: '교육기관', code: 'FED', tone: 'corporate', factionKeys: ['fhc'] },
       { id: 'ushinoda-figures', label: '우시노다교 수장·예외 존재', short: '우시노다 추가', code: 'USF', tone: 'cult', factionKeys: ['ushinoda'] },
       { id: 'independent-rites', label: '독립 교단·성채권', short: '독립 교단', code: 'IND', tone: 'cult', factionKeys: [] },
+      // 2026-11-21 사용자 추천안 승인 — 우시노다교가 무너뜨린 가상 국가의 망명 기관
+      { id: 'collapsed-states', label: '무너진 나라 망명 기관', short: '망명 기관', code: 'EXL', tone: 'civilian', factionKeys: [] },
       { id: 'unaffiliated', label: '소속 불명·특수 존재', short: '소속 불명', code: 'UNK', tone: 'civilian', factionKeys: [] }
     ],
     records: withPortraits([
@@ -70,6 +72,31 @@
         abilitySource: '그림자 — 두려움이 있던 자리를 채움(발현 경로 미확인)',
         abilityCost: '그 대가로 무엇을 잃었는지 본인이 기억하지 못한다.',
         limits: ['그림자가 두려움을 채운 시점과 경위는 기록되지 않았다.', '잃은 기억의 범위와 소속 부대는 확인되지 않았다.']
+      },
+      // 2026-11-21 사용자 추천안 승인 — 무너진 나라 인물 셋(초상은 아직 없음)
+      {
+        id: 'tabor-lentz', name: '타보르 렌츠', group: 'collapsed-states',
+        role: '베스카 망명정부 내무 대리', status: 'active', certainty: 'listed', registerYear: '2042',
+        unit: '베스카 망명정부',
+        overview: '베스카 망명정부의 내무 대리다. 격리 구역 안의 타락자를 국민으로 세는 정책을 지킨다. 매주 수도의 옛 주소로 공문을 낸다.',
+        affiliations: [],
+        limits: ['격리 구역 안에 남은 가족의 생사는 확인되지 않았다.', '이웃 나라가 교단의 통행을 눈감았다는 망명정부 주장에 대한 본인 진술은 기록되지 않았다.']
+      },
+      {
+        id: 'irena-volt', name: '이레나 볼트', group: 'collapsed-states',
+        role: '공석 구역 망명 대표단장', status: 'active', certainty: 'listed', registerYear: '2042',
+        unit: '공석 구역 망명 대표단',
+        overview: '공석 구역 망명 대표단을 이끈다. 신임장의 나라 이름 칸은 비어 있다. 본인은 고향을 에델라로 기억한다. 서명할 때마다 나라 이름 철자가 다르게 남는다.',
+        affiliations: [],
+        limits: ['서명 철자가 달라지는 원인은 확인되지 않았다. 그림자교 표식과의 관계도 확인되지 않았다.', '대표단의 의석과 발언권은 유지되지만 국민의 난민 지위는 정해지지 않았다.']
+      },
+      {
+        id: 'marcus-eide', name: '마르쿠스 아이데', group: 'nhc-additional',
+        role: 'N.H.C 오르비나 포위 지휘소장', status: 'active', certainty: 'listed', registerYear: '2042',
+        unit: 'N.H.C 오르비나 포위 지휘소',
+        overview: '오르비나 봉쇄 구역의 포위 지휘소를 맡고 있다. 데드존 혈교 지부의 중재 제안을 거부했다. 결계 안 방송에서 2019년에 돌아오지 않은 정찰조 대원의 목소리를 들었다는 보고를 받았다.',
+        affiliations: [{ key: 'nhc', label: 'N.H.C', role: '오르비나 포위 지휘소장', certainty: 'listed' }],
+        limits: ['방송 속 목소리가 실제 대원인지는 확인되지 않았다.', '중재 거부가 본인 판단인지 상부 지시인지는 기록되지 않았다.']
       },
       {
         id: 'kagami-itsuki', name: '카가미 이츠키', group: 'fhc-education',
