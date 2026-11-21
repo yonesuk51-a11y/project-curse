@@ -138,7 +138,8 @@ html[data-fx="reduced"] #map-room .tc-map-content *::after,
 .tc-map-fog { z-index:1; object-fit:fill; }
 .tc-map-canvas[data-map-id] .tc-map-effects { z-index:2; }
 .tc-map-points { position:absolute; inset:0; z-index:3; pointer-events:none; }
-.tc-map-framed { display:grid; place-items:center; width:40px; height:40px; pointer-events:auto; cursor:pointer; }
+.tc-map-framed { position:absolute; display:grid; place-items:center; width:40px; height:40px; pointer-events:auto; cursor:pointer; }
+.tc-map-framed.is-interline::before { content:""; position:absolute; inset:-3px; border:1px dashed var(--ch-ink); opacity:.8; pointer-events:none; }
 .tc-map-framed[hidden] { display:none; }
 .tc-map-frame-icon { width:36px; height:36px; pointer-events:none; }
 .tc-map-frame-word { position:absolute; inset:0; display:grid; place-items:center; color:var(--text); font:600 10px/1 var(--font); pointer-events:none; }
@@ -164,6 +165,9 @@ html[data-fx="reduced"] #map-room .tc-map-content *::after,
 .tc-map-frame-legend .tc-map-legend { grid-template-columns:repeat(4,minmax(0,1fr)); }
 .tc-map-frame-legend .tc-map-legend li { font-size:var(--fs-xs); gap:2px; }
 .tc-map-frame-legend p { font-size:var(--fs-xs); }
+.tc-map-interline-legend { display:grid; grid-template-columns:28px auto minmax(0,1fr); align-items:center; gap:var(--s2); padding-top:var(--s2); border-top:1px solid var(--line); font-size:var(--fs-xs); }
+.tc-map-interline-swatch { width:28px; height:14px; background:var(--ch-ink); opacity:.2; border-top:1px dashed var(--ch-ink); border-bottom:1px dashed var(--ch-ink); }
+.tc-map-interline-legend > span:last-child { color:var(--text-2); line-height:1.6; }
 .tc-map-observation { position:absolute; left:29px; top:0; width:36px; height:18px; pointer-events:none; }
 .tc-map-signal-line, .tc-map-signal-flow { position:absolute; left:0; top:6px; height:1px; width:32px; background:var(--line-2); }
 .tc-map-signal-flow { background:repeating-linear-gradient(90deg,transparent 0 11px,var(--red-ink) 11px 15px,transparent 15px 24px); animation:tc-map-signal-flow 3.8s linear infinite; }
@@ -186,6 +190,8 @@ html[data-fx="reduced"] .tc-map-signal-flow,
   .tc-map-preview .tc-evidence { grid-template-columns:minmax(0,1fr); }
   .tc-map-frame-legend .tc-map-legend { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .tc-map-world-directory { display:block; }
+  .tc-map-interline-legend { grid-template-columns:28px minmax(0,1fr); }
+  .tc-map-interline-legend > span:last-child { grid-column:2; }
 }
 
 @media (max-width: 1100px) {

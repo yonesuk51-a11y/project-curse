@@ -9,11 +9,12 @@
   }
 
   root.ProjectCurseRegionalDrilldown=freeze({
-    version:'regional-drilldown-v4',
+    version:'regional-drilldown-v5',
     districts:[
       {
-        id:'eastasia-northern-front',region:'eastasia',terrain:'front',
+        id:'eastasia-northern-front',region:'eastasia',terrain:'front',zoneGradeCode:'CORDON',
         label:'북부 차단선',code:'NORTH / CONTINUOUS BARRIER',status:'ADVANTAGE / WAR ACTIVE',confidence:'78%',
+        interline:{layerName:'선간 지대',boundaryIds:['north-third-line','north-sixth-line'],siteIds:['north-false-rescue-origin','north-reclaimed-sites','north-beast-corridor'],shape:{band:'M520 338 C602 269 639 207 690 153 S824 44 900 20 C939 31 969 82 1000 142 C911 202 841 263 775 328 S644 447 566 500 C543 457 527 397 520 338 Z',edges:['M520 338 C602 269 639 207 690 153 S824 44 900 20','M566 500 C644 447 709 388 775 328 S911 202 1000 142'],label:{x:698,y:304}}},
         description:'북동아시아 전구. 2018년 개전 당시 붕괴한 감시선, 2026년 탈환선과 2038년 분산 감시망을 겹쳐 복원했다. 선의 번호가 높아져도 전쟁이 끝났다는 뜻은 아니다.',
         warning:'구조 요청자의 목소리나 호출명만으로 예비대를 이동시키지 말 것. 서로 떨어진 두 계측 노드의 반환 지문이 일치해야 한다.',
         visual:{
@@ -60,7 +61,7 @@
         ]
       },
       {
-        id:'europe-north-sea-blockade',region:'europe',terrain:'northsea',
+        id:'europe-north-sea-blockade',region:'europe',terrain:'northsea',zoneGradeCode:'SEALED',
         label:'피의 호수 봉쇄선',code:'EUROPE / BLOOD LAKE BLOCKADE',status:'RESIDUAL / BLOCKADE ACTIVE',confidence:'84%',
         description:'1986년 유닛2의 진입 경로와 F.H.C 회수 기록, 후대 북해 봉쇄선을 겹쳐 놓은 사건권. 현장 위치 일부는 검열됐다. 지점 간 거리는 항법값이 아니다.',
         warning:'호수의 기원과 실종 인원의 최종 상태는 확인되지 않았다. 잔류 반응만으로 호수가 이동하거나 증식했다고 결론짓지 말 것.',
@@ -109,7 +110,7 @@
         ]
       },
       {
-        id:'gbf-western-marches',region:'southamerica',terrain:'forest',
+        id:'gbf-western-marches',region:'southamerica',terrain:'forest',zoneGradeCode:'UNMEASURED',
         label:'서부 순례 회랑',code:'GBF / WESTERN MARCHES',status:'ROUTE OVERLAP',confidence:'31%',
         description:'서부 진입로는 순례자 증언과 몬수르 교회의 종 운반 기록을 겹쳐 복원했다. 같은 길이 서로 다른 목적지로 이어진다.',
         warning:'비현실감이 발생하면 기존 경로를 역행하지 말 것. 검은 강의 강둑은 지도상 안전지대가 아니다. 이 회랑의 피의 호수 흔적을 북해 사건과 연결하지 말 것.',
@@ -155,7 +156,7 @@
         ]
       },
       {
-        id:'gbf-coastal-belt',region:'southamerica',terrain:'coast',
+        id:'gbf-coastal-belt',region:'southamerica',terrain:'coast',zoneGradeCode:null,zoneGradeStatus:'not-applicable',zoneGradeReason:'남방권은 동원·통신망이라 땅의 판정이 아니다.',
         label:'남방권 해안 동원선',code:'SOUTHERN THEATER / COASTAL MOBILIZATION',status:'ACTIVE OPERATION',confidence:'46%',
         description:'해안 작전망에서 혈맹 특수부대의 집결, 도시 집단 소환과 성위대 침투 신호가 만난다. 남방권은 국가나 자연지리가 아니라 동원·통신 범위를 뜻한다.',
         warning:'표시 상태는 OP-BROKEN-CROWN 최종 판단에 따라 갱신된다. 남방 혈맹, 해안 세력과 협력 성채를 하나의 지휘조직으로 묶어 판정하지 말 것.',
@@ -201,7 +202,7 @@
         ]
       },
       {
-        id:'gbf-inner-refuges',region:'southamerica',terrain:'deep-forest',
+        id:'gbf-inner-refuges',region:'southamerica',terrain:'deep-forest',zoneGradeCode:'UNMEASURED',
         label:'피난 성채 지대',code:'GBF / INNER REFUGES',status:'NO CENTRAL AUTHORITY',confidence:'18%',
         description:'내부 정착권에서는 국가 대신 성채, 촌락, 교회가 서로 피난처를 제공한다. 지도상의 거리는 도보 기록과 일치하지 않는다.',
         warning:'성채 자체가 하나의 교단일 수 있다. 불빛이 없는 성채와 오래된 전장은 우회할 것.',
@@ -246,7 +247,7 @@
         ]
       },
       {
-        id:'deadzone-return-corridor',region:'northamerica',terrain:'dead',
+        id:'deadzone-return-corridor',region:'northamerica',terrain:'dead',zoneGradeCode:'QUARANTINE',
         label:'서부 귀환 회랑',code:'DEAD ZONE / RETURN CORRIDOR',status:'QUARANTINE ACTIVE',confidence:'22%',
         description:'서부 경로에서만 귀환한 순례자 일곱 명의 진술이 겹친다. 왕복 경로 중 귀환 구간만 지도에 남아 있다.',
         warning:'전진 경로를 역산하지 말 것. 무전에서 자신의 목소리를 들으면 현재 진행 방향을 즉시 변경할 것.',
@@ -307,7 +308,7 @@
         ]
       },
       {
-        id:'deadzone-kingdom-graves',region:'northamerica',terrain:'ruins',
+        id:'deadzone-kingdom-graves',region:'northamerica',terrain:'ruins',zoneGradeCode:'SILENT',
         label:'고대 왕국 묘역',code:'DEAD ZONE / KINGDOM GRAVES',status:'HISTORICAL SIGNALS',confidence:'14%',
         description:'묘역에는 멸망한 왕국과 버려진 요새가 겹쳐 있다. 일부 성채는 이름과 주인이 사라진 뒤에도 순례자를 받아들인다.',
         warning:'불빛 없는 요새에 응답하지 말 것. 고유 무기는 봉인 주체가 확인되기 전까지 회수 금지다.',
@@ -352,7 +353,7 @@
         ]
       },
       {
-        id:'deadzone-silent-interior',region:'northamerica',terrain:'silent',
+        id:'deadzone-silent-interior',region:'northamerica',terrain:'silent',zoneGradeCode:'SILENT',
         label:'무응답 내륙',code:'DEAD ZONE / SILENT INTERIOR',status:'MAP TERMINATES HERE',confidence:'7%',
         description:'내륙에서는 지도, 위성, 순례자 진술이 모두 끊긴다. 표식 대부분은 위치가 아니다. 마지막 통신 시각을 지리 좌표처럼 환산한 값이다.',
         warning:'이 지도는 경로 안내가 아니다. 자신이 보내지 않은 구조 신호와 개인 식별 신호에 응답하지 말 것.',
