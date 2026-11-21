@@ -62,6 +62,8 @@
       { id: 'collapsed-states', label: '무너진 나라 망명 기관', short: '망명 기관', code: 'EXL', tone: 'civilian', factionKeys: [] },
       // 2026-11-21 사용자 추천안 승인 — 무대 도시 카르벤 격리시의 사람들
       { id: 'karven-city', label: '카르벤 격리시', short: '카르벤', code: 'KRV', tone: 'civilian', factionKeys: [] },
+      // 2026-11-22 사용자 승인 — 도래자와 프리윌 호송 계약자
+      { id: 'arrivals-freewill', label: '도래자와 계약자', short: '도래자·계약', code: 'ARC', tone: 'civilian', factionKeys: [] },
       { id: 'unaffiliated', label: '소속 불명·특수 존재', short: '소속 불명', code: 'UNK', tone: 'civilian', factionKeys: [] }
     ],
     records: withPortraits([
@@ -313,6 +315,34 @@
         affiliations: [{ key: 'nhc', label: 'N.H.C', role: '전선 대원', certainty: 'listed' }],
         relationships: [{ target: 'mizuno-shun', relation: '같은 사진에 함께 찍힌 대원이다.', certainty: 'listed' }],
         limits: ['사진이 찍힌 장소와 날짜, 뒤이어 일어난 리버스가 어떤 사건인지는 기록되지 않았다.', '리버스 발생 뒤의 생사와 소재는 확인되지 않았다.']
+      },
+      // 2026-11-22 사용자 승인 — 정사에 기록된 도래자와 프리윌 호송 매복 인물 셋
+      {
+        id: 'arrival-guide-register-001', name: '등록부 제1호 길손', group: 'arrivals-freewill',
+        role: '도래자(길손) / U.A.C 도래자 등록부 제1호', status: 'unknown', certainty: 'listed', registerYear: '2016',
+        unit: 'U.A.C 도래자 등록부',
+        overview: '2016년 대흑림 성채 문 앞에 나타나 첫 이름 계약을 맺고 성채 피난로 안내를 맡았다. 맡긴 이름은 등록부에 봉인됐으며 표시 이름은 이름이 아니라 등록 번호다.',
+        affiliations: [{ key: 'uac', label: 'U.A.C', role: '도래자 등록부 제1호', certainty: 'listed' }],
+        limits: ['측량대 장비를 얻은 경위는 확인되지 않았다.', '지금까지 몇 개의 길을 잊었는지는 확인되지 않았다.']
+      },
+      {
+        id: 'lantern-alley-memilmuk-owner', name: '등불 골목 메밀묵집 주인', group: 'arrivals-freewill',
+        role: '도래자(도깨비) / 메밀묵집 주인·씨름판 심판', status: 'active', certainty: 'partial', registerYear: '비공개',
+        unit: '카르벤 항구구 등불 골목',
+        overview: '등불 골목에서 메밀묵 가게를 하고 골목 끝 씨름판의 심판을 본다. 값은 내기로 받는다. 이웃 진술에는 웃음이 줄었다고 적혔다.',
+        affiliations: [{ key: 'uac', label: 'U.A.C', role: '도래자 등록', certainty: 'listed' }],
+        limits: ['웃음이 줄었다는 평가는 이웃 진술로만 남아 있다.', '등록 해와 맡긴 이름은 등록부에 기록돼 있으나 공개되지 않는다.']
+      },
+      {
+        id: 'eimund-varkel', name: '에이문드 바르켈', group: 'arrivals-freewill',
+        role: '프리윌 호송 분대장', status: 'unknown', certainty: 'listed', registerYear: '2038',
+        unit: '프리윌 호송선 2',
+        overview: '2038년 11월 14일 북해 연료선 호송 매복에서 프리윌 호송선 2를 지휘했다. 04:09 연료선과 고속정 사이로 들어갔다.',
+        affiliations: [
+          { key: 'freewill', label: '프리윌', role: '호송선 2 분대장', certainty: 'listed' },
+          { key: 'nhc', label: 'N.H.C', role: '전 해상 차단선 근무', certainty: 'listed' }
+        ],
+        limits: ['고속정의 소속은 확인되지 않았다.', '호송 매복 이후의 생사와 소재는 확인되지 않았다.']
       }
     ])
   });
