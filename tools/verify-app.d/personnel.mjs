@@ -40,7 +40,8 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const additions = P.additions || [];
   const additionGroupIds = new Set((P.additionGroups || []).map((group) => group.id));
   const legacyIds = new Set(records.map((record) => record.id));
-  add('addition-register-separate', additions.length === 28 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
+  // 2026-11-22 사용자 승인 — 도래자 둘과 프리윌 호송 분대장 추가로 28명에서 31명.
+  add('addition-register-separate', additions.length === 31 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
     new Set(additions.map((record) => record.id)).size === additions.length && P.groups.every((group) => !additionGroupIds.has(group.id)),
     `${additions.length} additions`);
   add('addition-records-complete', additions.every((record) => record.registerYear && record.role && record.overview && record.limits?.length &&
@@ -48,6 +49,8 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     (record.affiliations || []).every((item) => F.factions[item.key] && P.certainties[item.certainty]) &&
     (record.relationships || []).every((item) => P.byId[item.target] && P.certainties[item.certainty]) &&
     (!record.abilitySource || record.abilityCost)) && (P.additionGroups || []).every((group) => group.factionKeys.every((key) => F.factions[key])));
+  add('arrivals-freewill-have-no-portraits', ['arrival-guide-register-001', 'lantern-alley-memilmuk-owner', 'eimund-varkel'].every((id) =>
+    P.byId[id] && !P.byId[id].visual?.src && !P.byId[id].formerVisual?.src));
   add('addition-year-and-status-per-record', source.includes('record.registerYear || display().year') && source.includes("isAddition(record) ? own(source()?.statuses, id)?.label"));
   // 사용자 요청에 따른 안내문 두 어절만 교체한다. 연도·상태·대가·기록 한계는 옛 문구와 대조한다.
   add('legacy-display-facts-and-approved-intro', D?.year === '2006' && D.intro === '2006년까지 확인된 인물과 그들이 남긴 사건을 모았다. 이름을 누르면 주요 기록부터 읽을 수 있다.' &&
@@ -120,7 +123,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const roster = () => host.querySelectorAll('[data-per-id]');
     const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
     const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
-    show([]); assert.equal(roster().length, initial); assert.equal(initial, 43); // 2026-11-21: 무너진 나라 인물 셋 추가로 38 -> 40, 카르벤 인물 셋 추가로 40 -> 43
+    show([]); assert.equal(roster().length, initial); assert.equal(initial, 46); // 2026-11-22: 도래자·프리윌 인물 셋 추가로 43 -> 46
     assert.equal(host.querySelectorAll('.tc-per-index [role="tab"]').length, 2);
     assert.equal(host.querySelector('#tc-per-index-tab-legacy').getAttribute('aria-selected'), 'true');
     assert.ok(host.querySelectorAll('.tc-per-roster-fold').every(fold => fold.open === false), '명부 그룹은 제목과 한 줄 설명만 바로 보인다');
