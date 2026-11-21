@@ -315,8 +315,8 @@
     spaced(g, '2px');
     text(g, 'PC-03', 0, -34, { family: MONO, weight: 500, size: 20, color: INK.red, width: 160 });
     spaced(g, '0px');
-    text(g, '등록', 0, 20, { weight: 700, size: 52, color: INK.red, width: 170 });
-    text(g, '현장 인원', 0, 56, { weight: 600, size: 20, color: INK.red, width: 160 });
+    text(g, card.stamp?.[0] || '등록', 0, 20, { weight: 700, size: 52, color: INK.red, width: 170 });
+    text(g, card.stamp?.[1] || '현장 인원', 0, 56, { weight: 600, size: 20, color: INK.red, width: 160 });
     g.restore();
   }
 
@@ -467,6 +467,124 @@
     return filename(card).replace('등록증', '복무기록');
   }
 
+  /* ---------- 교전 보고서·분대 편성표 — 2026-11-21 사용자 추천안 승인 ----------
+     자캐 글에 붙이는 교류용 그림. 같은 판형(1080×1350), 같은 머리·바닥. 번호는 값에서 만든다. */
+  function sheetNo(prefix, text) {
+    return `${prefix}-${hash(text).toString(36).toUpperCase().padStart(7, '0').slice(-6)}`;
+  }
+
+  function drawReport(canvas, rep, assets = {}) {
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    const g = canvas.getContext('2d');
+    if (!g) return false;
+    g.textBaseline = 'alphabetic';
+    const head = { regNo: rep.regNo, issued: rep.issued, stamp: ['보고', '교전 기록'] };
+    background(g);
+    header(g, head, assets.emblem, { title: '교전 보고', code: 'AFTER-ACTION REPORT' });
+    let y = 262;
+    text(g, rep.op || '작전명 미기재', 56, y + 40, { weight: 600, size: 44, width: 640, color: rep.op ? INK.text : INK.text3 });
+    g.textAlign = 'right';
+    text(g, rep.date || '—', WIDTH - 56, y + 38, { family: MONO, weight: 500, size: 28, width: 320, color: INK.text2 });
+    g.textAlign = 'left';
+    y += 76;
+    const row = (name, value, color) => {
+      label(g, name, 56, y);
+      text(g, value || '—', 236, y + 2, { size: 28, width: WIDTH - 292, color: color || (value ? INK.text : INK.text3) });
+      y += 46;
+    };
+    row('장소', rep.place);
+    row('분대', rep.squad);
+    const counted = rep.out !== '' && rep.back !== '';
+    const mismatch = counted && rep.out !== rep.back;
+    row('인원', counted ? `출발 ${rep.out} / 귀환 ${rep.back}${mismatch ? ' — 계수 불일치' : ''}` : '', mismatch ? INK.redInk : null);
+    g.fillStyle = INK.line;
+    g.fillRect(56, y, WIDTH - 112, 2);
+    y += 46;
+
+    // 현장 시각 — 줄마다 시각·종류·내용
+    spaced(g, '3px');
+    text(g, 'FIELD TIMELINE / 현장 시각', 56, y, { family: COND, weight: 600, size: 20, color: INK.text3, width: 600 });
+    spaced(g, '0px');
+    y += 44;
+    (rep.lines || []).slice(0, 8).forEach((line) => {
+      if (y > HEIGHT - 400) return;
+      text(g, line.time || '--:--', 56, y, { family: MONO, weight: 500, size: 28, color: INK.redInk, width: 110 });
+      if (line.kind) {
+        g.font = font(600, 20, SANS);
+        const w = Math.min(150, g.measureText(line.kind).width + 20);
+        g.strokeStyle = 'rgba(226, 220, 214, 0.35)';
+        g.lineWidth = 2;
+        g.strokeRect(176, y - 26, w, 34);
+        text(g, line.kind, 186, y - 2, { weight: 600, size: 20, color: INK.text2, width: w - 16 });
+      }
+      y = text(g, line.text || '', 344, y, { size: 26, width: WIDTH - 400, max: 2, lineHeight: 34 }) + 14;
+    });
+    y = Math.max(y, HEIGHT - 390);
+    g.fillStyle = INK.line;
+    g.fillRect(56, y, WIDTH - 112, 2);
+    y += 44;
+    row('탄약', rep.ammo);
+    row('피해', rep.damage, rep.damage ? INK.redInk : null);
+    label(g, '남은 것', 56, y);
+    text(g, rep.result || '—', 236, y + 2, { size: 28, width: 480, max: 2, lineHeight: 36, color: rep.result ? INK.text : INK.text3 });
+    y += 84;
+    if (rep.grade) {
+      label(g, '기록 등급', 56, y);
+      text(g, rep.grade, 236, y + 2, { weight: 600, size: 26, width: 460, color: INK.text2 });
+    }
+    footer(g, head);
+    return true;
+  }
+
+  function drawSquad(canvas, sq, assets = {}) {
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    const g = canvas.getContext('2d');
+    if (!g) return false;
+    g.textBaseline = 'alphabetic';
+    const head = { regNo: sq.regNo, issued: sq.issued, stamp: ['편성', '현장조'] };
+    background(g);
+    header(g, head, assets.emblem, { title: '분대 편성표', code: 'SQUAD ROSTER' });
+    let y = 262;
+    text(g, sq.name || '분대 호출부호 미기재', 56, y + 44, { family: MONO, weight: 500, size: 46, width: 600, color: sq.name ? INK.redInk : INK.text3 });
+    g.textAlign = 'right';
+    text(g, sq.line || '—', WIDTH - 56, y + 30, { size: 26, width: 380, color: INK.text2 });
+    text(g, sq.zone || '', WIDTH - 56, y + 64, { size: 24, width: 380, color: INK.text3 });
+    g.textAlign = 'left';
+    y += 110;
+    const seats = (sq.seats || []).filter((seat, index) => index < 5 || seat.callsign || seat.name);
+    const colW = Math.floor((WIDTH - 112 - 16) / 2);
+    const cellH = 196;
+    seats.forEach((seat, index) => {
+      const x = 56 + (index % 2) * (colW + 16);
+      const top = y + Math.floor(index / 2) * (cellH + 14);
+      g.strokeStyle = seat.extra ? 'rgba(224, 112, 111, 0.55)' : INK.line;
+      g.lineWidth = 2;
+      g.setLineDash(seat.extra ? [8, 6] : []);
+      g.strokeRect(x, top, colW, cellH);
+      g.setLineDash([]);
+      spaced(g, '3px');
+      text(g, seat.seat, x + 22, top + 38, { family: COND, weight: 600, size: 22, color: seat.extra ? INK.redInk : INK.text3, width: colW - 44 });
+      spaced(g, '0px');
+      text(g, seat.callsign || '—', x + 22, top + 84, { family: MONO, weight: 500, size: 30, color: seat.callsign ? INK.redInk : INK.text3, width: colW - 44 });
+      text(g, seat.name || '비어 있음', x + 22, top + 130, { weight: 600, size: 34, color: seat.name ? INK.text : INK.text3, width: colW - 44 });
+      if (seat.note) text(g, seat.note, x + 22, top + 170, { size: 22, color: INK.text2, width: colW - 44 });
+    });
+    const rows = Math.ceil(seats.length / 2);
+    y += rows * (cellH + 14) + 30;
+    const filled = seats.filter((seat) => !seat.extra && (seat.callsign || seat.name)).length;
+    const extra = seats.some((seat) => seat.extra && (seat.callsign || seat.name));
+    text(g, `계수 — ${['영', '하나', '둘', '셋', '넷', '다섯'][filled] || filled}${extra ? (filled === 1 ? '와 하나' : '과 하나') : ''}. 들어갈 때, 나올 때, 인계할 때 따로 센다.`, 56, y, { size: 24, color: INK.text2, width: WIDTH - 112 });
+    footer(g, head);
+    return true;
+  }
+
+  function sheetFilename(kind, name) {
+    const base = String(name || '무명').replace(/[\\/:*?"<>|\u0000-\u001f]/g, '').replace(/\s+/g, '-').slice(0, 40) || '무명';
+    return `project-curse-${kind}-${base}.png`;
+  }
+
   // 기록 카드(2026-11-21 사용자 결정) — 상황판 '오늘의 기록 한 장'을 같은 판형(1080×1350)으로 그린다. 교류용 사본 줄을 넣는다.
   // record = { kind, text, source, title }
   function drawRecord(canvas, record, assets = {}) {
@@ -580,5 +698,5 @@
     return `project-curse-등록증-${base}.png`;
   }
 
-  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawService, serviceFilename, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
+  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawService, serviceFilename, drawReport, drawSquad, sheetNo, sheetFilename, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
 })(window);

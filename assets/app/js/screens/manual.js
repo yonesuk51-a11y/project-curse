@@ -12,6 +12,8 @@
   const STORAGE_KEY = 'pc6_field_register_v1';
   // 화면을 떠날 때(hide) 정리하는 타이머와, 없는 항목 안내를 넣는 자리
   let drawTimer = 0;
+  // 교전 보고서·분대 편성표(2026-11-21) 다시 그리기 타이머
+  const sheetTimers = { report: 0, squad: 0 };
   let stampTimer = 0;
   let focusTimer = 0;
   let notice = null;
@@ -118,6 +120,8 @@
     checkpoint: '바깥에서 안쪽으로 한 방향, 일곱 단계.',
     drill: '기계 판정에 서명할지 보류할지 고른다. 정답은 없다.',
     register: '자캐 등록 양식과 등록증 그림(PNG).',
+    report: '분 단위 시각·인원 계수·남은 것. 액션 글에 붙이는 교전 보고.',
+    squad: '여러 자캐를 한 분대로. 다섯 자리와 협력원.',
     // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
     'ability-grade': 'L0–L4. 등급은 세기가 아니라 얼마나 지켜볼지다.',
     fitness: '관측 신뢰도·이름 반응·계수·오염 내성·교전·남은 기억 — A–E.',
@@ -135,7 +139,7 @@
     roe: { title: '교전 규칙', hint: '철수·교전·피탈자·기시체·혈술·지각 오염·표식' },
     field: { title: '현장 절차', hint: '진입·현장조·역류·청소조·인계·검문소·서명 연습' },
     gear: { title: '장비와 능력', hint: '능력 등급·소능력·장비군·2030년대 장비' },
-    register: { title: '자캐 등록', hint: '등록 양식·등록증 그림' }
+    register: { title: '자캐 등록', hint: '등록 양식·등록증·교전 보고서·분대 편성표' }
   };
   let manualTabs = null;
 
@@ -558,6 +562,221 @@
     try {
       root.localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
     } catch (_error) { /* 저장하지 못해도 이번 방문에서는 쓴다 */ }
+  }
+
+  /* ---------- 교전 보고서·분대 편성표 (2026-11-21 사용자 추천안 승인) ----------
+     자캐 액션 글에 붙이는 양식. 글 양식 복사와 그림(PNG) 저장. 값은 이 기기에만 저장한다. 게임 점수·보상은 없다. */
+  function loadSheet(key) {
+    try { return JSON.parse(root.localStorage.getItem(key) || '{}') || {}; } catch (_error) { return {}; }
+  }
+  function saveSheet(key, value) {
+    try { root.localStorage.setItem(key, JSON.stringify(value)); } catch (_error) { /* 이번 방문에서만 쓴다 */ }
+  }
+  function copyTo(content, status) {
+    const done = () => { status.textContent = '복사했습니다.'; root.setTimeout(() => { status.textContent = ''; }, 2400); };
+    const fallback = () => {
+      const area = h('textarea', { 'aria-hidden': 'true', class: 'tc-sr' });
+      area.value = content;
+      root.document.body.append(area);
+      area.select();
+      try { root.document.execCommand('copy'); done(); } catch (_error) { status.textContent = '복사하지 못했습니다. 양식을 직접 선택해 복사하십시오.'; }
+      area.remove();
+    };
+    if (root.navigator.clipboard?.writeText) root.navigator.clipboard.writeText(content).then(done, fallback);
+    else fallback();
+  }
+  const sheetField = (label, control, hint) => h('label.tc-man-field', null, h('span', { text: label }), control, hint ? h('small', { text: hint }) : null);
+  const sheetSelect = (name, options, value) => h('select', { name }, options.map(([v, t]) => h('option', { value: v, selected: v === value ? true : null, text: t })));
+  const sheetInput = (name, value, max, extra = {}) => h('input', { name, type: 'text', maxlength: String(max), autocomplete: 'off', value: value || '', ...extra });
+
+  function sheetShell(kind, form, preview, canvas, onSave, copyLabel) {
+    const status = h('span.tc-man-copy-status', { role: 'status' });
+    return h('div.tc-man-sheet', null,
+      h('div.tc-man-register', null,
+        form,
+        h('div.tc-man-output', null,
+          lbl(`${kind} / 글 양식`),
+          preview,
+          h('div.tc-btnrow', null,
+            h('button.tc-btn.tc-btn--primary', { type: 'button', onclick: () => copyTo(preview.textContent, status) }, copyLabel),
+            canvas ? h('button.tc-btn', { type: 'button', onclick: () => onSave(status) }, '그림 저장 (PNG)') : null,
+            status)
+        )
+      ),
+      canvas ? h('div.tc-man-card-view.tc-man-sheet-view', null, canvas) : null
+    );
+  }
+
+  const REPORT_KEY = 'pc6_field_report_v1';
+  const REPORT_ROWS = 6;
+  function reportPanel() {
+    const Card = root.PCRegisterCard || null;
+    const forms = root.ProjectCurseCommunityGuide?.forms || {};
+    const levels = Object.entries(root.ProjectCurseWorldHistoryData?.evidenceLevels || {});
+    const saved = loadSheet(REPORT_KEY);
+    const lines = Array.from({ length: REPORT_ROWS }, (_, i) => saved.lines?.[i] || {});
+    const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
+      sheetField('작전명', sheetInput('op', saved.op, 30), '예: 셋째 역 재진입'),
+      sheetField('일시', sheetInput('date', saved.date, 24, { placeholder: '예: 2042.03.14 23:00' })),
+      sheetField('장소', sheetSelect('place', [['', '선택'], ...(forms.reportPlaces || []).map((p) => [p, p])], saved.place || '')),
+      sheetField('분대 호출부호', sheetInput('squad', saved.squad, 24)),
+      h('div.tc-man-counts', null,
+        sheetField('출발 인원', h('input', { name: 'out', type: 'number', min: '0', max: '99', value: saved.out ?? '' })),
+        sheetField('귀환 인원', h('input', { name: 'back', type: 'number', min: '0', max: '99', value: saved.back ?? '' }))
+      ),
+      h('fieldset.tc-man-field.tc-man-timeline', null,
+        h('legend', { text: '현장 시각 (여섯 줄까지)' }),
+        lines.map((line, i) => h('div.tc-man-tl-row', null,
+          h('input', { name: `t${i}`, type: 'text', maxlength: '5', inputmode: 'numeric', placeholder: '21:12', 'aria-label': `${i + 1}번째 줄 시각`, value: line.time || '' }),
+          h('select', { name: `k${i}`, 'aria-label': `${i + 1}번째 줄 종류` }, [['', '종류'], ...(forms.reportKinds || []).map((k) => [k, k])].map(([v, t]) => h('option', { value: v, selected: v === (line.kind || '') ? true : null, text: t }))),
+          h('input', { name: `x${i}`, type: 'text', maxlength: '48', autocomplete: 'off', placeholder: '무엇이 있었나', 'aria-label': `${i + 1}번째 줄 내용`, value: line.text || '' })
+        ))
+      ),
+      sheetField('탄약', sheetInput('ammo', saved.ammo, 30, { placeholder: '예: 탄창 14 / 조명탄 2' })),
+      sheetField('피해', sheetInput('damage', saved.damage, 30, { placeholder: '예: 경상 1' })),
+      h('label.tc-man-field.tc-man-field--wide', null, h('span', { text: '남은 것' }), sheetInput('result', saved.result, 60), h('small', { text: '이긴 쪽이 아니라 남은 것을 적는다.' })),
+      sheetField('기록 등급', sheetSelect('grade', [['', '선택 안 함'], ...levels.map(([, level]) => [level.label, level.label])], saved.grade || ''), '이 보고를 얼마나 믿을 수 있는지 쓴 사람이 정한다.')
+    );
+    const preview = h('pre.tc-man-preview', { 'aria-live': 'polite' });
+    const canvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '교전 보고 그림 미리보기' }) : null;
+    const emblem = Card ? Card.emblem(() => draw()) : null;
+    const values = () => {
+      const d = new FormData(form);
+      const num = (n) => { const t = String(d.get(n) ?? '').trim(); return t === '' ? '' : String(Math.max(0, Math.min(99, Math.round(Number(t)) || 0))); };
+      return {
+        op: String(d.get('op') || '').trim(), date: String(d.get('date') || '').trim(), place: d.get('place') || '', squad: String(d.get('squad') || '').trim(),
+        out: num('out'), back: num('back'),
+        lines: Array.from({ length: REPORT_ROWS }, (_, i) => ({ time: String(d.get(`t${i}`) || '').trim(), kind: d.get(`k${i}`) || '', text: String(d.get(`x${i}`) || '').trim() })),
+        ammo: String(d.get('ammo') || '').trim(), damage: String(d.get('damage') || '').trim(), result: String(d.get('result') || '').trim(), grade: d.get('grade') || ''
+      };
+    };
+    const filled = (v) => v.lines.filter((line) => line.time || line.kind || line.text);
+    const text = (v) => {
+      const blank = '______';
+      const mismatch = v.out !== '' && v.back !== '' && v.out !== v.back;
+      return [
+        `■ 교전 보고 — ${v.op || blank}`,
+        `일시     : ${v.date || blank}`,
+        `장소     : ${v.place || blank}`,
+        `분대     : ${v.squad || blank}`,
+        `인원     : 출발 ${v.out || '—'} / 귀환 ${v.back || '—'}${mismatch ? ' — 계수 불일치, S.I.D 분리 심사' : ''}`,
+        '— 현장 시각 —',
+        ...(filled(v).length ? filled(v).map((line) => `${line.time || '--:--'}  ${line.kind ? `[${line.kind}] ` : ''}${line.text}`) : [blank]),
+        `탄약     : ${v.ammo || blank}`,
+        `피해     : ${v.damage || blank}`,
+        `남은 것  : ${v.result || blank}`,
+        ...(v.grade ? [`기록 등급: ${v.grade}`] : [])
+      ].join('\n');
+    };
+    const sheet = (v) => ({ ...v, lines: filled(v), regNo: Card.sheetNo('AAR', `${v.op}|${v.squad}|${v.date}`), issued: Card.dtg() });
+    function draw() {
+      if (!Card || !canvas) return;
+      root.clearTimeout(sheetTimers.report);
+      sheetTimers.report = root.setTimeout(() => Card.drawReport(canvas, sheet(values()), { emblem }), 40);
+    }
+    function update() {
+      const v = values();
+      preview.textContent = text(v);
+      saveSheet(REPORT_KEY, v);
+      draw();
+    }
+    function save(status) {
+      const v = values();
+      Card.drawReport(canvas, sheet(v), { emblem });
+      Card.save(canvas, Card.sheetFilename('교전보고', v.op || v.squad)).then((ok) => {
+        status.textContent = ok ? '저장했습니다. 액션 글에 그대로 붙이면 됩니다.' : '저장하지 못했습니다. 그림을 길게 눌러 저장해 보십시오.';
+        root.PCAudio?.cue(ok ? 'channel.command' : 'system.denied');
+      });
+    }
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    update();
+    Card?.fontsReady().then(draw);
+    return panel('AFTER-ACTION REPORT', '교전 보고서 양식', [
+      h('p.tc-man-lead', { text: '교전이 끝나면 분 단위 시각으로 남긴다. 무엇을 쐈는지보다 무엇을 셌는지가 먼저다. 자캐 액션 글에 그대로 붙일 수 있다.' }),
+      sheetShell('AFTER-ACTION', form, preview, canvas, save, '보고서 복사')
+    ], { slug: 'report', open: false });
+  }
+
+  const SQUAD_KEY = 'pc6_field_squad_v1';
+  const COUNT_WORDS = ['영', '하나', '둘', '셋', '넷', '다섯'];
+  function squadPanel() {
+    const Card = root.PCRegisterCard || null;
+    const team = section('현장조 편성과 계수');
+    const seatNames = [...(team?.table?.rows || []).map(([seat]) => seat), '협력원'];
+    const arrivals = framework()?.arrivals;
+    const saved = loadSheet(SQUAD_KEY);
+    const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
+      sheetField('분대 호출부호', sheetInput('name', saved.name, 20, { placeholder: '예: 까마귀' })),
+      sheetField('배치선', sheetSelect('line', [['', '선택'], ...LINES.map(([line, unit]) => [line, unit ? `${line} — ${unit}` : line])], saved.line || '')),
+      sheetField('작전 구역', sheetInput('zone', saved.zone, 30, { placeholder: '예: 카르벤 아랫역' })),
+      h('fieldset.tc-man-field.tc-man-seats', null,
+        h('legend', { text: '자리 (교범의 다섯 자리와 협력원)' }),
+        seatNames.map((seat, i) => {
+          const s = saved.seats?.[i] || {};
+          return h('div.tc-man-seat', null,
+            h('b', { text: i === 5 ? `${seat} (선택)` : seat }),
+            h('input', { name: `c${i}`, type: 'text', maxlength: '20', autocomplete: 'off', placeholder: '호출부호', 'aria-label': `${seat} 호출부호`, value: s.callsign || '' }),
+            h('input', { name: `n${i}`, type: 'text', maxlength: '20', autocomplete: 'off', placeholder: '이름', 'aria-label': `${seat} 이름`, value: s.name || '' }),
+            h('input', { name: `o${i}`, type: 'text', maxlength: '30', autocomplete: 'off', placeholder: i === 5 ? '예: 등록 길손' : '한 줄', 'aria-label': `${seat} 비고`, value: s.note || '' })
+          );
+        }),
+        h('small', { text: arrivals ? '협력원은 다섯 자리 밖의 여섯 번째 자리다. 등록 도래자가 맡는다. 계수는 "다섯과 하나"로 센다.' : '' })
+      )
+    );
+    const preview = h('pre.tc-man-preview', { 'aria-live': 'polite' });
+    const canvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '분대 편성표 그림 미리보기' }) : null;
+    const emblem = Card ? Card.emblem(() => draw()) : null;
+    const values = () => {
+      const d = new FormData(form);
+      return {
+        name: String(d.get('name') || '').trim(), line: d.get('line') || '', zone: String(d.get('zone') || '').trim(),
+        seats: seatNames.map((seat, i) => ({ seat, extra: i === 5, callsign: String(d.get(`c${i}`) || '').trim(), name: String(d.get(`n${i}`) || '').trim(), note: String(d.get(`o${i}`) || '').trim() }))
+      };
+    };
+    const lineText = (v) => { const row = LINES.find(([line]) => line === v.line); return row ? (row[1] ? `${row[0]} — ${row[1]}` : row[0]) : ''; };
+    const text = (v) => {
+      const blank = '______';
+      const main = v.seats.filter((seat) => !seat.extra);
+      const extra = v.seats.find((seat) => seat.extra && (seat.callsign || seat.name));
+      const count = main.filter((seat) => seat.callsign || seat.name).length;
+      return [
+        `■ 분대 편성 — ${v.name || blank}`,
+        `배치선   : ${lineText(v) || blank}`,
+        `작전 구역: ${v.zone || blank}`,
+        ...main.map((seat) => `${seat.seat.padEnd(4, '　')}: ${seat.callsign || '—'} / ${seat.name || '비어 있음'}${seat.note ? ` — ${seat.note}` : ''}`),
+        ...(extra ? [`협력원  : ${extra.callsign || '—'} / ${extra.name || '—'}${extra.note ? ` — ${extra.note}` : ''}`] : []),
+        `계수     : ${COUNT_WORDS[count] || count}${extra ? (count === 1 ? '와 하나' : '과 하나') : ''}`
+      ].join('\n');
+    };
+    const sheet = (v) => ({ ...v, line: lineText(v), regNo: Card.sheetNo('SQD', `${v.name}|${v.zone}`), issued: Card.dtg() });
+    function draw() {
+      if (!Card || !canvas) return;
+      root.clearTimeout(sheetTimers.squad);
+      sheetTimers.squad = root.setTimeout(() => Card.drawSquad(canvas, sheet(values()), { emblem }), 40);
+    }
+    function update() {
+      const v = values();
+      preview.textContent = text(v);
+      saveSheet(SQUAD_KEY, v);
+      draw();
+    }
+    function save(status) {
+      const v = values();
+      Card.drawSquad(canvas, sheet(v), { emblem });
+      Card.save(canvas, Card.sheetFilename('분대편성', v.name)).then((ok) => {
+        status.textContent = ok ? '저장했습니다. 함께 쓰는 사람들과 나누면 됩니다.' : '저장하지 못했습니다. 그림을 길게 눌러 저장해 보십시오.';
+        root.PCAudio?.cue(ok ? 'channel.command' : 'system.denied');
+      });
+    }
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    update();
+    Card?.fontsReady().then(draw);
+    return panel('SQUAD ROSTER', '분대 편성표', [
+      h('p.tc-man-lead', { text: '여러 사람의 자캐를 한 분대로 묶는다. 자리마다 호출부호와 이름을 넣는다. 자리는 교범의 현장조 편성을 따른다.' }),
+      sheetShell('SQUAD ROSTER', form, preview, canvas, save, '편성표 복사')
+    ], { slug: 'squad', open: false });
   }
 
   function registerPanel() {
@@ -1046,7 +1265,7 @@
             tablePanel('신형 반-리버스 장비', 'ANTI-REVERSE', 'anti-reverse')
           )
         ],
-        register: [registerPanel()]
+        register: [registerPanel(), reportPanel(), squadPanel()]
       })
     );
   }
@@ -1076,7 +1295,7 @@
   }
 
   function hide() {
-    [drawTimer, stampTimer, focusTimer].forEach((timer) => root.clearTimeout(timer));
+    [drawTimer, stampTimer, focusTimer, sheetTimers.report, sheetTimers.squad].forEach((timer) => root.clearTimeout(timer));
   }
 
   PC.screen({ id: 'field-manual', mount, show, hide });

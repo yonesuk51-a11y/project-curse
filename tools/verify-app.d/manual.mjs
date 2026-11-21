@@ -77,4 +77,15 @@ export default function ({ add, read, context, app }) {
     assert.ok(/n >= 90 \? '통과' : n >= 70 \? '재검사'/.test(manual), '일치율 경계값이 교범과 같다');
     assert.ok(card.includes('function drawService') && card.includes('[0.7, 0.9]') && card.includes('serviceFilename'), '복무 기록 그림');
   });
+
+  // 교전 보고서·분대 편성표(2026-11-21 사용자 추천안 승인) — 자리는 교범에서, 장소·종류는 안내 데이터에서 읽는다. 점수·보상 없음.
+  check('register-report-and-squad-sheets', () => {
+    const forms = context.ProjectCurseCommunityGuide?.forms;
+    assert.ok(forms?.reportPlaces?.length >= 8 && forms?.reportKinds?.includes('계수 불일치'), '양식 값');
+    assert.ok(manual.includes('register: [registerPanel(), reportPanel(), squadPanel()]'), '자캐 등록 탭에 셋');
+    assert.ok(manual.includes("section('현장조 편성과 계수')") && manual.includes("'협력원'"), '자리는 교범 다섯과 협력원');
+    assert.ok(manual.includes('sheetTimers.report, sheetTimers.squad'), '떠날 때 타이머 정리');
+    assert.ok(!/점수|보상|레벨|경험치/.test(manual.slice(manual.indexOf('function reportPanel'), manual.indexOf('function registerPanel'))), '게임 장치 없음');
+    assert.ok(card.includes('function drawReport') && card.includes('function drawSquad') && card.includes('sheetFilename'), '그림');
+  });
 }
