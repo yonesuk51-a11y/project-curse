@@ -56,4 +56,25 @@ export default function ({ add, read, context, app }) {
     const form = context.ProjectCurseCommunityGuide?.guide?.sections?.find?.((section) => section.id === 'form');
     assert.equal(form?.link?.route?.join('/'), 'field-manual/register', '자캐 설정 안내의 등록 양식 연결');
   });
+
+  // 복무 기록(2026-11-21 사용자 결정) — 전 소속은 안내 데이터, 계측값·자격은 교범 절에서 읽는다. 실제 부대는 전 소속으로만.
+  check('register-service-record', () => {
+    const guide = context.ProjectCurseCommunityGuide?.guide?.sections || [];
+    const service = guide.find((section) => section.id === 'service');
+    assert.equal(service?.groups?.length, 4, '전 소속 묶음 넷');
+    const units = service.groups.flatMap((group) => group.items.map(([name]) => name));
+    assert.equal(new Set(units).size, units.length, '전 소속 이름이 겹치지 않는다');
+    assert.ok(!units.some((name) => /바그너|Wagner|스페츠나즈|Spetsnaz|IDF|이스라엘|러시아|우크라이나/.test(name)), '진행 중인 전쟁 부대·실제 PMC 없음');
+    assert.ok(service.paragraphs.some((text) => text.includes('전 소속으로만')), '실명 부대 사용 규칙');
+    const doc = context.ProjectCurseArchiveDocuments?.documents?.NHC_Manual_891219;
+    const sec = doc?.sections?.find((item) => item.title === '복무 기록과 계측값');
+    const skills = doc?.sections?.find((item) => item.title === '현장 자격과 특기');
+    assert.equal(sec?.table?.rows?.length, 5, '계측값 다섯');
+    assert.ok(sec.discharge?.length && sec.physical?.length === 3 && sec.laugh?.length, '고르는 칸 값');
+    assert.equal(skills?.table?.rows?.length, 14, '자격 열넷');
+    assert.ok(manual.includes("item.id === 'service'") && manual.includes("section('복무 기록과 계측값')") && manual.includes("rowsOf('현장 자격과 특기')"), '양식이 데이터에서 읽는다');
+    assert.ok(manual.includes('picked >= 3') && manual.includes('.slice(0, 3)'), '자격은 셋까지');
+    assert.ok(/n >= 90 \? '통과' : n >= 70 \? '재검사'/.test(manual), '일치율 경계값이 교범과 같다');
+    assert.ok(card.includes('function drawService') && card.includes('[0.7, 0.9]') && card.includes('serviceFilename'), '복무 기록 그림');
+  });
 }

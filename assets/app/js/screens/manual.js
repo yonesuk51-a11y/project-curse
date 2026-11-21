@@ -121,6 +121,8 @@
     // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
     'ability-grade': 'L0–L4. 등급은 세기가 아니라 얼마나 지켜볼지다.',
     fitness: '관측 신뢰도·이름 반응·계수·오염 내성·교전·남은 기억 — A–E.',
+    service: '기억 대조 일치율, 진입·귀환, 누적 노출, 체력 검정, 웃음 반응.',
+    skills: '저격부터 통역까지 열네 자격. 한 사람이 셋까지.',
     'minor-abilities': '작고 쓸모 있는 능력 열 가지와 그 대가.',
     'field-abilities': '교전을 돕지만 혼자 상황을 바꾸지 못하는 능력 여덟.',
     'cost-log': '쓸 때마다 적는 대가 일지와 72시간 억제제.',
@@ -581,6 +583,19 @@
     const gradeOptions = [['', '선택 안 함'], ...rowsOf('능력 등급과 등록').map(([grade, target]) => [grade, `${grade} — ${target}`])];
     const minorOptions = [['', '없음'], ...rowsOf('생활형 소능력').map(([name]) => [name, `${name} (L1)`]), ...rowsOf('현장형 보조 능력').map(([name]) => [name, `${name} (L2)`])];
     const augmentOptions = [['', '없음'], ...rowsOf('인체 보조 장비').map(([name]) => [name, name]), ...rowsOf('현장 전자장비').map(([name]) => [name, name])];
+    // 복무 기록(2026-11-21 사용자 결정) — 전 소속은 자캐 설정 안내의 묶음, 나머지는 교범 '복무 기록과 계측값'·'현장 자격과 특기'에서 읽는다
+    const serviceSection = root.ProjectCurseCommunityGuide?.guide?.sections?.find?.((item) => item.id === 'service');
+    const serviceSec = section('복무 기록과 계측값') || {};
+    const skillRows = rowsOf('현장 자격과 특기');
+    const pick = (list) => [['', '—'], ...(list || []).map((item) => [item, item])];
+    const unitSelect = (value) => h('select', { name: 'unit' },
+      h('option', { value: '', selected: value ? null : true, text: '없음' }),
+      (serviceSection?.groups || []).map((group) => h('optgroup', { label: group.title },
+        group.items.map(([name]) => h('option', { value: name, selected: name === value ? true : null, text: name }))
+      ))
+    );
+    const num = (name, max, value) => h('input', { name, type: 'number', inputmode: 'numeric', min: '0', max: String(max), step: '1', value: value ?? '' });
+    const savedService = saved.service || {};
 
     const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
       field('이름', h('input', { name: 'name', type: 'text', maxlength: '24', autocomplete: 'off', value: saved.name || '' }), '캐릭터 이름. 등록증 그림에 크게 들어간다.'),
@@ -601,6 +616,31 @@
           select(`fit-${key}`, [['', '—'], ['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D'], ['E', 'E']], saved.fitness?.[key] || '')
         )),
         h('small', { text: '등급은 세기가 아니라 어디까지 들여보낼지다. 높을수록 깊이 배치된다.' })
+      ),
+      h('fieldset.tc-man-field.tc-man-service', null,
+        h('legend', { text: '복무 기록 (선택)' }),
+        field('전 소속', unitSelect(savedService.unit || ''), '실제 부대는 전 소속으로만. 부대 마크는 그림에 넣지 않는다.'),
+        field('복무 기간', h('input', { name: 'period', type: 'text', maxlength: '20', autocomplete: 'off', placeholder: '예: 2031–2039', value: savedService.period || '' })),
+        field('퇴역 사유', select('discharge', pick(serviceSec.discharge), savedService.discharge || '')),
+        field('기억 대조 일치율 (%)', num('memory', 100, savedService.memory), '90 이상 통과 · 70–89 재검사 · 70 밑 관측 자격 정지'),
+        h('div.tc-man-counts', null,
+          field('존 진입', num('entries', 999, savedService.entries)),
+          field('귀환', num('returns', 999, savedService.returns)),
+          field('리버스 목격', num('sightings', 999, savedService.sightings))
+        ),
+        field('누적 노출 (분)', num('exposure', 9999, savedService.exposure), '작전 인원 한도는 한 해 30분.'),
+        field('체력 검정', select('physical', pick(serviceSec.physical), savedService.physical || '')),
+        field('웃음 반응 검사', select('laugh', pick(serviceSec.laugh), savedService.laugh || '')),
+        h('fieldset.tc-man-skills', null,
+          h('legend', { text: '자격·특기 (셋까지)' }),
+          skillRows.map(([name]) => h('label', null,
+            h('input', { type: 'checkbox', name: 'skill', value: name, checked: (savedService.skills || []).includes(name) ? true : null }),
+            h('span', { text: name })
+          ))
+        ),
+        field('잃은 것', h('input', { name: 'lost', type: 'text', maxlength: '40', autocomplete: 'off', placeholder: '예: 어머니의 목소리', value: savedService.lost || '' })),
+        field('남은 것', h('input', { name: 'kept', type: 'text', maxlength: '40', autocomplete: 'off', placeholder: '예: 첫 배치지의 냄새', value: savedService.kept || '' })),
+        h('small', { text: '고른 칸만 글 양식과 복무 기록 그림에 들어간다. 남은 기억이 많을수록 프리윌 계약금이 높다.' })
       ),
       field('표식', select('tag', tagOptions, saved.tag || '')),
       h('fieldset.tc-man-field.tc-man-gear', null,
@@ -635,10 +675,70 @@
         fitness: Object.fromEntries(FITNESS.map(([key]) => [key, data.get(`fit-${key}`) || ''])),
         minor: data.get('minor') || '',
         augment: data.get('augment') || '',
+        service: {
+          unit: data.get('unit') || '',
+          period: String(data.get('period') || '').trim(),
+          discharge: data.get('discharge') || '',
+          memory: clampNum(data.get('memory'), 100),
+          entries: clampNum(data.get('entries'), 999),
+          returns: clampNum(data.get('returns'), 999),
+          sightings: clampNum(data.get('sightings'), 999),
+          exposure: clampNum(data.get('exposure'), 9999),
+          physical: data.get('physical') || '',
+          laugh: data.get('laugh') || '',
+          skills: data.getAll('skill').slice(0, 3),
+          lost: String(data.get('lost') || '').trim(),
+          kept: String(data.get('kept') || '').trim()
+        },
         gear: data.getAll('gear'),
         anchor: String(data.get('anchor') || '').trim(),
         note: String(data.get('note') || '').trim()
       };
+    }
+
+    // 빈 칸은 ''로 둔다(0과 구분). 숫자가 아니거나 범위를 넘으면 범위 안으로 자른다
+    function clampNum(raw, max) {
+      const text = String(raw ?? '').trim();
+      if (!text) return '';
+      const value = Math.round(Number(text));
+      return Number.isFinite(value) ? String(Math.min(max, Math.max(0, value))) : '';
+    }
+
+    function hasService(sv) {
+      return !!sv && Object.entries(sv).some(([key, value]) => (key === 'skills' ? value.length : value !== ''));
+    }
+
+    // 계측값 판정 문구 — 교범 기준표의 경계값 그대로
+    function memoryNote(value) {
+      if (value === '') return '';
+      const n = Number(value);
+      return n >= 90 ? '통과' : n >= 70 ? '재검사' : '관측 자격 정지';
+    }
+    function countNote(sv) {
+      if (sv.entries === '' || sv.returns === '') return '';
+      const a = Number(sv.entries);
+      const b = Number(sv.returns);
+      return b > a ? 'S.I.D 분리 심사' : a > b ? '등록 보류' : '';
+    }
+
+    function serviceLines(sv) {
+      if (!hasService(sv)) return [];
+      const out = ['— 복무 기록 —'];
+      if (sv.unit) out.push(`전 소속   : ${sv.unit}${sv.period ? ` (${sv.period})` : ''}`);
+      else if (sv.period) out.push(`복무 기간 : ${sv.period}`);
+      if (sv.discharge) out.push(`퇴역 사유 : ${sv.discharge}`);
+      if (sv.skills.length) out.push(`자격      : ${sv.skills.join(' · ')}`);
+      if (sv.memory !== '') out.push(`기억 대조 : ${sv.memory}% — ${memoryNote(sv.memory)}`);
+      if (sv.entries !== '' || sv.returns !== '' || sv.sightings !== '') {
+        const note = countNote(sv);
+        out.push(`진입·귀환 : 진입 ${sv.entries || '—'} / 귀환 ${sv.returns || '—'} / 목격 ${sv.sightings || '—'}${note ? ` — ${note}` : ''}`);
+      }
+      if (sv.exposure !== '') out.push(`누적 노출 : ${sv.exposure}분${Number(sv.exposure) > 30 ? ' — 한 해 한도 30분 기준 초과 기록 있음' : ''}`);
+      if (sv.physical) out.push(`체력 검정 : ${sv.physical}`);
+      if (sv.laugh) out.push(`웃음 반응 : ${sv.laugh}`);
+      if (sv.lost) out.push(`잃은 것   : ${sv.lost}`);
+      if (sv.kept) out.push(`남은 것   : ${sv.kept}`);
+      return out;
     }
 
     function minorCost(name) {
@@ -669,6 +769,7 @@
         `기준점   : ${v.anchor || blank}`
       ];
       if (v.note) lines.push(`기록     : ${v.note}`);
+      lines.push(...serviceLines(v.service));
       return lines.join('\n');
     }
 
@@ -683,6 +784,10 @@
     const photoButton = h('button.tc-btn', { type: 'button', onclick: () => photoInput.click() }, '사진 넣기');
     const photoClear = h('button.tc-btn', { type: 'button', hidden: true, onclick: clearPhoto }, '사진 빼기');
     const saveButton = h('button.tc-btn.tc-btn--primary', { type: 'button', onclick: saveCard }, '등록증 저장 (PNG)');
+    // 복무 기록(뒷면) — 복무 기록 칸을 하나라도 채우면 나타난다
+    const serviceCanvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '복무 기록 미리보기' }) : null;
+    const serviceView = Card ? h('div.tc-man-card-view.tc-man-card-view--back', { hidden: true }, serviceCanvas) : null;
+    const serviceButton = h('button.tc-btn', { type: 'button', hidden: true, onclick: saveService }, '복무 기록 저장 (PNG)');
     const emblemImage = Card ? Card.emblem(() => redraw()) : null;
 
     function cardData(v) {
@@ -707,6 +812,13 @@
         minor: v.minor || '',
         minorCost: v.minor ? minorCost(v.minor) : '',
         augment: v.augment || '',
+        unit: v.service.unit,
+        service: hasService(v.service) ? {
+          ...v.service,
+          memoryNote: memoryNote(v.service.memory),
+          countNote: countNote(v.service),
+          exposureOver: v.service.exposure !== '' && Number(v.service.exposure) > 30
+        } : null,
         gear: v.gear,
         anchor: v.anchor,
         note: v.note
@@ -724,6 +836,13 @@
         const card = cardData(values());
         Card.draw(canvas, card, { photo, emblem: emblemImage });
         canvas.setAttribute('aria-label', `등록증 미리보기 — ${card.name || '이름 미기재'}, ${card.faction || '소속 미기재'}, ${card.regNo}`);
+        const back = !!card.service;
+        serviceView.hidden = !back;
+        serviceButton.hidden = !back;
+        if (back) {
+          Card.drawService(serviceCanvas, card, { emblem: emblemImage });
+          serviceCanvas.setAttribute('aria-label', `복무 기록 미리보기 — ${card.name || '이름 미기재'}, ${card.unit || '전 소속 미기재'}, ${card.regNo}`);
+        }
       }, 40);
     }
 
@@ -770,7 +889,21 @@
       });
     }
 
+    function saveService() {
+      const card = cardData(values());
+      if (!card.service) return;
+      Card.drawService(serviceCanvas, card, { emblem: emblemImage });
+      Card.save(serviceCanvas, Card.serviceFilename(card)).then((ok) => {
+        cardStatus.textContent = ok ? '복무 기록을 저장했습니다. 등록증과 함께 올리면 됩니다.' : '저장하지 못했습니다. 그림을 길게 눌러 저장해 보십시오.';
+        root.PCAudio?.cue(ok ? 'channel.command' : 'system.denied');
+      });
+    }
+
     function update() {
+      // 자격은 셋까지 — 셋을 고르면 나머지를 잠근다
+      const skillBoxes = [...form.querySelectorAll('input[name="skill"]')];
+      const picked = skillBoxes.filter((box) => box.checked).length;
+      skillBoxes.forEach((box) => { box.disabled = !box.checked && picked >= 3; });
       const v = values();
       const sourceSelect = form.elements.source;
       sourceSelect.disabled = v.class !== 'WIELDER';
@@ -828,10 +961,11 @@
           lbl('REGISTER CARD / 등록증 그림'),
           h('p', { text: '양식을 채우면 등록증 그림이 바로 바뀝니다. 사진을 넣으면 왼쪽 칸에 들어갑니다. 저장한 그림(PNG, 1080×1350)을 카카오스토리에 올리면 됩니다.' }),
           h('p.tc-man-card-note', { text: '사진은 이 기기 안에서만 쓰이고 어디로도 보내지 않습니다. 화면을 새로 고치면 사라집니다. 등록증은 교류용이며 공식 기록이 아닙니다.' }),
-          h('div.tc-btnrow', null, saveButton, photoButton, photoClear),
+          h('div.tc-btnrow', null, saveButton, photoButton, photoClear, serviceButton),
           cardStatus,
           photoInput
-        )
+        ),
+        serviceView
       ) : null
     ], { bracket: true, slug: 'register' });
   }
@@ -875,6 +1009,10 @@
         gear: [
           tablePanel('능력 등급과 등록', 'ABILITY GRADE', 'ability-grade'),
           tablePanel('현장 적합성 평가', 'FIELD FITNESS', 'fitness'),
+          h('div.tc-man-pair', null,
+            tablePanel('복무 기록과 계측값', 'SERVICE RECORD', 'service'),
+            tablePanel('현장 자격과 특기', 'QUALIFICATIONS', 'skills')
+          ),
           h('div.tc-man-pair', null,
             tablePanel('생활형 소능력', 'MINOR ABILITIES / L1', 'minor-abilities'),
             tablePanel('현장형 보조 능력', 'FIELD ABILITIES / L2', 'field-abilities')

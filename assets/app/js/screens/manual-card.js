@@ -125,13 +125,13 @@
     g.strokeRect(24, 32, WIDTH - 48, HEIGHT - 56);
   }
 
-  function header(g, card, emblem) {
+  function header(g, card, emblem, titles = {}) {
     if (emblem?.complete && emblem.naturalWidth) g.drawImage(emblem, 56, 62, 80, 80);
     spaced(g, '0px');
     text(g, 'U.A.C 합동작전 단말 · PC-03', 156, 86, { family: MONO, size: 22, color: INK.text3, width: 480 });
-    text(g, '현장 인원 등록증', 156, 140, { weight: 600, size: 52, width: 480 });
+    text(g, titles.title || '현장 인원 등록증', 156, 140, { weight: 600, size: 52, width: 480 });
     spaced(g, '4px');
-    text(g, 'FIELD PERSONNEL REGISTER', 158, 174, { family: COND, weight: 600, size: 22, color: INK.redBright, width: 480 });
+    text(g, titles.code || 'FIELD PERSONNEL REGISTER', 158, 174, { family: COND, weight: 600, size: 22, color: INK.redBright, width: 480 });
     spaced(g, '0px');
     g.textAlign = 'right';
     text(g, card.regNo, WIDTH - 56, 90, { family: MONO, weight: 500, size: 26, width: 380 });
@@ -269,8 +269,10 @@
       row('능력', card.cls ? '해당 없음' : '');
     }
     // 출신·소능력·보조 장비(2026-11-21 사용자 결정) — 고른 경우만 한 줄씩. 칸이 늘면 표식·장비군·한 줄 기록을 한 줄로 줄여 아래 띠를 넘지 않게 한다.
-    const extra = [card.origin, card.minor, card.augment].filter(Boolean).length;
-    if (card.origin) row('출신', card.origin);
+    const extra = [card.origin || card.unit, card.minor, card.augment].filter(Boolean).length;
+    // 전 소속(2026-11-21 사용자 결정)은 출신 줄에 붙인다. 자세한 복무 기록은 뒷면 그림(drawService)에 들어간다
+    if (card.origin) row('출신', card.unit ? `${card.origin} · 전 ${card.unit}` : card.origin);
+    else if (card.unit) row('전 소속', card.unit);
     if (card.minor) row('소능력', `${card.minor}${card.minorCost ? ` — ${card.minorCost}` : ''}`, extra >= 2 ? 1 : 2);
     if (card.augment) row('보조 장비', card.augment);
     row('표식', card.tag ? `${card.tag} — ${card.tagNote || ''}` : '', extra ? 1 : 2);
@@ -334,6 +336,135 @@
     details(g, card);
     footer(g, card);
     return true;
+  }
+
+  /* ---------- 복무 기록(뒷면) — 2026-11-21 사용자 결정 ----------
+     등록증과 같은 판형·번호로 그린다. 교범 '복무 기록과 계측값'의 경계값(일치율 70·90, 노출 한 해 30분)을 그대로 표시한다. 고른 칸만 그린다. */
+  function serviceRow(g, name, value, y, options = {}) {
+    label(g, name, 56, y);
+    return text(g, value, 300, y + 2, { size: options.size || 30, width: options.width || WIDTH - 356, max: options.max || 1, lineHeight: 40, color: options.color || INK.text }) + 18;
+  }
+
+  function serviceBar(g, y, ratio, marks, over) {
+    const x = 56;
+    const w = WIDTH - 112;
+    g.fillStyle = 'rgba(226, 220, 214, 0.08)';
+    g.fillRect(x, y, w, 14);
+    g.fillStyle = over ? INK.red : 'rgba(226, 220, 214, 0.72)';
+    g.fillRect(x, y, Math.round(w * Math.max(0, Math.min(1, ratio))), 14);
+    g.fillStyle = INK.redBright;
+    marks.forEach((mark) => g.fillRect(x + Math.round(w * mark) - 1, y - 8, 3, 30));
+  }
+
+  function drawService(canvas, card, assets = {}) {
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    const g = canvas.getContext('2d');
+    if (!g) return false;
+    g.textBaseline = 'alphabetic';
+    const sv = card.service || {};
+    background(g);
+    header(g, card, assets.emblem, { title: '복무 기록', code: 'SERVICE RECORD / 등록증 뒷면' });
+    let y = 262;
+    text(g, card.name || '이름 미기재', 56, y + 40, { weight: 600, size: 44, width: 620, color: card.name ? INK.text : INK.text3 });
+    g.textAlign = 'right';
+    text(g, card.callsign || '—', WIDTH - 56, y + 40, { family: MONO, weight: 500, size: 30, width: 360, color: card.callsign ? INK.redInk : INK.text3 });
+    g.textAlign = 'left';
+    y += 84;
+    g.fillStyle = INK.line;
+    g.fillRect(56, y, WIDTH - 112, 2);
+    y += 44;
+
+    if (sv.unit) y = serviceRow(g, '전 소속', sv.unit, y, { max: 2 });
+    if (sv.period) y = serviceRow(g, '복무 기간', sv.period, y, { size: 28 });
+    if (sv.discharge) y = serviceRow(g, '퇴역 사유', sv.discharge, y, { size: 28, color: /대가|말소|수배/.test(sv.discharge) ? INK.redInk : INK.text });
+
+    // 자격 칩
+    if (sv.skills?.length) {
+      label(g, '자격·특기', 56, y);
+      let x = 300;
+      g.font = font(500, 26, SANS);
+      sv.skills.forEach((skill) => {
+        const w = g.measureText(skill).width + 32;
+        g.strokeStyle = 'rgba(226, 220, 214, 0.35)';
+        g.lineWidth = 2;
+        g.strokeRect(x, y - 30, w, 42);
+        text(g, skill, x + 16, y + 1, { weight: 500, size: 26, width: w });
+        x += w + 12;
+      });
+      y += 52;
+    }
+
+    // 기억 대조 일치율
+    if (sv.memory !== '' && sv.memory != null) {
+      y += 10;
+      label(g, '기억 대조 일치율', 56, y);
+      g.textAlign = 'right';
+      text(g, sv.memoryNote || '', WIDTH - 56, y, { weight: 600, size: 24, width: 300, color: Number(sv.memory) >= 90 ? INK.text2 : INK.redInk });
+      g.textAlign = 'left';
+      text(g, `${sv.memory}%`, 56, y + 62, { family: MONO, weight: 500, size: 54, width: 260, color: Number(sv.memory) >= 70 ? INK.text : INK.redInk });
+      serviceBar(g, y + 84, Number(sv.memory) / 100, [0.7, 0.9], Number(sv.memory) < 70);
+      y += 122;
+    }
+
+    // 진입·귀환·목격
+    const counts = [['존 진입', sv.entries], ['귀환', sv.returns], ['리버스 목격', sv.sightings]];
+    if (counts.some(([, value]) => value !== '' && value != null)) {
+      y += 6;
+      const cell = Math.floor((WIDTH - 112) / 3);
+      counts.forEach(([name, value], index) => {
+        const x = 56 + index * cell;
+        g.strokeStyle = INK.line;
+        g.lineWidth = 2;
+        g.strokeRect(x, y - 30, cell - 10, 112);
+        spaced(g, '2px');
+        text(g, name, x + 18, y + 2, { family: COND, weight: 600, size: 20, color: INK.text3, width: cell - 40 });
+        spaced(g, '0px');
+        text(g, value === '' || value == null ? '—' : String(value), x + 18, y + 62, { family: MONO, weight: 500, size: 46, width: cell - 40, color: value === '' ? INK.text3 : INK.text });
+      });
+      y += 98;
+      if (sv.countNote) {
+        text(g, `진입과 귀환이 맞지 않는다 — ${sv.countNote}`, 56, y + 14, { weight: 600, size: 24, color: INK.redInk, width: WIDTH - 112 });
+        y += 34;
+      }
+      y += 16;
+    }
+
+    // 누적 노출 — 막대는 한도(30분)를 1/3 지점에 둔다
+    if (sv.exposure !== '' && sv.exposure != null) {
+      label(g, '누적 노출', 56, y);
+      g.textAlign = 'right';
+      text(g, sv.exposureOver ? '한 해 한도 30분 기준 초과 기록' : '한도 안', WIDTH - 56, y, { weight: 600, size: 24, width: 420, color: sv.exposureOver ? INK.redInk : INK.text2 });
+      g.textAlign = 'left';
+      text(g, `${sv.exposure}분`, 56, y + 56, { family: MONO, weight: 500, size: 44, width: 260, color: sv.exposureOver ? INK.redInk : INK.text });
+      serviceBar(g, y + 76, Number(sv.exposure) / 90, [1 / 3], sv.exposureOver);
+      y += 116;
+    }
+
+    // 잃은 것·남은 것 — 한 줄씩(길면 말줄임). 아래 검사 칸보다 먼저 그려 등록 인장과 겹치지 않게 한다
+    if (sv.lost) y = serviceRow(g, '잃은 것', sv.lost, y, { size: 28, width: 480, color: INK.text2 });
+    if (sv.kept) y = serviceRow(g, '남은 것', sv.kept, y, { size: 28, width: 480 });
+
+    // 체력 검정·웃음 반응
+    const tests = [['체력 검정', sv.physical], ['웃음 반응 검사', sv.laugh]].filter(([, value]) => value);
+    if (tests.length) {
+      const cell = Math.floor((WIDTH - 112) / 2);
+      tests.forEach(([name, value], index) => {
+        const x = 56 + index * cell;
+        spaced(g, '2px');
+        text(g, name, x, y, { family: COND, weight: 600, size: 20, color: INK.text3, width: cell - 20 });
+        spaced(g, '0px');
+        text(g, value, x, y + 40, { weight: 600, size: 30, width: 220, color: /불합격|부적합|격리/.test(value) ? INK.redInk : INK.text });
+      });
+      y += 76;
+    }
+
+    footer(g, card);
+    return true;
+  }
+
+  function serviceFilename(card) {
+    return filename(card).replace('등록증', '복무기록');
   }
 
   // 기록 카드(2026-11-21 사용자 결정) — 상황판 '오늘의 기록 한 장'을 같은 판형(1080×1350)으로 그린다. 교류용 사본 줄을 넣는다.
@@ -449,5 +580,5 @@
     return `project-curse-등록증-${base}.png`;
   }
 
-  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
+  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawService, serviceFilename, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
 })(window);

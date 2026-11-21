@@ -821,6 +821,11 @@
       const body = [];
       if (item.paragraphs) body.push(...item.paragraphs.map((text) => h('p', { text })));
       if (item.items) body.push(h('dl.tc-ooc-terms', null, item.items.map(([term, text]) => h('div', null, h('dt', { text: term }), h('dd', { text })))));
+      // 묶음 목록(전 소속 등) — 묶음마다 접는 칸으로 둔다
+      if (item.groups) body.push(h('div.tc-ooc-groups', null, item.groups.map((group) => h('details.tc-disclosure', null,
+        h('summary', null, h('b', { text: `${group.title} · ${group.items.length}` })),
+        h('dl.tc-ooc-terms', null, group.items.map(([term, text]) => h('div', null, h('dt', { text: term }), h('dd', { text }))))
+      ))));
       if (item.openCanon) {
         body.push(h('p', { text: open.lead || '' }));
         body.push(h('ul.tc-ooc-open', null, (open.guide || []).map((entry) => h('li', null,

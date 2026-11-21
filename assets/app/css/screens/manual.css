@@ -439,6 +439,7 @@
   line-height: 1.5;
 }
 .tc-man-field input[type="text"],
+.tc-man-field input[type="number"],
 .tc-man-field select {
   width: 100%;
   min-height: var(--tap);
@@ -712,3 +713,58 @@
 @media (max-width: 520px) {
   .tc-man-fitness { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* 복무 기록(2026-11-21 사용자 결정) — 전 소속·퇴역 사유·자격·계측값·남은 것 */
+.tc-man-service {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2) var(--s3);
+}
+.tc-man-service legend,
+.tc-man-service > small,
+.tc-man-service .tc-man-skills { grid-column: 1 / -1; }
+.tc-man-service > label {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.tc-man-service > label > span { color: var(--text-2); font-size: var(--fs-xs); }
+.tc-man-service input[type="number"] { width: 100%; }
+.tc-man-counts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s2) var(--s3);
+}
+.tc-man-counts label { display: grid; gap: 2px; min-width: 0; }
+.tc-man-counts label span { color: var(--text-2); font-size: var(--fs-xs); }
+.tc-man-skills {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s2);
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.tc-man-skills legend { grid-column: 1 / -1; color: var(--text-2); font-size: var(--fs-xs); margin-bottom: 2px; }
+.tc-man-skills label {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  min-height: var(--tap);
+  padding: 0 var(--s2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+}
+.tc-man-skills input { width: 16px; height: 16px; accent-color: var(--od-2); }
+.tc-man-skills input:disabled + span { color: var(--text-3); }
+@media (max-width: 720px) {
+  .tc-man-skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .tc-man-service { grid-template-columns: minmax(0, 1fr); }
+}
+.tc-man-card-view[hidden] { display: none; }

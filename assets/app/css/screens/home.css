@@ -1261,3 +1261,18 @@ html[data-fx="reduced"] .tc-home-ticker-track ul[aria-hidden="true"] { display: 
   color: var(--text-3);
   font-size: var(--fs-xs);
 }
+
+/* 자캐 안내 묶음 목록(전 소속) — 묶음마다 접는 칸 */
+.tc-ooc-groups {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-ooc-groups .tc-ooc-terms {
+  border-width: 1px 0 0;
+}
+.tc-ooc-groups .tc-ooc-terms > div {
+  grid-template-columns: minmax(12em, 1.2fr) minmax(0, 1fr);
+}
+@media (max-width: 520px) {
+  .tc-ooc-groups .tc-ooc-terms > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
