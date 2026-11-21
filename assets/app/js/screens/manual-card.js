@@ -655,6 +655,59 @@
     return true;
   }
 
+  // 종이 문서(계약서·면담 기록, 2026-11-22) — 항목 칸, 본문 줄, 메모, 서명란
+  function drawDoc(canvas, doc, assets = {}) {
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    const g = canvas.getContext('2d');
+    if (!g) return false;
+    g.textBaseline = 'alphabetic';
+    const head = { regNo: doc.regNo, issued: doc.issued, stamp: doc.stamp };
+    background(g);
+    header(g, head, assets.emblem, { title: doc.title, code: doc.code });
+    const px = 56;
+    const py = 236;
+    const pw = WIDTH - 112;
+    const ph = HEIGHT - 236 - 210;
+    const bottom = py + ph;
+    g.fillStyle = '#d8d0c4';
+    g.fillRect(px, py, pw, ph);
+    const ink = '#2a2222';
+    const soft = '#6a5e58';
+    let y = py + 56;
+    (doc.fields || []).forEach(([k, v]) => {
+      text(g, k, px + 40, y, { weight: 600, size: 22, color: soft, width: 180 });
+      text(g, v || '—', px + 220, y, { size: 26, color: v ? ink : soft, width: pw - 260 });
+      y += 40;
+    });
+    g.fillStyle = 'rgba(42, 34, 34, 0.25)';
+    g.fillRect(px + 40, y - 14, pw - 80, 2);
+    y += 30;
+    const stop = bottom - 120 - (doc.notes ? doc.notes.length * 40 : 0) - (doc.closing ? 40 : 0);
+    for (const line of doc.lines || []) {
+      if (y > stop) break;
+      const isQ = line.startsWith('문.');
+      y = text(g, line, px + 40, y, { weight: isQ ? 600 : 400, size: 24, color: isQ ? soft : ink, width: pw - 80, max: 3, lineHeight: 32 }) + (isQ ? 2 : 10);
+    }
+    if (doc.closing) { text(g, doc.closing, px + 40, Math.min(y + 10, stop + 30), { weight: 600, size: 24, color: ink, width: pw - 80 }); }
+    let ny = bottom - 110 - (doc.notes ? doc.notes.length * 40 : 0);
+    (doc.notes || []).forEach(([k, v]) => {
+      text(g, k, px + 40, ny, { weight: 600, size: 22, color: soft, width: 120 });
+      text(g, v || '—', px + 160, ny, { size: 24, color: v ? ink : soft, width: pw - 200 });
+      ny += 40;
+    });
+    const sigs = doc.signatures || [];
+    const sw = Math.floor((pw - 80) / Math.max(1, sigs.length));
+    sigs.forEach(([k, v], i) => {
+      const x = px + 40 + i * sw;
+      g.fillStyle = 'rgba(42, 34, 34, 0.5)';
+      g.fillRect(x, bottom - 44, sw - 40, 2);
+      text(g, `${k}  ${v || ''}`, x, bottom - 56, { size: 24, color: ink, width: sw - 40 });
+    });
+    footer(g, head);
+    return true;
+  }
+
   function sheetFilename(kind, name) {
     const base = String(name || '무명').replace(/[\\/:*?"<>|\u0000-\u001f]/g, '').replace(/\s+/g, '-').slice(0, 40) || '무명';
     return `project-curse-${kind}-${base}.png`;
@@ -773,5 +826,5 @@
     return `project-curse-등록증-${base}.png`;
   }
 
-  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawService, serviceFilename, drawReport, drawSquad, drawLetter, sheetNo, sheetFilename, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
+  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawService, serviceFilename, drawReport, drawSquad, drawLetter, drawDoc, sheetNo, sheetFilename, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
 })(window);

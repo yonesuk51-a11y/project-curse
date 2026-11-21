@@ -82,11 +82,12 @@ export default function ({ add, read, context, app }) {
   check('register-report-and-squad-sheets', () => {
     const forms = context.ProjectCurseCommunityGuide?.forms;
     assert.ok(forms?.reportPlaces?.length >= 8 && forms?.reportKinds?.includes('계수 불일치'), '양식 값');
-    assert.ok(manual.includes('register: [registerPanel(), reportPanel(), squadPanel(), letterPanel()]'), '자캐 등록 탭에 넷(검열 편지 2026-11-22)');
+    assert.ok(manual.includes('register: [registerPanel(), reportPanel(), squadPanel(), letterPanel(), contractPanel(), interviewPanel()]'), '자캐 등록 탭에 여섯(검열 편지·계약서·면담 기록 2026-11-22)');
+    assert.ok(forms?.contractClauses?.length === 5 && forms?.interviewQuestions?.length === 5 && forms?.interviewVerdicts?.length && card.includes('function drawDoc'), '계약서·면담 기록');
     assert.ok(forms?.censorTerms?.includes('작전') && manual.includes('function censorLetter') && manual.includes('Object.values(counts).some((n) => n > 3)') && card.includes('function drawLetter'), '검열: 목록·반복 보류·그림');
     assert.ok(manual.includes("name: 'pair'") && card.includes("'대조 짝'"), '대조 짝 칸');
     assert.ok(manual.includes("section('현장조 편성과 계수')") && manual.includes("'협력원'"), '자리는 교범 다섯과 협력원');
-    assert.ok(manual.includes('sheetTimers.report, sheetTimers.squad, sheetTimers.letter'), '떠날 때 타이머 정리');
+    assert.ok(manual.includes('sheetTimers.report, sheetTimers.squad, sheetTimers.letter, sheetTimers.contract, sheetTimers.interview'), '떠날 때 타이머 정리');
     assert.ok(!/점수|보상|레벨|경험치/.test(manual.slice(manual.indexOf('function reportPanel'), manual.indexOf('function registerPanel'))), '게임 장치 없음');
     assert.ok(card.includes('function drawReport') && card.includes('function drawSquad') && card.includes('sheetFilename'), '그림');
   });

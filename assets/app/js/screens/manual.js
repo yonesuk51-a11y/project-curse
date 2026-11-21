@@ -13,7 +13,7 @@
   // 화면을 떠날 때(hide) 정리하는 타이머와, 없는 항목 안내를 넣는 자리
   let drawTimer = 0;
   // 교전 보고서·분대 편성표(2026-11-21) 다시 그리기 타이머
-  const sheetTimers = { report: 0, squad: 0, letter: 0 };
+  const sheetTimers = { report: 0, squad: 0, letter: 0, contract: 0, interview: 0 };
   let stampTimer = 0;
   let focusTimer = 0;
   let notice = null;
@@ -123,6 +123,8 @@
     report: '분 단위 시각·인원 계수·남은 것. 액션 글에 붙이는 교전 보고.',
     squad: '여러 자캐를 한 분대로. 다섯 자리와 협력원.',
     letter: '지명·숫자는 검은 막대로. 다른 자캐에게 보내는 편지.',
+    contract: '자캐끼리 주고받는 의뢰. 세 번째 인식표 조항.',
+    interview: '캐릭터 소개를 면담 기록처럼. 관찰과 해석을 나눈다.',
     // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
     'ability-grade': 'L0–L4. 등급은 세기가 아니라 얼마나 지켜볼지다.',
     fitness: '관측 신뢰도·이름 반응·계수·오염 내성·교전·남은 기억 — A–E.',
@@ -140,7 +142,7 @@
     roe: { title: '교전 규칙', hint: '철수·교전·피탈자·기시체·혈술·지각 오염·표식' },
     field: { title: '현장 절차', hint: '진입·현장조·역류·청소조·인계·검문소·서명 연습' },
     gear: { title: '장비와 능력', hint: '능력 등급·소능력·장비군·2030년대 장비' },
-    register: { title: '자캐 등록', hint: '등록 양식·등록증·교전 보고서·분대 편성표·검열 편지' }
+    register: { title: '자캐 등록', hint: '등록증·교전 보고서·분대 편성표·검열 편지·계약서·면담 기록' }
   };
   let manualTabs = null;
 
@@ -799,6 +801,162 @@
     ], { slug: 'letter', open: false });
   }
 
+  /* 프리윌 계약서·S.I.D 면담 기록(2026-11-22 사용자 추천안 승인) — 자캐끼리 의뢰를 주고받거나, 캐릭터 소개를 면담 기록처럼. */
+  const CONTRACT_KEY = 'pc6_field_contract_v1';
+  function contractPanel() {
+    const Card = root.PCRegisterCard || null;
+    const forms = root.ProjectCurseCommunityGuide?.forms || {};
+    const clauses = forms.contractClauses || [];
+    const saved = loadSheet(CONTRACT_KEY);
+    const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
+      sheetField('의뢰인', sheetInput('client', saved.client, 24, { placeholder: '이름 또는 호출부호' })),
+      sheetField('계약자', sheetInput('contractor', saved.contractor, 24)),
+      h('label.tc-man-field.tc-man-field--wide', null, h('span', { text: '의뢰 내용' }), sheetInput('job', saved.job, 60, { placeholder: '예: 셋째 역 방벽 앞 배급 상자 회수' })),
+      sheetField('장소', sheetSelect('place', [['', '선택'], ...(forms.reportPlaces || []).map((p) => [p, p])], saved.place || '')),
+      sheetField('기한', sheetInput('due', saved.due, 24, { placeholder: '예: 2042.03.20 해 지기 전' })),
+      sheetField('보수', sheetInput('pay', saved.pay, 30, { placeholder: '예: 연료 쿠폰 20장' })),
+      h('fieldset.tc-man-field.tc-man-gear', null,
+        h('legend', { text: '조항' }),
+        clauses.map(([key, name]) => h('label', null,
+          h('input', { type: 'checkbox', name: 'clause', value: key, checked: (saved.clauses || clauses.slice(0, 3).map(([k]) => k)).includes(key) ? true : null }),
+          h('span', { text: name })
+        ))
+      ),
+      h('label.tc-man-field.tc-man-field--wide', null, h('span', { text: '특약 (선택)' }), sheetInput('extra', saved.extra, 60))
+    );
+    const preview = h('pre.tc-man-preview', { 'aria-live': 'polite' });
+    const canvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '계약서 그림 미리보기' }) : null;
+    const emblem = Card ? Card.emblem(() => draw()) : null;
+    const values = () => {
+      const d = new FormData(form);
+      const t = (n) => String(d.get(n) || '').trim();
+      return { client: t('client'), contractor: t('contractor'), job: t('job'), place: d.get('place') || '', due: t('due'), pay: t('pay'), clauses: d.getAll('clause'), extra: t('extra') };
+    };
+    const picked = (v) => clauses.filter(([key]) => v.clauses.includes(key));
+    const text = (v) => {
+      const blank = '______';
+      return [
+        '■ 회수·호송 계약서 — 프리윌',
+        `의뢰인   : ${v.client || blank}`,
+        `계약자   : ${v.contractor || blank}`,
+        `의뢰 내용: ${v.job || blank}`,
+        `장소     : ${v.place || blank}`,
+        `기한     : ${v.due || blank}`,
+        `보수     : ${v.pay || blank}`,
+        '— 조항 —',
+        ...picked(v).map(([, name, line], i) => `제${i + 1}조 ${name}. ${line}`),
+        ...(v.extra ? [`특약. ${v.extra}`] : []),
+        '계약서가 교전 규칙이다.',
+        `서명  의뢰인 ${v.client || blank} / 계약자 ${v.contractor || blank}`
+      ].join('\n');
+    };
+    const doc = (v) => ({
+      title: '계약서', code: 'FREEWILL CONTRACT', stamp: ['계약', '프리윌'],
+      regNo: Card.sheetNo('FWC', `${v.client}|${v.contractor}|${v.job}`), issued: Card.dtg(),
+      fields: [['의뢰인', v.client], ['계약자', v.contractor], ['의뢰 내용', v.job], ['장소', v.place], ['기한', v.due], ['보수', v.pay]],
+      lines: [...picked(v).map(([, name, line], i) => `제${i + 1}조 ${name}. ${line}`), ...(v.extra ? [`특약. ${v.extra}`] : [])],
+      closing: '계약서가 교전 규칙이다.',
+      signatures: [['의뢰인', v.client], ['계약자', v.contractor]]
+    });
+    function draw() {
+      if (!Card || !canvas) return;
+      root.clearTimeout(sheetTimers.contract);
+      sheetTimers.contract = root.setTimeout(() => Card.drawDoc(canvas, doc(values()), { emblem }), 50);
+    }
+    function update() { const v = values(); preview.textContent = text(v); saveSheet(CONTRACT_KEY, v); draw(); }
+    function save(status) {
+      const v = values();
+      Card.drawDoc(canvas, doc(v), { emblem });
+      Card.save(canvas, Card.sheetFilename('계약서', v.contractor || v.client)).then((ok) => {
+        status.textContent = ok ? '저장했습니다. 의뢰 글에 붙이면 됩니다.' : '저장하지 못했습니다. 그림을 길게 눌러 저장해 보십시오.';
+        root.PCAudio?.cue(ok ? 'channel.command' : 'system.denied');
+      });
+    }
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    update();
+    Card?.fontsReady().then(draw);
+    return panel('FREEWILL CONTRACT', '프리윌 계약서', [
+      h('p.tc-man-lead', { text: '자캐끼리 의뢰를 주고받는 계약서. 이념은 없다. 계약서가 교전 규칙이다.' }),
+      sheetShell('CONTRACT', form, preview, canvas, save, '계약서 복사')
+    ], { slug: 'contract', open: false });
+  }
+
+  const INTERVIEW_KEY = 'pc6_field_interview_v1';
+  function interviewPanel() {
+    const Card = root.PCRegisterCard || null;
+    const forms = root.ProjectCurseCommunityGuide?.forms || {};
+    const questions = forms.interviewQuestions || [];
+    const saved = loadSheet(INTERVIEW_KEY);
+    const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
+      sheetField('면담 대상', sheetInput('subject', saved.subject, 24)),
+      sheetField('면담관', sheetInput('officer', saved.officer, 24, { placeholder: '예: S.I.D 면담반 7' })),
+      sheetField('장소', sheetInput('place', saved.place, 30, { placeholder: '예: 카르벤 북문 대조실' })),
+      sheetField('일시', sheetInput('date', saved.date, 24)),
+      h('fieldset.tc-man-field.tc-man-timeline', null,
+        h('legend', { text: '질문과 답' }),
+        questions.map((q, i) => h('label.tc-man-field', null, h('span', { text: `문 ${i + 1}. ${q}` }),
+          h('input', { name: `a${i}`, type: 'text', maxlength: '60', autocomplete: 'off', value: saved.answers?.[i] || '' })))
+      ),
+      h('label.tc-man-field.tc-man-field--wide', null, h('span', { text: '관찰 (본 것만)' }), sheetInput('observed', saved.observed, 60, { placeholder: '예: 셋째 질문에서 답하기 전 2초 멈춤' })),
+      h('label.tc-man-field.tc-man-field--wide', null, h('span', { text: '해석 (따로 적는다)' }), sheetInput('reading', saved.reading, 60)),
+      sheetField('판정', sheetSelect('verdict', [['', '선택'], ...(forms.interviewVerdicts || []).map((x) => [x, x])], saved.verdict || ''))
+    );
+    const preview = h('pre.tc-man-preview', { 'aria-live': 'polite' });
+    const canvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '면담 기록 그림 미리보기' }) : null;
+    const emblem = Card ? Card.emblem(() => draw()) : null;
+    const values = () => {
+      const d = new FormData(form);
+      const t = (n) => String(d.get(n) || '').trim();
+      return { subject: t('subject'), officer: t('officer'), place: t('place'), date: t('date'), answers: questions.map((_, i) => t(`a${i}`)), observed: t('observed'), reading: t('reading'), verdict: d.get('verdict') || '' };
+    };
+    const qa = (v) => questions.map((q, i) => [q, v.answers[i]]).filter(([, a]) => a);
+    const text = (v) => {
+      const blank = '______';
+      return [
+        '■ S.I.D 면담 기록',
+        `대상   : ${v.subject || blank}`,
+        `면담관 : ${v.officer || blank}`,
+        `장소   : ${v.place || blank} / ${v.date || blank}`,
+        '— 질문과 답 —',
+        ...(qa(v).length ? qa(v).flatMap(([q, a]) => [`문. ${q}`, `답. ${a}`]) : [blank]),
+        `관찰   : ${v.observed || blank}`,
+        `해석   : ${v.reading || blank}`,
+        `판정   : ${v.verdict || blank}`
+      ].join('\n');
+    };
+    const doc = (v) => ({
+      title: '면담 기록', code: 'S.I.D INTERVIEW', stamp: [v.verdict ? v.verdict.slice(0, 2) : '면담', 'S.I.D'],
+      regNo: Card.sheetNo('SID', `${v.subject}|${v.officer}|${v.date}`), issued: Card.dtg(),
+      fields: [['대상', v.subject], ['면담관', v.officer], ['장소', v.place], ['일시', v.date]],
+      lines: qa(v).flatMap(([q, a]) => [`문. ${q}`, `답. ${a}`]),
+      notes: [['관찰', v.observed], ['해석', v.reading], ['판정', v.verdict]],
+      signatures: [['면담관', v.officer]]
+    });
+    function draw() {
+      if (!Card || !canvas) return;
+      root.clearTimeout(sheetTimers.interview);
+      sheetTimers.interview = root.setTimeout(() => Card.drawDoc(canvas, doc(values()), { emblem }), 50);
+    }
+    function update() { const v = values(); preview.textContent = text(v); saveSheet(INTERVIEW_KEY, v); draw(); }
+    function save(status) {
+      const v = values();
+      Card.drawDoc(canvas, doc(v), { emblem });
+      Card.save(canvas, Card.sheetFilename('면담기록', v.subject)).then((ok) => {
+        status.textContent = ok ? '저장했습니다. 캐릭터 소개 글에 붙이면 됩니다.' : '저장하지 못했습니다. 그림을 길게 눌러 저장해 보십시오.';
+        root.PCAudio?.cue(ok ? 'channel.command' : 'system.denied');
+      });
+    }
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    update();
+    Card?.fontsReady().then(draw);
+    return panel('S.I.D INTERVIEW', 'S.I.D 면담 기록', [
+      h('p.tc-man-lead', { text: '캐릭터 소개를 면담 기록처럼 쓴다. 본 것과 해석은 칸을 나눈다.' }),
+      sheetShell('INTERVIEW', form, preview, canvas, save, '면담 기록 복사')
+    ], { slug: 'interview', open: false });
+  }
+
   const SQUAD_KEY = 'pc6_field_squad_v1';
   const COUNT_WORDS = ['영', '하나', '둘', '셋', '넷', '다섯'];
   function squadPanel() {
@@ -1372,7 +1530,7 @@
             tablePanel('신형 반-리버스 장비', 'ANTI-REVERSE', 'anti-reverse')
           )
         ],
-        register: [registerPanel(), reportPanel(), squadPanel(), letterPanel()]
+        register: [registerPanel(), reportPanel(), squadPanel(), letterPanel(), contractPanel(), interviewPanel()]
       })
     );
   }
@@ -1402,7 +1560,7 @@
   }
 
   function hide() {
-    [drawTimer, stampTimer, focusTimer, sheetTimers.report, sheetTimers.squad, sheetTimers.letter].forEach((timer) => root.clearTimeout(timer));
+    [drawTimer, stampTimer, focusTimer, sheetTimers.report, sheetTimers.squad, sheetTimers.letter, sheetTimers.contract, sheetTimers.interview].forEach((timer) => root.clearTimeout(timer));
   }
 
   PC.screen({ id: 'field-manual', mount, show, hide });

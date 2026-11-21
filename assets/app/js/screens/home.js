@@ -581,6 +581,9 @@
     const next = PC.nextFeast?.();
     if (feast) items.unshift({ code: 'FEAST', text: `오늘 교단 축일 — ${feast.name}(${feast.faction}) · 리버스 경계`, tone: 'danger' });
     else if (next) items.push({ code: 'FEAST', text: `다음 교단 축일 — ${next.feast.name}(${next.feast.faction}) · ${next.days}일 남음`, tone: next.days <= 7 ? 'caution' : null });
+    // 오늘의 전조(2026-11-22) — 세계 기록 '리버스 전조와 예보'의 전조 하나를 권역 하나에 붙인다. 같은 날 같은 줄.
+    const omens = root.ProjectCurseWorldHistoryData?.worldFramework?.zoneLife?.items?.find((item) => item.id === 'reverse-omens')?.omens || [];
+    if (omens.length && ash?.regions?.length) items.push({ code: 'OMEN', text: `전조 관찰 — ${ash.regions[(day * 7 + 3) % ash.regions.length].name}: ${omens[day % omens.length]}`, tone: 'caution' });
     const wanted = root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted || [];
     if (wanted.length) {
       const top = wanted[day % wanted.length];
