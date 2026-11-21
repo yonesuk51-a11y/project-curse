@@ -563,7 +563,7 @@ function verify(){
   add('uac-independent-in-history:data',factionAnalysisSource.includes('UN 산하기관은 아니며'));
   add('history-ten-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===10&&worldHistoryData.eras.map(era=>era.id).join('|')==='deep|origin|exposure|institution|separation|fracture|silence|frontiers|mobilization|aftermath');
   // 2026-11-21: 가상 국가 세 기록을 더해 46건에서 49건, 실제 나라 아포칼립스 네 기록을 더해 53건이 됐다(사용자 추천안 승인).
-  add('history-base-fifty-three-evidence-records',Object.keys(worldHistoryData?.records||{}).length===53&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
+  add('history-base-fifty-five-evidence-records',Object.keys(worldHistoryData?.records||{}).length===55&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   // D 혼합: history-deep-world-framework의 데이터/매체 조건.
   add('history-deep-world-framework:data',worldHistoryData?.deepHistoryRecords?.length===8&&worldHistoryData?.worldFramework?.ontology?.length===4&&worldHistoryData.worldFramework.abilitySources?.length===7&&worldHistoryData.worldFramework.civilianSystems?.length===5);
   // 2026-09-25 사용자 설정: 리버스 지점의 피탈자. 네 구분에 끼워 넣지 않고, 분류 근거·교범 교전 규칙·해제 조건·의식과 생사를 함께 둔다.
@@ -575,16 +575,17 @@ function verify(){
   add('history-japan-technology-schema',japanTechnology?.version===VERSION&&japanTechnology?.schema==='project-curse-japan-technology-v1'&&japanTechRecords.length===5&&japanTechnology?.technologies?.length===7&&japanTechnology?.edges?.length===6);
   // 2026-11-21: 우시노다교가 무너뜨린 가상 국가 세 기록을 더해 51건에서 54건이 됐다(사용자 추천안 승인).
   // 2026-11-21: 실제 나라 아포칼립스 네 기록을 더해 58건이 됐다.
-  add('history-fifty-eight-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===58);
+  // 2026-11-21: 2031 서일본 해안 대지진, 2033 레드존 징집 증언을 더해 60건이 됐다.
+  add('history-sixty-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===60);
   add('history-japan-technology-record-depth',japanTechRecords.every(record=>record.id&&record.date&&record.title&&record.summary&&record.author&&record.recipient&&record.purpose&&record.basis&&record.sourceState&&record.fragments?.length>=3&&worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   add('history-japan-technology-chronology',japanTechIds===expectedJapanTechIds,japanTechIds);
   add('history-japan-public-boundaries',japanTechnology?.publicAnchors?.length===4&&japanTechnology.publicAnchors.map(anchor=>anchor.id).join('|')==='fgcs|optical-network|tron|bubble'&&japanTechnology.publicAnchors.every(anchor=>anchor.fact&&anchor.boundary&&anchor.source&&anchor.url.startsWith('https://')));
   add('history-japan-downstream-lineage',japanTechnology?.technologies?.some(item=>item.record==='2003-02-05-city-barrier'&&item.state==='derived')&&japanTechnology.technologies.some(item=>item.record==='2026-08-20-northern-reversal'&&item.state==='derived')&&worldHistoryProse?.records?.['2003-02-05-city-barrier']?.fragments?.some(fragment=>fragment.text.includes('제6계측계획'))&&worldHistoryProse?.records?.['2026-08-20-northern-reversal']?.fragments?.some(fragment=>fragment.text.includes('JID-87')));
   add('history-japan-separation-policy',japanTechRecords[0]?.fragments?.some(fragment=>fragment.text.includes('하위조직으로 활동하지 않으며'))&&japanTechnology?.publicAnchors?.find(anchor=>anchor.id==='bubble')?.boundary?.includes('버블의 발생이나 붕괴를')&&japanTechRecords.every(record=>!record.summary.includes('F.H.C')));
-  add('history-post-2006-chronicle',worldHistoryData?.post2006Records?.length===27&&worldHistoryData.post2006Records.every(record=>record.id&&record.date&&record.title&&record.summary&&record.paragraphs?.length>=3)&&worldHistoryData.records['2030-01-17-broken-crown']?.title==='부서진 왕관 개시');
+  add('history-post-2006-chronicle',worldHistoryData?.post2006Records?.length===29&&worldHistoryData.post2006Records.every(record=>record.id&&record.date&&record.title&&record.summary&&record.paragraphs?.length>=3)&&worldHistoryData.records['2030-01-17-broken-crown']?.title==='부서진 왕관 개시');
   const aftermathRecords=worldHistoryData?.post2006Records?.filter(record=>record.era==='aftermath')||[];
   // 2026-11-21: 도쿄 서부 시간 분열(2035)을 더해 후기 공통 기록이 6건에서 7건이 됐다(사용자 추천안 승인).
-  add('history-post-2030-common-chronicle',aftermathRecords.length===7&&aftermathRecords.map(record=>record.id).join('|')==='2031-02-03-branch-seal|2032-08-14-three-bells-compact|2034-04-22-inland-beacon-31|2035-11-19-tokyo-west-time-split|2036-12-12-central-callsign-loss|2038-06-29-sixth-northern-line|2042-10-31-three-night-silence');
+  add('history-post-2030-common-chronicle',aftermathRecords.length===9&&aftermathRecords.map(record=>record.id).join('|')==='2031-02-03-branch-seal|2031-06-21-west-japan-quake|2032-08-14-three-bells-compact|2033-09-08-redzone-conscription|2034-04-22-inland-beacon-31|2035-11-19-tokyo-west-time-split|2036-12-12-central-callsign-loss|2038-06-29-sixth-northern-line|2042-10-31-three-night-silence');
   add('history-post-2030-canon-boundary',worldHistoryData?.records?.['2031-02-03-branch-seal']?.summary?.includes('서로 양립할 수 없는 네 작전 결과철')&&worldHistoryData?.records?.['2036-12-12-central-callsign-loss']?.paragraphs?.some(text=>text.includes('중앙조직의 소멸을 선언하지 않았다'))&&worldHistoryData?.records?.['2042-10-31-three-night-silence']?.paragraphs?.some(text=>text.includes('두 지역이 연결됐다는 결론을 보류했다')));
   // D 혼합: history-direct-crosslinks의 데이터/매체 조건.
   add('history-direct-crosslinks:data',aftermathRecords.every(record=>Array.isArray(record.factions)&&Array.isArray(record.records)));
@@ -601,6 +602,9 @@ function verify(){
   const interstateAffairs=worldHistoryData?.worldFramework?.interstateAffairs;
   add('history-interstate-affairs:data',interstateAffairs?.items?.length===7&&interstateAffairs.items.every(item=>item.id&&item.title&&item.parties&&item.status&&item.text&&item.open&&item.records?.length&&item.records.every(id=>worldHistoryData.records[id])));
   // 기시체와 잔류 리버스(2026-11-21 사용자 설정) — 피탈자와 가르는 기준과 소각 프로토콜 절.
+  // 세계가 지고 있다(2026-11-21 사용자 결정): 종말 시계는 정보 추정, 열두 항목은 등급과 함께.
+  const decline=worldHistoryData?.worldFramework?.worldDecline;
+  add('history-world-decline:data',decline?.clock?.grade==='estimated'&&decline.items?.length===12&&decline.items.every(item=>item.id&&item.group&&item.title&&item.text&&worldHistoryData.evidenceLevels[item.grade])&&read('WORLD_CANON_LEDGER.md').includes('종말 시계'));
   const risen=worldHistoryData?.worldFramework?.risenCorpses;
   add('history-risen-corpses:data',Boolean(risen?.rule?.includes('잔류 리버스')&&risen.rule.includes('기시체')&&risen.handling?.includes('피탈자가 아니다')&&risen.protocol&&risen.boundary&&risen.caution)&&Boolean(context.window.ProjectCurseArchiveDocuments?.documents?.NHC_Manual_891219?.sections?.some(s=>s.title===risen.manualSection&&s.record?.limit&&(s.items||[]).some(t=>t.includes('체온과 맥박')))));
   const collapsedStates=['2011-09-27-vesca-collapse','2019-05-14-orvina-blood-moat','2021-10-27-vacant-seat'];
@@ -610,7 +614,7 @@ function verify(){
   const proseText=proseRecords.flatMap(record=>record.fragments||[]).map(fragment=>fragment.text).join('\n');
   const proseTypes=new Set(proseRecords.map(record=>record.documentType));
   const fragmentCounts=new Set(proseRecords.map(record=>record.fragments?.length||0));
-  add('history-authored-prose-fifty-eight',worldHistoryProse?.version===VERSION&&proseRecords.length===53&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
+  add('history-authored-prose-sixty',worldHistoryProse?.version===VERSION&&proseRecords.length===55&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
   add('history-prose-canon-id-parity',Object.keys(worldHistoryProse?.records||{}).sort().join('|')===Object.keys(worldHistoryData?.records||{}).sort().join('|')&&structureData?.owners?.worldHistoryProse==='assets/js/data/world-history-prose-data.js');
   add('history-eight-document-voices',Object.keys(worldHistoryProse?.documentTypes||{}).length===8&&proseTypes.size===8);
   add('history-variable-fragment-structure',fragmentCounts.size>=3&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='log'))&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='quote')));

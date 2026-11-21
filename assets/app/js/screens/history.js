@@ -287,6 +287,26 @@
     );
   }
 
+  // 세계가 지고 있다(2026-11-21 사용자 결정) — 종말 시계는 정보 추정. 항목마다 판정 등급을 함께 보인다.
+  function declineBody() {
+    const decline = chronology()?.worldFramework?.worldDecline;
+    if (!decline) return PC.missing('DECLINE MISSING', 'worldFramework.worldDecline', '세계가 지고 있다 데이터가 없습니다.');
+    const groups = [...new Set(decline.items.map((item) => item.group))];
+    return h('div.tc-hist-ref', null,
+      h('div.tc-hist-ref-lead', null,
+        h('p', { text: decline.rule }),
+        h('div.tc-note.tc-note--danger', null, h('b', null, decline.clock.label, ' ', verdictTag(decline.clock.grade)), h('p', { text: decline.clock.text }))
+      ),
+      groups.map((group) => h('details.tc-disclosure.tc-hist-sub', null,
+        h('summary', null, h('span', null, h('b', { text: group }))),
+        h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-affairs', null, decline.items.filter((item) => item.group === group).map((item) =>
+          h('li', null, h('b', { text: item.title }), verdictTag(item.grade), h('p', { text: item.text }))
+        ))
+      )),
+      h('div.tc-note.tc-note--caution', null, h('b', { text: decline.status }), h('p', { text: '판정 등급이 정보 추정·증언 기반인 항목은 확정된 사실이 아니다.' }))
+    );
+  }
+
   function observationsBody() {
     const framework = chronology()?.worldFramework;
     if (!framework) return PC.missing('FRAMEWORK MISSING', 'worldFramework', '세계 기본 규칙 데이터가 없습니다.');
@@ -362,6 +382,7 @@
       item('WORLD RULES', '세계의 기본 규칙', '존재 구분·발현 대가·민간 생존', frameworkBody()),
       item('ZONE GRADES', '구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
       item('INTERSTATE AFFAIRS', '국가 간 정세', '결론이 기록되지 않은 일곱 상황', interstateBody()),
+      item('WORLD DECLINE', '세계가 지고 있다', '종말 시계와 열두 기록', declineBody()),
       item('UNCONFIRMED PATTERNS', '확인되지 않은 세 규칙', '관측·봉쇄·능력 상한', observationsBody()),
       item('TECHNOLOGY TRACE', '일본 기술 도약의 계보', '1982–1992 계측 계획', technologyBody())
     );
