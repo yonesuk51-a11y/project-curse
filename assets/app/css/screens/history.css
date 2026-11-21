@@ -1059,3 +1059,41 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   font-size: var(--fs-s);
   line-height: 1.7;
 }
+
+/* 수배 목록 — 호출명 중심. 혐의는 본문, 주의는 붉은 글자 */
+.tc-hist-wanted {
+  display: grid;
+  gap: 1px;
+  margin: var(--s2) 0 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--line);
+  list-style: none;
+}
+.tc-hist-wanted > li {
+  display: grid;
+  gap: var(--s1);
+  min-width: 0;
+  padding: var(--s3);
+  border: 0;
+  background: var(--bg);
+}
+.tc-hist-wanted header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2);
+}
+.tc-hist-wanted header b {
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-hist-grid p.tc-hist-wanted-kind {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-hist-grid p.tc-hist-wanted-note {
+  color: var(--red-ink);
+  font-size: var(--fs-xs);
+}

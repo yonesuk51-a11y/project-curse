@@ -620,6 +620,9 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   const zoneLife=worldHistoryData?.worldFramework?.zoneLife;
   const nhcSections=context.window.ProjectCurseArchiveDocuments?.documents?.NHC_Manual_891219?.sections||[];
   add('history-zone-life:data',zoneLife?.items?.length===21&&new Set(zoneLife.items.map(item=>item.group)).size===4&&new Set(zoneLife.items.map(item=>item.id)).size===21&&zoneLife.items.every(item=>item.id&&item.title&&item.text&&worldHistoryData.evidenceLevels[item.grade])&&zoneLife.items.filter(item=>item.manualSection).every(item=>nhcSections.some(s=>s.title===item.manualSection))&&zoneLife.items.some(item=>item.excerpt?.lines?.some(line=>line.includes('█'))));
+  // 버티는 체제와 바뀌는 몸(2026-11-21 사용자 추천안 승인): 16항목 네 갈래, 수배 목록은 호출명만, 검문소 절에 기생체·자동 판정 서명.
+  const worldOrder=worldHistoryData?.worldFramework?.worldOrder;
+  add('history-world-order:data',worldOrder?.items?.length===16&&new Set(worldOrder.items.map(item=>item.group)).size===4&&worldOrder.items.every(item=>item.id&&item.title&&item.text&&worldHistoryData.evidenceLevels[item.grade])&&new Set([...(zoneLife?.items||[]),...worldOrder.items].map(item=>item.id)).size===37&&worldOrder.items.find(item=>item.id==='wanted-list')?.wanted?.length===5&&worldOrder.items.find(item=>item.id==='obsession-corruption')?.stages?.length===3&&nhcSections.some(s=>s.title==='검문소 표준 배치'&&(s.items||[]).some(t=>t.includes('기생체'))&&(s.items||[]).some(t=>t.includes('자동 판정'))));
   const oral=worldHistoryData?.worldFramework?.oralTestimony;
   add('history-oral-testimony:data',oral?.items?.length===6&&Boolean(oral.purpose)&&oral.rule?.includes('사실 확인은 하지 않았다')&&oral.items.every(entry=>entry.speaker&&entry.place&&/^\d{4}\.\d{2}\.\d{2}$/.test(entry.date)&&entry.lines?.length>=2&&entry.limit&&zoneLife?.items?.some(item=>item.id===entry.item)));
   const anchorCall=worldHistoryData?.worldFramework?.anchorCall;

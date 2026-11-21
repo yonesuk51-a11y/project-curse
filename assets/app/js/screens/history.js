@@ -376,15 +376,16 @@
     );
   }
 
-  // 존 안팎의 삶(2026-11-21 사용자 추천안 승인) — 네 갈래, 항목마다 판정 등급. 교범과 이어지는 항목은 현장 지침으로 잇는다.
-  function zoneLifeBody() {
-    const life = chronology()?.worldFramework?.zoneLife;
-    if (!life) return PC.missing('ZONE LIFE MISSING', 'worldFramework.zoneLife', '존 안팎의 삶 데이터가 없습니다.');
+  // 갈래별 항목 묶음(2026-11-21 사용자 추천안 승인) — 존 안팎의 삶, 버티는 체제와 바뀌는 몸.
+  // 항목마다 판정 등급. 교범과 이어지는 항목은 현장 지침으로, 단계·수배 목록이 있으면 함께 그린다.
+  function groupedBody(key, leadCode, leadLabel) {
+    const life = chronology()?.worldFramework?.[key];
+    if (!life) return PC.missing('REFERENCE MISSING', `worldFramework.${key}`, '이 묶음의 데이터가 없습니다.');
     const groups = [...new Set(life.items.map((item) => item.group))];
     return h('div.tc-hist-ref', null,
       h('div.tc-hist-ref-lead', null,
         h('p', { text: life.rule }),
-        h('div.tc-note.tc-note--caution', null, h('b', null, bi('LIFE BEHIND THE LINES', '차단선 안팎')), h('p', { text: life.status }))
+        h('div.tc-note.tc-note--caution', null, h('b', null, bi(leadCode, leadLabel)), h('p', { text: life.status }))
       ),
       groups.map((group) => h('details.tc-disclosure.tc-hist-sub', null,
         h('summary', null, h('span', null, h('b', { text: group }), h('small', { text: `${life.items.filter((item) => item.group === group).length}건` }))),
@@ -397,11 +398,26 @@
               h('figcaption', null, lbl('LEAKED EXCERPT'), h('span', { text: item.excerpt.label })),
               h('ol', null, item.excerpt.lines.map((line) => h('li', null, richText(line))))
             ) : null,
+            stageGrid(item.stages, `${item.title} 단계`),
+            wantedList(item.wanted),
             manualLink(item.manualSection)
           )
         ))
       ))
     );
+  }
+
+  // 수배 목록 — 호출명, 분류, 혐의, 주의. 실명은 쓰지 않는다.
+  function wantedList(entries) {
+    if (!entries?.length) return null;
+    return h('ul.tc-hist-wanted', { 'aria-label': '수배 목록' }, entries.map((entry) =>
+      h('li', null,
+        h('header', null, lbl(entry.code), h('b', { text: entry.alias })),
+        h('p.tc-hist-wanted-kind', { text: entry.kind }),
+        h('p', { text: entry.charge }),
+        h('p.tc-hist-wanted-note', { text: entry.note })
+      )
+    ));
   }
 
   // 구술 증언집(2026-11-21 사용자 추천안 승인) — 받아 적은 말이다. 사실 확인은 하지 않았다. 대사는 문장 개정 대상이 아니다.
@@ -506,7 +522,8 @@
       item('ZONE GRADES', '구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
       item('INTERSTATE AFFAIRS', '국가 간 정세', '결론이 기록되지 않은 일곱 상황', interstateBody()),
       item('WORLD DECLINE', '세계가 지고 있다', '종말 시계와 열두 기록', declineBody()),
-      item('ZONE LIFE', '존 안팎의 삶', '행정·존 안쪽·채집과 거래·사람과 사회', zoneLifeBody()),
+      item('ZONE LIFE', '존 안팎의 삶', '행정·존 안쪽·채집과 거래·사람과 사회', groupedBody('zoneLife', 'LIFE BEHIND THE LINES', '차단선 안팎')),
+      item('SYSTEMS AND BODIES', '버티는 체제와 바뀌는 몸', '판정과 행정·몸·전쟁과 하늘·사람', groupedBody('worldOrder', 'HOW THE SYSTEM HOLDS', '체제가 버티는 방식')),
       item('ORAL TESTIMONY', '구술 증언집', 'S.I.D 사회 기록반 여섯 증언', testimonyBody()),
       item('UNCONFIRMED PATTERNS', '확인되지 않은 세 규칙', '관측·봉쇄·능력 상한', observationsBody()),
       item('TECHNOLOGY TRACE', '일본 기술 도약의 계보', '1982–1992 계측 계획', technologyBody())
