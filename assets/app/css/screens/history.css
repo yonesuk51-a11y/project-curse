@@ -1194,7 +1194,7 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   font-weight: 600;
   line-height: 1.55;
 }
-.tc-hist-more > summary {
+.tc-more > summary {
   display: inline-flex;
   align-items: center;
   gap: var(--s1);
@@ -1203,23 +1203,23 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   cursor: pointer;
   list-style: none;
 }
-.tc-hist-more > summary::-webkit-details-marker { display: none; }
-.tc-hist-more > summary::before {
+.tc-more > summary::-webkit-details-marker { display: none; }
+.tc-more > summary::before {
   content: '+';
   display: inline-block;
   width: 1em;
   color: var(--text-3);
   font-family: var(--mono);
 }
-.tc-hist-more[open] > summary::before { content: '−'; }
-.tc-hist-more > summary:hover,
-.tc-hist-more > summary:focus-visible { color: var(--text); }
-.tc-hist-more-body {
+.tc-more[open] > summary::before { content: '−'; }
+.tc-more > summary:hover,
+.tc-more > summary:focus-visible { color: var(--text); }
+.tc-more-body {
   display: grid;
   gap: var(--s2);
   margin-top: var(--s2);
 }
-.tc-hist-more-body > p {
+.tc-more-body > p {
   color: var(--text-2);
   font-size: var(--fs-s);
   line-height: 1.65;
@@ -1332,36 +1332,6 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
 .tc-hist-related { margin: var(--s4) 0; }
 .tc-hist-related .tc-hist-links { margin: 0; }
 
-/* 사건 연표 / 세계 설정 탭 (2026-11-21 사용자 결정) */
-.tc-hist-tabs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
-  margin: var(--s4) 0;
-  border: 1px solid var(--line);
-  background: var(--line);
-}
-.tc-hist-tabs button {
-  display: grid;
-  gap: 2px;
-  justify-items: start;
-  padding: var(--s3) var(--s4);
-  border: 0;
-  background: var(--panel);
-  color: var(--text-2);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.tc-hist-tabs button b { color: inherit; font-size: var(--fs); font-weight: 600; }
-.tc-hist-tabs button small { color: var(--text-3); font-size: var(--fs-xs); }
-.tc-hist-tabs button:hover,
-.tc-hist-tabs button:focus-visible { background: var(--panel-2); color: var(--text); }
-.tc-hist-tabs button[aria-selected="true"] {
-  background: var(--panel-2);
-  color: var(--text);
-  box-shadow: inset 0 -2px 0 var(--red-ink);
-}
 .tc-hist-tab-lead {
   margin-bottom: var(--s3);
   color: var(--text-2);

@@ -58,7 +58,7 @@
     const open = options.open ?? (slug === 'register' || PC.density?.() === 'full');
     return h('details', { class: `tc-panel tc-man-panel${options.bracket ? ` tc-bracket${options.bracket === true ? '' : ` tc-bracket--${options.bracket}`}` : ''}${options.cls ? ` ${options.cls}` : ''}`, 'aria-labelledby': id, open, dataset: { slug } },
       h('summary.tc-panel-head', null,
-        h('div', null, lbl(code), h('h2', { id, text: title }), HINTS[slug] ? h('p.tc-man-hint', { text: HINTS[slug] }) : null)
+        h('div', null, lbl(code), h('h2', { id, text: title }), HINTS[slug] ? h('p.tc-hint', { text: HINTS[slug] }) : null)
       ),
       h('div.tc-panel-body', null, body)
     );
@@ -125,29 +125,18 @@
     gear: { title: '장비와 능력', hint: '장비군·제식 화기·능력과 대가' },
     register: { title: '자캐 등록', hint: '등록 양식·등록증 그림' }
   };
-  let activeTab = 'roe';
-  let tabButtons = {};
-  let tabPanels = {};
+  let manualTabs = null;
 
   function setTab(id, focus) {
-    if (!tabPanels[id]) return;
-    activeTab = id;
-    Object.entries(tabPanels).forEach(([key, panelEl]) => { panelEl.hidden = key !== id; });
-    Object.entries(tabButtons).forEach(([key, button]) => button.setAttribute('aria-selected', String(key === id)));
-    if (focus) tabButtons[id].focus();
+    return manualTabs?.set(id, focus) || false;
   }
 
   function tabs(groups) {
-    tabButtons = {};
-    tabPanels = {};
-    Object.entries(TABS).forEach(([id, tab]) => {
-      tabButtons[id] = h('button', {
-        type: 'button', role: 'tab', id: `tc-man-tabbtn-${id}`, 'aria-controls': `tc-man-tab-${id}`, 'aria-selected': String(id === activeTab),
-        onclick: () => setTab(id, true)
-      }, h('b', { text: tab.title }), h('small', { text: tab.hint }));
-      tabPanels[id] = h('div.tc-man-tabpanel', { id: `tc-man-tab-${id}`, role: 'tabpanel', 'aria-labelledby': `tc-man-tabbtn-${id}`, hidden: id !== activeTab }, groups[id]);
+    manualTabs = PC.tabs({
+      id: 'tc-man', label: '현장 지침 보기', active: 'roe',
+      items: Object.entries(TABS).map(([id, tab]) => ({ id, title: tab.title, hint: tab.hint, body: groups[id] }))
     });
-    return [h('div.tc-man-tabs', { role: 'tablist', 'aria-label': '현장 지침 보기' }, Object.values(tabButtons)), ...Object.values(tabPanels)];
+    return [manualTabs.tablist, ...manualTabs.panels];
   }
 
   /* ---------- 철수 조건 판정 ---------- */

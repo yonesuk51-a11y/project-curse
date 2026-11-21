@@ -116,9 +116,7 @@
 
   let activeEra = 'all';
   // 2026-11-21 사용자 결정: 사건 연표와 세계 설정을 탭으로 나눈다. #history/world, #history/ref/<id>는 세계 설정 탭을 연다.
-  let activeTab = 'chrono';
-  let tabButtons = null;
-  let tabPanels = null;
+  let historyTabs = null;
   let indexView = null;
   let refNotice = null;
   let detailView = null;
@@ -435,9 +433,9 @@
       h('header', null, h('b', { text: item.title }), h('span.tc-hist-life-tags', null, fresh?.has(item.id) ? PC.tag('새', 'evidence') : null, verdictTag(item.grade))),
       item.hook ? h('p.tc-hist-hook', { text: item.hook }) : null,
       docBlock(item.doc),
-      h('details.tc-hist-more', { open: PC.density?.() === 'full' },
+      h('details.tc-more', { open: PC.density?.() === 'full' },
         h('summary', null, h('span', { text: '본문' })),
-        h('div.tc-hist-more-body', null,
+        h('div.tc-more-body', null,
           h('p', { text: item.text }),
           item.excerpt ? h('figure.tc-hist-excerpt.tc-paper', { 'data-stamp': '유출' },
             h('figcaption', null, lbl('LEAKED EXCERPT'), h('span', { text: item.excerpt.label })),
@@ -787,42 +785,38 @@
   function buildIndex() {
     const list = records();
     const eras = chronology()?.eras || [];
-    const chrono = h('div.tc-hist-tabpanel', { id: 'tc-hist-tab-chrono', role: 'tabpanel', 'aria-labelledby': 'tc-hist-tabbtn-chrono' },
+    const chrono = h('div.tc-hist-tabbody', null,
       turnsPanel(),
       controls(),
       eraIndex()
     );
-    const world = h('div.tc-hist-tabpanel', { id: 'tc-hist-tab-world', role: 'tabpanel', 'aria-labelledby': 'tc-hist-tabbtn-world', hidden: true },
+    const world = h('div.tc-hist-tabbody', null,
       h('p.tc-hist-tab-lead', { text: '사건이 아니라 세계가 돌아가는 방식이다. 규칙, 땅과 나라, 사람들의 삶, 도시와 목소리를 묶음으로 본다.' }),
       refNotice = h('div.tc-hist-refnotice'),
       referenceStack()
     );
-    tabPanels = { chrono, world };
-    const tab = (id, title, hint) => h('button', {
-      type: 'button', role: 'tab', id: `tc-hist-tabbtn-${id}`, 'aria-controls': `tc-hist-tab-${id}`, 'aria-selected': String(id === 'chrono'),
-      onclick: () => setTab(id, true)
-    }, h('b', { text: title }), h('small', { text: hint }));
-    tabButtons = { chrono: tab('chrono', '사건 연표', `${list.length}개 사건 · ${eras.length}개 시대`), world: tab('world', '세계 설정', '규칙·땅과 나라·삶·도시와 목소리') };
+    historyTabs = PC.tabs({
+      id: 'tc-hist', label: '세계 기록 보기', active: 'chrono',
+      items: [
+        { id: 'chrono', title: '사건 연표', hint: `${list.length}개 사건 · ${eras.length}개 시대`, body: chrono },
+        { id: 'world', title: '세계 설정', hint: '규칙·땅과 나라·삶·도시와 목소리', body: world }
+      ]
+    });
     indexView = h('div.tc-hist-indexview', null,
       PC.screenHead('history', {
         title: '세계 기록',
         desc: '세계는 어느 날 한꺼번에 무너지지 않았다. 오래된 금기, 산업화된 계측, 대응기관의 모방과 대륙의 침묵이 수십 년에 걸쳐 겹쳤다. 사건 연표로 흐름을 잡고, 세계 설정에서 세계가 돌아가는 방식을 본다.',
         meta: [['SPAN', 'ORIGIN?–2042'], ['INDEX', `${list.length} RECORDS`], ['ERAS', String(eras.length)]]
       }),
-      h('div.tc-hist-tabs', { role: 'tablist', 'aria-label': '세계 기록 보기' }, tabButtons.chrono, tabButtons.world),
-      chrono,
-      world
+      historyTabs.tablist,
+      historyTabs.panels
     );
     renderIndex();
     return indexView;
   }
 
   function setTab(id, focus) {
-    if (!tabPanels?.[id]) return;
-    activeTab = id;
-    Object.entries(tabPanels).forEach(([key, panel]) => { panel.hidden = key !== id; });
-    Object.entries(tabButtons).forEach(([key, button]) => button.setAttribute('aria-selected', String(key === id)));
-    if (focus) tabButtons[id].focus();
+    historyTabs?.set(id, focus);
   }
 
   /* ---------- 사건 기록 ---------- */

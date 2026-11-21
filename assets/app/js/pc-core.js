@@ -540,6 +540,45 @@
     render('initial');
   }
 
+  /* ---------- 탭 (2026-11-21 사용자 결정) ---------- */
+  // 화면 안의 큰 갈래를 나누는 공용 탭. items: [{ id, title, hint, body }]. 좌우 화살표·Home·End로 옮긴다.
+  // 반환: { tablist, panels, set(id, focus), get() }. 없는 id로 set하면 false를 돌려주고 아무것도 바꾸지 않는다.
+  function tabs({ id: prefix, label, items, active, onChange }) {
+    let current = items.some((item) => item.id === active) ? active : items[0]?.id;
+    const buttons = {};
+    const panels = {};
+    const set = (id, focus) => {
+      if (!panels[id]) return false;
+      current = id;
+      Object.entries(panels).forEach(([key, panel]) => { panel.hidden = key !== id; });
+      Object.entries(buttons).forEach(([key, button]) => {
+        button.setAttribute('aria-selected', String(key === id));
+        button.tabIndex = key === id ? 0 : -1;
+      });
+      if (focus) buttons[id].focus();
+      onChange?.(id);
+      return true;
+    };
+    const onKey = (event) => {
+      const ids = items.map((item) => item.id);
+      const index = ids.indexOf(current);
+      const next = { ArrowRight: ids[(index + 1) % ids.length], ArrowLeft: ids[(index - 1 + ids.length) % ids.length], Home: ids[0], End: ids[ids.length - 1] }[event.key];
+      if (!next) return;
+      event.preventDefault();
+      set(next, true);
+    };
+    items.forEach((item) => {
+      buttons[item.id] = h('button', {
+        type: 'button', role: 'tab', id: `${prefix}-tab-${item.id}`, 'aria-controls': `${prefix}-panel-${item.id}`,
+        'aria-selected': String(item.id === current), tabindex: item.id === current ? '0' : '-1',
+        onclick: () => set(item.id, true), onkeydown: onKey
+      }, h('b', { text: item.title }), item.hint ? h('small', { text: item.hint }) : null);
+      panels[item.id] = h('div.tc-tabpanel', { id: `${prefix}-panel-${item.id}`, role: 'tabpanel', 'aria-labelledby': `${prefix}-tab-${item.id}`, hidden: item.id !== current }, item.body);
+    });
+    const tablist = h('div.tc-tabs', { role: 'tablist', 'aria-label': label, style: `--tab-count:${items.length}` }, Object.values(buttons));
+    return { tablist, panels: Object.values(panels), set, get: () => current };
+  }
+
   /* ---------- 흩어진 수신 조각 (2026-11-21 사용자 결정) ---------- */
   // 여러 화면에 끼어 있는 '세 번째 아나운서' 방송 조각. 받은 조각 id만 이 기기에 남긴다. 저장이 막히면 이번 방문에만 남는다.
   // 조각 문장은 home-screen-data.js signal.fragments에서 읽는다. 없는 id는 아무것도 그리지 않는다.
@@ -622,6 +661,7 @@
     version: '6.1.0',
     fx,
     density,
+    tabs,
     signalFound,
     signalMark,
     feastToday,
