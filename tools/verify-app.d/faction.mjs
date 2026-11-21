@@ -58,10 +58,19 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
     for (const density of ['brief', 'full']) {
       runtime.c.document.documentElement.dataset.density = density;
       runtime.show([]);
+      assert.equal(runtime.host.querySelectorAll('.tc-fac-index [role="tab"]').length, 5, '세력 분류 다섯 갈래가 탭으로 나뉜다');
       assert.equal(runtime.host.querySelectorAll('.tc-fac-index .tc-fac-role').length, 9, '목록에 아홉 역할을 표시한다');
-      for (const key of keys) checkName(runtime.host.querySelector(`[data-fac-key="${key}"] h3`), F.factions[key]);
+      for (const key of keys) {
+        const name = runtime.host.querySelector(`[data-fac-key="${key}"] h3`), tabPanel = name.closest('.tc-tabpanel');
+        if (tabPanel.hidden) runtime.click(runtime.host.querySelector(`[aria-controls="${tabPanel.id}"]`));
+        checkName(name, F.factions[key]);
+      }
       for (const key of keys) {
         runtime.show([key]);
+        assert.equal(runtime.host.querySelectorAll('.tc-fac-detail [role="tab"]').length, 3);
+        assert.equal(runtime.host.querySelector('#tc-fac-dossier-tab-assessment').getAttribute('aria-selected'), 'true');
+        const assessment = runtime.host.querySelectorAll('.tc-fac-detail .tc-fac-section').find(section => section.querySelector('h2')?.textContent === '현재와 주요 행동');
+        assert.ok(assessment?.open, '핵심 판정은 간략 보기에서도 펼쳐 보인다');
         checkName(runtime.host.querySelector('.tc-fac-cover h1'), F.factions[key]);
       }
     }
@@ -76,6 +85,7 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
     const linkedRoles = new Set();
     for (const key of keys) {
       runtime.show([key]);
+      runtime.click(runtime.host.querySelector('#tc-fac-dossier-tab-related'));
       const links = runtime.host.querySelectorAll('.tc-fac-detail a').filter(link => link.getAttribute('href')?.startsWith('#faction-info/'));
       assert.ok(links.length >= F.factions[key].relations.length, '관련 세력 링크가 빠지지 않아야 한다');
       for (const link of links) {

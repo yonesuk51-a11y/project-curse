@@ -1,6 +1,8 @@
 /* Project Curse 6 — 인물 편제표와 2006년 기록 파일. */
 .tc-per-index, .tc-per-detail, .tc-per-roster, .tc-per-results { min-width: 0; }
 .tc-per-detail, .tc-per-dossier, .tc-per-copy, .tc-per-results { display: grid; gap: var(--s4); }
+.tc-per-dossier-stack, .tc-per-related-stack { display: grid; gap: var(--s4); min-width: 0; }
+.tc-per-register-list { display: grid; gap: var(--s3); min-width: 0; }
 .tc-per-dossier { min-width: 0; animation: tc-per-file-open .46s var(--ease) both; }
 @keyframes tc-per-file-open { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
 .tc-per-controls { display: grid; gap: var(--s3); padding: var(--s4); margin-bottom: var(--s5); }
@@ -9,8 +11,8 @@
 .tc-per-search > span { color: var(--text-2); }
 .tc-per-search input, .tc-per-link-input { min-width: 0; width: 100%; min-height: 44px; padding: var(--s2) var(--s3); border: 1px solid var(--line-2); border-radius: 0; color: var(--text); background: var(--sunken); }
 .tc-per-search input::placeholder { color: var(--text-2); }
-.tc-per-workspace { display: grid; grid-template-columns: 178px minmax(0, 1fr); align-items: start; gap: var(--s4); }
-.tc-per-groups { position: sticky; top: calc(var(--bar-h) + var(--s4)); }
+.tc-per-workspace { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--s4); }
+.tc-per-groups { min-width: 0; }
 .tc-per-group-buttons { display: grid; }
 .tc-per-group-button { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); min-height: 44px; padding: var(--s2) var(--s3); border: 0; border-bottom: 1px solid var(--line); border-radius: 0; color: var(--text-2); background: transparent; text-align: left; font-size: var(--fs); transition: background-color var(--t) var(--ease); }
 .tc-per-group-button b { color: var(--coyote-ink); font-family: var(--mono); font-size: var(--fs-xs); font-weight: 500; }
@@ -18,7 +20,17 @@
 .tc-per-group-button[aria-pressed="true"] { color: var(--text); background: var(--fill-od-2); box-shadow: inset 2px 0 0 var(--ch); }
 .tc-per-group-button:last-child { border-bottom: 0; }
 .tc-per-result-count { margin-bottom: var(--s4); color: var(--ch-ink); font-size: var(--fs); overflow-wrap: anywhere; }
-.tc-per-results { gap: var(--s4); }
+.tc-per-results { gap: var(--s3); }
+.tc-per-roster-fold { min-width: 0; }
+.tc-per-roster-fold > summary h2 { font-size: var(--fs-l); }
+.tc-per-roster-body { display: grid; gap: var(--s2); }
+.tc-per-roster-body > .tc-rows { display: grid; }
+.tc-per-section > .tc-panel-body { display: grid; gap: var(--s4); }
+.tc-per-section > summary h2 { font-size: var(--fs-l); }
+.tc-per-link-group { display: grid; gap: var(--s3); min-width: 0; }
+.tc-per-link-group > h3 { font-size: var(--fs-l); }
+.tc-per-more-links > .tc-disclosure-body { display: grid; gap: var(--s3); }
+.tc-per-connections-fold > .tc-disclosure-body { display: grid; gap: var(--s5); }
 .tc-per-roster-group { min-width: 0; }
 .tc-per-roster-group > .tc-section-head { padding-bottom: var(--s2); margin-bottom: var(--s2); }
 .tc-per-expand { width: 100%; margin-top: var(--s2); }
@@ -88,8 +100,6 @@ html:not([data-density="full"]) .tc-per-row-unit p + p::before { content: '·'; 
 html:not([data-density="full"]) .tc-per-row .tc-row-meta { grid-column: 2; grid-row: 1; }
 html:not([data-density="full"]) .tc-per-row .tc-row-go { grid-column: 3; grid-row: 1 / 3; }
 @media (max-width: 1100px) {
-  .tc-per-workspace { grid-template-columns: minmax(0, 1fr); }
-  .tc-per-groups { position: static; }
   .tc-per-group-buttons { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .tc-per-group-button { box-shadow: 0 0 0 1px var(--line); }
 }
