@@ -92,6 +92,12 @@
       }
     ];
 
+    const cityMapPositions=Object.freeze({
+      karven:Object.freeze({x:480,y:80,region:'europe'}),
+      maroa:Object.freeze({x:480,y:480,region:'southamerica'}),
+      tama:Object.freeze({x:977,y:260,region:'eastasia'})
+    });
+
     const scenarioStageByItem={
       'gbf-west-observation':['unlit-fortress',0],'monsur-church':['unlit-fortress',1],'gbf-monsur-chapel':['unlit-fortress',1],'gbf-duel-ground':['unlit-fortress',2],'black-river':['unlit-fortress',3],'gbf-black-river':['unlit-fortress',3],'gbf-blood-lake':['unlit-fortress',4],'unlit-fortress':['unlit-fortress',5],'gbf-unlit-fortress':['unlit-fortress',5],
       'returned-coast':['deadzone-return',0],'dead-return-shore':['deadzone-return',0],'dead-checkpoint-07':['deadzone-return',1],'dead-quarantine-ring':['deadzone-return',4],
@@ -123,7 +129,7 @@ const id=entry.id;
     };
 }
 root.ProjectCurseMapScreenData=Object.freeze({
- canonBoundary, decisions:Object.freeze(decisions), theaters, scenarioStageByItem, markerDetails:markerDetails(), verdictDocument,
+ canonBoundary, decisions:Object.freeze(decisions), theaters, cityMapPositions, scenarioStageByItem, markerDetails:markerDetails(), verdictDocument,
  display:Object.freeze({yearMin:1975,yearMax:2042,yearStepMs:1100,zoomMax:6,signalGapMs:42000,signalLossMs:3400}),
  copy:{
  timeline:'고른 해까지 날짜가 확인된 기록을 표시합니다. 연도를 알 수 없는 기록은 점선으로 남습니다.',

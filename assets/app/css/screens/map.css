@@ -152,6 +152,12 @@ html[data-fx="reduced"] #map-room .tc-map-content *::after,
 .tc-map-canvas[data-map-id] .tc-map-effects { z-index:2; }
 .tc-map-points { position:absolute; inset:0; z-index:3; pointer-events:none; }
 .tc-map-framed { position:absolute; display:grid; place-items:center; width:40px; height:40px; pointer-events:auto; cursor:pointer; }
+.tc-map-city-point { position:absolute; z-index:4; display:grid; place-items:center; width:16px; height:16px; padding:0; border:0; background:transparent; transform:translate(-50%, -50%); pointer-events:auto; cursor:pointer; }
+.tc-map-city-point::before { content:""; width:7px; height:7px; border:1px solid var(--text-2); background:var(--panel-2); transform:rotate(45deg); opacity:.82; }
+.tc-map-city-point .tc-map-frame-icon, .tc-map-city-point .tc-map-frame-word, .tc-map-city-point .tc-map-observation { display:none; }
+.tc-map-city-point:hover::before, .tc-map-city-point.is-selected::before { border-color:var(--ch-ink); background:var(--ch-ink); opacity:1; }
+.tc-map-city-point:focus-visible { outline:2px solid var(--amber); outline-offset:2px; }
+.tc-map-city-point[hidden] { display:none; }
 .tc-map-framed.is-interline::before { content:""; position:absolute; inset:-3px; border:1px dashed var(--ch-ink); opacity:.8; pointer-events:none; }
 .tc-map-framed[hidden] { display:none; }
 .tc-map-frame-icon { width:36px; height:36px; pointer-events:none; }
@@ -193,6 +199,9 @@ html[data-fx="reduced"] #map-room .tc-map-content *::after,
 .tc-map-preview[hidden] { display:none; }
 .tc-map-preview-head { display:flex; justify-content:space-between; align-items:start; gap:var(--s2); }
 .tc-map-preview-head h3 { font-size:var(--fs); overflow-wrap:anywhere; }
+.tc-map-city-grade-counts { display:flex; flex-wrap:wrap; gap:var(--s1) var(--s2); }
+.tc-map-city-grade-count { display:inline-flex; align-items:baseline; gap:4px; white-space:nowrap; }
+.tc-map-city-district-grade { color:var(--text-2); }
 .tc-map-preview .tc-evidence { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); margin:0; }
 .tc-map-preview .tc-evidence-media img { display:block; width:100%; max-height:220px; object-fit:contain; cursor:zoom-in; }
 .tc-map-preview figcaption { display:grid; align-content:start; gap:var(--s2); font-size:var(--fs-xs); overflow-wrap:anywhere; }

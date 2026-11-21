@@ -148,6 +148,52 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     for(const e of d.synchronyEvents)assert.ok(historyIds.has(e.history));
     for(const s of Object.values(context.ProjectCursePilgrimageData.scenarios)){assert.ok(opIds.has(s.operation));for(const id of s.records)assert.ok(archiveIds.has(id)||context.ProjectCurseVerdictArchiveData.records?.some(e=>e.id===id),id);}
   });
+  check('world-city-map-points-history-links-and-explicit-missing',()=>{
+    const {c,host,screen}=screenHarness(context,source,stateSource),cities=c.ProjectCurseWorldHistoryData.worldFramework.cities;
+    const positions=c.ProjectCurseMapScreenData.cityMapPositions,markers=c.ProjectCurseMapRoom.markers;
+    const mapRegions={karven:'europe',maroa:'southamerica',tama:'eastasia'};
+    assert.equal(cities.map(city=>city.id).sort().join('|'),'karven|maroa|tama');
+    for(const city of cities){
+      const position=positions[city.id];assert.ok(position,city.id+' missing position');assert.equal(position.region,mapRegions[city.id],city.id+' wrong map region');
+      assert.ok(position.x>=0&&position.x<=1200&&position.y>=0&&position.y<=620,city.id+' outside world map');
+      assert.ok(markers.every(marker=>Math.hypot(marker.x-position.x,marker.y-position.y)>50),city.id+' overlaps a map marker');
+      const overview=markers.find(marker=>marker.overview&&marker.region===position.region);
+      assert.ok(overview&&Math.hypot(overview.x-position.x,overview.y-position.y)>95,city.id+' overlaps a mobile overview marker');
+    }
+    screen.show([],c.PCApp);
+    const points=host.querySelectorAll('.tc-map-city-point[data-city-id]');assert.equal(points.length,3);
+    for(const city of cities){
+      const point=host.querySelector('[data-city-id="'+city.id+'"]');assert.ok(point,city.id+' missing point');
+      assert.equal(point.dataset.contact,'city-'+city.id,city.id+' wrong contact id');assert.equal(point.attrs.href,'#map-room/city/'+city.id,city.id+' wrong map path');
+      assert.ok(point.attrs['aria-label'].includes('대략 위치'),city.id+' missing approximate label');
+      host.emit('click',point);
+      const preview=host.querySelector('.tc-map-preview');
+      assert.ok(preview.textContent.includes(city.label),city.id+' missing label in preview');
+      assert.ok(preview.textContent.includes(city.region),city.id+' missing region in preview');
+      assert.ok(preview.textContent.includes(city.hook),city.id+' missing hook in preview');
+      assert.ok(preview.textContent.includes('대략 위치'),city.id+' missing approximate label in preview');
+      assert.ok(preview.textContent.includes('판정 분포'),city.id+' missing grade distribution');
+      assert.equal(city.districts.length,6,city.id);
+      for(const district of city.districts)assert.ok(preview.textContent.includes(district.name),city.id+' missing district '+district.name);
+      for(const rumor of city.rumors)assert.ok(preview.textContent.includes(rumor),city.id+' missing rumor');
+      const links=preview.querySelectorAll('a.tc-map-link').map(item=>item.attrs.href);
+      assert.ok(links.includes('#history/ref/'+city.id),city.id+' city reference');
+      if(city.diary)assert.ok(links.includes('#history/ref/'+(city.id==='karven'?'diary':'diary-'+city.id)),city.id+' diary reference');
+      if(city.record)assert.ok(links.includes('#history/'+city.record),city.id+' event reference');
+      for(const district of city.districts)assert.ok(!host.visibleText(true).includes(district.code),city.id+' exposed a district code in brief view');
+    }
+    const css=read('assets/app/css/screens/map.css');
+    assert.match(css,/[.]tc-map-city-point:focus-visible/);assert.doesNotMatch(css,/[.]tc-map-city-point[^}]*animation/);
+    screen.show(['city','unlisted-city'],c.PCApp);
+    assert.ok(host.textContent.includes('MAP RECORD NOT FOUND'));assert.ok(host.textContent.includes('city/unlisted-city'));
+    for(const city of cities)assert.ok(!host.textContent.includes(city.label),'unknown city fell back to '+city.id);
+    screen.hide();
+    const mobile=screenHarness(context,source,stateSource);mobile.c.innerWidth=375;mobile.screen.show([],mobile.c.PCApp);
+    assert.ok(mobile.host.querySelectorAll('.tc-map-city-point[data-city-id]').every(point=>!point.hidden));mobile.screen.hide();
+    const reduced=screenHarness(context,source,stateSource);reduced.media.matches=true;reduced.screen.show([],reduced.c.PCApp);
+    assert.equal(reduced.host.dataset.mapFx,'reduced');assert.equal(reduced.timers.size,0);assert.equal(reduced.timeouts.size,0);reduced.screen.hide();
+    return '3 cities / 3 history refs / explicit missing id / reduced motion';
+  });
   check('three-new-field-scenarios-map-links',()=>{
     const data=context.ProjectCursePilgrimageData.scenarios,verdicts=context.ProjectCurseVerdictArchiveData.records;
     for(const id of ['interline-night-patrol','red-moat-negotiation','empty-seat-returner-screening']){
