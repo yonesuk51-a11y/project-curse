@@ -168,6 +168,7 @@
         ))
       ),
       possessionBlock(framework.reverseSiteCivilians),
+      laughingBlock(framework.laughingTaken),
       risenBlock(framework.risenCorpses),
       anchorBlock(framework.anchorCall),
       mindBlock(framework.reverseMind)
@@ -232,6 +233,78 @@
         h('p', { text: item.handling }),
         h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution }))
       )
+    );
+  }
+
+  // 웃는 피탈자(2026-11-21 사용자 설정) — 괴이화 없이 남을 해치며 기뻐한다. 판정을 통과한다. 첫 기록과 교범 항목으로 잇는다.
+  function laughingBlock(item) {
+    if (!item) return null;
+    const index = item.record ? findIndex(item.record) : -1;
+    return h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-rule-laughing' },
+      h('summary', null, h('span', null, h('b', { text: item.label }), h('small', { text: item.difference }))),
+      h('div.tc-disclosure-body', null,
+        h('p', { text: item.rule }),
+        h('ul.tc-hist-signs', null, item.signs.map((sign) => h('li', { text: sign }))),
+        h('p', { text: item.origin }),
+        h('div.tc-note.tc-note--danger', null, h('b', null, bi('PASSES THE CHECK', '판정을 통과한다')), h('p', { text: item.detection })),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
+        item.record ? h('p', null, index >= 0
+          ? h('a', { href: PC.href('history', item.record) }, `첫 기록 — ${records()[index].title}`, h('i', { 'aria-hidden': 'true', text: ' ›' }))
+          : h('span.is-missing', { text: `${item.record} (기록 없음)` })) : null,
+        manualLink(item.manualSection)
+      )
+    );
+  }
+
+  // 레드존 방어선과 시설(2026-11-21 사용자 추천안 승인) — 다섯 겹, 시설 표, 블랙존, 해상 차단선
+  function defenseBody() {
+    const d = chronology()?.worldFramework?.redzoneDefense;
+    if (!d) return PC.missing('DEFENSE MISSING', 'worldFramework.redzoneDefense', '레드존 방어선 자료가 없습니다.');
+    return h('div.tc-hist-ref', { id: 'tc-ref-redzone-defense' },
+      h('p', { text: d.rule }),
+      h('ol.tc-hist-layers', { 'aria-label': '레드존 방어선 다섯 겹' }, d.layers.map((layer) =>
+        h('li', null, h('b', { text: layer.name }), h('p', null, layer.text, h('small.tc-hist-failure', { text: ` 무너진 사례 — ${layer.failure}` })))
+      )),
+      refTable(d.facilities),
+      h('div.tc-hist-parts', null,
+        h('div.tc-note.tc-note--danger', null, h('b', { text: d.blackzone.name }), h('p', { text: d.blackzone.text }), h('p.tc-hint', { text: d.blackzone.caution })),
+        h('div.tc-note.tc-note--evidence', null, h('b', { text: d.sea.name }), h('p', { text: d.sea.text }), h('p.tc-hint', { text: `무너진 사례 — ${d.sea.failure}` }))
+      ),
+      h('p.tc-hist-caution', { text: d.status })
+    );
+  }
+
+  // 그늘의 조직(2026-11-21 사용자 추천안 승인) — P.O.H·S.O.N·프리윌. 조직마다 접는 칸 하나, 사건은 판정 등급과 함께.
+  function orgsBody() {
+    const o = chronology()?.worldFramework?.shadowOrgs;
+    if (!o) return PC.missing('ORGS MISSING', 'worldFramework.shadowOrgs', '그늘의 조직 자료가 없습니다.');
+    const factions = root.ProjectCurseFactionAnalysis?.factions || {};
+    return h('div.tc-hist-ref', null,
+      h('p', { text: o.rule }),
+      o.orgs.map((org) => h('details.tc-disclosure.tc-hist-sub', { id: `tc-ref-org-${org.id}` },
+        h('summary', null, h('span', null, h('b', { text: org.name }), h('small', { text: org.hook }))),
+        h('div.tc-disclosure-body', null,
+          h('p', { text: org.text }),
+          refTable(org.structure),
+          org.rules?.length ? h('ul.tc-hist-signs', null, org.rules.map((rule) => h('li', { text: rule }))) : null,
+          h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-affairs', { 'aria-label': `${org.name} 사건` }, org.scenarios.map((sc) => {
+            const index = sc.record ? findIndex(sc.record) : -1;
+            return h('li', null,
+              h('b', { text: sc.title }),
+              h('p.tc-hist-affair-parties', { text: `${sc.date} · ${sc.place}` }),
+              verdictTag(sc.grade),
+              h('p', { text: sc.text }),
+              sc.record ? (index >= 0
+                ? h('p', null, h('a', { href: PC.href('history', sc.record) }, '연표 기록 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+                : h('span.is-missing', { text: `${sc.record} (기록 없음)` })) : null
+            );
+          })),
+          org.faction && factions[org.faction]
+            ? h('p', null, h('a', { href: PC.href('faction-info', org.faction) }, `세력 분석에서 ${factions[org.faction].name} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' })))
+            : null
+        )
+      )),
+      h('div.tc-note.tc-note--caution', null, h('b', { text: o.status }), h('p', { text: o.caution }))
     );
   }
 
@@ -674,10 +747,12 @@
     const lifeCount = lifeItems().length;
     return h('div.tc-hist-refs', null,
       item('WORLD RULES', '세계의 기본 규칙', '존재 구분·발현 대가·몸과 죽음의 규칙', frameworkBody()),
-      item('LAND AND STATES', '땅과 나라', '구역 판정·국가 간 정세·세계가 지고 있다', h('div.tc-hist-parts', null,
+      item('LAND AND STATES', '땅과 나라', '구역 판정·국가 간 정세·방어선·그늘의 조직', h('div.tc-hist-parts', null,
         sub('구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
         sub('국가 간 정세', '결론이 기록되지 않은 상황', interstateBody()),
-        sub('세계가 지고 있다', '종말 시계와 열두 기록', declineBody())
+        sub('세계가 지고 있다', '종말 시계와 열두 기록', declineBody()),
+        sub('레드존 방어선과 시설', '다섯 겹·방어 시설·블랙존·해상 차단선', defenseBody()),
+        sub('그늘의 조직', 'P.O.H·S.O.N·프리윌', orgsBody())
       )),
       item('LIFE UNDER REVERSE', '리버스 아래의 삶', `일곱 갈래 ${lifeCount}항목 · 한 줄씩 먼저`, lifeBody()),
       item('VOICES AND PLACES', '목소리와 장소', `${cities().map((city) => city.label).join('·')}·주민 일지·구술 증언`, h('div.tc-hist-parts', null,

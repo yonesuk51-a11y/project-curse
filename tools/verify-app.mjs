@@ -104,7 +104,7 @@ const historyIds = historyRecords.map((record) => record.id);
 // 2026-11-21: 우시노다교가 무너뜨린 가상 국가 세 기록을 더해 51건에서 54건이 됐다(사용자 추천안 승인).
 // 2026-11-21: 실제 나라 아포칼립스 네 기록(2009 북미 망명정부, 2027 비무장지대, 2029 경기 북부 신도시, 2035 도쿄 서부)을 더해 58건이 됐다.
 // 2026-11-21: 서일본 해안 대지진(2031)과 비협력권 레드존 징집 증언(2033)을 더해 60건이 됐다.
-add('history-sixty-one-records', historyIds.length === 61, historyIds.length);
+add('history-sixty-three-records', historyIds.length === 63, historyIds.length);
 add('history-ids-unique', new Set(historyIds).size === historyIds.length);
 const eraIds = new Set((W?.eras || []).map((era) => era.id));
 const noEra = historyRecords.filter((record) => !eraIds.has(record.era)).map((record) => record.id);

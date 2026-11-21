@@ -1344,3 +1344,20 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   scrollbar-width: thin;
 }
 .tc-hist-eras button { flex: none; }
+
+/* 웃는 피탈자 징후·조직 규칙 목록, 방어선 무너진 사례 (2026-11-21) */
+.tc-hist-signs {
+  display: grid;
+  gap: var(--s1);
+  margin: var(--s2) 0;
+  padding-left: 1.1em;
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
+.tc-hist-failure {
+  display: block;
+  margin-top: 2px;
+  color: var(--red-ink);
+  font-size: var(--fs-xs);
+}
