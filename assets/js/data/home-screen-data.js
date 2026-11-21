@@ -369,7 +369,8 @@
         { give: '소금 한 줌', get: '붕대', unit: '롤', base: 1, spread: 1 },
         { give: '빈 탄피 열', get: '라디오', unit: '분', base: 60, spread: 20 },
         { give: '잔류물 하나', get: '연료 쿠폰', unit: '장', base: 5, spread: 2 },
-        { give: '이름 하루치', get: '연료 쿠폰', unit: '장', base: 20, spread: 6 }
+        { give: '이름 하루치', get: '연료 쿠폰', unit: '장', base: 20, spread: 6 },
+        { give: '진짜 달걀 하나', get: '연료 쿠폰', unit: '장', base: 12, spread: 4 }
       ],
       note: '이름 하루치는 남의 대조 문항 하나를 대신 답해 주는 일이다. 걸리면 둘 다 배급이 끊긴다.'
     },
