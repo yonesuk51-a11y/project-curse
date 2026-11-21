@@ -833,7 +833,7 @@
       item('LAND AND STATES', '땅과 나라', '구역 판정·국가 간 정세·방어선·교전·그늘의 조직', h('div.tc-hist-parts', null,
         sub('구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
         sub('국가 간 정세', '결론이 기록되지 않은 상황', interstateBody()),
-        sub('세계가 지고 있다', '종말 시계와 열두 기록', declineBody()),
+        sub('세계가 지고 있다', '종말 시계와 열 기록', declineBody()),
         sub('레드존 방어선과 시설', '다섯 겹·방어 시설·블랙존·해상 차단선', defenseBody()),
         sub('이름 난 교전', '성채 문·연료선·셋째 역·연료 창고·해안 철수선', battlesBody()),
         sub('그늘의 조직', 'P.O.H·S.O.N·프리윌', orgsBody())
