@@ -151,8 +151,9 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
   check('world-city-map-points-history-links-and-explicit-missing',()=>{
     const {c,host,screen}=screenHarness(context,source,stateSource),cities=c.ProjectCurseWorldHistoryData.worldFramework.cities;
     const positions=c.ProjectCurseMapScreenData.cityMapPositions,markers=c.ProjectCurseMapRoom.markers;
-    const mapRegions={karven:'europe',maroa:'southamerica',tama:'eastasia'};
-    assert.equal(cities.map(city=>city.id).sort().join('|'),'karven|maroa|tama');
+    const mapRegions={karven:'europe',maroa:'southamerica',tama:'eastasia',ostal:'europe'};
+    // 2026-11-22: 넷째 도시 오스탈 배양시를 더해 셋에서 넷이 됐다.
+    assert.equal(cities.map(city=>city.id).sort().join('|'),'karven|maroa|ostal|tama');
     for(const city of cities){
       const position=positions[city.id];assert.ok(position,city.id+' missing position');assert.equal(position.region,mapRegions[city.id],city.id+' wrong map region');
       assert.ok(position.x>=0&&position.x<=1200&&position.y>=0&&position.y<=620,city.id+' outside world map');
@@ -161,7 +162,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
       assert.ok(overview&&Math.hypot(overview.x-position.x,overview.y-position.y)>95,city.id+' overlaps a mobile overview marker');
     }
     screen.show([],c.PCApp);
-    const points=host.querySelectorAll('.tc-map-city-point[data-city-id]');assert.equal(points.length,3);
+    const points=host.querySelectorAll('.tc-map-city-point[data-city-id]');assert.equal(points.length,4);
     for(const city of cities){
       const point=host.querySelector('[data-city-id="'+city.id+'"]');assert.ok(point,city.id+' missing point');
       assert.equal(point.dataset.contact,'city-'+city.id,city.id+' wrong contact id');assert.equal(point.attrs.href,'#map-room/city/'+city.id,city.id+' wrong map path');
@@ -192,7 +193,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     assert.ok(mobile.host.querySelectorAll('.tc-map-city-point[data-city-id]').every(point=>!point.hidden));mobile.screen.hide();
     const reduced=screenHarness(context,source,stateSource);reduced.media.matches=true;reduced.screen.show([],reduced.c.PCApp);
     assert.equal(reduced.host.dataset.mapFx,'reduced');assert.equal(reduced.timers.size,0);assert.equal(reduced.timeouts.size,0);reduced.screen.hide();
-    return '3 cities / 3 history refs / explicit missing id / reduced motion';
+    return '4 cities / 4 history refs / explicit missing id / reduced motion';
   });
   check('three-new-field-scenarios-map-links',()=>{
     const data=context.ProjectCursePilgrimageData.scenarios,verdicts=context.ProjectCurseVerdictArchiveData.records;

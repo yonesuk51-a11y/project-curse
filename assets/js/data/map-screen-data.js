@@ -95,7 +95,9 @@
     const cityMapPositions=Object.freeze({
       karven:Object.freeze({x:480,y:80,region:'europe'}),
       maroa:Object.freeze({x:480,y:480,region:'southamerica'}),
-      tama:Object.freeze({x:977,y:260,region:'eastasia'})
+      tama:Object.freeze({x:977,y:260,region:'eastasia'}),
+      // 2026-11-22 넷째 도시 — 베스카 격리선 밖. 베스카의 정확한 위치는 정하지 않았으므로 유럽 권역 동쪽 대략 위치
+      ostal:Object.freeze({x:690,y:110,region:'europe'})
     });
 
     const scenarioStageByItem={
