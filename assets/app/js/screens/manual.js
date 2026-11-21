@@ -97,7 +97,7 @@
   /* ---------- 목차 (2026-11-21 사용자 결정) ---------- */
   // 패널이 열셋이라 바로 가기를 둔다. 주소(#field-manual)는 바꾸지 않고 해당 패널로 스크롤한 뒤 제목에 초점을 옮긴다.
   const TOC = [
-    ['break', '철수 조건'], ['roe', '접촉과 교전'], ['possessed', '피탈자'], ['blood', '혈술 대응'], ['tags', '표식 체계'],
+    ['break', '철수 조건'], ['roe', '접촉과 교전'], ['possessed', '피탈자'], ['risen', '기시체'], ['blood', '혈술 대응'], ['tags', '표식 체계'],
     ['prep', '진입 전 준비'], ['team', '현장조와 계수'], ['loadout', '장비군'], ['wielder', '능력과 대가'],
     ['lines', '편성과 인계'], ['checkpoint', '검문소 배치'], ['register', '등록 양식']
   ];
@@ -199,6 +199,21 @@
       rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
       h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 피탈자 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
     ], { bracket: 'danger', slug: 'possessed' });
+  }
+
+  /* ---------- 기시체 소각 프로토콜 ---------- */
+  // 일어난 죽은 몸, 기시체(2026-11-21 사용자 설정). 체온·맥박으로 피탈자와 가른다.
+  function risenPanel() {
+    const sec = section('기시체 소각 프로토콜');
+    if (!sec) return missingSection('기시체 소각 프로토콜');
+    const rec = sec.record || {};
+    return panel('ROE / RISEN CORPSES', '기시체 소각 프로토콜', [
+      paragraphs(sec.paragraphs),
+      list(sec.items, 'tc-man-list tc-man-list--rules'),
+      sec.warning ? h('div.tc-note.tc-note--danger', null, bi('RECORD RULE', '기록 규칙'), h('p', { text: sec.warning })) : null,
+      rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
+      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 기시체 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+    ], { bracket: 'danger', slug: 'risen' });
   }
 
   /* ---------- 혈술 대응 ---------- */
@@ -673,6 +688,7 @@
       toc(),
       h('div.tc-man-pair', null, breakPanel(), engagementPanel()),
       possessionPanel(),
+      risenPanel(),
       bloodPanel(),
       tagPanel(),
       entryPanels(),

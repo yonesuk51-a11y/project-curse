@@ -163,7 +163,24 @@
           h('li', null, h('b.tc-hist-coyote', { text: item.name }), h('p', { text: item.text }))
         ))
       ),
-      possessionBlock(framework.reverseSiteCivilians)
+      possessionBlock(framework.reverseSiteCivilians),
+      risenBlock(framework.risenCorpses)
+    );
+  }
+
+  // 기시체와 잔류 리버스(2026-11-21 사용자 설정) — 피탈자(산 몸)와 가르고, 소각 절차는 교범으로 잇는다.
+  function risenBlock(item) {
+    if (!item) return null;
+    return h('details.tc-disclosure.tc-hist-sub', null,
+      h('summary', null, h('span', null, h('b', { text: item.label }))),
+      h('div.tc-disclosure-body', null,
+        h('p', { text: item.rule }),
+        h('p', { text: item.handling }),
+        h('p', { text: item.protocol }),
+        h('p', { text: item.boundary }),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
+        item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `현장 지침의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
+      )
     );
   }
 
