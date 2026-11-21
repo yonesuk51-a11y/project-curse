@@ -539,10 +539,56 @@
     render('initial');
   }
 
+  /* ---------- 흩어진 수신 조각 (2026-11-21 사용자 결정) ---------- */
+  // 여러 화면에 끼어 있는 '세 번째 아나운서' 방송 조각. 받은 조각 id만 이 기기에 남긴다. 저장이 막히면 이번 방문에만 남는다.
+  // 조각 문장은 home-screen-data.js signal.fragments에서 읽는다. 없는 id는 아무것도 그리지 않는다.
+  const SIGNAL_KEY = 'pc6_signal_fragments_v1';
+  let signalMemory = null;
+  const signalData = () => root.ProjectCurseHomeScreen?.signal || null;
+  function signalFound() {
+    if (!signalMemory) {
+      try {
+        const parsed = JSON.parse(root.localStorage.getItem(SIGNAL_KEY) || '[]');
+        signalMemory = new Set(Array.isArray(parsed) ? parsed.filter((id) => typeof id === 'string') : []);
+      } catch (_error) {
+        signalMemory = new Set();
+      }
+    }
+    return [...signalMemory];
+  }
+  function signalTake(id) {
+    signalFound();
+    if (signalMemory.has(id)) return false;
+    signalMemory.add(id);
+    try { root.localStorage.setItem(SIGNAL_KEY, JSON.stringify([...signalMemory])); } catch (_error) { /* 이번 방문에만 남는다 */ }
+    document.dispatchEvent(new CustomEvent('pc:signal', { detail: { id, found: [...signalMemory] } }));
+    return true;
+  }
+  function signalMark(id) {
+    const fragment = signalData()?.fragments?.find((item) => item.id === id);
+    if (!fragment) return null;
+    const taken = () => signalFound().includes(id);
+    const text = h('span.tc-signal-text', { text: fragment.text, hidden: !taken() });
+    const button = h('button.tc-signal-mark', { type: 'button', 'aria-label': '잡음 섞인 수신 조각 받기' },
+      h('i', { 'aria-hidden': 'true', text: '▚▞' }), h('span', { text: '수신 잡음' }));
+    if (taken()) button.classList.add('is-taken');
+    button.addEventListener('click', () => {
+      const fresh = signalTake(id);
+      text.hidden = false;
+      button.classList.add('is-taken');
+      root.PCAudio?.cue(fresh ? 'evidence.open' : 'menu.select');
+      const total = signalData()?.fragments?.length || 0;
+      toast(fresh ? `수신 조각을 받았다. ${signalFound().length}/${total}` : '이미 받은 조각이다.');
+    });
+    return h('p.tc-signal', null, button, text);
+  }
+
   const api = Object.freeze({
     version: '6.1.0',
     fx,
     density,
+    signalFound,
+    signalMark,
     threat,
     openCanon,
     toast,

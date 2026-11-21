@@ -828,3 +828,46 @@ img[data-tc-inspectable]:focus-visible {
 html.tc-anomaly-clock [data-tc-clock] {
   color: var(--red-ink);
 }
+
+/* 흩어진 수신 조각 (2026-11-21 사용자 결정) — 증거 층에만 끼운다. 받은 뒤에는 문장이 남는다 */
+.tc-signal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s3);
+  margin: var(--s2) 0;
+}
+.tc-signal-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  padding: 2px var(--s2);
+  border: 1px dashed var(--line-2);
+  background: transparent;
+  color: var(--text-3);
+  font-family: var(--mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: .06em;
+  cursor: pointer;
+}
+.tc-signal-mark i { font-style: normal; opacity: .7; }
+.tc-signal-mark:hover,
+.tc-signal-mark:focus-visible { color: var(--text); border-color: var(--text-3); }
+.tc-signal-mark.is-taken { border-style: solid; color: var(--text-2); }
+.tc-signal-text {
+  color: var(--red-ink);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+}
+html:not([data-fx="reduced"]) .tc-signal-mark:not(.is-taken) i {
+  animation: tc-signal-flicker 2.8s steps(2, end) infinite;
+}
+@keyframes tc-signal-flicker {
+  0%, 86% { opacity: .7; }
+  88% { opacity: .15; }
+  92% { opacity: .9; }
+  100% { opacity: .7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tc-signal-mark i { animation: none !important; }
+}

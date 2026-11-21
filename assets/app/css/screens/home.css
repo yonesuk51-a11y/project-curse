@@ -1051,3 +1051,71 @@ html[data-silence="on"] .tc-home-signals {
   font-size: var(--fs-s);
   line-height: 1.7;
 }
+
+/* 오늘의 기록 한 장 · 수신 조각 모음 (2026-11-21 사용자 결정) */
+.tc-home-daily {
+  display: grid;
+  gap: var(--s2);
+  margin: var(--s4) 0;
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--red-ink);
+  background: var(--panel);
+}
+.tc-home-daily header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+.tc-home-daily h2 {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.tc-home-daily blockquote { margin: 0; }
+.tc-home-daily blockquote p {
+  color: var(--text);
+  font-size: var(--fs-l);
+  line-height: 1.6;
+}
+.tc-home-daily footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s2);
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-home-frag-count {
+  margin: var(--s3) 0 var(--s2);
+  color: var(--text-2);
+}
+.tc-home-frag-count strong { color: var(--text); font-size: var(--fs-l); }
+.tc-home-frag-list {
+  display: grid;
+  gap: 1px;
+  margin: 0 0 var(--s3);
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--line);
+  list-style: none;
+}
+.tc-home-frag-list li {
+  display: grid;
+  grid-template-columns: 2.4em minmax(0, 1fr);
+  gap: var(--s3);
+  padding: var(--s2) var(--s4);
+  background: var(--panel);
+  color: var(--text-3);
+  font-size: var(--fs-s);
+}
+.tc-home-frag-list li.is-found p { color: var(--text); }
+.tc-home-frag-done {
+  margin-bottom: var(--s3);
+  color: var(--red-ink);
+  font-size: var(--fs-s);
+}

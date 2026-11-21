@@ -645,3 +645,47 @@
     width: min(100%, 420px);
   }
 }
+
+/* 자동 판정 서명 연습 (2026-11-21 사용자 결정) — 판정 화면 세 장. 정답·점수 없음 */
+.tc-man-drill {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--s3);
+  margin: var(--s3) 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-man-drill > li {
+  display: grid;
+  align-content: start;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.tc-man-drill header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-man-drill header b { color: var(--text); font-size: var(--fs-s); }
+.tc-man-drill-readings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s2);
+  margin: 0;
+}
+.tc-man-drill-readings dt { color: var(--text-3); font-size: var(--fs-2xs); }
+.tc-man-drill-readings dd { margin: 0; color: var(--text); font-size: var(--fs-s); }
+.tc-man-drill .tc-btn.is-chosen { outline: 1px solid var(--text-2); }
+.tc-man-drill-result {
+  padding-top: var(--s2);
+  border-top: 1px dashed var(--line-2);
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}

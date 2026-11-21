@@ -258,7 +258,7 @@ add('manual-break-rule-source', (manualDoc?.sections || []).some((sec) => (sec.i
 // 구역 판정·혈술(2026-11-21 사용자 추천안 승인) — 세계 기록이 두 항목을 실제로 그리고, 혈술은 현장 지침의 같은 이름 절과 잇는다.
 add('history-renders-zone-grades-and-blood-arts',
   W?.worldFramework?.zoneGrading?.grades?.length === 6 && W?.worldFramework?.bloodArts?.branches?.length === 4 &&
-  historyScreenSource.includes("item('ZONE GRADES'") && historyScreenSource.includes('bloodBlock(framework.bloodArts)') &&
+  historyScreenSource.includes("sub('구역 판정과 존의 층'") && historyScreenSource.includes('bloodBlock(framework.bloodArts)') &&
   sectionTitles.has(W.worldFramework.bloodArts.manualSection) &&
   ['bloodPanel()', 'teamPanel()', 'checkpointPanel()'].every((call) => manualSource.includes(call)));
 // 이상 층 연출(2026-11-21 사용자 결정) — 이름이 갈린 나라, 무응답 구역 시계 멈춤, 결계 안 방송 윤곽음. 떠날 때 시계를 돌려놓는다.
@@ -266,9 +266,28 @@ add('history-atmosphere-hooks',
   W?.records?.['2021-10-27-vacant-seat']?.nameVariants?.length === 3 && ['2008-09-06-dead-zone-designation', '2021-10-27-vacant-seat', '2034-04-22-inland-beacon-31'].every((id) => W.records[id]?.silentZone) &&
   W.records['2019-05-14-orvina-blood-moat']?.broadcast && historyScreenSource.includes("PC.screen({ id: 'history', mount, show, hide })") &&
   read('assets/app/js/pc-core.js').includes("dataset.clockHold === 'on'") && read('assets/app/js/pc-audio.js').includes('broadcast, set'));
+// 다시 올 이유(2026-11-21 사용자 결정) — 주민 일지는 공개일 오름차순, 수신 조각 여섯은 순서가 이어지고 각 조각이 화면 한 곳에 끼어 있다.
+// 판정 서명 연습은 사례마다 판독값이 칸 수와 맞고 서명·보류 뒤 이야기가 모두 있다. 세계 기록은 #history/ref/<id>로 항목에 바로 간다.
+const homeSignal = homeScreen?.signal;
+const diaryEntries = context.ProjectCurseWorldHistoryData?.worldFramework?.cityFile?.diary?.entries || [];
+const drillSection = (context.ProjectCurseArchiveDocuments?.documents?.NHC_Manual_891219?.sections || []).find((section) => section.title === '자동 판정 서명 연습');
+const returnScreenSources = ['home', 'history', 'manual'].map((name) => read(`assets/app/js/screens/${name}.js`)).join(' ');
+add('return-reasons-diary-signal-drill',
+  diaryEntries.length === 12 && diaryEntries.every((entry, i, all) => entry.id && /^\d{4}-\d{2}-\d{2}$/.test(entry.release) && entry.lines?.length >= 2 && (!i || entry.release >= all[i - 1].release)) &&
+  homeSignal?.fragments?.length === 6 && homeSignal.fragments.every((item, i) => item.order === i + 1 && item.text && item.screen) &&
+  homeSignal.fragments.every((item) => (returnScreenSources.match(new RegExp(`'${item.id}'`, 'g')) || []).length === 1) &&
+  Boolean(homeSignal.limit && homeScreen?.daily?.title) &&
+  drillSection?.drill?.cases?.length === 6 && drillSection.drill.cases.every((item) => item.readings?.length === drillSection.drill.columns.length && item.machine && item.signed && item.held) &&
+  historyScreenSource.includes("id === 'ref'") && historyScreenSource.includes('function openRef(') && read('assets/app/js/pc-core.js').includes('signalMark,'));
+// 화면 파일 안에서 같은 이름의 함수 선언이 두 번 나오면 뒤의 것이 앞의 것을 조용히 덮어쓴다(2026-11-21 상황판 signalPanel 사고). 화면마다 이름이 하나여야 한다.
+const duplicateScreenFunctions = ['home', 'history', 'manual', 'manual-card'].flatMap((name) => {
+  const names = [...read(`assets/app/js/screens/${name}.js`).matchAll(/^ {2}function\s+([A-Za-z0-9_$]+)\s*\(/gm)].map((match) => match[1]);
+  return names.filter((fn, index) => names.indexOf(fn) !== index).map((fn) => `${name}:${fn}`);
+});
+add('screen-functions-not-shadowed', duplicateScreenFunctions.length === 0, duplicateScreenFunctions.join(', '));
 // 국가 간 정세(2026-11-21 사용자 추천안 승인) — 세계 기록 참조 묶음이 일곱 상황을 그리고, 관련 기록은 모두 연표에 있다.
 add('history-renders-interstate-affairs',
-  W?.worldFramework?.interstateAffairs?.items?.length === 7 && historyScreenSource.includes("item('INTERSTATE AFFAIRS'") &&
+  W?.worldFramework?.interstateAffairs?.items?.length === 7 && historyScreenSource.includes("sub('국가 간 정세'") &&
   W.worldFramework.interstateAffairs.items.every((item) => item.records?.length && item.records.every((id) => historySet.has(id))));
 for (const [id, name] of Object.entries(SCREEN_FILES)) {
   const source = read(`assets/app/js/screens/${name}.js`);

@@ -95,12 +95,12 @@
   }
 
   /* ---------- 목차 (2026-11-21 사용자 결정) ---------- */
-  // 패널이 열여섯이라 바로 가기를 둔다. 주소(#field-manual)는 바꾸지 않고 해당 패널로 스크롤한 뒤 제목에 초점을 옮긴다.
+  // 패널이 열일곱이라 바로 가기를 둔다. 주소(#field-manual)는 바꾸지 않고 해당 패널로 스크롤한 뒤 제목에 초점을 옮긴다.
   const TOC = [
     ['break', '철수 조건'], ['roe', '접촉과 교전'], ['possessed', '피탈자'], ['risen', '기시체'], ['blood', '혈술 대응'],
     ['percept', '지각 오염'], ['backflow', '역류 대피'], ['cleanup', '청소조'], ['tags', '표식 체계'],
     ['prep', '진입 전 준비'], ['team', '현장조와 계수'], ['loadout', '장비군'], ['wielder', '능력과 대가'],
-    ['lines', '편성과 인계'], ['checkpoint', '검문소 배치'], ['register', '등록 양식']
+    ['lines', '편성과 인계'], ['checkpoint', '검문소 배치'], ['drill', '판정 서명 연습'], ['register', '등록 양식']
   ];
   function toc() {
     const jump = (slug) => {
@@ -271,12 +271,13 @@
 
   /* ---------- 역류 경보와 대피 · 청소조 노출 한도 ---------- */
   // 같은 모양의 짧은 절 둘(2026-11-21 사용자 추천안 승인). 문단·순서·경고만 그린다.
-  function rulePanel(title, code, slug, noteCode, noteLabel) {
+  function rulePanel(title, code, slug, noteCode, noteLabel, extra) {
     const sec = section(title);
     if (!sec) return missingSection(title);
     return panel(code, title, [
       paragraphs(sec.paragraphs),
       list(sec.items, 'tc-man-list tc-man-list--rules'),
+      extra || null,
       sec.warning ? h('div.tc-note.tc-note--caution', null, bi(noteCode, noteLabel), h('p', { text: sec.warning })) : null
     ], { slug });
   }
@@ -315,8 +316,44 @@
         h('li', null, h('b', { text: step }), h('span', { text: duty }))
       )),
       list(sec.items),
+      PC.signalMark?.('sig-5'),
       sec.warning ? h('div.tc-note.tc-note--caution', null, bi('NOTE', '참고'), h('p', { text: sec.warning })) : null
     ], { slug: 'checkpoint' });
+  }
+
+  /* ---------- 자동 판정 서명 연습 (2026-11-21 사용자 결정) ---------- */
+  // 7주 차 검문 훈련 자료. 날짜로 세 사례를 고른다. 서명·보류 뒤에 실제로 있었던 일을 보인다. 정답·점수는 없다. 기록하지 않는다.
+  function drillPanel() {
+    const sec = section('자동 판정 서명 연습');
+    const drill = sec?.drill;
+    if (!drill?.cases?.length) return missingSection('자동 판정 서명 연습');
+    const day = Math.floor(Date.now() / 86400000);
+    const start = day % drill.cases.length;
+    const picked = [0, 1, 2].map((offset) => drill.cases[(start + offset) % drill.cases.length]);
+    const TONE = { '사람': 'ok', '피탈자': 'caution', '기시체': 'danger' };
+    return panel('VERDICT SIGN-OFF DRILL', '자동 판정 서명 연습', [
+      paragraphs(sec.paragraphs),
+      h('ol.tc-man-drill', null, picked.map((item) => {
+        const result = h('p.tc-man-drill-result', { hidden: true, 'aria-live': 'polite' });
+        const choose = (kind) => {
+          result.textContent = kind === 'signed' ? item.signed : item.held;
+          result.hidden = false;
+          sign.disabled = true;
+          hold.disabled = true;
+          (kind === 'signed' ? sign : hold).classList.add('is-chosen');
+          root.PCAudio?.cue(kind === 'signed' ? 'system.alert' : 'menu.select');
+        };
+        const sign = h('button.tc-btn.tc-btn--caution', { type: 'button', onclick: () => choose('signed') }, '서명');
+        const hold = h('button.tc-btn', { type: 'button', onclick: () => choose('held') }, '보류');
+        return h('li', null,
+          h('header', null, h('b', { text: item.label }), h('span', null, '기계 판정 ', PC.tag(item.machine, TONE[item.machine] || 'info'))),
+          h('dl.tc-man-drill-readings', null, drill.columns.map((column, index) => h('div', null, h('dt', { text: column }), h('dd.tc-code', { text: item.readings[index] })))),
+          h('div.tc-btnrow', null, sign, hold),
+          result
+        );
+      })),
+      sec.warning ? h('div.tc-note.tc-note--caution', null, bi('SIGN-OFF RULE', '서명 규칙'), h('p', { text: sec.warning })) : null
+    ], { slug: 'drill' });
   }
 
   /* ---------- 표식 체계 ---------- */
@@ -731,7 +768,7 @@
       bloodPanel(),
       perceptPanel(),
       h('div.tc-man-pair', null,
-        rulePanel('역류 경보와 대피', 'BACKFLOW SIREN', 'backflow', 'SHELTER DOOR', '대피소 문'),
+        rulePanel('역류 경보와 대피', 'BACKFLOW SIREN', 'backflow', 'SHELTER DOOR', '대피소 문', PC.signalMark?.('sig-3')),
         rulePanel('청소조 노출 한도', 'CLEANUP CREW', 'cleanup', 'SENTENCE CREDIT', '감경 계산')
       ),
       tagPanel(),
@@ -741,6 +778,7 @@
       wielderPanel(),
       linesPanel(),
       checkpointPanel(),
+      drillPanel(),
       registerPanel()
     );
   }

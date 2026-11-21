@@ -395,7 +395,8 @@
       h('p.tc-home-fold-lead', null, h('span.tc-fx-live', { 'aria-hidden': 'true' }), ash.lead),
       h('div.tc-home-ash-sky', { class: `is-${sky.tone}` },
         h('header', null, h('span.tc-code', { text: ash.code }), PC.tag(`오늘의 하늘 — ${sky.name}`, sky.tone)),
-        h('p', { text: sky.text })
+        h('p', { text: sky.text }),
+        PC.signalMark?.('sig-1')
       ),
       h('ol.tc-home-fear-list.tc-home-ash-list', null, ash.regions.map((region, index) => {
         const value = Math.max(0, Math.round(region.base + (dayNoise(index + offset, day) - 0.5) * region.spread));
@@ -418,6 +419,70 @@
         link('재 내리는 날 보기', ['history'])
       )
     );
+  }
+
+  /* ---------- 오늘의 기록 한 장 (2026-11-21 사용자 결정) ---------- */
+  // 세계 기록에서 한 줄 훅·증언·은어·소문·금지곡을 모아 날짜로 하나를 고른다. 오늘 올라온 주민 일지가 있으면 그 장이 먼저다.
+  function localDay() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  }
+
+  function dailyPool() {
+    const framework = root.ProjectCurseWorldHistoryData?.worldFramework || {};
+    const life = ['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => framework[key]?.items || []);
+    const pool = [];
+    life.filter((item) => item.hook).forEach((item) => pool.push({ kind: '한 줄', text: item.hook, source: item.title, ref: item.id }));
+    (framework.oralTestimony?.items || []).forEach((entry) => entry.lines.forEach((line) => pool.push({ kind: '증언', text: line, source: entry.speaker, ref: entry.id })));
+    const tableRows = (id) => life.find((item) => item.id === id)?.tables?.[0]?.rows || [];
+    tableRows('field-slang').forEach(([term, meaning]) => pool.push({ kind: '은어', text: `${term} — ${meaning}`, source: '현장 은어', ref: 'field-slang' }));
+    tableRows('banned-songs').forEach(([song, reason]) => pool.push({ kind: '금지곡', text: `${song} — ${reason}`, source: '방송 금지곡', ref: 'banned-songs' }));
+    (framework.cityFile?.rumors || []).forEach((rumor) => pool.push({ kind: '소문', text: rumor, source: framework.cityFile.label, ref: 'karven' }));
+    return pool;
+  }
+
+  function dailyCard() {
+    const head = copy().daily;
+    const diary = root.ProjectCurseWorldHistoryData?.worldFramework?.cityFile?.diary;
+    const fresh = diary?.entries?.find((entry) => entry.release === localDay());
+    const pool = dailyPool();
+    if (!head || (!fresh && !pool.length)) return PC.missing('DAILY RECORD MISSING', 'ProjectCurseHomeScreen.daily', '오늘의 기록이 없습니다.');
+    const pick = fresh
+      ? { kind: '주민 일지 · 새 장', text: fresh.lines[0], source: `${diary.title} — ${fresh.date} ${fresh.title}`, ref: 'diary' }
+      : pool[(today() * 7919) % pool.length];
+    return h('section.tc-home-daily', { 'aria-labelledby': 'tc-home-daily-title' },
+      h('header', null, h('h2#tc-home-daily-title', { text: head.title }), PC.tag(pick.kind, fresh ? 'danger' : 'evidence')),
+      h('blockquote', null, h('p', { text: pick.text })),
+      h('footer', null, h('span', { text: pick.source }), link('이어서 읽기', ['history', 'ref', pick.ref]))
+    );
+  }
+
+  /* ---------- 수신 조각 모음 (2026-11-21 사용자 결정) ---------- */
+  // 받은 조각은 방송 순서대로 잇고, 받지 못한 자리는 어느 채널에 있는지만 알린다.
+  function fragmentPanel() {
+    const signal = copy().signal;
+    if (!signal?.fragments?.length) return PC.missing('SIGNAL MISSING', 'ProjectCurseHomeScreen.signal', '수신 조각 자료가 없습니다.');
+    const found = new Set(PC.signalFound?.() || []);
+    const ordered = [...signal.fragments].sort((a, b) => a.order - b.order);
+    const count = ordered.filter((item) => found.has(item.id)).length;
+    return h('section.tc-home-frag', { 'aria-label': signal.title },
+      h('p.tc-home-fold-lead', { text: signal.intro }),
+      h('p.tc-home-frag-count', null, h('strong.tc-code', { text: `${count}/${ordered.length}` }), h('span', { text: ' 조각 수신' })),
+      h('ol.tc-home-frag-list', null, ordered.map((item) => found.has(item.id)
+        ? h('li.is-found', null, h('span.tc-code', { text: String(item.order).padStart(2, '0') }), h('p', { text: item.text }))
+        : h('li', null, h('span.tc-code', { text: String(item.order).padStart(2, '0') }), h('p', { text: `— ${signal.missing} · ${item.screen} 어딘가 —` }))
+      )),
+      count === ordered.length ? h('p.tc-home-frag-done', { text: signal.complete }) : null,
+      h('footer.tc-home-civil-foot', null,
+        h('dl.tc-kv', null, kv('보낸 곳', signal.author), kv('받는 곳', signal.recipient), kv('시기', signal.date)),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: '이 복원본의 한계' }), h('p', { text: signal.limit }))
+      )
+    );
+  }
+
+  function renderFragments() {
+    const slot = indexView?.querySelector('.tc-home-frag-slot');
+    if (slot) slot.replaceChildren(fragmentPanel());
   }
 
   function wantedPanel() {
@@ -711,6 +776,7 @@
       h('div.tc-home-open', null, custodyPanel(), keyArt()),
       h('div.tc-home-grid', null, live.flash, live.signals),
       h('div.tc-home-updates-slot'),
+      h('div.tc-home-daily-slot'),
       entryPanel(),
       h('div.tc-home-folds', null,
         fold('tc-home-fold-contact', contactStep ? `귀환 신호 — ${contactStep.title}` : '귀환 신호 접촉 보고', '육안 인원과 열원 수가 맞지 않은 보고', contactPanel()),
@@ -718,6 +784,7 @@
         fold('tc-home-fold-zones', '구역 판정 판', '지역 여덟 곳의 판정과 오늘의 국가 간 정세', zonePanel()),
         fold('tc-home-fold-fear', copy().fear?.title || '도시 공포 지수', `도시 ${copy().fear?.cities?.length || 0}곳의 오늘 지수와 방송 문안 기준`, fearPanel()),
         fold('tc-home-fold-ash', copy().ashWeather?.title || '재 농도 기상 방송', `권역 ${copy().ashWeather?.regions?.length || 0}곳의 재 농도와 오늘의 하늘`, ashPanel()),
+        fold('tc-home-fold-signal', copy().signal?.title || '수신 조각', `흩어진 방송 조각 ${copy().signal?.fragments?.length || 0}개`, h('div.tc-home-frag-slot')),
         fold('tc-home-fold-wanted', copy().wanted?.title || '수배 회람', `호출명 ${root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted?.length || 0}개와 오늘 회람 맨 위`, wantedPanel()),
         fold('tc-home-fold-ops', '작전 기록', `작전 ${counts().ops}건의 마지막 기록`, live.ops)
       ),
@@ -751,10 +818,15 @@
       const panel = updatesPanel();
       if (panel) slot.append(panel);
     }
+    // 오늘의 기록은 날짜가 바뀌면 달라지므로 들어올 때마다 그린다. 수신 조각 모음도 같다.
+    const daily = indexView.querySelector('.tc-home-daily-slot');
+    if (daily) daily.replaceChildren(dailyCard());
+    renderFragments();
     // 상황판이 보이는 동안 진행 상태가 바뀌면 다시 그린다. 두 번 들어와도 하나만 붙는다.
     listeners?.abort();
     listeners = new AbortController();
     STATE_EVENTS.forEach((type) => document.addEventListener(type, refresh, { signal: listeners.signal }));
+    document.addEventListener('pc:signal', renderFragments, { signal: listeners.signal });
     // 모르는 주소로 들어오면 조용히 넘기지 않고 알린다.
     const box = indexView.querySelector('.tc-home-unknown');
     if (!box) return;

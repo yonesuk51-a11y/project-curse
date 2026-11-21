@@ -1165,3 +1165,154 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   color: var(--text-2);
   font-size: var(--fs-s);
 }
+
+/* 리버스 아래의 삶 (2026-11-21 사용자 결정) — 한 줄 훅을 먼저, 본문은 접고, 끝에 이어지는 기록 */
+.tc-hist-parts {
+  display: grid;
+  gap: var(--s2);
+}
+.tc-hist-lifelist > li.tc-hist-life {
+  display: grid;
+  align-content: start;
+  gap: var(--s2);
+}
+.tc-hist-life > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+.tc-hist-life > header b {
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-hist-grid p.tc-hist-hook {
+  color: var(--text);
+  font-size: var(--fs);
+  font-weight: 600;
+  line-height: 1.55;
+}
+.tc-hist-more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+  list-style: none;
+}
+.tc-hist-more > summary::-webkit-details-marker { display: none; }
+.tc-hist-more > summary::before {
+  content: '+';
+  display: inline-block;
+  width: 1em;
+  color: var(--text-3);
+  font-family: var(--mono);
+}
+.tc-hist-more[open] > summary::before { content: '−'; }
+.tc-hist-more > summary:hover,
+.tc-hist-more > summary:focus-visible { color: var(--text); }
+.tc-hist-more-body {
+  display: grid;
+  gap: var(--s2);
+  margin-top: var(--s2);
+}
+.tc-hist-more-body > p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.65;
+}
+.tc-hist-grid p.tc-hist-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s1) var(--s3);
+  padding-top: var(--s2);
+  border-top: 1px dashed var(--line-2);
+  font-size: var(--fs-xs);
+}
+.tc-hist-links > span:first-child {
+  color: var(--text-3);
+}
+.tc-hist-links a {
+  color: var(--text-2);
+}
+.tc-hist-links a:hover,
+.tc-hist-links a:focus-visible {
+  color: var(--text);
+}
+.tc-hist-refs .is-target {
+  outline: 1px solid var(--red-ink);
+  outline-offset: -1px;
+}
+.tc-hist-topic { text-decoration: none; }
+/* 문서 모양 — 증거 층. 양식·약관·방송 문안 */
+.tc-hist-doc {
+  margin: 0;
+  padding: var(--s3);
+  border: 1px solid var(--line-2);
+  background: var(--panel-3);
+  font-family: var(--mono);
+}
+.tc-hist-doc figcaption {
+  margin-bottom: var(--s2);
+  padding-bottom: var(--s2);
+  border-bottom: 1px solid var(--line-2);
+  color: var(--text);
+  font-size: var(--fs-xs);
+  letter-spacing: .02em;
+}
+.tc-hist-doc ol {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-hist-doc li {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.tc-hist-doc.is-form li { border-bottom: 1px dotted var(--line-2); padding-bottom: 3px; }
+.tc-hist-doc.is-script { border-left: 2px solid var(--amber); }
+.tc-hist-doc.is-clause { border-left: 2px solid var(--line-2); }
+/* 주민 일지 */
+.tc-hist-diary {
+  display: grid;
+  gap: var(--s3);
+  margin: var(--s3) 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-hist-diary > li {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4);
+  border-left: 1px solid var(--line-2);
+  background: var(--panel);
+}
+.tc-hist-diary header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s2) var(--s3);
+}
+.tc-hist-diary header time { color: var(--text-3); font-size: var(--fs-xs); }
+.tc-hist-diary header b { color: var(--text); font-size: var(--fs-s); }
+.tc-hist-diary p {
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.75;
+}
+.tc-hist-diary-pending {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}

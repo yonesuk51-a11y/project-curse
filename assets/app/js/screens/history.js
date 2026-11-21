@@ -116,6 +116,7 @@
 
   let activeEra = 'all';
   let indexView = null;
+  let refNotice = null;
   let detailView = null;
 
   function turnsPanel() {
@@ -376,35 +377,118 @@
     );
   }
 
-  // 갈래별 항목 묶음(2026-11-21 사용자 추천안 승인) — 존 안팎의 삶, 버티는 체제와 바뀌는 몸.
-  // 항목마다 판정 등급. 교범과 이어지는 항목은 현장 지침으로, 단계·수배 목록이 있으면 함께 그린다.
-  function groupedBody(key, leadCode, leadLabel) {
-    const life = chronology()?.worldFramework?.[key];
-    if (!life) return PC.missing('REFERENCE MISSING', `worldFramework.${key}`, '이 묶음의 데이터가 없습니다.');
-    const groups = [...new Set(life.items.map((item) => item.group))];
+  // 리버스 아래의 삶(2026-11-21 사용자 결정) — zoneLife·worldOrder·fieldCulture 52항목을 주제 일곱 갈래로 보인다.
+  // 항목마다 한 줄 훅과 문서 모양을 먼저 보이고, 본문은 접는다(전체 보기에서는 펼친 채로 그린다). 끝에 이어지는 기록을 단다.
+  const SIGNAL_AT = { 'sacrifice-list': 'sig-2', 'broadcast-announcer': 'sig-6' };
+
+  function lifeItems() {
+    const framework = chronology()?.worldFramework || {};
+    return ['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => framework[key]?.items || []);
+  }
+
+  // 이어지는 기록의 이름표 — 삶 항목, 구술 증언, 카르벤 격리시, 주민 일지
+  function refTitles() {
+    const framework = chronology()?.worldFramework || {};
+    const titles = new Map(lifeItems().map((item) => [item.id, item.title]));
+    (framework.oralTestimony?.items || []).forEach((entry) => titles.set(entry.id, `증언 — ${entry.speaker.split(' / ')[0]}`));
+    if (framework.cityFile) titles.set('karven', framework.cityFile.label);
+    if (framework.cityFile?.diary) titles.set('diary', framework.cityFile.diary.title);
+    return titles;
+  }
+
+  function linkChips(links, titles) {
+    if (!links?.length) return null;
+    return h('p.tc-hist-links', null,
+      h('span', { text: '이어지는 기록' }),
+      links.map((id) => titles.has(id)
+        ? h('a', { href: PC.href('history', 'ref', id) }, titles.get(id), h('i', { 'aria-hidden': 'true', text: ' ›' }))
+        : h('span.is-missing', { text: `${id} (기록 없음)` }))
+    );
+  }
+
+  // 문서 모양 — 배급증 양식, 약관 조항, 방송 문안. 가림 막대는 richText가 그린다.
+  function docBlock(doc) {
+    if (!doc?.lines?.length) return null;
+    return h(`figure.tc-hist-doc.is-${doc.kind || 'form'}`, null,
+      h('figcaption', { text: doc.title }),
+      h('ol', null, doc.lines.map((line) => h('li', null, richText(line))))
+    );
+  }
+
+  function lifeItem(item, titles) {
+    const signal = SIGNAL_AT[item.id];
+    return h('li.tc-hist-life', { id: `tc-ref-${item.id}` },
+      h('header', null, h('b', { text: item.title }), verdictTag(item.grade)),
+      item.hook ? h('p.tc-hist-hook', { text: item.hook }) : null,
+      docBlock(item.doc),
+      h('details.tc-hist-more', { open: PC.density?.() === 'full' },
+        h('summary', null, h('span', { text: '본문' })),
+        h('div.tc-hist-more-body', null,
+          h('p', { text: item.text }),
+          item.excerpt ? h('figure.tc-hist-excerpt', null,
+            h('figcaption', null, lbl('LEAKED EXCERPT'), h('span', { text: item.excerpt.label })),
+            h('ol', null, item.excerpt.lines.map((line) => h('li', null, richText(line))))
+          ) : null,
+          stageGrid(item.stages, `${item.title} 단계`),
+          wantedList(item.wanted),
+          (item.tables || []).map((table) => refTable(table)),
+          signal ? PC.signalMark?.(signal) : null,
+          manualLink(item.manualSection)
+        )
+      ),
+      linkChips(item.links, titles)
+    );
+  }
+
+  function lifeBody() {
+    const intro = chronology()?.worldFramework?.lifeIntro;
+    const items = lifeItems();
+    if (!intro?.themes?.length || !items.length) return PC.missing('LIFE MISSING', 'worldFramework.lifeIntro', '리버스 아래의 삶 데이터가 없습니다.');
+    const titles = refTitles();
+    const stray = items.filter((item) => !intro.themes.includes(item.group));
     return h('div.tc-hist-ref', null,
       h('div.tc-hist-ref-lead', null,
-        h('p', { text: life.rule }),
-        h('div.tc-note.tc-note--caution', null, h('b', null, bi(leadCode, leadLabel)), h('p', { text: life.status }))
+        h('p', { text: intro.rule }),
+        h('div.tc-note.tc-note--caution', null, h('b', null, bi('LIFE UNDER REVERSE', '판정 등급')), h('p', { text: intro.status }))
       ),
-      groups.map((group) => h('details.tc-disclosure.tc-hist-sub', null,
-        h('summary', null, h('span', null, h('b', { text: group }), h('small', { text: `${life.items.filter((item) => item.group === group).length}건` }))),
-        h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-affairs', null, life.items.filter((item) => item.group === group).map((item) =>
-          h('li', { id: `tc-life-${item.id}` },
-            h('b', { text: item.title }),
-            verdictTag(item.grade),
-            h('p', { text: item.text }),
-            item.excerpt ? h('figure.tc-hist-excerpt', null,
-              h('figcaption', null, lbl('LEAKED EXCERPT'), h('span', { text: item.excerpt.label })),
-              h('ol', null, item.excerpt.lines.map((line) => h('li', null, richText(line))))
-            ) : null,
-            stageGrid(item.stages, `${item.title} 단계`),
-            wantedList(item.wanted),
-            (item.tables || []).map((table) => refTable(table)),
-            manualLink(item.manualSection)
-          )
-        ))
-      ))
+      intro.themes.map((theme) => {
+        const list = items.filter((item) => item.group === theme);
+        return h('details.tc-disclosure.tc-hist-sub', null,
+          h('summary', null, h('span', null, h('b', { text: theme }), h('small', { text: `${list.length}건` }))),
+          h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-lifelist', null, list.map((item) => lifeItem(item, titles)))
+        );
+      }),
+      stray.length ? PC.missing('THEME MISSING', stray.map((item) => `${item.id}:${item.group}`).join(', '), '갈래가 정해지지 않은 항목이 있습니다.') : null
+    );
+  }
+
+  // 카르벤 주민 일지(2026-11-21 사용자 결정) — release(실제 공개일)가 지난 장만 보인다. 오늘 열린 장에는 표지를 단다.
+  function localDay() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  }
+
+  function diaryBody() {
+    const diary = chronology()?.worldFramework?.cityFile?.diary;
+    if (!diary?.entries?.length) return PC.missing('DIARY MISSING', 'worldFramework.cityFile.diary', '주민 일지가 없습니다.');
+    const today = localDay();
+    const open = diary.entries.filter((entry) => entry.release <= today);
+    return h('div.tc-hist-ref', { id: 'tc-ref-diary' },
+      h('div.tc-hist-ref-lead', null,
+        h('p', { text: diary.source }),
+        h('div.tc-note.tc-note--evidence', null, h('b', null, bi('RECOVERED DIARY', `${open.length}/${diary.entries.length}장`)), h('p', { text: diary.limit }))
+      ),
+      h('ol.tc-hist-diary', null, open.map((entry) =>
+        h('li', null,
+          h('header', null, h('time.tc-code', { text: entry.date }), h('b', { text: entry.title }), entry.release === today ? PC.tag('오늘 올라온 장', 'evidence') : null),
+          entry.lines.map((line) => h('p', { text: line }))
+        )
+      )),
+      open.length < diary.entries.length ? h('p.tc-hist-diary-pending', { text: diary.pending }) : null,
+      h('dl.tc-kv', null,
+        h('div', null, h('dt', { text: '작성자' }), h('dd', { text: diary.author })),
+        h('div', null, h('dt', { text: '받는 곳' }), h('dd', { text: diary.recipient }))
+      )
     );
   }
 
@@ -428,7 +512,7 @@
     const city = framework.cityFile;
     if (!city) return PC.missing('CITY FILE MISSING', 'worldFramework.cityFile', '도시 기록이 없습니다.');
     const grades = framework.zoneGrading?.grades || [];
-    return h('div.tc-hist-ref', null,
+    return h('div.tc-hist-ref', { id: 'tc-ref-karven' },
       h('div.tc-hist-ref-lead', null,
         h('p', { text: city.rule }),
         h('div.tc-note.tc-note--evidence', null, h('b', null, bi('CITY FILE', city.region)), h('p', { text: city.population }))
@@ -443,6 +527,7 @@
           h('p', { text: district.note })
         );
       })),
+      PC.signalMark?.('sig-4'),
       h('details.tc-disclosure.tc-hist-sub', null,
         h('summary', null, h('span', null, h('b', { text: '도시에 도는 소문' }), h('small', { text: `${city.rumors.length}건` }))),
         h('ul.tc-hist-rumors', null, city.rumors.map((rumor) => h('li', null, PC.tag('소문', 'evidence'), h('p', { text: rumor }))))
@@ -476,11 +561,11 @@
       ),
       h('ul.tc-hist-testimonies', null, oral.items.map((entry) => {
         const topic = life.find((item) => item.id === entry.item);
-        return h('li', null,
+        return h('li', { id: `tc-ref-${entry.id}` },
           h('header', null,
             h('b', { text: entry.speaker }),
             h('small', { text: `${entry.date} · ${entry.place}` }),
-            topic ? PC.tag(topic.title, 'evidence') : h('span.is-missing', { text: `${entry.item} (항목 없음)` })
+            topic ? h('a.tc-hist-topic', { href: PC.href('history', 'ref', topic.id) }, PC.tag(topic.title, 'evidence')) : h('span.is-missing', { text: `${entry.item} (항목 없음)` })
           ),
           h('blockquote', null, entry.lines.map((line) => h('p', { text: line }))),
           h('p.tc-hist-caution', { text: `기록 한계 — ${entry.limit}` })
@@ -561,18 +646,29 @@
       h('summary', null, h('span', null, lbl(code), h('b', { text: title }), h('small', { text: hint }))),
       h('div.tc-disclosure-body', null, body)
     );
+    // 2026-11-21 사용자 결정: 묶음 열하나를 다섯으로 줄였다. 묶음 안은 다시 접는 칸으로 나눈다.
+    const sub = (title, hint, body) => h('details.tc-disclosure.tc-hist-sub.tc-hist-part', null,
+      h('summary', null, h('span', null, h('b', { text: title }), hint ? h('small', { text: hint }) : null)),
+      h('div.tc-disclosure-body', null, body)
+    );
+    const lifeCount = lifeItems().length;
     return h('div.tc-hist-refs', null,
-      item('WORLD RULES', '세계의 기본 규칙', '존재 구분·발현 대가·민간 생존', frameworkBody()),
-      item('ZONE GRADES', '구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
-      item('INTERSTATE AFFAIRS', '국가 간 정세', '결론이 기록되지 않은 일곱 상황', interstateBody()),
-      item('WORLD DECLINE', '세계가 지고 있다', '종말 시계와 열두 기록', declineBody()),
-      item('ZONE LIFE', '존 안팎의 삶', '행정·존 안쪽·채집과 거래·사람과 사회', groupedBody('zoneLife', 'LIFE BEHIND THE LINES', '차단선 안팎')),
-      item('SYSTEMS AND BODIES', '버티는 체제와 바뀌는 몸', '판정과 행정·몸·전쟁과 하늘·사람', groupedBody('worldOrder', 'HOW THE SYSTEM HOLDS', '체제가 버티는 방식')),
-      item('FIELD CULTURE', '현장의 말과 사람들', '말과 문화·군과 현장·기술·세력과 바다', groupedBody('fieldCulture', 'FIELD PRACTICE', '현장 관행')),
-      item('CITY FILE', '카르벤 격리시', '북해권 남쪽 연안 · 여섯 구와 소문', cityBody()),
-      item('ORAL TESTIMONY', '구술 증언집', 'S.I.D 사회 기록반 여섯 증언', testimonyBody()),
-      item('UNCONFIRMED PATTERNS', '확인되지 않은 세 규칙', '관측·봉쇄·능력 상한', observationsBody()),
-      item('TECHNOLOGY TRACE', '일본 기술 도약의 계보', '1982–1992 계측 계획', technologyBody())
+      item('WORLD RULES', '세계의 기본 규칙', '존재 구분·발현 대가·몸과 죽음의 규칙', frameworkBody()),
+      item('LAND AND STATES', '땅과 나라', '구역 판정·국가 간 정세·세계가 지고 있다', h('div.tc-hist-parts', null,
+        sub('구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
+        sub('국가 간 정세', '결론이 기록되지 않은 상황', interstateBody()),
+        sub('세계가 지고 있다', '종말 시계와 열두 기록', declineBody())
+      )),
+      item('LIFE UNDER REVERSE', '리버스 아래의 삶', `일곱 갈래 ${lifeCount}항목 · 한 줄씩 먼저`, lifeBody()),
+      item('VOICES AND PLACES', '목소리와 장소', '카르벤 격리시·주민 일지·구술 증언', h('div.tc-hist-parts', null,
+        sub('카르벤 격리시', '북해권 남쪽 연안 · 여섯 구와 소문', cityBody()),
+        sub(chronology()?.worldFramework?.cityFile?.diary?.title || '주민 일지', '날마다 한 장씩 올라온다', diaryBody()),
+        sub('구술 증언집', 'S.I.D 사회 기록반', testimonyBody())
+      )),
+      item('UNCONFIRMED', '확인되지 않은 것들', '세 규칙·일본 기술 도약의 계보', h('div.tc-hist-parts', null,
+        sub('확인되지 않은 세 규칙', '관측·봉쇄·능력 상한', observationsBody()),
+        sub('일본 기술 도약의 계보', '1982–1992 계측 계획', technologyBody())
+      ))
     );
   }
 
@@ -676,6 +772,7 @@
         meta: [['SPAN', 'ORIGIN?–2042'], ['INDEX', `${list.length} RECORDS`], ['ERAS', String(eras.length)]]
       }),
       turnsPanel(),
+      refNotice = h('div.tc-hist-refnotice'),
       referenceStack(),
       controls(),
       eraIndex()
@@ -903,6 +1000,7 @@
 
   function hide() {
     releaseClock();
+    root.clearTimeout(refTimer);
   }
 
   /* ---------- 화면 등록 ---------- */
@@ -916,16 +1014,43 @@
   let indexScroll = 0;
   let onIndex = true;
 
+  // #history/ref/<id> — 묶음 안의 항목으로 바로 간다. 감싼 접는 칸을 모두 펼치고 항목에 초점을 둔다. 없는 id는 없다고 표시한다.
+  let refTimer = 0;
+  function openRef(id) {
+    root.clearTimeout(refTimer);
+    refNotice?.replaceChildren();
+    root.document.querySelectorAll('.tc-hist-refs .is-target').forEach((el) => el.classList.remove('is-target'));
+    const target = id ? root.document.getElementById(`tc-ref-${id}`) : null;
+    if (!target) {
+      refNotice?.append(PC.missing('REFERENCE NOT FOUND', `history/ref/${id || ''}`, '세계 기록에 이 항목이 없습니다.'));
+      return;
+    }
+    for (let node = target; node; node = node.parentElement) if (node.tagName === 'DETAILS') node.open = true;
+    target.querySelector(':scope > details')?.setAttribute('open', '');
+    target.classList.add('is-target');
+    // 셸이 화면을 맨 위로 올리고 제목에 초점을 둔 다음에 옮긴다
+    refTimer = root.setTimeout(() => {
+      target.scrollIntoView({ block: 'start', behavior: PC.fx() === 'reduced' ? 'auto' : 'smooth' });
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    }, 60);
+  }
+
   function show(parts, app, info) {
     const id = parts[0];
     releaseClock();
-    if (!id) {
+    if (!id || id === 'ref') {
       detailView.hidden = true;
       indexView.hidden = false;
       app.setTitle('세계 기록');
-      if (!onIndex && info.reason === 'push' && indexScroll) {
-        const y = indexScroll;
-        root.requestAnimationFrame(() => root.scrollTo(0, y));
+      if (id === 'ref') {
+        openRef(parts[1]);
+      } else {
+        refNotice?.replaceChildren();
+        if (!onIndex && info.reason === 'push' && indexScroll) {
+          const y = indexScroll;
+          root.requestAnimationFrame(() => root.scrollTo(0, y));
+        }
       }
       onIndex = true;
       return;
