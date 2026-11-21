@@ -102,7 +102,8 @@ const historyRecords = [
 ];
 const historyIds = historyRecords.map((record) => record.id);
 // 2026-11-21: 우시노다교가 무너뜨린 가상 국가 세 기록을 더해 51건에서 54건이 됐다(사용자 추천안 승인).
-add('history-fifty-four-records', historyIds.length === 54, historyIds.length);
+// 2026-11-21: 실제 나라 아포칼립스 네 기록(2009 북미 망명정부, 2027 비무장지대, 2029 경기 북부 신도시, 2035 도쿄 서부)을 더해 58건이 됐다.
+add('history-fifty-eight-records', historyIds.length === 58, historyIds.length);
 add('history-ids-unique', new Set(historyIds).size === historyIds.length);
 const eraIds = new Set((W?.eras || []).map((era) => era.id));
 const noEra = historyRecords.filter((record) => !eraIds.has(record.era)).map((record) => record.id);
@@ -243,6 +244,10 @@ add('history-renders-zone-grades-and-blood-arts',
   historyScreenSource.includes("item('ZONE GRADES'") && historyScreenSource.includes('bloodBlock(framework.bloodArts)') &&
   sectionTitles.has(W.worldFramework.bloodArts.manualSection) &&
   ['bloodPanel()', 'teamPanel()', 'checkpointPanel()'].every((call) => manualSource.includes(call)));
+// 국가 간 정세(2026-11-21 사용자 추천안 승인) — 세계 기록 참조 묶음이 일곱 상황을 그리고, 관련 기록은 모두 연표에 있다.
+add('history-renders-interstate-affairs',
+  W?.worldFramework?.interstateAffairs?.items?.length === 7 && historyScreenSource.includes("item('INTERSTATE AFFAIRS'") &&
+  W.worldFramework.interstateAffairs.items.every((item) => item.records?.length && item.records.every((id) => historySet.has(id))));
 for (const [id, name] of Object.entries(SCREEN_FILES)) {
   const source = read(`assets/app/js/screens/${name}.js`);
   const registers = /PC\.screen\(\{\s*id:\s*'([^']+)'/.exec(source);

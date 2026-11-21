@@ -791,6 +791,22 @@ a.tc-hist-turn:hover {
 }
 
 /* ---------- 반응형 ---------- */
+/* 국가 간 정세 — 당사자는 작은 글자, 상태 표지는 왼쪽에 붙인다 */
+.tc-hist-affairs li > .tc-tag {
+  justify-self: start;
+}
+.tc-hist-grid p.tc-hist-affair-parties {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-hist-grid p.tc-hist-affair-open {
+  color: var(--text);
+}
+.tc-hist-affair-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s4);
+}
 /* 구역 판정 — 판정마다 기존 사례를 작은 글자로 붙인다 */
 .tc-hist-grid p.tc-hist-zone-example {
   color: var(--text-3);

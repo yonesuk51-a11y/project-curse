@@ -243,6 +243,33 @@
     );
   }
 
+  // 국가 간 정세(2026-11-21 사용자 추천안 승인) — 결론이 기록되지 않은 상황만 적는다. 관련 기록으로 잇는다.
+  function interstateBody() {
+    const affairs = chronology()?.worldFramework?.interstateAffairs;
+    if (!affairs) return PC.missing('INTERSTATE MISSING', 'worldFramework.interstateAffairs', '국가 간 정세 데이터가 없습니다.');
+    return h('div.tc-hist-ref', null,
+      h('div.tc-hist-ref-lead', null,
+        h('p', { text: affairs.rule }),
+        h('div.tc-note.tc-note--caution', null, h('b', null, bi('OPEN SITUATIONS', '결론 없는 상황')), h('p', { text: affairs.status }))
+      ),
+      h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-affairs', null, affairs.items.map((item) =>
+        h('li', null,
+          h('b', { text: item.title }),
+          h('p.tc-hist-affair-parties', { text: item.parties }),
+          PC.tag(item.status, 'caution'),
+          h('p', { text: item.text }),
+          h('p.tc-hist-affair-open', { text: `정해지지 않은 점 — ${item.open}` }),
+          h('p.tc-hist-affair-links', null, (item.records || []).map((id) => {
+            const index = findIndex(id);
+            return index >= 0
+              ? h('a', { href: PC.href('history', id) }, records()[index].title, h('i', { 'aria-hidden': 'true', text: ' ›' }))
+              : h('span.is-missing', { text: `${id} (기록 없음)` });
+          }))
+        )
+      ))
+    );
+  }
+
   function observationsBody() {
     const framework = chronology()?.worldFramework;
     if (!framework) return PC.missing('FRAMEWORK MISSING', 'worldFramework', '세계 기본 규칙 데이터가 없습니다.');
@@ -317,6 +344,7 @@
     return h('div.tc-hist-refs', null,
       item('WORLD RULES', '세계의 기본 규칙', '존재 구분·발현 대가·민간 생존', frameworkBody()),
       item('ZONE GRADES', '구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
+      item('INTERSTATE AFFAIRS', '국가 간 정세', '결론이 기록되지 않은 일곱 상황', interstateBody()),
       item('UNCONFIRMED PATTERNS', '확인되지 않은 세 규칙', '관측·봉쇄·능력 상한', observationsBody()),
       item('TECHNOLOGY TRACE', '일본 기술 도약의 계보', '1982–1992 계측 계획', technologyBody())
     );
