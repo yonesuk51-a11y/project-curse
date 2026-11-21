@@ -71,7 +71,7 @@
         id: 'tachibana-isamu', name: '타치바나 이사무', aliases: ['아바야'], group: 'nhc-additional',
         role: 'N.H.C 대괴이 전투요원 / 코드명 아바야', status: 'active', certainty: 'listed', registerYear: '연대 미확정',
         unit: 'N.H.C 대괴이 전투요원',
-        overview: '두려움이 있던 자리를 그림자가 채운 뒤로 어떤 괴이 앞에서도 물러서지 않는 것으로 기록된 N.H.C 전투요원이다.',
+        overview: 'N.H.C 전투요원으로, 두려움이 있던 자리를 그림자가 채운 뒤로 어떤 괴이 앞에서도 물러서지 않는다고 기록됐다.',
         affiliations: [{ key: 'nhc', label: 'N.H.C', role: '대괴이 전투요원 / 코드명 아바야', certainty: 'listed' }],
         abilitySource: '그림자 — 두려움이 있던 자리를 채움(발현 경로 미확인)',
         abilityCost: '그 대가로 무엇을 잃었는지 본인이 기억하지 못한다.',
@@ -82,7 +82,7 @@
         id: 'tabor-lentz', name: '타보르 렌츠', group: 'collapsed-states',
         role: '베스카 망명정부 내무 대리', status: 'active', certainty: 'listed', registerYear: '2042',
         unit: '베스카 망명정부',
-        overview: '베스카 망명정부의 내무 대리다. 격리 구역 안의 타락자를 국민으로 세는 정책을 지킨다. 매주 수도의 옛 주소로 공문을 낸다.',
+        overview: '베스카 망명정부의 내무 대리다. 격리 구역 안의 타락자도 국민으로 세는 정책을 지키고, 매주 수도의 옛 주소로 공문을 보낸다.',
         affiliations: [],
         limits: ['격리 구역 안에 남은 가족의 생사는 확인되지 않았다.', '이웃 나라가 교단의 통행을 눈감았다는 망명정부 주장에 대한 본인 진술은 기록되지 않았다.']
       },
@@ -90,15 +90,15 @@
         id: 'irena-volt', name: '이레나 볼트', group: 'collapsed-states',
         role: '공석 구역 망명 대표단장', status: 'active', certainty: 'listed', registerYear: '2042',
         unit: '공석 구역 망명 대표단',
-        overview: '공석 구역 망명 대표단을 이끈다. 신임장의 나라 이름 칸은 비어 있다. 본인은 고향을 에델라로 기억한다. 서명할 때마다 나라 이름 철자가 다르게 남는다.',
+        overview: '공석 구역 망명 대표단을 이끈다. 신임장의 나라 이름 칸은 비어 있고, 본인은 고향을 에델라로 기억한다. 서명할 때마다 나라 이름 철자가 다르게 남는다.',
         affiliations: [],
-        limits: ['서명 철자가 달라지는 원인은 확인되지 않았다. 그림자교 표식과의 관계도 확인되지 않았다.', '대표단의 의석과 발언권은 유지되지만 국민의 난민 지위는 정해지지 않았다.']
+        limits: ['서명 철자가 달라지는 원인도, 그림자교 표식과의 관계도 확인되지 않았다.', '대표단의 의석과 발언권은 그대로 남아 있지만, 국민의 난민 지위는 정해지지 않았다.']
       },
       {
         id: 'marcus-eide', name: '마르쿠스 아이데', group: 'nhc-additional',
         role: 'N.H.C 오르비나 포위 지휘소장', status: 'active', certainty: 'listed', registerYear: '2042',
         unit: 'N.H.C 오르비나 포위 지휘소',
-        overview: '오르비나 봉쇄 구역의 포위 지휘소를 맡고 있다. 데드존 혈교 지부의 중재 제안을 거부했다. 결계 안 방송에서 2019년에 돌아오지 않은 정찰조 대원의 목소리를 들었다는 보고를 받았다.',
+        overview: '오르비나 봉쇄 구역의 포위 지휘소를 맡고 있으며, 데드존 혈교 지부의 중재 제안을 거부했다. 결계 안 방송에서 2019년에 돌아오지 않은 정찰조 대원의 목소리가 들렸다는 보고를 받았다.',
         affiliations: [{ key: 'nhc', label: 'N.H.C', role: '오르비나 포위 지휘소장', certainty: 'listed' }],
         limits: ['방송 속 목소리가 실제 대원인지는 확인되지 않았다.', '중재 거부가 본인 판단인지 상부 지시인지는 기록되지 않았다.']
       },
@@ -107,7 +107,7 @@
         id: 'karven-undertaker', name: '굴뚝구 장례 대행인', group: 'karven-city',
         role: '카르벤 굴뚝구 장례 대행인 / 회수 일지 작성자', status: 'unknown', certainty: 'partial', registerYear: '2042',
         unit: '굴뚝구 장례 대행소',
-        overview: '소각 대기실의 순서를 대신 지키는 일을 한다. S.I.D 사회 기록반이 회수한 일지의 작성자다. 일지는 2042년 11월 30일, 북문 대조를 하루 앞두고 끝난다.',
+        overview: '소각 대기실의 순서를 대신 지키는 일을 한다. S.I.D 사회 기록반이 거둬들인 일지를 쓴 사람으로, 일지는 북문 대조를 하루 앞둔 2042년 11월 30일에 끝난다.',
         affiliations: [],
         limits: ['이름은 기록반이 지웠다.', '북문 대조를 통과했는지는 기록되지 않았다.']
       },
@@ -115,9 +115,9 @@
         id: 'eskil-bran', name: '에스킬 브란', group: 'karven-city',
         role: 'S.I.D 대조관 / 카르벤 북문 기억 대조실', status: 'active', certainty: 'listed', registerYear: '2042',
         unit: 'S.I.D 카르벤 북문 대조실',
-        overview: '카르벤 북문의 기억 대조실을 맡는다. 머뭇거림 없이 답하는 사람을 위조 신원으로 의심하는 기준을 북문에 들였다. 2041년 8월 19일 밤 근무표에 이름이 있다.',
+        overview: '카르벤 북문의 기억 대조실을 맡으며, 머뭇거림 없이 답하는 사람을 위조 신원으로 의심하는 기준을 북문에 들였다. 2041년 8월 19일 밤 근무표에 이름이 있다.',
         affiliations: [{ key: 'sid', label: 'S.I.D', role: '대조관 / 카르벤 북문', certainty: 'listed' }],
-        limits: ['그 밤 대조 없이 통과시킨 인원이 있었는지는 장부의 해당 면이 빠져 확인되지 않았다.', '대조 기준을 누가 처음 만들었는지는 기록되지 않았다.']
+        limits: ['그 밤 대조 없이 통과시킨 사람이 있었는지는 장부의 그 쪽이 빠져 있어 확인되지 않았다.', '대조 기준을 누가 처음 만들었는지는 기록되지 않았다.']
       },
       {
         id: 'third-announcer', name: '세 번째 아나운서', aliases: ['WNT-05'], group: 'karven-city',
@@ -170,7 +170,7 @@
         id: 'kieran-hayward', name: '키어런 헤이워드', group: 'independent-rites',
         role: '삼림계 교단 관리자', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: '삼림계 교단',
-        overview: '삼림계 교단의 관리자로 기록됐다. 삼림계 교단은 대흑림에서 식생 의식과 길 표식을 유지하는 집단 가운데 하나다.',
+        overview: '삼림계 교단의 관리자로 기록됐다. 이 교단은 대흑림에서 식생 의식을 치르고 길 표식을 지키는 집단 가운데 하나다.',
         limits: ['관리하는 거점의 위치와 교단 안의 정확한 직위는 기록되지 않았다.', '삼림계 교단의 의식 목적은 확인되지 않았다.']
       },
       {
@@ -205,8 +205,8 @@
         id: 'kenevin', name: '커네빈', aliases: ['히라에스', 'Hiraeth'], group: 'ushinoda-figures',
         role: '우시노다교 제3사도 / 암흑시대의 잊힌 기사', status: 'unknown', certainty: 'partial', registerYear: '암흑시대 전승',
         unit: '우시노다교 / 교단 명단의 제3사도',
-        overview: '먼 암흑시대에 이신(異神)에 맞서 성벽에 섰던 기사로 전해진다. 지금은 히라에스라는 이름으로 불리는 이질적 존재가 됐다. 기사였던 시절을 기억하는 존재는 더 이상 남아 있지 않다.',
-        notes: ['우시노다를 주군으로 부르는 화자의 구술은 히라에스를 우시노다에게 검을 겨눈 인간 전사로 기억한다. 고향에 아내와 어린 아들이 있었다고 전한다.', '히라에스는 돌아갈 수 없는 고향과 과거를 향한 그리움을 뜻하는 웨일스어다.', '구술 전문은 세계 기록 「외신 강림과 성벽의 저항」에 실려 있다.'],
+        overview: '먼 암흑시대에 이신(異神)에 맞서 성벽에 섰던 기사로 전해지며, 지금은 히라에스라고 불리는 이질적 존재가 됐다. 기사였던 시절을 기억하는 이는 더는 남아 있지 않다.',
+        notes: ['우시노다를 주군으로 부르는 화자의 구술은 히라에스를 우시노다에게 검을 겨눈 인간 전사로 기억하며, 고향에 아내와 어린 아들이 있었다고 전한다.', '히라에스는 돌아갈 수 없는 고향과 과거를 향한 그리움을 뜻하는 웨일스어다.', '구술 전문은 세계 기록 「외신 강림과 성벽의 저항」에 실려 있다.'],
         // 2026-09-25 사용자 확인("히라에스는 동일인물"): 교단 명단의 제3사도 히라에스가 커네빈이다. 제3사도가 된 경위는 기록되지 않았다.
         affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제3사도(교단 명단)', certainty: 'listed' }],
         limits: ['기사에서 이질적 존재로 바뀐 경위와 시점은 기록되지 않았다.', '우시노다에게 검을 겨눈 기사가 언제, 어떻게 우시노다교 제3사도가 됐는지는 기록되지 않았다.', '현재 소재와 적대 여부는 확인되지 않았다.']
@@ -217,7 +217,7 @@
         id: 'apostle-camille-potier', name: '카미유 포티에', group: 'ushinoda-figures',
         role: '우시노다교 제2사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: '우시노다교 / 교단 명단의 제2사도',
-        overview: '우시노다교 교단 명단에 제2사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        overview: '우시노다교 교단 명단에 제2사도로 적힌 이름이다.',
         affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제2사도(교단 명단)', certainty: 'listed' }],
         limits: ['교단 명단의 번호가 세 파벌의 로드좌·사도석과 어떻게 맞물리는지는 기록되지 않았다.', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
       },
@@ -225,7 +225,7 @@
         id: 'apostle-viljar', name: '빌야르', group: 'ushinoda-figures',
         role: '우시노다교 제4사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: '우시노다교 / 교단 명단의 제4사도',
-        overview: '우시노다교 교단 명단에 제4사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        overview: '우시노다교 교단 명단에 제4사도로 적힌 이름이다.',
         affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제4사도(교단 명단)', certainty: 'listed' }],
         limits: ['교단 명단의 번호가 세 파벌의 로드좌·사도석과 어떻게 맞물리는지는 기록되지 않았다.', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
       },
@@ -233,7 +233,7 @@
         id: 'apostle-levente-hambas', name: '레벤테 함바스', group: 'ushinoda-figures',
         role: '우시노다교 제5사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: '우시노다교 / 교단 명단의 제5사도',
-        overview: '우시노다교 교단 명단에 제5사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        overview: '우시노다교 교단 명단에 제5사도로 적힌 이름이다.',
         affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제5사도(교단 명단)', certainty: 'listed' }],
         limits: ['교단 명단의 번호가 세 파벌의 로드좌·사도석과 어떻게 맞물리는지는 기록되지 않았다.', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
       },
@@ -241,7 +241,7 @@
         id: 'apostle-robin', name: '로빈', group: 'ushinoda-figures',
         role: '우시노다교 제6사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: '우시노다교 / 교단 명단의 제6사도',
-        overview: '우시노다교 교단 명단에 제6사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        overview: '우시노다교 교단 명단에 제6사도로 적힌 이름이다.',
         affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제6사도(교단 명단)', certainty: 'listed' }],
         limits: ['교단 명단의 번호가 세 파벌의 로드좌·사도석과 어떻게 맞물리는지는 기록되지 않았다.', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
       },
@@ -249,7 +249,7 @@
         id: 'apostle-kendo', name: '켄도', group: 'ushinoda-figures',
         role: '우시노다교 제7사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: '우시노다교 / 교단 명단의 제7사도',
-        overview: '우시노다교 교단 명단에 제7사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        overview: '우시노다교 교단 명단에 제7사도로 적힌 이름이다.',
         affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제7사도(교단 명단)', certainty: 'listed' }],
         limits: ['교단 명단의 번호가 세 파벌의 로드좌·사도석과 어떻게 맞물리는지는 기록되지 않았다.', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
       },
@@ -257,7 +257,7 @@
         id: 'apostle-lisbeth-van-doorn', name: '리스베트 반 도른', group: 'ushinoda-figures',
         role: '우시노다교 제8사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: '우시노다교 / 교단 명단의 제8사도',
-        overview: '우시노다교 교단 명단에 제8사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        overview: '우시노다교 교단 명단에 제8사도로 적힌 이름이다.',
         affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제8사도(교단 명단)', certainty: 'listed' }],
         limits: ['교단 명단의 번호가 세 파벌의 로드좌·사도석과 어떻게 맞물리는지는 기록되지 않았다.', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
       },
@@ -265,7 +265,7 @@
         id: 'apostle-meguro-soichiro', name: '메구로 소이치로', group: 'ushinoda-figures',
         role: '우시노다교 제9사도', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: '우시노다교 / 교단 명단의 제9사도',
-        overview: '우시노다교 교단 명단에 제9사도로 적힌 이름이다. 능력·파벌·활동 시기는 명단에 적혀 있지 않다.',
+        overview: '우시노다교 교단 명단에 제9사도로 적힌 이름이다.',
         affiliations: [{ key: 'ushinoda', label: '우시노다교', role: '제9사도(교단 명단)', certainty: 'listed' }],
         limits: ['교단 명단의 번호가 세 파벌의 로드좌·사도석과 어떻게 맞물리는지는 기록되지 않았다.', '능력과 대가, 파벌, 활동 시기는 기록되지 않았다.']
       },
@@ -274,7 +274,7 @@
         id: 'tonari-nakamura', name: '토나리 나카무라', group: 'nhc-additional',
         role: 'N.H.C 제2타격부대 지휘관', status: 'active', certainty: 'listed', registerYear: '연대 미확정',
         unit: 'N.H.C 제2타격부대',
-        overview: '인공 리버스 현상으로 타락을 몸에 융합하고 신체를 강화하는 데 성공한 사례로 기록된 N.H.C 제2타격부대 지휘관이다.',
+        overview: 'N.H.C 제2타격부대 지휘관으로, 인공 리버스 현상으로 타락을 몸에 융합해 신체를 강화하는 데 성공한 사례로 기록됐다.',
         affiliations: [{ key: 'nhc', label: 'N.H.C', role: '제2타격부대 지휘관', certainty: 'listed' }],
         abilitySource: '인공 리버스 현상을 통한 타락 융합·신체 강화',
         abilityCost: '대가의 내용은 기록되지 않았다.',
@@ -293,7 +293,7 @@
         id: 'shinohara-chiharu', name: '시노하라 치하루', group: 'nhc-additional',
         role: 'N.H.C 제2타격부대 선행정찰병', status: 'active', certainty: 'listed', registerYear: '연대 미확정',
         unit: 'N.H.C 제2타격부대',
-        overview: '괴이 출몰 지역을 먼저 정찰하고 진입로를 확보하는 N.H.C 대괴이 전투요원이다.',
+        overview: '괴이가 나오는 지역에 먼저 들어가 살피고 진입로를 여는 N.H.C 대괴이 전투요원이다.',
         affiliations: [{ key: 'nhc', label: 'N.H.C', role: '제2타격부대 선행정찰병', certainty: 'listed' }],
         relationships: [{ target: 'tonari-nakamura', relation: '제2타격부대의 지휘관이다.', certainty: 'listed' }],
         limits: ['활동 시기와 교전 기록은 확인되지 않았다.']
@@ -302,7 +302,7 @@
         id: 'mizuno-shun', name: '미즈노 슌', group: 'nhc-additional',
         role: 'N.H.C 전선 대원', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: 'N.H.C 전선 대원',
-        overview: '리버스가 발생하기 30분 전에 찍힌 사진에 오가와 나오와 함께 남은 N.H.C의 젊은 대원이다. 사진 당시 21세였다.',
+        overview: '리버스가 일어나기 30분 전에 찍힌 사진에 오가와 나오와 함께 남은 N.H.C 대원으로, 사진을 찍을 때 21세였다.',
         affiliations: [{ key: 'nhc', label: 'N.H.C', role: '전선 대원', certainty: 'listed' }],
         relationships: [{ target: 'ogawa-nao', relation: '같은 사진에 함께 찍힌 대원이다.', certainty: 'listed' }],
         limits: ['사진이 찍힌 장소와 날짜, 뒤이어 일어난 리버스가 어떤 사건인지는 기록되지 않았다.', '리버스 발생 뒤의 생사와 소재는 확인되지 않았다.']
@@ -311,7 +311,7 @@
         id: 'ogawa-nao', name: '오가와 나오', group: 'nhc-additional',
         role: 'N.H.C 전선 대원', status: 'unknown', certainty: 'listed', registerYear: '연대 미확정',
         unit: 'N.H.C 전선 대원',
-        overview: '리버스가 발생하기 30분 전에 찍힌 사진에 미즈노 슌과 함께 남은 N.H.C의 젊은 대원이다. 사진 당시 22세였다.',
+        overview: '리버스가 일어나기 30분 전에 찍힌 사진에 미즈노 슌과 함께 남은 N.H.C 대원으로, 사진을 찍을 때 22세였다.',
         affiliations: [{ key: 'nhc', label: 'N.H.C', role: '전선 대원', certainty: 'listed' }],
         relationships: [{ target: 'mizuno-shun', relation: '같은 사진에 함께 찍힌 대원이다.', certainty: 'listed' }],
         limits: ['사진이 찍힌 장소와 날짜, 뒤이어 일어난 리버스가 어떤 사건인지는 기록되지 않았다.', '리버스 발생 뒤의 생사와 소재는 확인되지 않았다.']
@@ -321,7 +321,7 @@
         id: 'arrival-guide-register-001', name: '등록부 제1호 길손', group: 'arrivals-freewill',
         role: '도래자(길손) / U.A.C 도래자 등록부 제1호', status: 'unknown', certainty: 'listed', registerYear: '2016',
         unit: 'U.A.C 도래자 등록부',
-        overview: '2016년 대흑림 성채 문 앞에 나타나 첫 이름 계약을 맺고 성채 피난로 안내를 맡았다. 맡긴 이름은 등록부에 봉인됐으며 표시 이름은 이름이 아니라 등록 번호다.',
+        overview: '2016년 대흑림 성채 문 앞에 나타나 첫 이름 계약을 맺고 성채 피난로 안내를 맡았다. 맡긴 이름은 등록부에 봉인됐고, 여기 적힌 이름은 이름이 아니라 등록 번호다.',
         affiliations: [{ key: 'uac', label: 'U.A.C', role: '도래자 등록부 제1호', certainty: 'listed' }],
         limits: ['측량대 장비를 얻은 경위는 확인되지 않았다.', '지금까지 몇 개의 길을 잊었는지는 확인되지 않았다.']
       },
@@ -329,7 +329,7 @@
         id: 'lantern-alley-memilmuk-owner', name: '등불 골목 메밀묵집 주인', group: 'arrivals-freewill',
         role: '도래자(도깨비) / 메밀묵집 주인·씨름판 심판', status: 'active', certainty: 'partial', registerYear: '비공개',
         unit: '카르벤 항구구 등불 골목',
-        overview: '등불 골목에서 메밀묵 가게를 하고 골목 끝 씨름판의 심판을 본다. 값은 내기로 받는다. 이웃 진술에는 웃음이 줄었다고 적혔다.',
+        overview: '등불 골목에서 메밀묵 가게를 하며 골목 끝 씨름판의 심판을 보고, 값은 내기로 받는다. 웃음이 줄었다는 이웃 진술이 있다.',
         affiliations: [{ key: 'uac', label: 'U.A.C', role: '도래자 등록', certainty: 'listed' }],
         limits: ['웃음이 줄었다는 평가는 이웃 진술로만 남아 있다.', '등록 해와 맡긴 이름은 등록부에 기록돼 있으나 공개되지 않는다.']
       },
