@@ -311,6 +311,34 @@
     );
   }
 
+  /* ---------- 구역 판정 판 (2026-11-21 사용자 결정) ---------- */
+  // 판정은 작전 지도 지역 데이터(zoneGradeCode)와 세계 기본 규칙(zoneGrading)에서 읽는다. 오늘의 정세 회람은 날짜로 하나를 고른다.
+  function zonePanel() {
+    const framework = root.ProjectCurseWorldHistoryData?.worldFramework || {};
+    const grades = framework.zoneGrading?.grades || [];
+    const districts = root.ProjectCurseMapRoom?.drilldowns || [];
+    if (!grades.length || !districts.length) return PC.missing('ZONE BOARD MISSING', 'zoneGrading / drilldowns', '구역 판정 데이터가 없습니다.');
+    const affairs = framework.interstateAffairs?.items || [];
+    const day = Math.floor(Date.now() / 86400000);
+    const affair = affairs.length ? affairs[day % affairs.length] : null;
+    return h('section.tc-home-zones', { 'aria-label': '구역 판정 판' },
+      h('p.tc-home-fold-lead', { text: '구역 판정은 행정이 어디까지 닿는지이며 위험도가 아니다.' }),
+      h('ul.tc-home-zone-list', null, districts.map((district) => {
+        const grade = grades.find((item) => item.code === district.zoneGradeCode);
+        const name = grade ? grade.name : (district.zoneGradeStatus === 'not-applicable' ? '판정 대상 아님' : '판정 없음');
+        return h('li', null,
+          h('a', { href: PC.href('map-room', 'region', district.id) }, h('b', { text: district.label }), h('span', { text: name }))
+        );
+      })),
+      affair ? h('aside.tc-home-affair', { 'aria-labelledby': 'tc-home-affair-title' },
+        h('h3#tc-home-affair-title', null, '오늘의 정세 회람 — ', affair.title),
+        PC.tag(affair.status, 'caution'),
+        h('p', { text: affair.text }),
+        link('국가 간 정세 전체 보기', ['history'])
+      ) : null
+    );
+  }
+
   /* ---------- 귀환 신호 접촉 보고 ---------- */
   function contactPanel() {
     const contact = copy().contact;
@@ -581,6 +609,7 @@
       h('div.tc-home-folds', null,
         fold('tc-home-fold-contact', contactStep ? `귀환 신호 — ${contactStep.title}` : '귀환 신호 접촉 보고', '육안 인원과 열원 수가 맞지 않은 보고', contactPanel()),
         fold('tc-home-fold-civil', civil?.title || '민간 재난 방송', '권역 경보망에서 받은 방송 여섯 건과 경보색 기준', civilPanel()),
+        fold('tc-home-fold-zones', '구역 판정 판', '지역 여덟 곳의 판정과 오늘의 국가 간 정세', zonePanel()),
         fold('tc-home-fold-ops', '작전 기록', `작전 ${counts().ops}건의 마지막 기록`, live.ops)
       ),
       h('p.tc-home-foot.tc-full-only', null, h('span', { text: 'PC-03' }), h('b', { text: 'NO EXTERNAL HANDSHAKE' }))

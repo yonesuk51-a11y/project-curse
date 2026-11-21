@@ -135,6 +135,44 @@
   font-size: var(--fs-s);
   line-height: 1.55;
 }
+/* 구역 판정 판 — 지역 여덟 곳과 오늘의 정세 회람 */
+.tc-home-zone-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 1px;
+  margin: var(--s3) 0;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.tc-home-zone-list a {
+  display: grid;
+  gap: 2px;
+  padding: var(--s3) var(--s4);
+  background: var(--panel);
+  color: var(--text);
+  text-decoration: none;
+}
+.tc-home-zone-list a span {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-home-zone-list a:hover,
+.tc-home-zone-list a:focus-visible {
+  background: var(--panel-2);
+}
+.tc-home-affair {
+  display: grid;
+  justify-items: start;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4);
+  border-left: 2px solid var(--amber);
+  background: var(--panel-2);
+}
+.tc-home-affair p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
 .tc-home-civil-legend {
   display: grid;
   align-content: start;

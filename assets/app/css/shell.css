@@ -445,8 +445,14 @@ html.tc-immersive .tc-main {
   .tc-rail-list {
     grid-template-columns: repeat(7, minmax(0, 1fr));
   }
+  /* 2026-11-21: 375px에서 칸 안 글자가 칸보다 넓어 8px 넘쳤다. 칸이 글자 폭 아래로 줄 수 있게 한다(사용자 결정, 보이는 요소는 그대로) */
+  .tc-rail-list li,
+  .tc-rail-list a,
+  .tc-rail-list a span {
+    min-width: 0;
+  }
   .tc-rail-list a {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     justify-items: center;
     gap: 2px;
     min-height: var(--dock-h);
