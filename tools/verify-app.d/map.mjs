@@ -148,6 +148,28 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     for(const e of d.synchronyEvents)assert.ok(historyIds.has(e.history));
     for(const s of Object.values(context.ProjectCursePilgrimageData.scenarios)){assert.ok(opIds.has(s.operation));for(const id of s.records)assert.ok(archiveIds.has(id)||context.ProjectCurseVerdictArchiveData.records?.some(e=>e.id===id),id);}
   });
+  check('regional-zone-grade-display-and-explicit-missing',()=>{
+    const {c,host,screen}=screenHarness(context,source,stateSource),grades=context.ProjectCurseWorldHistoryData.worldFramework.zoneGrading.grades;
+    const expected={'eastasia-northern-front':'CORDON','europe-north-sea-blockade':'SEALED','gbf-western-marches':'UNMEASURED','gbf-coastal-belt':null,'gbf-inner-refuges':'UNMEASURED','deadzone-return-corridor':'QUARANTINE','deadzone-kingdom-graves':'SILENT','deadzone-silent-interior':'SILENT'};
+    for(const detail of context.ProjectCurseMapRoom.drilldowns){
+      screen.show(['region',detail.id],c.PCApp);const expectedCode=expected[detail.id],copy=host.visibleText(true);
+      assert.ok(copy.includes('구역 판정'),detail.id);assert.ok(copy.includes('구역 판정은 행정이 어디까지 닿는지이며 위험도가 아니다.'),detail.id);
+      if(expectedCode){const grade=grades.find(item=>item.code===expectedCode),code=host.querySelector('.tc-map-zone-grade-code');assert.ok(copy.includes(`구역 판정 — ${grade.name}`),detail.id);assert.ok(copy.includes(grade.text),detail.id);assert.equal(code?.textContent,expectedCode);assert.equal(code?.visibleText(true),'');assert.equal(code?.visibleText(),expectedCode);}
+      else{assert.ok(copy.includes('구역 판정 — 판정 대상 아님'));assert.ok(copy.includes('남방권은 동원·통신망이라 땅의 판정이 아니다.'));assert.equal(host.querySelector('.tc-map-zone-grade-code'),null);}
+    }
+    const data=context.ProjectCurseMapRoom,fixture={...context,ProjectCurseMapRoom:{...data,drilldowns:data.drilldowns.map((detail,i)=>i===0?{...detail,zoneGradeCode:'UNLISTED'}:detail)}};
+    const invalid=screenHarness(fixture,source,stateSource);invalid.screen.show(['region','eastasia-northern-front'],invalid.c.PCApp);assert.ok(invalid.host.textContent.includes('ZONE GRADE NOT FOUND'));invalid.screen.hide();screen.hide();
+  });
+  check('regional-northern-interline-rendering-and-membership',()=>{
+    const {c,host,screen}=screenHarness(context,source,stateSource),detail=context.ProjectCurseMapRoom.drilldowns.find(item=>item.id==='eastasia-northern-front');
+    screen.show(['region',detail.id],c.PCApp);
+    const image=host.querySelector('.tc-map-svg'),svg=decodeURIComponent(image.attrs.src.slice(image.attrs.src.indexOf(',')+1));
+    assert.ok(svg.includes('pc-detail-interline-band'));assert.ok(svg.includes('선간 지대'));assert.ok(host.querySelector('.tc-map-interline-legend')?.textContent.includes('작은 의식대와 복제 신호'));
+    for(const id of detail.interline.siteIds){const point=host.querySelector(`[data-contact="${id}"]`);assert.ok(point.classList.contains('is-interline'),id);assert.equal(point.dataset.zoneLayer,'선간 지대',id);assert.ok(point.attrs['aria-label'].includes('선간 지대'),id);}
+    const css=read('assets/app/css/screens/map.css');assert.match(css,/\.tc-map-framed\.is-interline::before/);assert.match(css,/html\[data-fx="reduced"\] #map-room \.tc-map-content \*/);
+    screen.show(['region',detail.id,'site','north-beast-corridor'],c.PCApp);assert.ok(host.visibleText(true).includes('구역 판정 — 차단 구역'));assert.ok(host.querySelector('[data-contact="north-beast-corridor"]').classList.contains('is-interline'));screen.hide();
+    const reduced=screenHarness(context,source,stateSource);reduced.media.matches=true;reduced.screen.show(['region',detail.id],reduced.c.PCApp);assert.equal(reduced.host.dataset.mapFx,'reduced');assert.equal(reduced.timers.size,0);assert.equal(reduced.timeouts.size,0);assert.ok(reduced.host.querySelector('.tc-map-interline-legend'));assert.ok(reduced.host.querySelector('[data-contact="north-beast-corridor"]').classList.contains('is-interline'));reduced.screen.hide();
+  });
   check('playback-lifecycle-and-motion-guard',()=>{
     for(const token of ['PC.missing(',"PC.screen({id:'map-room'",'root.clearInterval(timer)','controller?.abort()',"reducedFx()||view?.kind!=='op'",'root.document.hidden',"event.key===' '","['ArrowLeft','ArrowRight']","if(state.layers.routes&&!syncEvent)","if(state.layers.synchrony)","addEventListener('pc:fx',onMotion",'clearReaction()'] )assert.ok(source.includes(token),token);
     const css=read('assets/app/css/screens/map.css');
