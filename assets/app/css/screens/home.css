@@ -1313,3 +1313,30 @@ html[data-fx="reduced"] .tc-home-ticker-track ul[aria-hidden="true"] { display: 
 .tc-home-price-list em { font-style: normal; text-align: right; color: var(--text-3); }
 .tc-home-price-list em.is-up { color: var(--red-ink); }
 .tc-home-price-list em.is-down { color: var(--text-2); }
+
+/* 자캐 거점·입문 세 단계·새로 온 것(2026-11-22) */
+.tc-hub-forms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s2); margin: 0; padding: 0; list-style: none; }
+.tc-hub-forms a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  gap: 2px var(--s2);
+  min-height: 64px;
+  padding: var(--s3);
+  border: 1px solid var(--line-2);
+  color: var(--text);
+  text-decoration: none;
+}
+.tc-hub-forms a span { grid-column: 1; color: var(--text-2); font-size: var(--fs-xs); }
+.tc-hub-forms a em { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-style: normal; color: var(--text-3); }
+.tc-hub-forms a:hover, .tc-hub-forms a:focus-visible { border-color: rgb(var(--ch-rgb)); }
+.tc-hub-bulletin h3 { margin: var(--s1) 0; }
+.tc-hub-bulletin ul { margin: var(--s2) 0; padding-left: 1.1em; display: grid; gap: 2px; }
+@media (max-width: 520px) { .tc-hub-forms { grid-template-columns: minmax(0, 1fr); } }
+.tc-welcome-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); margin: 0 0 var(--s4); padding: 0; list-style: none; }
+.tc-welcome-steps li { display: flex; align-items: center; gap: var(--s2); padding: var(--s2); border-top: 2px solid var(--line-2); color: var(--text-3); font-size: var(--fs-xs); }
+.tc-welcome-steps li i { font-style: normal; font-family: var(--mono); }
+.tc-welcome-steps li[aria-current="step"] { border-top-color: rgb(var(--ch-rgb)); color: var(--text); font-weight: 600; }
+.tc-home-fresh { display: grid; gap: var(--s1); margin: 0 0 var(--s3); padding: 0; list-style: none; }
+.tc-home-fresh li { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s2); }
+.tc-home-fresh a { color: var(--text); }

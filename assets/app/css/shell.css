@@ -661,3 +661,62 @@ html[data-density="brief"] body:is([data-screen="history"], [data-screen="field-
     height: 3px;
   }
 }
+
+/* 아래 막대 다섯 칸과 묶음 전환 띠(2026-11-22 사용자 결정) */
+.tc-dock-list { display: none; }
+.tc-groupnav { display: none; }
+@media (max-width: 960px) {
+  .tc-rail .tc-rail-list { display: none; }
+  .tc-dock-list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .tc-dock-list li { min-width: 0; }
+  .tc-dock-list a {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: var(--dock-h);
+    padding: 6px 2px;
+    color: var(--text-2);
+    font-size: var(--fs-s);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .tc-dock-list a[aria-current="page"] {
+    color: var(--text);
+    background: rgba(var(--ch-rgb), .08);
+  }
+  .tc-dock-list a[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: rgb(var(--ch-rgb));
+  }
+  .tc-dock-list a:focus-visible { outline: 2px solid rgb(var(--ch-rgb)); outline-offset: -2px; }
+  .tc-groupnav:not([hidden]) {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    margin-bottom: var(--s4);
+    border: 1px solid var(--line-2);
+  }
+  .tc-groupnav a {
+    display: grid;
+    place-items: center;
+    min-height: 44px;
+    padding: 6px var(--s2);
+    color: var(--text-2);
+    font-size: var(--fs-s);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .tc-groupnav a + a { border-left: 1px solid var(--line-2); }
+  .tc-groupnav a[aria-current="page"] { color: var(--text); background: rgba(var(--ch-rgb), .1); box-shadow: inset 0 -2px 0 rgb(var(--ch-rgb)); }
+}

@@ -105,6 +105,10 @@ const historyIds = historyRecords.map((record) => record.id);
 // 2026-11-21: 실제 나라 아포칼립스 네 기록(2009 북미 망명정부, 2027 비무장지대, 2029 경기 북부 신도시, 2035 도쿄 서부)을 더해 58건이 됐다.
 // 2026-11-21: 서일본 해안 대지진(2031)과 비협력권 레드존 징집 증언(2033)을 더해 60건이 됐다.
 add('history-sixty-four-records', historyIds.length === 64, historyIds.length);
+// 아래 막대 다섯 칸·자캐 거점·입문 세 단계(2026-11-22 사용자 결정). 첫 방문은 주소가 없거나 상황판일 때만 입문으로 보낸다.
+{ const core = read('assets/app/js/pc-core.js'); const home = read('assets/app/js/screens/home.js'); const G = context.ProjectCurseCommunityGuide;
+  const dock = app.split('<ol class="tc-dock-list">')[1]?.split('</ol>')[0] || '';
+  add('shell-five-dock-groups-and-onboarding', (dock.match(/data-tc-group="/g) || []).length === 5 && ['today', 'char', 'world', 'people', 'records'].every((g) => dock.includes('data-tc-group="' + g + '"')) && core.includes('function groupOf(') && core.includes("const plain = !location.hash || location.hash === '#terminal-home'") && core.includes('PCUpdates?.first?.()') && G?.hub?.forms?.length === 6 && G?.welcome?.steps?.length === 3 && home.includes('function renderWelcome') && home.includes('function renderStart') && home.indexOf('tc-home-updates-slot') < home.indexOf('tc-home-daily-slot')); }
 // 합동 작전 공고(2026-11-21 사용자 추천안 승인) — 여덟 건, 주마다 하나. 교류용 글감이라는 표시가 있다.
 { const B = context.ProjectCurseHomeScreen?.bulletins; add('home-joint-operation-bulletins', !!B && B.items.length === 8 && new Set(B.items.map((item) => item.code)).size === 8 && B.arc?.steps?.length === 4 && B.arc.endings?.length === 3 && B.arc.steps.every((step) => step.title && step.situation && step.roe.length >= 3 && step.prompts.length >= 3 && step.link?.route) && context.ProjectCurseHomeScreen?.prices?.items?.length === 6 && B.items.every((item) => item.title && item.place && item.situation && item.roe.length >= 3 && item.seats && item.prompts.length >= 3 && item.link?.route) && /공식 기록이 아닙니다/.test(B.note) && read('assets/app/js/screens/home.js').includes("fold('tc-home-fold-bulletin'")); }
 add('history-ids-unique', new Set(historyIds).size === historyIds.length);

@@ -21,7 +21,8 @@
 
   const SIGNAL_TONES = { critical: 'danger', unstable: 'caution', returned: 'info', recovered: 'ok' };
   const STATE_EVENTS = ['projectcurse:operation-state-change', 'projectcurse:pilgrimage-state-change', 'projectcurse:verdict-archive-change'];
-  const TITLES = { index: '상황판', intro: '입문 카드', guide: '자캐 설정 안내' };
+  const TITLES = { index: '상황판', intro: '입문 카드', guide: '자캐 설정 안내', start: '자캐 거점', welcome: '입문' };
+  const SUB_PAGES = ['intro', 'guide', 'start', 'welcome'];
 
   // {이름} 자리를 값으로 채운다. 값이 없으면 자리를 그대로 두지 않고 빈 문자열로 둔다.
   const fill = (template, values) => String(template || '').replace(/\{(\w+)\}/g, (_, key) => (values[key] ?? ''));
@@ -719,6 +720,21 @@
   }
 
   /* ---------- 지난 방문 이후 — 새 기록 알림(pc-updates.js) ---------- */
+  // 새로 온 것(2026-11-22 사용자 결정) — 오늘 올라온 일지 장과 이번 주 공고를 한 줄씩
+  function freshLines() {
+    const now = new Date();
+    const day = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const lines = [];
+    (root.ProjectCurseWorldHistoryData?.worldFramework?.cities || []).forEach((city) => {
+      (city.diary?.entries || []).filter((entry) => entry.release === day).forEach((entry) => {
+        lines.push(['일지 새 장', `${city.label} — ${entry.title}`, ['history', 'ref', city.id === 'karven' ? 'diary' : `diary-${city.id}`]]);
+      });
+    });
+    const item = bulletinItem();
+    if (item) lines.push(['이번 주 공고', `${item.code} ${item.title}`, ['terminal-home', 'start']]);
+    return lines;
+  }
+
   function updatesPanel() {
     const U = root.PCUpdates;
     if (!U) return null;
@@ -727,12 +743,15 @@
     const entries = all.slice(0, 1);
     const more = first ? 0 : all.length - entries.length;
     const fresh = U.count();
-    if (!entries.length && !fresh) return null;
+    if (!entries.length && !fresh && !freshLines().length) return null;
     return h('section.tc-panel.tc-home-updates', { 'aria-labelledby': 'tc-home-updates-title' },
       h('header.tc-panel-head', null,
-        h('div', null, h('span.tc-label.tc-full-only', { text: 'UPDATE LOG' }), h('h2#tc-home-updates-title', { text: first ? '최근 갱신' : '지난 방문 이후' })),
+        h('div', null, h('span.tc-label.tc-full-only', { text: 'UPDATE LOG' }), h('h2#tc-home-updates-title', { text: '새로 온 것' })),
         fresh ? PC.tag(`새 기록 ${fresh}건`, 'danger') : null
       ),
+      freshLines().length ? h('ul.tc-home-fresh', null, freshLines().map(([label, text, route]) =>
+        h('li', null, h('span.tc-label', { text: label }), h('a', { href: PC.href(...route) }, text, h('i', { 'aria-hidden': 'true', text: ' ›' })))
+      )) : null,
       entries.length ? h('ol.tc-home-update-list', null, entries.map((entry) =>
         h('li', null,
           h('time.tc-code', { text: String(entry.date).replace(/-/g, '.'), datetime: entry.date }),
@@ -880,6 +899,100 @@
     );
   }
 
+  /* ---------- 자캐 거점 (2026-11-22 사용자 결정) ---------- */
+  function renderStart(box) {
+    const data = guideData().hub;
+    if (!data) {
+      box.append(PC.missing('HUB MISSING', 'ProjectCurseCommunityGuide.hub', '자캐 거점 자료가 없습니다.'));
+      return;
+    }
+    const item = bulletinItem();
+    box.append(
+      h('article.tc-ooc.tc-home-hub', { 'aria-labelledby': 'tc-hub-title' },
+        h('header.tc-ooc-head', null,
+          h('p.tc-label', { text: data.kicker }),
+          h('h1#tc-hub-title', { text: data.title, 'data-tc-focus': true }),
+          h('p.tc-ooc-lead', { text: data.lead })
+        ),
+        h('section.tc-ooc-section', { 'aria-labelledby': 'tc-hub-forms' },
+          h('h2#tc-hub-forms', { text: data.formsTitle }),
+          h('ul.tc-hub-forms', null, data.forms.map((form) => h('li', null,
+            h('a', { href: PC.href('field-manual', 'register', form.slug) }, h('b', { text: form.title }), h('span', { text: form.text }), h('em', { 'aria-hidden': 'true', text: '›' }))
+          )))
+        ),
+        item ? h('section.tc-ooc-section.tc-hub-bulletin', { 'aria-labelledby': 'tc-hub-bulletin' },
+          h('h2#tc-hub-bulletin', { text: copy().bulletins?.title || '이번 주 합동 작전 공고' }),
+          h('p.tc-label', { text: item.arcTitle ? `${item.code} · 연속 작전 ${item.step}/${item.total}` : item.code }),
+          h('h3', { text: item.title }),
+          h('p', { text: item.situation }),
+          h('ul', null, item.prompts.map((line) => h('li', { text: line }))),
+          h('div.tc-btnrow', null, link('교전 보고서로 쓰기', ['field-manual', 'register', 'report'], true))
+        ) : null,
+        h('section.tc-ooc-section', { 'aria-labelledby': 'tc-hub-first' },
+          h('h2#tc-hub-first', { text: data.firstTitle }),
+          h('ul.tc-hub-forms', null, data.first.map((entry) => h('li', null,
+            h('a', { href: PC.href(...entry.route) }, h('b', { text: entry.label }), h('span', { text: entry.text }), h('em', { 'aria-hidden': 'true', text: '›' }))
+          )))
+        ),
+        h('section.tc-ooc-section', { 'aria-labelledby': 'tc-hub-ideas' },
+          h('h2#tc-hub-ideas', { text: data.ideasTitle }),
+          h('div.tc-btnrow', null, data.ideas.map((entry) => link(entry.label, entry.route)))
+        )
+      )
+    );
+  }
+
+  /* ---------- 입문 세 단계 (2026-11-22 사용자 결정) ---------- */
+  function renderWelcome(box, stepPart) {
+    const w = guideData().welcome;
+    const intro = guideData().intro;
+    const basics = guideData().guide?.sections?.find((section) => section.id === 'basics');
+    if (!w || !intro) {
+      box.append(PC.missing('WELCOME MISSING', 'ProjectCurseCommunityGuide.welcome', '입문 자료가 없습니다.'));
+      return;
+    }
+    const step = stepPart === '2' ? 2 : 1;
+    const finish = (target) => (event) => {
+      event.preventDefault();
+      PC.onboarded(true);
+      PC.go(...target);
+    };
+    const steps = h('ol.tc-welcome-steps', { 'aria-label': '입문 단계' }, w.steps.map((name, index) =>
+      h('li', { 'aria-current': index + 1 === step ? 'step' : null }, h('i', { text: String(index + 1) }), h('span', { text: name }))
+    ));
+    const skip = h('a.tc-btn', { href: PC.href('terminal-home'), onclick: finish(['terminal-home']) }, w.skip);
+    if (step === 1) {
+      const terms = intro.terms.map(termOf).filter(Boolean);
+      box.append(h('article.tc-ooc.tc-home-intro.tc-welcome', { 'aria-labelledby': 'tc-welcome-title' },
+        steps,
+        h('header.tc-ooc-head', null,
+          h('img.tc-ooc-logo', { src: 'assets/brand/og-image.png', alt: '가운데가 붉게 갈라진 흰 봉인 옆에 PROJECT CURSE 글자가 있는 로고', width: '1200', height: '630' }),
+          h('h1#tc-welcome-title', { text: w.steps[0], 'data-tc-focus': true }),
+          h('p.tc-ooc-lead', { text: intro.lead })
+        ),
+        h('section.tc-ooc-story', { 'aria-label': w.steps[0] }, intro.story.map((line) => h('p', { text: line }))),
+        h('section.tc-ooc-section', { 'aria-labelledby': 'tc-welcome-terms' },
+          h('h2#tc-welcome-terms', { text: intro.termsTitle }),
+          h('dl.tc-ooc-terms', null, terms.map((term) => h('div', null, h('dt', { text: term.name }), h('dd', { text: term.text }))))
+        ),
+        h('div.tc-btnrow', null, link(w.next, ['terminal-home', 'welcome', '2'], true), skip)
+      ));
+      return;
+    }
+    box.append(h('article.tc-ooc.tc-welcome', { 'aria-labelledby': 'tc-welcome-title' },
+      steps,
+      h('header.tc-ooc-head', null,
+        h('h1#tc-welcome-title', { text: w.charTitle, 'data-tc-focus': true }),
+        h('p.tc-ooc-lead', { text: w.charLead })
+      ),
+      basics ? h('dl.tc-ooc-terms', null, basics.items.map(([term, text]) => h('div', null, h('dt', { text: term }), h('dd', { text })))) : null,
+      h('div.tc-btnrow', null,
+        h('a.tc-btn.tc-btn--primary', { href: PC.href('field-manual', 'register', 'register'), onclick: finish(['field-manual', 'register', 'register']) }, w.charCta, h('i', { 'aria-hidden': 'true', text: '›' })),
+        h('a.tc-btn', { href: PC.href('terminal-home'), onclick: finish(['terminal-home']) }, w.later)
+      )
+    ));
+  }
+
   /* ---------- 자캐 설정 안내 ---------- */
   function renderGuide(box) {
     const data = guideData().guide;
@@ -954,10 +1067,11 @@
       // 2026-11-21 사용자 결정: 첫 화면은 '오늘'만 — 방송 띠, 오늘의 기록, 긴급 경보·최근 신호, 최근 갱신 한 줄.
       // 바로가기·사건부터 읽기·보관함 쪽지·키아트는 지우지 않고 아래 접는 칸으로 내렸다(처음 온 방문자에게는 '처음 오셨다면'을 펼쳐 둔다).
       h('div.tc-home-ticker-slot'),
+      // 2026-11-22 사용자 결정: 다시 온 사람은 새로 온 것부터 본다
+      h('div.tc-home-updates-slot'),
       h('p.tc-home-silence', { role: 'status' }, h('b', { text: '외부 교신 두절' }), h('span', { text: '삼야 무응답과 같은 시각이다. 수신 목록이 멈췄다.' }), h('a', { href: PC.href('history', '2042-10-31-three-night-silence') }, '기록 보기 ›')),
       h('div.tc-home-daily-slot'),
       h('div.tc-home-grid', null, live.flash, live.signals),
-      h('div.tc-home-updates-slot'),
       h('div.tc-home-folds', null,
         fold('tc-home-fold-start', '처음 오셨다면', '입문 카드·자캐 설정 안내·등록증·사건부터 읽기', h('div.tc-home-start', null, quickLinks(), entryPanel())),
         fold('tc-home-fold-custody', copy().custody?.title || '보관함에 남긴 쪽지', '서부 귀환 회랑 보관함 · 검문소 07 키아트', h('div.tc-home-open', null, custodyPanel(), keyArt())),
@@ -988,13 +1102,15 @@
   }
 
   function show(parts, app, info) {
-    const page = parts[0] === 'intro' || parts[0] === 'guide' ? parts[0] : 'index';
+    const page = SUB_PAGES.includes(parts[0]) ? parts[0] : 'index';
     app.setTitle(TITLES[page]);
     indexView.hidden = page !== 'index';
     subView.hidden = page === 'index';
     if (page !== 'index') {
       PC.clear(subView);
       if (page === 'intro') renderIntro(subView);
+      else if (page === 'start') renderStart(subView);
+      else if (page === 'welcome') renderWelcome(subView, parts[1]);
       else renderGuide(subView);
       PC.threat('low');
       return;

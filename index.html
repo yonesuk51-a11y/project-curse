@@ -30,10 +30,10 @@
 <script src="assets/app/js/pc-prefs.js?v=6.1.0-32005840"></script>
 <link href="assets/app/css/tokens.css?v=6.0.0-a1768bdb" rel="stylesheet"/>
 <link href="assets/app/css/base.css?v=6.0.0-19696b5a" rel="stylesheet"/>
-<link href="assets/app/css/shell.css?v=6.0.0-2f19a6bb" rel="stylesheet"/>
+<link href="assets/app/css/shell.css?v=6.0.0-a422154a" rel="stylesheet"/>
 <link href="assets/app/css/components.css?v=6.0.0-949bfb5e" rel="stylesheet"/>
 <link href="assets/app/css/fx.css?v=6.0.0-234e251c" rel="stylesheet"/>
-<link href="assets/app/css/screens/home.css?v=6.0.0-50a3e552" rel="stylesheet"/>
+<link href="assets/app/css/screens/home.css?v=6.0.0-7d851316" rel="stylesheet"/>
 <link href="assets/app/css/screens/history.css?v=6.0.0-11cd0be7" rel="stylesheet"/>
 <link href="assets/app/css/screens/map.css?v=6.0.0-f3843e9e" rel="stylesheet"/>
 <link href="assets/app/css/screens/faction.css?v=6.0.0-7bdd95f0" rel="stylesheet"/>
@@ -63,12 +63,21 @@
 <p aria-hidden="true" class="tc-rail-head">CHANNELS</p>
 <ol class="tc-rail-list">
 <li><a aria-label="상황판" data-tc-nav="terminal-home" href="#terminal-home"><i aria-hidden="true">00</i><span aria-hidden="true"><b>상황판</b><small>상황</small><em>COMMAND NODE</em></span></a></li>
+<li><a aria-label="자캐 거점" data-tc-group="char" href="#terminal-home/start"><i aria-hidden="true">◇</i><span aria-hidden="true"><b>자캐 거점</b><small>자캐</small><em>PARTICIPANTS</em></span></a></li>
 <li><a aria-label="작전 지도" data-tc-nav="map-room" href="#map-room"><i aria-hidden="true">01</i><span aria-hidden="true"><b>작전 지도</b><small>지도</small><em>CARTOGRAPHY</em></span></a></li>
 <li><a aria-label="세계 기록" data-tc-nav="history" href="#history"><i aria-hidden="true">02</i><span aria-hidden="true"><b>세계 기록</b><small>연표</small><em>CHRONOLOGY</em></span></a></li>
 <li><a aria-label="세력 분석" data-tc-nav="faction-info" href="#faction-info"><i aria-hidden="true">03</i><span aria-hidden="true"><b>세력 분석</b><small>세력</small><em>INTELLIGENCE</em></span></a></li>
 <li><a aria-label="기록보관소" data-tc-nav="archive-entry" href="#archive-entry"><i aria-hidden="true">04</i><span aria-hidden="true"><b>기록보관소</b><small>기록</small><em>ARCHIVE VAULT</em></span></a></li>
 <li><a aria-label="인물 기록" data-tc-nav="personnel" href="#personnel"><i aria-hidden="true">05</i><span aria-hidden="true"><b>인물 기록</b><small>인물</small><em>PERSONNEL</em></span></a></li>
 <li><a aria-label="현장 지침" data-tc-nav="field-manual" href="#field-manual"><i aria-hidden="true">06</i><span aria-hidden="true"><b>현장 지침</b><small>지침</small><em>FIELD MANUAL</em></span></a></li>
+</ol>
+<!-- 2026-11-22 사용자 결정: 좁은 화면 아래 막대는 다섯 칸(오늘·자캐·세계·사람·기록). 묶음 안 화면은 본문 위 전환 띠로 오간다. -->
+<ol class="tc-dock-list">
+<li><a data-tc-group="today" href="#terminal-home">오늘</a></li>
+<li><a data-tc-group="char" href="#terminal-home/start">자캐</a></li>
+<li><a data-tc-group="world" href="#history">세계</a></li>
+<li><a data-tc-group="people" href="#personnel">사람</a></li>
+<li><a data-tc-group="records" href="#archive-entry">기록</a></li>
 </ol>
 <dl class="tc-rail-foot">
 <div><dt>NODE</dt><dd>PC-03</dd></div>
@@ -98,9 +107,9 @@
 <script src="assets/js/data/transition-manifest.js?v=5.54.0-7fcb5663"></script>
 <script src="assets/js/data/channel-hero-data.js?v=6.1.0-b6ff04b0"></script>
 <script src="assets/js/data/open-canon-data.js?v=6.1.0-26c63533"></script>
-<script src="assets/js/data/community-guide-data.js?v=6.1.0-74d48379"></script>
+<script src="assets/js/data/community-guide-data.js?v=6.1.0-6714f434"></script>
 <script src="assets/js/data/share-index-data.js?v=6.1.0-508128d3"></script>
-<script src="assets/js/data/site-updates-data.js?v=6.1.0-ebd76deb"></script>
+<script src="assets/js/data/site-updates-data.js?v=6.1.0-549d8ded"></script>
 <script src="assets/js/data/terminal-fx-data.js?v=6.0.0-00903d4b"></script>
 <script src="assets/js/data/channel-identity-data.js?v=5.54.0-b71e2cb4"></script>
 <script src="assets/js/data/canon-registry.js?v=5.54.0-49d2fbe9"></script>
@@ -148,22 +157,22 @@
 <script src="assets/app/js/cinematic/cinematic-immortality.js?v=6.0.0-8b187889"></script>
 <script src="assets/app/js/cinematic/cinematic-ferals.js?v=6.0.0-122a0ac4"></script>
 <script src="assets/app/js/cinematic/cinematic-sakuma.js?v=6.0.0-4b73bf2a"></script>
-<script src="assets/app/js/pc-core.js?v=6.0.0-85ac87e9"></script>
+<script src="assets/app/js/pc-core.js?v=6.0.0-5aecc83d"></script>
 <script src="assets/app/js/pc-audio.js?v=6.0.0-caaa897d"></script>
 <script src="assets/app/js/pc-fx.js?v=6.0.0-aef40fc3"></script>
 <script src="assets/app/js/pc-state.js?v=6.0.0-560e0739"></script>
 <script src="assets/app/js/pc-anomaly.js?v=6.1.0-fcaf6abf"></script>
 <script src="assets/app/js/pc-inspect.js?v=6.1.0-09005cd5"></script>
 <script src="assets/app/js/pc-updates.js?v=6.1.0-49370648"></script>
-<script src="assets/app/js/pc-settings.js?v=6.1.0-68407f34"></script>
+<script src="assets/app/js/pc-settings.js?v=6.1.0-d1bd3a65"></script>
 <script src="assets/app/js/pc-search.js?v=6.1.0-f03c816e"></script>
-<script src="assets/app/js/screens/home.js?v=6.0.0-7661ab97"></script>
+<script src="assets/app/js/screens/home.js?v=6.0.0-1e4bcaff"></script>
 <script src="assets/app/js/screens/history.js?v=6.0.0-1754fb71"></script>
 <script src="assets/app/js/screens/map.js?v=6.0.0-213b6eb6"></script>
 <script src="assets/app/js/screens/faction.js?v=6.0.0-5701ce9d"></script>
 <script src="assets/app/js/screens/archive.js?v=6.0.0-b94c750a"></script>
 <script src="assets/app/js/screens/personnel.js?v=6.0.0-a131fdb5"></script>
 <script src="assets/app/js/screens/manual-card.js?v=6.1.0-44c099d4"></script>
-<script src="assets/app/js/screens/manual.js?v=6.0.0-3ff5a109"></script>
+<script src="assets/app/js/screens/manual.js?v=6.0.0-d570206d"></script>
 </body>
 </html>

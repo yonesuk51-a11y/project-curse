@@ -4,6 +4,7 @@
   'use strict';
 
   const doc = root.document;
+  const ONBOARD_KEY = 'pc6_onboard_v1';
   const SCREEN_IDS = ['terminal-home', 'map-room', 'history', 'faction-info', 'archive-entry', 'personnel', 'field-manual', 'media-audit'];
   // 새 앱에서 생긴 채널 — 옛 앱과 함께 쓰는 channel-identity-data.js에는 넣지 않는다.
   const APP_CHANNELS = [
@@ -185,12 +186,53 @@
     return list.find((item) => item.id === id) || null;
   }
 
-  function updateChrome(route) {
+  /* 아래 막대 다섯 칸(2026-11-22 사용자 결정) — 오늘·자캐·세계·사람·기록. 화면은 그대로 두고 묶음으로 가른다.
+     자캐 = 상황판의 자캐 거점·입문·안내와 현장 지침의 등록 탭. 묶음 안 화면이 둘이면 본문 위에 전환 띠를 단다(좁은 화면). */
+  const GROUPS = {
+    today: { label: '오늘', members: [] },
+    char: { label: '자캐', members: [] },
+    world: { label: '세계', members: [['history', '세계 기록'], ['field-manual', '현장 지침']] },
+    people: { label: '사람', members: [['personnel', '인물 기록'], ['faction-info', '세력 분석']] },
+    records: { label: '기록', members: [['archive-entry', '기록보관소'], ['map-room', '작전 지도']] }
+  };
+  const CHAR_PAGES = ['start', 'welcome', 'intro', 'guide'];
+  function groupOf(route, parts = []) {
+    if (route === 'terminal-home') return CHAR_PAGES.includes(parts[0]) ? 'char' : 'today';
+    if (route === 'field-manual') return parts[0] === 'register' ? 'char' : 'world';
+    if (route === 'history') return 'world';
+    if (route === 'personnel' || route === 'faction-info') return 'people';
+    return 'records';
+  }
+  function groupBar(route, group) {
+    const main = doc.getElementById('tc-main');
+    if (!main) return;
+    let bar = main.querySelector(':scope > [data-tc-groupnav]');
+    const members = GROUPS[group]?.members || [];
+    if (members.length < 2) {
+      if (bar) bar.hidden = true;
+      return;
+    }
+    if (!bar) {
+      bar = h('nav.tc-groupnav', { 'data-tc-groupnav': true, 'aria-label': '묶음 안 화면' });
+      main.prepend(bar);
+    }
+    bar.hidden = false;
+    clear(bar).append(...members.map(([id, label]) => h('a', { href: href(id), 'aria-current': id === route ? 'page' : null, text: label })));
+  }
+
+  function updateChrome(route, parts = []) {
     doc.body.dataset.screen = route;
+    const group = groupOf(route, parts);
+    doc.body.dataset.group = group;
     doc.querySelectorAll('[data-tc-nav]').forEach((link) => {
-      if (link.dataset.tcNav === route) link.setAttribute('aria-current', 'page');
+      if (link.dataset.tcNav === route && group !== 'char') link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
+    doc.querySelectorAll('[data-tc-group]').forEach((link) => {
+      if (link.dataset.tcGroup === group) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+    groupBar(route, group);
     const info = channel(route);
     const code = doc.querySelector('[data-tc-ch-code]');
     const label = doc.querySelector('[data-tc-ch-label]');
@@ -221,7 +263,7 @@
       if (host) host.hidden = true;
     });
 
-    updateChrome(loc.route);
+    updateChrome(loc.route, loc.parts);
     // 위협 등급은 채널 기본값으로 되돌리고, 상세 화면이 show()에서 자기 등급을 넘긴다.
     threat(null, loc.route);
     // 기록 영상 몰입 재생은 기록보관소를 떠나면 끝난다(화면의 hide()가 먼저 지우지만 안전하게 한 번 더).
@@ -537,6 +579,10 @@
     });
     startClock();
     markFeast();
+    try {
+      const plain = !location.hash || location.hash === '#terminal-home';
+      if (plain && root.PCUpdates?.first?.() && !root.localStorage.getItem(ONBOARD_KEY)) history.replaceState(null, '', href('terminal-home', 'welcome'));
+    } catch (_error) { /* 저장소를 못 쓰면 입문을 건너뛴다 */ }
     render('initial');
   }
 
@@ -657,6 +703,17 @@
     if (feast?.special && !document.querySelector('.tc-feast-veil')) document.body.append(h('div.tc-feast-veil', { 'aria-hidden': 'true' }));
   }
 
+  // 입문 세 단계(2026-11-22) — 마치거나 건너뛰면 다시 띄우지 않는다. 설정 창에서 다시 볼 수 있다.
+  function onboarded(value) {
+    try {
+      if (value === true) root.localStorage.setItem(ONBOARD_KEY, new Date().toISOString());
+      else if (value === false) root.localStorage.removeItem(ONBOARD_KEY);
+      return !!root.localStorage.getItem(ONBOARD_KEY);
+    } catch (_error) {
+      return true;
+    }
+  }
+
   const api = Object.freeze({
     version: '6.1.0',
     fx,
@@ -666,6 +723,7 @@
     signalMark,
     feastToday,
     nextFeast,
+    onboarded,
     threat,
     openCanon,
     toast,

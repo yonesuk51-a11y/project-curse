@@ -1548,10 +1548,16 @@
     }
     setTab(part);
     if (part !== 'register') return;
-    root.document.getElementById('tc-man-register')?.closest('details')?.setAttribute('open', '');
+    // #field-manual/register/<양식>(2026-11-22) — 자캐 거점에서 양식 하나로 바로 간다. 없는 양식은 없다고 표시한다.
+    const slug = parts[1] || 'register';
+    if (!root.document.getElementById(`tc-man-${slug}`)?.closest('details.tc-man-panel')) {
+      notice?.append(PC.missing('FORM NOT FOUND', `field-manual/register/${slug}`, '이 양식이 없습니다.'));
+      return;
+    }
+    root.document.getElementById(`tc-man-${slug}`)?.closest('details')?.setAttribute('open', '');
     // 셸이 화면을 맨 위로 올리고 제목에 포커스를 둔 다음에 옮긴다
     focusTimer = root.setTimeout(() => {
-      const heading = root.document.getElementById('tc-man-register');
+      const heading = root.document.getElementById(`tc-man-${slug}`);
       if (!heading) return;
       heading.closest('details')?.scrollIntoView({ block: 'start', behavior: PC.fx() === 'reduced' ? 'auto' : 'smooth' });
       if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');

@@ -70,6 +70,11 @@
       h('div.tc-set-row', null,
         h('p.tc-set-label', { text: '링크' }),
         h('button.tc-btn', { type: 'button', text: '지금 화면 링크 복사', onclick: () => PC.copyLink() })
+      ),
+      // 입문 다시 보기(2026-11-22 사용자 결정)
+      h('div.tc-set-row', null,
+        h('p.tc-set-label', { text: '입문' }),
+        h('a.tc-btn', { href: PC.href('terminal-home', 'welcome'), text: '입문 세 단계 다시 보기' })
       )
     );
   }

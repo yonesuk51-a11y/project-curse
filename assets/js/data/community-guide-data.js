@@ -50,6 +50,43 @@
         { label: '현장 지침', route: ['field-manual'] }
       ]
     },
+    // 2026-11-22 사용자 결정 — 자캐 거점(#terminal-home/start). 아래 막대 '자캐' 칸이 여기로 온다.
+    hub: {
+      kicker: '자캐 거점',
+      title: '자캐 — 만들고, 쓰고, 함께 쓴다',
+      lead: '캐릭터를 만들고, 교류 글에 붙일 양식을 한곳에 모았습니다.',
+      firstTitle: '처음이라면',
+      first: [
+        { label: '입문 카드', text: '이 세계를 한 장으로', route: ['terminal-home', 'intro'] },
+        { label: '자캐 설정 안내', text: '출신·전 소속·대가·쓰지 않는 소재', route: ['terminal-home', 'guide'] },
+        { label: '입문 세 단계', text: '처음 들어왔을 때의 순서를 다시', route: ['terminal-home', 'welcome'] }
+      ],
+      formsTitle: '등록증과 양식',
+      forms: [
+        { slug: 'register', title: '등록증', text: '캐릭터 등록증과 뒷면 복무 기록' },
+        { slug: 'report', title: '교전 보고서', text: '분 단위 시각과 남은 것' },
+        { slug: 'squad', title: '분대 편성표', text: '여러 자캐를 한 분대로' },
+        { slug: 'letter', title: '검열 편지', text: '다른 자캐에게 보내는 편지' },
+        { slug: 'contract', title: '프리윌 계약서', text: '자캐끼리 주고받는 의뢰' },
+        { slug: 'interview', title: 'S.I.D 면담 기록', text: '캐릭터 소개를 면담처럼' }
+      ],
+      ideasTitle: '글감',
+      ideas: [
+        { label: '대조 짝', route: ['history', 'ref', 'pair-check'] },
+        { label: '이름 난 교전', route: ['history', 'ref', 'battle-maroa-gate'] },
+        { label: '도래자', route: ['history', 'ref', 'arrivals'] }
+      ]
+    },
+    // 2026-11-22 사용자 결정 — 첫 방문자: 기동 뒤 ① 이 세계는 ② 자캐 만들기 ③ 오늘의 상황판. 건너뛸 수 있고, 마치면 다시 띄우지 않는다.
+    welcome: {
+      steps: ['이 세계는', '자캐 만들기', '오늘의 상황판'],
+      next: '다음 — 자캐 만들기',
+      skip: '건너뛰기',
+      charTitle: '자캐 만들기',
+      charLead: '네 가지를 정하면 등록증을 만들 수 있습니다. 나머지는 쓰면서 정해도 됩니다.',
+      charCta: '등록증 만들기',
+      later: '나중에 — 상황판으로'
+    },
     // 2026-11-21 사용자 추천안 승인 — 교전 보고서 양식이 고르는 값. 장소는 세계 기록의 장소 이름만 쓴다.
     forms: {
       reportPlaces: ['대흑림 성채', '서부 순례 회랑', '데드존 검문소', '지하문', '도시 폐쇄시설', '북부 차단선', '북해권', '남방 해안', '카르벤 격리시', '마로아 자치시'],
