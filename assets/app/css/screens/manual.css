@@ -690,3 +690,7 @@
   line-height: 1.6;
 }
 
+/* 표 하나짜리 절(2026-11-21) — 칸 수가 표마다 다르다 */
+@media (min-width: 761px) {
+  .tc-man-table--wide .tc-man-tr { grid-template-columns: var(--tpl); }
+}

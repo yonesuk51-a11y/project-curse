@@ -117,12 +117,21 @@
     lines: '민간 분리, 회수, 지휘 승계, 작전 종료와 인식표.',
     checkpoint: '바깥에서 안쪽으로 한 방향, 일곱 단계.',
     drill: '기계 판정에 서명할지 보류할지 고른다. 정답은 없다.',
-    register: '자캐 등록 양식과 등록증 그림(PNG).'
+    register: '자캐 등록 양식과 등록증 그림(PNG).',
+    // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
+    'ability-grade': 'L0–L4. 등급은 세기가 아니라 얼마나 지켜볼지다.',
+    'minor-abilities': '작고 쓸모 있는 능력 열 가지와 그 대가.',
+    'field-abilities': '교전을 돕지만 혼자 상황을 바꾸지 못하는 능력 여덟.',
+    'cost-log': '쓸 때마다 적는 대가 일지와 72시간 억제제.',
+    'field-electronics': '판정 조준경, 투명 표시창 고글, 전자 인식표, 손바닥 드론.',
+    'body-augments': '열상 의안, 근전도 의수, 피부 아래 신원 칩, 신경 포트.',
+    'black-market': '체온 조끼, 칩 복제기 — 검문을 속이는 장비와 적발 요령.',
+    'anti-reverse': '기억 보존 기록기, 이름 반응 측정기, 역류 계측기.'
   };
   const TABS = {
     roe: { title: '교전 규칙', hint: '철수·교전·피탈자·기시체·혈술·지각 오염·표식' },
     field: { title: '현장 절차', hint: '진입·현장조·역류·청소조·인계·검문소·서명 연습' },
-    gear: { title: '장비와 능력', hint: '장비군·제식 화기·능력과 대가' },
+    gear: { title: '장비와 능력', hint: '능력 등급·소능력·장비군·2030년대 장비' },
     register: { title: '자캐 등록', hint: '등록 양식·등록증 그림' }
   };
   let manualTabs = null;
@@ -302,6 +311,27 @@
       list(sec.items, 'tc-man-list tc-man-list--rules'),
       extra || null,
       sec.warning ? h('div.tc-note.tc-note--caution', null, bi(noteCode, noteLabel), h('p', { text: sec.warning })) : null
+    ], { slug });
+  }
+
+  /* ---------- 표 하나짜리 절 (2026-11-21 사용자 결정) ---------- */
+  // 능력 등급·소능력·장비처럼 문단 + 표 + 항목 + 경고로 된 절. 칸 수는 표마다 다르다. 좁은 화면에서는 칸 제목을 줄마다 붙인다.
+  function tablePanel(title, code, slug) {
+    const sec = section(title);
+    if (!sec?.table) return missingSection(title);
+    const heads = sec.table.headers;
+    return panel(code, title, [
+      paragraphs(sec.paragraphs),
+      h('div.tc-man-table.tc-man-table--wide', { role: 'table', 'aria-label': title, style: `--tpl:minmax(7rem, .9fr) repeat(${Math.max(1, heads.length - 1)}, minmax(0, 1.6fr))` },
+        h('div.tc-man-tr.tc-man-th', { role: 'row' }, heads.map((head) => h('span', { role: 'columnheader', text: head }))),
+        sec.table.rows.map((row) => h('div.tc-man-tr', { role: 'row' },
+          row.map((cell, index) => index === 0
+            ? h('span', { role: 'cell' }, h('b', { text: cell }))
+            : h('span', { role: 'cell', 'data-head': heads[index], text: cell }))
+        ))
+      ),
+      list(sec.items, 'tc-man-list tc-man-list--rules'),
+      sec.warning ? h('div.tc-note.tc-note--caution', null, bi('NOTE', '참고'), h('p', { text: sec.warning })) : null
     ], { slug });
   }
 
@@ -542,6 +572,11 @@
     const originSection = root.ProjectCurseCommunityGuide?.guide?.sections?.find?.((item) => item.id === 'origin');
     const originOptions = [['', '선택 안 함'], ...(originSection?.items || []).map(([name]) => [name, name])];
     const gearGroups = (gear?.groups || []).map((group) => group.title);
+    // 2026-11-21 사용자 결정 — 능력 등급·소능력·보조 장비는 교범 절의 표에서 읽는다
+    const rowsOf = (title) => section(title)?.table?.rows || [];
+    const gradeOptions = [['', '선택 안 함'], ...rowsOf('능력 등급과 등록').map(([grade, target]) => [grade, `${grade} — ${target}`])];
+    const minorOptions = [['', '없음'], ...rowsOf('생활형 소능력').map(([name]) => [name, `${name} (L1)`]), ...rowsOf('현장형 보조 능력').map(([name]) => [name, `${name} (L2)`])];
+    const augmentOptions = [['', '없음'], ...rowsOf('인체 보조 장비').map(([name]) => [name, name]), ...rowsOf('현장 전자장비').map(([name]) => [name, name])];
 
     const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
       field('이름', h('input', { name: 'name', type: 'text', maxlength: '24', autocomplete: 'off', value: saved.name || '' }), '캐릭터 이름. 등록증 그림에 크게 들어간다.'),
@@ -552,6 +587,9 @@
       field('분류', select('class', classOptions, saved.class || ''), '괴이는 등록 대상이 아니다.'),
       field('발현 경로', select('source', sourceOptions, saved.source || ''), '능력자만 적는다. 대가는 교범 기준으로 자동으로 적힌다.'),
       field('출신', select('origin', originOptions, saved.origin || ''), '자캐 설정 안내의 출신 목록. 고르면 등록증에 한 줄 들어간다.'),
+      field('능력 등급', select('grade', gradeOptions, saved.grade || ''), '등급은 세기가 아니라 얼마나 지켜볼지다.'),
+      field('소능력', select('minor', minorOptions, saved.minor || ''), '작은 능력 하나. 대가는 교범 표대로 자동으로 적힌다.'),
+      field('보조 장비', select('augment', augmentOptions, saved.augment || ''), '몸에 단 장비나 개인 전자장비 하나.'),
       field('표식', select('tag', tagOptions, saved.tag || '')),
       h('fieldset.tc-man-field.tc-man-gear', null,
         h('legend', { text: '장비군' }),
@@ -581,10 +619,18 @@
         source: data.get('source') || '',
         tag: data.get('tag') || '',
         origin: data.get('origin') || '',
+        grade: data.get('grade') || '',
+        minor: data.get('minor') || '',
+        augment: data.get('augment') || '',
         gear: data.getAll('gear'),
         anchor: String(data.get('anchor') || '').trim(),
         note: String(data.get('note') || '').trim()
       };
+    }
+
+    function minorCost(name) {
+      const row = [...rowsOf('생활형 소능력'), ...rowsOf('현장형 보조 능력')].find(([item]) => item === name);
+      return row ? row[2] : '';
     }
 
     function text(v) {
@@ -601,6 +647,9 @@
         `배치선   : ${v.line || blank}`,
         `분류     : ${cls}${v.class === 'WIELDER' && source ? ` / ${source.name} — 대가: ${source.cost}` : ''}`,
         `출신     : ${v.origin || blank}`,
+        `능력 등급: ${v.grade || blank}`,
+        `소능력   : ${v.minor ? `${v.minor} — 대가: ${minorCost(v.minor)}` : '없음'}`,
+        `보조 장비: ${v.augment || '없음'}`,
         `표식     : ${tagRow ? `${tagRow[0]} — ${tagRow[1]}` : blank}`,
         `장비군   : ${v.gear.length ? v.gear.join(', ') : blank}`,
         `기준점   : ${v.anchor || blank}`
@@ -639,6 +688,10 @@
         tag: tagRow?.[0] || '',
         tagNote: tagRow?.[1] || '',
         origin: v.origin || '',
+        grade: v.grade || '',
+        minor: v.minor || '',
+        minorCost: v.minor ? minorCost(v.minor) : '',
+        augment: v.augment || '',
         gear: v.gear,
         anchor: v.anchor,
         note: v.note
@@ -804,7 +857,24 @@
           checkpointPanel(),
           drillPanel()
         ],
-        gear: [loadoutPanel(), wielderPanel()],
+        gear: [
+          tablePanel('능력 등급과 등록', 'ABILITY GRADE', 'ability-grade'),
+          h('div.tc-man-pair', null,
+            tablePanel('생활형 소능력', 'MINOR ABILITIES / L1', 'minor-abilities'),
+            tablePanel('현장형 보조 능력', 'FIELD ABILITIES / L2', 'field-abilities')
+          ),
+          tablePanel('대가 관리 일지와 억제제', 'COST LOG', 'cost-log'),
+          wielderPanel(),
+          loadoutPanel(),
+          h('div.tc-man-pair', null,
+            tablePanel('현장 전자장비', 'FIELD ELECTRONICS', 'field-electronics'),
+            tablePanel('인체 보조 장비', 'BODY AUGMENTS', 'body-augments')
+          ),
+          h('div.tc-man-pair', null,
+            tablePanel('암시장 교란 장비', 'BLACK MARKET', 'black-market'),
+            tablePanel('신형 반-리버스 장비', 'ANTI-REVERSE', 'anti-reverse')
+          )
+        ],
         register: [registerPanel()]
       })
     );

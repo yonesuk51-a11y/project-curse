@@ -229,8 +229,10 @@
     y = text(g, card.faction ? `${card.faction}${card.role ? ` · ${card.role}` : ''}` : '—', x, y + 40, { weight: 500, size: 32, width, max: 2, lineHeight: 40, color: card.faction ? INK.text : INK.text3 }) + 14;
     label(g, '배치선', x, y);
     y = text(g, card.line || '—', x, y + 38, { size: 28, width, color: card.line ? INK.text : INK.text3 }) + 14;
-    label(g, '분류', x, y);
-    text(g, card.cls || '—', x, y + 38, { size: 28, width, max: 2, color: card.cls ? INK.text : INK.text3 });
+    // 능력 등급(2026-11-21 사용자 결정) — 분류 칸에 함께 적는다(아래 칸과 겹치지 않게). 예: 능력자 · L2
+    label(g, card.grade ? '분류 · 능력 등급' : '분류', x, y);
+    const cls = [card.cls, card.grade].filter(Boolean).join(' · ');
+    text(g, cls || '—', x, y + 38, { size: 28, width, max: 2, color: cls ? INK.text : INK.text3 });
   }
 
   function details(g, card) {
@@ -248,12 +250,15 @@
     } else {
       row('능력', card.cls ? '해당 없음' : '');
     }
-    // 출신(2026-11-21 사용자 결정) — 고른 경우만 한 줄. 아래 칸이 넘치지 않게 장비군을 한 줄로 줄인다.
+    // 출신·소능력·보조 장비(2026-11-21 사용자 결정) — 고른 경우만 한 줄씩. 칸이 늘면 표식·장비군·한 줄 기록을 한 줄로 줄여 아래 띠를 넘지 않게 한다.
+    const extra = [card.origin, card.minor, card.augment].filter(Boolean).length;
     if (card.origin) row('출신', card.origin);
-    row('표식', card.tag ? `${card.tag} — ${card.tagNote || ''}` : '', 2);
-    row('장비군', (card.gear || []).join(' · '), card.origin ? 1 : 2);
-    row('기준점', card.anchor);
-    if (card.note) row('한 줄 기록', card.note, 2);
+    if (card.minor) row('소능력', `${card.minor}${card.minorCost ? ` — ${card.minorCost}` : ''}`, extra >= 2 ? 1 : 2);
+    if (card.augment) row('보조 장비', card.augment);
+    row('표식', card.tag ? `${card.tag} — ${card.tagNote || ''}` : '', extra ? 1 : 2);
+    row('장비군', (card.gear || []).join(' · '), extra ? 1 : 2);
+    if (extra < 3) row('기준점', card.anchor);
+    if (card.note) row('한 줄 기록', card.note, extra ? 1 : 2);
   }
 
   function footer(g, card) {
