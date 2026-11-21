@@ -156,6 +156,7 @@
         ))
       ),
       bloodBlock(framework.bloodArts),
+      ubermenschBlock(framework.ubermensch),
       h('details.tc-disclosure.tc-hist-sub', null,
         h('summary', null, h('span', null, h('b', { text: '괴이 재난 속 민간인의 일상' }))),
         h('div.tc-disclosure-body', null, h('p.tc-hist-baseline', { text: framework.publicBaseline })),
@@ -221,6 +222,26 @@
         )),
         h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
         item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `현장 지침의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
+      )
+    );
+  }
+
+  // 위버멘시(2026-11-21 사용자 설정, 추천안 승인) — 계열별 대가와 수명, 죽은 뒤의 소각 장치. 재개 여부는 상충 기록이다.
+  function ubermenschBlock(item) {
+    if (!item) return null;
+    return h('details.tc-disclosure.tc-hist-sub', null,
+      h('summary', null, h('span', null, h('b', { text: item.label }))),
+      h('div.tc-disclosure-body', null,
+        h('p', { text: item.rule }),
+        h('p', { text: item.origin }),
+        h('ul.tc-hist-grid.tc-hist-grid--3', null, item.branches.map((branch) =>
+          h('li', null, lbl(branch.code), h('b', { text: branch.name }), h('p', { text: branch.power }), h('p', { text: branch.cost }))
+        )),
+        item.technology ? h('p', { text: item.technology }) : null,
+        item.maintenance ? h('div.tc-note.tc-note--evidence', null, h('b', null, bi('F.H.C — EGORIN', '안정제')), h('p', { text: item.maintenance })) : null,
+        h('p', { text: item.lifespan }),
+        h('p', { text: item.afterDeath }),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution }))
       )
     );
   }

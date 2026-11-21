@@ -605,6 +605,9 @@ function verify(){
   // 세계가 지고 있다(2026-11-21 사용자 결정): 종말 시계는 정보 추정, 열두 항목은 등급과 함께.
   const decline=worldHistoryData?.worldFramework?.worldDecline;
   add('history-world-decline:data',decline?.clock?.grade==='estimated'&&decline.items?.length===12&&decline.items.every(item=>item.id&&item.group&&item.title&&item.text&&worldHistoryData.evidenceLevels[item.grade])&&read('WORLD_CANON_LEDGER.md').includes('종말 시계'));
+  // 위버멘시(2026-11-21 사용자 설정): 세 계열의 대가, 수명, 죽은 뒤 소각 장치, 재개는 상충 기록.
+  const uber=worldHistoryData?.worldFramework?.ubermensch;
+  add('history-ubermensch:data',uber?.branches?.length===3&&uber.branches.every(b=>b.code&&b.name&&b.power&&b.cost)&&uber.status?.includes('상충')&&uber.lifespan&&uber.technology?.includes('커스 테크놀로지')&&uber.maintenance?.includes('EGORIN')&&uber.afterDeath?.includes('소각 장치')&&Boolean(context.window.ProjectCurseArchiveDocuments?.documents?.NHC_Manual_891219?.sections?.some(s=>(s.items||[]).some(t=>t.includes('흉곽 소각 장치')))));
   const risen=worldHistoryData?.worldFramework?.risenCorpses;
   add('history-risen-corpses:data',Boolean(risen?.rule?.includes('잔류 리버스')&&risen.rule.includes('기시체')&&risen.handling?.includes('피탈자가 아니다')&&risen.protocol&&risen.boundary&&risen.caution)&&Boolean(context.window.ProjectCurseArchiveDocuments?.documents?.NHC_Manual_891219?.sections?.some(s=>s.title===risen.manualSection&&s.record?.limit&&(s.items||[]).some(t=>t.includes('체온과 맥박')))));
   const collapsedStates=['2011-09-27-vesca-collapse','2019-05-14-orvina-blood-moat','2021-10-27-vacant-seat'];
