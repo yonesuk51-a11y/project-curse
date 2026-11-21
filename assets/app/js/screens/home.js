@@ -651,7 +651,10 @@
   function updatesPanel() {
     const U = root.PCUpdates;
     if (!U) return null;
-    const { first, entries } = U.since(3);
+    // 2026-11-21 사용자 결정: 첫 화면에는 가장 최근 한 건만. 나머지는 건수만 알린다.
+    const { first, entries: all } = U.since(3);
+    const entries = all.slice(0, 1);
+    const more = first ? 0 : all.length - entries.length;
     const fresh = U.count();
     if (!entries.length && !fresh) return null;
     return h('section.tc-panel.tc-home-updates', { 'aria-labelledby': 'tc-home-updates-title' },
@@ -665,7 +668,8 @@
           h('div', null, h('b', { text: entry.title }), entry.text ? h('p', { text: entry.text }) : null),
           (entry.links || []).length ? h('div.tc-btnrow', null, entry.links.map((item) => h('a.tc-btn', { href: PC.href(item.route, ...(item.parts || [])) }, item.label))) : null
         )
-      )) : h('p.tc-home-fold-lead', { text: '지난 방문 뒤에 새로 들어온 기록이 있습니다. 목록의 \'새 기록\' 표시를 확인하십시오.' })
+      )) : h('p.tc-home-fold-lead', { text: '지난 방문 뒤에 새로 들어온 기록이 있습니다. 목록의 \'새 기록\' 표시를 확인하십시오.' }),
+      more > 0 ? h('p.tc-home-update-more', { text: `이 밖에 ${more}건이 더 들어왔다. 각 채널의 '새' 표시를 확인하십시오.` }) : null
     );
   }
 
@@ -871,15 +875,16 @@
     indexView = h('div.tc-home-index', null,
       h('div.tc-home-unknown', { hidden: true }),
       PC.screenHead('terminal-home', { title: '합동작전 단말', desc: copy().lead, meta: nodeState() }),
+      // 2026-11-21 사용자 결정: 첫 화면은 '오늘'만 — 방송 띠, 오늘의 기록, 긴급 경보·최근 신호, 최근 갱신 한 줄.
+      // 바로가기·사건부터 읽기·보관함 쪽지·키아트는 지우지 않고 아래 접는 칸으로 내렸다(처음 온 방문자에게는 '처음 오셨다면'을 펼쳐 둔다).
       h('div.tc-home-ticker-slot'),
-      quickLinks(),
       h('p.tc-home-silence', { role: 'status' }, h('b', { text: '외부 교신 두절' }), h('span', { text: '삼야 무응답과 같은 시각이다. 수신 목록이 멈췄다.' }), h('a', { href: PC.href('history', '2042-10-31-three-night-silence') }, '기록 보기 ›')),
-      h('div.tc-home-open', null, custodyPanel(), keyArt()),
+      h('div.tc-home-daily-slot'),
       h('div.tc-home-grid', null, live.flash, live.signals),
       h('div.tc-home-updates-slot'),
-      h('div.tc-home-daily-slot'),
-      entryPanel(),
       h('div.tc-home-folds', null,
+        fold('tc-home-fold-start', '처음 오셨다면', '입문 카드·자캐 설정 안내·등록증·사건부터 읽기', h('div.tc-home-start', null, quickLinks(), entryPanel())),
+        fold('tc-home-fold-custody', copy().custody?.title || '보관함에 남긴 쪽지', '서부 귀환 회랑 보관함 · 검문소 07 키아트', h('div.tc-home-open', null, custodyPanel(), keyArt())),
         fold('tc-home-fold-contact', contactStep ? `귀환 신호 — ${contactStep.title}` : '귀환 신호 접촉 보고', '육안 인원과 열원 수가 맞지 않은 보고', contactPanel()),
         fold('tc-home-fold-civil', civil?.title || '민간 재난 방송', '권역 경보망에서 받은 방송 여섯 건과 경보색 기준', civilPanel()),
         fold('tc-home-fold-zones', '구역 판정 판', '지역 여덟 곳의 판정과 오늘의 국가 간 정세', zonePanel()),
@@ -896,6 +901,8 @@
     );
     subView = h('div.tc-home-sub', { hidden: true });
     el.append(indexView, subView);
+    // 처음 온 방문자에게는 '처음 오셨다면'을 펼쳐 둔다
+    if (root.PCUpdates?.first?.()) indexView.querySelector('#tc-home-fold-start')?.setAttribute('open', '');
     // 접촉 보고를 펼치면 재계수 연출을 한 번 보여 준다
     indexView.querySelector('#tc-home-fold-contact')?.addEventListener('toggle', (event) => {
       if (event.target.open) recount();

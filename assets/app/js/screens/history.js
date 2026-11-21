@@ -443,10 +443,11 @@
           wantedList(item.wanted),
           (item.tables || []).map((table) => refTable(table)),
           signal ? PC.signalMark?.(signal) : null,
-          manualLink(item.manualSection)
+          manualLink(item.manualSection),
+          // 2026-11-21 사용자 결정: 이어지는 기록은 본문을 열었을 때만, 둘까지
+          linkChips((item.links || []).slice(0, 2), titles)
         )
-      ),
-      linkChips(item.links, titles)
+      )
     );
   }
 
@@ -800,6 +801,17 @@
 
   /* ---------- 사건 기록 ---------- */
 
+  // 2026-11-21 사용자 결정: 관련 기록은 접는 칸 하나에 넣는다. 이전·다음 기록 이동은 밖에 둔다.
+  function relatedFold(record) {
+    const panel = relatedLinks(record);
+    if (!panel) return null;
+    const count = panel.querySelectorAll('a').length;
+    return h('details.tc-disclosure.tc-hist-related', null,
+      h('summary', null, h('span', null, lbl('CROSS REFERENCE'), h('b', { text: '관련 기록 열기' }), h('small', { text: `${count}건` }))),
+      h('div.tc-disclosure-body', null, panel)
+    );
+  }
+
   function relatedLinks(record) {
     const incidents = root.ProjectCurseIncidentNetwork?.incidentList?.filter((item) => item.history === record.id) || [];
     const mapRoom = root.ProjectCurseMapRoom || {};
@@ -970,8 +982,9 @@
         counterPanel(record),
         PC.openCanon?.(openCanon().history?.[record.id] || [])
       ),
-      operationTracks(record),
-      relatedLinks(record),
+      // 기본 append는 null을 'null' 글자로 넣는다 — 없는 칸은 빈 문자열로 넘긴다
+      operationTracks(record) || '',
+      relatedFold(record) || '',
       h('nav.tc-hist-nav', { 'aria-label': '사건 기록 이동' },
         previous
           ? h('a.tc-btn', { href: PC.href('history', previous.id), rel: 'prev' }, h('i', { text: '←' }), h('span', null, h('small', { text: '이전 사건' }), h('b', { text: previous.title })))

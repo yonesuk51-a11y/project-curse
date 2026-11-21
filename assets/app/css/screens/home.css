@@ -1249,3 +1249,15 @@ html[data-fx="reduced"] .tc-home-ticker-track ul[aria-hidden="true"] { display: 
 .tc-home-feast-note { color: var(--text-3); font-size: var(--fs-xs); }
 .tc-home-frag-extra { margin-top: calc(var(--s2) * -1); }
 .tc-home-frag-extra small { color: var(--text-3); font-size: var(--fs-2xs); }
+
+/* 첫 화면 정리 (2026-11-21 사용자 결정) — 내린 칸 안의 간격, 최근 갱신 한 줄 */
+.tc-home-start {
+  display: grid;
+  gap: var(--s4);
+}
+.tc-home-start .tc-home-entry { margin: 0; }
+.tc-home-update-more {
+  margin-top: var(--s2);
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}

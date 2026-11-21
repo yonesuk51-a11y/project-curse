@@ -1327,3 +1327,7 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   margin: var(--s2) 0;
   font-size: var(--fs-s);
 }
+
+/* 관련 기록 접는 칸 (2026-11-21 사용자 결정) */
+.tc-hist-related { margin: var(--s4) 0; }
+.tc-hist-related .tc-hist-links { margin: 0; }
