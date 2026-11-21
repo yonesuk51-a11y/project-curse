@@ -180,6 +180,31 @@
         {target:'ushinoda', label:'힘의 도구화', text:'S.O.N은 우시노다교를 신앙 대상으로 보지 않는다. 의식과 리버스를 세계 권력구조를 바꿀 수단으로 판단한다. 제한적인 거래와 공동행동을 선택한다.'}
       ]
     },
+    freewill: {
+      name: 'FREEWILL',
+      lead: '2029년 연안 자치시 연맹 자유항에 합법 등록된 민간 군사 회사다. U.A.C 하청과 비협력권 의뢰를 함께 받으며, 사설 회수 계약자 가운데 가장 크다.',
+      overview: [
+        '프리윌은 2029년 연안 자치시 연맹 자유항에 등록됐다. 이념을 내세우지 않는다. 계약서가 교전 규칙이다.',
+        'U.A.C 하청과 비협력권 의뢰를 함께 받는다. 사설 회수 계약자 가운데 가장 크다고 기록돼 있다.',
+        '대원 대부분은 은퇴한 U.A.C·N.H.C·S.I.D 특수팀과 여러 나라 특수부대 출신이다. 기관이 대가가 쌓인 사람을 현장에서 내보내면 프리윌이 받는다.',
+        '사업은 회수 계약, 호송, 검문 위탁, 성채 야간 경비, 정화 하청으로 기록돼 있다.'
+      ],
+      operations: ['회수 계약으로 존 안의 유해·장비·자료 반출','연료선과 봉인 열차 호송','인력이 모자란 도시의 검문문 위탁 운영','성채 야간 피난권 문 경비','비협력권 소각·정화 작업 하청'],
+      fault: '계약서가 교전 규칙이어도 N.H.C가 교전권을 인정하지 않는 구역이 있다. 차단선 안에서 만나면 무장 해제를 요구한다. 퇴직자 일부는 S.O.N 세포로 옮겨 가며, 프리윌은 그들의 행방을 관리하지 않는다.',
+      chronology: [
+        ['2029년', '연안 자치시 연맹 자유항에 합법 등록'],
+        ['현재', 'U.A.C 하청과 비협력권 의뢰를 함께 수행'],
+        ['현재', '회수 계약·호송·검문 위탁 운영'],
+        ['현재', '성채 야간 경비와 정화 하청 수행'],
+        ['2040년 / 증언', '마로아 성채 문 명부 매매 의혹이 진술로 기록됨. 사실로 확정되지 않음']
+      ],
+      relations: [
+        {target:'uac', label:'하청 계약', text:'프리윌은 U.A.C 하청을 받는다.'},
+        {target:'nhc', label:'교전권 불인정', text:'N.H.C는 프리윌의 교전권을 인정하지 않는다. 차단선 안에서 마주치면 무장 해제를 요구한다.'},
+        {target:'syndicate', label:'퇴직자 일부 이동', text:'프리윌을 그만둔 대원 일부는 S.O.N 세포로 옮겨 간다. 프리윌은 퇴직자의 행방을 관리하지 않는다.'}
+      ],
+      visual: null
+    },
     ushinoda: {
       name: '우시노다교',
       lead: '리버스를 의도적으로 일으키고 인간 사회의 정부·교육·기업 조직 안으로 침투해 온 세계적 의식 세력이다.',
@@ -406,6 +431,13 @@
       misconception:'우시노다교의 하부조직도 단일 혁명조직도 아니다. 실험체를 구출하는 세력과 그 힘을 거래하는 세력이 함께 있다.',
       past:'F.H.C 시설과 운송로를 이용한 기록은 남았다. 장기 동맹이었는지 일회 거래였는지는 사건마다 다르다.',
       unresolved:'공통 계좌를 관리한 주체와 현재도 유지되는 국제 연결망, 내부 배신 이후의 실제 규모.'
+    },
+    freewill:{
+      status:'2029년 자유항에 합법 등록된 민간 군사 회사다. U.A.C 하청과 비협력권 의뢰를 함께 받고, 사설 회수 계약자 가운데 가장 크다고 기록돼 있다.',
+      lineage:'대원 대부분은 은퇴한 U.A.C·N.H.C·S.I.D 특수팀과 여러 나라 특수부대 출신이다. 기관이 대가가 쌓인 사람을 현장에서 내보내면 프리윌이 받는다.',
+      misconception:'이념을 내세우지 않으며 계약서가 교전 규칙이다. 이 계약이 N.H.C 차단선 안에서 교전권으로 인정되는 것은 아니다.',
+      past:'2040년 마로아 성채 문에서 명부의 빈칸을 팔았다는 진술이 있다. 증언 등급이며 사실로 확정되지 않았다.',
+      unresolved:'대표자, 전체 인원수, 본사 위치와 구체적인 지휘 계통은 확인되지 않았다.'
     },
     ushinoda:{
       status:'타락·혈액·그림자 세 종파와 지역 잔당이 같은 근원을 주장한다. 중앙 호출명 상실 뒤 단일 지휘 여부는 더 불분명해졌다.',
@@ -689,11 +721,11 @@
     groups: [
       {label:'PRIMARY INSTITUTIONS', keys:['uac','nhc','sid','fhc']},
       {label:'FIELD RESPONSE LINE', keys:['ashcrew','arf','cpd']},
-      {label:'EXTERNAL POWERS', keys:['syndicate','ushinoda','haimun']},
+      {label:'EXTERNAL POWERS', keys:['syndicate','freewill','ushinoda','haimun']},
       {label:'CULT LINEAGE / COMMAND STATUS', keys:['corruption-cult','blood-cult','shadow-cult','first-apostle','southern-blood','deadzone-blood']},
       {label:'PREDECESSOR RECORD', keys:['amarion']}
     ],
-    order: ['uac','nhc','sid','fhc','ashcrew','arf','cpd','syndicate','ushinoda','haimun','corruption-cult','blood-cult','shadow-cult','first-apostle','southern-blood','deadzone-blood','amarion'],
+    order: ['uac','nhc','sid','fhc','ashcrew','arf','cpd','syndicate','freewill','ushinoda','haimun','corruption-cult','blood-cult','shadow-cult','first-apostle','southern-blood','deadzone-blood','amarion'],
     assessments,factions
   });
 })(window);

@@ -97,6 +97,13 @@
       links:['U.A.C','F.H.C','우시노다교'],records:['Unknown_Record3_920711','Unknown_Record4_930314'],
       event:'초기 국가 지원망에서 출발해 현재의 분산형 반 U.A.C 연합으로 확대되었다.'
     },
+    freewill:{
+      name:'FREEWILL',sub:'합법 등록 민간 군사 회사',cat:'기업',status:'합법 등록 / 계약 운용',zone:'자유항 등록 / 계약별 활동',
+      summary:'2029년 연안 자치시 연맹의 자유항에 등록된 민간 군사 회사다. U.A.C 하청과 비협력권 의뢰를 함께 받고, 사설 회수 계약자 가운데 가장 크다고 기록돼 있다. 이념을 내세우지 않으며 계약서가 교전 규칙이다.',
+      roles:['존 안의 유해·장비·자료 회수','연료선·봉인 열차 호송','도시 검문문 위탁 운영','성채 야간 피난권 문 경비','비협력권 정화 작업 하청'],
+      links:['U.A.C','N.H.C','S.O.N'],records:[],
+      event:'2029년 합법 등록됐다. 2040년 마로아 성채 문 명부 매매 의혹은 증언 등급으로 남아 있다.'
+    },
     ushinoda:{
       name:'우시노다교',sub:'타락교·혈교·그림자교',cat:'교단',status:'적대 / 좌석 계보 분열',zone:'의식 확산권·평행세계 누출권',risk:'의식 오염 / 현실 중첩 / 계보 사칭',
       summary:'타락교, 혈교, 그림자교는 각각 하나의 로드좌와 네 사도석을 교리상 주장한다. 이는 언제나 15명이 실재한다는 뜻이 아니다. 공석, 복수 주장자와 죽은 자의 이름을 계승한 사례가 있어 현장에서는 번호보다 권능·의식 문법·계승 증거를 우선한다.',
@@ -138,6 +145,7 @@
     fhc:{name:'F.H.C',sub:'분열 기업권',type:'institution',x:58,y:24,status:'법인 존속 / 중앙 지휘 상실',summary:factions.fhc.summary,records:factions.fhc.records},
     amarion:{name:'아마리온',sub:'F.H.C 전신 기업',type:'unstable',x:40,y:13,status:'역사 기록 / 승계',summary:factions.amarion.summary,records:factions.amarion.records},
     syndicate:{name:'S.O.N',sub:'Shadow Of Nemesis',type:'unstable',x:18,y:29,status:'적대 / 분산 연합',summary:factions.syndicate.summary,records:factions.syndicate.records},
+    freewill:{name:'FREEWILL',sub:'민간 군사 회사',type:'institution',x:14,y:10,status:'합법 등록 / 계약 운용',summary:factions.freewill.summary,records:factions.freewill.records},
     ushinoda:{name:'우시노다교',sub:'세 파벌·좌석 계보',type:'cult',x:84,y:31,status:'적대 / 계보 분열',summary:factions.ushinoda.summary,records:factions.ushinoda.records},
     haimun:{name:'P.O.H',sub:'Power Of Haimun',type:'unstable',x:84,y:70,status:'감시 / 범죄망',summary:factions.haimun.summary,records:factions.haimun.records},
     ashcrew:{name:'Ash Crew',sub:'N.H.C 산하',type:'field',x:18,y:69,status:'가동 / 사후 처리',summary:factions.ashcrew.summary,records:factions.ashcrew.records},
@@ -151,6 +159,9 @@
     {a:'uac',b:'fhc',label:'감시·정치적 대립',kind:'watch',confidence:'confirmed'},
     {a:'uac',b:'ushinoda',label:'격리·적대',kind:'hostile',confidence:'confirmed'},
     {a:'uac',b:'syndicate',label:'체제 대립',kind:'hostile',confidence:'confirmed'},
+    {a:'uac',b:'freewill',label:'하청 계약',kind:'trade',confidence:'confirmed'},
+    {a:'nhc',b:'freewill',label:'교전권 불인정',kind:'hostile',confidence:'confirmed'},
+    {a:'freewill',b:'syndicate',label:'퇴직자 일부 이동',kind:'history',confidence:'confirmed'},
     {a:'nhc',b:'ashcrew',label:'산하·지휘',kind:'command',confidence:'confirmed'},
     {a:'ashcrew',b:'arf',label:'산하·회수',kind:'command',confidence:'confirmed'},
     {a:'ashcrew',b:'cpd',label:'산하·민간선',kind:'command',confidence:'confirmed'},
@@ -169,7 +180,7 @@
   const factionTags={
     uac:['institution'],nhc:['field','institution'],sid:['institution'],fhc:['corporate','institution'],
     amarion:['corporate','unstable'],syndicate:['rogue','unstable'],ushinoda:['cult','rogue'],
-    haimun:['rogue','unstable'],ashcrew:['field'],arf:['field'],cpd:['field']
+    haimun:['rogue','unstable'],ashcrew:['field'],arf:['field'],cpd:['field'],freewill:['corporate']
   };
 
   root.ProjectCurseCanon=freeze({

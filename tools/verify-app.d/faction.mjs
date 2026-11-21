@@ -12,7 +12,7 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
   const source = read('assets/app/js/screens/faction.js');
   const legacy = read('tools/fixtures/legacy-app/assets/js/pages/faction-analysis.js');
   const keys = F.order;
-  add('seventeen-dossiers', keys.length === 17 && Object.keys(F.factions).length === 17);
+  add('eighteen-dossiers', keys.length === 18 && Object.keys(F.factions).length === 18);
   add('five-groups-cover-every-dossier-once', F.groups.length === 5 && F.groups.flatMap((group) => group.keys).join('|') === keys.join('|') && new Set(keys).size === keys.length);
   add('history-canon-keys-open-exact-dossiers', Object.keys(C.factions).every((key) => F.factions[key]?.name === C.factions[key].name), Object.keys(C.factions).join('|'));
   add('all-relation-targets-exist', keys.every((key) => F.factions[key].relations.every((item) => Object.hasOwn(F.factions, item.target))));
@@ -20,9 +20,11 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
     const item = F.factions[key];
     return item.lead && item.overview.length && item.operations.length && item.fault && item.chronology.length && ['status', 'lineage', 'misconception', 'past', 'unresolved'].every((field) => item.assessment[field]);
   }));
+  const unregistered = keys.filter((key) => !M.marks[key]?.asset || !F.factions[key]?.visual?.src);
   const images = keys.flatMap((key) => [M.marks[key]?.asset, F.factions[key].visual?.src]).filter(Boolean);
   const missingImages = images.filter((file) => { try { return !read(file).length; } catch { return true; } });
-  add('registered-marks-and-visuals-exist', images.length === 34 && !missingImages.length, missingImages.join('|'));
+  const allRegisteredDossiersHaveImages = keys.filter((key) => key !== 'freewill').every((key) => typeof M.marks[key]?.asset === 'string' && typeof F.factions[key]?.visual?.src === 'string');
+  add('registered-marks-and-visuals-exist', images.length === 34 && !missingImages.length && allRegisteredDossiersHaveImages && unregistered.join('|') === 'freewill' && M.marks.freewill?.asset === null && F.factions.freewill?.visual === null && source.includes('휘장 미등록') && source.includes('그림 미등록'), `${missingImages.join('|')} / 미등록: ${unregistered.join('|')}`);
   add('mark-provenance-and-grades', keys.every((key) => M.marks[key]?.source && /^[A-D]$/.test(M.marks[key]?.confidence)));
   add('lineage-links-resolve', L.order.every((key) => F.factions[key] && L.nodes[key].history.every((id) => historyIds.has(id))) && L.edges.every((edge) => L.nodes[edge.from] && L.nodes[edge.to] && L.states[edge.state]));
   const incidents = context.ProjectCurseIncidentNetwork.incidentList.filter((item) => item.factions.some((key) => keys.includes(key)));
@@ -124,4 +126,20 @@ export default function ({ add, read, context, app, historyIds, opIds }) {
     runtime.screen.hide(); assert.equal(runtime.host.listeners('click').length, 0); assert.equal(runtime.timers.size, 0);
     add('detail-shell-fallback-and-identity-execution', true);
   } catch (error) { add('detail-shell-fallback-and-identity-execution', false, error.stack); }
+  try {
+    const runtime = screenRuntime({ read, context, screenName: 'faction' });
+    runtime.show([]);
+    const freewillRow = runtime.host.querySelector('[data-fac-key="freewill"]');
+    assert.ok(freewillRow?.querySelector('.tc-fac-mark-empty'), '목록에 휘장 미등록 표시가 있어야 한다');
+    assert.equal(freewillRow.querySelector('img'), null, '목록에서 다른 세력 휘장으로 대체하지 않는다');
+    runtime.show(['freewill']);
+    assert.ok(runtime.host.querySelector('.tc-fac-cover .tc-fac-mark-empty'), '상세 표지에 휘장 미등록 표시가 있어야 한다');
+    assert.equal(runtime.host.querySelector('.tc-fac-cover .tc-fac-mark img'), null, '상세 표지에서 다른 세력 휘장으로 대체하지 않는다');
+    runtime.click(runtime.host.querySelector('#tc-fac-dossier-tab-evidence'));
+    assert.ok(runtime.host.textContent.includes('그림 미등록'), '연혁·감식 탭에 그림 미등록 표시가 있어야 한다');
+    assert.equal(runtime.host.querySelector('.tc-fac-visual img'), null, '미등록 그림에 이미지를 넣지 않는다');
+    assert.ok(runtime.host.querySelector('.tc-fac-visual-empty'), '연혁·감식 탭에 시각 자료 자리표시가 있어야 한다');
+    runtime.screen.hide();
+    add('freewill-unregistered-assets-never-fall-back-execution', true);
+  } catch (error) { add('freewill-unregistered-assets-never-fall-back-execution', false, error.stack); }
 }

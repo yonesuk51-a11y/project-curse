@@ -78,10 +78,12 @@
     // 번호는 source.order의 표시 순번이다. 새 회수 번호나 회수 위치를 설정으로 만들지 않는다.
     const number = String(source().order.indexOf(key) + 1).padStart(2, '0');
     return h('figure.tc-evidence.tc-fac-mark', { class: compact ? 'tc-fac-mark--compact' : null },
-      h('div.tc-fac-mark-image', null, h('span.tc-code.tc-full-only', { text: `MARK / ${number}` }),
-        h('img', { src: mark.asset, alt: `${faction(key).name} 문양`, loading: 'lazy', decoding: 'async', width: 160, height: 160, 'data-tc-inspect': compact ? null : '' })),
+      h('div.tc-fac-mark-image', null, mark.asset ? h('span.tc-code.tc-full-only', { text: `MARK / ${number}` }) : null,
+        mark.asset
+          ? h('img', { src: mark.asset, alt: `${faction(key).name} 문양`, loading: 'lazy', decoding: 'async', width: 160, height: 160, 'data-tc-inspect': compact ? null : '' })
+          : h('div.tc-fac-mark-empty', { role: 'img', 'aria-label': '휘장 미등록', text: '휘장 미등록' })),
       h('figcaption', null,
-        PC.tag(`감식 ${mark.confidence}`, mark.confidence === 'A' ? 'evidence' : 'caution'),
+        PC.tag(mark.asset ? `감식 ${mark.confidence}` : '휘장 미등록', mark.asset && mark.confidence === 'A' ? 'evidence' : 'caution'),
         compact ? null : h('span', { text: mark.source })));
   }
 
@@ -120,10 +122,12 @@
     const mark = own(root.ProjectCurseFactionMarks?.marks, key);
     if (!mark) return PC.missing('MARK NOT FOUND', key, '문양 감식 자료가 없습니다.');
     return h('details.tc-disclosure.tc-fac-analysis', { open: PC.density?.() === 'full' },
-      h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'INSIGNIA / AUTHENTICATION' }), h('b', { text: '문양 감식' }), h('small.tc-hint', { text: '등록 표식과 감식 근거를 확인한다.' }))),
+      h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'INSIGNIA / AUTHENTICATION' }), h('b', { text: mark.asset ? '문양 감식' : '휘장 미등록' }), h('small.tc-hint', { text: mark.asset ? '등록 표식과 감식 근거를 확인한다.' : '휘장 자료와 상징은 아직 등록되지 않았다.' }))),
       h('div.tc-disclosure-body.tc-fac-copy', null,
         kv([['종류', mark.type], ['처음 확인', mark.firstSeen], ['사용 방식', mark.usage], ['등록본', mark.assetState]]),
-        h('ol.tc-fac-symbols', null, (mark.symbols || []).map((item) => h('li', null, h('b', { text: item.label }), h('p', { text: item.text })))),
+        mark.symbols?.length
+          ? h('ol.tc-fac-symbols', null, mark.symbols.map((item) => h('li', null, h('b', { text: item.label }), h('p', { text: item.text }))))
+          : h('p.tc-fac-unregistered', { text: '휘장 미등록. 등록된 도형과 상징이 없다.' }),
         mark.note ? h('aside.tc-note.tc-note--caution', null, h('b', { text: '주의' }), h('p.tc-fac-prose', { text: mark.note })) : null));
   }
 
@@ -266,9 +270,13 @@
       h('li', null, h('time.tc-code', { text: date }), h('span', { text }))));
     const evidenceTab = [
       panel('CHRONOLOGY', '주요 연혁', '세력의 형성과 현재 상태에 이르는 기록.', chronology, false),
-      item.visual?.src ? panel('REGISTERED VISUAL', '등록 시각 자료', '기록된 표식과 캡션을 확인한다.', h('figure.tc-evidence.tc-fac-visual', { dataset: { evidenceClass: item.visual.className } },
-        h('div.tc-evidence-media', null, PC.img(item.visual.src, { alt: item.visual.alt || '' })),
-        h('figcaption', null, h('b', null, displayLabel(item.visual.label)), h('span.tc-fac-prose', { text: item.visual.caption }))), false) : null,
+      item.visual?.src
+        ? panel('REGISTERED VISUAL', '등록 시각 자료', '기록된 표식과 캡션을 확인한다.', h('figure.tc-evidence.tc-fac-visual', { dataset: { evidenceClass: item.visual.className } },
+          h('div.tc-evidence-media', null, PC.img(item.visual.src, { alt: item.visual.alt || '' })),
+          h('figcaption', null, h('b', null, displayLabel(item.visual.label)), h('span.tc-fac-prose', { text: item.visual.caption }))), false)
+        : panel('VISUAL / PENDING', '등록 시각 자료', '채택된 문서 그림이 없다.', h('figure.tc-evidence.tc-fac-visual.tc-fac-visual--empty', null,
+          h('div.tc-evidence-media', null, h('div.tc-fac-visual-empty', { role: 'img', 'aria-label': '그림 미등록', text: '그림 미등록' })),
+          h('figcaption', null, h('b', null, '그림 미등록'), h('span.tc-fac-prose', { text: '그림은 사용자 채택 대기 상태다.' }))), false),
       markAnalysis(key)
     ].filter(Boolean);
     const relatedTab = [relatedBundles(key, item, openMarks)];

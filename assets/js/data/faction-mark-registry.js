@@ -70,6 +70,11 @@
       ],
       note:'중앙조직의 정식 휘장이 아니다. 계파마다 절단선과 외향 화살의 수가 다르다.'
     },
+    freewill:{
+      name:'FREEWILL',asset:null,type:'휘장 미등록',source:'세력 기록의 조직 문서 / 휘장 자료 미기재',
+      assetState:'휘장 미등록 / 그림 채택 대기',confidence:'C',firstSeen:'미등록',usage:'미등록',symbols:[],
+      note:'현재 세력 분석에는 휘장 자료가 등록되지 않았다. 조직의 실제 표식은 미확인이다.'
+    },
     ushinoda:{
       name:'우시노다교',asset:'assets/faction_marks/v3/ushinoda.png',previousAsset:'assets/faction_marks/ushinoda.svg',legacyAsset:'assets/faction_marks/ushinoda.webp',
       type:'의식 공통문양',source:'다수 의식지의 반복 획을 대조한 감식 재구성',assetState:'이미지 등록본 / 종파 파생 기준',
