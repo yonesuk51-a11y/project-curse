@@ -15,7 +15,7 @@
     defaults:{quality:'auto',effects:'balanced',interfaceAudio:'full',ambient:'on',textReveal:'on'},
     channels:[
       {
-        id:'terminal-home',index:'00',code:'COMMAND NODE',label:'상황판',shortLabel:'상황',theme:'command',glyph:'CN',
+        id:'terminal-home',index:'00',code:'PARTICIPANTS',label:'자캐',shortLabel:'자캐',theme:'command',glyph:'CN',
         description:'폐쇄 서버의 현재 신호와 모든 기록 채널을 통합 지휘한다.',
         telemetry:[['NETWORK','ISOLATED'],['UPLINK','LOCAL'],['THREAT','ESCALATED']]
       },

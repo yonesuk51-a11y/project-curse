@@ -21,7 +21,8 @@
 
   const SIGNAL_TONES = { critical: 'danger', unstable: 'caution', returned: 'info', recovered: 'ok' };
   const STATE_EVENTS = ['projectcurse:operation-state-change', 'projectcurse:pilgrimage-state-change', 'projectcurse:verdict-archive-change'];
-  const TITLES = { index: '상황판', intro: '입문 카드', guide: '자캐 설정 안내', start: '자캐 거점', welcome: '입문' };
+  // 2026-11-22 사용자 결정: #terminal-home은 자캐 거점(처음 화면), 옛 상황판은 세계의 '지금'(#terminal-home/now)
+  const TITLES = { index: '지금', intro: '입문 카드', guide: '자캐 설정 안내', start: '자캐', welcome: '입문' };
   const SUB_PAGES = ['intro', 'guide', 'start', 'welcome'];
 
   // {이름} 자리를 값으로 채운다. 값이 없으면 자리를 그대로 두지 않고 빈 문자열로 둔다.
@@ -599,19 +600,23 @@
     const row = (hidden) => h('ul', { 'aria-hidden': hidden ? 'true' : null }, items.map((item) =>
       h('li', { class: item.tone ? `is-${item.tone}` : null }, h('span.tc-code', { text: item.code }), h('span', { text: item.text }))
     ));
-    const openNotice = () => {
-      const fold = indexView?.querySelector('#tc-home-fold-notice');
-      if (!fold) return;
-      fold.open = true;
-      fold.scrollIntoView({ block: 'start', behavior: PC.fx() === 'reduced' ? 'auto' : 'smooth' });
-      fold.querySelector('summary')?.focus({ preventScroll: true });
+    const openNotice = (event) => {
+      event.preventDefault();
+      PC.go('terminal-home', 'now');
+      root.setTimeout(() => {
+        const fold = indexView?.querySelector('#tc-home-fold-notice');
+        if (!fold) return;
+        fold.open = true;
+        fold.scrollIntoView({ block: 'start', behavior: PC.fx() === 'reduced' ? 'auto' : 'smooth' });
+        fold.querySelector('summary')?.focus({ preventScroll: true });
+      }, 120);
     };
     return h('section.tc-home-ticker', { 'aria-label': '방송 띠 — 오늘의 공시 요약' },
       h('span.tc-home-ticker-live', null, h('span.tc-fx-live', { 'aria-hidden': 'true' }), 'ON AIR'),
       h('div.tc-home-ticker-window', { tabindex: '0', 'aria-label': '방송 띠 내용. 가로로 밀어 볼 수 있습니다.' },
         h('div.tc-home-ticker-track', null, row(false), row(true))
       ),
-      h('button.tc-home-ticker-more', { type: 'button', onclick: openNotice }, '공시 전체', h('i', { 'aria-hidden': 'true', text: ' ›' }))
+      h('a.tc-home-ticker-more', { href: PC.href('terminal-home', 'now'), onclick: openNotice }, '공시 전체', h('i', { 'aria-hidden': 'true', text: ' ›' }))
     );
   }
 
@@ -858,7 +863,7 @@
   }
 
   function backLink() {
-    return h('a.tc-home-back', { href: PC.href('terminal-home'), onclick: (event) => { event.preventDefault(); PC.back('terminal-home'); } }, '← 상황판');
+    return h('a.tc-home-back', { href: PC.href('terminal-home'), onclick: (event) => { event.preventDefault(); PC.back('terminal-home'); } }, '← 자캐');
   }
 
   function renderIntro(box) {
@@ -914,6 +919,7 @@
           h('h1#tc-hub-title', { text: data.title, 'data-tc-focus': true }),
           h('p.tc-ooc-lead', { text: data.lead })
         ),
+        updatesPanel(),
         h('section.tc-ooc-section', { 'aria-labelledby': 'tc-hub-forms' },
           h('h2#tc-hub-forms', { text: data.formsTitle }),
           h('ul.tc-hub-forms', null, data.forms.map((form) => h('li', null,
@@ -1067,8 +1073,7 @@
       // 2026-11-21 사용자 결정: 첫 화면은 '오늘'만 — 방송 띠, 오늘의 기록, 긴급 경보·최근 신호, 최근 갱신 한 줄.
       // 바로가기·사건부터 읽기·보관함 쪽지·키아트는 지우지 않고 아래 접는 칸으로 내렸다(처음 온 방문자에게는 '처음 오셨다면'을 펼쳐 둔다).
       h('div.tc-home-ticker-slot'),
-      // 2026-11-22 사용자 결정: 다시 온 사람은 새로 온 것부터 본다
-      h('div.tc-home-updates-slot'),
+
       h('p.tc-home-silence', { role: 'status' }, h('b', { text: '외부 교신 두절' }), h('span', { text: '삼야 무응답과 같은 시각이다. 수신 목록이 멈췄다.' }), h('a', { href: PC.href('history', '2042-10-31-three-night-silence') }, '기록 보기 ›')),
       h('div.tc-home-daily-slot'),
       h('div.tc-home-grid', null, live.flash, live.signals),
@@ -1102,12 +1107,13 @@
   }
 
   function show(parts, app, info) {
-    const page = SUB_PAGES.includes(parts[0]) ? parts[0] : 'index';
+    const page = parts[0] === 'now' ? 'index' : (SUB_PAGES.includes(parts[0]) ? parts[0] : 'start');
     app.setTitle(TITLES[page]);
     indexView.hidden = page !== 'index';
     subView.hidden = page === 'index';
     if (page !== 'index') {
       PC.clear(subView);
+      if (info?.unknown) subView.append(PC.missing('UNKNOWN CHANNEL', `#${info.unknown}`, '요청한 주소에 해당하는 화면이 없습니다. 자캐 거점으로 연결했습니다.'));
       if (page === 'intro') renderIntro(subView);
       else if (page === 'start') renderStart(subView);
       else if (page === 'welcome') renderWelcome(subView, parts[1]);
@@ -1117,17 +1123,12 @@
     }
     refresh();
     // 지난 방문 이후 판은 새 기록 계산이 끝난 뒤 그린다
-    const slot = indexView.querySelector('.tc-home-updates-slot');
-    if (slot) {
-      PC.clear(slot);
-      const panel = updatesPanel();
-      if (panel) slot.append(panel);
-    }
+    // 새로 온 것은 자캐 거점 맨 위로 옮겼다(2026-11-22)
     // 오늘의 기록은 날짜가 바뀌면 달라지므로 들어올 때마다 그린다. 수신 조각 모음도 같다.
     const daily = indexView.querySelector('.tc-home-daily-slot');
     if (daily) daily.replaceChildren(dailyCard());
     const ticker = indexView.querySelector('.tc-home-ticker-slot');
-    if (ticker) ticker.replaceChildren(...[feastPanel(), tickerBar()].filter(Boolean));
+    if (ticker) ticker.replaceChildren(...[feastPanel()].filter(Boolean));
     renderFragments();
     // 상황판이 보이는 동안 진행 상태가 바뀌면 다시 그린다. 두 번 들어와도 하나만 붙는다.
     listeners?.abort();
@@ -1139,7 +1140,7 @@
     if (!box) return;
     PC.clear(box);
     box.hidden = !info.unknown;
-    if (info.unknown) box.append(PC.missing('UNKNOWN CHANNEL', `#${info.unknown}`, '요청한 주소에 해당하는 채널이 없습니다. 상황판으로 연결했습니다.'));
+    if (info.unknown) box.append(PC.missing('UNKNOWN CHANNEL', `#${info.unknown}`, '요청한 주소에 해당하는 화면이 없습니다.'));
   }
 
   function hide() {
@@ -1148,5 +1149,7 @@
     finishRecount();
   }
 
+  // 방송 띠를 셸이 모든 화면 맨 위에 단다(2026-11-22)
+  root.PCHomeTicker = () => tickerBar();
   PC.screen({ id: 'terminal-home', mount, show, hide });
 })(window);

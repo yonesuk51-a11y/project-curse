@@ -187,21 +187,24 @@
   }
 
   /* 아래 막대 다섯 칸(2026-11-22 사용자 결정) — 오늘·자캐·세계·사람·기록. 화면은 그대로 두고 묶음으로 가른다.
-     자캐 = 상황판의 자캐 거점·입문·안내와 현장 지침의 등록 탭. 묶음 안 화면이 둘이면 본문 위에 전환 띠를 단다(좁은 화면). */
+     자캐 = 자캐 거점·입문·안내와 현장 지침의 등록 탭. 묶음 안 화면이 둘이면 본문 위에 전환 띠를 단다(좁은 화면). */
+  // 2026-11-22 사용자 결정: 세 칸으로 다시 묶었다 — 자캐(처음 화면)·세계·자료. 상황판은 세계의 '지금'(#terminal-home/now)이 됐다.
+  // members: [화면 id, 이름, 주소 조각들] — 묶음 안 화면이 둘 이상이면 본문 위에 전환 띠를 단다.
   const GROUPS = {
-    today: { label: '오늘', members: [] },
     char: { label: '자캐', members: [] },
-    world: { label: '세계', members: [['history', '세계 기록'], ['field-manual', '현장 지침']] },
-    people: { label: '사람', members: [['personnel', '인물 기록'], ['faction-info', '세력 분석']] },
-    records: { label: '기록', members: [['archive-entry', '기록보관소'], ['map-room', '작전 지도']] }
+    world: { label: '세계', members: [['history', '연표·설정', []], ['field-manual', '현장 교범', []], ['terminal-home', '지금', ['now']]] },
+    data: { label: '자료', members: [['personnel', '인물', []], ['faction-info', '세력', []], ['archive-entry', '기록보관소', []], ['map-room', '작전 지도', []]] }
   };
-  const CHAR_PAGES = ['start', 'welcome', 'intro', 'guide'];
   function groupOf(route, parts = []) {
-    if (route === 'terminal-home') return CHAR_PAGES.includes(parts[0]) ? 'char' : 'today';
+    if (route === 'terminal-home') return parts[0] === 'now' ? 'world' : 'char';
     if (route === 'field-manual') return parts[0] === 'register' ? 'char' : 'world';
     if (route === 'history') return 'world';
-    if (route === 'personnel' || route === 'faction-info') return 'people';
-    return 'records';
+    return 'data';
+  }
+  function memberCurrent(route, parts, id, sub) {
+    if (id !== route) return false;
+    if (route === 'terminal-home') return parts[0] === sub[0];
+    return true;
   }
   function groupBar(route, group) {
     const main = doc.getElementById('tc-main');
@@ -214,10 +217,12 @@
     }
     if (!bar) {
       bar = h('nav.tc-groupnav', { 'data-tc-groupnav': true, 'aria-label': '묶음 안 화면' });
-      main.prepend(bar);
+      const strip = main.querySelector(':scope > [data-tc-ticker]');
+      if (strip) strip.after(bar);
+      else main.prepend(bar);
     }
     bar.hidden = false;
-    clear(bar).append(...members.map(([id, label]) => h('a', { href: href(id), 'aria-current': id === route ? 'page' : null, text: label })));
+    clear(bar).append(...members.map(([id, label, sub]) => h('a', { href: href(id, ...sub), 'aria-current': memberCurrent(route, current?.parts || [], id, sub) ? 'page' : null, text: label })));
   }
 
   function updateChrome(route, parts = []) {
@@ -225,7 +230,9 @@
     const group = groupOf(route, parts);
     doc.body.dataset.group = group;
     doc.querySelectorAll('[data-tc-nav]').forEach((link) => {
-      if (link.dataset.tcNav === route && group !== 'char') link.setAttribute('aria-current', 'page');
+      const [, ...sub] = (link.getAttribute('href') || '').replace(/^#/, '').split('/');
+      const on = group !== 'char' && link.dataset.tcNav === route && (route !== 'terminal-home' || parts[0] === sub[0]);
+      if (on) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
     doc.querySelectorAll('[data-tc-group]').forEach((link) => {
@@ -233,11 +240,13 @@
       else link.removeAttribute('aria-current');
     });
     groupBar(route, group);
+    tickerStrip();
     const info = channel(route);
     const code = doc.querySelector('[data-tc-ch-code]');
     const label = doc.querySelector('[data-tc-ch-label]');
     if (code) code.textContent = info ? info.index : '--';
-    if (label) label.textContent = info ? info.label : route;
+    // 옛 상황판(#terminal-home/now)은 세계의 '지금'이다(2026-11-22)
+    if (label) label.textContent = route === 'terminal-home' && parts[0] === 'now' ? '지금' : (info ? info.label : route);
   }
 
   function render(reason) {
@@ -584,6 +593,24 @@
       if (plain && root.PCUpdates?.first?.() && !root.localStorage.getItem(ONBOARD_KEY)) history.replaceState(null, '', href('terminal-home', 'welcome'));
     } catch (_error) { /* 저장소를 못 쓰면 입문을 건너뛴다 */ }
     render('initial');
+    tickerStrip();
+  }
+
+  // 방송 띠(2026-11-22 사용자 결정) — 상황판 대신 모든 화면 맨 위에 가느다란 한 줄. 띠의 내용은 home.js가 만든다(PCHomeTicker).
+  let tickerDay = '';
+  function tickerStrip() {
+    const main = doc.getElementById('tc-main');
+    if (!main || typeof root.PCHomeTicker !== 'function') return;
+    const day = new Date().toDateString();
+    let slot = main.querySelector(':scope > [data-tc-ticker]');
+    if (slot && tickerDay === day) return;
+    tickerDay = day;
+    if (!slot) {
+      slot = h('div.tc-ticker-slot', { 'data-tc-ticker': true });
+      main.prepend(slot);
+    }
+    const bar = root.PCHomeTicker();
+    clear(slot).append(...[bar].filter(Boolean));
   }
 
   /* ---------- 탭 (2026-11-21 사용자 결정) ---------- */

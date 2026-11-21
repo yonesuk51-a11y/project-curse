@@ -669,7 +669,7 @@ html[data-density="brief"] body:is([data-screen="history"], [data-screen="field-
   .tc-rail .tc-rail-list { display: none; }
   .tc-dock-list {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin: 0;
     padding: 0;
     list-style: none;
@@ -719,4 +719,28 @@ html[data-density="brief"] body:is([data-screen="history"], [data-screen="field-
   }
   .tc-groupnav a + a { border-left: 1px solid var(--line-2); }
   .tc-groupnav a[aria-current="page"] { color: var(--text); background: rgba(var(--ch-rgb), .1); box-shadow: inset 0 -2px 0 rgb(var(--ch-rgb)); }
+}
+
+/* 세 칸 구조(2026-11-22 사용자 결정) — 넓은 화면 왼쪽 목록의 묶음 안 화면, 모든 화면 맨 위 방송 띠 */
+.tc-rail-sub {
+  display: grid;
+  margin: 0;
+  padding: 0 0 var(--s2);
+  list-style: none;
+  border-bottom: 1px solid rgba(216, 214, 204, .06);
+}
+.tc-rail-sub a {
+  display: block;
+  padding: 6px var(--s4) 6px calc(var(--s4) + 28px + var(--s2));
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-decoration: none;
+}
+.tc-rail-sub a:hover { color: var(--text); }
+.tc-rail-sub a[aria-current="page"] { color: var(--text); box-shadow: inset 2px 0 0 var(--ch); }
+.tc-ticker-slot:empty { display: none; }
+.tc-ticker-slot { margin-bottom: var(--s4); }
+@media (max-width: 960px) {
+  .tc-rail-sub { display: none; }
 }
