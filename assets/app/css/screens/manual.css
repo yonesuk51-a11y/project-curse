@@ -95,6 +95,41 @@
   color: var(--text);
   font-weight: 600;
 }
+/* 검문소 표준 배치 — 한 방향 동선. 번호는 교범 표의 순서다 */
+.tc-man-steps {
+  display: grid;
+  gap: 1px;
+  margin: var(--s4) 0;
+  border: 1px solid var(--line);
+  background: var(--line);
+  counter-reset: checkpoint-step;
+}
+.tc-man-steps li {
+  display: grid;
+  grid-template-columns: 2.6em minmax(0, 10em) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  background: var(--panel);
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+  counter-increment: checkpoint-step;
+}
+.tc-man-steps li::before {
+  content: counter(checkpoint-step, decimal-leading-zero);
+  color: var(--amber);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.tc-man-steps b {
+  font-weight: 600;
+}
+.tc-man-steps span {
+  color: var(--text-2);
+}
 .tc-man-list--check li::before {
   top: .42em;
   width: 11px;
@@ -465,6 +500,12 @@
   }
 }
 @media (max-width: 600px) {
+  .tc-man-steps li {
+    grid-template-columns: 2.6em minmax(0, 1fr);
+  }
+  .tc-man-steps li span {
+    grid-column: 2;
+  }
   .tc-man-loadout,
   .tc-man-ontology,
   .tc-man-form,

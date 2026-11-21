@@ -162,6 +162,70 @@
     ], { bracket: 'danger', slug: 'possessed' });
   }
 
+  /* ---------- 혈술 대응 ---------- */
+  // 피를 쓰는 능력의 네 갈래(2026-11-21 사용자 추천안 승인). 세계 기본 규칙의 혈술 항목과 서로 링크한다.
+  function bloodPanel() {
+    const sec = section('혈술 대응');
+    if (!sec?.table) return missingSection('혈술 대응');
+    const [, signHead, counterHead] = sec.table.headers;
+    const rec = sec.record || {};
+    return panel('ROE / BLOOD ARTS', '혈술 대응', [
+      paragraphs(sec.paragraphs),
+      h('div.tc-man-table', { role: 'table', 'aria-label': '혈술 갈래별 징후와 대응' },
+        h('div.tc-man-tr.tc-man-th', { role: 'row' },
+          sec.table.headers.map((head) => h('span', { role: 'columnheader', text: head }))
+        ),
+        sec.table.rows.map(([branch, sign, counter]) => h('div.tc-man-tr', { role: 'row' },
+          h('span', { role: 'cell' }, h('b', { text: branch })),
+          h('span', { role: 'cell', 'data-head': signHead, text: sign }),
+          h('span', { role: 'cell', 'data-head': counterHead, text: counter })
+        ))
+      ),
+      list(sec.items, 'tc-man-list tc-man-list--rules'),
+      sec.warning ? h('div.tc-note.tc-note--danger', null, bi('AFTER CONTACT', '쓰러뜨린 뒤'), h('p', { text: sec.warning })) : null,
+      rec.limit ? h('div.tc-note.tc-note--caution', null, bi('INFORMATION LIMIT', '이 규칙의 한계'), h('p', { text: rec.limit })) : null,
+      h('p', null, h('a', { href: PC.href('history') }, '세계 기본 규칙에서 혈술 항목 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })))
+    ], { bracket: 'danger', slug: 'blood' });
+  }
+
+  /* ---------- 현장조 편성과 계수 ---------- */
+  // 다섯 자리, 삼중 계수, 독립시계 세 개(2026-11-21 사용자 추천안 승인). 공유 시간은 철수 조건 판정과 같은 항목이다.
+  function teamPanel() {
+    const sec = section('현장조 편성과 계수');
+    if (!sec?.table) return missingSection('현장조 편성과 계수');
+    const [roleHead, dutyHead] = sec.table.headers;
+    return panel('FIELD TEAM / COUNT', '현장조 편성과 계수', [
+      paragraphs(sec.paragraphs),
+      h('div.tc-man-sources', { role: 'table', 'aria-label': '현장조 다섯 자리' },
+        h('div.tc-man-tr.tc-man-th', { role: 'row' },
+          h('span', { role: 'columnheader', text: roleHead }),
+          h('span', { role: 'columnheader', text: dutyHead })
+        ),
+        sec.table.rows.map(([role, duty]) => h('div.tc-man-tr', { role: 'row' },
+          h('span', { role: 'cell' }, h('b', { text: role })),
+          h('span', { role: 'cell', 'data-head': dutyHead, text: duty })
+        ))
+      ),
+      list(sec.items, 'tc-man-list tc-man-list--rules'),
+      sec.warning ? h('div.tc-note.tc-note--caution', null, bi('COUNT RULE', '계수 규칙'), h('p', { text: sec.warning })) : null
+    ], { slug: 'team' });
+  }
+
+  /* ---------- 검문소 표준 배치 ---------- */
+  // 바깥에서 안쪽으로 한 방향 동선(2026-11-21 사용자 추천안 승인). 단계 번호는 교범 표의 순서 그대로다.
+  function checkpointPanel() {
+    const sec = section('검문소 표준 배치');
+    if (!sec?.table) return missingSection('검문소 표준 배치');
+    return panel('CHECKPOINT LAYOUT', '검문소 표준 배치', [
+      paragraphs(sec.paragraphs),
+      h('ol.tc-man-steps', { 'aria-label': '검문소 단계' }, sec.table.rows.map(([step, duty]) =>
+        h('li', null, h('b', { text: step }), h('span', { text: duty }))
+      )),
+      list(sec.items),
+      sec.warning ? h('div.tc-note.tc-note--caution', null, bi('NOTE', '참고'), h('p', { text: sec.warning })) : null
+    ], { slug: 'checkpoint' });
+  }
+
   /* ---------- 표식 체계 ---------- */
   const TAG_CLASS = { 'White Tag': 'white', 'Gray Tag': 'gray', 'Red Tag': 'red', 'Black Tag': 'black', 'Null Tag': 'null' };
 
@@ -212,7 +276,7 @@
     const functions = new Map((sec.table?.rows || []).map(([name, role]) => [name, role]));
     return panel('LOADOUT', '장비군', [
       paragraphs(sec.paragraphs),
-      h('ul.tc-man-loadout', null, (sec.groups || []).map((group) => h('li', { class: group.title === '현장 제압 장비군' ? 'is-kinetic' : null },
+      h('ul.tc-man-loadout', null, (sec.groups || []).map((group) => h('li', { class: ['현장 제압 장비군', '제식 화기군'].includes(group.title) ? 'is-kinetic' : null },
         h('header', null,
           h('b', { text: group.title }),
           functions.get(group.title) ? h('span', { text: functions.get(group.title) }) : null
@@ -562,11 +626,14 @@
       doctrine(),
       h('div.tc-man-pair', null, breakPanel(), engagementPanel()),
       possessionPanel(),
+      bloodPanel(),
       tagPanel(),
       entryPanels(),
+      teamPanel(),
       loadoutPanel(),
       wielderPanel(),
       linesPanel(),
+      checkpointPanel(),
       registerPanel()
     );
   }

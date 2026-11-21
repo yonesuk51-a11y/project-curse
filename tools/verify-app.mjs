@@ -101,7 +101,8 @@ const historyRecords = [
   ...(W?.post2006Records || []).map((record) => ({ ...record, ...(P?.getRecord?.(record.id) || {}) }))
 ];
 const historyIds = historyRecords.map((record) => record.id);
-add('history-fifty-one-records', historyIds.length === 51, historyIds.length);
+// 2026-11-21: 우시노다교가 무너뜨린 가상 국가 세 기록을 더해 51건에서 54건이 됐다(사용자 추천안 승인).
+add('history-fifty-four-records', historyIds.length === 54, historyIds.length);
 add('history-ids-unique', new Set(historyIds).size === historyIds.length);
 const eraIds = new Set((W?.eras || []).map((era) => era.id));
 const noEra = historyRecords.filter((record) => !eraIds.has(record.era)).map((record) => record.id);
@@ -236,6 +237,12 @@ const sectionTitles = new Set((manualDoc?.sections || []).map((sec) => sec.title
 const missingTitles = neededTitles.filter((title) => !sectionTitles.has(title));
 add('manual-sections-exist', !!manualDoc && neededTitles.length >= 9 && missingTitles.length === 0, missingTitles.join(' | ') || `${neededTitles.length} sections`);
 add('manual-break-rule-source', (manualDoc?.sections || []).some((sec) => (sec.items || []).some((item) => item.includes('둘을 잃으면 전원 철수'))));
+// 구역 판정·혈술(2026-11-21 사용자 추천안 승인) — 세계 기록이 두 항목을 실제로 그리고, 혈술은 현장 지침의 같은 이름 절과 잇는다.
+add('history-renders-zone-grades-and-blood-arts',
+  W?.worldFramework?.zoneGrading?.grades?.length === 6 && W?.worldFramework?.bloodArts?.branches?.length === 4 &&
+  historyScreenSource.includes("item('ZONE GRADES'") && historyScreenSource.includes('bloodBlock(framework.bloodArts)') &&
+  sectionTitles.has(W.worldFramework.bloodArts.manualSection) &&
+  ['bloodPanel()', 'teamPanel()', 'checkpointPanel()'].every((call) => manualSource.includes(call)));
 for (const [id, name] of Object.entries(SCREEN_FILES)) {
   const source = read(`assets/app/js/screens/${name}.js`);
   const registers = /PC\.screen\(\{\s*id:\s*'([^']+)'/.exec(source);

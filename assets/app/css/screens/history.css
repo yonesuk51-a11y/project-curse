@@ -103,6 +103,7 @@ a.tc-hist-turn:hover {
   background: var(--line);
 }
 .tc-hist-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tc-hist-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .tc-hist-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .tc-hist-grid--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .tc-hist-grid li {
@@ -790,11 +791,59 @@ a.tc-hist-turn:hover {
 }
 
 /* ---------- 반응형 ---------- */
+/* 구역 판정 — 판정마다 기존 사례를 작은 글자로 붙인다 */
+.tc-hist-grid p.tc-hist-zone-example {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+/* 존의 일곱 층 — 바깥에서 안쪽으로. 사건 층은 글자색과 표지를 함께 달리한다 */
+.tc-hist-layers {
+  display: grid;
+  gap: 1px;
+  margin-top: var(--s3);
+  border: 1px solid var(--line);
+  background: var(--line);
+  counter-reset: zone-layer;
+}
+.tc-hist-layers li {
+  display: grid;
+  grid-template-columns: 2.6em minmax(0, 13em) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  background: var(--panel);
+  counter-increment: zone-layer;
+}
+.tc-hist-layers li::before {
+  content: counter(zone-layer, decimal-leading-zero);
+  color: var(--text-3);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  letter-spacing: .14em;
+}
+.tc-hist-layers b {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-hist-layers p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
+.tc-hist-layers li.is-event b {
+  color: var(--red-ink);
+}
 @media (max-width: 1100px) {
   .tc-hist-grid--5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 900px) {
   .tc-hist-turn-list,
+  .tc-hist-grid--3,
   .tc-hist-grid--4,
   .tc-hist-grid--5 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -811,9 +860,16 @@ a.tc-hist-turn:hover {
 @media (max-width: 600px) {
   .tc-hist-turn-list,
   .tc-hist-grid--2,
+  .tc-hist-grid--3,
   .tc-hist-grid--4,
   .tc-hist-grid--5 {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .tc-hist-layers li {
+    grid-template-columns: 2.6em minmax(0, 1fr);
+  }
+  .tc-hist-layers li p {
+    grid-column: 2;
   }
   .tc-hist-turn {
     min-height: 0;

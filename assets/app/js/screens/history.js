@@ -155,6 +155,7 @@
           h('li', null, h('b', { text: item.name }), h('p', { text: item.cost }))
         ))
       ),
+      bloodBlock(framework.bloodArts),
       h('details.tc-disclosure.tc-hist-sub', null,
         h('summary', null, h('span', null, h('b', { text: '괴이 재난 속 민간인의 일상' }))),
         h('div.tc-disclosure-body', null, h('p.tc-hist-baseline', { text: framework.publicBaseline })),
@@ -183,6 +184,62 @@
         item.record ? h('p', null, h('a', { href: PC.href('archive-entry', item.record) }, '괴이 판정표 원문 열기', h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null,
         item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `현장 지침의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
       )
+    );
+  }
+
+  // 혈술 네 갈래(2026-11-21 사용자 추천안 승인) — 피의 출처로 나눈다. 대응 순서는 현장 지침의 같은 이름 절로 잇는다.
+  function bloodBlock(item) {
+    if (!item) return null;
+    return h('details.tc-disclosure.tc-hist-sub', null,
+      h('summary', null, h('span', null, h('b', { text: item.label }))),
+      h('div.tc-disclosure-body', null,
+        h('p', { text: item.rule }),
+        h('ul.tc-hist-grid.tc-hist-grid--4', null, item.branches.map((branch) =>
+          h('li', null,
+            lbl(branch.code),
+            h('b', { text: `${branch.name} — ${branch.source}` }),
+            h('p', { text: branch.arts }),
+            h('p', { text: branch.cost })
+          )
+        )),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
+        item.manualSection ? h('p', null, h('a', { href: PC.href('field-manual') }, `현장 지침의 ${item.manualSection} 보기`, h('i', { 'aria-hidden': 'true', text: ' ›' }))) : null
+      )
+    );
+  }
+
+  // 구역 판정과 존의 층(2026-11-21 사용자 추천안 승인) — 구역 판정은 땅의 상태, 판정 등급은 기록의 상태다. 둘을 섞지 않는다.
+  function zoneBody() {
+    const zone = chronology()?.worldFramework?.zoneGrading;
+    if (!zone) return PC.missing('ZONE GRADES MISSING', 'worldFramework.zoneGrading', '구역 판정 데이터가 없습니다.');
+    return h('div.tc-hist-ref', null,
+      h('div.tc-hist-ref-lead', null,
+        h('p', { text: zone.rule }),
+        h('div.tc-note.tc-note--evidence', null, h('b', null, bi('ZONE RULE', '판정 기준')), h('p', { text: zone.handling }))
+      ),
+      h('ul.tc-hist-grid.tc-hist-grid--3', null, zone.grades.map((grade) =>
+        h('li', null, lbl(grade.code), h('b', { text: grade.name }), h('p', { text: grade.text }), h('p.tc-hist-zone-example', { text: grade.example }))
+      )),
+      h('details.tc-disclosure.tc-hist-sub', null,
+        h('summary', null, h('span', null, h('b', { text: '존의 일곱 층 — 바깥에서 안쪽으로' }))),
+        h('ol.tc-hist-layers', null, zone.layers.map((layer) =>
+          h('li', { class: layer.event ? 'is-event' : null },
+            h('b', null, layer.name, layer.event ? PC.tag('사건 층', 'danger') : null),
+            h('p', { text: layer.text })
+          )
+        ))
+      ),
+      h('details.tc-disclosure.tc-hist-sub', null,
+        h('summary', null, h('span', null, h('b', { text: '존 이름을 붙이는 세 층' }))),
+        h('ul.tc-hist-grid.tc-hist-grid--3', null, zone.naming.map((name) =>
+          h('li', null, lbl(name.code), h('b', { text: name.name }), h('p', { text: name.text }))
+        )),
+        // 실제 이름 예 — 공식 판정명 / 현지 관습명 / 귀환자 구어
+        h('ul.tc-hist-grid.tc-hist-grid--5', { 'aria-label': '존 이름 예' }, (zone.zones || []).map((item) =>
+          h('li', null, h('b', { text: item.official }), h('p', { text: `현지 — ${item.local}` }), h('p', { text: `구어 — ${item.spoken}` }))
+        ))
+      ),
+      h('div.tc-note.tc-note--caution', null, h('b', { text: zone.status }), h('p', { text: zone.caution }))
     );
   }
 
@@ -259,6 +316,7 @@
     );
     return h('div.tc-hist-refs', null,
       item('WORLD RULES', '세계의 기본 규칙', '존재 구분·발현 대가·민간 생존', frameworkBody()),
+      item('ZONE GRADES', '구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
       item('UNCONFIRMED PATTERNS', '확인되지 않은 세 규칙', '관측·봉쇄·능력 상한', observationsBody()),
       item('TECHNOLOGY TRACE', '일본 기술 도약의 계보', '1982–1992 계측 계획', technologyBody())
     );
