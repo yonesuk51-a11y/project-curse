@@ -120,6 +120,7 @@
     register: '자캐 등록 양식과 등록증 그림(PNG).',
     // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
     'ability-grade': 'L0–L4. 등급은 세기가 아니라 얼마나 지켜볼지다.',
+    fitness: '관측 신뢰도·이름 반응·계수·오염 내성·교전·남은 기억 — A–E.',
     'minor-abilities': '작고 쓸모 있는 능력 열 가지와 그 대가.',
     'field-abilities': '교전을 돕지만 혼자 상황을 바꾸지 못하는 능력 여덟.',
     'cost-log': '쓸 때마다 적는 대가 일지와 72시간 억제제.',
@@ -313,6 +314,9 @@
       sec.warning ? h('div.tc-note.tc-note--caution', null, bi(noteCode, noteLabel), h('p', { text: sec.warning })) : null
     ], { slug });
   }
+
+  // 현장 적합성 평가 항목 — [양식 키, 이름, 등록증의 짧은 이름]. 교범 '현장 적합성 평가' 표의 순서와 같다.
+  const FITNESS = [['observe', '관측 신뢰도', '관측'], ['name', '이름 반응', '이름'], ['count', '계수 정확도', '계수'], ['contam', '오염 내성', '오염'], ['combat', '교전 숙련', '교전'], ['memory', '남은 기억', '기억']];
 
   /* ---------- 표 하나짜리 절 (2026-11-21 사용자 결정) ---------- */
   // 능력 등급·소능력·장비처럼 문단 + 표 + 항목 + 경고로 된 절. 칸 수는 표마다 다르다. 좁은 화면에서는 칸 제목을 줄마다 붙인다.
@@ -590,6 +594,14 @@
       field('능력 등급', select('grade', gradeOptions, saved.grade || ''), '등급은 세기가 아니라 얼마나 지켜볼지다.'),
       field('소능력', select('minor', minorOptions, saved.minor || ''), '작은 능력 하나. 대가는 교범 표대로 자동으로 적힌다.'),
       field('보조 장비', select('augment', augmentOptions, saved.augment || ''), '몸에 단 장비나 개인 전자장비 하나.'),
+      // 현장 적합성 평가(2026-11-21 사용자 결정) — 여섯 항목을 A–E로. 비워 두면 양식과 등록증에 나오지 않는다
+      h('fieldset.tc-man-field.tc-man-fitness', null,
+        h('legend', { text: '현장 적합성 평가 (선택)' }),
+        FITNESS.map(([key, name]) => h('label', null, h('span', { text: name }),
+          select(`fit-${key}`, [['', '—'], ['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D'], ['E', 'E']], saved.fitness?.[key] || '')
+        )),
+        h('small', { text: '등급은 세기가 아니라 어디까지 들여보낼지다. 높을수록 깊이 배치된다.' })
+      ),
       field('표식', select('tag', tagOptions, saved.tag || '')),
       h('fieldset.tc-man-field.tc-man-gear', null,
         h('legend', { text: '장비군' }),
@@ -620,6 +632,7 @@
         tag: data.get('tag') || '',
         origin: data.get('origin') || '',
         grade: data.get('grade') || '',
+        fitness: Object.fromEntries(FITNESS.map(([key]) => [key, data.get(`fit-${key}`) || ''])),
         minor: data.get('minor') || '',
         augment: data.get('augment') || '',
         gear: data.getAll('gear'),
@@ -650,6 +663,7 @@
         `능력 등급: ${v.grade || blank}`,
         `소능력   : ${v.minor ? `${v.minor} — 대가: ${minorCost(v.minor)}` : '없음'}`,
         `보조 장비: ${v.augment || '없음'}`,
+        ...(FITNESS.some(([key]) => v.fitness?.[key]) ? [`평가     : ${FITNESS.map(([key, , short]) => `${short} ${v.fitness[key] || '—'}`).join(' · ')}`] : []),
         `표식     : ${tagRow ? `${tagRow[0]} — ${tagRow[1]}` : blank}`,
         `장비군   : ${v.gear.length ? v.gear.join(', ') : blank}`,
         `기준점   : ${v.anchor || blank}`
@@ -689,6 +703,7 @@
         tagNote: tagRow?.[1] || '',
         origin: v.origin || '',
         grade: v.grade || '',
+        fitness: FITNESS.some(([key]) => v.fitness?.[key]) ? FITNESS.map(([key, , short]) => ({ label: short, grade: v.fitness[key] || '' })) : null,
         minor: v.minor || '',
         minorCost: v.minor ? minorCost(v.minor) : '',
         augment: v.augment || '',
@@ -859,6 +874,7 @@
         ],
         gear: [
           tablePanel('능력 등급과 등록', 'ABILITY GRADE', 'ability-grade'),
+          tablePanel('현장 적합성 평가', 'FIELD FITNESS', 'fitness'),
           h('div.tc-man-pair', null,
             tablePanel('생활형 소능력', 'MINOR ABILITIES / L1', 'minor-abilities'),
             tablePanel('현장형 보조 능력', 'FIELD ABILITIES / L2', 'field-abilities')

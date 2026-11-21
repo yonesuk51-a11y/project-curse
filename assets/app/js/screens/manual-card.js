@@ -217,6 +217,24 @@
     spaced(g, '0px');
   }
 
+  // 현장 적합성 평가 막대(2026-11-21 사용자 결정) — 오른쪽 칸 아래, 분류 줄과 아래 칸 사이에 여섯 칸. 고른 경우만
+  function fitness(g, card) {
+    if (!card.fitness?.length) return;
+    const x0 = 452;
+    const cell = Math.floor((WIDTH - 56 - x0) / card.fitness.length);
+    const y = 740;
+    g.strokeStyle = INK.line;
+    g.lineWidth = 2;
+    card.fitness.forEach((item, index) => {
+      const x = x0 + index * cell;
+      g.strokeRect(x, y - 30, cell - 6, 40);
+      spaced(g, '1px');
+      text(g, item.label, x + 8, y, { family: COND, weight: 600, size: 20, color: INK.text3, width: 60 });
+      spaced(g, '0px');
+      text(g, item.grade || '—', x + cell - 38, y + 1, { family: MONO, weight: 500, size: 24, color: item.grade ? INK.redInk : INK.text3, width: 30 });
+    });
+  }
+
   function identity(g, card) {
     const x = 452;
     const width = WIDTH - 56 - x;
@@ -232,7 +250,7 @@
     // 능력 등급(2026-11-21 사용자 결정) — 분류 칸에 함께 적는다(아래 칸과 겹치지 않게). 예: 능력자 · L2
     label(g, card.grade ? '분류 · 능력 등급' : '분류', x, y);
     const cls = [card.cls, card.grade].filter(Boolean).join(' · ');
-    text(g, cls || '—', x, y + 38, { size: 28, width, max: 2, color: cls ? INK.text : INK.text3 });
+    text(g, cls || '—', x, y + 38, { size: 28, width, max: card.fitness?.length ? 1 : 2, color: cls ? INK.text : INK.text3 });
   }
 
   function details(g, card) {
@@ -312,6 +330,7 @@
     header(g, card, assets.emblem);
     photoBox(g, assets.photo || null);
     identity(g, card);
+    fitness(g, card);
     details(g, card);
     footer(g, card);
     return true;
