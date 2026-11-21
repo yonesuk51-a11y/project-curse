@@ -1097,3 +1097,71 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   color: var(--red-ink);
   font-size: var(--fs-xs);
 }
+
+/* 묶음 항목의 작은 표 (2026-11-21) — 넓은 화면은 칸, 좁은 화면은 줄마다 칸 제목 */
+.tc-hist-table {
+  display: grid;
+  gap: 1px;
+  margin-top: var(--s2);
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.tc-hist-grid p.tc-hist-table-cap {
+  padding: var(--s2) var(--s3);
+  background: var(--bg);
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-hist-tr {
+  display: grid;
+  grid-template-columns: var(--tpl, minmax(6rem, .8fr) minmax(0, 2fr));
+  gap: var(--s3);
+  padding: var(--s2) var(--s3);
+  background: var(--panel);
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.55;
+}
+.tc-hist-th {
+  background: var(--bg);
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-hist-tr b {
+  color: var(--text);
+  font-weight: 600;
+}
+@media (max-width: 640px) {
+  .tc-hist-th { display: none; }
+  .tc-hist-tr {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+  .tc-hist-tr span[data-head]:not(:first-child)::before {
+    content: attr(data-head) " — ";
+    color: var(--text-3);
+    font-size: var(--fs-xs);
+  }
+}
+/* 카르벤 격리시 */
+.tc-hist-grid p.tc-hist-city-places {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-hist-rumors {
+  display: grid;
+  gap: var(--s2);
+  margin: var(--s3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-hist-rumors li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--s3);
+}
+.tc-hist-rumors p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}

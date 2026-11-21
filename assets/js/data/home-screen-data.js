@@ -210,7 +210,7 @@
         { id: 'deadzone-coast', name: '데드존 해안 격리선', base: 71, spread: 14, note: '역류 사이렌 시험 방송이 있는 주에 오른다.' },
         { id: 'coastal-league', name: '대흑림 외연 연안 자치시', base: 55, spread: 20, note: '성채가 문을 열지 않은 밤 다음 날 오른다.' },
         { id: 'northern-line', name: '북부 차단선 처리장 도시', base: 66, spread: 12, note: '청소조 교대 명단이 공시되는 날 오른다.' },
-        { id: 'north-sea-port', name: '북해권 항구', base: 58, spread: 18, note: '피난 선단이 보인 날 조명탄 소리 신고가 는다.' },
+        { id: 'karven', name: '카르벤 격리시', base: 58, spread: 18, note: '항구구에 조명탄이 오른 날 오른다.' },
         { id: 'vesca-border', name: '베스카 격리선 밖 국경 도시', base: 77, spread: 14, note: '선간 지대 순찰 보고 뒤에 오른다.' },
         { id: 'western-corridor', name: '서부 순례 회랑 입구', base: 44, spread: 22, note: '귀의 운동 행렬이 지나간 날 오른다.' }
       ]
@@ -238,7 +238,7 @@
         { id: 'northern-line', name: '북부 차단선 처리장 도시', base: 150, spread: 90, note: '처리장 굴뚝이 바람 위쪽에 있다.' },
         { id: 'deadzone-coast', name: '데드존 해안 격리선', base: 100, spread: 80, note: '해풍이 불면 낮아진다. 역류 뒤 소각이 몰리면 오른다.' },
         { id: 'tokyo', name: '도쿄 감시권', base: 55, spread: 50, note: '서쪽 해안 소각장에서 바람이 불어온다.' },
-        { id: 'north-sea-port', name: '북해권 항구', base: 75, spread: 60, note: '바다 위에서 태운 배의 연기가 들어온다.' },
+        { id: 'karven', name: '카르벤 격리시', base: 75, spread: 60, note: '북풍이 불면 굴뚝구의 재가 시 전체에 내린다.' },
         { id: 'coastal-league', name: '남방 해안 연안 자치시', base: 50, spread: 60, note: '연료가 모자란 주에는 오히려 낮아진다.' },
         { id: 'western-corridor', name: '서부 순례 회랑', base: 35, spread: 40, note: '성채 소각로는 밤에만 돈다.' }
       ],

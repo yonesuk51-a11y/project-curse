@@ -400,10 +400,54 @@
             ) : null,
             stageGrid(item.stages, `${item.title} 단계`),
             wantedList(item.wanted),
+            (item.tables || []).map((table) => refTable(table)),
             manualLink(item.manualSection)
           )
         ))
       ))
+    );
+  }
+
+  // 묶음 항목의 작은 표 — 은어, 금지곡, 축일, 훈련 과정, 계급·훈장. 좁은 화면에서는 칸 제목을 줄마다 붙인다.
+  function refTable(table) {
+    if (!table?.rows?.length) return null;
+    // 칸 수는 표마다 달라서 grid 틀을 변수(--tpl)로 넘긴다. 좁은 화면 CSS가 한 칸으로 덮는다.
+    const tpl = `minmax(6rem, .8fr) repeat(${Math.max(1, table.headers.length - 1)}, minmax(0, 2fr))`;
+    return h('div.tc-hist-table', { role: 'table', 'aria-label': table.caption, style: `--tpl:${tpl}` },
+      h('p.tc-hist-table-cap', { text: table.caption }),
+      h('div.tc-hist-tr.tc-hist-th', { role: 'row' }, table.headers.map((head) => h('span', { role: 'columnheader', text: head }))),
+      table.rows.map((row) => h('div.tc-hist-tr', { role: 'row' },
+        row.map((cell, index) => h('span', { role: 'cell', 'data-head': table.headers[index] }, index === 0 ? h('b', { text: cell }) : cell))
+      ))
+    );
+  }
+
+  // 카르벤 격리시(2026-11-21 사용자 추천안 승인) — 무대 도시. 구역 판정 이름은 zoneGrading에서 읽는다. 소문은 소문 표지를 단다.
+  function cityBody() {
+    const framework = chronology()?.worldFramework || {};
+    const city = framework.cityFile;
+    if (!city) return PC.missing('CITY FILE MISSING', 'worldFramework.cityFile', '도시 기록이 없습니다.');
+    const grades = framework.zoneGrading?.grades || [];
+    return h('div.tc-hist-ref', null,
+      h('div.tc-hist-ref-lead', null,
+        h('p', { text: city.rule }),
+        h('div.tc-note.tc-note--evidence', null, h('b', null, bi('CITY FILE', city.region)), h('p', { text: city.population }))
+      ),
+      h('ul.tc-hist-grid.tc-hist-grid--3.tc-hist-city', null, city.districts.map((district) => {
+        const grade = grades.find((item) => item.code === district.grade);
+        return h('li', null,
+          lbl(district.code),
+          h('b', { text: district.name }),
+          grade ? PC.tag(grade.name, ['SEALED', 'QUARANTINE', 'SILENT'].includes(grade.code) ? 'danger' : 'caution') : h('span.is-missing', { text: `${district.grade} (판정 없음)` }),
+          h('p.tc-hist-city-places', { text: district.places }),
+          h('p', { text: district.note })
+        );
+      })),
+      h('details.tc-disclosure.tc-hist-sub', null,
+        h('summary', null, h('span', null, h('b', { text: '도시에 도는 소문' }), h('small', { text: `${city.rumors.length}건` }))),
+        h('ul.tc-hist-rumors', null, city.rumors.map((rumor) => h('li', null, PC.tag('소문', 'evidence'), h('p', { text: rumor }))))
+      ),
+      h('div.tc-note.tc-note--caution', null, h('b', { text: city.status }), h('p', { text: city.caution }))
     );
   }
 
@@ -524,6 +568,8 @@
       item('WORLD DECLINE', '세계가 지고 있다', '종말 시계와 열두 기록', declineBody()),
       item('ZONE LIFE', '존 안팎의 삶', '행정·존 안쪽·채집과 거래·사람과 사회', groupedBody('zoneLife', 'LIFE BEHIND THE LINES', '차단선 안팎')),
       item('SYSTEMS AND BODIES', '버티는 체제와 바뀌는 몸', '판정과 행정·몸·전쟁과 하늘·사람', groupedBody('worldOrder', 'HOW THE SYSTEM HOLDS', '체제가 버티는 방식')),
+      item('FIELD CULTURE', '현장의 말과 사람들', '말과 문화·군과 현장·기술·세력과 바다', groupedBody('fieldCulture', 'FIELD PRACTICE', '현장 관행')),
+      item('CITY FILE', '카르벤 격리시', '북해권 남쪽 연안 · 여섯 구와 소문', cityBody()),
       item('ORAL TESTIMONY', '구술 증언집', 'S.I.D 사회 기록반 여섯 증언', testimonyBody()),
       item('UNCONFIRMED PATTERNS', '확인되지 않은 세 규칙', '관측·봉쇄·능력 상한', observationsBody()),
       item('TECHNOLOGY TRACE', '일본 기술 도약의 계보', '1982–1992 계측 계획', technologyBody())
