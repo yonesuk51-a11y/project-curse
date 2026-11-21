@@ -53,7 +53,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
       ...(W.oralTestimony?.items || []).map((entry) => entry.id),
       ...(W.cities || []).flatMap((city) => [city.id, ...(city.diary ? [city.id === 'karven' ? 'diary' : `diary-${city.id}`] : [])]),
       ...(W.battles?.items || []).map((item) => `battle-${item.id}`),
-      ...(W.arrivals ? ['arrivals', ...W.arrivals.races.map((race) => `arrival-${race.id}`), ...(W.arrivals.district ? ['arrival-district'] : [])] : [])
+      ...(W.arrivals ? ['arrivals', ...W.arrivals.races.map((race) => `arrival-${race.id}`), ...(W.arrivals.district ? ['arrival-district'] : []), ...(W.arrivals.stranded ? ['arrival-stranded'] : [])] : [])
     ]);
     assert.equal(kinds.history, historyIds.size + refIds.size, `세계 기록 ${kinds.history}/${historyIds.size}+${refIds.size}`);
     assert.equal(kinds.faction, Object.keys(context.ProjectCurseFactionAnalysis?.factions || {}).length, '세력');

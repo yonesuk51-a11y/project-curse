@@ -13,7 +13,7 @@
   // 화면을 떠날 때(hide) 정리하는 타이머와, 없는 항목 안내를 넣는 자리
   let drawTimer = 0;
   // 교전 보고서·분대 편성표(2026-11-21) 다시 그리기 타이머
-  const sheetTimers = { report: 0, squad: 0 };
+  const sheetTimers = { report: 0, squad: 0, letter: 0 };
   let stampTimer = 0;
   let focusTimer = 0;
   let notice = null;
@@ -122,6 +122,7 @@
     register: '자캐 등록 양식과 등록증 그림(PNG).',
     report: '분 단위 시각·인원 계수·남은 것. 액션 글에 붙이는 교전 보고.',
     squad: '여러 자캐를 한 분대로. 다섯 자리와 협력원.',
+    letter: '지명·숫자는 검은 막대로. 다른 자캐에게 보내는 편지.',
     // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
     'ability-grade': 'L0–L4. 등급은 세기가 아니라 얼마나 지켜볼지다.',
     fitness: '관측 신뢰도·이름 반응·계수·오염 내성·교전·남은 기억 — A–E.',
@@ -139,7 +140,7 @@
     roe: { title: '교전 규칙', hint: '철수·교전·피탈자·기시체·혈술·지각 오염·표식' },
     field: { title: '현장 절차', hint: '진입·현장조·역류·청소조·인계·검문소·서명 연습' },
     gear: { title: '장비와 능력', hint: '능력 등급·소능력·장비군·2030년대 장비' },
-    register: { title: '자캐 등록', hint: '등록 양식·등록증·교전 보고서·분대 편성표' }
+    register: { title: '자캐 등록', hint: '등록 양식·등록증·교전 보고서·분대 편성표·검열 편지' }
   };
   let manualTabs = null;
 
@@ -698,6 +699,106 @@
     ], { slug: 'report', open: false });
   }
 
+  /* 검열 편지(2026-11-22 사용자 추천안 승인) — 차단선 안쪽에서 나가는 편지는 S.I.D 우편 검열을 거친다.
+     지명·숫자·작전 말·호출부호를 검은 막대로 지운다. 이름(받는 사람·보내는 사람)은 남긴다. 같은 문장이 세 번 넘게 나오면 보류. */
+  const LETTER_KEY = 'pc6_field_letter_v1';
+  function censorTerms() {
+    const fw = framework() || {};
+    const forms = root.ProjectCurseCommunityGuide?.forms || {};
+    const words = new Set([...(forms.censorTerms || []), ...(forms.reportPlaces || [])]);
+    (fw.cities || []).forEach((city) => {
+      words.add(city.label);
+      city.label.split(' ').forEach((part) => part.length >= 2 && words.add(part));
+      (city.districts || []).forEach((district) => words.add(district.name));
+    });
+    return [...words].filter(Boolean).sort((a, b) => b.length - a.length);
+  }
+  // 글을 토막(낱말·공백)으로 나누고 지울 토막을 표시한다. 숫자가 든 낱말, 목록의 낱말이 든 낱말을 지운다.
+  function censorLetter(body, keep) {
+    const terms = censorTerms();
+    const keepSet = new Set(keep.filter(Boolean));
+    const lines = String(body || '').split('\n');
+    const sentences = String(body || '').split(/[.!?。\n]+/).map((x) => x.trim()).filter((x) => x.length >= 4);
+    const counts = sentences.reduce((acc, x) => ({ ...acc, [x]: (acc[x] || 0) + 1 }), {});
+    const held = Object.values(counts).some((n) => n > 3);
+    let cut = 0;
+    const out = lines.map((line) => line.split(/(\s+)/).map((token) => {
+      if (!token.trim()) return { text: token, cut: false };
+      const bare = token.replace(/[.,!?'"“”‘’()·…:;~-]/g, '');
+      const hide = !keepSet.has(bare) && (/\d/.test(token) || terms.some((term) => token.includes(term)));
+      if (hide) cut += 1;
+      return { text: token, cut: hide };
+    }));
+    return { lines: out, cut, held };
+  }
+
+  function letterPanel() {
+    const Card = root.PCRegisterCard || null;
+    const saved = loadSheet(LETTER_KEY);
+    const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
+      sheetField('받는 사람', sheetInput('to', saved.to, 24)),
+      sheetField('보내는 사람', sheetInput('from', saved.from, 24)),
+      sheetField('보내는 곳', sheetInput('origin', saved.origin, 30, { placeholder: '예: 카르벤 북문 대조실' }), '보내는 곳도 검열 대상이다.'),
+      h('label.tc-man-field.tc-man-field--wide', null, h('span', { text: '본문 (600자까지)' }),
+        h('textarea', { name: 'body', rows: '8', maxlength: '600', autocomplete: 'off', text: saved.body || '' }),
+        h('small', { text: '지명·숫자·작전 말·호출부호는 검은 막대가 된다. 받는 사람과 보내는 사람의 이름은 남는다.' }))
+    );
+    const preview = h('pre.tc-man-preview', { 'aria-live': 'polite' });
+    const canvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '검열 편지 그림 미리보기' }) : null;
+    const emblem = Card ? Card.emblem(() => draw()) : null;
+    const values = () => {
+      const d = new FormData(form);
+      return { to: String(d.get('to') || '').trim(), from: String(d.get('from') || '').trim(), origin: String(d.get('origin') || '').trim(), body: String(d.get('body') || '') };
+    };
+    const result = (v) => censorLetter(v.body, [v.to, v.from]);
+    const bar = (token) => '■'.repeat(Math.max(2, Math.min(8, [...token].length)));
+    const text = (v) => {
+      const r = result(v);
+      const originCut = v.origin ? censorLetter(v.origin, []).lines.map((line) => line.map((t) => (t.cut ? bar(t.text) : t.text)).join('')).join(' ') : '';
+      return [
+        `■ S.I.D 우편 검열 — ${r.held ? '보류(반복 문장)' : '통과'}`,
+        `받는 사람: ${v.to || '______'}`,
+        `보낸 곳  : ${originCut || '______'}`,
+        '',
+        ...r.lines.map((line) => line.map((t) => (t.cut ? bar(t.text) : t.text)).join('')),
+        '',
+        `보내는 사람: ${v.from || '______'}`,
+        `검열 막대 ${r.cut}곳`
+      ].join('\n');
+    };
+    const sheet = (v) => {
+      const r = result(v);
+      return { ...v, ...r, originLines: v.origin ? censorLetter(v.origin, []).lines : [], regNo: Card.sheetNo('MAIL', `${v.to}|${v.from}|${v.body.length}`), issued: Card.dtg() };
+    };
+    function draw() {
+      if (!Card || !canvas) return;
+      root.clearTimeout(sheetTimers.letter);
+      sheetTimers.letter = root.setTimeout(() => Card.drawLetter(canvas, sheet(values()), { emblem }), 60);
+    }
+    function update() {
+      const v = values();
+      preview.textContent = text(v);
+      saveSheet(LETTER_KEY, v);
+      draw();
+    }
+    function save(status) {
+      const v = values();
+      Card.drawLetter(canvas, sheet(v), { emblem });
+      Card.save(canvas, Card.sheetFilename('검열편지', v.to || v.from)).then((ok) => {
+        status.textContent = ok ? '저장했습니다. 받는 사람에게 보내는 글에 붙이면 됩니다.' : '저장하지 못했습니다. 그림을 길게 눌러 저장해 보십시오.';
+        root.PCAudio?.cue(ok ? 'channel.command' : 'system.denied');
+      });
+    }
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    update();
+    Card?.fontsReady().then(draw);
+    return panel('CENSORED MAIL', '검열 편지 양식', [
+      h('p.tc-man-lead', { text: '차단선 안쪽에서 나가는 편지는 S.I.D 우편 검열을 거친다. 쓰는 대로 검열된 모양을 보여 준다. 다른 사람의 자캐에게 보내는 글로 쓸 수 있다.' }),
+      sheetShell('CENSORED MAIL', form, preview, canvas, save, '편지 복사')
+    ], { slug: 'letter', open: false });
+  }
+
   const SQUAD_KEY = 'pc6_field_squad_v1';
   const COUNT_WORDS = ['영', '하나', '둘', '셋', '넷', '다섯'];
   function squadPanel() {
@@ -861,6 +962,9 @@
             h('span', { text: name })
           ))
         ),
+        // 대조 짝(2026-11-22 사용자 추천안 승인) — 짝의 호출부호와 짝이 쓴 대조문 한 줄
+        field('대조 짝', h('input', { name: 'pair', type: 'text', maxlength: '24', autocomplete: 'off', placeholder: '짝의 호출부호나 이름', value: savedService.pair || '' }), '짝을 잃으면 짝이 쓴 대조문도 끝난다.'),
+        field('짝이 쓴 대조문', h('input', { name: 'pairLine', type: 'text', maxlength: '50', autocomplete: 'off', placeholder: '예: 무전을 끊기 전에 숨을 한 번 들이쉰다.', value: savedService.pairLine || '' })),
         field('잃은 것', h('input', { name: 'lost', type: 'text', maxlength: '40', autocomplete: 'off', placeholder: '예: 어머니의 목소리', value: savedService.lost || '' })),
         field('남은 것', h('input', { name: 'kept', type: 'text', maxlength: '40', autocomplete: 'off', placeholder: '예: 첫 배치지의 냄새', value: savedService.kept || '' })),
         h('small', { text: '고른 칸만 글 양식과 복무 기록 그림에 들어간다. 남은 기억이 많을수록 프리윌 계약금이 높다.' })
@@ -911,6 +1015,8 @@
           physical: data.get('physical') || '',
           laugh: data.get('laugh') || '',
           skills: data.getAll('skill').slice(0, 3),
+          pair: String(data.get('pair') || '').trim(),
+          pairLine: String(data.get('pairLine') || '').trim(),
           lost: String(data.get('lost') || '').trim(),
           kept: String(data.get('kept') || '').trim()
         },
@@ -960,6 +1066,7 @@
       if (sv.exposure !== '') out.push(`누적 노출 : ${sv.exposure}분${Number(sv.exposure) > 30 ? ' — 한 해 한도 30분 기준 초과 기록 있음' : ''}`);
       if (sv.physical) out.push(`체력 검정 : ${sv.physical}`);
       if (sv.laugh) out.push(`웃음 반응 : ${sv.laugh}`);
+      if (sv.pair) out.push(`대조 짝   : ${sv.pair}${sv.pairLine ? ` — "${sv.pairLine}"` : ''}`);
       if (sv.lost) out.push(`잃은 것   : ${sv.lost}`);
       if (sv.kept) out.push(`남은 것   : ${sv.kept}`);
       return out;
@@ -1265,7 +1372,7 @@
             tablePanel('신형 반-리버스 장비', 'ANTI-REVERSE', 'anti-reverse')
           )
         ],
-        register: [registerPanel(), reportPanel(), squadPanel()]
+        register: [registerPanel(), reportPanel(), squadPanel(), letterPanel()]
       })
     );
   }
@@ -1295,7 +1402,7 @@
   }
 
   function hide() {
-    [drawTimer, stampTimer, focusTimer, sheetTimers.report, sheetTimers.squad].forEach((timer) => root.clearTimeout(timer));
+    [drawTimer, stampTimer, focusTimer, sheetTimers.report, sheetTimers.squad, sheetTimers.letter].forEach((timer) => root.clearTimeout(timer));
   }
 
   PC.screen({ id: 'field-manual', mount, show, hide });

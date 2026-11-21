@@ -344,8 +344,18 @@
   function weekIndex(length) {
     return length ? Math.floor((Math.floor(Date.now() / 86400000) + 3) / 7) % length : -1;
   }
+  // 홑 공고 여덟 뒤에 이어지는 공고 네 주(arc). 마지막 주에는 종결 보고 셋을 함께 보인다.
+  function bulletinSequence() {
+    const b = copy().bulletins || {};
+    const arc = b.arc;
+    const steps = (arc?.steps || []).map((step, index, list) => ({
+      ...step, code: `${arc.code}-${index + 1}`, arcTitle: arc.title, step: index + 1, total: list.length,
+      endings: index === list.length - 1 ? arc.endings : null, endingsNote: arc.endingsNote
+    }));
+    return [...(b.items || []), ...steps];
+  }
   function bulletinItem() {
-    const items = copy().bulletins?.items || [];
+    const items = bulletinSequence();
     return items[weekIndex(items.length)] || null;
   }
   function bulletinPanel() {
@@ -354,8 +364,13 @@
     if (!b || !item) return PC.missing('BULLETIN MISSING', 'ProjectCurseHomeScreen.bulletins', '합동 작전 공고가 없습니다.');
     return h('section.tc-home-bulletin', { 'aria-labelledby': 'tc-home-bulletin-title' },
       h('p.tc-home-fold-lead', { text: b.lead }),
-      h('header', null, label(item.code, item.place), h('h3#tc-home-bulletin-title', { text: item.title })),
+      h('header', null, label(item.code, item.place),
+        item.arcTitle ? h('p.tc-home-bulletin-arc', { text: `연속 작전 ${item.step}/${item.total} — ${item.arcTitle}` }) : null,
+        h('h3#tc-home-bulletin-title', { text: item.title })),
       h('p', { text: item.situation }),
+      item.endings ? h('div.tc-note.tc-note--caution', null, h('b', { text: '종결 보고 셋' }),
+        h('ul.tc-home-bulletin-endings', null, item.endings.map((line) => h('li', { text: line }))),
+        h('p.tc-hint', { text: item.endingsNote })) : null,
       h('dl.tc-home-bulletin-kv', null,
         h('div', null, h('dt', { text: '교전 규칙' }), h('dd', null, h('ul', null, item.roe.map((line) => h('li', { text: line }))))),
         h('div', null, h('dt', { text: '모집 자리' }), h('dd', { text: item.seats })),
@@ -366,6 +381,29 @@
         item.link ? link(item.link.label, item.link.route) : null
       ),
       h('p.tc-hint', { text: b.note })
+    );
+  }
+
+  /* ---------- 둑시장 시세 (2026-11-22 사용자 추천안 승인) ---------- */
+  function pricePanel() {
+    const p = copy().prices;
+    if (!p?.items?.length) return PC.missing('PRICES MISSING', 'ProjectCurseHomeScreen.prices', '시세 자료가 없습니다.');
+    const day = Math.floor(Date.now() / 86400000);
+    const value = (item, index, d) => Math.max(1, Math.round(item.base + (dayNoise(index + 40, d) * 2 - 1) * item.spread));
+    return h('section.tc-home-prices', { 'aria-label': p.title },
+      h('p.tc-home-fold-lead', { text: p.lead }),
+      h('ul.tc-home-price-list', null, p.items.map((item, index) => {
+        const now = value(item, index, day);
+        const before = value(item, index, day - 1);
+        const move = now > before ? '▲' : now < before ? '▼' : '—';
+        return h('li', null,
+          h('b', { text: item.give }),
+          h('span', { text: `${item.get} ${now}${item.unit}` }),
+          h('em', { class: now > before ? 'is-up' : now < before ? 'is-down' : '', 'aria-label': now > before ? '어제보다 오름' : now < before ? '어제보다 내림' : '어제와 같음', text: move })
+        );
+      })),
+      h('p.tc-hint', { text: p.note }),
+      link('배급 밖의 값', ['history', 'ref', 'ration-economy'])
     );
   }
 
@@ -925,9 +963,10 @@
         fold('tc-home-fold-bulletin', copy().bulletins?.title || '합동 작전 공고', bulletinItem() ? `${bulletinItem().code} · ${bulletinItem().title}` : '', bulletinPanel()),
         fold('tc-home-fold-zones', '구역 판정 판', '지역 여덟 곳의 판정과 오늘의 국가 간 정세', zonePanel()),
         // 2026-11-21 사용자 결정: 공포 지수·재 농도·수배 회람을 '오늘의 공시' 한 칸으로 묶었다. 요약은 위쪽 방송 띠가 흘린다.
-        fold('tc-home-fold-notice', '오늘의 공시', '공포 지수·재 농도 기상 방송·수배 회람', h('div.tc-home-notice', null,
+        fold('tc-home-fold-notice', '오늘의 공시', '공포 지수·재 농도 기상 방송·수배 회람·둑시장 시세', h('div.tc-home-notice', null,
           noticePart('tc-home-notice-fear', copy().fear?.title || '도시 공포 지수', `도시 ${copy().fear?.cities?.length || 0}곳`, fearPanel()),
           noticePart('tc-home-notice-ash', copy().ashWeather?.title || '재 농도 기상 방송', `권역 ${copy().ashWeather?.regions?.length || 0}곳과 오늘의 하늘`, ashPanel()),
+          noticePart('tc-home-notice-prices', copy().prices?.title || '둑시장 시세', `교환 ${copy().prices?.items?.length || 0}가지`, pricePanel()),
           noticePart('tc-home-notice-wanted', copy().wanted?.title || '수배 회람', `호출명 ${root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted?.length || 0}개`, wantedPanel())
         )),
         fold('tc-home-fold-signal', copy().signal?.title || '수신 조각', `흩어진 방송 조각 ${copy().signal?.fragments?.length || 0}개`, h('div.tc-home-frag-slot')),

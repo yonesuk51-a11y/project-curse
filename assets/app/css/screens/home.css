@@ -1295,3 +1295,21 @@ html[data-fx="reduced"] .tc-home-ticker-track ul[aria-hidden="true"] { display: 
 @media (max-width: 520px) {
   .tc-home-bulletin-kv > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 }
+
+/* 이어지는 공고·둑시장 시세(2026-11-22) */
+.tc-home-bulletin-arc { margin: 0; color: var(--red-ink); font-size: var(--fs-xs); font-weight: 600; }
+.tc-home-bulletin-endings { margin: var(--s2) 0; padding-left: 1.1em; display: grid; gap: var(--s1); }
+.tc-home-price-list { display: grid; margin: 0; padding: 0; list-style: none; border: 1px solid var(--line); }
+.tc-home-price-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 2em;
+  gap: var(--s3);
+  align-items: center;
+  padding: var(--s2) var(--s3);
+}
+.tc-home-price-list li + li { border-top: 1px solid var(--line); }
+.tc-home-price-list b { font-weight: 600; }
+.tc-home-price-list span { font-family: var(--mono); }
+.tc-home-price-list em { font-style: normal; text-align: right; color: var(--text-3); }
+.tc-home-price-list em.is-up { color: var(--red-ink); }
+.tc-home-price-list em.is-down { color: var(--text-2); }

@@ -290,6 +290,14 @@
           h('ul.tc-hist-signs', null, a.district.scenes.map((line) => h('li', { text: line })))
         )
       ),
+      a.stranded ? h('details.tc-disclosure.tc-hist-sub', { id: 'tc-ref-arrival-stranded' },
+        h('summary', null, h('span', null, h('b', { text: a.stranded.title }), h('small', { text: '등록이 닫힌 도래자 · 등 돌린 무리' }))),
+        h('div.tc-disclosure-body', null,
+          h('p', { text: a.stranded.text }),
+          h('ul.tc-hist-signs', null, a.stranded.lines.map((line) => h('li', { text: line }))),
+          a.stranded.dispute ? h('div.tc-note.tc-note--danger', null, h('b', null, a.stranded.dispute.title, ' ', verdictTag(a.stranded.dispute.grade)), h('p', { text: a.stranded.dispute.text })) : null
+        )
+      ) : null,
       a.record ? h('p', null, index >= 0
         ? h('a', { href: PC.href('history', a.record) }, `첫 계약 — ${records()[index].title}`, h('i', { 'aria-hidden': 'true', text: ' ›' }))
         : h('span.is-missing', { text: `${a.record} (기록 없음)` })) : null,
@@ -627,12 +635,13 @@
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   }
 
-  function diaryBody() {
-    const diary = cities().find((city) => city.id === 'karven')?.diary;
-    if (!diary?.entries?.length) return PC.missing('DIARY MISSING', 'worldFramework.cities[karven].diary', '주민 일지가 없습니다.');
+  // 주민 일지 — 카르벤은 #history/ref/diary, 다른 도시는 #history/ref/diary-<도시>(2026-11-22 다마 감시구 추가)
+  function diaryBody(cityId = 'karven') {
+    const diary = cities().find((city) => city.id === cityId)?.diary;
+    if (!diary?.entries?.length) return PC.missing('DIARY MISSING', `worldFramework.cities[${cityId}].diary`, '주민 일지가 없습니다.');
     const today = localDay();
     const open = diary.entries.filter((entry) => entry.release <= today);
-    return h('div.tc-hist-ref', { id: 'tc-ref-diary' },
+    return h('div.tc-hist-ref', { id: cityId === 'karven' ? 'tc-ref-diary' : `tc-ref-diary-${cityId}` },
       h('div.tc-hist-ref-lead', null,
         h('p', { text: diary.source }),
         h('div.tc-note.tc-note--evidence', null, h('b', null, bi('RECOVERED DIARY', `${open.length}/${diary.entries.length}장`)), h('p', { text: diary.limit }))
@@ -830,9 +839,10 @@
         sub('그늘의 조직', 'P.O.H·S.O.N·프리윌', orgsBody())
       )),
       item('LIFE UNDER REVERSE', '리버스 아래의 삶', `일곱 갈래 ${lifeCount}항목 · 한 줄씩 먼저`, lifeBody()),
-      item('VOICES AND PLACES', '목소리와 장소', `${cities().map((city) => city.label).join('·')}·주민 일지·구술 증언`, h('div.tc-hist-parts', null,
+      item('VOICES AND PLACES', '목소리와 장소', `${cities().map((city) => city.label).join('·')}·주민 일지 ${cities().filter((city) => city.diary).length}·구술 증언`, h('div.tc-hist-parts', null,
         cities().map((city) => sub(city.label, `${city.region} · ${city.districts?.length || 0}구와 소문`, cityBody(city))),
         sub(cities().find((city) => city.id === 'karven')?.diary?.title || '주민 일지', '날마다 한 장씩 올라온다', diaryBody()),
+        cities().filter((city) => city.id !== 'karven' && city.diary).map((city) => sub(city.diary.title, `${city.label} · 날마다 한 장씩`, diaryBody(city.id))),
         sub('구술 증언집', 'S.I.D 사회 기록반', testimonyBody())
       )),
       item('UNCONFIRMED', '확인되지 않은 것들', '세 규칙·일본 기술 도약의 계보', h('div.tc-hist-parts', null,

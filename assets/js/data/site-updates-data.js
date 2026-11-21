@@ -16,6 +16,13 @@
   root.ProjectCurseSiteUpdates = freeze({
     entries: [
       {
+        date: '2026-11-22',
+        at: '2026-11-22T00:17:00+09:00',
+        title: '대조 짝과 다마 감시구',
+        text: '대조 짝 제도와 검열 편지 양식, 전진기지의 하루와 휴가증이 실렸다. 셋째 도시 도쿄 다마 감시구와 하루 앞 골목 주민 일지가 날마다 한 장씩 올라온다. 새 괴이 다섯, 둑시장 시세, 돌아가지 못한 도래자, 네 주 동안 이어지는 작전 공고도 더해졌다.',
+        links: [{ label: '대조 짝', route: 'history', parts: ['ref', 'pair-check'] }, { label: '다마 감시구', route: 'history', parts: ['ref', 'tama'] }]
+      },
+      {
         date: '2026-11-21',
         at: '2026-11-21T23:51:00+09:00',
         title: '이름 난 교전과 합동 작전 공고',

@@ -441,6 +441,8 @@
       y += 116;
     }
 
+    // 대조 짝(2026-11-22) — 짝 이름과 짝이 쓴 대조문 한 줄
+    if (sv.pair) y = serviceRow(g, '대조 짝', sv.pairLine ? `${sv.pair} — "${sv.pairLine}"` : sv.pair, y, { size: 26, width: 480 });
     // 잃은 것·남은 것 — 한 줄씩(길면 말줄임). 아래 검사 칸보다 먼저 그려 등록 인장과 겹치지 않게 한다
     if (sv.lost) y = serviceRow(g, '잃은 것', sv.lost, y, { size: 28, width: 480, color: INK.text2 });
     if (sv.kept) y = serviceRow(g, '남은 것', sv.kept, y, { size: 28, width: 480 });
@@ -580,6 +582,79 @@
     return true;
   }
 
+  // 검열 편지 — 종이 한 장. 지운 낱말은 검은 막대, 검열 도장. 보류면 붉은 줄.
+  function drawLetter(canvas, letter, assets = {}) {
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    const g = canvas.getContext('2d');
+    if (!g) return false;
+    g.textBaseline = 'alphabetic';
+    const head = { regNo: letter.regNo, issued: letter.issued, stamp: letter.held ? ['보류', '우편 검열'] : ['통과', '우편 검열'] };
+    background(g);
+    header(g, head, assets.emblem, { title: '검열 편지', code: 'S.I.D CENSORED MAIL' });
+    // 종이
+    const px = 56;
+    const py = 236;
+    const pw = WIDTH - 112;
+    const ph = HEIGHT - 236 - 210;
+    g.fillStyle = '#d8d0c4';
+    g.fillRect(px, py, pw, ph);
+    g.fillStyle = 'rgba(40, 24, 24, 0.06)';
+    for (let i = 0; i < 40; i += 1) g.fillRect(px, py + 34 + i * 40, pw, 1);
+    const ink = '#2a2222';
+    const inkSoft = '#5a4f4a';
+    let y = py + 70;
+    text(g, `받는 사람  ${letter.to || '—'}`, px + 40, y, { weight: 600, size: 30, color: ink, width: pw - 80 });
+    y += 48;
+    // 보낸 곳 — 토막마다 그린다
+    const drawTokens = (lines, startY, size, lineH, maxLines, x0 = px + 40) => {
+      let yy = startY;
+      let used = 0;
+      g.font = font(400, size, SANS);
+      for (const line of lines) {
+        let x = x0;
+        if (used >= maxLines) break;
+        for (const token of line) {
+          const w = g.measureText(token.text).width;
+          if (x + w > px + pw - 40 && token.text.trim()) {
+            x = x0;
+            yy += lineH;
+            used += 1;
+            if (used >= maxLines) break;
+          }
+          if (token.cut) {
+            g.fillStyle = '#0c0909';
+            g.fillRect(x - 2, yy - size + 4, w + 4, size + 4);
+          } else if (token.text.trim()) {
+            g.fillStyle = ink;
+            g.fillText(token.text, x, yy);
+          }
+          x += w;
+        }
+        yy += lineH;
+        used += 1;
+      }
+      return yy;
+    };
+    g.fillStyle = inkSoft;
+    text(g, '보낸 곳', px + 40, y, { size: 24, color: inkSoft, width: 200 });
+    g.font = font(400, 26, SANS);
+    y = drawTokens(letter.originLines?.length ? letter.originLines : [[{ text: '—', cut: false }]], y, 26, 36, 1, px + 150) - 36 + 4;
+    y += 56;
+    y = drawTokens(letter.lines || [], y, 30, 44, Math.floor((py + ph - 140 - y) / 44));
+    text(g, `보내는 사람  ${letter.from || '—'}`, px + 40, py + ph - 56, { weight: 600, size: 30, color: ink, width: pw - 80 });
+    if (letter.held) {
+      g.strokeStyle = 'rgba(179, 60, 69, 0.85)';
+      g.lineWidth = 6;
+      g.beginPath();
+      g.moveTo(px + 20, py + 20);
+      g.lineTo(px + pw - 20, py + ph - 20);
+      g.stroke();
+    }
+    footer(g, head);
+    return true;
+  }
+
   function sheetFilename(kind, name) {
     const base = String(name || '무명').replace(/[\\/:*?"<>|\u0000-\u001f]/g, '').replace(/\s+/g, '-').slice(0, 40) || '무명';
     return `project-curse-${kind}-${base}.png`;
@@ -698,5 +773,5 @@
     return `project-curse-등록증-${base}.png`;
   }
 
-  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawService, serviceFilename, drawReport, drawSquad, sheetNo, sheetFilename, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
+  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawService, serviceFilename, drawReport, drawSquad, drawLetter, sheetNo, sheetFilename, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
 })(window);

@@ -812,3 +812,16 @@
   .tc-man-seat b { grid-column: 1 / -1; }
   .tc-man-seat input:last-child { grid-column: 1 / -1; }
 }
+.tc-man-field textarea {
+  width: 100%;
+  min-height: 9em;
+  padding: 8px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  color: var(--text);
+  background: var(--sunken);
+  font: inherit;
+  font-size: var(--fs-s);
+  line-height: 1.6;
+  resize: vertical;
+}
