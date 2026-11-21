@@ -339,6 +339,73 @@
     );
   }
 
+  /* ---------- 도시 공포 지수 · 수배 회람 (2026-11-21 사용자 요청) ---------- */
+  // 공포 지수는 home-screen-data.js의 공시 기준값(base)에서 날짜마다 spread 안으로 움직인다. 같은 날에는 같은 값이다.
+  const today = () => Math.floor(Date.now() / 86400000);
+  function fearValue(city, index, day) {
+    const seed = Math.abs(Math.sin((day + 1) * 12.9898 + (index + 1) * 78.233) * 43758.5453) % 1;
+    return Math.max(0, Math.min(100, Math.round(city.base + (seed - 0.5) * city.spread)));
+  }
+
+  function fearPanel() {
+    const fear = copy().fear;
+    if (!fear?.cities?.length || !fear.bands?.length) return PC.missing('FEAR INDEX MISSING', 'ProjectCurseHomeScreen.fear', '공포 지수 공시가 없습니다.');
+    const day = today();
+    const bandOf = (value) => [...fear.bands].reverse().find((band) => value >= band.min) || fear.bands[0];
+    return h('section.tc-home-fear', { 'aria-label': fear.title },
+      h('p.tc-home-fold-lead', { text: fear.lead }),
+      h('ol.tc-home-fear-list', null, fear.cities.map((city, index) => {
+        const value = fearValue(city, index, day);
+        const delta = value - fearValue(city, index, day - 1);
+        const band = bandOf(value);
+        return h('li', { class: `is-${band.tone}` },
+          h('b', { text: city.name }),
+          h('span.tc-home-fear-meter', { role: 'img', 'aria-label': `지수 ${value}, ${band.name}` }, h('i', { style: `width:${value}%` })),
+          h('span.tc-home-fear-value', null,
+            h('strong.tc-code', { text: String(value) }),
+            h('small', { text: delta === 0 ? '어제와 같음' : `어제보다 ${delta > 0 ? '▲' : '▼'}${Math.abs(delta)}` })
+          ),
+          PC.tag(band.name, band.tone),
+          h('p', { text: city.note })
+        );
+      })),
+      h('div.tc-home-fear-bands', null,
+        h('h3', { text: '지수 구간과 방송 문안' }),
+        h('dl', null, fear.bands.map((band) => h('div', null, h('dt', null, PC.tag(`${band.min}+ ${band.name}`, band.tone)), h('dd', { text: band.act }))))
+      ),
+      h('footer.tc-home-civil-foot', null,
+        h('dl.tc-kv', null, kv('보낸 곳', fear.author), kv('받는 곳', fear.recipient), kv('목적', fear.purpose)),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: '이 공시의 한계' }), h('p', { text: fear.limit })),
+        link('공포 관리 행정 보기', ['history'])
+      )
+    );
+  }
+
+  function wantedPanel() {
+    const head = copy().wanted;
+    const list = root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted || [];
+    if (!head || !list.length) return PC.missing('WANTED CIRCULAR MISSING', 'worldOrder / wanted-list', '수배 회람이 없습니다.');
+    const first = today() % list.length;
+    const ordered = [...list.slice(first), ...list.slice(0, first)];
+    return h('section.tc-home-wanted', { 'aria-label': head.title },
+      h('p.tc-home-fold-lead', { text: head.lead }),
+      h('ol.tc-home-wanted-list', null, ordered.map((entry, index) =>
+        h('li', { class: index === 0 ? 'is-top' : null },
+          h('header', null, h('span.tc-code', { text: entry.code }), index === 0 ? PC.tag('오늘 회람 맨 위', 'danger') : null),
+          h('b', { text: entry.alias }),
+          h('p.tc-home-wanted-kind', { text: entry.kind }),
+          h('p', { text: entry.charge }),
+          h('p.tc-home-wanted-note', { text: entry.note })
+        )
+      )),
+      h('footer.tc-home-civil-foot', null,
+        h('p.tc-home-wanted-report', { text: head.report }),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: '이 회람의 한계' }), h('p', { text: head.limit })),
+        link('수배 목록 원문 보기', ['history'])
+      )
+    );
+  }
+
   /* ---------- 귀환 신호 접촉 보고 ---------- */
   function contactPanel() {
     const contact = copy().contact;
@@ -610,6 +677,8 @@
         fold('tc-home-fold-contact', contactStep ? `귀환 신호 — ${contactStep.title}` : '귀환 신호 접촉 보고', '육안 인원과 열원 수가 맞지 않은 보고', contactPanel()),
         fold('tc-home-fold-civil', civil?.title || '민간 재난 방송', '권역 경보망에서 받은 방송 여섯 건과 경보색 기준', civilPanel()),
         fold('tc-home-fold-zones', '구역 판정 판', '지역 여덟 곳의 판정과 오늘의 국가 간 정세', zonePanel()),
+        fold('tc-home-fold-fear', copy().fear?.title || '도시 공포 지수', `도시 ${copy().fear?.cities?.length || 0}곳의 오늘 지수와 방송 문안 기준`, fearPanel()),
+        fold('tc-home-fold-wanted', copy().wanted?.title || '수배 회람', `호출명 ${root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted?.length || 0}개와 오늘 회람 맨 위`, wantedPanel()),
         fold('tc-home-fold-ops', '작전 기록', `작전 ${counts().ops}건의 마지막 기록`, live.ops)
       ),
       h('p.tc-home-foot.tc-full-only', null, h('span', { text: 'PC-03' }), h('b', { text: 'NO EXTERNAL HANDSHAKE' }))

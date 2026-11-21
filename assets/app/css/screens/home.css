@@ -876,3 +876,151 @@ html[data-silence="on"] .tc-home-signals {
     height: 48px;
   }
 }
+
+/* 도시 공포 지수 · 수배 회람 (2026-11-21 사용자 요청) */
+.tc-home-fear-list {
+  display: grid;
+  gap: 1px;
+  margin: var(--s3) 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--line);
+  list-style: none;
+}
+.tc-home-fear-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+  padding: var(--s3) var(--s4);
+  background: var(--panel);
+}
+.tc-home-fear-list b {
+  color: var(--text);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+.tc-home-fear-meter {
+  display: block;
+  height: 6px;
+  background: var(--line);
+}
+.tc-home-fear-meter i {
+  display: block;
+  height: 100%;
+  background: var(--text-3);
+}
+.tc-home-fear-list li.is-info .tc-home-fear-meter i { background: var(--ir-ink); }
+.tc-home-fear-list li.is-caution .tc-home-fear-meter i { background: var(--amber); }
+.tc-home-fear-list li.is-danger .tc-home-fear-meter i { background: var(--red-ink); }
+.tc-home-fear-value {
+  display: grid;
+  justify-items: end;
+  min-width: 5.5rem;
+}
+.tc-home-fear-value strong {
+  color: var(--text);
+  font-size: var(--fs-l);
+}
+.tc-home-fear-value small {
+  color: var(--text-3);
+  font-size: var(--fs-2xs);
+}
+.tc-home-fear-list p {
+  grid-column: 1 / -1;
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+}
+.tc-home-fear-bands {
+  display: grid;
+  gap: var(--s2);
+  margin-bottom: var(--s3);
+  padding: var(--s3) var(--s4);
+  border-left: 2px solid var(--amber);
+  background: var(--panel-2);
+}
+.tc-home-fear-bands h3 {
+  font-size: var(--fs-s);
+}
+.tc-home-fear-bands dl {
+  display: grid;
+  gap: var(--s2);
+  margin: 0;
+}
+.tc-home-fear-bands dl > div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--s3);
+}
+.tc-home-fear-bands dd {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-home-wanted-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+  gap: 1px;
+  margin: var(--s3) 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--line);
+  list-style: none;
+}
+.tc-home-wanted-list li {
+  display: grid;
+  align-content: start;
+  gap: var(--s1);
+  min-width: 0;
+  padding: var(--s3) var(--s4);
+  background: var(--panel);
+}
+.tc-home-wanted-list li.is-top {
+  box-shadow: inset 2px 0 0 var(--red-ink);
+}
+.tc-home-wanted-list header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  color: var(--text-3);
+  font-size: var(--fs-2xs);
+}
+.tc-home-wanted-list b {
+  color: var(--text);
+  font-size: var(--fs-l);
+  font-weight: 600;
+}
+.tc-home-wanted-list p {
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  line-height: 1.55;
+}
+.tc-home-wanted-list p.tc-home-wanted-kind {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-home-wanted-list p.tc-home-wanted-note {
+  color: var(--red-ink);
+  font-size: var(--fs-xs);
+}
+.tc-home-wanted-report {
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+@media (max-width: 640px) {
+  .tc-home-fear-list li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .tc-home-fear-meter {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+  .tc-home-fear-list li > .tc-tag { justify-self: start; }
+  .tc-home-fear-bands dl > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s1);
+  }
+}

@@ -189,6 +189,42 @@
       ]
     },
 
+    // 도시 공포 지수(2026-11-21 사용자 요청) — 세계 기록 '버티는 체제와 바뀌는 몸'의 공포 관리 행정을 상황판에 공시로 보인다.
+    // 값은 base를 기준으로 날짜마다 spread 안에서 바뀐다. 측정값이 아니라 공시 사본이다.
+    fear: {
+      title: '도시 공포 지수',
+      code: 'FEAR INDEX / DAILY NOTICE',
+      lead: '공포 관리 행정이 매일 내는 도시별 지수다. 수치가 오르면 방송이 더 침착해진다.',
+      author: '공포 관리 행정 일일 공시',
+      recipient: '권역 방송국 / 경보 방송 책임자',
+      purpose: '방송 문안 조정 기준',
+      limit: '공포가 잔류 리버스를 키운다는 가설은 확인되지 않았다. 지수는 신고 건수, 통화량, 배급소 대기열로 추정한 값이고 측정 방법은 공개되지 않았다. 이 단말의 값은 공시 사본이며 날마다 바뀐다.',
+      bands: [
+        { min: 0, name: '평온', tone: 'ok', act: '표준 문안을 읽는다.' },
+        { min: 40, name: '주의', tone: 'info', act: '문안을 더 천천히 읽는다.' },
+        { min: 60, name: '경계', tone: 'caution', act: '배경 음악을 넣는다. 숫자를 읽지 않는다.' },
+        { min: 80, name: '억제', tone: 'danger', act: '공포 유발 단속을 시작한다. 방송은 더 침착하게 읽는다.' }
+      ],
+      cities: [
+        { id: 'tokyo', name: '도쿄 감시권', base: 48, spread: 16, note: '독립시계가 어긋난 날 오른다.' },
+        { id: 'deadzone-coast', name: '데드존 해안 격리선', base: 71, spread: 14, note: '역류 사이렌 시험 방송이 있는 주에 오른다.' },
+        { id: 'coastal-league', name: '대흑림 외연 연안 자치시', base: 55, spread: 20, note: '성채가 문을 열지 않은 밤 다음 날 오른다.' },
+        { id: 'northern-line', name: '북부 차단선 처리장 도시', base: 66, spread: 12, note: '청소조 교대 명단이 공시되는 날 오른다.' },
+        { id: 'north-sea-port', name: '북해권 항구', base: 58, spread: 18, note: '피난 선단이 보인 날 조명탄 소리 신고가 는다.' },
+        { id: 'vesca-border', name: '베스카 격리선 밖 국경 도시', base: 77, spread: 14, note: '선간 지대 순찰 보고 뒤에 오른다.' },
+        { id: 'western-corridor', name: '서부 순례 회랑 입구', base: 44, spread: 22, note: '귀의 운동 행렬이 지나간 날 오른다.' }
+      ]
+    },
+
+    // 수배 회람(2026-11-21 사용자 요청) — 수배자는 세계 기록 worldOrder의 수배 목록에서 읽는다. 여기에는 회람 머리말만 둔다.
+    wanted: {
+      title: '수배 회람',
+      code: 'WANTED CIRCULAR / U.A.C · S.I.D',
+      lead: 'U.A.C와 S.I.D가 함께 올린 수배 회람이다. 회람 맨 위에 오르는 호출명은 날마다 바뀐다.',
+      report: '제보는 가까운 검문소로 한다. 호출명으로만 신고한다. 실명을 부르지 않는다.',
+      limit: '혐의는 수배 기관의 주장이다. 판결 기록이 아니다.'
+    },
+
     keyArt: {
       src: 'assets/resources/derived/remake-keyart-checkpoint-07-concept-v2.png',
       alt: '검문소 07 출입문 앞에 귀환자 네 명이 서 있고, 대원이 든 열상 판독 단말에는 인체 형상 다섯 개가 표시된 편집 키아트',

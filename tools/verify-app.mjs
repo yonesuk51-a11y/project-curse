@@ -172,6 +172,15 @@ add('home-live-channels-resolve',
   badChannels.length === 0 && !!contactOp?.steps?.[homeScreen.contact.step] && !!homeScreen?.keyArt?.src && existsSync(ROOT + homeScreen.keyArt.src),
   badChannels.map((channel) => channel.scenario || channel.kind).join(' | '));
 
+// 도시 공포 지수·수배 회람(2026-11-21 사용자 요청) — 공포 구간은 0부터 오름차순, 기준값과 폭은 0~100 안. 수배자는 세계 기록 수배 목록에서 읽는다.
+const homeFear = homeScreen?.fear;
+const homeWantedSource = context.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted || [];
+add('home-fear-index-and-wanted-circular',
+  homeFear?.cities?.length === 7 && homeFear.bands?.[0]?.min === 0 && homeFear.bands.every((band, i, all) => !i || band.min > all[i - 1].min) &&
+  homeFear.cities.every((city) => city.id && city.name && city.note && city.base - city.spread / 2 >= 0 && city.base + city.spread / 2 <= 100) &&
+  Boolean(homeFear.author && homeFear.recipient && homeFear.purpose && homeFear.limit?.includes('확인되지 않았다')) &&
+  Boolean(homeScreen?.wanted?.report && homeScreen.wanted.limit) && homeWantedSource.length === 5 && homeWantedSource.every((entry) => entry.code && entry.alias && entry.charge));
+
 // 음향·연출 — terminal-fx-data.js가 부르는 사건은 audio-manifest.js에, 소리 파일은 assets/audio/에 있어야 한다.
 const terminalFx = context.ProjectCurseTerminalFx;
 const audioEvents = context.ProjectCurseAudioManifest?.events || {};
