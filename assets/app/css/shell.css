@@ -521,8 +521,9 @@ html.tc-immersive .tc-main {
     padding: 0 var(--s3);
   }
 }
-/* 아주 작은 휴대폰(320px) — 간격만 더 줄인다 */
-@media (max-width: 360px) {
+/* 휴대폰(400px 이하) — 간격과 여백만 더 줄인다. 보이는 요소는 빼지 않는다.
+   2026-11-21: 375px에서 대체 글꼴 때문에 설정 버튼이 18px 넘쳐 360px 기준을 400px로 넓혔다(사용자 결정). */
+@media (max-width: 400px) {
   .tc-bar {
     gap: 4px;
   }

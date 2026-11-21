@@ -248,8 +248,10 @@
     } else {
       row('능력', card.cls ? '해당 없음' : '');
     }
+    // 출신(2026-11-21 사용자 결정) — 고른 경우만 한 줄. 아래 칸이 넘치지 않게 장비군을 한 줄로 줄인다.
+    if (card.origin) row('출신', card.origin);
     row('표식', card.tag ? `${card.tag} — ${card.tagNote || ''}` : '', 2);
-    row('장비군', (card.gear || []).join(' · '), 2);
+    row('장비군', (card.gear || []).join(' · '), card.origin ? 1 : 2);
     row('기준점', card.anchor);
     if (card.note) row('한 줄 기록', card.note, 2);
   }

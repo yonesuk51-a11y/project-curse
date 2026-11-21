@@ -95,6 +95,30 @@
   color: var(--text);
   font-weight: 600;
 }
+/* 목차 — 패널 바로 가기. 좁은 화면에서는 줄을 바꿔 감싼다 */
+.tc-man-toc ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  margin: var(--s4) 0;
+}
+.tc-man-toc button {
+  min-height: 36px;
+  padding: 0 var(--s3);
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+  color: var(--text-2);
+  font-size: var(--fs-s);
+  cursor: pointer;
+}
+.tc-man-toc button:hover,
+.tc-man-toc button:focus-visible {
+  border-color: var(--amber);
+  color: var(--text);
+}
+.tc-man-revisions {
+  margin-top: var(--s3);
+}
 /* 검문소 표준 배치 — 한 방향 동선. 번호는 교범 표의 순서다 */
 .tc-man-steps {
   display: grid;

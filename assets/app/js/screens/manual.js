@@ -62,17 +62,56 @@
   }
 
   /* ---------- 교범 첫머리 ---------- */
+  // 마지막 개정일은 교범 데이터(revision)에서 읽는다. 2026-11-21 사용자 결정으로 2041 개정본이 됐다.
+  const revision = () => manual()?.revision || '';
+
   function doctrine() {
     const doc = manual();
     const scope = section('적용 범위와 지휘 관계');
+    const history = section('개정 이력');
     return h('section.tc-man-doctrine', { 'aria-label': '교범 첫 원칙' },
       h('blockquote', null, h('p', { text: scope?.quote || '' })),
       h('div.tc-man-doctrine-meta', null,
         h('span.tc-label', { text: doc?.code || MANUAL_ID }),
         h('span', { text: `${doc?.owner || ''} · ${doc?.classification || ''}` }),
-        h('span', { text: '이 단말에 등록된 마지막 개정은 2005.01.21 현장 개정본이다.' }),
+        h('span', { text: `이 단말에 등록된 마지막 개정은 ${revision()} 개정본이다.` }),
         h('a.tc-btn', { href: PC.href('archive-entry', MANUAL_ID) }, '교범 원문 보기', h('i', { 'aria-hidden': 'true', text: '›' }))
-      )
+      ),
+      history?.table ? h('details.tc-disclosure.tc-man-revisions', null,
+        h('summary', null, h('span', null, h('b', { text: '개정 이력' }))),
+        h('div.tc-disclosure-body', null,
+          paragraphs(history.paragraphs),
+          h('div.tc-man-table', { role: 'table', 'aria-label': '교범 개정 이력' },
+            h('div.tc-man-tr.tc-man-th', { role: 'row' }, history.table.headers.map((head) => h('span', { role: 'columnheader', text: head }))),
+            history.table.rows.map(([date, label, text]) => h('div.tc-man-tr', { role: 'row' },
+              h('span', { role: 'cell' }, h('b', { text: date })),
+              h('span', { role: 'cell', 'data-head': history.table.headers[1], text: label }),
+              h('span', { role: 'cell', 'data-head': history.table.headers[2], text })
+            ))
+          )
+        )
+      ) : missingSection('개정 이력')
+    );
+  }
+
+  /* ---------- 목차 (2026-11-21 사용자 결정) ---------- */
+  // 패널이 열셋이라 바로 가기를 둔다. 주소(#field-manual)는 바꾸지 않고 해당 패널로 스크롤한 뒤 제목에 초점을 옮긴다.
+  const TOC = [
+    ['break', '철수 조건'], ['roe', '접촉과 교전'], ['possessed', '피탈자'], ['blood', '혈술 대응'], ['tags', '표식 체계'],
+    ['prep', '진입 전 준비'], ['team', '현장조와 계수'], ['loadout', '장비군'], ['wielder', '능력과 대가'],
+    ['lines', '편성과 인계'], ['checkpoint', '검문소 배치'], ['register', '등록 양식']
+  ];
+  function toc() {
+    const jump = (slug) => {
+      const heading = document.getElementById(`tc-man-${slug}`);
+      if (!heading) return;
+      const reduced = document.documentElement.dataset.fx === 'reduced' || root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      heading.closest('section')?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+    };
+    return h('nav.tc-man-toc', { 'aria-label': '현장 지침 목차' },
+      h('ol', null, TOC.map(([slug, title]) => h('li', null, h('button', { type: 'button', onclick: () => jump(slug) }, title))))
     );
   }
 
@@ -385,6 +424,9 @@
     const classOptions = [['', '선택'], ['human', '인간'], ...(fw?.ontology || []).filter((item) => ['PERSON', 'WIELDER'].includes(item.code)).map((item) => [item.code, item.name])];
     const sourceOptions = [['', '해당 없음'], ...(fw?.abilitySources || []).map((item) => [item.name, item.name])];
     const tagOptions = [['', '선택'], ...(tagSec?.table?.rows || []).map(([name]) => [name, name])];
+    // 출신 목록은 자캐 설정 안내(community-guide-data.js의 origin 항목)에서 읽는다.
+    const originSection = root.ProjectCurseCommunityGuide?.guide?.sections?.find?.((item) => item.id === 'origin');
+    const originOptions = [['', '선택 안 함'], ...(originSection?.items || []).map(([name]) => [name, name])];
     const gearGroups = (gear?.groups || []).map((group) => group.title);
 
     const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
@@ -395,6 +437,7 @@
       field('배치선', select('line', [['', '선택'], ...LINES.map(([line, unit]) => [line, unit ? `${line} — ${unit}` : line])], saved.line || '')),
       field('분류', select('class', classOptions, saved.class || ''), '괴이는 등록 대상이 아니다.'),
       field('발현 경로', select('source', sourceOptions, saved.source || ''), '능력자만 적는다. 대가는 교범 기준으로 자동으로 적힌다.'),
+      field('출신', select('origin', originOptions, saved.origin || ''), '자캐 설정 안내의 출신 목록. 고르면 등록증에 한 줄 들어간다.'),
       field('표식', select('tag', tagOptions, saved.tag || '')),
       h('fieldset.tc-man-field.tc-man-gear', null,
         h('legend', { text: '장비군' }),
@@ -423,6 +466,7 @@
         class: data.get('class') || '',
         source: data.get('source') || '',
         tag: data.get('tag') || '',
+        origin: data.get('origin') || '',
         gear: data.getAll('gear'),
         anchor: String(data.get('anchor') || '').trim(),
         note: String(data.get('note') || '').trim()
@@ -436,12 +480,13 @@
       const source = (fw?.abilitySources || []).find((item) => item.name === v.source);
       const tagRow = (tagSec?.table?.rows || []).find(([name]) => name === v.tag);
       const lines = [
-        '■ 현장 인원 등록 — N.H.C 현장 교범(2005.01.21 현장 개정) 기준',
+        `■ 현장 인원 등록 — N.H.C 현장 교범(${revision()} 개정) 기준`,
         `이름     : ${v.name || blank}`,
         `호출부호 : ${v.callsign || blank}`,
         `소속     : ${faction}`,
         `배치선   : ${v.line || blank}`,
         `분류     : ${cls}${v.class === 'WIELDER' && source ? ` / ${source.name} — 대가: ${source.cost}` : ''}`,
+        `출신     : ${v.origin || blank}`,
         `표식     : ${tagRow ? `${tagRow[0]} — ${tagRow[1]}` : blank}`,
         `장비군   : ${v.gear.length ? v.gear.join(', ') : blank}`,
         `기준점   : ${v.anchor || blank}`
@@ -479,6 +524,7 @@
         cost: source?.cost || '',
         tag: tagRow?.[0] || '',
         tagNote: tagRow?.[1] || '',
+        origin: v.origin || '',
         gear: v.gear,
         anchor: v.anchor,
         note: v.note
@@ -619,11 +665,12 @@
       PC.screenHead('field-manual', {
         title: '현장 지침',
         // 채널 이름은 2026-09-25에 '현장 지침'으로 바꿨다. 원문 문서 이름(N.H.C 교전 교범)은 고유명사라 그대로 둔다
-        desc: `N.H.C 교전 교범(2005.01.21 개정)을 옮긴 현장 기준. ${doc.summary}`,
-        meta: [['ISSUER', 'N.H.C HQ'], ['REVISION', '2005.01.21'], ['FIRST ED.', '1989.12.19']]
+        desc: `N.H.C 교전 교범(${revision()} 개정)을 옮긴 현장 기준. ${doc.summary}`,
+        meta: [['ISSUER', 'N.H.C HQ'], ['REVISION', revision()], ['FIRST ED.', '1989.12.19']]
       }),
       notice,
       doctrine(),
+      toc(),
       h('div.tc-man-pair', null, breakPanel(), engagementPanel()),
       possessionPanel(),
       bloodPanel(),
