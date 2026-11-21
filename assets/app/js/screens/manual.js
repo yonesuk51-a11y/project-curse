@@ -50,12 +50,15 @@
   // 영문 머리글 + 한글 — 간략 보기에서는 한글만
   const bi = (english, korean) => h('b', null, h('span.tc-full-only', { text: `${english} / ` }), korean);
 
+  // 2026-11-21 사용자 결정: 패널은 접는 칸이다. 처음에는 제목과 한 줄 설명(HINTS)만, 전체 보기에서는 펼친 채로 그린다.
   function panel(code, title, body, options = {}) {
-    const id = `tc-man-${options.slug || code.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-    return h('section', { class: `tc-panel tc-man-panel${options.bracket ? ` tc-bracket${options.bracket === true ? '' : ` tc-bracket--${options.bracket}`}` : ''}${options.cls ? ` ${options.cls}` : ''}`, 'aria-labelledby': id },
-      h('header.tc-panel-head', null,
-        h('div', null, lbl(code), h('h2', { id, text: title })),
-        options.aside || null
+    const slug = options.slug || code.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const id = `tc-man-${slug}`;
+    // 등록 양식은 그 탭의 본문이라 늘 펼친다
+    const open = options.open ?? (slug === 'register' || PC.density?.() === 'full');
+    return h('details', { class: `tc-panel tc-man-panel${options.bracket ? ` tc-bracket${options.bracket === true ? '' : ` tc-bracket--${options.bracket}`}` : ''}${options.cls ? ` ${options.cls}` : ''}`, 'aria-labelledby': id, open, dataset: { slug } },
+      h('summary.tc-panel-head', null,
+        h('div', null, lbl(code), h('h2', { id, text: title }), HINTS[slug] ? h('p.tc-man-hint', { text: HINTS[slug] }) : null)
       ),
       h('div.tc-panel-body', null, body)
     );
@@ -94,26 +97,57 @@
     );
   }
 
-  /* ---------- 목차 (2026-11-21 사용자 결정) ---------- */
-  // 패널이 열일곱이라 바로 가기를 둔다. 주소(#field-manual)는 바꾸지 않고 해당 패널로 스크롤한 뒤 제목에 초점을 옮긴다.
-  const TOC = [
-    ['break', '철수 조건'], ['roe', '접촉과 교전'], ['possessed', '피탈자'], ['risen', '기시체'], ['blood', '혈술 대응'],
-    ['percept', '지각 오염'], ['backflow', '역류 대피'], ['cleanup', '청소조'], ['tags', '표식 체계'],
-    ['prep', '진입 전 준비'], ['team', '현장조와 계수'], ['loadout', '장비군'], ['wielder', '능력과 대가'],
-    ['lines', '편성과 인계'], ['checkpoint', '검문소 배치'], ['drill', '판정 서명 연습'], ['register', '등록 양식']
-  ];
-  function toc() {
-    const jump = (slug) => {
-      const heading = document.getElementById(`tc-man-${slug}`);
-      if (!heading) return;
-      const reduced = document.documentElement.dataset.fx === 'reduced' || root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      heading.closest('section')?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-      heading.setAttribute('tabindex', '-1');
-      heading.focus({ preventScroll: true });
-    };
-    return h('nav.tc-man-toc', { 'aria-label': '현장 지침 목차' },
-      h('ol', null, TOC.map(([slug, title]) => h('li', null, h('button', { type: 'button', onclick: () => jump(slug) }, title))))
-    );
+  /* ---------- 탭과 한 줄 설명 (2026-11-21 사용자 결정) ---------- */
+  // 패널 열일곱을 탭 넷으로 나눈다. 탭 안의 패널은 접힌 채 제목과 한 줄 설명만 보인다. #field-manual/<탭>으로 바로 연다.
+  const HINTS = {
+    break: '공유 시간·지휘 통신·철수 경로 가운데 둘을 잃으면 전원 철수한다.',
+    roe: '목표는 사살이 아니라 접근 방향을 막는 것이다.',
+    possessed: '몸을 빼앗긴 민간인. 체온과 맥박이 있으면 피탈자다.',
+    risen: '일어난 죽은 몸은 관절부터 끊고 태운다.',
+    blood: '피가 어디서 왔는지로 갈래를 나누고 대응한다.',
+    percept: '보면 오염되는 괴이, 잔류물 착란, 리버스 정신 반응.',
+    backflow: '사이렌이 울리고 10분이 지나면 대피소 문은 열리지 않는다.',
+    cleanup: '잔류물 곁의 작업은 한 교대에 90초.',
+    tags: 'White·Gray·Red·Black·Null — 다섯 표식.',
+    prep: '철수 경로가 확정되지 않으면 들어가지 않는다.',
+    move: '같은 복도가 반복되면 멈춘다. 탄피를 던져 거리를 본다.',
+    team: '다섯 자리, 삼중 계수, 독립시계 셋.',
+    loadout: '장비군 일곱과 제식 화기.',
+    wielder: '능력의 발현 경로와 그 대가.',
+    lines: '민간 분리, 회수, 지휘 승계, 작전 종료와 인식표.',
+    checkpoint: '바깥에서 안쪽으로 한 방향, 일곱 단계.',
+    drill: '기계 판정에 서명할지 보류할지 고른다. 정답은 없다.',
+    register: '자캐 등록 양식과 등록증 그림(PNG).'
+  };
+  const TABS = {
+    roe: { title: '교전 규칙', hint: '철수·교전·피탈자·기시체·혈술·지각 오염·표식' },
+    field: { title: '현장 절차', hint: '진입·현장조·역류·청소조·인계·검문소·서명 연습' },
+    gear: { title: '장비와 능력', hint: '장비군·제식 화기·능력과 대가' },
+    register: { title: '자캐 등록', hint: '등록 양식·등록증 그림' }
+  };
+  let activeTab = 'roe';
+  let tabButtons = {};
+  let tabPanels = {};
+
+  function setTab(id, focus) {
+    if (!tabPanels[id]) return;
+    activeTab = id;
+    Object.entries(tabPanels).forEach(([key, panelEl]) => { panelEl.hidden = key !== id; });
+    Object.entries(tabButtons).forEach(([key, button]) => button.setAttribute('aria-selected', String(key === id)));
+    if (focus) tabButtons[id].focus();
+  }
+
+  function tabs(groups) {
+    tabButtons = {};
+    tabPanels = {};
+    Object.entries(TABS).forEach(([id, tab]) => {
+      tabButtons[id] = h('button', {
+        type: 'button', role: 'tab', id: `tc-man-tabbtn-${id}`, 'aria-controls': `tc-man-tab-${id}`, 'aria-selected': String(id === activeTab),
+        onclick: () => setTab(id, true)
+      }, h('b', { text: tab.title }), h('small', { text: tab.hint }));
+      tabPanels[id] = h('div.tc-man-tabpanel', { id: `tc-man-tab-${id}`, role: 'tabpanel', 'aria-labelledby': `tc-man-tabbtn-${id}`, hidden: id !== activeTab }, groups[id]);
+    });
+    return [h('div.tc-man-tabs', { role: 'tablist', 'aria-label': '현장 지침 보기' }, Object.values(tabButtons)), ...Object.values(tabPanels)];
   }
 
   /* ---------- 철수 조건 판정 ---------- */
@@ -761,25 +795,29 @@
       }),
       notice,
       doctrine(),
-      toc(),
-      h('div.tc-man-pair', null, breakPanel(), engagementPanel()),
-      possessionPanel(),
-      risenPanel(),
-      bloodPanel(),
-      perceptPanel(),
-      h('div.tc-man-pair', null,
-        rulePanel('역류 경보와 대피', 'BACKFLOW SIREN', 'backflow', 'SHELTER DOOR', '대피소 문', PC.signalMark?.('sig-3')),
-        rulePanel('청소조 노출 한도', 'CLEANUP CREW', 'cleanup', 'SENTENCE CREDIT', '감경 계산')
-      ),
-      tagPanel(),
-      entryPanels(),
-      teamPanel(),
-      loadoutPanel(),
-      wielderPanel(),
-      linesPanel(),
-      checkpointPanel(),
-      drillPanel(),
-      registerPanel()
+      ...tabs({
+        roe: [
+          h('div.tc-man-pair', null, breakPanel(), engagementPanel()),
+          possessionPanel(),
+          risenPanel(),
+          bloodPanel(),
+          perceptPanel(),
+          tagPanel()
+        ],
+        field: [
+          entryPanels(),
+          teamPanel(),
+          h('div.tc-man-pair', null,
+            rulePanel('역류 경보와 대피', 'BACKFLOW SIREN', 'backflow', 'SHELTER DOOR', '대피소 문', PC.signalMark?.('sig-3')),
+            rulePanel('청소조 노출 한도', 'CLEANUP CREW', 'cleanup', 'SENTENCE CREDIT', '감경 계산')
+          ),
+          linesPanel(),
+          checkpointPanel(),
+          drillPanel()
+        ],
+        gear: [loadoutPanel(), wielderPanel()],
+        register: [registerPanel()]
+      })
     );
   }
 
@@ -790,15 +828,18 @@
     notice?.replaceChildren();
     const part = parts?.[0];
     if (!part) return;
-    if (part !== 'register') {
+    if (part !== 'register' && !TABS[part]) {
       notice?.append(PC.missing('SECTION NOT FOUND', `field-manual/${part}`, '현장 지침에 이 항목이 없습니다.'));
       return;
     }
+    setTab(part);
+    if (part !== 'register') return;
+    root.document.getElementById('tc-man-register')?.closest('details')?.setAttribute('open', '');
     // 셸이 화면을 맨 위로 올리고 제목에 포커스를 둔 다음에 옮긴다
     focusTimer = root.setTimeout(() => {
       const heading = root.document.getElementById('tc-man-register');
       if (!heading) return;
-      heading.closest('section')?.scrollIntoView({ block: 'start', behavior: PC.fx() === 'reduced' ? 'auto' : 'smooth' });
+      heading.closest('details')?.scrollIntoView({ block: 'start', behavior: PC.fx() === 'reduced' ? 'auto' : 'smooth' });
       if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
       heading.focus({ preventScroll: true });
     }, 60);
