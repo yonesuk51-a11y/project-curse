@@ -409,23 +409,27 @@
   // 문서 모양 — 배급증 양식, 약관 조항, 방송 문안. 가림 막대는 richText가 그린다.
   function docBlock(doc) {
     if (!doc?.lines?.length) return null;
-    return h(`figure.tc-hist-doc.is-${doc.kind || 'form'}`, null,
+    const STAMP = { form: '접수', clause: '약관', script: '송출' };
+    return h(`figure.tc-hist-doc.tc-paper.is-${doc.kind || 'form'}`, { 'data-stamp': STAMP[doc.kind] || '사본' },
       h('figcaption', { text: doc.title }),
       h('ol', null, doc.lines.map((line) => h('li', null, richText(line))))
     );
   }
 
-  function lifeItem(item, titles) {
+  // 지난 방문 뒤 새로 생긴 항목(pc-updates.js의 life 분류). 첫 방문이면 비어 있다.
+  const freshLife = () => new Set(root.PCUpdates?.fresh?.('life') || []);
+
+  function lifeItem(item, titles, fresh) {
     const signal = SIGNAL_AT[item.id];
     return h('li.tc-hist-life', { id: `tc-ref-${item.id}` },
-      h('header', null, h('b', { text: item.title }), verdictTag(item.grade)),
+      h('header', null, h('b', { text: item.title }), h('span.tc-hist-life-tags', null, fresh?.has(item.id) ? PC.tag('새', 'evidence') : null, verdictTag(item.grade))),
       item.hook ? h('p.tc-hist-hook', { text: item.hook }) : null,
       docBlock(item.doc),
       h('details.tc-hist-more', { open: PC.density?.() === 'full' },
         h('summary', null, h('span', { text: '본문' })),
         h('div.tc-hist-more-body', null,
           h('p', { text: item.text }),
-          item.excerpt ? h('figure.tc-hist-excerpt', null,
+          item.excerpt ? h('figure.tc-hist-excerpt.tc-paper', { 'data-stamp': '유출' },
             h('figcaption', null, lbl('LEAKED EXCERPT'), h('span', { text: item.excerpt.label })),
             h('ol', null, item.excerpt.lines.map((line) => h('li', null, richText(line))))
           ) : null,
@@ -445,6 +449,7 @@
     const items = lifeItems();
     if (!intro?.themes?.length || !items.length) return PC.missing('LIFE MISSING', 'worldFramework.lifeIntro', '리버스 아래의 삶 데이터가 없습니다.');
     const titles = refTitles();
+    const fresh = freshLife();
     const stray = items.filter((item) => !intro.themes.includes(item.group));
     return h('div.tc-hist-ref', null,
       h('div.tc-hist-ref-lead', null,
@@ -453,9 +458,10 @@
       ),
       intro.themes.map((theme) => {
         const list = items.filter((item) => item.group === theme);
+        const added = list.filter((item) => fresh.has(item.id)).length;
         return h('details.tc-disclosure.tc-hist-sub', null,
-          h('summary', null, h('span', null, h('b', { text: theme }), h('small', { text: `${list.length}건` }))),
-          h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-lifelist', null, list.map((item) => lifeItem(item, titles)))
+          h('summary', null, h('span', null, h('b', { text: theme }), h('small', { text: added ? `${list.length}건 · 새 ${added}` : `${list.length}건` }))),
+          h('ul.tc-hist-grid.tc-hist-grid--2.tc-hist-lifelist', null, list.map((item) => lifeItem(item, titles, fresh)))
         );
       }),
       stray.length ? PC.missing('THEME MISSING', stray.map((item) => `${item.id}:${item.group}`).join(', '), '갈래가 정해지지 않은 항목이 있습니다.') : null
@@ -479,8 +485,8 @@
         h('div.tc-note.tc-note--evidence', null, h('b', null, bi('RECOVERED DIARY', `${open.length}/${diary.entries.length}장`)), h('p', { text: diary.limit }))
       ),
       h('ol.tc-hist-diary', null, open.map((entry) =>
-        h('li', null,
-          h('header', null, h('time.tc-code', { text: entry.date }), h('b', { text: entry.title }), entry.release === today ? PC.tag('오늘 올라온 장', 'evidence') : null),
+        h('li.tc-paper', { 'data-stamp': '회수 사본' },
+          h('header', null, h('time.tc-code', { text: entry.date }), h('b', { text: entry.title }), entry.release === today ? PC.tag('오늘 올라온 장', 'evidence') : (freshLife().has(entry.id) ? PC.tag('새 장', 'evidence') : null)),
           entry.lines.map((line) => h('p', { text: line }))
         )
       )),
@@ -561,7 +567,7 @@
       ),
       h('ul.tc-hist-testimonies', null, oral.items.map((entry) => {
         const topic = life.find((item) => item.id === entry.item);
-        return h('li', { id: `tc-ref-${entry.id}` },
+        return h('li.tc-paper', { id: `tc-ref-${entry.id}`, 'data-stamp': '구술' },
           h('header', null,
             h('b', { text: entry.speaker }),
             h('small', { text: `${entry.date} · ${entry.place}` }),

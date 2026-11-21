@@ -450,10 +450,78 @@
     const pick = fresh
       ? { kind: '주민 일지 · 새 장', text: fresh.lines[0], source: `${diary.title} — ${fresh.date} ${fresh.title}`, ref: 'diary' }
       : pool[(today() * 7919) % pool.length];
-    return h('section.tc-home-daily', { 'aria-labelledby': 'tc-home-daily-title' },
+    const status = h('span.tc-home-daily-status', { role: 'status' });
+    const save = () => {
+      const Card = root.PCRegisterCard;
+      if (!Card?.drawRecord) { status.textContent = '카드를 그릴 수 없습니다.'; return; }
+      status.textContent = '카드를 그리는 중…';
+      const emblem = Card.emblem(() => undefined);
+      Card.fontsReady().then(() => {
+        const canvas = document.createElement('canvas');
+        Card.drawRecord(canvas, { title: head.title, kind: pick.kind, text: pick.text, source: pick.source }, { emblem });
+        return Card.save(canvas, Card.recordFilename(pick));
+      }).then((ok) => { status.textContent = ok ? '카드를 저장했습니다.' : '저장하지 못했습니다.'; }, () => { status.textContent = '저장하지 못했습니다.'; });
+    };
+    return h('section.tc-home-daily.tc-paper', { 'aria-labelledby': 'tc-home-daily-title', 'data-stamp': '사본' },
       h('header', null, h('h2#tc-home-daily-title', { text: head.title }), PC.tag(pick.kind, fresh ? 'danger' : 'evidence')),
       h('blockquote', null, h('p', { text: pick.text })),
-      h('footer', null, h('span', { text: pick.source }), link('이어서 읽기', ['history', 'ref', pick.ref]))
+      h('footer', null,
+        h('span', { text: pick.source }),
+        h('span.tc-home-daily-actions', null,
+          h('button.tc-btn', { type: 'button', onclick: save }, '카드로 저장 (PNG)'),
+          link('이어서 읽기', ['history', 'ref', pick.ref])
+        ),
+        status
+      )
+    );
+  }
+
+  /* ---------- 방송 띠 (2026-11-21 사용자 결정) ---------- */
+  // 공포 지수·재 농도·수배 회람·오늘의 하늘을 화면 위쪽 한 줄로 흘린다. 효과 줄임에서는 멈춘 채 가로로 밀어 본다.
+  // 띠는 읽기 보조다. 같은 값은 '오늘의 공시' 칸에 모두 있다.
+  function tickerItems() {
+    const day = today();
+    const items = [];
+    const fear = copy().fear;
+    (fear?.cities || []).forEach((city, index) => {
+      const value = fearValue(city, index, day);
+      const band = [...(fear.bands || [])].reverse().find((item) => value >= item.min);
+      items.push({ code: 'FEAR', text: `${city.name} 공포 ${value}${band ? ` · ${band.name}` : ''}`, tone: band?.tone });
+    });
+    const ash = copy().ashWeather;
+    if (ash?.phenomena?.length) items.push({ code: 'SKY', text: `오늘의 하늘 — ${ash.phenomena[day % ash.phenomena.length].name}`, tone: ash.phenomena[day % ash.phenomena.length].tone });
+    (ash?.regions || []).forEach((region, index) => {
+      const value = Math.max(0, Math.round(region.base + (dayNoise(index + 11, day) - 0.5) * region.spread));
+      const grade = [...(ash.grades || [])].reverse().find((item) => value >= item.min);
+      items.push({ code: 'ASH', text: `${region.name} 재 ${value}${ash.unit ? ` ${ash.unit}` : ''}${grade ? ` · ${grade.name}` : ''}`, tone: grade?.tone });
+    });
+    const wanted = root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted || [];
+    if (wanted.length) {
+      const top = wanted[day % wanted.length];
+      items.push({ code: 'WANTED', text: `수배 ${top.code} ${top.alias} — ${top.kind}`, tone: 'danger' });
+    }
+    return items;
+  }
+
+  function tickerBar() {
+    const items = tickerItems();
+    if (!items.length) return null;
+    const row = (hidden) => h('ul', { 'aria-hidden': hidden ? 'true' : null }, items.map((item) =>
+      h('li', { class: item.tone ? `is-${item.tone}` : null }, h('span.tc-code', { text: item.code }), h('span', { text: item.text }))
+    ));
+    const openNotice = () => {
+      const fold = indexView?.querySelector('#tc-home-fold-notice');
+      if (!fold) return;
+      fold.open = true;
+      fold.scrollIntoView({ block: 'start', behavior: PC.fx() === 'reduced' ? 'auto' : 'smooth' });
+      fold.querySelector('summary')?.focus({ preventScroll: true });
+    };
+    return h('section.tc-home-ticker', { 'aria-label': '방송 띠 — 오늘의 공시 요약' },
+      h('span.tc-home-ticker-live', null, h('span.tc-fx-live', { 'aria-hidden': 'true' }), 'ON AIR'),
+      h('div.tc-home-ticker-window', { tabindex: '0', 'aria-label': '방송 띠 내용. 가로로 밀어 볼 수 있습니다.' },
+        h('div.tc-home-ticker-track', null, row(false), row(true))
+      ),
+      h('button.tc-home-ticker-more', { type: 'button', onclick: openNotice }, '공시 전체', h('i', { 'aria-hidden': 'true', text: ' ›' }))
     );
   }
 
@@ -477,6 +545,14 @@
         h('dl.tc-kv', null, kv('보낸 곳', signal.author), kv('받는 곳', signal.recipient), kv('시기', signal.date)),
         h('div.tc-note.tc-note--caution', null, h('b', { text: '이 복원본의 한계' }), h('p', { text: signal.limit }))
       )
+    );
+  }
+
+  // 오늘의 공시 안의 접는 칸
+  function noticePart(id, title, hint, body) {
+    return h('details.tc-disclosure.tc-home-notice-part', { id },
+      h('summary', null, h('span', null, h('b', { text: title }), h('small', { text: hint }))),
+      h('div.tc-disclosure-body', null, body)
     );
   }
 
@@ -771,6 +847,7 @@
     indexView = h('div.tc-home-index', null,
       h('div.tc-home-unknown', { hidden: true }),
       PC.screenHead('terminal-home', { title: '합동작전 단말', desc: copy().lead, meta: nodeState() }),
+      h('div.tc-home-ticker-slot'),
       quickLinks(),
       h('p.tc-home-silence', { role: 'status' }, h('b', { text: '외부 교신 두절' }), h('span', { text: '삼야 무응답과 같은 시각이다. 수신 목록이 멈췄다.' }), h('a', { href: PC.href('history', '2042-10-31-three-night-silence') }, '기록 보기 ›')),
       h('div.tc-home-open', null, custodyPanel(), keyArt()),
@@ -782,10 +859,13 @@
         fold('tc-home-fold-contact', contactStep ? `귀환 신호 — ${contactStep.title}` : '귀환 신호 접촉 보고', '육안 인원과 열원 수가 맞지 않은 보고', contactPanel()),
         fold('tc-home-fold-civil', civil?.title || '민간 재난 방송', '권역 경보망에서 받은 방송 여섯 건과 경보색 기준', civilPanel()),
         fold('tc-home-fold-zones', '구역 판정 판', '지역 여덟 곳의 판정과 오늘의 국가 간 정세', zonePanel()),
-        fold('tc-home-fold-fear', copy().fear?.title || '도시 공포 지수', `도시 ${copy().fear?.cities?.length || 0}곳의 오늘 지수와 방송 문안 기준`, fearPanel()),
-        fold('tc-home-fold-ash', copy().ashWeather?.title || '재 농도 기상 방송', `권역 ${copy().ashWeather?.regions?.length || 0}곳의 재 농도와 오늘의 하늘`, ashPanel()),
+        // 2026-11-21 사용자 결정: 공포 지수·재 농도·수배 회람을 '오늘의 공시' 한 칸으로 묶었다. 요약은 위쪽 방송 띠가 흘린다.
+        fold('tc-home-fold-notice', '오늘의 공시', '공포 지수·재 농도 기상 방송·수배 회람', h('div.tc-home-notice', null,
+          noticePart('tc-home-notice-fear', copy().fear?.title || '도시 공포 지수', `도시 ${copy().fear?.cities?.length || 0}곳`, fearPanel()),
+          noticePart('tc-home-notice-ash', copy().ashWeather?.title || '재 농도 기상 방송', `권역 ${copy().ashWeather?.regions?.length || 0}곳과 오늘의 하늘`, ashPanel()),
+          noticePart('tc-home-notice-wanted', copy().wanted?.title || '수배 회람', `호출명 ${root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted?.length || 0}개`, wantedPanel())
+        )),
         fold('tc-home-fold-signal', copy().signal?.title || '수신 조각', `흩어진 방송 조각 ${copy().signal?.fragments?.length || 0}개`, h('div.tc-home-frag-slot')),
-        fold('tc-home-fold-wanted', copy().wanted?.title || '수배 회람', `호출명 ${root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted?.length || 0}개와 오늘 회람 맨 위`, wantedPanel()),
         fold('tc-home-fold-ops', '작전 기록', `작전 ${counts().ops}건의 마지막 기록`, live.ops)
       ),
       h('p.tc-home-foot.tc-full-only', null, h('span', { text: 'PC-03' }), h('b', { text: 'NO EXTERNAL HANDSHAKE' }))
@@ -821,6 +901,8 @@
     // 오늘의 기록은 날짜가 바뀌면 달라지므로 들어올 때마다 그린다. 수신 조각 모음도 같다.
     const daily = indexView.querySelector('.tc-home-daily-slot');
     if (daily) daily.replaceChildren(dailyCard());
+    const ticker = indexView.querySelector('.tc-home-ticker-slot');
+    if (ticker) ticker.replaceChildren(...[tickerBar()].filter(Boolean));
     renderFragments();
     // 상황판이 보이는 동안 진행 상태가 바뀌면 다시 그린다. 두 번 들어와도 하나만 붙는다.
     listeners?.abort();

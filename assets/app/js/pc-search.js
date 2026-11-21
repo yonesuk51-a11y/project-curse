@@ -76,6 +76,28 @@
       });
     });
 
+    // 세계 기록 안의 항목(2026-11-21) — 리버스 아래의 삶 52항목(표의 첫 칸: 은어·곡명·축일·계급), 구술 증언, 도시, 공개된 일지
+    const W = chron.worldFramework || {};
+    ['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => W[key]?.items || []).forEach((item) => {
+      const rows = (item.tables || []).flatMap((table) => table.rows);
+      add('history', ['history', 'ref', item.id], item.title, {
+        sub: `리버스 아래의 삶 · ${item.group}`,
+        keys: [item.hook, ...rows.map((row) => row[0]), ...(item.wanted || []).flatMap((entry) => [entry.alias, entry.code]), ...(item.stages || []).map((stage) => stage.name)],
+        text: [item.hook, item.text, ...rows.map((row) => row.join(' ')), ...(item.wanted || []).map((entry) => `${entry.kind} ${entry.charge}`)]
+      });
+    });
+    (W.oralTestimony?.items || []).forEach((entry) => add('history', ['history', 'ref', entry.id], `증언 — ${entry.speaker}`, { sub: '구술 증언집', keys: [entry.place], text: entry.lines }));
+    const cities = W.cities || (W.cityFile ? [{ id: 'karven', ...W.cityFile }] : []);
+    const today = new Date();
+    const day = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    cities.forEach((city) => {
+      add('history', ['history', 'ref', city.id], city.label, { sub: city.region, keys: (city.districts || []).map((district) => district.name), text: [city.rule, ...(city.rumors || [])] });
+      if (city.diary) {
+        const open = (city.diary.entries || []).filter((entry) => entry.release <= day);
+        add('history', ['history', 'ref', city.id === 'karven' ? 'diary' : `diary-${city.id}`], city.diary.title, { sub: '주민 일지', keys: open.map((entry) => entry.title), text: open.flatMap((entry) => entry.lines) });
+      }
+    });
+
     // 세력 — 약어 세력은 한글 역할(roleLabel)로도 찾는다
     Object.entries(root.ProjectCurseFactionAnalysis?.factions || {}).forEach(([id, faction]) => {
       add('faction', ['faction-info', id], faction.name, {

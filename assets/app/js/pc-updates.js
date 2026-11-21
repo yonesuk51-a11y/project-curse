@@ -22,8 +22,23 @@
       'archive-entry': idsOf(root.ProjectCurseArchive?.publicRecords),
       personnel: personnel.byId ? Object.keys(personnel.byId) : idsOf(personnel.records),
       'faction-info': Object.keys(root.ProjectCurseFactionAnalysis?.factions || {}),
-      'map-room': idsOf(root.ProjectCurseMapRoom?.operations).map((id) => `op/${id}`)
+      'map-room': idsOf(root.ProjectCurseMapRoom?.operations).map((id) => `op/${id}`),
+      // 세계 기록 안의 항목(2026-11-21) — 리버스 아래의 삶·구술 증언·도시·공개된 일지 장. 링크에 배지를 달지 않고 history.js가 '새' 표지로 쓴다.
+      life: lifeIds()
     };
+  }
+
+  function lifeIds() {
+    const W = root.ProjectCurseWorldHistoryData?.worldFramework || {};
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const cities = W.cities || (W.cityFile ? [{ id: 'karven', ...W.cityFile }] : []);
+    return [
+      ...['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => (W[key]?.items || []).map((item) => item.id)),
+      ...(W.oralTestimony?.items || []).map((entry) => entry.id),
+      ...cities.map((city) => city.id),
+      ...cities.flatMap((city) => (city.diary?.entries || []).filter((entry) => entry.release <= today).map((entry) => entry.id))
+    ];
   }
 
   function compute() {

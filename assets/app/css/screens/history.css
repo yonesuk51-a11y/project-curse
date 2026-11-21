@@ -985,7 +985,7 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   padding: var(--s3);
   border: 1px solid var(--line-2);
   border-left: 2px solid var(--red-ink);
-  background: var(--bg);
+  background-color: var(--bg);
 }
 .tc-hist-excerpt figcaption {
   display: flex;
@@ -1031,7 +1031,7 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   min-width: 0;
   padding: var(--s3) var(--s4);
   border: 1px solid var(--line);
-  background: var(--panel);
+  background-color: var(--panel);
 }
 .tc-hist-testimonies header {
   display: grid;
@@ -1253,7 +1253,7 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   margin: 0;
   padding: var(--s3);
   border: 1px solid var(--line-2);
-  background: var(--panel-3);
+  background-color: var(--panel-3);
   font-family: var(--mono);
 }
 .tc-hist-doc figcaption {
@@ -1297,7 +1297,7 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   gap: var(--s2);
   padding: var(--s3) var(--s4);
   border-left: 1px solid var(--line-2);
-  background: var(--panel);
+  background-color: var(--panel);
 }
 .tc-hist-diary header {
   display: flex;

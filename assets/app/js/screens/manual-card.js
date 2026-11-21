@@ -312,6 +312,44 @@
     return true;
   }
 
+  // 기록 카드(2026-11-21 사용자 결정) — 상황판 '오늘의 기록 한 장'을 같은 판형(1080×1350)으로 그린다. 교류용 사본 줄을 넣는다.
+  // record = { kind, text, source, title }
+  function drawRecord(canvas, record, assets = {}) {
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+    const g = canvas.getContext('2d');
+    if (!g) return false;
+    g.textBaseline = 'alphabetic';
+    background(g);
+    if (assets.emblem?.complete && assets.emblem.naturalWidth) g.drawImage(assets.emblem, 56, 62, 80, 80);
+    spaced(g, '2px');
+    text(g, 'U.A.C JOINT OPS · PC-03', 156, 98, { family: COND, weight: 600, size: 26, color: INK.text3, width: 520 });
+    text(g, dtg(), WIDTH - 360, 98, { family: MONO, weight: 500, size: 26, color: INK.text3, width: 300 });
+    spaced(g, '0px');
+    text(g, record.title || '오늘의 기록 한 장', 156, 136, { weight: 600, size: 28, color: INK.text2, width: 760 });
+    g.fillStyle = INK.redInk;
+    g.fillRect(72, 220, 6, 80);
+    text(g, record.kind || '', 100, 248, { weight: 600, size: 30, color: INK.redInk, width: 880 });
+    text(g, record.source || '', 100, 292, { weight: 400, size: 26, color: INK.text3, width: 880, max: 2, lineHeight: 34 });
+    text(g, record.text || '', 72, 420, { weight: 600, size: 58, color: INK.text, width: 936, max: 11, lineHeight: 84 });
+    g.strokeStyle = INK.line;
+    g.lineWidth = 2;
+    g.beginPath();
+    g.moveTo(72, HEIGHT - 170);
+    g.lineTo(WIDTH - 72, HEIGHT - 170);
+    g.stroke();
+    text(g, 'PROJECT CURSE — 단말 기록 사본', 72, HEIGHT - 116, { family: MONO, weight: 500, size: 26, color: INK.text2, width: 900 });
+    text(g, '교류용 사본이며 공식 기록이 아니다.', 72, HEIGHT - 76, { weight: 400, size: 24, color: INK.text3, width: 900 });
+    return true;
+  }
+
+  function recordFilename(record) {
+    const base = String(record.kind || '기록').replace(/[\\/:*?"<>|\u0000-\u001f·]/g, '').replace(/\s+/g, '-').slice(0, 30) || '기록';
+    const now = new Date();
+    const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+    return `project-curse-오늘의기록-${base}-${stamp}.png`;
+  }
+
   // 글꼴이 늦게 오면 대체 글꼴로 그려지므로, 쓰는 글꼴을 먼저 불러 둔다(실패해도 그린다)
   function fontsReady() {
     const set = doc.fonts;
@@ -387,5 +425,5 @@
     return `project-curse-등록증-${base}.png`;
   }
 
-  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, save, loadPhoto, fontsReady, emblem, filename });
+  root.PCRegisterCard = Object.freeze({ WIDTH, HEIGHT, regNo, dtg, draw, drawRecord, recordFilename, save, loadPhoto, fontsReady, emblem, filename });
 })(window);

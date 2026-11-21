@@ -46,7 +46,14 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   check('search-index-covers-every-record', () => {
     const people = Object.keys(context.ProjectCursePersonnel?.byId || {});
     assert.equal(kinds.personnel, people.length, `인물 ${kinds.personnel}/${people.length}`);
-    assert.equal(kinds.history, historyIds.size, `세계 기록 ${kinds.history}/${historyIds.size}`);
+    // 세계 기록 안의 항목(2026-11-21) — 리버스 아래의 삶·구술 증언·도시·일지도 #history/ref/<id>로 색인한다
+    const W = context.ProjectCurseWorldHistoryData?.worldFramework || {};
+    const refIds = new Set([
+      ...['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => (W[key]?.items || []).map((item) => item.id)),
+      ...(W.oralTestimony?.items || []).map((entry) => entry.id),
+      ...(W.cities || (W.cityFile ? [{ id: 'karven', ...W.cityFile }] : [])).flatMap((city) => [city.id, ...(city.diary ? [city.id === 'karven' ? 'diary' : `diary-${city.id}`] : [])])
+    ]);
+    assert.equal(kinds.history, historyIds.size + refIds.size, `세계 기록 ${kinds.history}/${historyIds.size}+${refIds.size}`);
     assert.equal(kinds.faction, Object.keys(context.ProjectCurseFactionAnalysis?.factions || {}).length, '세력');
     assert.equal(kinds.archive, (context.ProjectCurseArchive?.publicRecords || []).length, '기록보관소');
     assert.ok(kinds.map >= opIds.size + (context.ProjectCurseMapRoom?.drilldowns || []).length, '작전 지도');
@@ -55,7 +62,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const broken = items.filter((item) => {
       const [route, a, b] = item.parts;
       if (route === 'personnel') return !people.includes(a);
-      if (route === 'history') return !historyIds.has(a);
+      if (route === 'history') return a === 'ref' ? !refIds.has(b) : !historyIds.has(a);
       if (route === 'archive-entry') return !archiveIds.has(a);
       if (route === 'map-room' && a === 'op') return !opIds.has(b);
       return false;

@@ -1060,7 +1060,7 @@ html[data-silence="on"] .tc-home-signals {
   padding: var(--s3) var(--s4);
   border: 1px solid var(--line);
   border-left: 2px solid var(--red-ink);
-  background: var(--panel);
+  background-color: var(--panel);
 }
 .tc-home-daily header {
   display: flex;
@@ -1119,3 +1119,103 @@ html[data-silence="on"] .tc-home-signals {
   color: var(--red-ink);
   font-size: var(--fs-s);
 }
+
+/* 방송 띠 (2026-11-21 사용자 결정) — 공영 방송 자막처럼 한 줄로 흐른다. 마우스·초점이 올라가면 멈춘다. 효과 줄임에서는 멈춘 채 가로로 민다 */
+.tc-home-ticker {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: stretch;
+  margin: var(--s3) 0;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  font-size: var(--fs-xs);
+}
+.tc-home-ticker-live {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  padding: 0 var(--s3);
+  background: var(--red);
+  color: #f4ecea;
+  font-family: var(--label);
+  font-weight: 600;
+  letter-spacing: .1em;
+}
+.tc-home-ticker-window {
+  overflow: hidden;
+  min-width: 0;
+}
+.tc-home-ticker-window:focus-visible {
+  outline: 1px solid var(--text-2);
+  outline-offset: -1px;
+}
+.tc-home-ticker-track {
+  display: flex;
+  width: max-content;
+}
+.tc-home-ticker-track ul {
+  display: flex;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tc-home-ticker-track li {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s2);
+  padding: var(--s2) var(--s4);
+  border-right: 1px solid var(--line);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.tc-home-ticker-track li .tc-code { color: var(--text-3); font-size: var(--fs-2xs); }
+.tc-home-ticker-track li.is-caution span:last-child { color: var(--amber); }
+.tc-home-ticker-track li.is-danger span:last-child { color: var(--red-ink); }
+.tc-home-ticker-more {
+  padding: 0 var(--s3);
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tc-home-ticker-more:hover,
+.tc-home-ticker-more:focus-visible { color: var(--text); background: var(--panel-2); }
+html:not([data-fx="reduced"]) .tc-home-ticker-track {
+  animation: tc-home-ticker 90s linear infinite;
+}
+html:not([data-fx="reduced"]) .tc-home-ticker:hover .tc-home-ticker-track,
+html:not([data-fx="reduced"]) .tc-home-ticker:focus-within .tc-home-ticker-track {
+  animation-play-state: paused;
+}
+@keyframes tc-home-ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+html[data-fx="reduced"] .tc-home-ticker-window { overflow-x: auto; }
+html[data-fx="reduced"] .tc-home-ticker-track ul[aria-hidden="true"] { display: none; }
+@media (max-width: 640px) {
+  .tc-home-ticker { grid-template-columns: minmax(0, 1fr) auto; }
+  .tc-home-ticker-live { display: none; }
+}
+/* 오늘의 공시 안의 접는 칸 */
+.tc-home-notice {
+  display: grid;
+  gap: var(--s2);
+}
+/* 오늘의 기록 카드 — 저장 단추 */
+.tc-home-daily-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+}
+.tc-home-daily-status {
+  flex-basis: 100%;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.tc-home-daily-status:empty { display: none; }

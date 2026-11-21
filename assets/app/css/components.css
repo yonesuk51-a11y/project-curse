@@ -868,6 +868,31 @@ html:not([data-fx="reduced"]) .tc-signal-mark:not(.is-taken) i {
   92% { opacity: .9; }
   100% { opacity: .7; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .tc-signal-mark i { animation: none !important; }
+
+/* 증거 층 서류 질감 (2026-11-21 사용자 결정) — 문서 모양·유출본·일지·증언·기록 카드가 같은 종이를 쓴다.
+   종이 결은 약하게, 도장은 모서리에만. 글자를 가리지 않는다. */
+.tc-paper {
+  position: relative;
+  background-color: var(--panel-3);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(226, 210, 204, .018) 0 1px, transparent 1px 3px),
+    radial-gradient(120% 80% at 0% 0%, rgba(226, 210, 204, .035), transparent 60%);
+}
+.tc-paper[data-stamp]::after {
+  content: attr(data-stamp);
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  padding: 1px 6px;
+  border: 1px solid rgba(224, 112, 111, .45);
+  color: rgba(224, 112, 111, .7);
+  font-family: var(--label);
+  font-size: var(--fs-2xs);
+  letter-spacing: .12em;
+  transform: rotate(-4deg);
+  pointer-events: none;
+}
+.tc-paper[data-stamp] > figcaption,
+.tc-paper[data-stamp] > header {
+  padding-right: 4.5rem;
 }
