@@ -132,6 +132,7 @@ const historyRefIds = new Set([
   ...['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => (historyFramework[key]?.items || []).map((item) => item.id)),
   ...(historyFramework.oralTestimony?.items || []).map((entry) => entry.id),
   ...(historyFramework.cities || []).map((city) => city.id), 'diary',
+  ...(historyFramework.battles?.items || []).map((item) => `battle-${item.id}`),
   ...(historyFramework.arrivals ? ['arrivals', ...historyFramework.arrivals.races.map((race) => `arrival-${race.id}`), 'arrival-district', 'arrival-contract', 'arrival-squad'] : []),
   ...[...read('assets/app/js/screens/history.js').matchAll(/id: 'tc-ref-(rule-[a-z-]+)'/g)].map((m) => m[1])
 ]);

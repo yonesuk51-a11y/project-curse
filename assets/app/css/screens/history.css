@@ -1380,3 +1380,20 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
 @media (max-width: 520px) {
   .tc-hist-kv > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 }
+
+/* 이름 난 교전(2026-11-21) — 교신 발췌 */
+.tc-hist-radio {
+  display: grid;
+  gap: var(--s1);
+  margin: var(--s2) 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: var(--fs-s);
+  line-height: 1.6;
+}
+.tc-hist-radio li {
+  padding-left: var(--s3);
+  border-left: 2px solid var(--line-2);
+  color: var(--text);
+}

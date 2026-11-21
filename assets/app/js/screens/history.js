@@ -297,6 +297,36 @@
     );
   }
 
+  // 이름 난 교전(2026-11-21 사용자 추천안 승인) — 교전마다 접는 칸. 병력·지형·분 단위 시각·교신·결과.
+  function battlesBody() {
+    const b = chronology()?.worldFramework?.battles;
+    if (!b) return PC.missing('BATTLES MISSING', 'worldFramework.battles', '교전 기록이 없습니다.');
+    return h('div.tc-hist-ref', { id: 'tc-ref-battles' },
+      h('p', { text: b.rule }),
+      h('div.tc-hist-parts', null, b.items.map((item) => {
+        const index = item.record ? findIndex(item.record) : -1;
+        return h('details.tc-disclosure.tc-hist-sub.tc-hist-battle', { id: `tc-ref-battle-${item.id}` },
+          h('summary', null, h('span', null, h('b', { text: item.title }), h('small', { text: `${item.date} · ${item.place}` }))),
+          h('div.tc-disclosure-body', null,
+            h('p', null, verdictTag(item.grade)),
+            h('dl.tc-hist-kv', null, item.forces.map(([side, text]) => h('div', null, h('dt', { text: side }), h('dd', { text })))),
+            h('p.tc-hint', { text: item.ground }),
+            h('section.tc-hist-fragment.is-log', null, h('span.tc-hist-fragment-label', { text: '현장 시각' }), logBlock(item.timeline.join('\n'))),
+            h('section.tc-hist-fragment.is-quote', null, h('span.tc-hist-fragment-label', { text: '교신 발췌' }),
+              h('ul.tc-hist-radio', null, item.radio.map((line) => h('li', { text: line })))),
+            h('div.tc-note.tc-note--danger', null, h('b', { text: '남은 것' }), h('p', { text: item.result })),
+            item.after ? h('p.tc-hint', { text: item.after }) : null,
+            item.record ? h('p', null, index >= 0
+              ? h('a', { href: PC.href('history', item.record) }, `함께 읽을 기록 — ${records()[index].title}`, h('i', { 'aria-hidden': 'true', text: ' ›' }))
+              : h('span.is-missing', { text: `${item.record} (기록 없음)` })) : null,
+            manualLink(item.manual)
+          )
+        );
+      })),
+      h('p.tc-hist-caution', { text: b.caution })
+    );
+  }
+
   // 레드존 방어선과 시설(2026-11-21 사용자 추천안 승인) — 다섯 겹, 시설 표, 블랙존, 해상 차단선
   function defenseBody() {
     const d = chronology()?.worldFramework?.redzoneDefense;
@@ -791,11 +821,12 @@
         frameworkBody(),
         sub('도래자 — 건너와 머무는 이들', '도깨비·길손·맡은이·산손·물손·재지기, 이름 계약', arrivalsBody())
       )),
-      item('LAND AND STATES', '땅과 나라', '구역 판정·국가 간 정세·방어선·그늘의 조직', h('div.tc-hist-parts', null,
+      item('LAND AND STATES', '땅과 나라', '구역 판정·국가 간 정세·방어선·교전·그늘의 조직', h('div.tc-hist-parts', null,
         sub('구역 판정과 존의 층', '여섯 판정·일곱 층·세 이름', zoneBody()),
         sub('국가 간 정세', '결론이 기록되지 않은 상황', interstateBody()),
         sub('세계가 지고 있다', '종말 시계와 열두 기록', declineBody()),
         sub('레드존 방어선과 시설', '다섯 겹·방어 시설·블랙존·해상 차단선', defenseBody()),
+        sub('이름 난 교전', '성채 문·연료선·셋째 역·연료 창고·해안 철수선', battlesBody()),
         sub('그늘의 조직', 'P.O.H·S.O.N·프리윌', orgsBody())
       )),
       item('LIFE UNDER REVERSE', '리버스 아래의 삶', `일곱 갈래 ${lifeCount}항목 · 한 줄씩 먼저`, lifeBody()),

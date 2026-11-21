@@ -106,6 +106,9 @@
       if (arrivals.district) add('history', ['history', 'ref', 'arrival-district'], arrivals.district.title, { sub: '도래자', keys: ['등불 골목', '메밀묵', '씨름판'], text: [arrivals.district.text, ...arrivals.district.scenes] });
     }
 
+    // 이름 난 교전(2026-11-21)
+    (W.battles?.items || []).forEach((item) => add('history', ['history', 'ref', `battle-${item.id}`], item.title, { sub: `${item.date} · ${item.place}`, keys: ['교전'], text: [item.result, ...item.radio] }));
+
     // 세력 — 약어 세력은 한글 역할(roleLabel)로도 찾는다
     Object.entries(root.ProjectCurseFactionAnalysis?.factions || {}).forEach(([id, faction]) => {
       add('faction', ['faction-info', id], faction.name, {
