@@ -51,7 +51,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const refIds = new Set([
       ...['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => (W[key]?.items || []).map((item) => item.id)),
       ...(W.oralTestimony?.items || []).map((entry) => entry.id),
-      ...(W.cities || (W.cityFile ? [{ id: 'karven', ...W.cityFile }] : [])).flatMap((city) => [city.id, ...(city.diary ? [city.id === 'karven' ? 'diary' : `diary-${city.id}`] : [])])
+      ...(W.cities || []).flatMap((city) => [city.id, ...(city.diary ? [city.id === 'karven' ? 'diary' : `diary-${city.id}`] : [])])
     ]);
     assert.equal(kinds.history, historyIds.size + refIds.size, `세계 기록 ${kinds.history}/${historyIds.size}+${refIds.size}`);
     assert.equal(kinds.faction, Object.keys(context.ProjectCurseFactionAnalysis?.factions || {}).length, '세력');

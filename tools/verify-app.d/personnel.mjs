@@ -40,7 +40,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const additions = P.additions || [];
   const additionGroupIds = new Set((P.additionGroups || []).map((group) => group.id));
   const legacyIds = new Set(records.map((record) => record.id));
-  add('addition-register-separate', additions.length === 25 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
+  add('addition-register-separate', additions.length === 28 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
     new Set(additions.map((record) => record.id)).size === additions.length && P.groups.every((group) => !additionGroupIds.has(group.id)),
     `${additions.length} additions`);
   add('addition-records-complete', additions.every((record) => record.registerYear && record.role && record.overview && record.limits?.length &&
@@ -120,7 +120,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const roster = () => host.querySelectorAll('[data-per-id]');
     const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
     const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
-    show([]); assert.equal(roster().length, initial); assert.equal(initial, 40); // 2026-11-21: 무너진 나라 인물 셋 추가로 38 -> 40
+    show([]); assert.equal(roster().length, initial); assert.equal(initial, 43); // 2026-11-21: 무너진 나라 인물 셋 추가로 38 -> 40, 카르벤 인물 셋 추가로 40 -> 43
     const ids = () => roster().map((node) => node.dataset.perId);
     for (const group of groups) assert.ok(ids().filter((id) => P.byId[id].group === group.id).length <= 6);
     assert.equal(host.querySelectorAll('[data-per-expand]').length, 2); // 2026-11-21: N.H.C 추가 명부가 7명이 되어 펼침 단추가 둘

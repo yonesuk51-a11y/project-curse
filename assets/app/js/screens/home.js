@@ -437,13 +437,13 @@
     const tableRows = (id) => life.find((item) => item.id === id)?.tables?.[0]?.rows || [];
     tableRows('field-slang').forEach(([term, meaning]) => pool.push({ kind: '은어', text: `${term} — ${meaning}`, source: '현장 은어', ref: 'field-slang' }));
     tableRows('banned-songs').forEach(([song, reason]) => pool.push({ kind: '금지곡', text: `${song} — ${reason}`, source: '방송 금지곡', ref: 'banned-songs' }));
-    (framework.cityFile?.rumors || []).forEach((rumor) => pool.push({ kind: '소문', text: rumor, source: framework.cityFile.label, ref: 'karven' }));
+    (framework.cities || []).forEach((city) => (city.rumors || []).forEach((rumor) => pool.push({ kind: '소문', text: rumor, source: city.label, ref: city.id })));
     return pool;
   }
 
   function dailyCard() {
     const head = copy().daily;
-    const diary = root.ProjectCurseWorldHistoryData?.worldFramework?.cityFile?.diary;
+    const diary = root.ProjectCurseWorldHistoryData?.worldFramework?.cities?.find((city) => city.id === 'karven')?.diary;
     const fresh = diary?.entries?.find((entry) => entry.release === localDay());
     const pool = dailyPool();
     if (!head || (!fresh && !pool.length)) return PC.missing('DAILY RECORD MISSING', 'ProjectCurseHomeScreen.daily', '오늘의 기록이 없습니다.');
@@ -476,6 +476,20 @@
     );
   }
 
+  /* ---------- 빈 자리의 밤 (2026-11-21 사용자 결정) ---------- */
+  // special 축일 하루 동안만 방송 띠 위에 특별 방송을 띄운다. 그날에만 잡히는 덧붙은 수신 조각도 여기 끼운다.
+  function feastPanel() {
+    const feast = PC.feastToday?.();
+    if (!feast?.special) return null;
+    const extra = copy().signal?.fragments?.find((item) => item.epilogue);
+    return h('section.tc-home-feast', { 'aria-labelledby': 'tc-home-feast-title' },
+      h('header', null, h('span.tc-code', { text: 'SPECIAL BROADCAST' }), h('h2#tc-home-feast-title', { text: `오늘은 ${feast.name}` }), PC.tag(feast.faction, 'danger')),
+      h('ol', null, (feast.broadcast || []).map((line) => h('li', { text: line }))),
+      extra ? PC.signalMark?.(extra.id) : null,
+      feast.note ? h('p.tc-home-feast-note', { text: feast.note }) : null
+    );
+  }
+
   /* ---------- 방송 띠 (2026-11-21 사용자 결정) ---------- */
   // 공포 지수·재 농도·수배 회람·오늘의 하늘을 화면 위쪽 한 줄로 흘린다. 효과 줄임에서는 멈춘 채 가로로 밀어 본다.
   // 띠는 읽기 보조다. 같은 값은 '오늘의 공시' 칸에 모두 있다.
@@ -495,6 +509,10 @@
       const grade = [...(ash.grades || [])].reverse().find((item) => value >= item.min);
       items.push({ code: 'ASH', text: `${region.name} 재 ${value}${ash.unit ? ` ${ash.unit}` : ''}${grade ? ` · ${grade.name}` : ''}`, tone: grade?.tone });
     });
+    const feast = PC.feastToday?.();
+    const next = PC.nextFeast?.();
+    if (feast) items.unshift({ code: 'FEAST', text: `오늘 교단 축일 — ${feast.name}(${feast.faction}) · 리버스 경계`, tone: 'danger' });
+    else if (next) items.push({ code: 'FEAST', text: `다음 교단 축일 — ${next.feast.name}(${next.feast.faction}) · ${next.days}일 남음`, tone: next.days <= 7 ? 'caution' : null });
     const wanted = root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted || [];
     if (wanted.length) {
       const top = wanted[day % wanted.length];
@@ -531,7 +549,8 @@
     const signal = copy().signal;
     if (!signal?.fragments?.length) return PC.missing('SIGNAL MISSING', 'ProjectCurseHomeScreen.signal', '수신 조각 자료가 없습니다.');
     const found = new Set(PC.signalFound?.() || []);
-    const ordered = [...signal.fragments].sort((a, b) => a.order - b.order);
+    const ordered = signal.fragments.filter((item) => !item.epilogue).sort((a, b) => a.order - b.order);
+    const extra = signal.fragments.filter((item) => item.epilogue);
     const count = ordered.filter((item) => found.has(item.id)).length;
     return h('section.tc-home-frag', { 'aria-label': signal.title },
       h('p.tc-home-fold-lead', { text: signal.intro }),
@@ -540,7 +559,12 @@
         ? h('li.is-found', null, h('span.tc-code', { text: String(item.order).padStart(2, '0') }), h('p', { text: item.text }))
         : h('li', null, h('span.tc-code', { text: String(item.order).padStart(2, '0') }), h('p', { text: `— ${signal.missing} · ${item.screen} 어딘가 —` }))
       )),
-      count === ordered.length ? h('p.tc-home-frag-done', { text: signal.complete }) : null,
+      count === ordered.length ? h('p.tc-home-frag-done', null, signal.complete, signal.record ? ' ' : null,
+        signal.record ? h('a', { href: PC.href('history', signal.record) }, '연표 기록 보기', h('i', { 'aria-hidden': 'true', text: ' ›' })) : null) : null,
+      extra.length ? h('ol.tc-home-frag-list.tc-home-frag-extra', { 'aria-label': '덧붙은 수신' }, extra.map((item) => found.has(item.id)
+        ? h('li.is-found', null, h('span.tc-code', { text: '+' }), h('p', null, item.text, h('small', { text: ` — ${item.received}` })))
+        : h('li', null, h('span.tc-code', { text: '+' }), h('p', { text: `— ${signal.missing} · ${item.screen}에만 잡힌다 —` }))
+      )) : null,
       h('footer.tc-home-civil-foot', null,
         h('dl.tc-kv', null, kv('보낸 곳', signal.author), kv('받는 곳', signal.recipient), kv('시기', signal.date)),
         h('div.tc-note.tc-note--caution', null, h('b', { text: '이 복원본의 한계' }), h('p', { text: signal.limit }))
@@ -902,7 +926,7 @@
     const daily = indexView.querySelector('.tc-home-daily-slot');
     if (daily) daily.replaceChildren(dailyCard());
     const ticker = indexView.querySelector('.tc-home-ticker-slot');
-    if (ticker) ticker.replaceChildren(...[tickerBar()].filter(Boolean));
+    if (ticker) ticker.replaceChildren(...[feastPanel(), tickerBar()].filter(Boolean));
     renderFragments();
     // 상황판이 보이는 동안 진행 상태가 바뀌면 다시 그린다. 두 번 들어와도 하나만 붙는다.
     listeners?.abort();

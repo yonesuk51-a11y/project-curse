@@ -1316,3 +1316,14 @@ html[data-fx="reduced"] .tc-hist-kv .tc-tag {
   color: var(--text-3);
   font-size: var(--fs-xs);
 }
+
+/* 무대 도시 — 한 줄 훅과 연표 기록 링크 */
+.tc-hist-ref-lead p.tc-hist-city-hook {
+  color: var(--text);
+  font-size: var(--fs);
+  font-weight: 600;
+}
+.tc-hist-city-record {
+  margin: var(--s2) 0;
+  font-size: var(--fs-s);
+}

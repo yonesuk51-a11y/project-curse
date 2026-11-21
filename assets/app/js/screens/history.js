@@ -381,6 +381,11 @@
   // 항목마다 한 줄 훅과 문서 모양을 먼저 보이고, 본문은 접는다(전체 보기에서는 펼친 채로 그린다). 끝에 이어지는 기록을 단다.
   const SIGNAL_AT = { 'sacrifice-list': 'sig-2', 'broadcast-announcer': 'sig-6' };
 
+  // 무대 도시(2026-11-21 사용자 결정) — 카르벤 격리시, 마로아 자치시
+  function cities() {
+    return chronology()?.worldFramework?.cities || [];
+  }
+
   function lifeItems() {
     const framework = chronology()?.worldFramework || {};
     return ['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => framework[key]?.items || []);
@@ -391,8 +396,9 @@
     const framework = chronology()?.worldFramework || {};
     const titles = new Map(lifeItems().map((item) => [item.id, item.title]));
     (framework.oralTestimony?.items || []).forEach((entry) => titles.set(entry.id, `증언 — ${entry.speaker.split(' / ')[0]}`));
-    if (framework.cityFile) titles.set('karven', framework.cityFile.label);
-    if (framework.cityFile?.diary) titles.set('diary', framework.cityFile.diary.title);
+    cities().forEach((city) => titles.set(city.id, city.label));
+    const diary = cities().find((city) => city.id === 'karven')?.diary;
+    if (diary) titles.set('diary', diary.title);
     return titles;
   }
 
@@ -475,8 +481,8 @@
   }
 
   function diaryBody() {
-    const diary = chronology()?.worldFramework?.cityFile?.diary;
-    if (!diary?.entries?.length) return PC.missing('DIARY MISSING', 'worldFramework.cityFile.diary', '주민 일지가 없습니다.');
+    const diary = cities().find((city) => city.id === 'karven')?.diary;
+    if (!diary?.entries?.length) return PC.missing('DIARY MISSING', 'worldFramework.cities[karven].diary', '주민 일지가 없습니다.');
     const today = localDay();
     const open = diary.entries.filter((entry) => entry.release <= today);
     return h('div.tc-hist-ref', { id: 'tc-ref-diary' },
@@ -512,14 +518,16 @@
     );
   }
 
-  // 카르벤 격리시(2026-11-21 사용자 추천안 승인) — 무대 도시. 구역 판정 이름은 zoneGrading에서 읽는다. 소문은 소문 표지를 단다.
-  function cityBody() {
+  // 무대 도시(2026-11-21 사용자 추천안 승인) — 구역 판정 이름은 zoneGrading에서 읽는다. 소문은 소문 표지를 단다.
+  // 카르벤에는 수신 조각과 2041 항구구 기록 링크가 붙는다.
+  function cityBody(city) {
     const framework = chronology()?.worldFramework || {};
-    const city = framework.cityFile;
-    if (!city) return PC.missing('CITY FILE MISSING', 'worldFramework.cityFile', '도시 기록이 없습니다.');
+    if (!city) return PC.missing('CITY FILE MISSING', 'worldFramework.cities', '도시 기록이 없습니다.');
     const grades = framework.zoneGrading?.grades || [];
-    return h('div.tc-hist-ref', { id: 'tc-ref-karven' },
+    const recordIndex = city.record ? findIndex(city.record) : -1;
+    return h('div.tc-hist-ref', { id: `tc-ref-${city.id}` },
       h('div.tc-hist-ref-lead', null,
+        city.hook ? h('p.tc-hist-city-hook', { text: city.hook }) : null,
         h('p', { text: city.rule }),
         h('div.tc-note.tc-note--evidence', null, h('b', null, bi('CITY FILE', city.region)), h('p', { text: city.population }))
       ),
@@ -533,7 +541,10 @@
           h('p', { text: district.note })
         );
       })),
-      PC.signalMark?.('sig-4'),
+      city.id === 'karven' ? PC.signalMark?.('sig-4') : null,
+      city.record ? h('p.tc-hist-city-record', null, recordIndex >= 0
+        ? h('a', { href: PC.href('history', city.record) }, `연표 기록 — ${records()[recordIndex].title}`, h('i', { 'aria-hidden': 'true', text: ' ›' }))
+        : h('span.is-missing', { text: `${city.record} (기록 없음)` })) : null,
       h('details.tc-disclosure.tc-hist-sub', null,
         h('summary', null, h('span', null, h('b', { text: '도시에 도는 소문' }), h('small', { text: `${city.rumors.length}건` }))),
         h('ul.tc-hist-rumors', null, city.rumors.map((rumor) => h('li', null, PC.tag('소문', 'evidence'), h('p', { text: rumor }))))
@@ -666,9 +677,9 @@
         sub('세계가 지고 있다', '종말 시계와 열두 기록', declineBody())
       )),
       item('LIFE UNDER REVERSE', '리버스 아래의 삶', `일곱 갈래 ${lifeCount}항목 · 한 줄씩 먼저`, lifeBody()),
-      item('VOICES AND PLACES', '목소리와 장소', '카르벤 격리시·주민 일지·구술 증언', h('div.tc-hist-parts', null,
-        sub('카르벤 격리시', '북해권 남쪽 연안 · 여섯 구와 소문', cityBody()),
-        sub(chronology()?.worldFramework?.cityFile?.diary?.title || '주민 일지', '날마다 한 장씩 올라온다', diaryBody()),
+      item('VOICES AND PLACES', '목소리와 장소', `${cities().map((city) => city.label).join('·')}·주민 일지·구술 증언`, h('div.tc-hist-parts', null,
+        cities().map((city) => sub(city.label, `${city.region} · ${city.districts?.length || 0}구와 소문`, cityBody(city))),
+        sub(cities().find((city) => city.id === 'karven')?.diary?.title || '주민 일지', '날마다 한 장씩 올라온다', diaryBody()),
         sub('구술 증언집', 'S.I.D 사회 기록반', testimonyBody())
       )),
       item('UNCONFIRMED', '확인되지 않은 것들', '세 규칙·일본 기술 도약의 계보', h('div.tc-hist-parts', null,

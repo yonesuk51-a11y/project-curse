@@ -536,6 +536,7 @@
       render(reason);
     });
     startClock();
+    markFeast();
     render('initial');
   }
 
@@ -583,12 +584,48 @@
     return h('p.tc-signal', null, button, text);
   }
 
+  /* ---------- 교단 축일 (2026-11-21 사용자 결정) ---------- */
+  // 날짜는 home-screen-data.js feasts(md = 월-일, 방문자 기기의 날짜). 미리 보기: localStorage pc6_feast_preview에 축일 id.
+  // special 축일이면 html[data-feast]에 id를 단다(fx.css가 연출을 맡는다).
+  const feastList = () => root.ProjectCurseHomeScreen?.feasts || [];
+  const monthDay = (date) => `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  function feastToday() {
+    let preview = null;
+    try { preview = root.localStorage.getItem('pc6_feast_preview'); } catch (_error) { preview = null; }
+    if (preview) return feastList().find((feast) => feast.id === preview) || null;
+    const md = monthDay(new Date());
+    return feastList().find((feast) => feast.md === md) || null;
+  }
+  function nextFeast() {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let best = null;
+    feastList().forEach((feast) => {
+      const [m, d] = String(feast.md || '').split('-').map(Number);
+      if (!m || !d) return;
+      let when = new Date(start.getFullYear(), m - 1, d);
+      if (when <= start) when = new Date(start.getFullYear() + 1, m - 1, d);
+      const days = Math.round((when - start) / 86400000);
+      if (!best || days < best.days) best = { feast, days };
+    });
+    return best;
+  }
+  function markFeast() {
+    const feast = feastToday();
+    if (feast?.special) document.documentElement.dataset.feast = feast.id;
+    else delete document.documentElement.dataset.feast;
+    // 위협 등급 연출(body::after)과 겹치지 않게 따로 둔 막 — 누를 수 없고 글자를 가리지 않는다
+    if (feast?.special && !document.querySelector('.tc-feast-veil')) document.body.append(h('div.tc-feast-veil', { 'aria-hidden': 'true' }));
+  }
+
   const api = Object.freeze({
     version: '6.1.0',
     fx,
     density,
     signalFound,
     signalMark,
+    feastToday,
+    nextFeast,
     threat,
     openCanon,
     toast,

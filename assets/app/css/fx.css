@@ -973,3 +973,20 @@ html[data-silence="on"] .tc-bar {
 @keyframes tc-grow {
   from { transform: scaleX(0); }
 }
+
+/* 빈 자리의 밤(2026-11-21 사용자 결정) — 그림자교 축일 하루. 화면 가장자리의 어둠이 한 겹 짙어진다. 글자는 가리지 않는다(이상 층) */
+html[data-feast="empty-seat-night"] .tc-feast-veil {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(5, 3, 6, .55) 100%);
+}
+html[data-feast="empty-seat-night"]:not([data-fx="reduced"]) .tc-feast-veil {
+  animation: tc-feast-breathe 9s ease-in-out infinite;
+}
+@keyframes tc-feast-breathe {
+  0%, 100% { opacity: .75; }
+  50% { opacity: 1; }
+}

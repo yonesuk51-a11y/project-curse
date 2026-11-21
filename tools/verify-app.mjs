@@ -104,7 +104,7 @@ const historyIds = historyRecords.map((record) => record.id);
 // 2026-11-21: 우시노다교가 무너뜨린 가상 국가 세 기록을 더해 51건에서 54건이 됐다(사용자 추천안 승인).
 // 2026-11-21: 실제 나라 아포칼립스 네 기록(2009 북미 망명정부, 2027 비무장지대, 2029 경기 북부 신도시, 2035 도쿄 서부)을 더해 58건이 됐다.
 // 2026-11-21: 서일본 해안 대지진(2031)과 비협력권 레드존 징집 증언(2033)을 더해 60건이 됐다.
-add('history-sixty-records', historyIds.length === 60, historyIds.length);
+add('history-sixty-one-records', historyIds.length === 61, historyIds.length);
 add('history-ids-unique', new Set(historyIds).size === historyIds.length);
 const eraIds = new Set((W?.eras || []).map((era) => era.id));
 const noEra = historyRecords.filter((record) => !eraIds.has(record.era)).map((record) => record.id);
@@ -269,13 +269,16 @@ add('history-atmosphere-hooks',
 // 다시 올 이유(2026-11-21 사용자 결정) — 주민 일지는 공개일 오름차순, 수신 조각 여섯은 순서가 이어지고 각 조각이 화면 한 곳에 끼어 있다.
 // 판정 서명 연습은 사례마다 판독값이 칸 수와 맞고 서명·보류 뒤 이야기가 모두 있다. 세계 기록은 #history/ref/<id>로 항목에 바로 간다.
 const homeSignal = homeScreen?.signal;
-const diaryEntries = context.ProjectCurseWorldHistoryData?.worldFramework?.cityFile?.diary?.entries || [];
+const diaryEntries = context.ProjectCurseWorldHistoryData?.worldFramework?.cities?.find((city) => city.id === 'karven')?.diary?.entries || [];
 const drillSection = (context.ProjectCurseArchiveDocuments?.documents?.NHC_Manual_891219?.sections || []).find((section) => section.title === '자동 판정 서명 연습');
 const returnScreenSources = ['home', 'history', 'manual'].map((name) => read(`assets/app/js/screens/${name}.js`)).join(' ');
 add('return-reasons-diary-signal-drill',
   diaryEntries.length === 12 && diaryEntries.every((entry, i, all) => entry.id && /^\d{4}-\d{2}-\d{2}$/.test(entry.release) && entry.lines?.length >= 2 && (!i || entry.release >= all[i - 1].release)) &&
-  homeSignal?.fragments?.length === 6 && homeSignal.fragments.every((item, i) => item.order === i + 1 && item.text && item.screen) &&
-  homeSignal.fragments.every((item) => (returnScreenSources.match(new RegExp(`'${item.id}'`, 'g')) || []).length === 1) &&
+  // 본 방송 여섯 + 빈 자리의 밤에만 잡히는 덧붙은 조각 하나(epilogue)
+  homeSignal?.fragments?.length === 7 && homeSignal.fragments.filter((item) => item.epilogue).length === 1 && homeSignal.fragments.every((item, i) => item.order === i + 1 && item.text && item.screen) &&
+  Boolean(context.ProjectCurseHomeScreen?.feasts?.length === 4 && context.ProjectCurseHomeScreen.feasts.every((feast) => /^\d{2}-\d{2}$/.test(feast.md) && feast.name && feast.faction) && context.ProjectCurseHomeScreen.feasts.filter((feast) => feast.special).every((feast) => feast.broadcast?.length >= 3)) &&
+  returnScreenSources.includes("function feastPanel()") && returnScreenSources.includes("fragments?.find((item) => item.epilogue)") &&
+  homeSignal.fragments.filter((item) => !item.epilogue).every((item) => (returnScreenSources.match(new RegExp(`'${item.id}'`, 'g')) || []).length === 1) &&
   Boolean(homeSignal.limit && homeScreen?.daily?.title) &&
   drillSection?.drill?.cases?.length === 6 && drillSection.drill.cases.every((item) => item.readings?.length === drillSection.drill.columns.length && item.machine && item.signed && item.held) &&
   historyScreenSource.includes("id === 'ref'") && historyScreenSource.includes('function openRef(') && read('assets/app/js/pc-core.js').includes('signalMark,'));

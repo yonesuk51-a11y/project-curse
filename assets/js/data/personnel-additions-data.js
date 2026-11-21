@@ -60,6 +60,8 @@
       { id: 'independent-rites', label: '독립 교단·성채권', short: '독립 교단', code: 'IND', tone: 'cult', factionKeys: [] },
       // 2026-11-21 사용자 추천안 승인 — 우시노다교가 무너뜨린 가상 국가의 망명 기관
       { id: 'collapsed-states', label: '무너진 나라 망명 기관', short: '망명 기관', code: 'EXL', tone: 'civilian', factionKeys: [] },
+      // 2026-11-21 사용자 추천안 승인 — 무대 도시 카르벤 격리시의 사람들
+      { id: 'karven-city', label: '카르벤 격리시', short: '카르벤', code: 'KRV', tone: 'civilian', factionKeys: [] },
       { id: 'unaffiliated', label: '소속 불명·특수 존재', short: '소속 불명', code: 'UNK', tone: 'civilian', factionKeys: [] }
     ],
     records: withPortraits([
@@ -97,6 +99,31 @@
         overview: '오르비나 봉쇄 구역의 포위 지휘소를 맡고 있다. 데드존 혈교 지부의 중재 제안을 거부했다. 결계 안 방송에서 2019년에 돌아오지 않은 정찰조 대원의 목소리를 들었다는 보고를 받았다.',
         affiliations: [{ key: 'nhc', label: 'N.H.C', role: '오르비나 포위 지휘소장', certainty: 'listed' }],
         limits: ['방송 속 목소리가 실제 대원인지는 확인되지 않았다.', '중재 거부가 본인 판단인지 상부 지시인지는 기록되지 않았다.']
+      },
+      // 2026-11-21 사용자 추천안 승인 — 카르벤 격리시 사람 셋(초상은 아직 없음)
+      {
+        id: 'karven-undertaker', name: '굴뚝구 장례 대행인', group: 'karven-city',
+        role: '카르벤 굴뚝구 장례 대행인 / 회수 일지 작성자', status: 'unknown', certainty: 'partial', registerYear: '2042',
+        unit: '굴뚝구 장례 대행소',
+        overview: '소각 대기실의 순서를 대신 지키는 일을 한다. S.I.D 사회 기록반이 회수한 일지의 작성자다. 일지는 2042년 11월 30일, 북문 대조를 하루 앞두고 끝난다.',
+        affiliations: [],
+        limits: ['이름은 기록반이 지웠다.', '북문 대조를 통과했는지는 기록되지 않았다.']
+      },
+      {
+        id: 'eskil-bran', name: '에스킬 브란', group: 'karven-city',
+        role: 'S.I.D 대조관 / 카르벤 북문 기억 대조실', status: 'active', certainty: 'listed', registerYear: '2042',
+        unit: 'S.I.D 카르벤 북문 대조실',
+        overview: '카르벤 북문의 기억 대조실을 맡는다. 머뭇거림 없이 답하는 사람을 위조 신원으로 의심하는 기준을 북문에 들였다. 2041년 8월 19일 밤 근무표에 이름이 있다.',
+        affiliations: [{ key: 'sid', label: 'S.I.D', role: '대조관 / 카르벤 북문', certainty: 'listed' }],
+        limits: ['그 밤 대조 없이 통과시킨 인원이 있었는지는 장부의 해당 면이 빠져 확인되지 않았다.', '대조 기준을 누가 처음 만들었는지는 기록되지 않았다.']
+      },
+      {
+        id: 'third-announcer', name: '세 번째 아나운서', aliases: ['WNT-05'], group: 'karven-city',
+        role: '공영 방송 아나운서 / 수배 WNT-05', status: 'unknown', certainty: 'unresolved', registerYear: '2041',
+        unit: '카르벤 권역 공영 방송',
+        overview: '카르벤 권역 공영 방송에서 표준 문안을 읽던 아나운서다. 2041년 8월 19일 밤 항구구 임시 송출로 표준 문안을 벗어난 방송을 했다는 판단이 있다. 실명은 수배 규정에 따라 쓰지 않는다.',
+        affiliations: [],
+        limits: ['송출자가 이 사람인지는 목소리 대조로만 추정됐다.', '방송 뒤의 행방은 확인되지 않았다.']
       },
       {
         id: 'kagami-itsuki', name: '카가미 이츠키', group: 'fhc-education',

@@ -87,7 +87,7 @@
       });
     });
     (W.oralTestimony?.items || []).forEach((entry) => add('history', ['history', 'ref', entry.id], `증언 — ${entry.speaker}`, { sub: '구술 증언집', keys: [entry.place], text: entry.lines }));
-    const cities = W.cities || (W.cityFile ? [{ id: 'karven', ...W.cityFile }] : []);
+    const cities = W.cities || [];
     const today = new Date();
     const day = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     cities.forEach((city) => {

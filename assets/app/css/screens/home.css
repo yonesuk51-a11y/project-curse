@@ -1219,3 +1219,33 @@ html[data-fx="reduced"] .tc-home-ticker-track ul[aria-hidden="true"] { display: 
   font-size: var(--fs-xs);
 }
 .tc-home-daily-status:empty { display: none; }
+
+/* 빈 자리의 밤 특별 방송 (2026-11-21 사용자 결정) — special 축일 하루만 */
+.tc-home-feast {
+  display: grid;
+  gap: var(--s2);
+  margin: var(--s3) 0;
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--red);
+  background: linear-gradient(180deg, rgba(179, 60, 69, .14), transparent 70%), var(--panel);
+}
+.tc-home-feast header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) var(--s3);
+}
+.tc-home-feast header .tc-code { color: var(--red-ink); font-size: var(--fs-2xs); letter-spacing: .1em; }
+.tc-home-feast h2 { color: var(--text); font-size: var(--fs-l); }
+.tc-home-feast ol {
+  display: grid;
+  gap: var(--s1);
+  margin: 0;
+  padding-left: 1.2em;
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.7;
+}
+.tc-home-feast-note { color: var(--text-3); font-size: var(--fs-xs); }
+.tc-home-frag-extra { margin-top: calc(var(--s2) * -1); }
+.tc-home-frag-extra small { color: var(--text-3); font-size: var(--fs-2xs); }

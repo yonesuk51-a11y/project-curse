@@ -32,7 +32,7 @@
     const W = root.ProjectCurseWorldHistoryData?.worldFramework || {};
     const now = new Date();
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    const cities = W.cities || (W.cityFile ? [{ id: 'karven', ...W.cityFile }] : []);
+    const cities = W.cities || [];
     return [
       ...['zoneLife', 'worldOrder', 'fieldCulture'].flatMap((key) => (W[key]?.items || []).map((item) => item.id)),
       ...(W.oralTestimony?.items || []).map((entry) => entry.id),
