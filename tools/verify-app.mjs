@@ -105,6 +105,8 @@ const historyIds = historyRecords.map((record) => record.id);
 // 2026-11-21: 실제 나라 아포칼립스 네 기록(2009 북미 망명정부, 2027 비무장지대, 2029 경기 북부 신도시, 2035 도쿄 서부)을 더해 58건이 됐다.
 // 2026-11-21: 서일본 해안 대지진(2031)과 비협력권 레드존 징집 증언(2033)을 더해 60건이 됐다.
 add('history-sixty-four-records', historyIds.length === 64, historyIds.length);
+// 합동 작전 공고(2026-11-21 사용자 추천안 승인) — 여덟 건, 주마다 하나. 교류용 글감이라는 표시가 있다.
+{ const B = context.ProjectCurseHomeScreen?.bulletins; add('home-joint-operation-bulletins', !!B && B.items.length === 8 && new Set(B.items.map((item) => item.code)).size === 8 && B.items.every((item) => item.title && item.place && item.situation && item.roe.length >= 3 && item.seats && item.prompts.length >= 3 && item.link?.route) && /공식 기록이 아닙니다/.test(B.note) && read('assets/app/js/screens/home.js').includes("fold('tc-home-fold-bulletin'")); }
 add('history-ids-unique', new Set(historyIds).size === historyIds.length);
 const eraIds = new Set((W?.eras || []).map((era) => era.id));
 const noEra = historyRecords.filter((record) => !eraIds.has(record.era)).map((record) => record.id);

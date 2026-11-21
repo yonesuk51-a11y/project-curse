@@ -339,6 +339,36 @@
     );
   }
 
+  /* ---------- 합동 작전 공고 (2026-11-21 사용자 추천안 승인) ---------- */
+  // 주마다 한 건. 같은 주에는 모두에게 같은 공고가 보인다. 결과는 정하지 않는다(교류용 글감).
+  function weekIndex(length) {
+    return length ? Math.floor((Math.floor(Date.now() / 86400000) + 3) / 7) % length : -1;
+  }
+  function bulletinItem() {
+    const items = copy().bulletins?.items || [];
+    return items[weekIndex(items.length)] || null;
+  }
+  function bulletinPanel() {
+    const b = copy().bulletins;
+    const item = bulletinItem();
+    if (!b || !item) return PC.missing('BULLETIN MISSING', 'ProjectCurseHomeScreen.bulletins', '합동 작전 공고가 없습니다.');
+    return h('section.tc-home-bulletin', { 'aria-labelledby': 'tc-home-bulletin-title' },
+      h('p.tc-home-fold-lead', { text: b.lead }),
+      h('header', null, label(item.code, item.place), h('h3#tc-home-bulletin-title', { text: item.title })),
+      h('p', { text: item.situation }),
+      h('dl.tc-home-bulletin-kv', null,
+        h('div', null, h('dt', { text: '교전 규칙' }), h('dd', null, h('ul', null, item.roe.map((line) => h('li', { text: line }))))),
+        h('div', null, h('dt', { text: '모집 자리' }), h('dd', { text: item.seats })),
+        h('div', null, h('dt', { text: '써 볼 장면' }), h('dd', null, h('ul', null, item.prompts.map((line) => h('li', { text: line })))))
+      ),
+      h('div.tc-btnrow', null,
+        link('교전 보고서 양식', ['field-manual', 'register'], true),
+        item.link ? link(item.link.label, item.link.route) : null
+      ),
+      h('p.tc-hint', { text: b.note })
+    );
+  }
+
   /* ---------- 도시 공포 지수 · 수배 회람 (2026-11-21 사용자 요청) ---------- */
   // 공포 지수는 home-screen-data.js의 공시 기준값(base)에서 날짜마다 spread 안으로 움직인다. 같은 날에는 같은 값이다.
   const today = () => Math.floor(Date.now() / 86400000);
@@ -892,6 +922,7 @@
         fold('tc-home-fold-custody', copy().custody?.title || '보관함에 남긴 쪽지', '서부 귀환 회랑 보관함 · 검문소 07 키아트', h('div.tc-home-open', null, custodyPanel(), keyArt())),
         fold('tc-home-fold-contact', contactStep ? `귀환 신호 — ${contactStep.title}` : '귀환 신호 접촉 보고', '육안 인원과 열원 수가 맞지 않은 보고', contactPanel()),
         fold('tc-home-fold-civil', civil?.title || '민간 재난 방송', '권역 경보망에서 받은 방송 여섯 건과 경보색 기준', civilPanel()),
+        fold('tc-home-fold-bulletin', copy().bulletins?.title || '합동 작전 공고', bulletinItem() ? `${bulletinItem().code} · ${bulletinItem().title}` : '', bulletinPanel()),
         fold('tc-home-fold-zones', '구역 판정 판', '지역 여덟 곳의 판정과 오늘의 국가 간 정세', zonePanel()),
         // 2026-11-21 사용자 결정: 공포 지수·재 농도·수배 회람을 '오늘의 공시' 한 칸으로 묶었다. 요약은 위쪽 방송 띠가 흘린다.
         fold('tc-home-fold-notice', '오늘의 공시', '공포 지수·재 농도 기상 방송·수배 회람', h('div.tc-home-notice', null,

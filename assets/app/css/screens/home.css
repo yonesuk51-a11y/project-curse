@@ -1276,3 +1276,22 @@ html[data-fx="reduced"] .tc-home-ticker-track ul[aria-hidden="true"] { display: 
 @media (max-width: 520px) {
   .tc-ooc-groups .tc-ooc-terms > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 }
+
+/* 합동 작전 공고(2026-11-21) */
+.tc-home-bulletin { display: grid; gap: var(--s3); }
+.tc-home-bulletin header { display: grid; gap: 4px; }
+.tc-home-bulletin h3 { margin: 0; font-size: var(--fs-l, 1.15rem); }
+.tc-home-bulletin-kv { display: grid; margin: 0; border: 1px solid var(--line); }
+.tc-home-bulletin-kv > div {
+  display: grid;
+  grid-template-columns: 7em minmax(0, 1fr);
+  gap: var(--s3);
+  padding: var(--s2) var(--s3);
+}
+.tc-home-bulletin-kv > div + div { border-top: 1px solid var(--line); }
+.tc-home-bulletin-kv dt { color: var(--text-2); font-size: var(--fs-xs); font-weight: 600; }
+.tc-home-bulletin-kv dd { margin: 0; }
+.tc-home-bulletin-kv ul { margin: 0; padding-left: 1.1em; display: grid; gap: 2px; }
+@media (max-width: 520px) {
+  .tc-home-bulletin-kv > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
