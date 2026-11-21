@@ -100,6 +100,9 @@
     'assets/resources/derived/ezekiel-kalp-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/alma-kara-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     // 2026-09-25 사용자 채택 — 2006년 명부 남은 8명 사진(인상착의 기록 없음)
+    // 2026-11-21 사용자 채택 — 위버멘시·커스 테크놀로지·EGORIN 장면(2026-10-16 후보)
+    'assets/resources/derived/curse-technology-concept-v1.png':{width:1672,height:941,widths:[480,960],tone:'low-key'},
+    'assets/resources/derived/egorin-kit-concept-v1.png':{width:1672,height:941,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/alma-damian-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/alma-bennett-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},
     'assets/resources/derived/alma-griffon-portrait-concept-v1.png':{width:1024,height:1536,widths:[480,960],tone:'low-key'},

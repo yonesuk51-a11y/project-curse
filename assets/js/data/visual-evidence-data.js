@@ -251,6 +251,12 @@
     'assets/resources/derived/alma-kara-portrait-concept-v1.png':Object.freeze({
       assetId:'VEA-PER-KRA-01',className:'RECONSTRUCTED',source:'인물 기록(alma-kara) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 서명하는 문서의 내용과 가문 안의 지위는 확정하지 않는다.'
     }),
+    'assets/resources/derived/curse-technology-concept-v1.png':Object.freeze({
+      assetId:'VEA-UBM-CT-01',className:'RECONSTRUCTED',source:'사용자 설정글(커스 테크놀로지) 기반 장면 재구성',date:'2026-11-21',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'커스 테크놀로지 이식 장치와 변질 반응을 한 장면으로 옮긴 분석 재구성이다. 인물의 신원과 시설 위치, 실제 시술 기록은 확정하지 않는다.'
+    }),
+    'assets/resources/derived/egorin-kit-concept-v1.png':Object.freeze({
+      assetId:'VEA-UBM-EG-01',className:'RECONSTRUCTED',source:'사용자 설정글(F.H.C EGORIN) 기반 장비 재구성',date:'2026-11-21',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'EGORIN 투여 키트를 재구성한 그림이다. 실제 포장, 용량, 제조 시설은 확정하지 않는다.'
+    }),
     'assets/resources/derived/alma-damian-portrait-concept-v1.png':Object.freeze({
       assetId:'VEA-PER-DMN-01',className:'RECONSTRUCTED',source:'인물 기록(alma-damian) 기반 인물 재구성 — 인상착의 기록 없음',date:'2026-09-25',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 장부의 내용과 실제 감사 사건은 확정하지 않는다.'
     }),

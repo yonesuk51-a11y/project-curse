@@ -1204,6 +1204,22 @@
       "release": "PROJECT_GENERATED",
       "source": "인물 기록(mizumi-yanami) 기반 인물 재구성 — 인상착의 기록 없음 (2026-09-25 지옥 그림체)",
       "handling": "인상착의 기록이 없어 외형을 새로 정한 인물 재구성이다. 겉모습이 기록된 나이(44세)보다 훨씬 젊다. 젊음을 유지하는 힘의 정체와 대가, 피의 강 결계의 범위는 확정하지 않는다."
+    },
+    "assets/resources/derived/curse-technology-concept-v1.png": {
+      "credit": "Project Curse scene brief from the user's setting post / Codex image generation (2026-10-16 candidate)",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "사용자 설정글(커스 테크놀로지) 기반 장면 재구성 (2026-10-16 후보, 2026-11-21 채택)",
+      "handling": "커스 테크놀로지 이식 장치와 변질 반응을 한 장면으로 옮긴 분석 재구성이다. 인물의 신원과 시설 위치, 실제 시술 기록은 확정하지 않는다."
+    },
+    "assets/resources/derived/egorin-kit-concept-v1.png": {
+      "credit": "Project Curse scene brief from the user's setting post / Codex image generation (2026-10-16 candidate)",
+      "evidence": "assets/resources/ASSET_REGISTRY.md",
+      "provenance": "RECONSTRUCTED",
+      "release": "PROJECT_GENERATED",
+      "source": "사용자 설정글(F.H.C EGORIN) 기반 장비 재구성 (2026-10-16 후보, 2026-11-21 채택)",
+      "handling": "EGORIN 투여 키트를 재구성한 그림이다. 실제 포장, 용량, 제조 시설은 확정하지 않는다."
     }
   }
 }

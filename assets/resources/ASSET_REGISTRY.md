@@ -314,3 +314,12 @@ After the pruning of 35 unneeded records, the user picked one of two candidates 
 | `derived/natalia-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `natalia` | Round cheeks, broad forehead, soft short auburn hair, round glasses, short sturdy build; loose cardigan, high-neck blouse, long skirt; cassette recorder and heavy folders at a records cart under a desk lamp. | `인물 재구성` |
 | `derived/reiki-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `reiki` | As of 2004: round face, low straight brows, short layered dark brown hair, small sturdy build; loose blue-grey hooded work jacket, canvas bag, flashlight; crouched by a door between warehouse shelves. | `인물 재구성` |
 | `derived/mizumi-yanami-portrait-concept-v1.png` | RECONSTRUCTED | Personnel record `mizumi-yanami` | Youthful look (about 30) kept by an unrecorded power (user setting): long narrow face, prominent cheekbones, small eyes, short dark bob with uneven fringe, lean build; long blue-grey coat, dark high neck, dark red scarf, boots; seated on a flooded passage ledge by a lavender fire, dark red blood running below. | `인물 재구성` |
+
+## 2026-11-21 Ubermensch / Curse Technology / EGORIN adoption
+
+The user adopted two 2026-10-16 candidates (`output/imagegen/20261016-curse-technology-concept-v1`, `20261016-egorin-kit-concept-v1`) for the world rule entry on Ubermensch, based on the user's KakaoStory setting post (Curse Technology, F.H.C EGORIN).
+
+| Asset | Class | Used by | Source and handling | Required public label |
+|---|---|---|---|---|
+| `derived/curse-technology-concept-v1.png` | RECONSTRUCTED | History world rules `worldFramework.ubermensch` | A man in a dark workshop with a forearm clamp linked to a machine holding dark crimson tissue; corruption veins on the arm. No readable marks. | `분석 재구성` |
+| `derived/egorin-kit-concept-v1.png` | RECONSTRUCTED | History world rules `worldFramework.ubermensch` | Open black case with three ampoules and an injector; color bands only, no readable marks. | `분석 재구성` |

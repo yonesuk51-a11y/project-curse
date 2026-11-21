@@ -238,6 +238,7 @@
           h('li', null, lbl(branch.code), h('b', { text: branch.name }), h('p', { text: branch.power }), h('p', { text: branch.cost }))
         )),
         item.technology ? h('p', { text: item.technology }) : null,
+        (item.visuals || []).map((visual) => visualBlock(visual)),
         item.maintenance ? h('div.tc-note.tc-note--evidence', null, h('b', null, bi('F.H.C — EGORIN', '안정제')), h('p', { text: item.maintenance })) : null,
         h('p', { text: item.lifespan }),
         h('p', { text: item.afterDeath }),
