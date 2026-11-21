@@ -25,7 +25,7 @@
   /* 글자 */
   --text: #e2dcd6;
   --text-2: #aca29c;
-  --text-3: #8a7f78;
+  --text-3: #9a8f88;   /* 2026-11-21 사용자 결정: 작은 회색 글자를 조금 밝게(어두운 바탕 대비 약 6:1) */
 
   /* 기능색 — 선·면용 */
   --od: #56613f;       /* 활성·아군 */
@@ -67,8 +67,8 @@
   --label: "Barlow Condensed", "Arial Narrow", "IBM Plex Sans KR", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Consolas, "IBM Plex Sans KR", monospace;
 
-  /* 글자 크기 — 한국어 본문은 15px, 가장 작은 글자도 11px 이상 */
-  --fs-2xs: .6875rem;  /* 11px — 라벨 */
+  /* 글자 크기 — 한국어 본문은 15px, 가장 작은 글자도 12px 이상(2026-11-21 사용자 결정으로 11px → 12px) */
+  --fs-2xs: .75rem;    /* 12px — 라벨 */
   --fs-xs: .75rem;     /* 12px */
   --fs-s: .8125rem;    /* 13px */
   --fs: .9375rem;      /* 15px */

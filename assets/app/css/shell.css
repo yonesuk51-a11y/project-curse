@@ -616,3 +616,48 @@ html[data-density="brief"] .tc-rail-foot {
 html[data-density="brief"] .tc-rail-list a {
   min-height: 48px;
 }
+
+/* 2026-11-21 사용자 결정 — 간략 보기에서 머리말을 낮추고 영문 라벨을 숨긴다(AGENTS 1절: 영문 코드·부가 수치는 간략 보기에서 숨긴다).
+   머리말 그림(hero)과 바탕 결은 그대로 둔다. 전체 보기는 바꾸지 않는다. */
+html[data-density="brief"] .tc-screenhead {
+  gap: var(--s1) var(--s5);
+  margin-bottom: var(--s4);
+  padding: var(--s4) var(--s5);
+}
+html[data-density="brief"] .tc-screenhead.has-hero {
+  min-height: 128px;
+}
+html[data-density="brief"] .tc-screenhead h1 {
+  font-size: var(--fs-xl);
+}
+html[data-density="brief"] .tc-screenhead-desc {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: var(--fs-s);
+}
+/* 영문 라벨 숨김은 영문 코드만 라벨로 쓰는 세계 기록·현장 지침에만 건다(다른 화면의 라벨에는 한글 정보가 들어 있다) */
+html[data-density="brief"] body:is([data-screen="history"], [data-screen="field-manual"]) :is(.tc-panel-head, .tc-disclosure > summary, .tc-tabs) .tc-label {
+  display: none;
+}
+/* 모바일 하단 내비(2026-11-21 사용자 결정) — 번호를 빼고 글자를 키운다. 지금 화면은 바탕과 위 막대로 또렷하게 */
+@media (max-width: 960px) {
+  .tc-rail-list a i {
+    display: none;
+  }
+  .tc-rail-list a small {
+    font-size: var(--fs-s);
+    letter-spacing: 0;
+  }
+  .tc-rail-list a[aria-current="page"] {
+    background: var(--panel-2);
+    color: var(--text);
+  }
+  .tc-rail-list a[aria-current="page"] small {
+    color: var(--text);
+  }
+  .tc-rail-list a[aria-current="page"]::before {
+    height: 3px;
+  }
+}
