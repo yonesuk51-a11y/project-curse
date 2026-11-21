@@ -1,6 +1,19 @@
 /* Project Curse 6 — 세력 편제표. 공용 부품의 색과 형태는 유지한다. */
 .tc-fac-index, .tc-fac-detail, .tc-fac-groups, .tc-fac-copy { min-width: 0; }
 .tc-fac-detail, .tc-fac-groups, .tc-fac-copy { display: grid; gap: var(--s4); }
+.tc-fac-detail-stack { display: grid; gap: var(--s4); min-width: 0; }
+.tc-fac-index .tc-tabpanel { min-width: 0; }
+.tc-fac-group-rows { display: grid; min-width: 0; }
+.tc-fac-section { min-width: 0; }
+.tc-fac-section > .tc-panel-body { display: grid; gap: var(--s4); }
+.tc-fac-section > summary h2 { font-size: var(--fs-l); }
+.tc-fac-related { min-width: 0; }
+.tc-fac-related > .tc-disclosure-body { display: grid; gap: var(--s5); }
+.tc-fac-link-group { display: grid; gap: var(--s3); min-width: 0; }
+.tc-fac-link-group > h3, .tc-fac-link-group > h4 { font-size: var(--fs-l); }
+.tc-fac-more-links > .tc-disclosure-body { display: grid; gap: var(--s3); }
+.tc-fac-incident { display: grid; gap: var(--s3); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+.tc-fac-analysis { margin-top: var(--s3); }
 .tc-fac-groups { gap: var(--s6); }
 .tc-fac-controls { display: grid; gap: var(--s3); margin-bottom: var(--s5); padding: var(--s4); }
 .tc-fac-control-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s2); }

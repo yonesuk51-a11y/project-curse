@@ -210,8 +210,31 @@ export function screenRuntime({ context, read, screenName = 'archive' }) {
   const domCode = core.slice(core.indexOf('  function h('), core.indexOf('  function clear('));
   vm.runInContext(`{ const doc = document; ${domCode} window.testH = h; }`, c);
   const h = c.testH;
+  const tabs = ({ id: prefix, label, items, active, onChange }) => {
+    let current = items.some(item => item.id === active) ? active : items[0]?.id;
+    const buttons = {}, panels = {};
+    const set = (id, focus = false) => {
+      if (!panels[id]) return false;
+      current = id;
+      for (const [key, panel] of Object.entries(panels)) panel.hidden = key !== id;
+      for (const [key, button] of Object.entries(buttons)) { button.setAttribute('aria-selected', String(key === id)); button.tabIndex = key === id ? 0 : -1; }
+      if (focus) buttons[id].focus(); onChange?.(id); return true;
+    };
+    const onKey = event => {
+      const ids = items.map(item => item.id), index = ids.indexOf(current);
+      const next = { ArrowRight: ids[(index + 1) % ids.length], ArrowLeft: ids[(index - 1 + ids.length) % ids.length], Home: ids[0], End: ids.at(-1) }[event.key];
+      if (!next) return; event.preventDefault?.(); set(next, true);
+    };
+    for (const item of items) {
+      const button = h('button', { type: 'button', role: 'tab', id: `${prefix}-tab-${item.id}`, 'aria-controls': `${prefix}-panel-${item.id}`, 'aria-selected': String(item.id === current), tabindex: item.id === current ? '0' : '-1' }, h('b', { text: item.title }), item.hint ? h('small', null, item.hint) : null);
+      button.addEventListener('click', () => set(item.id, true)); button.addEventListener('keydown', onKey); buttons[item.id] = button;
+      panels[item.id] = h('div.tc-tabpanel', { id: `${prefix}-panel-${item.id}`, role: 'tabpanel', 'aria-labelledby': `${prefix}-tab-${item.id}`, hidden: item.id !== current }, item.body);
+    }
+    return { tablist: h('div.tc-tabs', { role: 'tablist', 'aria-label': label }, Object.values(buttons)), panels: Object.values(panels), set, get: () => current };
+  };
   c.PCApp = { h, append: (el, children) => { el.append(...children); return el; }, clear: el => { el.replaceChildren(); return el; }, screen: screen => screens.set(screen.id, screen), setTitle() {},
     href: (...p) => '#' + p.join('/'), go: (...p) => routes.push(p), back: (...p) => routes.push(p), fx: () => c.mode, threat: level => threats.push(level),
+    density: () => c.document.documentElement.dataset.density || c.mode, tabs,
     tag: text => h('span', null, text), missing: (code, key, text) => h('div.tc-missing', null, code, key, text), screenHead: () => h('header'), img: (src, props) => h('img', { src, ...props }) };
   for (const file of ['record-cinematic-registry', 'cinematic-cults', 'cinematic-immortality', 'cinematic-ferals', 'cinematic-sakuma']) vm.runInContext(read(`assets/app/js/cinematic/${file}.js`), c);
   const screenSource = read(`assets/app/js/screens/${screenName}.js`);
@@ -230,6 +253,31 @@ export function screenRuntime({ context, read, screenName = 'archive' }) {
 
 function verifyArchivePlayback({ add, read, context }) {
   const check = (name, run) => { try { run(); add(name, true); } catch (error) { add(name, false, error.stack); } };
+  check('tabbed-index-and-addressed-document-sections', () => {
+    const r = screenRuntime({ read, context }); r.c.mode = 'brief'; r.show([]);
+    const indexTabs = r.host.querySelectorAll('[role="tab"]');
+    assert.equal(indexTabs.length, 3, '목록·사건 흐름·현장 판정의 세 갈래가 탭으로 나뉜다');
+    assert.equal(r.host.querySelector('#tc-arc-index-tab-records').getAttribute('aria-selected'), 'true');
+    assert.equal(r.host.querySelector('#tc-arc-index-panel-flow').hidden, true);
+    const recordList = r.host.querySelector('.tc-arc-list'), directRows = recordList.children.filter(node => node.dataset?.arcRecord), overflow = recordList.children.find(node => node.tagName === 'DETAILS');
+    assert.equal(directRows.length, 6, '간략 보기에는 처음 여섯 기록만 바로 표시한다');
+    assert.ok(overflow && !overflow.open, '나머지 검색 결과는 제목이 보이는 접는 칸에 남는다');
+    assert.ok(r.host.querySelectorAll('.tc-arc-list [data-arc-record]').length > directRows.length, '접힌 결과에도 모든 기록 링크가 보존된다');
+    const docs = r.c.ProjectCurseArchiveDocuments.documents, registry = r.c.ProjectCurseCinematicRegistry;
+    const entry = Object.entries(docs).find(([id, item]) => item.sections?.length > 1 && !registry.get(id));
+    assert.ok(entry, '여러 절이 있는 비영상 기록이 있어야 한다');
+    r.show([entry[0]]);
+    assert.equal(r.host.querySelector('#tc-arc-record-tab-document').getAttribute('aria-selected'), 'true');
+    assert.equal(r.host.querySelector('#tc-arc-record-panel-media').hidden, true);
+    const sections = r.host.querySelectorAll('.tc-arc-document-section');
+    assert.ok(sections.length > 1);
+    assert.equal(sections[0].open, true, '주소로 연 기록의 첫 절은 간략 보기에서도 보인다');
+    assert.ok(sections.slice(1).every(section => section.open === false), '나머지 절은 요약 제목으로 남는다');
+    const toc = r.host.querySelector('.tc-arc-toc-fold'); assert.equal(toc.open, false, '목차는 간략 보기에서 접힌다');
+    r.click(r.host.querySelector('[data-arc-part="1"]'));
+    assert.equal(sections[1].open, true, '목차에서 선택한 절이 열리고 초점을 받는다');
+    r.screen.hide(); assert.equal(r.timers.size, 0);
+  });
   check('ui-labels-preserve-source-records', () => {
     const r = screenRuntime({ read, context });
     const originalRecords = JSON.stringify(r.c.ProjectCurseArchive.publicRecords);

@@ -163,7 +163,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     const {c,host,screen}=screenHarness(context,source,stateSource),grades=context.ProjectCurseWorldHistoryData.worldFramework.zoneGrading.grades;
     const expected={'eastasia-northern-front':'CORDON','europe-north-sea-blockade':'SEALED','gbf-western-marches':'UNMEASURED','gbf-coastal-belt':null,'gbf-inner-refuges':'UNMEASURED','deadzone-return-corridor':'QUARANTINE','deadzone-kingdom-graves':'SILENT','deadzone-silent-interior':'SILENT'};
     for(const detail of context.ProjectCurseMapRoom.drilldowns){
-      screen.show(['region',detail.id],c.PCApp);const expectedCode=expected[detail.id],copy=host.visibleText(true);
+      screen.show(['region',detail.id],c.PCApp);const expectedCode=expected[detail.id],gradePanel=host.querySelectorAll('.tc-map-contact-layout .tc-map-panel').find(fold=>fold.tag==='details'&&fold.querySelector('h2')?.textContent.startsWith('구역 판정'));assert.ok(gradePanel,'구역 판정 갈래가 있어야 한다');assert.equal(gradePanel.open,false,'간략 보기에서 판정 본문은 접힌다');gradePanel.open=true;const copy=host.visibleText(true);
       assert.ok(copy.includes('구역 판정'),detail.id);assert.ok(copy.includes('구역 판정은 행정이 어디까지 닿는지이며 위험도가 아니다.'),detail.id);
       if(expectedCode){const grade=grades.find(item=>item.code===expectedCode),code=host.querySelector('.tc-map-zone-grade-code');assert.ok(copy.includes(`구역 판정 — ${grade.name}`),detail.id);assert.ok(copy.includes(grade.text),detail.id);assert.equal(code?.textContent,expectedCode);assert.equal(code?.visibleText(true),'');assert.equal(code?.visibleText(),expectedCode);}
       else{assert.ok(copy.includes('구역 판정 — 판정 대상 아님'));assert.ok(copy.includes('남방권은 동원·통신망이라 땅의 판정이 아니다.'));assert.equal(host.querySelector('.tc-map-zone-grade-code'),null);}
@@ -178,7 +178,7 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     assert.ok(svg.includes('pc-detail-interline-band'));assert.ok(svg.includes('선간 지대'));assert.ok(host.querySelector('.tc-map-interline-legend')?.textContent.includes('작은 의식대와 복제 신호'));
     for(const id of detail.interline.siteIds){const point=host.querySelector(`[data-contact="${id}"]`);assert.ok(point.classList.contains('is-interline'),id);assert.equal(point.dataset.zoneLayer,'선간 지대',id);assert.ok(point.attrs['aria-label'].includes('선간 지대'),id);}
     const css=read('assets/app/css/screens/map.css');assert.match(css,/\.tc-map-framed\.is-interline::before/);assert.match(css,/html\[data-fx="reduced"\] #map-room \.tc-map-content \*/);
-    screen.show(['region',detail.id,'site','north-beast-corridor'],c.PCApp);assert.ok(host.visibleText(true).includes('구역 판정 — 차단 구역'));assert.ok(host.querySelector('[data-contact="north-beast-corridor"]').classList.contains('is-interline'));screen.hide();
+    screen.show(['region',detail.id,'site','north-beast-corridor'],c.PCApp);assert.equal(host.querySelector('#tc-map-main-tab-map').getAttribute('aria-selected'),'true');const selectedDirectory=host.querySelectorAll('.tc-map-contact-layout .tc-map-panel').find(fold=>fold.querySelector('h2')?.textContent==='지도 지점 목록');assert.ok(selectedDirectory?.open,'주소로 선택한 지점이 들어 있는 접는 칸을 연다');assert.ok(host.visibleText(true).includes('구역 판정 — 차단 구역'));assert.ok(host.querySelector('[data-contact="north-beast-corridor"]').classList.contains('is-interline'));screen.hide();
     const reduced=screenHarness(context,source,stateSource);reduced.media.matches=true;reduced.screen.show(['region',detail.id],reduced.c.PCApp);assert.equal(reduced.host.dataset.mapFx,'reduced');assert.equal(reduced.timers.size,0);assert.equal(reduced.timeouts.size,0);assert.ok(reduced.host.querySelector('.tc-map-interline-legend'));assert.ok(reduced.host.querySelector('[data-contact="north-beast-corridor"]').classList.contains('is-interline'));reduced.screen.hide();
   });
   check('playback-lifecycle-and-motion-guard',()=>{
@@ -214,15 +214,25 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
 
   check('brief-labels-and-operational-information',()=>{
     const {c,host,screen}=screenHarness(context,source,stateSource);
-    screen.show([],c.PCApp);
+    c.document.documentElement.dataset.density='full';screen.show([],c.PCApp);
     const english=text=>(text.match(/\b[A-Z][A-Z0-9_./-]{2,}\b/g)||[]).length;
-    const full=english(host.visibleText()),brief=english(host.visibleText(true));
+    const full=english(host.visibleText());
+    c.document.documentElement.dataset.density='brief';screen.show([],c.PCApp);
+    const brief=english(host.visibleText(true));
     assert.ok(brief<=full/2,`${brief} / ${full}`);
-    for(const item of context.ProjectCurseMapRoom.operations)assert.ok(host.visibleText(true).includes(item.label));
-    assert.ok(host.visibleText(true).includes('CRITICAL / PARTIAL'));
+    const mainTabs=['map','operations','signals','field'].map(id=>host.querySelector(`#tc-map-main-tab-${id}`));
+    assert.ok(mainTabs.every(Boolean),'지도·작전·신호·현장 갈래가 탭으로 나뉜다');
+    const operationTab=host.querySelector('#tc-map-main-tab-operations');operationTab.emit('click');
+    const operations=host.querySelector('#tc-map-main-panel-operations .tc-map-panel');
+    assert.ok(operations&&!operations.open,'작전 목록은 간략 보기에서 접힌다');
+    for(const item of context.ProjectCurseMapRoom.operations)assert.ok(operations.textContent.includes(item.label),`${item.id} 목록 보존`);
+    screen.show(['marker','southern-coast'],c.PCApp);assert.ok(host.visibleText(true).includes('치명 / 부분'),'선택한 경고 신호의 판정은 간략 보기에서도 보인다');assert.ok(!host.visibleText(true).includes('CRITICAL / PARTIAL'),'영문 상태 코드는 간략 보기에서 숨긴다');
+    c.document.documentElement.dataset.density='full';screen.show(['marker','southern-coast'],c.PCApp);assert.ok(host.visibleText().includes('CRITICAL / PARTIAL'),'전체 보기에서는 원래 상태 코드도 보존한다');c.document.documentElement.dataset.density='brief';
     screen.show(['op','op-immortality'],c.PCApp);
+    assert.equal(host.querySelector('#tc-map-main-tab-operations').getAttribute('aria-selected'),'true');
     const op=context.ProjectCurseMapRoom.operations.find(item=>item.id==='op-immortality');
     assert.ok(host.visibleText(true).includes(op.steps[0].time));
+    const unitFold=host.querySelector('.tc-map-units').closest('details');assert.ok(unitFold&&!unitFold.open,'부대 보조 표는 제목이 보이는 접는 칸이다');unitFold.open=true;
     assert.ok(host.visibleText(true).includes(op.steps[0].units[0].id));
     assert.ok(host.visibleText(true).includes(`X ${op.steps[0].units[0].x}`));
     screen.hide();return `전체 ${full}개 / 간략 ${brief}개 영문 토큰 · DOM 대역 기준`;
@@ -234,10 +244,12 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     screen.show([],c.PCApp);
     assert.equal(heads.at(-1).title,'작전 지도');assert.equal(heads.at(-1).hero,undefined);
     assert.equal(host.querySelector('.tc-map-toolbar').getAttribute('aria-label'),'작전 지도 탐색');
-    assert.ok(host.querySelectorAll('a').some(a=>a.textContent==='지도 목록'&&a.attrs.href==='#map-room'));
-    for(const word of ['신호 목록','지역 목록','지역 상세 지도','작전 진행'])assert.ok(host.visibleText(true).includes(word),word);
-    const paths=[['region','world'],['region','eastasia-northern-front'],['marker','tokyo'],['synchrony','three-night-silence'],['op','op-immortality'],['pilgrimage','unlit-fortress'],['verdict'],['op','없는-작전']];
-    for(const parts of paths){screen.show(parts,c.PCApp);assert.equal(heads.at(-1).hero,false,parts.join('/'));}
+    assert.ok(host.querySelectorAll('a').some(a=>a.textContent==='지도 첫 화면'&&a.attrs.href==='#map-room'));
+    assert.deepEqual(['map','operations','signals','field'].map(id=>host.querySelector(`#tc-map-main-tab-${id}`).querySelector('b').textContent),['전술 지도','작전 기록','사건·신호','현장·판정']);
+    assert.ok(host.visibleText(true).includes('지역 상세 지도'));
+    for(const [id,word] of [['operations','작전 목록'],['signals','신호 목록'],['field','현장 기록']]){host.querySelector(`#tc-map-main-tab-${id}`).emit('click');assert.ok(host.visibleText(true).includes(word),word);}
+    const paths=[{parts:['region','world'],tab:'map'},{parts:['region','eastasia-northern-front'],tab:'map'},{parts:['marker','tokyo'],tab:'signals'},{parts:['synchrony','three-night-silence'],tab:'signals'},{parts:['op','op-immortality'],tab:'operations'},{parts:['pilgrimage','unlit-fortress'],tab:'field'},{parts:['verdict'],tab:'field'},{parts:['op','없는-작전'],tab:'missing'}];
+    for(const {parts,tab} of paths){screen.show(parts,c.PCApp);assert.equal(heads.at(-1).hero,false,parts.join('/'));if(tab!=='missing')assert.equal(host.querySelector(`#tc-map-main-tab-${tab}`).getAttribute('aria-selected'),'true',parts.join('/'));else assert.ok(host.textContent.includes('MAP RECORD NOT FOUND'));}
     screen.show(['synchrony','three-night-silence'],c.PCApp);
     const terms=()=>host.querySelectorAll('dt').map(node=>node.textContent);
     assert.ok(terms().includes('성채 타종 장부'));assert.ok(terms().includes('관측 지점'));
@@ -428,7 +440,7 @@ export function screenHarness(context,source,stateSource='') {
   const dataKey=key=>key.replace(/^data-/,'').replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase());
   class Element extends Target {
     constructor(spec,props,...children){
-      super();this.spec=spec;this.tag=spec.split(/[.#]/)[0];this.tagName=this.tag.toUpperCase();this.id=spec.match(/#([\w-]+)/)?.[1]||'';
+      super();this.spec=spec;this.tag=spec.split(/[.#]/)[0];this.tagName=this.tag.toUpperCase();this.id=spec.match(/#([\w-]+)/)?.[1]||'';if(this.tag==='details')this.open=false;
       this.classes=new Set([...spec.matchAll(/\.([\w-]+)/g)].map(m=>m[1]));this.dataset={};this.attrs={};this.children=[];this.isConnected=true;
       this.classList={add:(...names)=>names.forEach(name=>this.classes.add(name)),remove:(...names)=>names.forEach(name=>this.classes.delete(name)),contains:name=>this.classes.has(name)};
       for(const [key,value] of Object.entries(props||{})){if(value==null||value===false)continue;if(key==='text')this.textContent=value;else if(key==='dataset')Object.assign(this.dataset,value);else this.setAttribute(key,value);}
@@ -459,9 +471,16 @@ export function screenHarness(context,source,stateSource='') {
     hasPointerCapture(id){return this.captures?.has(id)||false;}
     releasePointerCapture(id){this.captures?.delete(id);}
     select(){}
-    visibleText(brief=false){if(this.hidden||brief&&this.classes.has('tc-full-only'))return '';return this.children.map(child=>child instanceof Element?child.visibleText(brief):String(child)).join(' ');}
+    visibleText(brief=false){if(this.hidden||brief&&this.classes.has('tc-full-only'))return '';if(this.tag==='details'&&!this.open)return this.children[0]?.visibleText(brief)||'';return this.children.map(child=>child instanceof Element?child.visibleText(brief):String(child)).join(' ');}
   }
   const h=(...args)=>new Element(...args),timers=new Map(),timeouts=new Map(),frames=new Map(),observers=new Set(),audio=[],threats=[],navigations=[];
+  const tabs=({id:prefix,label,items,active,onChange})=>{
+    let current=items.some(item=>item.id===active)?active:items[0]?.id;const buttons={},panels={};
+    const set=(id,focus=false)=>{if(!panels[id])return false;current=id;for(const [key,panel]of Object.entries(panels))panel.hidden=key!==id;for(const [key,button]of Object.entries(buttons)){button.setAttribute('aria-selected',String(key===id));button.tabIndex=key===id?0:-1;}if(focus)buttons[id].focus();onChange?.(id);return true;};
+    const onKey=event=>{const ids=items.map(item=>item.id),index=ids.indexOf(current),next={ArrowRight:ids[(index+1)%ids.length],ArrowLeft:ids[(index-1+ids.length)%ids.length],Home:ids[0],End:ids.at(-1)}[event.key];if(!next)return;event.preventDefault?.();set(next,true);};
+    for(const item of items){const button=h('button',{type:'button',role:'tab',id:`${prefix}-tab-${item.id}`,'aria-controls':`${prefix}-panel-${item.id}`,'aria-selected':String(item.id===current),tabindex:item.id===current?'0':'-1'},h('b',{text:item.title}),item.hint?h('small',null,item.hint):null);button.addEventListener('click',()=>set(item.id,true));button.addEventListener('keydown',onKey);buttons[item.id]=button;panels[item.id]=h('div.tc-tabpanel',{id:`${prefix}-panel-${item.id}`,role:'tabpanel','aria-labelledby':`${prefix}-tab-${item.id}`,hidden:item.id!==current},item.body);}
+    return{tablist:h('div.tc-tabs',{role:'tablist','aria-label':label},Object.values(buttons)),panels:Object.values(panels),set,get:()=>current};
+  };
   const storage=()=>{const values=new Map();return {getItem:key=>values.get(key)||null,setItem:(key,value)=>values.set(key,value),removeItem:key=>values.delete(key)};};
   c={...context,AbortController,document:new Target(),localStorage:storage(),sessionStorage:storage(),
     CustomEvent:class{constructor(type,props){this.type=type;Object.assign(this,props);}},
@@ -473,7 +492,7 @@ export function screenHarness(context,source,stateSource='') {
   c.document.documentElement=h('html');
   c.MutationObserver=class{constructor(callback){this.callback=callback;}observe(){observers.add(this);}disconnect(){observers.delete(this);}};
   c.PCAudio={cue:name=>audio.push(name)};
-  c.PCApp={h,screen:value=>{screen=value;},href:(...parts)=>'#'+parts.join('/'),go:(...parts)=>navigations.push(parts),back:id=>navigations.push(['back',id]),setTitle(){},append:(el,children)=>el.append(children),clear:el=>{el.replaceChildren();return el;},tag:text=>h('span.tc-tag',null,text),verdictTone:()=> 'info',missing:(code,key,text)=>h('div.tc-missing',null,code,key,text),
+  c.PCApp={h,screen:value=>{screen=value;},href:(...parts)=>'#'+parts.join('/'),go:(...parts)=>navigations.push(parts),back:id=>navigations.push(['back',id]),setTitle(){},append:(el,children)=>el.append(children),clear:el=>{el.replaceChildren();return el;},tabs,density:()=>c.document.documentElement.dataset.density||'brief',tag:text=>h('span.tc-tag',null,text),verdictTone:()=> 'info',missing:(code,key,text)=>h('div.tc-missing',null,code,key,text),
     screenHead:(_id,options={})=>h('header.tc-screenhead',null,h('p.tc-screenhead-code',null,'CH SCREEN'),h('h1',{text:options.title}),h('p',{text:options.desc}),h('dl.tc-screenhead-meta',null,options.meta?.map(([term,value])=>h('div',null,term,value)))),img:(src,props={})=>h('img',{alt:'',...props,src})};
   c.PCApp.append=(el,children)=>el.append(...children.flat(Infinity).filter(x=>x!=null&&x!==false&&x!==''));
   c.PCApp.back=(...parts)=>navigations.push(['back',...parts]);

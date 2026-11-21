@@ -8,6 +8,19 @@
 .tc-map-toolbar > :last-child { margin-left: auto; }
 .tc-map-disclosure { min-width: 0; }
 .tc-map-disclosure[data-disclosure="index"] { margin-bottom: var(--s5); }
+.tc-map-content > .tc-tabs { margin-bottom: var(--s2); }
+.tc-map-content > .tc-tabpanel { display: grid; gap: var(--s4); min-width: 0; }
+.tc-map-content > .tc-tabpanel[hidden] { display: none !important; }
+.tc-map-field, .tc-map-verdict-sections { display: grid; gap: var(--s4); min-width: 0; }
+.tc-map-verdict-sections > .tc-tabpanel { display: grid; gap: var(--s4); min-width: 0; }
+.tc-map-verdict-sections > .tc-tabpanel[hidden] { display: none !important; }
+.tc-map-route-nav { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s2); min-width: 0; }
+.tc-map-route-nav > :last-child { margin-left: auto; }
+.tc-map-route-nav details { flex: 0 1 auto; }
+.tc-map-overview > aside { min-width: 0; }
+.tc-map-overview > aside > .tc-map-disclosure { margin: 0; }
+.tc-map-panel > summary .tc-hint { max-width: 72ch; }
+.tc-map-disclosure > summary .tc-hint { max-width: 68ch; }
 .tc-map-title { display: grid; gap: var(--s2); padding: var(--s4) 0; border-bottom: 1px solid var(--line); }
 .tc-map-title h2 { font-size: var(--fs-xl); }
 .tc-map-copy { font-size: var(--fs); line-height: 1.8; overflow-wrap: anywhere; }

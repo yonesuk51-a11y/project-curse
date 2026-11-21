@@ -121,13 +121,16 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
     const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
     show([]); assert.equal(roster().length, initial); assert.equal(initial, 43); // 2026-11-21: 무너진 나라 인물 셋 추가로 38 -> 40, 카르벤 인물 셋 추가로 40 -> 43
+    assert.equal(host.querySelectorAll('.tc-per-index [role="tab"]').length, 2);
+    assert.equal(host.querySelector('#tc-per-index-tab-legacy').getAttribute('aria-selected'), 'true');
+    assert.ok(host.querySelectorAll('.tc-per-roster-fold').every(fold => fold.open === false), '명부 그룹은 제목과 한 줄 설명만 바로 보인다');
     const ids = () => roster().map((node) => node.dataset.perId);
     for (const group of groups) assert.ok(ids().filter((id) => P.byId[id].group === group.id).length <= 6);
     assert.equal(host.querySelectorAll('[data-per-expand]').length, 2); // 2026-11-21: N.H.C 추가 명부가 7명이 되어 펼침 단추가 둘
     click('perExpand', 'ushinoda-figures'); assert.equal(roster().length, initial + 4); assert.equal(navigations.length, 0);
     assert.equal(c.document.activeElement.dataset.perExpand, 'ushinoda-figures');
     assert.equal(c.document.activeElement.getAttribute('aria-expanded'), 'true');
-    show([records[0].id]); show([]); assert.equal(roster().length, initial + 4);
+    show([records[0].id]); assert.equal(host.querySelector('#tc-per-dossier-tab-profile').getAttribute('aria-selected'), 'true'); show([]); assert.equal(roster().length, initial + 4);
     screen.hide(); show([]); assert.equal(roster().length, initial + 4);
     click('perExpand', 'ushinoda-figures'); assert.equal(roster().length, initial);
     click('perGroup', 'ushinoda'); assert.equal(roster().length, everyone.filter((person) => [person.group, ...(person.secondaryGroups || [])].includes('ushinoda')).length); assert.equal(host.querySelectorAll('[data-per-expand]').length, 0);
@@ -157,6 +160,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     assert.equal(host.querySelector('.tc-per-group-buttons').getAttribute('aria-label'), '소속과 관계');
     assert.ok(host.visibleText(true).includes('소속과 관계'));
     screen.show(['sakuma-yuta'], c.PCApp);
+    host.querySelector('#tc-per-dossier-tab-connections').emit('click');
     assert.ok(host.querySelectorAll('dt').some(node => node.textContent === '조직'));
     assert.ok(host.querySelectorAll('a').some(node => node.textContent === '세계 기록 목록 ↗' && node.attrs.href === '#history'));
     assert.ok(host.textContent.includes('소속 세력의 사건 목록'));

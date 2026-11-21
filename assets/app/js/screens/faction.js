@@ -20,7 +20,7 @@
   // 신원 불명 근거가 있는 사람만 대상으로 삼는다. 단순한 행방 불명은 제외한다.
   const uncertainIdentity = person => person.certainty === 'unresolved' || (person.limits || []).some(text => /본명.*확인되지|육체의 신원/.test(text));
 
-  let host, indexView, detailView, rows, count, listeners;
+  let host, indexView, detailView, count, listeners, indexTabs, groupBodies;
   let filter = 'all', active = false, onIndex = true, indexScroll = 0, restoreFrame = 0;
 
   function tagsFor(key) {
@@ -41,6 +41,23 @@
     return h('section.tc-panel.tc-fac-section', null,
       h('header.tc-panel-head', null, h('div', null, h('span.tc-label.tc-full-only', { text: code }), h('h2', { text: title }))),
       h('div.tc-panel-body.tc-fac-copy', null, body));
+  }
+  function panel(code, title, hint, ...content) {
+    const forced = typeof content.at(-1) === 'boolean' ? content.pop() : undefined;
+    const open = forced ?? PC.density?.() === 'full';
+    return h('details.tc-panel.tc-fac-section', { open },
+      h('summary.tc-panel-head', null, h('div', null,
+        h('span.tc-label.tc-full-only', { text: code }), h('h2', { text: title }), h('p.tc-hint', { text: hint }))),
+      h('div.tc-panel-body.tc-fac-copy', null, content));
+  }
+  const groupKey = label => String(label).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  function linkGroup(title, entries) {
+    if (!entries.length) return null;
+    return h('section.tc-fac-link-group', null, h('h3', { text: title }),
+      ...entries.slice(0, 2),
+      entries.length > 2 ? h('details.tc-disclosure.tc-fac-more-links', null,
+        h('summary', null, h('span', null, h('b', { text: '나머지 자료' }), h('span.tc-full-only.tc-label', { text: ` / ${entries.length - 2} FILES` }))),
+        h('div.tc-disclosure-body', null, entries.slice(2))) : null);
   }
   function kv(items) {
     return h('dl.tc-kv.tc-fac-kv', null, items.filter(([, value]) => value).map(([term, value]) =>
@@ -81,28 +98,29 @@
   }
 
   function renderRows() {
-    PC.clear(rows);
     let total = 0;
+    let firstMatch = '';
     (source()?.groups || []).forEach((group) => {
       const keys = group.keys.filter((key) => filter === 'all' || tagsFor(key).includes(filter));
-      if (!keys.length) return;
       total += keys.length;
-      rows.append(h('section.tc-fac-group', null,
-        h('header.tc-section-head', null,
-          h('div', null, h('span.tc-label.tc-full-only', { text: group.label }), h('h2', { text: display().groupLabels[group.label] || group.label })),
-          h('span.tc-code.tc-full-only', { text: `${String(keys.length).padStart(2, '0')} FILES` })),
-        h('div.tc-rows', null, keys.map(indexRow))));
+      const key = groupKey(group.label);
+      if (keys.length) firstMatch ||= key;
+      const body = groupBodies?.[key];
+      if (!body) return;
+      PC.clear(body);
+      if (keys.length) body.append(...keys.map(indexRow));
     });
     count.textContent = `${total} / ${source()?.order.length || 0}개 문서`;
-    if (!total) rows.append(PC.missing('NO MATCHING FILES', filter, '선택한 분류에 해당하는 세력 문서가 없습니다.'));
+    if (!total) { groupBodies?.[groupKey(source()?.groups?.[0]?.label)]?.append(PC.missing('NO MATCHING FILES', filter, '선택한 분류에 해당하는 세력 문서가 없습니다.')); indexTabs?.set(groupKey(source()?.groups?.[0]?.label)); }
+    else if (firstMatch && !source()?.groups?.some(group => groupKey(group.label) === indexTabs?.get?.() && group.keys.some(key => filter === 'all' || tagsFor(key).includes(filter)))) indexTabs?.set(firstMatch);
     indexView.querySelectorAll('[data-fac-filter]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.facFilter === filter)));
   }
 
   function markAnalysis(key) {
     const mark = own(root.ProjectCurseFactionMarks?.marks, key);
     if (!mark) return PC.missing('MARK NOT FOUND', key, '문양 감식 자료가 없습니다.');
-    return h('details.tc-disclosure', null,
-      h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'INSIGNIA / AUTHENTICATION' }), h('b', { text: '문양 감식' }))),
+    return h('details.tc-disclosure.tc-fac-analysis', { open: PC.density?.() === 'full' },
+      h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'INSIGNIA / AUTHENTICATION' }), h('b', { text: '문양 감식' }), h('small.tc-hint', { text: '등록 표식과 감식 근거를 확인한다.' }))),
       h('div.tc-disclosure-body.tc-fac-copy', null,
         kv([['종류', mark.type], ['처음 확인', mark.firstSeen], ['사용 방식', mark.usage], ['등록본', mark.assetState]]),
         h('ol.tc-fac-symbols', null, (mark.symbols || []).map((item) => h('li', null, h('b', { text: item.label }), h('p', { text: item.text })))),
@@ -119,7 +137,8 @@
     const current = node(key);
     if (!current) return null;
     const data = lineage();
-    return section('LINEAGE / COMMAND STATUS', '교단 갈래',
+    return h('section.tc-fac-copy.tc-fac-lineage', null,
+      h('h3', { text: '교단 갈래' }),
       h('div.tc-fac-tags', null, PC.tag(data.states[current.state].label, stateTone(current.state)), h('b', { text: current.kind })),
       h('p.tc-fac-command', { text: current.command }), h('p', { text: current.summary }),
       h('ul.tc-fac-lineage-nodes', { 'aria-label': '우시노다 갈래 목록' }, data.order.map((id) => h('li', null,
@@ -162,10 +181,16 @@
         h('b', { text: person.name }), h('span', { text: person.role }))
         : PC.missing('PERSONNEL NOT FOUND', id, '연결된 인물 파일이 없습니다.'));
     };
-    return section('PERSONNEL', '관련 인물',
-      ids.length ? h('p.tc-code', { text: '2006년 명부' }) : null,
-      ids.length ? h('ul.tc-fac-people', null, ids.map(item)) : null,
-      added.length ? [h('h3', { text: people.additionLabel }), h('ul.tc-fac-people', null, added.map(item))] : null,
+    return h('section.tc-fac-link-group', null, h('h3', { text: '관련 인물' }),
+      ids.length ? h('p.tc-label', { text: '2006년 명부' }) : null,
+      ids.length ? h('ul.tc-fac-people', null, ids.slice(0, 2).map(item)) : null,
+      ids.length > 2 ? h('details.tc-disclosure.tc-fac-more-links', null,
+        h('summary', null, h('span', null, h('b', { text: '2006년 명부 나머지 인물' }))),
+        h('div.tc-disclosure-body', null, h('ul.tc-fac-people', null, ids.slice(2).map(item)))) : null,
+      added.length ? [h('h4', { text: people.additionLabel }), h('ul.tc-fac-people', null, added.slice(0, 2).map(item))] : null,
+      added.length > 2 ? h('details.tc-disclosure.tc-fac-more-links', null,
+        h('summary', null, h('span', null, h('b', { text: '추가 등록 인물 나머지' }))),
+        h('div.tc-disclosure-body', null, h('ul.tc-fac-people', null, added.slice(2).map(item)))) : null,
       h('div.tc-btnrow', null, link('인물 기록 열기 ↗', 'personnel')));
   }
 
@@ -174,14 +199,34 @@
     const markers = new Set((root.ProjectCurseMapRoom?.markers || []).map((item) => item.incident));
     const ops = new Set((root.ProjectCurseMapRoom?.operations || []).map((item) => item.id));
     if (!list.length) return null;
-    return section('INCIDENT CROSS REFERENCE', '연결 사건',
-      h('ol.tc-fac-incidents', null, list.map((item) => h('li', null,
+    const entries = list.map((item) => h('article.tc-fac-incident', null,
         h('div.tc-fac-tags', null, h('time.tc-code', { text: item.date }), PC.tag(item.status, /SEALED|CONFLICT/.test(item.status) ? 'danger' : 'evidence', { latin: true })),
         h('h3', { text: item.title }), h('p', { text: item.summary }),
         h('div.tc-btnrow', null,
           item.history ? link('연표 기록 ↗', 'history', item.history) : null,
           markers.has(item.id) ? link('지도 위치 ↗', 'map-room', 'incident', item.id) : null,
-          item.operation && ops.has(item.operation) ? link('작전 진행 ↗', 'map-room', 'op', item.operation) : null)))));
+          item.operation && ops.has(item.operation) ? link('작전 진행 ↗', 'map-room', 'op', item.operation) : null)));
+    return linkGroup('연결 사건', entries);
+  }
+
+  function relatedBundles(key, item, openMarks) {
+    const factionLinks = item.relations.map((relation) => faction(relation.target)
+      ? h('a.tc-fac-relation', { href: PC.href('faction-info', relation.target) },
+        h('div.tc-fac-tags', null, h('b', null, factionName(relation.target, faction(relation.target).name)), PC.tag(relation.label, relationTone(relation.label))), h('p', { text: relation.text }))
+      : PC.missing('FACTION NOT FOUND', relation.target, relation.text));
+    const lineage = lineageSection(key);
+    const groups = [
+      linkGroup('다른 세력과의 관계', factionLinks),
+      relatedPeople(key),
+      incidentSection(key),
+      lineage,
+      openMarks.length ? h('section.tc-fac-link-group', null, h('h3', { text: '자유 해석' }), openMarks) : null
+    ].filter(Boolean);
+    return h('details.tc-disclosure.tc-fac-related', { open: PC.density?.() === 'full' },
+      h('summary', null, h('span', null,
+        h('span.tc-label.tc-full-only', { text: 'RELATED DOSSIERS' }), h('b', { text: '관련 인물·세력·사건' }),
+        h('small.tc-hint', { text: '소속 연결과 사건 기록, 판정이 남은 갈래를 모았다.' }))),
+      h('div.tc-disclosure-body.tc-fac-copy', null, groups));
   }
 
   function renderDetail(key) {
@@ -200,8 +245,40 @@
     const openCanon = root.ProjectCurseOpenCanon?.faction?.[key];
     const openMarks = (openCanon || []).map(text => PC.openCanon?.(text)).filter(Boolean);
     detailView.dataset.facDossier = key;
+    const operationList = h('ul.tc-fac-bullets', null,
+      item.operations.slice(0, 2).map((text) => h('li', { text })),
+      item.operations.length > 2 ? h('li', null, h('details.tc-disclosure.tc-fac-more-links', null,
+        h('summary', null, h('span', null, h('b', { text: '추가 행동·운용 기록' }))),
+        h('div.tc-disclosure-body', null, h('ul.tc-fac-bullets', null, item.operations.slice(2).map((text) => h('li', { text })))))) : null);
+    const contextBody = item.assessment ? h('dl.tc-fac-context', null,
+      [['현재', 'status'], ['형성 과정', 'lineage'], ['주의할 점', 'misconception'], ['남겨진 문제', 'past'], ['아직 모르는 것', 'unresolved']].map(([term, field]) =>
+        h('div', null, h('dt', { text: term }), h('dd', { text: item.assessment[field] })))) : null;
+    const analysisTab = [
+      panel('CURRENT ASSESSMENT', '현재와 주요 행동', item.assessment?.status || item.lead,
+        h('p', { text: item.assessment?.status || item.lead }), operationList, true),
+      panel('ORGANIZATION', '조직과 활동', firstSentence(item.overview[0]), paragraphs(item.overview),
+        item.profile ? h('section.tc-fac-profile', null,
+          h('h3', { text: item.profile.label }), h('p', { text: item.profile.note }), kv(item.profile.items)) : null,
+        h('section.tc-fac-copy', null, h('h3', { text: '내부 문제' }), h('p', { text: item.fault }))),
+      contextBody ? panel('CONTEXT', '이해에 필요한 배경', '미확정 사항과 해석 한계를 포함한다.', contextBody) : null
+    ].filter(Boolean);
+    const chronology = h('ol.tc-fac-chronology', null, item.chronology.map(([date, text]) =>
+      h('li', null, h('time.tc-code', { text: date }), h('span', { text }))));
+    const evidenceTab = [
+      panel('CHRONOLOGY', '주요 연혁', '세력의 형성과 현재 상태에 이르는 기록.', chronology, false),
+      item.visual?.src ? panel('REGISTERED VISUAL', '등록 시각 자료', '기록된 표식과 캡션을 확인한다.', h('figure.tc-evidence.tc-fac-visual', { dataset: { evidenceClass: item.visual.className } },
+        h('div.tc-evidence-media', null, PC.img(item.visual.src, { alt: item.visual.alt || '' })),
+        h('figcaption', null, h('b', null, displayLabel(item.visual.label)), h('span.tc-fac-prose', { text: item.visual.caption }))), false) : null,
+      markAnalysis(key)
+    ].filter(Boolean);
+    const relatedTab = [relatedBundles(key, item, openMarks)];
+    const tabs = PC.tabs({ id: 'tc-fac-dossier', label: '세력 문서 갈래', active: 'assessment', items: [
+      { id: 'assessment', title: '현재 분석', hint: '현재 판정과 조직 활동.', body: h('div.tc-fac-detail-stack', null, analysisTab) },
+      { id: 'evidence', title: '연혁·감식', hint: '연혁, 등록 표식, 확인 자료.', body: h('div.tc-fac-detail-stack', null, evidenceTab) },
+      { id: 'related', title: '연결 자료', hint: '관련 인물·세력·사건과 판정 한계.', body: h('div.tc-fac-detail-stack', null, relatedTab) }
+    ] });
     PC.append(detailView, [
-      h('header.tc-panel.tc-bracket.tc-fac-cover', null, markBoard(key),
+        h('header.tc-panel.tc-bracket.tc-fac-cover', null, markBoard(key),
         h('div.tc-fac-cover-copy', null,
           h('p.tc-label.tc-full-only', { text: `FACTION DOSSIER / ${key}` }),
           h('h1', { 'data-tc-focus': true }, factionName(key, item.name)), h('p', { text: item.lead }),
@@ -210,32 +287,8 @@
             current ? PC.tag(lineage().states[current.state].label, stateTone(current.state)) : null),
           registered?.risk ? h('div.tc-fac-tags', { 'aria-label': '위험 태그' }, registered.risk.split(' / ').map((risk) => PC.tag(risk, 'danger'))) : null,
           registered?.zone ? kv([['활동권', registered.zone]]) : null)),
-      section('CURRENT ASSESSMENT', '현재와 주요 행동',
-        h('p', { text: item.assessment?.status || item.lead }),
-        h('ul.tc-fac-bullets', null, item.operations.map((text) => h('li', { text }))),
-        h('div.tc-btnrow', null, item.relations[0] ? link(h('span', null, factionName(item.relations[0].target, faction(item.relations[0].target)?.name || item.relations[0].target), ` · ${item.relations[0].label}`), 'faction-info', item.relations[0].target) : null,
-          incidents(key)[0] ? link(incidents(key)[0].title, incidents(key)[0].history ? 'history' : 'map-room', ...(incidents(key)[0].history ? [incidents(key)[0].history] : ['incident', incidents(key)[0].id])) : null)),
-      section('ORGANIZATION', '조직과 활동', paragraphs(item.overview),
-        item.profile ? h('section.tc-fac-profile', null,
-          h('h3', { text: item.profile.label }), h('p', { text: item.profile.note }), kv(item.profile.items)) : null,
-        h('section.tc-fac-copy', null, h('h3', { text: '내부 문제' }), h('p', { text: item.fault }))),
-      item.assessment ? section('CONTEXT', '이해에 필요한 배경',
-        h('dl.tc-fac-context', null, [['현재', 'status'], ['형성 과정', 'lineage'], ['주의할 점', 'misconception'], ['남겨진 문제', 'past'], ['아직 모르는 것', 'unresolved']].map(([term, field]) =>
-          h('div', null, h('dt', { text: term }), h('dd', { text: item.assessment[field] }))))) : null,
-      section('CHRONOLOGY', '주요 연혁', h('ol.tc-fac-chronology', null, item.chronology.map(([date, text]) =>
-        h('li', null, h('time.tc-code', { text: date }), h('span', { text }))))),
-      item.visual?.src ? h('figure.tc-evidence.tc-fac-visual', { dataset: { evidenceClass: item.visual.className } },
-        h('div.tc-evidence-media', null, PC.img(item.visual.src, { alt: item.visual.alt || '' })),
-        h('figcaption', null, h('b', null, displayLabel(item.visual.label)), h('span.tc-fac-prose', { text: item.visual.caption }))) : null,
-      markAnalysis(key), lineageSection(key),
-      openMarks.length ? h('aside.tc-fac-open-canon', { 'aria-label': '자유 해석' }, openMarks) : null,
-      section('CONNECTED FACTIONS', '다른 세력과의 관계',
-        h('ul.tc-fac-relations', null, item.relations.map((relation) => h('li', null,
-          faction(relation.target) ? h('a.tc-fac-relation', { href: PC.href('faction-info', relation.target) },
-            h('div.tc-fac-tags', null, h('b', null, factionName(relation.target, faction(relation.target).name)), PC.tag(relation.label, relationTone(relation.label))), h('p', { text: relation.text }))
-            : PC.missing('FACTION NOT FOUND', relation.target, relation.text))))),
-      relatedPeople(key), incidentSection(key),
-      h('nav.tc-btnrow', { 'aria-label': '세력 목록으로 돌아가기' }, backLink())]);
+        tabs.tablist, ...tabs.panels,
+        h('nav.tc-btnrow', { 'aria-label': '세력 목록으로 돌아가기' }, backLink())]);
     return item.name;
   }
 
@@ -254,13 +307,27 @@
       indexView.append(PC.missing('FACTION DATA MISSING', 'ProjectCurseFactionAnalysis / ProjectCurseFactionDisplay', '세력 분석 데이터를 불러오지 못했습니다.'));
       return;
     }
-    rows = h('div.tc-fac-groups');
-    count = h('p.tc-code', { role: 'status', 'aria-live': 'polite' });
+    count = h('p.tc-code.tc-full-only', { role: 'status', 'aria-live': 'polite' });
+    groupBodies = {};
+    const groupHints = {
+      'PRIMARY INSTITUTIONS': '지휘 기관과 현장 전투 조직.',
+      'FIELD RESPONSE LINE': '회수·대피·사후 대응 조직.',
+      'EXTERNAL POWERS': '독립 세력과 이해 관계.',
+      'CULT LINEAGE / COMMAND STATUS': '계통 판정과 미확정 관계 포함.',
+      'PREDECESSOR RECORD': '전신 조직의 기록.'
+    };
+    const groupItems = source().groups.map((group) => {
+      const id = groupKey(group.label), body = h('div.tc-rows.tc-fac-group-rows');
+      groupBodies[id] = body;
+      return { id, title: display().groupLabels[group.label] || group.label, hint: groupHints[group.label] || '등록 세력 문서.', body };
+    });
+    indexTabs = PC.tabs({ id: 'tc-fac-index', label: '세력 분석 분류', active: groupItems[0]?.id, items: groupItems });
     indexView.append(PC.screenHead('faction-info', { desc: display().intro, meta: [['DOSSIERS', `${source().order.length}`], ['GROUPS', `${source().groups.length}`]] }),
       h('section.tc-panel.tc-fac-controls', { 'aria-label': '세력 분류 필터' },
         h('div.tc-fac-control-head', null, h('h2', { text: '분석 대상 조직' }), count),
         h('div.tc-seg', { role: 'group', 'aria-label': '세력 분류' }, Object.entries(root.ProjectCurseCanon.factionTagLabels).map(([id, label]) =>
-          h('button', { type: 'button', 'aria-pressed': String(id === filter), dataset: { facFilter: id } }, label)))), rows);
+          h('button', { type: 'button', 'aria-pressed': String(id === filter), dataset: { facFilter: id } }, label)))),
+      indexTabs.tablist, ...indexTabs.panels);
     indexView.querySelectorAll('.tc-screenhead-meta, .tc-screenhead-code').forEach(el => el.classList.add('tc-full-only'));
     renderRows();
   }
