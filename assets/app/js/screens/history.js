@@ -604,6 +604,7 @@
         h('time.tc-hist-date', { text: record.date }),
         h('h1', { text: record.title, 'data-tc-focus': true }),
         record.summary ? h('p.tc-hist-summary', { text: record.summary }) : null,
+        variantLine(record),
         h('dl.tc-kv.tc-hist-kv', null,
           h('div', null, h('dt', { text: '시대 구획' }), h('dd', { text: era ? `${era.index} / ${era.title}` : '미분류' })),
           h('div', null, h('dt', { text: '기록 판정' }), h('dd', null, verdictTag(record.evidence))),
@@ -644,6 +645,40 @@
     return { title: record.title };
   }
 
+  /* ---------- 이상 층 연출 (2026-11-21 사용자 결정) ---------- */
+  // 정보는 가리지 않는다. 세 이름은 본문에 모두 남고, 시계는 몇 초 뒤 다시 간다.
+  // 이름이 갈린 나라 — 들어올 때마다 기록이 부르는 이름이 셋 가운데 하나로 바뀐다.
+  function variantLine(record) {
+    const names = record.nameVariants || [];
+    if (names.length < 2) return null;
+    const pick = names[Math.floor(Math.random() * names.length)];
+    const other = names.filter((name) => name !== pick);
+    return h('p.tc-hist-variant', null,
+      '이 기록이 부르는 나라 — ',
+      h('b', { text: pick, dataset: { tcAnomaly: 'name', tcAnomalyAlt: other[Math.floor(Math.random() * other.length)] } })
+    );
+  }
+
+  let clockTimer = 0;
+  function releaseClock() {
+    root.clearTimeout(clockTimer);
+    clockTimer = 0;
+    delete root.document.documentElement.dataset.clockHold;
+  }
+  // 무응답 구역 기록 — 상단 바 시계가 7초 동안 멈춘다. 결계 안 방송이 있는 기록은 방송 윤곽음을 한 번 낸다.
+  function atmosphere(record) {
+    releaseClock();
+    if (record?.silentZone) {
+      root.document.documentElement.dataset.clockHold = 'on';
+      clockTimer = root.setTimeout(releaseClock, 7000);
+    }
+    if (record?.broadcast) root.PCAudio?.broadcast?.();
+  }
+
+  function hide() {
+    releaseClock();
+  }
+
   /* ---------- 화면 등록 ---------- */
 
   function mount(el) {
@@ -657,6 +692,7 @@
 
   function show(parts, app, info) {
     const id = parts[0];
+    releaseClock();
     if (!id) {
       detailView.hidden = true;
       indexView.hidden = false;
@@ -674,7 +710,8 @@
     detailView.hidden = false;
     const result = renderDetail(id);
     app.setTitle(result.title);
+    atmosphere(records()[findIndex(id)]);
   }
 
-  PC.screen({ id: 'history', mount, show });
+  PC.screen({ id: 'history', mount, show, hide });
 })(window);

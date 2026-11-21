@@ -216,7 +216,7 @@
       ]
     },
     {
-      id:'2008-09-06-dead-zone-designation',date:'2008.09.06',title:'대륙 무응답 선언',
+      id:'2008-09-06-dead-zone-designation',silentZone:true,date:'2008.09.06',title:'대륙 무응답 선언',
       summary:'U.A.C가 북미 내륙의 표준 통제 절차를 중단했다. 무응답권을 데드존으로 재분류했다.',
       era:'silence',evidence:'confirmed',
       basis:'U.A.C 작전 회람 44-DZ와 N.H.C·S.I.D의 출입 제한 지침이 동일한 날짜에 발효됐다.',
@@ -316,7 +316,7 @@
       ]
     },
     {
-      id:'2019-05-14-orvina-blood-moat',date:'2019.05.14',title:'오르비나 결계 봉쇄',
+      id:'2019-05-14-orvina-blood-moat',broadcast:'orvina',date:'2019.05.14',title:'오르비나 결계 봉쇄',
       summary:'강 하구의 수도를 피의 강 결계가 둘러쌌다. 결계 안과의 통신은 끊겼다.',
       era:'frontiers',evidence:'observed',
       basis:'포위선 관측 기록과 결계 둘레 측정값이 반복해 일치한다. 결계를 펼친 혈교 계열은 확인되지 않았다.',
@@ -342,7 +342,7 @@
       ]
     },
     {
-      id:'2021-10-27-vacant-seat',date:'2021.10.27',title:'공석 구역 판정',
+      id:'2021-10-27-vacant-seat',silentZone:true,nameVariants:['에델라','에델란트','에들린'],date:'2021.10.27',title:'공석 구역 판정',
       summary:'한 나라의 이름이 기록마다 다르게 남기 시작했다. 같은 주에 그 나라 정부의 응답이 끊겼다.',
       era:'frontiers',evidence:'disputed',
       basis:'생존자 기억, 이웃 나라 조약 원본, 옛 지도가 나라 이름을 서로 다르게 적는다. 그림자교 표식은 세 기록 모두에서 회수됐다.',
@@ -482,7 +482,7 @@
       ]
     },
     {
-      id:'2034-04-22-inland-beacon-31',date:'2034.04.22',title:'내륙 등대 31호 응답',
+      id:'2034-04-22-inland-beacon-31',silentZone:true,date:'2034.04.22',title:'내륙 등대 31호 응답',
       summary:'폐쇄된 데드존 해안 중계기가 지도에 없는 서른한 개 내륙 호출부호의 응답을 수신했다.',
       era:'aftermath',evidence:'observed',
       basis:'정비반 수신기와 독립된 두 보존 단말에 같은 94초 응답열이 남아 있다.',

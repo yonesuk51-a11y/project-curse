@@ -310,7 +310,39 @@
   doc.addEventListener('pointerdown', resume, true);
   doc.addEventListener('keydown', resume, true);
 
-  root.PCAudio = Object.freeze({ cue, play: sound, noise, set, unlock, isOn: () => on });
+  // 결계 안 방송(2026-11-21 사용자 결정) — 멀리서 들리는 확성 안내의 윤곽만 낸다. 말소리는 없다. 20초에 한 번까지.
+  let lastBroadcast = 0;
+  function broadcast() {
+    if (!on || doc.hidden) return false;
+    const now = Date.now();
+    if (now - lastBroadcast < 20000) return false;
+    const ctx = audioContext();
+    if (!ctx) return false;
+    lastBroadcast = now;
+    noise({ ms: 180, gain: 0.03, freq: 900 });
+    const low = ctx.createBiquadFilter();
+    low.type = 'lowpass';
+    low.frequency.value = 700;
+    const out = ctx.createGain();
+    out.gain.value = 0.035 * busGain('alert');
+    low.connect(out).connect(ctx.destination);
+    [[523.25, 0.35], [415.3, 0.85], [349.23, 1.35]].forEach(([freq, at]) => {
+      const osc = ctx.createOscillator();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      const env = ctx.createGain();
+      const t = ctx.currentTime + at;
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(1, t + 0.04);
+      env.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+      osc.connect(env).connect(low);
+      osc.start(t);
+      osc.stop(t + 1);
+    });
+    return true;
+  }
+
+  root.PCAudio = Object.freeze({ cue, play: sound, noise, broadcast, set, unlock, isOn: () => on });
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', render, { once: true });
   else render();
 })(window);

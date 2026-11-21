@@ -470,6 +470,8 @@
     if (!el) return;
     let timer = 0;
     const tick = () => {
+      // 무응답 구역 기록을 여는 동안 세계 기록 화면이 시계를 잠깐 멈춘다(html[data-clock-hold], 2026-11-21 사용자 결정)
+      if (doc.documentElement.dataset.clockHold === 'on') return;
       // 이상 신호(pc-anomaly.js)가 가끔 시계를 한 초 어긋나게 한다
       const now = new Date(Date.now() + (root.PCAnomaly?.clockSkew?.() || 0));
       el.textContent = `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}Z`;

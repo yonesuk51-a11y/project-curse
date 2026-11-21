@@ -791,6 +791,16 @@ a.tc-hist-turn:hover {
 }
 
 /* ---------- 반응형 ---------- */
+/* 이름이 갈린 나라 — 기록이 부르는 이름(이상 층). 세 이름은 본문에 모두 남는다 */
+.tc-hist-variant {
+  margin-top: var(--s2);
+  color: var(--text-2);
+  font-size: var(--fs-s);
+}
+.tc-hist-variant b {
+  color: var(--red-ink);
+  font-weight: 600;
+}
 /* 국가 간 정세 — 당사자는 작은 글자, 상태 표지는 왼쪽에 붙인다 */
 .tc-hist-affairs li > .tc-tag {
   justify-self: start;

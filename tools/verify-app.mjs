@@ -244,6 +244,11 @@ add('history-renders-zone-grades-and-blood-arts',
   historyScreenSource.includes("item('ZONE GRADES'") && historyScreenSource.includes('bloodBlock(framework.bloodArts)') &&
   sectionTitles.has(W.worldFramework.bloodArts.manualSection) &&
   ['bloodPanel()', 'teamPanel()', 'checkpointPanel()'].every((call) => manualSource.includes(call)));
+// 이상 층 연출(2026-11-21 사용자 결정) — 이름이 갈린 나라, 무응답 구역 시계 멈춤, 결계 안 방송 윤곽음. 떠날 때 시계를 돌려놓는다.
+add('history-atmosphere-hooks',
+  W?.records?.['2021-10-27-vacant-seat']?.nameVariants?.length === 3 && ['2008-09-06-dead-zone-designation', '2021-10-27-vacant-seat', '2034-04-22-inland-beacon-31'].every((id) => W.records[id]?.silentZone) &&
+  W.records['2019-05-14-orvina-blood-moat']?.broadcast && historyScreenSource.includes("PC.screen({ id: 'history', mount, show, hide })") &&
+  read('assets/app/js/pc-core.js').includes("dataset.clockHold === 'on'") && read('assets/app/js/pc-audio.js').includes('broadcast, set'));
 // 국가 간 정세(2026-11-21 사용자 추천안 승인) — 세계 기록 참조 묶음이 일곱 상황을 그리고, 관련 기록은 모두 연표에 있다.
 add('history-renders-interstate-affairs',
   W?.worldFramework?.interstateAffairs?.items?.length === 7 && historyScreenSource.includes("item('INTERSTATE AFFAIRS'") &&
