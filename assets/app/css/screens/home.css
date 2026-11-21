@@ -1024,3 +1024,30 @@ html[data-silence="on"] .tc-home-signals {
     gap: var(--s1);
   }
 }
+
+/* 재 농도 기상 방송 (2026-11-21 사용자 요청) — 권역 줄은 공포 지수와 같은 모양, 오늘의 하늘은 방송 원고처럼 */
+.tc-home-ash-sky {
+  display: grid;
+  gap: var(--s2);
+  margin: var(--s3) 0;
+  padding: var(--s3) var(--s4);
+  border-left: 2px solid var(--line-2);
+  background: var(--panel-2);
+}
+.tc-home-ash-sky.is-caution { border-left-color: var(--amber); }
+.tc-home-ash-sky.is-danger { border-left-color: var(--red-ink); }
+.tc-home-ash-sky.is-info { border-left-color: var(--ir-ink); }
+.tc-home-ash-sky header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  color: var(--text-3);
+  font-size: var(--fs-2xs);
+}
+.tc-home-ash-sky p {
+  color: var(--text);
+  font-size: var(--fs-s);
+  line-height: 1.7;
+}

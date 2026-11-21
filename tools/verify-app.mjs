@@ -181,6 +181,13 @@ add('home-fear-index-and-wanted-circular',
   Boolean(homeFear.author && homeFear.recipient && homeFear.purpose && homeFear.limit?.includes('확인되지 않았다')) &&
   Boolean(homeScreen?.wanted?.report && homeScreen.wanted.limit) && homeWantedSource.length === 5 && homeWantedSource.every((entry) => entry.code && entry.alias && entry.charge));
 
+// 재 농도 기상 방송(2026-11-21 사용자 요청) — 등급은 0부터 오름차순, 권역 기준값은 0 이상, 오늘의 하늘은 문안과 표지 색이 있어야 한다.
+const homeAsh = homeScreen?.ashWeather;
+add('home-ash-weather-broadcast',
+  homeAsh?.regions?.length === 6 && homeAsh.grades?.[0]?.min === 0 && homeAsh.grades.every((grade, i, all) => !i || grade.min > all[i - 1].min) &&
+  homeAsh.regions.every((region) => region.id && region.name && region.note && region.base - region.spread / 2 >= 0) &&
+  homeAsh.phenomena?.length === 5 && homeAsh.phenomena.every((sky) => sky.id && sky.name && sky.text && ['ok', 'info', 'caution', 'danger'].includes(sky.tone)) &&
+  Boolean(homeAsh.unit && homeAsh.max > 0 && homeAsh.author && homeAsh.recipient && homeAsh.purpose && homeAsh.limit?.includes('확인되지 않았다')));
 // 음향·연출 — terminal-fx-data.js가 부르는 사건은 audio-manifest.js에, 소리 파일은 assets/audio/에 있어야 한다.
 const terminalFx = context.ProjectCurseTerminalFx;
 const audioEvents = context.ProjectCurseAudioManifest?.events || {};

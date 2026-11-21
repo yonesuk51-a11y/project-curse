@@ -342,9 +342,11 @@
   /* ---------- 도시 공포 지수 · 수배 회람 (2026-11-21 사용자 요청) ---------- */
   // 공포 지수는 home-screen-data.js의 공시 기준값(base)에서 날짜마다 spread 안으로 움직인다. 같은 날에는 같은 값이다.
   const today = () => Math.floor(Date.now() / 86400000);
+  function dayNoise(index, day) {
+    return Math.abs(Math.sin((day + 1) * 12.9898 + (index + 1) * 78.233) * 43758.5453) % 1;
+  }
   function fearValue(city, index, day) {
-    const seed = Math.abs(Math.sin((day + 1) * 12.9898 + (index + 1) * 78.233) * 43758.5453) % 1;
-    return Math.max(0, Math.min(100, Math.round(city.base + (seed - 0.5) * city.spread)));
+    return Math.max(0, Math.min(100, Math.round(city.base + (dayNoise(index, day) - 0.5) * city.spread)));
   }
 
   function fearPanel() {
@@ -377,6 +379,43 @@
         h('dl.tc-kv', null, kv('보낸 곳', fear.author), kv('받는 곳', fear.recipient), kv('목적', fear.purpose)),
         h('div.tc-note.tc-note--caution', null, h('b', { text: '이 공시의 한계' }), h('p', { text: fear.limit })),
         link('공포 관리 행정 보기', ['history'])
+      )
+    );
+  }
+
+  // 재 농도 기상 방송(2026-11-21 사용자 요청) — 공포 지수와 같은 날짜 값 함수를 쓴다. 하늘 현상은 날짜로 하나.
+  function ashPanel() {
+    const ash = copy().ashWeather;
+    if (!ash?.regions?.length || !ash.grades?.length || !ash.phenomena?.length) return PC.missing('ASH FORECAST MISSING', 'ProjectCurseHomeScreen.ashWeather', '재 농도 예보가 없습니다.');
+    const day = today();
+    const gradeOf = (value) => [...ash.grades].reverse().find((grade) => value >= grade.min) || ash.grades[0];
+    const sky = ash.phenomena[day % ash.phenomena.length];
+    const offset = 11;
+    return h('section.tc-home-ash', { 'aria-label': ash.title },
+      h('p.tc-home-fold-lead', null, h('span.tc-fx-live', { 'aria-hidden': 'true' }), ash.lead),
+      h('div.tc-home-ash-sky', { class: `is-${sky.tone}` },
+        h('header', null, h('span.tc-code', { text: ash.code }), PC.tag(`오늘의 하늘 — ${sky.name}`, sky.tone)),
+        h('p', { text: sky.text })
+      ),
+      h('ol.tc-home-fear-list.tc-home-ash-list', null, ash.regions.map((region, index) => {
+        const value = Math.max(0, Math.round(region.base + (dayNoise(index + offset, day) - 0.5) * region.spread));
+        const grade = gradeOf(value);
+        return h('li', { class: `is-${grade.tone}` },
+          h('b', { text: region.name }),
+          h('span.tc-home-fear-meter', { role: 'img', 'aria-label': `재 농도 ${value} ${ash.unit}, ${grade.name}` }, h('i', { style: `width:${Math.min(100, Math.round(value / ash.max * 100))}%` })),
+          h('span.tc-home-fear-value', null, h('strong.tc-code', { text: String(value) }), h('small', { text: ash.unit })),
+          PC.tag(grade.name, grade.tone),
+          h('p', { text: region.note })
+        );
+      })),
+      h('div.tc-home-fear-bands', null,
+        h('h3', { text: '농도 등급과 행동 요령' }),
+        h('dl', null, ash.grades.map((grade) => h('div', null, h('dt', null, PC.tag(`${grade.min}+ ${grade.name}`, grade.tone)), h('dd', { text: grade.act }))))
+      ),
+      h('footer.tc-home-civil-foot', null,
+        h('dl.tc-kv', null, kv('보낸 곳', ash.author), kv('받는 곳', ash.recipient), kv('목적', ash.purpose)),
+        h('div.tc-note.tc-note--caution', null, h('b', { text: '이 방송의 한계' }), h('p', { text: ash.limit })),
+        link('재 내리는 날 보기', ['history'])
       )
     );
   }
@@ -678,6 +717,7 @@
         fold('tc-home-fold-civil', civil?.title || '민간 재난 방송', '권역 경보망에서 받은 방송 여섯 건과 경보색 기준', civilPanel()),
         fold('tc-home-fold-zones', '구역 판정 판', '지역 여덟 곳의 판정과 오늘의 국가 간 정세', zonePanel()),
         fold('tc-home-fold-fear', copy().fear?.title || '도시 공포 지수', `도시 ${copy().fear?.cities?.length || 0}곳의 오늘 지수와 방송 문안 기준`, fearPanel()),
+        fold('tc-home-fold-ash', copy().ashWeather?.title || '재 농도 기상 방송', `권역 ${copy().ashWeather?.regions?.length || 0}곳의 재 농도와 오늘의 하늘`, ashPanel()),
         fold('tc-home-fold-wanted', copy().wanted?.title || '수배 회람', `호출명 ${root.ProjectCurseWorldHistoryData?.worldFramework?.worldOrder?.items?.find((item) => item.id === 'wanted-list')?.wanted?.length || 0}개와 오늘 회람 맨 위`, wantedPanel()),
         fold('tc-home-fold-ops', '작전 기록', `작전 ${counts().ops}건의 마지막 기록`, live.ops)
       ),
