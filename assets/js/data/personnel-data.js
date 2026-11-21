@@ -91,10 +91,10 @@
         {key:'haimun',label:'하이문',role:'리더 / 레드 마우스',certainty:'listed'}
       ],
       capabilities:['겜블러 표기','오리진 실험체'],
-      notes:['조국에 충성했지만 배신과 같은 일을 겪고 돌아섰다고 적혀 있다.','“진정한 힘을 목도한 주군을 모시기로 한다”는 동기 문구가 남아 있다.'],
+      notes:['“진정한 힘을 목도한 주군을 모시기로 한다”는 동기 문구가 남아 있다.'],
       limits:['각 소속의 정확한 시간 순서와 “주군”의 신원은 확정되지 않았다.','겜블러라는 표기가 성향과 싸우는 방식, 능력 가운데 무엇을 뜻하는지는 확인되지 않았다.']
     },
-    {id:'reiki',name:'레이키',group:'fhc-ark',role:'소속 인물',status:'deceased',certainty:'listed',overview:'F.H.C-아크 인물군에 사망자로 기재됐다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['전체 이름과 역할, 능력, 사망 경위는 기록되지 않았다.']},
+    {id:'reiki',name:'레이키',group:'fhc-ark',role:'소속 인물',status:'deceased',certainty:'listed',overview:'F.H.C-아크 인물군에 사망자로 기재됐다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['사망 경위는 기록되지 않았다.']},
     {
       id:'baranto',name:'바란토',group:'nhc',role:'국장',status:'active',certainty:'listed',
       overview:'N.H.C 국장으로 기재된 생기 사용자다.',
