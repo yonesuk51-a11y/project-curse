@@ -1,5 +1,6 @@
 ﻿import vm from 'node:vm';
 import assert from 'node:assert/strict';
+import { plainWording } from '../lib/plain-wording.mjs';
 
 // 옛 상태 저장소와 반응형 분기를 독립 기준으로 실행해 대조한다.
 export default function verifyMap({add,read,context,app,historyIds,archiveIds,opIds}) {
@@ -62,7 +63,8 @@ export default function verifyMap({add,read,context,app,historyIds,archiveIds,op
     if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, approvedLegacy(item)]));
     return value;
   };
-  const equalLegacy = (before, after) => equal(approvedLegacy(before), after);
+  // 2026-11-22 사용자 승인 문장 바꾸기(tools/lib/plain-wording.mjs)를 이름 정리 뒤에 적용한다. 문장 전체가 같을 때만 바뀐다.
+  const equalLegacy = (before, after) => equal(plainWording(approvedLegacy(before)), after);
   const check=(name,run)=>{try{const result=run();add(name,true,result||'');}catch(error){add(name,false,error.message);}};
   function runtime(modern,seed={}) {
     const storage=new Map(Object.entries(seed));

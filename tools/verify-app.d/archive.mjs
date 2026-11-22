@@ -3,9 +3,11 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { applyCanonRenames, renamedValue } from '../lib/canon-renames.mjs';
+import { plainWording, plainOriginal } from '../lib/plain-wording.mjs';
 
 // 옛 화면의 실제 대본과 대조한다. 승인된 화면 안내만 지정된 위치에서 새 문구로 대조한다.
 // 2026-09-25 사용자 승인 정사 이름 변경(tools/lib/canon-renames.mjs)은 옛 원문에 먼저 적용한 뒤 글자 그대로 비교한다.
+// 2026-11-22 사용자 승인 문장 바꾸기(tools/lib/plain-wording.mjs)도 같은 방식이다. 문장 전체가 표와 같을 때만 새 문장으로 대조한다.
 export default function ({ add, read, context, app, archiveIds, opIds, historyIds }) {
   const source = read('assets/app/js/screens/archive.js');
   const css = read('assets/app/css/screens/archive.css');
@@ -21,7 +23,7 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   add('bounded-mount-and-decode', source.includes('scope.later(finish, 400)') && source.includes("scope.on(doc, 'keydown', finish") && source.includes('mounting?.end()') && source.includes("view.classList.remove('tc-arc-decoding'), 600") && css.includes('tc-arc-acquisition::after'));
   const migrated = context.ProjectCurseArchiveViewerData;
   const oldChapters = vm.runInNewContext(read('tools/fixtures/legacy-app/assets/js/pages/archive-consolidation.js').match(/const storyChapters\s*=\s*(\[[\s\S]*?\n\s*\]);/)[1]);
-  add('chapter-prose-verbatim', JSON.stringify(renamedValue(oldChapters)) === JSON.stringify(migrated.chapters));
+  add('chapter-prose-verbatim', JSON.stringify(plainWording(renamedValue(oldChapters))) === JSON.stringify(migrated.chapters));
   const oldPages = vm.runInNewContext(read('tools/fixtures/legacy-app/assets/js/core/record-cinematic-runtime.js').match(/    const pages = (\[[\s\S]*?\n\]);/)[1]);
   // 마지막 쪽은 영상 속 대사가 아니라 화면 닫기 안내다. 나머지 대사·장면·순서는 그대로 대조한다.
   const returnPage = oldPages.at(-1);
@@ -37,7 +39,8 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
     sourceIntro: ['현재 문서에 사용된 이미지의 출처 등급과 원본 대조 가능 여부를 표시한다. 복원 추정본은 원본 기록을 대신하지 않는다.', '현재 문서에 사용된 이미지의 출처 등급을 표시하고, 원본과 맞춰 볼 수 있는지 알려 준다. 복원 추정본은 원본 기록을 대신하지 않는다.'],
     comparisonNote: ['비교 경계를 움직여 두 사본의 크롭·색상·정보 손실을 직접 대조할 수 있다.', '비교 경계를 움직여 두 그림의 잘린 부분·색상·빠진 정보를 직접 맞춰 볼 수 있다.']
   };
-  add('viewer-copy-approved-wording', Object.entries(approvedCopy).every(([key, [before, after]]) => oldCopy.includes(before) && migrated.copy[key] === after) && Object.entries(migrated.copy).every(([key, value]) => Object.hasOwn(approvedCopy, key) ? value === approvedCopy[key][1] : copyStrings(value).every(text => oldCopy.includes(text))));
+  // 승인 안내(approvedCopy)와 2026-11-22 문장 바꾸기 표의 새 문장은, 바꾸기 전 문장이 옛 원문에 있었는지로 대조한다.
+  add('viewer-copy-approved-wording', Object.entries(approvedCopy).every(([key, [before, after]]) => oldCopy.includes(before) && migrated.copy[key] === plainWording(after)) && Object.entries(migrated.copy).every(([key, value]) => Object.hasOwn(approvedCopy, key) ? value === plainWording(approvedCopy[key][1]) : copyStrings(value).every(text => oldCopy.includes(plainOriginal(text)))));
 
   const storage = new Map(), events = [];
   const test = { console, localStorage: { getItem: k => storage.get(k) || null, setItem: (k, v) => storage.set(k, v), removeItem: k => storage.delete(k) }, document: { dispatchEvent: e => events.push(e), addEventListener() {} }, CustomEvent: class { constructor(type, init) { this.type = type; this.detail = init?.detail; } } };
@@ -45,7 +48,7 @@ export default function ({ add, read, context, app, archiveIds, opIds, historyId
   for (const m of app.matchAll(/<script src="(assets\/js\/data\/[^"?]+)/g)) vm.runInContext(read(m[1]), test);
   vm.runInContext(read('tools/fixtures/legacy-app/assets/js/core/operation-state.js'), test);
   const operation = test.ProjectCurseOperationState;
-  add('operation-boundary-verbatim', ['operationId', 'storageKey', 'branchIds', 'canonBoundary', 'decisions'].every(key => JSON.stringify(renamedValue(operation[key] ?? null)) === JSON.stringify(migrated.operation[key] ?? null)));
+  add('operation-boundary-verbatim', ['operationId', 'storageKey', 'branchIds', 'canonBoundary', 'decisions'].every(key => JSON.stringify(plainWording(renamedValue(operation[key] ?? null))) === JSON.stringify(migrated.operation[key] ?? null)));
   ['record-cinematic-registry.js'].forEach(file => vm.runInContext(read(`assets/app/js/cinematic/${file}`), test));
   ['cults', 'immortality', 'ferals', 'sakuma'].forEach(name => vm.runInContext(read(`assets/app/js/cinematic/cinematic-${name}.js`), test));
   const registry = test.ProjectCurseCinematicRegistry;
