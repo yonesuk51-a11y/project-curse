@@ -571,63 +571,63 @@
       className:'RECONSTRUCTED',
       alt:'어두운 수도원 필사실에서 성인 필사자가 촛불 하나 아래 두 장부를 대조하며 읽히지 않는 필획을 옮겨 적는다.',
       label:'INTERPRETIVE RECONSTRUCTION / MARGIN SEALS',
-      caption:'14세기 장부 여백에 남은 봉인 절차와 기억 대조문의 재필사를 촛불 아래의 작업으로 옮겼다. 필사자의 신원·장소·기호의 정확한 형태를 확정하지 않는다. 대역병은 사본이 쓰인 시대 배경이며, 역병의 원인과 봉인 기록은 관계가 없다.'
+      caption:'14세기 장부 여백에 남은 봉인 절차와 기억 대조문을 다시 베껴 쓰는 일을 촛불 아래의 작업으로 옮겼다. 베껴 쓴 사람이 누구인지, 장소, 기호의 정확한 모양은 확정하지 않는다. 대역병은 사본이 쓰인 시대 배경이며, 역병의 원인과 봉인 기록은 관계가 없다.'
     },
     'deep-sealing-wars':{
       src:'assets/resources/derived/sealing-wars-lead-box-convoy-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'나무와 생울타리 사이 진창길에서 성인이 등불 달린 보급 수레의 끈 묶인 납 상자를 지키며 걷는다.',
       label:'INTERPRETIVE RECONSTRUCTION / SEALED CONVOY',
-      caption:'삼십년전쟁기 보급망을 따라 이동한 봉인 상자를 평범한 수레 행렬 안의 경계 장면으로 옮겼다. 전쟁은 이동의 배경일 뿐이며 전쟁의 원인과 봉인 상자는 관계가 없다. 이동 경로·총수량·상자 내용물과 인계 성공은 확정하지 않는다.'
+      caption:'삼십년전쟁 때 보급망을 따라 옮겨진 봉인 상자를, 평범한 수레 행렬 안에서 경계하는 장면으로 옮겼다. 전쟁은 이동의 배경일 뿐이며 전쟁의 원인과 봉인 상자는 관계가 없다. 이동 경로·전체 수량·상자에 든 것과 넘겨주는 데 성공했는지는 확정하지 않는다.'
     },
     'deep-industrial-occult':{
       src:'assets/resources/derived/industrial-occult-plate-lab-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'세기 전환기의 어두운 계측실에서 한 성인이 빈 의자와 전신 장치를 지켜보고 앞쪽 사진 건판에는 비슷한 세로 손상이 남아 있다.',
       label:'INTERPRETIVE RECONSTRUCTION / PLATE AND WIRE',
-      caption:'전신 장치와 사진 건판이 설명되지 않은 흔적을 함께 기록하기 시작한 산업 계측기의 장면이다. 전력이 현상을 만들었다는 인과, 손상 속 존재의 신원과 실험의 정확한 장소·배치를 확정하지 않는다.'
+      caption:'전신 장치와 사진 건판이 설명되지 않은 흔적을 함께 기록하기 시작한 산업 계측기의 장면이다. 전력이 현상을 만들었다는 인과, 손상 속 존재가 누구인지, 실험의 정확한 장소와 배치는 확정하지 않는다.'
     },
     'deep-cold-war-programs':{
       src:'assets/resources/derived/cold-war-divided-labs-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'흰 형광등 아래 불투명 칸막이로 나뉜 세 작업 칸에서 성인 연구원들이 비슷한 표본 사진을 각자 다른 아날로그 장비와 대조한다.',
       label:'INTERPRETIVE RECONSTRUCTION / DIVIDED LABS',
-      caption:'같은 현상을 서로 다른 위협으로 분류한 세 연구 갈래를 나뉜 작업 칸으로 병치했다. 실제 기관·연구원 신원·총원을 확정하지 않으며, 냉전의 원인과 변칙 현상은 관계가 없다.'
+      caption:'같은 현상을 서로 다른 위협으로 분류한 세 연구 갈래를, 나뉜 작업 칸에 나란히 놓았다. 실제 기관, 연구원이 누구인지, 전체 인원은 확정하지 않는다. 냉전의 원인과 변칙 현상은 관계가 없다.'
     },
     '1975-distortion-system':{
       src:'assets/resources/derived/distortion-system-1975-field-trace-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'연구 단지 바깥 도랑에서 성인 조사자들이 손전등 하나로 눌린 풀과 놓인 무전기를 살펴본다.',
       label:'INTERPRETIVE RECONSTRUCTION / FIELD TRACE — 상충 기록',
-      caption:'왜곡 시스템 실행 뒤 흩어져 접수된 이상 신고를 연구 단지 외곽의 불명확한 흔적 조사로 가정했다. 이 장소·인원·흔적의 실재와 실험·교단 활동 사이의 인과를 확정하지 않는다.'
+      caption:'왜곡 시스템을 돌린 뒤 흩어져 들어온 이상 신고를, 연구 단지 밖의 불명확한 흔적 조사로 가정했다. 이 장소·인원·흔적이 실제로 있었는지, 실험·교단 활동 사이의 인과는 확정하지 않는다.'
     },
     '1982-03-22-fhc':{
       src:'assets/resources/derived/fhc-founding-1982-loading-dock-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'표기 없는 연구 기업 하역장 안으로 성인 작업자들이 봉인된 문서 상자와 장비 케이스를 옮기고 연구자가 동행한다.',
       label:'INTERPRETIVE RECONSTRUCTION / SUCCESSION DOCK',
-      caption:'아마리온의 인력·자료·장비가 F.H.C 기반으로 이어진 과정을 야간 하역 작업으로 옮겼다. 창설자와 작업자의 신원, 실제 사옥·운송 날짜·총수량과 개별 상자 내용물을 확정하지 않는다.'
+      caption:'아마리온의 인력·자료·장비가 F.H.C의 바탕으로 이어진 과정을, 밤에 짐을 내리는 작업으로 옮겼다. 창설자와 작업자가 누구인지, 실제 사옥·운송 날짜·전체 수량, 상자마다 든 것은 확정하지 않는다.'
     },
     '1982-uac-watch':{
       src:'assets/resources/derived/uac-watch-1982-listening-room-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'작은 감시실에서 성인 한 명이 등을 보인 채 시설 사진과 글자 없는 지도 앞의 녹음기와 전화를 다룬다.',
       label:'INTERPRETIVE RECONSTRUCTION / LISTENING ROOM — 증언 기반',
-      caption:'비인가 감시망의 기록 기능을 1980년대의 작은 아날로그 감시실로 가정했다. 방의 실재, 인물이 레스작인지 여부와 감시망 구성·자금·권한을 확정하지 않는다.'
+      caption:'비인가 감시망의 기록 기능을 1980년대의 작은 아날로그 감시실로 가정했다. 그런 방이 실제로 있었는지, 인물이 레스작인지, 감시망의 구성·자금·권한은 확정하지 않는다.'
     },
     '1993-11-02-uac':{
       src:'assets/resources/derived/uac-founding-1993-assembly-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'어두운 회의장의 성인 대표들이 긴 책상에 앉아 흰 사각형 조명 아래의 무표기 발표대를 바라본다.',
       label:'INTERPRETIVE RECONSTRUCTION / ASSEMBLY 1993',
-      caption:'비밀 감시망이 독립적인 초국가 대응 기관으로 공개된 전환을 차분한 대표 회의로 옮겼다. 실제 행사장·참가국·대표 신원·총원·표결 결과를 확정하지 않는다.'
+      caption:'비밀 감시망이 나라를 넘어선 독립 대응 기관으로 공개되며 바뀐 일을, 차분한 대표 회의로 옮겼다. 실제 행사장, 참가국, 대표가 누구인지, 전체 인원, 표결 결과는 확정하지 않는다.'
     },
     '1993-syndicate':{
       src:'assets/resources/derived/son-formation-1993-backroom-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'창고 뒷방을 내려다보는 시점에서 정장·표장 없는 근무복·연구복을 입은 성인 네 명이 한 탁자 위로 무표기 자료를 주고받는다.',
       label:'INTERPRETIVE RECONSTRUCTION / BACKROOM COMPACT',
-      caption:'반 U.A.C 국가 인맥과 기업·연구 지원 경로의 결집을 익명 연락 회합으로 옮겼다. 단일 창설 회의·지휘부의 존재, 참석자 신원·실제 인원·국가·장소·날짜를 확정하지 않는다.'
+      caption:'U.A.C에 반대하는 나라들의 인맥과 기업·연구 지원 경로가 모인 일을 익명의 연락 모임으로 옮겼다. 하나의 창설 회의·지휘부가 있었는지, 참석자가 누구인지, 실제 인원·나라·장소·날짜는 확정하지 않는다.'
     },
     '1997-01-27-classification':{
       src:'assets/resources/derived/classification-1997-sorting-room-concept-v1.png',
@@ -641,14 +641,14 @@
       className:'RECONSTRUCTED',
       alt:'한 본부의 적재장에서 성인 작업자들이 같은 기록 상자들을 표식 없는 두 차량으로 나누어 옮긴다.',
       label:'INTERPRETIVE RECONSTRUCTION / TWO CONVOYS',
-      caption:'공통 지원 아래 두 갈래로 이관되는 기록으로 독립 지휘체계 개편을 표현했다. 실제 이관 장소와 날짜, 차량과 인원의 수는 확정하지 않는다.'
+      caption:'같은 지원을 받으며 두 갈래로 넘어가는 기록으로 독립 지휘체계 개편을 표현했다. 실제로 넘긴 장소와 날짜, 차량과 인원의 수는 확정하지 않는다.'
     },
     '2002-02-20-ground-forces':{
       src:'assets/resources/derived/ground-forces-2002-handover-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'야간 합동 훈련장 차양 아래에서 교관이 서로 다른 군복의 성인 병사들에게 운반함과 계측 장비 사용을 보여 준다.',
       label:'INTERPRETIVE RECONSTRUCTION / EQUIPMENT HANDOVER',
-      caption:'협력 지상군에 현장 대응 장비와 절차를 인계하는 합동 훈련장이다. 참여 국가와 부대, 장비의 실제 기종은 확정하지 않는다.'
+      caption:'협력 지상군에 현장 대응 장비와 절차를 넘겨주는 합동 훈련장이다. 참여 국가와 부대, 장비의 실제 기종은 확정하지 않는다.'
     },
     '2010-04-12-returner-compact':{
       src:'assets/resources/derived/returner-compact-2010-tent-table-concept-v1.png',
@@ -662,14 +662,14 @@
       className:'RECONSTRUCTED',
       alt:'회보라 연무가 낀 대흑림의 여러 능선 사이로 일곱 성채의 작은 산호색 불빛이 흩어져 보인다.',
       label:'INTERPRETIVE RECONSTRUCTION / SEVEN LIGHTS',
-      caption:'일곱 성채로 전하는 야간 피난 관습을 숲속에 흩어진 불빛으로 표현한 원경이다. 성채의 실제 위치와 거리, 동시 점등 여부는 확정하지 않는다.'
+      caption:'일곱 성채로 전해지는 야간 피난 관습을, 숲속에 흩어진 불빛으로 표현한 먼 풍경이다. 성채의 실제 위치와 거리, 불이 한꺼번에 켜졌는지는 확정하지 않는다.'
     },
     '2016-02-21-blood-cult-atlantic-schism':{
       src:'assets/resources/derived/atlantic-schism-2016-cut-line-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'조용한 무전실에서 성인 교단원이 통신 장비의 플러그를 빼 들고 창밖의 성인 순례자들은 짐 곁에서 쉬고 있다.',
       label:'INTERPRETIVE RECONSTRUCTION / CUT LINE',
-      caption:'데드존 지부의 순례자 보호 노선과 혈맹 지휘부와의 결별을 통신선 분리로 표현했다. 결별의 실제 방식과 인물의 신원, 거점의 위치는 확정하지 않는다.'
+      caption:'데드존 지부의 순례자 보호 노선, 그리고 혈맹 지휘부와 갈라선 일을 끊긴 통신선으로 표현했다. 실제로 어떻게 갈라섰는지, 인물이 누구인지, 거점의 위치는 확정하지 않는다.'
     },
     '2027-11-02-southern-allegiance':{
       src:'assets/resources/derived/southern-allegiance-2027-vessel-concept-v1.png',
@@ -698,63 +698,63 @@
       className:'RECONSTRUCTED',
       alt:'도시 고가도로 아래 케이블로 연결된 차단 장비와 검색대 앞에 성인 시민들이 줄을 서 있다.',
       label:'INTERPRETIVE RECONSTRUCTION / CITY BARRIER 2003',
-      caption:'2003년 도심 차단 장비와 초기 이상 탐지를 위한 검색 지점을 그렸다. 장비의 상세 구조와 이 검색 지점의 실제 위치, 이후 봉쇄 결과는 확정하지 않는다.'
+      caption:'2003년 도심 차단 장비와 초기 이상 탐지를 위한 검색 지점을 그렸다. 장비의 자세한 구조와 이 검색 지점의 실제 위치, 그 뒤의 봉쇄 결과는 확정하지 않는다.'
     },
     '2006-08-20-ubermensch-raid':{
       src:'assets/resources/derived/ubermensch-raid-2006-extraction-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'야간 시설 복도에서 담요를 두른 성인들이 얼굴을 가린 채 무장 인원의 인도를 받아 모퉁이를 돌아 나간다.',
       label:'INTERPRETIVE RECONSTRUCTION / FACILITY EXTRACTION',
-      caption:'위버멘시 미국 지부에서 성인 방랑자들과 연구자료를 옮기는 대열 일부를 그렸다. 화면 속 인물의 신원, 구출된 열 명의 전체 모습과 이후 행선지는 확정하지 않는다.'
+      caption:'위버멘시 미국 지부에서 성인 방랑자들과 연구자료를 옮기는 대열 가운데 한 부분을 그렸다. 화면 속 인물이 누구인지, 구출된 열 명의 전체 모습, 그 뒤 어디로 갔는지는 확정하지 않는다.'
     },
     '2007-03-11-continuity-withdrawal':{
       src:'assets/resources/derived/continuity-withdrawal-2007-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'비워진 내륙 지휘실의 창 너머로 성인 인원들이 철수 차량에 기록과 장비를 싣고 있다.',
       label:'INTERPRETIVE RECONSTRUCTION / INLAND WITHDRAWAL',
-      caption:'내륙 지휘기능을 비우고 대응 자산을 해안권으로 철수시키던 과정을 그렸다. 차량의 최종 도착지와 이동 결과, 국가의 법적 해체 여부는 이 장면으로 확정하지 않는다.'
+      caption:'내륙의 지휘 기능을 비우고 대응 자산을 해안권으로 철수시키던 과정을 그렸다. 차량이 마지막에 닿은 곳과 이동 결과, 나라가 법적으로 해체됐는지는 이 장면으로 확정하지 않는다.'
     },
     '2012-11-19-great-black-forest-survey':{
       src:'assets/resources/derived/gbf-survey-2012-return-marker-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'측량 장비를 든 성인 대원들이 칼자국 난 출발 말뚝과 그쪽으로 돌아오는 발자국 앞에 멈춰 서 있다.',
       label:'INTERPRETIVE RECONSTRUCTION / RETURN TO MARKER',
-      caption:'출발 표식을 다시 마주친 공동 측량대의 귀환 한 순간을 그렸다. 발자국의 실제 경로, 숲 내부의 거리와 귀환 현상의 원인은 확정하지 않는다.'
+      caption:'출발 표식을 다시 마주친 공동 측량대가 돌아오는 한순간을 그렸다. 발자국이 실제로 지나간 길, 숲 안의 거리, 되돌아오는 현상의 원인은 확정하지 않는다.'
     },
     '2018-09-12-northern-front':{
       src:'assets/resources/derived/northern-front-2018-breach-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'새벽 산업지대 차단선의 무너진 철망 너머로 검붉은 살과 이빨의 괴이들이 밀려오고 성인 병사들이 방어진지를 지킨다.',
       label:'INTERPRETIVE RECONSTRUCTION / NORTHERN LINE BREACH',
-      caption:'북부전선 개전 당시 차단선 돌파를 방어하는 한 국면을 그렸다. 짐승의 길의 전체 전력과 괴이의 확정 외형, 화면 밖 전투의 승패는 확정하지 않는다.'
+      caption:'북부전선이 열리던 때 차단선이 뚫리는 것을 막는 한 장면을 그렸다. 짐승의 길의 전체 전력, 괴이의 정확한 외형, 화면 밖 전투의 승패는 확정하지 않는다.'
     },
     '2021-05-04-fhc-submassacres':{
       src:'assets/resources/derived/fhc-submassacres-2021-corridor-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'형광등 하나가 켜진 격리 복도에 넘어진 운반대와 부분적으로 가려진 성인 유해, 검붉은 웅덩이가 남아 있다.',
       label:'INTERPRETIVE RECONSTRUCTION / ISOLATION CORRIDOR — 상충 기록',
-      caption:'F.H.C 내부 시설의 상호 공격 뒤 남았을 격리 복도를 한 가능성으로 그렸다. 최초 명령자와 가해 주체, 피해자의 신원·오염 여부와 전체 사망자 수는 확정하지 않는다.'
+      caption:'F.H.C 내부 시설끼리 서로 공격한 뒤 남았을 격리 복도를 하나의 가능성으로 그렸다. 처음 명령한 사람과 공격한 쪽, 피해자가 누구이고 오염됐는지, 전체 사망자 수는 확정하지 않는다.'
     },
     '2024-03-17-ushinoda-fabrication':{
       src:'assets/resources/derived/ushinoda-fabrication-2024-review-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'어두운 판독실의 분석원들이 청록색 화면에 반복된 문과 인물 윤곽의 어긋남을 나란히 대조한다.',
       label:'INTERPRETIVE RECONSTRUCTION / COMPOSITE REVIEW',
-      caption:'서로 다른 사건을 합성한 영상의 인물 윤곽과 배경을 대조하는 감식 과정을 그렸다. 화면 속 인물의 신원과 실제 회수 프레임의 형태, 교단의 존재 여부는 이 그림으로 확정하지 않는다.'
+      caption:'서로 다른 사건을 합쳐 만든 영상에서 인물 윤곽과 배경을 맞춰 보는 감식 과정을 그렸다. 화면 속 인물이 누구인지, 실제 회수 프레임의 모습, 교단이 실제로 있는지는 이 그림으로 확정하지 않는다.'
     },
     '2028-07-25-mass-summoning-rehearsal':{
       src:'assets/resources/derived/mass-summoning-2028-rehearsal-site-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'밤의 도시 광장에 문양 없는 거친 원형 긁힘과 낮은 라벤더색 잔광이 남고 먼 길목에서 대응 차량 불빛이 접근한다.',
       label:'INTERPRETIVE RECONSTRUCTION / REHEARSAL SITE',
-      caption:'도시권 집단소환 예행 가운데 한 장소의 잔류 흔적과 접근하는 대응 차량을 그렸다. 실제 잔류물의 구조와 소환 규모, 다른 도시와의 지리적 연결 및 다음 목표는 확정하지 않는다.'
+      caption:'도시권 집단소환 예행이 벌어진 장소 가운데 한 곳의 남은 흔적과, 다가오는 대응 차량을 그렸다. 실제 잔류물의 구조와 소환 규모, 다른 도시와의 지리적 연결과 다음 목표는 확정하지 않는다.'
     },
     '2034-04-22-inland-beacon-31':{
       src:'assets/resources/derived/inland-beacon-31-relay-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'어두운 해안 중계실에서 성인 운용자 한 명이 켜진 수신기 앞에 앉아 있고 창 너머 내륙은 흐릿하다.',
       label:'INTERPRETIVE RECONSTRUCTION / BEACON 31',
-      caption:'폐쇄된 해안 중계기의 정비 시험 중 응답열을 듣는 운용자 한 명을 그렸다. 응답의 발신자와 실제 위치, 구조 요청의 진위 또는 구조 승인은 확정하지 않는다.'
+      caption:'폐쇄된 해안 중계기를 정비 시험하던 중 응답열을 듣는 운용자 한 명을 그렸다. 응답을 보낸 쪽과 실제 위치, 구조 요청이 진짜인지, 구조 승인은 확정하지 않는다.'
     },
     // 2026-09-25 사용자 승인(1~5번 진행) — 이미 채택한 그림을 사건 기록에 다시 쓴다.
     '1989-08-23-tokyo':{
@@ -797,14 +797,14 @@
       className:'RECONSTRUCTED',
       alt:'달빛 아래 창을 짚고 성벽에 선 커네빈 뒤로, 빽빽한 사람 형체와 창끝이 연무 속 지평선까지 이어진다.',
       label:'INTERPRETIVE RECONSTRUCTION / THE WALL AND THE HOST — 증언 기반',
-      caption:'교단 측 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁의 연대·장소·규모와 경과, 우시노다의 모습은 확정하지 않는다.'
+      caption:'교단 쪽 구술과 커네빈 전승에 남은 성벽의 저항을 옮긴 전승 장면이다. 전쟁이 언제 어디서 얼마나 크게 벌어졌는지와 그 흐름, 우시노다의 모습은 확정하지 않는다.'
     },
     'deep-angel-descent':{
       src:'assets/resources/derived/angel-descent-red-sky-concept-v1.png',
       className:'RECONSTRUCTED',
       alt:'붉게 갈라진 하늘에서 날개 윤곽이 쏟아지는 동안 군사들은 얼굴을 가리고, 한 성인만 고개를 든다.',
       label:'INTERPRETIVE RECONSTRUCTION / RED SKY DESCENT — 증언 기반',
-      caption:'「본 자의 서」가 전하는 천사 강림과 얼굴을 든 한 사람을 지상에서 바라본 전승 장면이다. 강림의 실제 연대·장소·규모, 생존자의 신원과 현재 존재, IMAGE-241HS 증언과의 독립성을 확정하지 않는다.'
+      caption:'「본 자의 서」가 전하는 천사 강림과, 얼굴을 든 한 사람을 땅에서 바라본 전승 장면이다. 강림이 실제로 일어난 때와 장소·규모, 살아남은 사람이 누구이고 지금도 있는지, IMAGE-241HS 증언과 따로 나온 것인지는 확정하지 않는다.'
     },
     '1975-09-12-amarion':{
       src:'assets/resources/derived/amarion-1975-test-hall-concept-v1.png',

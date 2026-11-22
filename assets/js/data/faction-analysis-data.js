@@ -628,7 +628,7 @@
     src:'assets/resources/derived/cpd-screening-line-concept-v2.png',
     className:'RECONSTRUCTED',label:'SCREENING LANE / 분석 재구성',
     alt:'철망으로 나뉜 선별 통로에서 방독면을 쓴 인원이 피난민의 손목에 흰색과 붉은색 표식을 채우는 장면의 분석 재구성',
-    caption:'민간 분리와 선별 통로의 절차를 재구성한 장면이다. 특정 검문소, 피난민 신원, 개별 표식 판정을 확정하지 않는다.'
+    caption:'민간 분리와 선별 통로의 절차를 재구성한 장면이다. 어느 검문소인지, 피난민이 누구인지, 표식마다 내린 판정은 확정하지 않는다.'
   };
   factions.sid.visual={
     src:'assets/resources/derived/sid-memory-check-booth-concept-v1.png',
@@ -664,55 +664,55 @@
     src:'assets/resources/derived/corruption-cult-drain-room-concept-v1.png',
     className:'RECONSTRUCTED',label:'FLESH REWRITE / 분석 재구성',
     alt:'어두운 설비실에서 성인 작업 인원들이 뼈와 손 모양 조직이 돋아난 몸을 다루고, 검붉은 흔적이 배수로로 흐른다.',
-    caption:'타락교의 신체 타락 의식과 생체 구조 재작성을 폐쇄 설비실의 장면으로 상정했다. 대상자의 신원과 생사, 실제 시술 형태, 지휘자와 의식의 성공 여부를 확정하지 않는다.'
+    caption:'타락교의 신체 타락 의식과 몸의 구조를 다시 짜는 일을 닫힌 설비실의 장면으로 가정해 그렸다. 대상자가 누구인지와 생사, 실제 시술 형태, 누가 지휘했고 의식이 성공했는지는 확정하지 않는다.'
   };
   factions['blood-cult'].visual={
     src:'assets/resources/derived/blood-cult-reservoir-concept-v1.png',
     className:'RECONSTRUCTED',label:'BLOOD RESERVOIR / 분석 재구성',
     alt:'지하 저장소의 넓은 검붉은 수면과 좁은 수로 곁에서 성인들이 라벤더빛 아래 혈액의 흐름을 살핀다.',
-    caption:'혈교가 혈액의 저장소와 수로를 의식의 좌표로 삼는다는 기록을 지하 저장소로 옮겼다. 혈액의 출처, 통로의 개통과 행선지, 다른 혈교 계통과의 지휘 공유를 확정하지 않는다.'
+    caption:'혈교가 피를 모아 두는 곳과 물길을 의식의 좌표로 삼는다는 기록을 지하 저장소로 옮겼다. 피가 어디서 왔는지, 통로가 열렸는지와 어디로 이어지는지, 다른 혈교 계통과 지휘를 함께 하는지는 확정하지 않는다.'
   };
   factions['shadow-cult'].visual={
     src:'assets/resources/derived/shadow-cult-mismatched-reflection-concept-v1.png',
     className:'RECONSTRUCTED',label:'MISMATCHED REFLECTION / 분석 재구성',
     alt:'폐쇄 건물의 거울 복도에서 고개를 숙인 성인과, 다른 자세로 남은 반사 속 형체가 어긋난다.',
-    caption:'그림자교 기록에 반복되는 반사면과 인식의 불일치를 복도의 한순간으로 상정했다. 사람과 반사 형체의 신원, 엔릴바니의 외형과 개입, 빙의의 성립 여부를 확정하지 않는다.'
+    caption:'그림자교 기록에 되풀이되는, 반사면과 인식이 어긋나는 일을 복도의 한순간으로 가정해 그렸다. 사람과 반사 형체가 누구인지, 엔릴바니의 외형과 개입, 빙의가 이루어졌는지는 확정하지 않는다.'
   };
   factions['southern-blood'].visual={
     src:'assets/resources/derived/southern-blood-coastal-command-concept-v1.png',
     className:'RECONSTRUCTED',label:'COASTAL COMMAND / 분석 재구성',
     alt:'밤의 해안 지휘소에서 긴 외투를 입은 성인들과 무장 인원들이 지도와 무전기 곁으로 보급함을 옮긴다.',
-    caption:'남방 혈맹의 해안 교단과 무장세력이 함께 쓰는 전시 지휘·보급 공간을 상정했다. 지휘관의 신원, 실제 명령 내용, 혈교와의 직계 관계와 작전 결과를 확정하지 않는다.'
+    caption:'남방 혈맹의 해안 교단과 무장세력이 함께 쓰는 전쟁 때의 지휘·보급 공간을 가정해 그렸다. 지휘관이 누구인지, 실제 명령 내용, 혈교와 바로 이어진 관계인지와 작전 결과는 확정하지 않는다.'
   };
   factions['deadzone-blood'].visual={
     src:'assets/resources/derived/deadzone-blood-pilgrim-aid-concept-v1.png',
     className:'RECONSTRUCTED',label:'PILGRIM AID / 분석 재구성',
     alt:'도로변 임시 숙영지에서 지친 성인 순례자들이 쉬는 동안 돌봄 인원이 팔에 붕대를 감고, 컵을 든 순례자가 곁에서 쉰다.',
-    caption:'데드존 혈교 거점에서 반복 보고된 순례자 응급처치와 임시 숙영 지원을 옮겼다. 구조 활동의 목적과 개별 거점의 규칙, 치료 결과, 데드존 전역의 안전을 확정하지 않는다.'
+    caption:'데드존 혈교 거점에서 되풀이해 보고된 순례자 응급처치와 임시로 묵을 곳을 내주는 일을 옮겼다. 구조 활동의 목적, 거점 하나하나의 규칙, 치료 결과, 데드존 전체의 안전은 확정하지 않는다.'
   };
   factions['syndicate'].visual={
     src:'assets/resources/derived/son-hidden-depot-concept-v1.png',
     className:'RECONSTRUCTED',label:'HIDDEN DEPOT / 분석 재구성',
     alt:'숨겨진 하역 공간에서 정장·전투복·연구복 차림의 성인들이 방독면과 보호장비가 담긴 운반함을 옮긴다.',
-    caption:'S.O.N의 분산 지원망이 오염 대응 장비를 은닉하고 재배치하는 활동을 상정했다. 인원의 신원과 소속국, 실제 지휘 관계, 장비의 출처와 특정 작전의 성과를 확정하지 않는다.'
+    caption:'S.O.N의 흩어진 지원망이 오염 대응 장비를 숨기고 다시 옮겨 두는 활동을 가정해 그렸다. 인원이 누구이고 어느 나라 소속인지, 실제 지휘 관계, 장비가 어디서 왔는지와 특정 작전의 성과는 확정하지 않는다.'
   };
   factions['haimun'].visual={
     src:'assets/resources/derived/haimun-night-transfer-concept-v1.png',
     className:'RECONSTRUCTED',label:'NIGHT TRANSFER / 분석 재구성',
     alt:'밤의 진료소 뒤편에서 무표기 냉동차량과 열린 뒷문 사이로 성인들이 조용히 이동한다.',
-    caption:'P.O.H의 위장 진료소와 운송망을 통한 등록 밖의 인력 이동을 야간 하역 장면으로 상정했다. 이동하는 사람의 신원과 전체 수, 최종 목적지, 특정 거래의 성립과 결과를 확정하지 않는다.'
+    caption:'P.O.H가 위장 진료소와 운송망으로 기록 밖에서 사람을 옮기는 일을 밤에 짐을 내리는 장면으로 가정해 그렸다. 옮겨지는 사람이 누구이고 몇 명인지, 최종 목적지, 특정 거래가 이루어졌는지와 결과는 확정하지 않는다.'
   };
   factions['arf'].visual={
     src:'assets/resources/derived/arf-sealed-recovery-hoist-concept-v1.png',
     className:'RECONSTRUCTED',label:'SEALED RECOVERY / 분석 재구성',
     alt:'오염된 설비 구덩이에서 보호복을 입은 회수 인원이 견인 장비로 밀봉 운반함을 끌어올린다.',
-    caption:'A.R.F의 밀봉·분리 회수 절차를 오염 구역의 견인 작업으로 옮겼다. 운반함의 내용과 실제 사체 수, 반출·폐기 판정, 오염 제거의 성공을 확정하지 않는다.'
+    caption:'A.R.F의 밀봉·분리 회수 절차를 오염 구역에서 끌어내는 작업으로 옮겼다. 운반함에 든 것과 실제 사체 수, 반출·폐기 판정, 오염을 없애는 데 성공했는지는 확정하지 않는다.'
   };
   factions['amarion'].visual={
     src:'assets/resources/derived/amarion-abandoned-facility-concept-v1.png',
     className:'RECONSTRUCTED',label:'ABANDONED FACILITY / 분석 재구성',
     alt:'먼지가 내려앉은 옛 제어반과 멈춘 장치들 뒤로 기계적으로 봉인된 문이 남아 있는 빈 시설 내부다.',
-    caption:'아마리온의 활동 중단과 승계 기록 뒤 수십 년이 흐른 폐시설을 상정했다. 시설의 실제 위치와 상태, 장비의 행방, 왜곡 시스템의 결과와 이상현상과의 인과를 확정하지 않는다.'
+    caption:'아마리온이 활동을 멈추고 승계가 기록된 뒤 수십 년이 지난 버려진 시설을 가정해 그렸다. 시설의 실제 위치와 상태, 장비가 어디로 갔는지, 왜곡 시스템의 결과와 이상한 일 사이의 인과는 확정하지 않는다.'
   };
 
   root.ProjectCurseFactionAnalysis = freeze({
