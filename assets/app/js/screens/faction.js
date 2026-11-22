@@ -113,7 +113,7 @@
       if (keys.length) body.append(...keys.map(indexRow));
     });
     count.textContent = `${total} / ${source()?.order.length || 0}개 문서`;
-    if (!total) { groupBodies?.[groupKey(source()?.groups?.[0]?.label)]?.append(PC.missing('NO MATCHING FILES', filter, '선택한 분류에 해당하는 세력 문서가 없습니다.')); indexTabs?.set(groupKey(source()?.groups?.[0]?.label)); }
+    if (!total) { groupBodies?.[groupKey(source()?.groups?.[0]?.label)]?.append(PC.missing('NO MATCHING FILES', filter, '이 분류에는 세력 문서가 없습니다.')); indexTabs?.set(groupKey(source()?.groups?.[0]?.label)); }
     else if (firstMatch && !source()?.groups?.some(group => groupKey(group.label) === indexTabs?.get?.() && group.keys.some(key => filter === 'all' || tagsFor(key).includes(filter)))) indexTabs?.set(firstMatch);
     indexView.querySelectorAll('[data-fac-filter]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.facFilter === filter)));
   }
@@ -229,7 +229,7 @@
     return h('details.tc-disclosure.tc-fac-related', { open: PC.density?.() === 'full' },
       h('summary', null, h('span', null,
         h('span.tc-label.tc-full-only', { text: 'RELATED DOSSIERS' }), h('b', { text: '관련 인물·세력·사건' }),
-        h('small.tc-hint', { text: '소속 연결과 사건 기록, 판정이 남은 갈래를 모았다.' }))),
+        h('small.tc-hint', { text: '소속과 사건 기록, 아직 판정이 남은 갈래를 모았다.' }))),
       h('div.tc-disclosure-body.tc-fac-copy', null, groups));
   }
 
@@ -239,7 +239,7 @@
     const item = faction(key);
     if (!item) {
       detailView.append(h('h1', { text: canon(key)?.name || '세력 문서 없음', 'data-tc-focus': true }),
-        PC.missing('FACTION NOT FOUND', key, '이 단말에 해당하는 세력 분석 문서가 없습니다.'));
+        PC.missing('FACTION NOT FOUND', key, '이 단말에는 이 세력의 분석 문서가 없습니다.'));
       return '세력 문서 없음';
     }
     const registered = canon(key);
@@ -264,26 +264,26 @@
         item.profile ? h('section.tc-fac-profile', null,
           h('h3', { text: item.profile.label }), h('p', { text: item.profile.note }), kv(item.profile.items)) : null,
         h('section.tc-fac-copy', null, h('h3', { text: '내부 문제' }), h('p', { text: item.fault }))),
-      contextBody ? panel('CONTEXT', '이해에 필요한 배경', '미확정 사항과 해석 한계를 포함한다.', contextBody) : null
+      contextBody ? panel('CONTEXT', '이해에 필요한 배경', '아직 정해지지 않은 내용과 해석의 한계가 담겼다.', contextBody) : null
     ].filter(Boolean);
     const chronology = h('ol.tc-fac-chronology', null, item.chronology.map(([date, text]) =>
       h('li', null, h('time.tc-code', { text: date }), h('span', { text }))));
     const evidenceTab = [
-      panel('CHRONOLOGY', '주요 연혁', '세력의 형성과 현재 상태에 이르는 기록.', chronology, false),
+      panel('CHRONOLOGY', '주요 연혁', '세력이 생긴 뒤 지금까지의 기록.', chronology, false),
       item.visual?.src
-        ? panel('REGISTERED VISUAL', '등록 시각 자료', '기록된 표식과 캡션을 확인한다.', h('figure.tc-evidence.tc-fac-visual', { dataset: { evidenceClass: item.visual.className } },
+        ? panel('REGISTERED VISUAL', '등록 시각 자료', '기록된 표식과 설명을 본다.', h('figure.tc-evidence.tc-fac-visual', { dataset: { evidenceClass: item.visual.className } },
           h('div.tc-evidence-media', null, PC.img(item.visual.src, { alt: item.visual.alt || '' })),
           h('figcaption', null, h('b', null, displayLabel(item.visual.label)), h('span.tc-fac-prose', { text: item.visual.caption }))), false)
-        : panel('VISUAL / PENDING', '등록 시각 자료', '채택된 문서 그림이 없다.', h('figure.tc-evidence.tc-fac-visual.tc-fac-visual--empty', null,
+        : panel('VISUAL / PENDING', '등록 시각 자료', '문서에 실린 그림이 없다.', h('figure.tc-evidence.tc-fac-visual.tc-fac-visual--empty', null,
           h('div.tc-evidence-media', null, h('div.tc-fac-visual-empty', { role: 'img', 'aria-label': '그림 미등록', text: '그림 미등록' })),
-          h('figcaption', null, h('b', null, '그림 미등록'), h('span.tc-fac-prose', { text: '그림은 사용자 채택 대기 상태다.' }))), false),
+          h('figcaption', null, h('b', null, '그림 미등록'), h('span.tc-fac-prose', { text: '그림을 실을지는 아직 정해지지 않았다.' }))), false),
       markAnalysis(key)
     ].filter(Boolean);
     const relatedTab = [relatedBundles(key, item, openMarks)];
     const tabs = PC.tabs({ id: 'tc-fac-dossier', label: '세력 문서 갈래', active: 'assessment', items: [
-      { id: 'assessment', title: '현재 분석', hint: '현재 판정과 조직 활동.', body: h('div.tc-fac-detail-stack', null, analysisTab) },
-      { id: 'evidence', title: '연혁·감식', hint: '연혁, 등록 표식, 확인 자료.', body: h('div.tc-fac-detail-stack', null, evidenceTab) },
-      { id: 'related', title: '연결 자료', hint: '관련 인물·세력·사건과 판정 한계.', body: h('div.tc-fac-detail-stack', null, relatedTab) }
+      { id: 'assessment', title: '현재 분석', hint: '현재 판정과 조직의 활동을 본다.', body: h('div.tc-fac-detail-stack', null, analysisTab) },
+      { id: 'evidence', title: '연혁·감식', hint: '세력 기록과 확인 자료를 본다.', body: h('div.tc-fac-detail-stack', null, evidenceTab) },
+      { id: 'related', title: '연결 자료', hint: '연결된 자료를 본다. 판정의 한계도 확인한다.', body: h('div.tc-fac-detail-stack', null, relatedTab) }
     ] });
     PC.append(detailView, [
         h('header.tc-panel.tc-bracket.tc-fac-cover', null, markBoard(key),
@@ -327,7 +327,7 @@
     const groupItems = source().groups.map((group) => {
       const id = groupKey(group.label), body = h('div.tc-rows.tc-fac-group-rows');
       groupBodies[id] = body;
-      return { id, title: display().groupLabels[group.label] || group.label, hint: groupHints[group.label] || '등록 세력 문서.', body };
+      return { id, title: display().groupLabels[group.label] || group.label, hint: groupHints[group.label] || '기록에 오른 세력 문서.', body };
     });
     indexTabs = PC.tabs({ id: 'tc-fac-index', label: '세력 분석 분류', active: groupItems[0]?.id, items: groupItems });
     indexView.append(PC.screenHead('faction-info', { desc: display().intro, meta: [['DOSSIERS', `${source().order.length}`], ['GROUPS', `${source().groups.length}`]] }),
