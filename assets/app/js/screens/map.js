@@ -79,6 +79,7 @@ function operationTerrain(operation){
   const sessionKey='project_curse_map_session_v1', recentKey='project_curse_map_recent_v1';
   const confidence={confirmed:'확인 자료',corroborated:'함께 맞춰 본 자료',observed:'관측 자료',estimated:'추정 좌표',disputed:'상충 진술',testimony:'순례자 증언',historical:'과거 기록'};
   const risks={critical:'치명',high:'높음',medium:'주의',low:'낮음'};
+  const routeSignals={testimony:'증언',spoofed:'위조 신호',lost:'신호 소실',intermittent:'끊겼다 이어지는 신호',duplicated:'겹쳐 들어온 신호',corroborated:'함께 맞춰 본 신호',tracked:'추적 중',terminating:'끊어지는 중',sealed:'봉인됨',recovered:'되살린 기록',partial:'일부만 남음',observed:'관측됨',looping:'되풀이되는 신호',historical:'과거 기록',encrypted:'암호화됨',biological:'생체 신호'};
   const statusLabels={normal:'정상',unstable:'불안정',split:'신호 분열',unknown:'알 수 없음',lost:'신호 소실'};
   const uncertain=c=>['estimated','testimony','disputed'].includes(c);
   const traceTone=c=>['broken','compromised'].includes(c)?'hostile':c==='contained'?'contained':['kept','verified','secured'].includes(c)?'secured':'unknown';
@@ -207,7 +208,7 @@ function operationTerrain(operation){
     return all.length?disclosure('CROSS REFERENCE','관련 기록',[
       h('nav.tc-btnrow',{'aria-label':'관련 기록'},all.slice(0,2)),
       all.length>2?disclosure('MORE REFERENCES','나머지 관련 자료',h('nav.tc-btnrow',{'aria-label':'추가 관련 기록'},all.slice(2)),{open:fullDensity()}):null
-    ],{open:fullDensity(),hint:'관련 자료와 판정 경계를 모았다.'}):null;
+    ],{open:fullDensity(),hint:'관련 자료와 판정의 한계를 모았다.'}):null;
   }
   function canonical(path){
     if(!Array.isArray(path))return [];
@@ -536,7 +537,7 @@ function operationTerrain(operation){
     return disclosure('CITY DISTRICTS','구역 '+districts.length+'곳',h('ul.tc-map-bullets',null,districts.map(district=>{
       const grade=grades.find(item=>item.code===district.grade);
       return h('li',null,h('b',{text:district.name}),grade?h('span.tc-map-city-district-grade',{text:' · '+grade.name}):PC.missing('CITY GRADE NOT FOUND',district.grade,'도시 구역 판정 자료가 없습니다.'));
-    })),{open:false,hint:'구역 이름과 행정 판정.'});
+    })),{open:false,hint:'구역 이름과 행정 범위를 확인한다.'});
   }
   function citySummary(city){
     const rumors=city.rumors||[];
@@ -546,7 +547,7 @@ function operationTerrain(operation){
       kv([['권역',city.region],['위치','대략 위치'],['구역 수',String((city.districts||[]).length)+'곳'],['판정 분포',cityGradeCount(city)]]),
       note('대략 위치','정확한 위치는 정해지지 않았다. 표식은 권역 안의 추정 위치다.'),
       cityDistricts(city),
-      rumors.length?disclosure('CITY RUMORS','도시에 도는 소문',list(rumors),{open:false,hint:rumors.length+'건 · 확인된 사실이 아님'}):PC.missing('CITY RUMORS MISSING','worldFramework.cities['+city.id+'].rumors','도시 소문 자료가 없습니다.')
+      rumors.length?disclosure('CITY RUMORS','도시에 도는 소문',list(rumors),{open:false,hint:rumors.length+'건 · 확인되지 않은 소문'}):PC.missing('CITY RUMORS MISSING','worldFramework.cities['+city.id+'].rumors','도시 소문 자료가 없습니다.')
     );
   }
   function cityLinks(city){
@@ -606,7 +607,7 @@ function operationTerrain(operation){
     return routes.length?routes.map(r=>{
       const index=r.siteIds.indexOf(site.id),neighbor=offset=>{const id=r.siteIds[index+offset];return id?link(offset<0?'← 이전 지점':'다음 지점 →','map-room','region',d.id,'site',id):null;};
       const others=r.siteIds.filter(id=>id!==site.id).map((id)=>{const item=d.sites.find(s=>s.id===id);return item?link(item.label,'map-room','region',d.id,'site',id):missing(id);});
-      return panel('ROUTE SEQUENCE',r.label,h('p.tc-hint',{text:`${risks[r.risk]} 위험 · ${r.signal}개 기록 · ${r.rule}`}),h('div.tc-btnrow',null,neighbor(-1),neighbor(1)),linkCollection('ROUTE LOCATIONS','경로의 다른 지점',others,'이동 경로와 연결된 지점.'));
+      return panel('ROUTE SEQUENCE',r.label,h('p.tc-hint',{text:`위험도: ${risks[r.risk]}. 신호 상태: ${routeSignals[r.signal] || r.signal}. 적용 규칙: ${r.rule}.`}),h('div.tc-btnrow',null,neighbor(-1),neighbor(1)),linkCollection('ROUTE LOCATIONS','경로의 다른 지점',others,'이동 경로와 연결된 지점.'));
     }):note('연결 경로','연결 경로가 복원되지 않았다.');
   }
   function zoneGradePanel(d){
@@ -634,7 +635,7 @@ function operationTerrain(operation){
     const regionalLinks=[link('세계','map-room','region','world'),link(region(d.region).label,'map-room','region',d.region),site?link('구역 개요','map-room','region',d.id):null].filter(Boolean);
     const visuals=briefing(d,site);
     return h('div.tc-map-stack',null,
-      h('nav.tc-map-route-nav',{'aria-label':'지역 경로'},site?link('← 구역 개요','map-room','region',d.id):link('← 세계 지도','map-room','region','world'),linkCollection('REGIONAL BREADCRUMBS','다른 지도 갈래',regionalLinks.slice(site?1:2),'세계·광역·구역 지도를 이동한다.')),
+      h('nav.tc-map-route-nav',{'aria-label':'지역 경로'},site?link('← 구역 개요','map-room','region',d.id):link('← 세계 지도','map-room','region','world'),linkCollection('REGIONAL BREADCRUMBS','다른 지도 갈래',regionalLinks.slice(site?1:2),'세계 지도와 지역 지도를 오간다.')),
       h('div.tc-map-layout.tc-map-contact-layout',null,
         h('div.tc-map-stack',null,
           mapFrame(d.code,d.status,mapGraphic(d.label,box,body,contacts,p,routes,[],{id:d.id,confidence:d.confidence,zones:overlays}),yearBar(),layers('detailLayers',[['routes','경로'],['threats','위험 반경'],['comms','통신권'],['distortion','공간 왜곡']]),frameLegend(d.interline?(interlineLayer||PC.missing('ZONE LAYER NOT FOUND',d.interline.layerName,'지도 층 자료가 없습니다.')):null)),
@@ -697,19 +698,19 @@ function operationTerrain(operation){
     routes.push({points:s.route});
     if(decision?.route)routes.push({points:decision.route,kind:decision.id==='execute'?'hostile':'normal',alternate:true});
     for(const u of s.units)body+=symbol(u.status,u.x,u.y,u.id,p);
-    const control=h('div.tc-map-playback',{role:'group','aria-label':'작전 진행 재생'},action('← 이전 단계','previous','',{disabled:adjacent(o,-1)===step}),action(playing?'정지':'재생','play','',{disabled:reducedFx()||o.steps.filter((_,i)=>reachable(o,i)).length<2,'aria-pressed':String(playing)}),action('다음 단계 →','next','',{disabled:adjacent(o,1)===step}),h('span.tc-code',{'aria-live':'polite'},h('time',{text:s.time}),h('span.tc-full-only',{text:` · ${step+1} / ${o.steps.length}`})),h('p.tc-map-help',{text:reducedFx()?'효과 줄임: 이전·다음 단추로 기록을 읽어 주세요.':'← / → 단계 이동 · 스페이스 재생·정지'}));
+    const control=h('div.tc-map-playback',{role:'group','aria-label':'작전 진행 재생'},action('← 이전 단계','previous','',{disabled:adjacent(o,-1)===step}),action(playing?'정지':'재생','play','',{disabled:reducedFx()||o.steps.filter((_,i)=>reachable(o,i)).length<2,'aria-pressed':String(playing)}),action('다음 단계 →','next','',{disabled:adjacent(o,1)===step}),h('span.tc-code',{'aria-live':'polite'},h('time',{text:s.time}),h('span.tc-full-only',{text:` · ${step+1} / ${o.steps.length}`})),h('p.tc-map-help',{text:reducedFx()?'효과 줄임: 이전·다음 단추로 기록을 읽어 주세요.':'← / →로 단계 이동 · 스페이스로 재생·정지'}));
     const steps=h('ol.tc-phase.tc-map-phases',null,o.steps.map((item,i)=>h('li',{class:i<step?'is-done':i===step?'is-contact':null},action(`${item.time} · ${item.title}`,'step',String(i),{'aria-current':i===step?'step':null,disabled:!reachable(o,i)}),ss?.choices[i]?tag(ss.choices[i].ruleOutcome,'evidence'):stepPhase(o,i)==='locked'?tag('기록 대기'):null)));
     const siteIndex=h('ol.tc-map-bullets',null,o.sites.map((s,i)=>h('li',null,h('span.tc-full-only',{text:`${String(i+1).padStart(2,'0')} · `}),`${s.label} · X ${s.x} / Y ${s.y}${decision?.siteStates[i]?' · '+decision.siteStates[i]:''}`)));
-    return h('div.tc-map-stack',null,mapFrame(o.code,s.time,mapGraphic(o.label,box,body,[],p,routes,s.units.map(u=>({...u,selected:true}))),control),foldPanel('OPERATION PHASES','작전 단계','현재 선택한 단계와 접근 가능한 기록.',steps),
-      foldPanel('UNIT STATUS','부대 상태','호출부호·상태·좌표를 포함한 편제 현황.',h('ul.tc-map-units',null,s.units.map(u=>h('li',null,h('img',{src:uri(symbol(u.status,20,20,'',p),'0 0 40 40',p),width:40,height:40,alt:''}),h('b.tc-code',{text:u.id}),h('span',{text:statusLabels[u.status]||u.status}),h('span.tc-code',{text:`X ${u.x} / Y ${u.y}`}))))),disclosure('SYMBOL KEY','지도 기호 범례',legend(),{hint:'지도 기호의 상태 의미.'}),
-      foldPanel('SITE INDEX','작전 지점','작전 지점과 좌표·현장 판정.',siteIndex));
+    return h('div.tc-map-stack',null,mapFrame(o.code,s.time,mapGraphic(o.label,box,body,[],p,routes,s.units.map(u=>({...u,selected:true}))),control),foldPanel('OPERATION PHASES','작전 단계','지금 선택한 단계와 열 수 있는 기록.',steps),
+      foldPanel('UNIT STATUS','부대 상태','부대별 호출부호와 상태를 보여 준다. 위치도 확인할 수 있다.',h('ul.tc-map-units',null,s.units.map(u=>h('li',null,h('img',{src:uri(symbol(u.status,20,20,'',p),'0 0 40 40',p),width:40,height:40,alt:''}),h('b.tc-code',{text:u.id}),h('span',{text:statusLabels[u.status]||u.status}),h('span.tc-code',{text:`X ${u.x} / Y ${u.y}`}))))),disclosure('SYMBOL KEY','지도 기호 범례',legend(),{hint:'지도 기호의 상태 의미.'}),
+      foldPanel('SITE INDEX','작전 지점','각 작전 지점의 위치와 현장 판정을 보여 준다.',siteIndex));
   }
   function operationIntel(o){
     const decision=o.id===O.operationId?O.getDecision():null,id=scenarioForOperation(o),ending=id?P.getEnding(id):null;
     const inc=incident(o.incident)||root.ProjectCurseIncidentNetwork.incidentList.find(i=>i.operation===o.id);
     return intelPanel(
-      panel(o.code,o.label,txt(o.summary),kv([['분류',o.classification],['기록 상태',o.status],['현장 판정',decision?.status||ending?.status],['지역',o.region]]),o.directive?note('현장 명령',o.directive):null,o.objectives?foldPanel('OBJECTIVES','작전 목표','명령에 등록된 목표.',list(o.objectives)):null,references(o,inc),linkCollection('OPERATION LINKS','연결 기록·지도·판정',[id?link(scenarios[id].title,'map-room','pilgrimage',id):null,inc?.region?link('해당 지역에서 보기','map-room','region',inc.region):null,o.id===O.operationId?link('작전 판단 원문','archive-entry','Operation_Broken_Crown'):null].filter(Boolean)),
-      foldPanel('COMMUNICATION LOG','현재까지의 통신 기록','현 단계까지의 교신과 신호 소실.',h('ol.tc-log.tc-map-log',{'aria-label':'단계별 통신 기록'},o.steps.slice(0,step+1).map((s,i)=>h('li',{class:s.units.some(u=>['lost','split'].includes(u.status))?'is-loss':s.units.some(u=>u.status==='unstable')?'is-contact':null,'aria-current':i===step?'step':null},h('time',{text:s.time}),h('div',null,h('b',{text:s.title}),h('p.tc-map-copy',{text:s.note}))))))),
+      panel(o.code,o.label,txt(o.summary),kv([['분류',o.classification],['기록 상태',o.status],['현장 판정',decision?.status||ending?.status],['지역',o.region]]),o.directive?note('현장 명령',o.directive):null,o.objectives?foldPanel('OBJECTIVES','작전 목표','명령에 적힌 목표.',list(o.objectives)):null,references(o,inc),linkCollection('OPERATION LINKS','연결 기록·지도·판정',[id?link(scenarios[id].title,'map-room','pilgrimage',id):null,inc?.region?link('해당 지역에서 보기','map-room','region',inc.region):null,o.id===O.operationId?link('작전 판단 원문','archive-entry','Operation_Broken_Crown'):null].filter(Boolean)),
+      foldPanel('COMMUNICATION LOG','현재까지의 통신 기록','지금까지 주고받은 무전과 끊긴 신호.',h('ol.tc-log.tc-map-log',{'aria-label':'단계별 통신 기록'},o.steps.slice(0,step+1).map((s,i)=>h('li',{class:s.units.some(u=>['lost','split'].includes(u.status))?'is-loss':s.units.some(u=>u.status==='unstable')?'is-contact':null,'aria-current':i===step?'step':null},h('time',{text:s.time}),h('div',null,h('b',{text:s.title}),h('p.tc-map-copy',{text:s.note}))))))),
       decision?foldPanel('COMMAND DECISION',decision.title,`승인 상태: ${decision.unresolved}`,txt(decision.summary),txt(decision.observed),txt(decision.immediate),note('승인 대기',decision.unresolved),note('작전 영향',decision.consequence),note('후속 지침',decision.directive),note(O.canonBoundary.status,O.canonBoundary.scope)):null,
       ending?foldPanel('FIELD RESULT',ending.title,'현장 판정과 중앙 기록의 경계.',txt(ending.summary),txt(ending.consequence),note('현장 판정',scenarios[id].canonBoundary)):null);
   }
@@ -741,7 +742,7 @@ function operationTerrain(operation){
     if(s.id==='deadzone-recovery')return m.echo>=58||m.team<=45||m.tether<=30?'critical':m.echo>=30||m.team<=70||m.tether<=55?'unstable':'nominal';
     return m.corruption>=55||m.signal<=35?'critical':m.corruption>=28||m.fear>=58?'unstable':'nominal';
   }
-  function metricPanel(s,st){const risk=severity(s,st);return foldPanel('FIELD MEASUREMENT','현장 측정값',`현장 신호 ${risk==='critical'?'치명':risk==='unstable'?'불안정':'안정'} · 측정값과 기록 상태.`,h('div.tc-map-meters',null,s.metrics.map(m=>h('label',null,h('span',{text:m.label}),h('b',{text:`${st.metrics[m.key]}%`}),h('meter',{min:0,max:100,value:st.metrics[m.key],'aria-label':m.label})))),kv([['채널',s.channel],['기록',`${st.choices.length} / ${s.stages.length}`],['규칙 위반',String(st.violations)],['상태',st.status.toUpperCase()],['현장 신호',risk.toUpperCase()],['진행도',`${P.getSummary(s.id).progress}%`]]));}
+  function metricPanel(s,st){const risk=severity(s,st);return foldPanel('FIELD MEASUREMENT','현장 측정값',`현장 신호는 ${risk==='critical'?'치명 수준':risk==='unstable'?'불안정 수준':'안정 수준'}이다. 측정값과 기록 상태를 확인한다.`,h('div.tc-map-meters',null,s.metrics.map(m=>h('label',null,h('span',{text:m.label}),h('b',{text:`${st.metrics[m.key]}%`}),h('meter',{min:0,max:100,value:st.metrics[m.key],'aria-label':m.label})))),kv([['채널',s.channel],['기록',`${st.choices.length} / ${s.stages.length}`],['규칙 위반',String(st.violations)],['상태',st.status.toUpperCase()],['현장 신호',risk.toUpperCase()],['진행도',`${P.getSummary(s.id).progress}%`]]));}
   function decisionFeedback(s){
     if(feedback?.scenarioId!==s.id)return null;
     const changes=s.metrics.filter(m=>feedback.deltas[m.key]).map(m=>[m.label,`${feedback.deltas[m.key]>0?'+':''}${feedback.deltas[m.key]} · ${feedback.after[m.key]}%`]);
@@ -777,8 +778,8 @@ function operationTerrain(operation){
     const sum=V.getSummary(),entries=V.list();
     return h('div.tc-map-stack',null,bodyTitle('FIELD VERDICT ARCHIVE','현장 판정 보관',X.copy.archive),
       disclosure('VERDICT COUNTS','보관 현황',kv([['열린 기록',`${sum.unlocked} / ${sum.total}`],['읽지 않음',String(sum.unread)]]),{hint:'열린 기록과 읽지 않은 판정이 있는지 확인한다.'}),
-      Object.values(scenarios).map(s=>foldPanel(s.code,s.title,entries.some(item=>item.scenarioId===s.id&&item.unread)?'새로 도착한 판정이 있다.':'현장 판단과 접근 상태를 연다.',h('div.tc-rows',null,entries.filter(v=>v.scenarioId===s.id).map(v=>row(v.id,v.unlocked?v.title:v.lockedTitle,v.unlocked?v.summary:v.requirement,['verdict',v.id],v.unlocked?(v.unread?'새 기록':'확인함'):'접근 제한',v.unlocked?'evidence':'danger',v.unlocked&&v.unread))),link('현장 기록 보기','map-room','pilgrimage',s.id))),
-      disclosure('LOCAL STORAGE','판정 기록 관리',[txt(X.copy.archiveManage),action('모든 기록을 읽지 않음으로 표시','reset-read'),...Object.values(scenarios).map(s=>action(resetArm===`clear:${s.id}`?'한 번 더 눌러 판정 삭제 확인':`${s.title} 판정 삭제`,'clear-verdicts',s.id)),action(resetArm==='clear:all'?'한 번 더 눌러 전체 판정 삭제 확인':'모든 판정 기록 삭제','clear-verdicts','all',{class:'tc-btn--danger'})],{open:resetArm.startsWith('clear:'),hint:'읽음 상태를 바꾸거나 저장한 판정을 초기화한다.'}));
+      Object.values(scenarios).map(s=>foldPanel(s.code,s.title,entries.some(item=>item.scenarioId===s.id&&item.unread)?'새로 도착한 판정이 있다.':'현장 판단과 볼 수 있는 기록을 확인한다.',h('div.tc-rows',null,entries.filter(v=>v.scenarioId===s.id).map(v=>row(v.id,v.unlocked?v.title:v.lockedTitle,v.unlocked?v.summary:v.requirement,['verdict',v.id],v.unlocked?(v.unread?'새 기록':'확인함'):'접근 제한',v.unlocked?'evidence':'danger',v.unlocked&&v.unread))),link('현장 기록 보기','map-room','pilgrimage',s.id))),
+      disclosure('LOCAL STORAGE','판정 기록 관리',[txt(X.copy.archiveManage),action('모든 기록을 읽지 않음으로 표시','reset-read'),...Object.values(scenarios).map(s=>action(resetArm===`clear:${s.id}`?'한 번 더 눌러 판정 삭제 확인':`${s.title} 판정 삭제`,'clear-verdicts',s.id)),action(resetArm==='clear:all'?'한 번 더 눌러 전체 판정 삭제 확인':'모든 판정 기록 삭제','clear-verdicts','all',{class:'tc-btn--danger'})],{open:resetArm.startsWith('clear:'),hint:'읽음 표시를 바꾸거나 저장한 판정을 지운다.'}));
   }
   function verdictSection(s){return panel('FIELD VERDICT',s.title,s.record?verdictRecord(s.record):null,...(s.paragraphs||[]).map(txt),s.warning?note('판정 한계',s.warning):null,s.table?h('div.tc-map-table-wrap',null,h('table.tc-map-table',null,h('thead',null,h('tr',null,s.table.headers.map(t=>h('th',{scope:'col',text:t})))),h('tbody',null,s.table.rows.map(row=>h('tr',null,row.map(t=>h('td',{text:t}))))))):null,s.quote?h('blockquote.tc-map-quote',{text:s.quote}):null);}
   function verdictView(entry){
@@ -788,9 +789,9 @@ function operationTerrain(operation){
     const sections=sectionItems.length>1?PC.tabs({id:'tc-map-verdict-sections',label:'현장 판정 기록 절',active:sectionItems[0].id,items:sectionItems}):null;
     const related=[link('판정 보관 목록','map-room','verdict'),link('현재 현장 기록','map-room','pilgrimage',entry.scenarioId),d.unlockScenario?link('후속 현장 기록','map-room','pilgrimage',d.unlockScenario):null].filter(Boolean);
     return h('article.tc-map-stack',null,bodyTitle(d.code,d.title,d.summary),
-      disclosure('VERDICT METADATA','기록 출처와 보조 수치',kv([['보관 시각',d.date],['작성',d.owner],['분류',d.classification],...d.telemetry]),{hint:'보관 시각·작성자·분류와 기계 측정값.'}),
+      disclosure('VERDICT METADATA','기록 출처와 보조 수치',kv([['보관 시각',d.date],['작성',d.owner],['분류',d.classification],...d.telemetry]),{hint:'기록 정보와 기계가 잰 값을 보여 준다.'}),
       sections?h('div.tc-map-verdict-sections',null,sections.tablist,sections.panels):sectionItems[0]?.body||null,
-      linkCollection('RELATED VERDICTS','이어지는 현장·판정',related,'이전·현재·후속 현장 기록.'));
+      linkCollection('RELATED VERDICTS','이어지는 현장·판정',related,'이전과 현재, 다음 현장 기록을 확인한다.'));
   }
   function indexTarget(item){
     const t=item.target;
@@ -817,7 +818,7 @@ function operationTerrain(operation){
   function signalIndex(){return disclosure('SIGNAL INDEX','신호 목록',[
     txt(X.copy.index),h('div.tc-map-search',null,h('label',{for:'tc-map-search',text:'사건·지역·세력·호출부호 검색'}),h('input#tc-map-search',{type:'search',value:state.indexQuery,maxlength:80,autocomplete:'off',dataset:{control:'search'}}),action('검색 지우기','clear-search')),
     h('div.tc-seg',{role:'group','aria-label':'신호 목록 필터'},signals.filters.map(f=>action(f.label,'filter',f.id,{'aria-pressed':String(f.id===state.indexFilter)}))),h('p.tc-code.tc-full-only#tc-map-count',{'aria-live':'polite',text:`${filtered().length}개 접촉 정보 · 전체 ${signals.items.length}개`}),h('div.tc-rows#tc-map-search-results',null,indexRowsFolded()),note('위치 공개 보류',X.copy.withheld,'evidence')
-  ],{open:state.indexOpen||fullDensity(),hint:'검색·판정 필터·위치 공개 보류가 포함된 접촉 목록.',dataset:{disclosure:'index'}});}
+  ],{open:state.indexOpen||fullDensity(),hint:'검색이나 판정으로 지점을 찾는다. 위치를 공개하지 않은 기록도 나온다.',dataset:{disclosure:'index'}});}
   function updateIndex(){const results=host.querySelector('#tc-map-search-results');if(results)PC.clear(results).append(...indexRowsFolded());const count=host.querySelector('#tc-map-count');if(count)count.textContent=`${filtered().length}개 접촉 정보 · 전체 ${signals.items.length}개`;host.querySelectorAll('[data-action="filter"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.key===state.indexFilter)));saveSession();}
   function operationDirectory(){
     const entries=items=>items.map(o=>dated(h('div.tc-map-catalog-entry',null,row(o.code,o.label,`${itemYear(o)==null?X.copy.timelineUnknown:itemYear(o)+'년 기록'} · ${o.region}`,['op',o.id],o.status||`${o.steps.length}단계`,lockedOperation(o)?'danger':'info')),o));
@@ -832,27 +833,27 @@ function operationTerrain(operation){
     const theaters=X.theaters.map(theaterCard);
     return h('div.tc-map-layout.tc-map-overview',null,
       h('div.tc-map-stack',null,map.board,
-        disclosure('CONTACT DIRECTORY','세계 지도 지점 목록',h('div.tc-rows',null,contactRows),{open:fullDensity(),hint:'좌표·기록 시점·관측 지점을 연다.'})),
+        disclosure('CONTACT DIRECTORY','세계 지도 지점 목록',h('div.tc-rows',null,contactRows),{open:fullDensity(),hint:'지점의 좌표와 기록 시점을 확인한다.'})),
       h('aside.tc-map-stack',null,
-        panel('OPERATIONAL THEATERS','주요 지역 상황',txt(X.copy.intro),h('div.tc-rows',null,theaters.slice(0,2)),theaters.length>2?disclosure('MORE THEATERS','다른 작전 지역',h('div.tc-rows',null,theaters.slice(2)),{open:fullDensity(),hint:X.theaters.slice(2).some(item=>/CRITICAL/.test(item.status))?'접힌 지역에 치명 판정이 등록되어 있다.':'다른 주요 작전 지역과 판정.'}):null),
+        panel('OPERATIONAL THEATERS','주요 지역 상황',txt(X.copy.intro),h('div.tc-rows',null,theaters.slice(0,2)),theaters.length>2?disclosure('MORE THEATERS','다른 작전 지역',h('div.tc-rows',null,theaters.slice(2)),{open:fullDensity(),hint:X.theaters.slice(2).some(item=>/CRITICAL/.test(item.status))?'접힌 지역에 치명 판정이 있다.':'다른 주요 작전 지역의 판정을 본다.'}):null),
         linkCollection('REGIONAL CONTROL','지역·동시 관측',[
           ...D.regions.map(item=>link(item.label,'map-room','region',item.id)),
           ...D.synchronyEvents.map(item=>link(item.title,'map-room','synchrony',item.id))
-        ],'지역 목록과 동시 관측 기록.'),
+        ],'지역 목록을 열고 동시 관측 기록도 확인한다.'),
         linkCollection('REGIONAL DRILLDOWN','지역 상세 지도',D.drilldowns.map(item=>link(item.label,'map-room','region',item.id)),'구역별 세부 지도를 연다.'),
         locations.length?foldPanel('RECENT COORDINATES','최근 본 좌표','이 기기에서 최근 열었던 지도 자료.',h('div.tc-rows',null,locations.map(({p,v},i)=>row(v.item?.code||String(i+1).padStart(2,'0'),v.title,'',p)))):null));
   }
   function mapLanding(){
-    return h('div.tc-map-stack',null,txt('작전 지도 갈래를 선택해 지역·사건·작전 기록을 확인한다.'),
+    return h('div.tc-map-stack',null,txt('지도를 고르면 지역을 볼 수 있다. 사건과 작전 기록도 확인할 수 있다.'),
       linkCollection('REGIONAL CONTROL','지역 지도',D.regions.map(item=>link(item.label,'map-room','region',item.id)),'지역별 상황도를 연다.'),
       linkCollection('REGIONAL DRILLDOWN','지역 상세 지도',D.drilldowns.map(item=>link(item.label,'map-room','region',item.id)),'구역별 지점을 연다.'));
   }
   function scenarioLanding(){
     const entries=Object.values(scenarios).map(s=>row(s.code,s.title,s.summary,['pilgrimage',s.id],allowedScenario(s.id)?({idle:'시작 전',active:'진행 중',complete:'완료 기록'}[P.get(s.id).status]||'진행 기록'):s.unlock.label,allowedScenario(s.id)?'info':'danger'));
-    const scenarioBody=h('div.tc-map-stack',null,txt('현장 경과는 참가자의 판단 기록이다. 보관된 판정은 별도 탭에서 확인한다.'),h('div.tc-rows',null,entries.slice(0,2)),entries.length>2?disclosure('MORE SCENARIOS','다른 현장 기록',h('div.tc-rows',null,entries.slice(2)),{open:fullDensity()}):null,link('현장 판정 보관','map-room','verdict'));
+    const scenarioBody=h('div.tc-map-stack',null,txt('참가자의 판단은 현장 경과에 남는다. 보관한 판정은 다른 탭에서 확인한다.'),h('div.tc-rows',null,entries.slice(0,2)),entries.length>2?disclosure('MORE SCENARIOS','다른 현장 기록',h('div.tc-rows',null,entries.slice(2)),{open:fullDensity()}):null,link('현장 판정 보관','map-room','verdict'));
     const tabs=PC.tabs({id:'tc-map-field',label:'현장 기록 보기',active:activeFieldTab,items:[
-      {id:'scenarios',title:'현장 기록',hint:'순례·검문·회수 판단',body:scenarioBody},
-      {id:'verdicts',title:'판정 보관',hint:'열린 판정과 접근 제한',body:verdictsView()}
+      {id:'scenarios',title:'현장 기록',hint:'현장에서 내린 판단 기록',body:scenarioBody},
+      {id:'verdicts',title:'판정 보관',hint:'열 수 있는 판정과 잠긴 기록',body:verdictsView()}
     ],onChange:id=>{activeFieldTab=id;}});
     return h('div.tc-map-field',null,tabs.tablist,tabs.panels);
   }
@@ -869,13 +870,13 @@ function operationTerrain(operation){
     const operationBody=v.kind==='op'?operationView(v.item):operationDirectory();
     const signalBody=['marker','synchrony'].includes(v.kind)?regionView(v):v.kind==='withheld'?panel('POSITION WITHHELD',v.item.title,txt(v.item.meta),note('위치 공개 보류',X.copy.withheld),references(v.item,{history:v.item.history,factions:v.item.factionKeys}),link('관측 지역','map-room','region',v.item.regionId)):h('div.tc-map-stack',null,signalIndex(),linkCollection('SIGNAL LOCATIONS','관측 지역·동시 관측',[
       ...D.regions.map(item=>link(item.label,'map-room','region',item.id)),...D.synchronyEvents.map(item=>link(item.title,'map-room','synchrony',item.id))
-    ],'관측 신호가 연결된 지도.'));
+    ],'관측 신호가 표시된 지도를 연다.'));
     const fieldBody=v.kind==='pilgrimage'?pilgrimageView(v.item):v.kind==='verdicts'?verdictsView():v.kind==='verdict'?verdictView(v.item):scenarioLanding();
     return [
       {id:'map',title:'전술 지도',hint:'세계·지역·상세 지도',body:mapBody},
-      {id:'operations',title:'작전 기록',hint:'단계별 명령과 통신 내용',body:operationBody},
-      {id:'signals',title:'사건·신호',hint:'검색·위치 공개·관측 자료',body:signalBody},
-      {id:'field',title:'현장·판정',hint:'참가자 판단과 보관 판정',body:fieldBody}
+      {id:'operations',title:'작전 기록',hint:'작전 단계마다 명령과 무전 내용을 확인한다',body:operationBody},
+      {id:'signals',title:'사건·신호',hint:'사건과 지점을 찾고 관측 기록을 본다',body:signalBody},
+      {id:'field',title:'현장·판정',hint:'참가자가 내린 판단과 보관한 판정',body:fieldBody}
     ];
   }
   function render(){
@@ -890,7 +891,7 @@ function operationTerrain(operation){
       mapTabs=PC.tabs({id:'tc-map-main',label:'작전 지도 갈래',active:activeMapTab,items:tabViews(view),onChange:id=>{activeMapTab=id;}});
       host.append(h('div.tc-map-content',null,mapTabs.tablist,...mapTabs.panels));
     }
-    if(storageFailed)host.append(note('이 단말의 저장 상태','저장소에 접근할 수 없습니다. 현재 탭의 읽음 상태만 유지됩니다.'));
+    if(storageFailed)host.append(note('이 단말의 저장 상태','저장할 수 없습니다. 읽음 표시는 이 탭에만 남습니다.'));
     setYear(mapYear);startSignals();saveSession();
   }
   function focusContent(){const el=host.querySelector('.tc-map-content [data-tc-focus], .tc-map-content h2');if(el){el.setAttribute('tabindex','-1');el.focus({preventScroll:true});}}

@@ -63,7 +63,7 @@
   function writeSaved(key, value, storage) {
     try { (storage || root.localStorage).setItem(key, JSON.stringify(value)); return true; } catch (_) { return false; }
   }
-  function storageNote(ok, target) { if (!ok) target.append(PC.missing('LOCAL SAVE UNAVAILABLE', '', '이 브라우저에서 저장할 수 없습니다. 현재 보고 있는 기록에만 반영됩니다.')); }
+  function storageNote(ok, target) { if (!ok) target.append(PC.missing('LOCAL SAVE UNAVAILABLE', '', '이 브라우저에서는 저장할 수 없습니다. 바뀐 내용은 지금 보는 기록에만 적용됩니다.')); }
   function focusAt(el) { if (el) { if (el.matches?.('details')) el.open = true; el.tabIndex = -1; el.focus({ preventScroll: true }); el.scrollIntoView({ block: 'start', behavior: reducedFx() ? 'auto' : 'smooth' }); } }
 
   function directory() {
@@ -133,9 +133,9 @@
     const flowPanel = h('div.tc-arc-stack', null, readingGroups);
     const verdictPanel = h('div.tc-arc-stack', null, verdictIndex());
     archiveTabs = PC.tabs({ id: 'tc-arc-index', label: '기록보관소 갈래', active: indexState.tab, items: [
-      { id: 'records', title: '증거 목록', hint: '검색·분류·기록 파일.', body: recordPanel },
-      { id: 'flow', title: '사건 흐름', hint: '시간과 사건에 따라 묶은 기록.', body: flowPanel },
-      { id: 'verdicts', title: '현장 판정', hint: '열린 판정 사본과 확인 상태.', body: verdictPanel }
+      { id: 'records', title: '증거 목록', hint: '기록을 찾고, 분류별로 본다.', body: recordPanel },
+      { id: 'flow', title: '사건 흐름', hint: '기록을 시간과 사건 순서로 묶었다.', body: flowPanel },
+      { id: 'verdicts', title: '현장 판정', hint: '볼 수 있는 판정 사본과 읽음 표시를 확인한다.', body: verdictPanel }
     ] });
     view.append(head, archiveTabs.tablist, ...archiveTabs.panels,
       disclosure('자료 출처 표시', Object.entries(evidence()?.classes || {}).map(([key, item]) => h('div.tc-arc-legend-row', null, sourceTag(key), h('p', { text: data.sourceDescriptions[key] || item.description }))), 'SOURCE STATE', PC.density?.() === 'full'));
@@ -220,7 +220,7 @@
       scope.on(range, 'change', () => root.PCAudio?.cue('evidence.compare'));
       stage.append(h('div.tc-arc-compare-labels', null, h('span', { text: item.className }), h('span', { text: item.comparison.label })), compare, h('label.tc-arc-range', { for: range.id }, '두 그림을 맞춰 볼 경계', range));
     } else stage.append(current);
-    const sync = () => { const imgs = [...stage.querySelectorAll('img')], ready = imgs.every(img => img.complete && img.naturalWidth > 0); if (range) range.disabled = !ready; loading.textContent = ready ? `${imgs.length} / ${imgs.length}개 원본 크기 자료 받음` : '자료 받는 중 · 불러오지 못한 자료는 다시 받을 수 있습니다.'; };
+    const sync = () => { const imgs = [...stage.querySelectorAll('img')], ready = imgs.every(img => img.complete && img.naturalWidth > 0); if (range) range.disabled = !ready; loading.textContent = ready ? `${imgs.length} / ${imgs.length}개 원본 크기 자료를 받았습니다.` : '자료를 받고 있습니다. 받지 못한 자료는 다시 받을 수 있습니다.'; };
     stage.querySelectorAll('img').forEach(img => { scope.on(img, 'load', sync); scope.on(img, 'error', sync); }); sync();
     imageDialog.replaceChildren(h('header.tc-arc-dialog-head', null, h('div', null, h('p.tc-code', { text: `${item.recordId} / ${imageIndex + 1} OF ${images.length}` }), h('h2#tc-arc-evidence-title', { text: item.assetId })), close), stage, loading,
       h('p', { text: item.caption || item.alt }), kv([['출처 판정', sourceTag(item.className)], ['출처', item.source], ['시점', item.date], ['무결성', item.integrity], ['원본 상태', item.comparison ? '비교 자료 연결됨' : item.originalState === 'missing' ? '원본 미등록' : item.originalState === 'available' ? '원본 계열 확인' : '추가 확인 필요'], ['관계', item.comparison?.relationship || '단일 자산']]),
@@ -248,7 +248,7 @@
       const target = root.ProjectCursePilgrimageData?.scenarios[scenario]?.mapTarget;
       if (target?.detail) links.set(`target:${target.detail}`, link('판정 좌표를 작전 지도에서 확인', 'map-room', 'region', target.detail));
     }
-    if (!links.size) return h('p.tc-muted', { text: '관련 작전·세력 연결 미등록' });
+    if (!links.size) return h('p.tc-muted', { text: '이 기록과 이어지는 자료가 없습니다.' });
     const all = [...links.values()];
     const remainder = all.length > 2 ? disclosure('나머지 연결 자료', h('nav.tc-btnrow', { 'aria-label': '추가 관련 기록' }, all.slice(2)), 'MORE LINKS', PC.density?.() === 'full') : null;
     return disclosure('관련 작전·세력·기록', [h('nav.tc-btnrow', { 'aria-label': '관련 작전·세력·기록' }, all.slice(0, 2)), remainder], 'RELATED FILES', PC.density?.() === 'full', '연결 기록은 두 항목씩 나누어 볼 수 있다.');
@@ -263,9 +263,9 @@
       kv([['증거 번호', record?.code || item?.code || id], ['보안 등급', item?.classification || (id === 'Cults_871104' ? data.copy.securityFacts[0][1] : '별도 등급 미등록')], ['작성·기록일', record?.date || item?.date || '미등록'], ['출처', item?.owner || cinema?.sourceLabel || '미등록'], ['형식', record?.format === 'video' ? '영상' : '문서'], ['분류', record ? categoryLabel(record) : '내부 문서'], ['위험도', riskTag(record?.risk)], ['출처 판정', sourceState]]),
       item?.date && record?.date && item.date !== record.date ? kv([['본문 기록일·개정 이력', item.date]]) : null,
       locked?.querySelector('.doc-meta') ? h('p.tc-arc-meta', { text: locked.querySelector('.doc-meta').textContent }) : null,
-      disclosure('인계 기록·정보 한계', custody.length ? custody.map(r => kv([['기록', r.code], ['작성자', r.author], ['받는 곳', r.recipient], ['근거', r.evidence], ['한계', r.limit]])) : h('p.tc-muted', { text: '이 자료에 등록된 인계 기록이 없습니다.' }), 'CHAIN OF CUSTODY'),
+      disclosure('인계 기록·정보 한계', custody.length ? custody.map(r => kv([['기록', r.code], ['작성자', r.author], ['받는 곳', r.recipient], ['근거', r.evidence], ['한계', r.limit]])) : h('p.tc-muted', { text: '이 자료에는 인계 기록이 없습니다.' }), 'CHAIN OF CUSTODY'),
       related(id, item), h('p.tc-code.tc-full-only', { text: `ATTACHMENTS / ${item?.sections?.length || 0} DOCUMENT SECTIONS${cinema ? ` · ${registry().pages(id).length} VIDEO FRAMES` : ''}` }),
-      h('p.tc-arc-annotation', { text: '판정 주석과 자료의 출처·한계는 각 쪽에 함께 표시됩니다.' }));
+      h('p.tc-arc-annotation', { text: '판정 설명과 자료의 출처, 한계를 각 쪽에서 함께 볼 수 있습니다.' }));
   }
   function tableBlock(table) {
     return h('div.tc-arc-table-wrap', { tabindex: '0', role: 'region', 'aria-label': '기록 표 · 좌우 이동 가능' }, h('table.tc-arc-table', null,
@@ -491,7 +491,7 @@
     function safePlay(item) {
       const scope = frameMedia.has(item) ? frameLife : life;
       const request = item.play();
-      request?.catch(error => { if (!scope?.live || !dialog.open || !playing || error.name === 'AbortError') return; audioState.textContent = '소리나 영상을 재생하지 못했습니다. 일시정지 후 다시 재생하거나 다음 쪽을 눌러 주세요.'; });
+      request?.catch(error => { if (!scope?.live || !dialog.open || !playing || error.name === 'AbortError') return; audioState.textContent = '소리나 영상이 재생되지 않습니다. 일시정지한 뒤 다시 재생하거나 다음 쪽으로 가 보세요.'; });
     }
     function syncMedia() {
       media().forEach(item => {
@@ -605,9 +605,9 @@
       scope.dispose(() => releaseMedia(still));
       const finish = () => { if (finished || !scope.live) return; finished = true; done(); };
       bridgeFinish = finish;
-      scope.on(video, 'ended', finish); scope.on(video, 'error', () => { audioState.textContent = '영상 구간을 읽지 못해 다음 쪽을 엽니다.'; finish(); });
+      scope.on(video, 'ended', finish); scope.on(video, 'error', () => { audioState.textContent = '영상 구간을 재생하지 못해 다음 쪽으로 넘어갑니다.'; finish(); });
       scope.dispose(() => releaseMedia(video)); schedule(finish, timeout);
-      replaceStage(video, h('div.tc-arc-bridge-still', null, still, h('span.tc-full-only.tc-code', { text: config.sourceLabel }), h('p', { text: '기록 신호 읽는 중' })));
+      replaceStage(video, h('div.tc-arc-bridge-still', null, still, h('span.tc-full-only.tc-code', { text: config.sourceLabel }), h('p', { text: '기록 신호를 읽고 있습니다.' })));
       sync(); syncMedia();
     }
     function pause() {
@@ -681,8 +681,8 @@
     const viewport = h('div.tc-arc-cinema-viewport', null, noise, stage);
     dialog.append(h('header.tc-arc-cinema-head', null, h('h2#tc-arc-cinema-title', { text: '기록 영상' }), chooser, closeButton), viewport,
       h('footer.tc-arc-cinema-footer', null, progress, h('div.tc-arc-player-controls', null, previous, toggle, next, button('처음부터', restart), soundControl), status, audioState,
-        h('p#tc-arc-cinema-help.tc-full-only', { text: 'Tab 조작 이동 · P 재생·정지 · ← → 쪽 이동 · R 처음부터 · Esc 닫기' })), bgm, radio);
-    shell.append(h('h2', { text: '기록 영상' }), h('p', { text: '전체 화면에서 영상과 소리를 재생합니다. Esc나 닫기를 누르면 이 기록으로 돌아옵니다.' }), launch, transcript, dialog);
+        h('p#tc-arc-cinema-help.tc-full-only', { text: 'Tab으로 항목 이동 · P로 재생·정지 · ← →로 쪽 이동 · R로 처음부터 · Esc로 닫기' })), bgm, radio);
+    shell.append(h('h2', { text: '기록 영상' }), h('p', { text: '영상과 소리를 전체 화면으로 재생합니다. Esc를 누르거나 닫기 버튼을 누르면 기록으로 돌아옵니다.' }), launch, transcript, dialog);
     life.dispose(() => { close(false); [bgm, radio, noise].filter(Boolean).forEach(releaseMedia); });
     player = { pause, close, syncFx }; return shell;
   }
@@ -716,7 +716,7 @@
     function showDetail() {
       auditDetailLife?.end(); auditDetailLife = lifetime();
       list.querySelectorAll('[data-path]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.path === auditState.selected)));
-      if (auditState.scope === 'reference') { detail.replaceChildren(note('REFERENCE ONLY', '참고 전용 자료의 편입 제한은 각 항목에 표시된 기준을 따릅니다.')); return; }
+      if (auditState.scope === 'reference') { detail.replaceChildren(note('REFERENCE ONLY', '참고 전용 자료는 항목마다 적힌 기준에 맞춰 다룹니다.')); return; }
       const asset = matches.find(a => a.path === auditState.selected);
       if (!asset) { detail.replaceChildren(PC.missing('MEDIA NOT SELECTED', auditState.selected || '', '목록에서 볼 자료를 고르십시오.')); return; }
       detail.replaceChildren(h('p.tc-code', { text: asset.kind.toUpperCase() }), h('h2', { text: asset.path.split('/').at(-1), tabindex: '-1' }),
@@ -765,19 +765,19 @@
     } else {
       const record = records().find(r => r.id === activeId), locked = [...doc.querySelectorAll('#tc-vault > article')].find(el => el.dataset.record === activeId);
       const item = Object.hasOwn(documents(), activeId) ? documents()[activeId] : verdictDocument(activeId);
-      if (!record && !item && !locked) { view.append(PC.missing('RECORD MISSING', activeId, '이 주소에 해당하는 기록이나 받은 현장 기록이 없습니다.'), link('기록 목록', 'archive-entry')); return; }
+      if (!record && !item && !locked) { view.append(PC.missing('RECORD MISSING', activeId, '이 주소에 맞는 기록이나 받은 현장 기록이 없습니다.'), link('기록 목록', 'archive-entry')); return; }
       PC.setTitle(record?.title || item?.title || locked?.querySelector('.doc-title')?.textContent || activeId);
       const threat = threatLevels[String(record?.risk || '').toUpperCase()]; if (threat) PC.threat?.(threat);
       view.append(fileCover(activeId, record, item, locked));
       const cinema = registry()?.get(activeId) ? cinemaViewer(activeId) : null;
-      const body = locked ? protectedBody(locked) : item ? documentBody(item) : PC.missing('RECORD BODY MISSING', activeId, '목록에 있으나 본문이 등록되지 않았습니다.');
+      const body = locked ? protectedBody(locked) : item ? documentBody(item) : PC.missing('RECORD BODY MISSING', activeId, '목록에는 있지만 본문이 없습니다.');
       if (record?.cover && !images.some(image => image.path === evidence().normalize(record.cover))) registerImage(record.cover, record.title, record.title);
       const mediaPanel = h('div.tc-arc-stack', null,
-        evidenceIndex() || h('p.tc-muted', { text: '등록된 시각 첨부가 없습니다.' }),
+        evidenceIndex() || h('p.tc-muted', { text: '첨부한 시각 자료가 없습니다.' }),
         cinema || null);
       const recordTabs = PC.tabs({ id: 'tc-arc-record', label: '기록 파일 갈래', active: cinema ? 'media' : 'document', items: [
-        { id: 'document', title: '기록 본문', hint: '원문 본문과 경고, 기록 절.', body: body },
-        { id: 'media', title: cinema ? '첨부·기록 영상' : '시각 첨부', hint: '출처 판정과 첨부 자료.', body: mediaPanel }
+        { id: 'document', title: '기록 본문', hint: '원문과 경고를 읽는다.', body: body },
+        { id: 'media', title: cinema ? '첨부·기록 영상' : '시각 첨부', hint: '첨부 자료와 출처를 확인한다.', body: mediaPanel }
       ] });
       view.append(recordTabs.tablist, ...recordTabs.panels,
         h('nav.tc-btnrow.tc-arc-file-end', null, backLink(), button('표지로', () => focusAt(view.querySelector('h1')))));

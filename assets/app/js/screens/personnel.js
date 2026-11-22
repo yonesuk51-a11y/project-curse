@@ -121,7 +121,7 @@
           return members.length ? rosterFold(group, members, group.label, `${group.code} / ADDITIONAL REGISTER`) : null;
         })));
     }
-    if (!records.length) rosterBodies.legacy.append(PC.missing('NO MATCHING PERSONNEL', state.query, '조건에 맞는 인물이 없습니다. 검색어나 상태·소속을 바꿔 보세요.'));
+    if (!records.length) rosterBodies.legacy.append(PC.missing('NO MATCHING PERSONNEL', state.query, '이 조건에 맞는 인물이 없습니다. 검색어나 필터를 바꿔 보세요.'));
     const groupLabel = state.group === 'all' ? '전체 인물' : groupOf(state.group)?.label;
     const statusLabel = state.status === 'all' ? '' : ` · ${own(source().statuses, state.status)?.label}`;
     const shown = resultList.querySelectorAll('[data-per-id]').length;
@@ -227,11 +227,11 @@
     return h('section.tc-per-link-group', null, h('h3', { text: '관련 사건·기록' }),
       record.incident ? kv([['인물 파일에 기록된 사건', record.incident]]) : null,
       h('div.tc-btnrow', null, link('세계 기록 목록 ↗', 'history')),
-      events.length ? [h('h3', { text: '소속 세력의 사건 목록' }), h('p', { text: '소속 세력과 관련된 사건입니다. 이 인물이 직접 참여했는지는 각 기록에서 확인해 주세요.' }),
+      events.length ? [h('h3', { text: '소속 세력의 사건 목록' }), h('p', { text: '이 사건은 소속 세력과 관련이 있습니다. 인물이 직접 참여했는지는 각 사건 기록에서 확인해 주세요.' }),
         ...eventCards.slice(0, 2), eventCards.length > 2 ? h('details.tc-disclosure.tc-per-more-links', null,
           h('summary', null, h('span', null, h('b', { text: '나머지 사건 기록' }))), h('div.tc-disclosure-body', null, eventCards.slice(2))) : null] : null,
       archiveLinks.length ? h('details.tc-disclosure.tc-per-crossref', { open: PC.density?.() === 'full' },
-        h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'ARCHIVE CROSS REFERENCE' }), h('b', { text: '연결 기록보관소' }), h('small.tc-hint', { text: '소속 세력의 사건철에 연결된 기록.' }))),
+        h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'ARCHIVE CROSS REFERENCE' }), h('b', { text: '연결 기록보관소' }), h('small.tc-hint', { text: '소속 세력의 사건 기록과 이어진 자료.' }))),
         h('div.tc-disclosure-body', null, archiveLinks.slice(0, 2), archiveLinks.length > 2 ? h('details.tc-disclosure.tc-per-more-links', null,
           h('summary', null, h('span', null, h('b', { text: '나머지 기록' }))), h('div.tc-disclosure-body', null, archiveLinks.slice(2))) : null)) : null);
   }
@@ -241,7 +241,7 @@
     if (!sections.length) return null;
     return h('details.tc-disclosure.tc-per-connections-fold', { open: PC.density?.() === 'full' },
       h('summary', null, h('span', null, h('span.tc-label.tc-full-only', { text: 'RELATED DOSSIERS' }), h('b', { text: '관련 세력·인물·사건·기록' }),
-        h('small.tc-hint', { text: '소속 확인, 관계 자료와 사건 연결을 포함한다.' }))),
+        h('small.tc-hint', { text: '인물과 이어진 자료를 모았다.' }))),
       h('div.tc-disclosure-body.tc-per-related-stack', null, sections));
   }
 
@@ -251,7 +251,7 @@
     delete detailView.dataset.perSelected;
     const record = person(id);
     if (!record) {
-      detailView.append(backLink(), h('h1', { text: '인물 파일 없음', 'data-tc-focus': true }), PC.missing('PERSONNEL NOT FOUND', id, '이 명부에 해당하는 인물 파일이 없습니다.'));
+      detailView.append(backLink(), h('h1', { text: '인물 파일 없음', 'data-tc-focus': true }), PC.missing('PERSONNEL NOT FOUND', id, '이 명부에서 인물 파일을 찾을 수 없습니다.'));
       return '인물 파일 없음';
     }
     detailView.dataset.perSelected = id;
@@ -261,16 +261,16 @@
     const profileParts = [
       section('PROFILE / KEY RECORD', '주요 기록', h('p', { text: record.overview }),
         kv([['소속', record.unit], ['연결 사건', record.incident]])),
-      (record.capabilities?.length || record.equipment?.length || record.abilitySource) ? panel('CAPABILITY / COST', '능력과 대가', '능력의 발현 경로와 확인된 대가, 장비 기록.',
+      (record.capabilities?.length || record.equipment?.length || record.abilitySource) ? panel('CAPABILITY / COST', '능력과 대가', '능력이 생긴 길과 확인된 대가를 본다. 장비 기록도 있다.',
         record.capabilities?.length ? h('div.tc-per-copy', null, h('h3', { text: '능력' }), bullets(record.capabilities)) : null,
         record.equipment?.length ? h('div.tc-per-copy', null, h('h3', { text: '장비' }), bullets(record.equipment)) : null,
         record.abilitySource ? kv([['발현 경로', record.abilitySource], ['확인된 대가', record.abilityCost || display().abilityCostMissing]]) : null) : null,
-      identity ? panel('IDENTITY', '신원', '등록부의 신원 대조 항목.', kv([['성별', identity.sex], ['출생', identity.birth], ['2006년 당시 나이', identity.age], ['출신', identity.origin], ['국적·신분', identity.nationality], ['소속', record.affiliationSummary]])) : null
+      identity ? panel('IDENTITY', '신원', '등록부에 적힌 인물 정보를 맞춰 본다.', kv([['성별', identity.sex], ['출생', identity.birth], ['2006년 당시 나이', identity.age], ['출신', identity.origin], ['국적·신분', identity.nationality], ['소속', record.affiliationSummary]])) : null
     ].filter(Boolean);
     const serviceHistory = h('ol.tc-per-chronology', null, (record.history || []).map(([date, text]) =>
       h('li', null, h('time.tc-code', { text: date }), h('span', { text }))));
     const serviceParts = [panel('BACKGROUND / SERVICE RECORD', '과거와 경력',
-      record.background?.[0] || '배경 설명과 경력 연혁을 기록했다.',
+      record.background?.[0] || '배경과 경력을 적었다.',
       (record.background || []).map((text) => h('p', { text })), serviceHistory)];
     const additionalParts = [
       panel('DISPOSITION / FIELD NOTES', '성향과 추가 기록', '현장 기록과 추가 메모를 포함한다.',
@@ -278,16 +278,16 @@
         record.fieldNotes?.length ? h('section.tc-per-copy', null, h('h3', { text: '현장 기록' }), bullets(record.fieldNotes)) : null,
         record.notes?.length ? h('section.tc-per-copy', null, h('h3', { text: '추가 기록' }), bullets(record.notes)) : null),
       panel('RECORD LIMITS', h('span', null, '확인되지 않은 부분', record.limits?.length ? h('span.tc-full-only', { text: ` · ${record.limits.length}개` }) : null),
-        '이 파일이 확정하지 않는 신원과 사건 범위를 적었다.',
+        '이 파일이 아직 확정하지 않은 신원과 사건 범위를 적었다.',
         h('aside.tc-note.tc-note--caution.tc-per-limits', null, h('b', { text: '확인되지 않은 부분' }), bullets(record.limits?.length ? record.limits : [display().limitDefault])))
     ];
-    if (Array.isArray(openCanon) && openCanon.length) additionalParts.push(panel('OPEN INTERPRETATION', '자유 해석', '확인되지 않은 해석 메모.',
+    if (Array.isArray(openCanon) && openCanon.length) additionalParts.push(panel('OPEN INTERPRETATION', '자유 해석', '아직 확인되지 않은 해석이 적혀 있다.',
       h('ul.tc-per-bullets', null, openCanon.map((text) => h('li', null, PC.openCanon?.(text) ?? h('span', { text }))))));
     const dossierTabs = PC.tabs({ id: 'tc-per-dossier', label: '인물 파일 갈래', active: 'profile', items: [
-      { id: 'profile', title: '주요 기록', hint: '인물 정보와 핵심 판정.', body: h('div.tc-per-dossier-stack', null, profileParts) },
-      { id: 'service', title: '과거·경력', hint: '경력 설명과 사건 연혁.', body: h('div.tc-per-dossier-stack', null, serviceParts) },
-      { id: 'connections', title: '연결 자료', hint: '관련 세력·인물·사건·기록.', body: h('div.tc-per-dossier-stack', null, relatedConnections(record)) },
-      { id: 'additional', title: '추가 기록·한계', hint: '미확인 범위와 추가 메모 포함.', body: h('div.tc-per-dossier-stack', null, additionalParts) }
+      { id: 'profile', title: '주요 기록', hint: '인물 정보와 주요 판정을 본다.', body: h('div.tc-per-dossier-stack', null, profileParts) },
+      { id: 'service', title: '과거·경력', hint: '경력과 사건이 이어진 과정을 본다.', body: h('div.tc-per-dossier-stack', null, serviceParts) },
+      { id: 'connections', title: '연결 자료', hint: '인물과 이어진 자료를 확인한다.', body: h('div.tc-per-dossier-stack', null, relatedConnections(record)) },
+      { id: 'additional', title: '추가 기록·한계', hint: '확인되지 않은 내용과 추가 메모를 본다.', body: h('div.tc-per-dossier-stack', null, additionalParts) }
     ] });
     PC.append(detailView, [navigation(record),
       h('div.tc-per-copy-feedback', { role: 'status', 'aria-live': 'polite' }),
@@ -368,8 +368,8 @@
     const allGroups = [...source().groups, ...(source().additionGroups || [])];
     rosterBodies = { legacy: h('div.tc-per-register-list'), addition: h('div.tc-per-register-list') };
     rosterTabs = PC.tabs({ id: 'tc-per-index', label: '인물 명부 기준', active: 'legacy', items: [
-      { id: 'legacy', title: `${display().year}년 명부`, hint: '2006년 당시의 인물 등록.', body: rosterBodies.legacy },
-      { id: 'addition', title: '추가 등록', hint: '별도 기준 연도로 등록한 인물.', body: rosterBodies.addition }
+      { id: 'legacy', title: `${display().year}년 명부`, hint: '2006년에 기록된 인물.', body: rosterBodies.legacy },
+      { id: 'addition', title: '추가 등록', hint: '따로 정한 연도에 기록한 인물.', body: rosterBodies.addition }
     ] });
     resultList = h('div#tc-per-results.tc-per-results', null, rosterTabs.tablist, ...rosterTabs.panels);
     const head = PC.screenHead('personnel', { desc: display().intro, meta: [['REGISTER', additions().length ? `${display().year} · ${source().additionLabel}` : display().year], ['FILES', `${everyone().length}`], ['GROUPS', `${allGroups.length}`]] });
