@@ -86,6 +86,8 @@ export default function ({ add, read, context, app }) {
     assert.ok(forms?.contractClauses?.length === 5 && forms?.interviewQuestions?.length === 5 && forms?.interviewVerdicts?.length && card.includes('function drawDoc'), '계약서·면담 기록');
     assert.ok(forms?.censorTerms?.includes('작전') && manual.includes('function censorLetter') && manual.includes('Object.values(counts).some((n) => n > 3)') && card.includes('function drawLetter'), '검열: 목록·반복 보류·그림');
     assert.ok(manual.includes("name: 'pair'") && card.includes("'대조 짝'"), '대조 짝 칸');
+    // 마지막 편지(2026-11-22 사용자 추천안 승인) — 검열 없이 봉한다. 그림은 봉인 도장과 봉랍
+    assert.ok(manual.includes("['last', '마지막 편지']") && manual.includes('function plainLetter') && manual.includes("isLast(v) ? plainLetter(v.body) : censorLetter(v.body, [v.to, v.from])") && card.includes("letter.kind === 'last'") && card.includes("['봉인', '마지막 편지']"), '마지막 편지: 고르기·검열 없음·봉인 그림');
     assert.ok(manual.includes("section('현장조 편성과 계수')") && manual.includes("'협력원'"), '자리는 교범 다섯과 협력원');
     assert.ok(manual.includes('sheetTimers.report, sheetTimers.squad, sheetTimers.letter, sheetTimers.contract, sheetTimers.interview'), '떠날 때 타이머 정리');
     assert.ok(!/점수|보상|레벨|경험치/.test(manual.slice(manual.indexOf('function reportPanel'), manual.indexOf('function registerPanel'))), '게임 장치 없음');

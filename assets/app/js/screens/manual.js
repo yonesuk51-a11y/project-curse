@@ -122,7 +122,7 @@
     register: '자캐 등록 양식과 등록증 그림(PNG).',
     report: '분 단위 시각·인원 계수·남은 것. 액션 글에 붙이는 교전 보고.',
     squad: '여러 자캐를 한 분대로. 다섯 자리와 협력원.',
-    letter: '지명·숫자는 검은 막대로. 다른 자캐에게 보내는 편지.',
+    letter: '검열 편지는 지명·숫자를 검은 막대로. 마지막 편지는 봉해 둔다.',
     contract: '자캐끼리 주고받는 의뢰. 세 번째 인식표 조항.',
     interview: '캐릭터 소개를 면담 기록처럼. 관찰과 해석을 나눈다.',
     // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
@@ -702,8 +702,14 @@
   }
 
   /* 검열 편지(2026-11-22 사용자 추천안 승인) — 차단선 안쪽에서 나가는 편지는 S.I.D 우편 검열을 거친다.
-     지명·숫자·작전 말·호출부호를 검은 막대로 지운다. 이름(받는 사람·보내는 사람)은 남긴다. 같은 문장이 세 번 넘게 나오면 보류. */
+     지명·숫자·작전 말·호출부호를 검은 막대로 지운다. 이름(받는 사람·보내는 사람)은 남긴다. 같은 문장이 세 번 넘게 나오면 보류.
+     마지막 편지(2026-11-22 사용자 추천안 승인) — 출동 전에 쓰고 검열 없이 봉한다. 이름표가 돌아오면 열린다. */
   const LETTER_KEY = 'pc6_field_letter_v1';
+  const LETTER_KINDS = [['censored', '검열 편지'], ['last', '마지막 편지']];
+  // 마지막 편지는 지우지 않는다 — 검열 편지와 같은 토막 모양으로만 나눈다
+  function plainLetter(body) {
+    return { lines: String(body || '').split('\n').map((line) => line.split(/(\s+)/).map((token) => ({ text: token, cut: false }))), cut: 0, held: false };
+  }
   function censorTerms() {
     const fw = framework() || {};
     const forms = root.ProjectCurseCommunityGuide?.forms || {};
@@ -738,31 +744,45 @@
     const Card = root.PCRegisterCard || null;
     const saved = loadSheet(LETTER_KEY);
     const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
+      sheetField('편지 종류', sheetSelect('kind', LETTER_KINDS, saved.kind === 'last' ? 'last' : 'censored'), '마지막 편지는 검열하지 않고 봉해 둔다. 이름표가 돌아오면 열린다.'),
       sheetField('받는 사람', sheetInput('to', saved.to, 24)),
       sheetField('보내는 사람', sheetInput('from', saved.from, 24)),
-      sheetField('보내는 곳', sheetInput('origin', saved.origin, 30, { placeholder: '예: 카르벤 북문 대조실' }), '보내는 곳도 검열 대상이다.'),
+      sheetField('보내는 곳', sheetInput('origin', saved.origin, 30, { placeholder: '예: 카르벤 북문 대조실' }), '검열 편지에서는 보내는 곳도 지운다.'),
       h('label.tc-man-field.tc-man-field--wide', null, h('span', { text: '본문 (600자까지)' }),
         h('textarea', { name: 'body', rows: '8', maxlength: '600', autocomplete: 'off', text: saved.body || '' }),
-        h('small', { text: '지명·숫자·작전 말·호출부호는 검은 막대가 된다. 받는 사람과 보내는 사람의 이름은 남는다.' }))
+        h('small', { text: '검열 편지에서는 지명·숫자·작전 말·호출부호가 검은 막대가 된다. 받는 사람과 보내는 사람의 이름은 남는다.' }))
     );
     const preview = h('pre.tc-man-preview', { 'aria-live': 'polite' });
-    const canvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '검열 편지 그림 미리보기' }) : null;
+    const canvas = Card ? h('canvas.tc-man-card-canvas', { width: String(Card.WIDTH), height: String(Card.HEIGHT), role: 'img', 'aria-label': '편지 그림 미리보기' }) : null;
     const emblem = Card ? Card.emblem(() => draw()) : null;
     const values = () => {
       const d = new FormData(form);
-      return { to: String(d.get('to') || '').trim(), from: String(d.get('from') || '').trim(), origin: String(d.get('origin') || '').trim(), body: String(d.get('body') || '') };
+      return { kind: d.get('kind') === 'last' ? 'last' : 'censored', to: String(d.get('to') || '').trim(), from: String(d.get('from') || '').trim(), origin: String(d.get('origin') || '').trim(), body: String(d.get('body') || '') };
     };
-    const result = (v) => censorLetter(v.body, [v.to, v.from]);
+    const isLast = (v) => v.kind === 'last';
+    const result = (v) => (isLast(v) ? plainLetter(v.body) : censorLetter(v.body, [v.to, v.from]));
+    const originLines = (v) => (v.origin ? (isLast(v) ? plainLetter(v.origin) : censorLetter(v.origin, [])).lines : []);
     const bar = (token) => '■'.repeat(Math.max(2, Math.min(8, [...token].length)));
+    const joined = (lines) => lines.map((line) => line.map((t) => (t.cut ? bar(t.text) : t.text)).join(''));
     const text = (v) => {
       const r = result(v);
-      const originCut = v.origin ? censorLetter(v.origin, []).lines.map((line) => line.map((t) => (t.cut ? bar(t.text) : t.text)).join('')).join(' ') : '';
+      const originCut = joined(originLines(v)).join(' ');
+      if (isLast(v)) return [
+        '■ 마지막 편지 — 봉인',
+        '이름표가 돌아오면 연다. 살아 돌아오면 본인이 찾아가 태운다.',
+        `받는 사람: ${v.to || '______'}`,
+        `쓴 곳    : ${originCut || '______'}`,
+        '',
+        ...joined(r.lines),
+        '',
+        `보내는 사람: ${v.from || '______'}`
+      ].join('\n');
       return [
         `■ S.I.D 우편 검열 — ${r.held ? '보류(반복 문장)' : '통과'}`,
         `받는 사람: ${v.to || '______'}`,
         `보낸 곳  : ${originCut || '______'}`,
         '',
-        ...r.lines.map((line) => line.map((t) => (t.cut ? bar(t.text) : t.text)).join('')),
+        ...joined(r.lines),
         '',
         `보내는 사람: ${v.from || '______'}`,
         `검열 막대 ${r.cut}곳`
@@ -770,7 +790,7 @@
     };
     const sheet = (v) => {
       const r = result(v);
-      return { ...v, ...r, originLines: v.origin ? censorLetter(v.origin, []).lines : [], regNo: Card.sheetNo('MAIL', `${v.to}|${v.from}|${v.body.length}`), issued: Card.dtg() };
+      return { ...v, ...r, originLines: originLines(v), regNo: Card.sheetNo(isLast(v) ? 'SEAL' : 'MAIL', `${v.to}|${v.from}|${v.body.length}`), issued: Card.dtg() };
     };
     function draw() {
       if (!Card || !canvas) return;
@@ -786,7 +806,7 @@
     function save(status) {
       const v = values();
       Card.drawLetter(canvas, sheet(v), { emblem });
-      Card.save(canvas, Card.sheetFilename('검열편지', v.to || v.from)).then((ok) => {
+      Card.save(canvas, Card.sheetFilename(isLast(v) ? '마지막편지' : '검열편지', v.to || v.from)).then((ok) => {
         status.textContent = ok ? '저장했습니다. 받는 사람에게 보내는 글에 붙이면 됩니다.' : '저장하지 못했습니다. 그림을 길게 눌러 저장해 보십시오.';
         root.PCAudio?.cue(ok ? 'channel.command' : 'system.denied');
       });
@@ -795,9 +815,9 @@
     form.addEventListener('change', update);
     update();
     Card?.fontsReady().then(draw);
-    return panel('CENSORED MAIL', '검열 편지 양식', [
-      h('p.tc-man-lead', { text: '차단선 안쪽에서 나가는 편지는 S.I.D 우편 검열을 거친다. 쓰는 대로 검열된 모양을 보여 준다. 다른 사람의 자캐에게 보내는 글로 쓸 수 있다.' }),
-      sheetShell('CENSORED MAIL', form, preview, canvas, save, '편지 복사')
+    return panel('FIELD MAIL', '검열 편지·마지막 편지 양식', [
+      h('p.tc-man-lead', { text: '차단선 안쪽에서 나가는 편지는 S.I.D 우편 검열을 거치고, 쓰는 대로 검열된 모양을 보여 준다. 출동 전에 쓰는 마지막 편지는 검열 없이 봉해 두었다가 이름표가 돌아오면 연다. 다른 사람의 자캐에게 보내는 글로 쓸 수 있다.' }),
+      sheetShell('FIELD MAIL', form, preview, canvas, save, '편지 복사')
     ], { slug: 'letter', open: false });
   }
 
@@ -1081,7 +1101,7 @@
     const form = h('form.tc-man-form', { onsubmit: (event) => event.preventDefault() },
       field('이름', h('input', { name: 'name', type: 'text', maxlength: '24', autocomplete: 'off', value: saved.name || '' }), '캐릭터 이름. 등록증 그림에 크게 들어간다.'),
       // 호출부호가 비어 있으면 단말 열람자 호출부호(설정·접속 화면)를 먼저 채운다
-      field('호출부호', h('input', { name: 'callsign', type: 'text', maxlength: '24', autocomplete: 'off', value: saved.callsign || root.PCPrefs?.operator?.() || '' })),
+      field('호출부호', h('input', { name: 'callsign', type: 'text', maxlength: '24', autocomplete: 'off', value: saved.callsign || root.PCPrefs?.operator?.() || '' }), '본인이 짓지 않고 분대가 첫 출동 날 붙여 준다. 현장 말로 돌잡이.'),
       field('소속', select('faction', factionOptions, saved.faction || '')),
       field('배치선', select('line', [['', '선택'], ...LINES.map(([line, unit]) => [line, unit ? `${line} — ${unit}` : line])], saved.line || '')),
       field('분류', select('class', classOptions, saved.class || ''), '괴이는 등록 대상이 아니다.'),

@@ -251,6 +251,8 @@ const badSlots = [
 add('screen-visual-slots-resolve', districts.length > 0 && !badSlots.length, badSlots.join(' | '));
 // 리버스 지점의 민간인 빙의(2026-09-25 사용자 설정) — 세계 기본 규칙 화면이 데이터 항목과 판정표 연결을 실제로 그린다.
 const historyScreenSource = read('assets/app/js/screens/history.js');
+// 자캐에 쓰기 줄(2026-11-22 사용자 결정) — 메타 설명은 기록 본문과 따로 그린다.
+add('history-renders-life-meta-tips', historyScreenSource.includes("item.tip ? h('p.tc-hist-tip'") && read('assets/app/css/screens/history.css').includes('p.tc-hist-tip'));
 add('history-renders-reverse-site-possession', Boolean(W?.worldFramework?.reverseSiteCivilians?.rule) &&
   historyScreenSource.includes('possessionBlock(framework.reverseSiteCivilians)') && historyScreenSource.includes("PC.href('archive-entry', item.record)"));
 

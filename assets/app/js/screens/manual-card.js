@@ -583,15 +583,18 @@
   }
 
   // 검열 편지 — 종이 한 장. 지운 낱말은 검은 막대, 검열 도장. 보류면 붉은 줄.
+  // 마지막 편지(2026-11-22 사용자 추천안 승인) — 검열 막대 없이 봉인 도장과 봉랍 하나. 이름표가 돌아오면 연다.
   function drawLetter(canvas, letter, assets = {}) {
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
     const g = canvas.getContext('2d');
     if (!g) return false;
     g.textBaseline = 'alphabetic';
-    const head = { regNo: letter.regNo, issued: letter.issued, stamp: letter.held ? ['보류', '우편 검열'] : ['통과', '우편 검열'] };
+    const last = letter.kind === 'last';
+    const stamp = last ? ['봉인', '마지막 편지'] : letter.held ? ['보류', '우편 검열'] : ['통과', '우편 검열'];
+    const head = { regNo: letter.regNo, issued: letter.issued, stamp };
     background(g);
-    header(g, head, assets.emblem, { title: '검열 편지', code: 'S.I.D CENSORED MAIL' });
+    header(g, head, assets.emblem, last ? { title: '마지막 편지', code: 'SEALED LAST LETTER' } : { title: '검열 편지', code: 'S.I.D CENSORED MAIL' });
     // 종이
     const px = 56;
     const py = 236;
@@ -637,13 +640,33 @@
       return yy;
     };
     g.fillStyle = inkSoft;
-    text(g, '보낸 곳', px + 40, y, { size: 24, color: inkSoft, width: 200 });
+    text(g, last ? '쓴 곳' : '보낸 곳', px + 40, y, { size: 24, color: inkSoft, width: 200 });
     g.font = font(400, 26, SANS);
     y = drawTokens(letter.originLines?.length ? letter.originLines : [[{ text: '—', cut: false }]], y, 26, 36, 1, px + 150) - 36 + 4;
     y += 56;
-    y = drawTokens(letter.lines || [], y, 30, 44, Math.floor((py + ph - 140 - y) / 44));
-    text(g, `보내는 사람  ${letter.from || '—'}`, px + 40, py + ph - 56, { weight: 600, size: 30, color: ink, width: pw - 80 });
-    if (letter.held) {
+    // 마지막 편지는 아래에 봉인 문구와 봉랍 자리를 남긴다
+    const bodyBottom = py + ph - (last ? 190 : 140);
+    y = drawTokens(letter.lines || [], y, 30, 44, Math.floor((bodyBottom - y) / 44));
+    if (last) {
+      text(g, '이름표가 돌아오면 연다. 살아 돌아오면 본인이 찾아가 태운다.', px + 40, py + ph - 122, { size: 22, color: '#8a2f36', width: pw - 240 });
+      // 봉랍 — 본문 아래, 바닥 등록 인장(오른쪽 아래 원)과 겹치지 않는 자리
+      const cx = px + pw - 94;
+      const cy = py + ph - 136;
+      g.fillStyle = 'rgba(118, 26, 34, 0.94)';
+      g.beginPath();
+      g.arc(cx, cy, 44, 0, Math.PI * 2);
+      g.fill();
+      g.strokeStyle = 'rgba(232, 221, 212, 0.4)';
+      g.lineWidth = 2;
+      g.beginPath();
+      g.arc(cx, cy, 33, 0, Math.PI * 2);
+      g.stroke();
+      g.textAlign = 'center';
+      text(g, '봉', cx, cy + 12, { weight: 700, size: 34, color: '#e8ddd4', width: 56 });
+      g.textAlign = 'left';
+    }
+    text(g, `보내는 사람  ${letter.from || '—'}`, px + 40, py + ph - 56, { weight: 600, size: 30, color: ink, width: pw - (last ? 220 : 80) });
+    if (!last && letter.held) {
       g.strokeStyle = 'rgba(179, 60, 69, 0.85)';
       g.lineWidth = 6;
       g.beginPath();

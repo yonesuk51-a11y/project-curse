@@ -598,6 +598,8 @@
           (item.tables || []).map((table) => refTable(table)),
           signal ? PC.signalMark?.(signal) : null,
           manualLink(item.manualSection),
+          // 2026-11-22 사용자 결정: 메타 설명(현실에서 따온 것, 자캐에 쓰는 법)은 기록 본문과 따로 '자캐에 쓰기' 줄로
+          item.tip ? h('p.tc-hist-tip', null, h('b', { text: '자캐에 쓰기' }), h('span', { text: item.tip })) : null,
           // 2026-11-21 사용자 결정: 이어지는 기록은 본문을 열었을 때만, 둘까지
           linkChips((item.links || []).slice(0, 2), titles)
         )
