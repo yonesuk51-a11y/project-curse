@@ -10,7 +10,7 @@
   const APP_CHANNELS = [
     {
       id: 'field-manual', index: '06', code: 'FIELD MANUAL', label: '현장 지침', shortLabel: '지침',
-      description: '현장에 들어가기 전에 확인하는 기준. 교전 원칙, 철수 조건, 표식, 장비, 능력과 대가, 인원 등록 양식.',
+      description: '현장에 들어가기 전에 보는 기준. 싸우는 원칙과 물러날 때, 표식과 장비, 능력의 대가, 인원 등록 양식이 있다.',
       telemetry: [['SOURCE', 'N.H.C MANUAL'], ['REVISION', '2005.01.21'], ['FORM', 'FIELD REGISTER']]
     }
   ];

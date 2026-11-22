@@ -16,32 +16,32 @@
     channels:[
       {
         id:'terminal-home',index:'00',code:'PARTICIPANTS',label:'자캐',shortLabel:'자캐',theme:'command',glyph:'CN',
-        description:'폐쇄 서버의 현재 신호와 모든 기록 채널을 통합 지휘한다.',
+        description:'닫힌 서버에 지금 들어오는 신호와 모든 기록 채널을 한곳에서 지휘한다.',
         telemetry:[['NETWORK','ISOLATED'],['UPLINK','LOCAL'],['THREAT','ESCALATED']]
       },
       {
         id:'map-room',index:'01',code:'CARTOGRAPHY',label:'작전 지도',shortLabel:'지도',theme:'cartography',glyph:'MR',
-        description:'지역·현장·작전 좌표를 겹쳐 보고 생존 가능한 이동 경로를 확인한다.',
+        description:'지역과 현장, 작전이 벌어진 곳을 한 지도에 겹쳐 보고, 살아서 지나갈 수 있는 길을 찾는다.',
         telemetry:[['GRID','ACTIVE'],['LAYERS','SYNCHRONIZED'],['SIGNAL','UNSTABLE']]
       },
       {
         id:'history',index:'02',code:'CHRONOLOGY',label:'세계 기록',shortLabel:'연대기',theme:'chronology',glyph:'CH',
-        description:'분절된 사건 기록을 시간축에 재배열해 세계의 변곡점을 추적한다.',
+        description:'흩어진 사건 기록을 시간 순서로 다시 놓고, 세계가 꺾인 지점을 따라간다.',
         telemetry:[['SPAN','ORIGIN?–2042'],['INDEX','49 RECORDS'],['ERAS','10']]
       },
       {
         id:'faction-info',index:'03',code:'INTELLIGENCE',label:'세력 분석',shortLabel:'세력',theme:'intelligence',glyph:'IA',
-        description:'기관·교단·독립 세력의 관계와 충돌 가능성을 분석한다.',
+        description:'기관과 교단, 독립 세력 사이의 관계와 부딪힐 가능성을 살핀다.',
         telemetry:[['DOSSIERS','ACTIVE'],['TRUST','VARIABLE'],['NETWORK','CONTESTED']]
       },
       {
         id:'archive-entry',index:'04',code:'ARCHIVE VAULT',label:'기록보관소',shortLabel:'보관소',theme:'archive',glyph:'AV',
-        description:'회수 영상과 복구 문서를 분류하고 봉인 상태와 출처를 검증한다.',
+        description:'거둬 온 영상과 되살린 문서를 나눠 두고, 봉인 상태와 출처를 확인한다.',
         telemetry:[['VAULT','MOUNTED'],['RECOVERY','PARTIAL'],['ACCESS','LIMITED']]
       },
       {
         id:'personnel',index:'05',code:'PERSONNEL REGISTER',label:'인물 기록',shortLabel:'인물',theme:'personnel',glyph:'PR',
-        description:'2006년 명부와 2042 추가 등록 인물의 소속과 사건을 인물별로 따라간다.',
+        description:'2006년 명부와 2042년에 더 올린 인물의 소속과 사건을 한 사람씩 따라간다.',
         telemetry:[['BASIS','2006'],['REGISTER','56 FILES'],['STATUS','HISTORICAL']]
       }
     ],

@@ -527,7 +527,7 @@
           h('li', null, h('b', { text: item.title }), verdictTag(item.grade), h('p', { text: item.text }))
         ))
       )),
-      h('div.tc-note.tc-note--caution', null, h('b', { text: decline.status }), h('p', { text: '판정 등급이 정보 추정·증언 기반인 항목은 확정된 사실이 아니다.' }))
+      h('div.tc-note.tc-note--caution', null, h('b', { text: decline.status }), h('p', { text: '판정 등급이 ‘정보 추정’이나 ‘증언 기반’인 항목은 확정된 사실이 아니다.' }))
     );
   }
 
@@ -769,7 +769,7 @@
     ) : null;
     return h('div.tc-hist-ref', null,
       h('div.tc-hist-ref-lead', null,
-        h('p', { text: '세계가 어떻게 어긋나는지에 대한 세 가지 관측이다. 어느 기관도 확인하지 못했고, 셋 다 결정 대기 상태로 남아 있다.' }),
+        h('p', { text: '세계가 어떻게 어긋나 있는지 본 기록 세 가지다. 어느 기관도 확인하지 못해서, 셋 다 결정 대기로 남아 있다.' }),
         h('div.tc-note.tc-note--caution', null, h('b', null, bi('UNCONFIRMED PATTERNS', '확인되지 않은 규칙')), h('p', { text: '사례를 같은 원인으로 묶는 근거로 쓰지 않는다.' }))
       ),
       rule(framework.observerDivergence),
@@ -953,7 +953,7 @@
       eraIndex()
     );
     const world = h('div.tc-hist-tabbody', null,
-      h('p.tc-hist-tab-lead', { text: '사건이 아니라 세계가 돌아가는 방식이다. 규칙, 땅과 나라, 사람들의 삶, 도시와 목소리를 묶음으로 본다.' }),
+      h('p.tc-hist-tab-lead', { text: '여기에는 사건 대신 세계가 돌아가는 방식을 모았다. 기본 규칙, 땅과 나라, 사람들의 삶, 도시와 목소리로 나눠 본다.' }),
       refNotice = h('div.tc-hist-refnotice'),
       referenceStack()
     );
@@ -967,7 +967,7 @@
     indexView = h('div.tc-hist-indexview', null,
       PC.screenHead('history', {
         title: '세계 기록',
-        desc: '세계는 어느 날 한꺼번에 무너지지 않았다. 오래된 금기, 산업화된 계측, 대응기관의 모방과 대륙의 침묵이 수십 년에 걸쳐 겹쳤다. 사건 연표로 흐름을 잡고, 세계 설정에서 세계가 돌아가는 방식을 본다.',
+        desc: '세계는 어느 날 한꺼번에 무너지지 않았다. 오래된 금기를 기술이 재기 시작했고, 대응기관은 적을 닮아 갔다. 그러다 한 대륙과 연락이 끊겼다. 이 일들이 수십 년에 걸쳐 겹쳤다. 사건 연표로 흐름을 잡고, 세계 설정에서 세계가 돌아가는 방식을 본다.',
         meta: [['SPAN', 'ORIGIN?–2042'], ['INDEX', `${list.length} RECORDS`], ['ERAS', String(eras.length)]]
       }),
       historyTabs.tablist,

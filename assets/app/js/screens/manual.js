@@ -816,7 +816,7 @@
     update();
     Card?.fontsReady().then(draw);
     return panel('FIELD MAIL', '검열 편지·마지막 편지 양식', [
-      h('p.tc-man-lead', { text: '차단선 안쪽에서 나가는 편지는 S.I.D 우편 검열을 거치고, 쓰는 대로 검열된 모양을 보여 준다. 출동 전에 쓰는 마지막 편지는 검열 없이 봉해 두었다가 이름표가 돌아오면 연다. 다른 사람의 자캐에게 보내는 글로 쓸 수 있다.' }),
+      h('p.tc-man-lead', { text: '차단선 안쪽에서 나가는 편지는 S.I.D의 우편 검열을 거친다. 이 양식은 쓰는 대로 검열된 모양을 보여 준다. 출동 전에 쓰는 마지막 편지는 검열 없이 봉해 두었다가, 이름표가 돌아오면 연다. 다른 사람의 자캐에게 보내는 글로 쓸 수 있다.' }),
       sheetShell('FIELD MAIL', form, preview, canvas, save, '편지 복사')
     ], { slug: 'letter', open: false });
   }
@@ -1467,7 +1467,7 @@
     Card?.fontsReady().then(redraw);
 
     return panel('FIELD REGISTER', '현장 인원 등록 양식', [
-      h('p.tc-man-lead', { text: '현장에 들어가는 인원은 들어가기 전에 호출부호·배치선·표식을 원본 명단에 남긴다. 아래 양식은 교범의 표식과 장비군, 세계 기본 규칙의 발현 경로를 그대로 쓴다.' }),
+      h('p.tc-man-lead', { text: '현장에 들어가는 사람은 들어가기 전에 호출부호와 배치선, 표식을 원본 명단에 남긴다. 아래 양식의 표식과 장비 갈래는 교범을 따르고, 능력이 생긴 길(발현 경로)은 세계 기본 규칙을 따른다.' }),
       h('div.tc-man-register', null,
         form,
         h('div.tc-man-output', null,
