@@ -31,7 +31,7 @@
       {
         id:'world',label:'세계',code:'WORLD CONTROL',viewBox:'0 0 1200 620',
         status:'지역 선택',confidence:'관측망 63%',
-        description:'폐쇄 서버에 남은 신호를 지역별로 띄우고, 세부 좌표는 지역을 열어야 보인다.'
+        description:'닫힌 서버에 남은 신호를 지역별로 띄운다. 자세한 좌표는 지역을 열어야 보인다.'
       },
       {
         id:'eastasia',label:'동아시아',code:'EAST ASIA WATCH',viewBox:'665 45 520 290',
@@ -46,13 +46,13 @@
       {
         id:'northamerica',label:'북미 데드존',code:'DEAD ZONE / NORTH',viewBox:'15 35 520 290',
         status:'내륙 응답 없음',confidence:'지도 신뢰도 22%',
-        description:'북아메리카 내륙의 무응답권으로, 옛 국가 지도와 지금 순례자들이 가져오는 귀환 기록이 서로 맞지 않는다.',
+        description:'북아메리카 내륙의 무응답권, 곧 행정의 손이 끊긴 땅이다. 옛 나라 지도는 지금 순례자들의 귀환 기록과 맞지 않는다.',
         nomenclature:geography.deadZone
       },
       {
         id:'southamerica',label:'대흑림',code:'GREAT BLACK FOREST / SOUTH AMERICA',viewBox:'190 275 570 320',
         status:'공간 측량 불가',confidence:'지도 신뢰도 31%',
-        description:'남아메리카 내륙의 이상권이다. 바깥 해안선은 그대로인데 안쪽의 거리와 정착지 좌표는 거듭 어긋난다.',
+        description:'남아메리카 내륙의 이상권이다. 바깥 해안선은 그대로다. 그런데 안쪽은 거리와 정착지 좌표가 잴 때마다 어긋난다.',
         nomenclature:geography.greatBlackForest
       }
     ],
@@ -73,8 +73,8 @@
       {
         id:'three-night-silence',code:'SYNC-2042-1031',date:'2042.10.31',title:'삼야 무응답',duration:'61H 01M',
         status:'OBSERVED / CAUSE UNRESOLVED',confidence:'observed',history:'2042-10-31-three-night-silence',connection:'UNRESOLVED',route:null,
-        summary:'대흑림 성채 여섯 곳과 데드존 검문소 네 곳이 61시간 1분 동안 바깥과 교신이 끊겼다. 복구 장부에는 상대 권역의 호출 부호가 남았는데, 중계 경로는 확인되지 않았다.',
-        boundary:'열 개 표식은 같은 시간대의 독립 관측점이다. 대륙 사이의 통로·항로·지리적 연결을 뜻하지 않는다.',
+        summary:'대흑림 성채 여섯 곳과 데드존 검문소 네 곳이 61시간 1분 동안 바깥과 연락이 끊겼다. 그런데 복구 장부에는 서로 상대편 지역의 호출 부호가 남았다. 신호가 무엇을 거쳐 왔는지는 확인되지 않았다.',
+        boundary:'열 개 표식은 같은 시간대에 따로 기록된 관측 지점이다. 대륙 사이에 통로나 항로, 지리적 연결이 있다는 뜻은 아니다.',
         points:[
           {id:'gbf-bell-01',region:'southamerica',x:338,y:362,code:'G01',kind:'castle',label:'성채 타종 장부 01',site:'대흑림 북서 성채권',callsign:'DZ-GATE-07',log:'검문소 호출 부호 1회 기록'},
           {id:'gbf-bell-02',region:'southamerica',x:381,y:350,code:'G02',kind:'castle',label:'성채 타종 장부 02',site:'대흑림 북부 성채권',callsign:'DZ-WHITE-ASH',log:'백색 재 검문 코드 3회 기록'},
@@ -117,7 +117,7 @@
       ...(network?.operations||[]),
       {
         id:'op-deadzone-return',label:'돌아온 자의 이름',code:'DZ-RETURN-SCREEN-07',region:'북미 데드존',
-        summary:'서부 귀환 신호에서 검문소 07 내측문까지 이어지는 검문 경로로, 여기서 네 귀환자와 다섯 번째 생체 반응을 갈라냈다.',
+        summary:'서부 귀환 신호에서 검문소 07 안쪽 문까지 이어지는 검문 경로다. 여기서 돌아온 네 사람과 다섯 번째 생체 반응을 갈라냈다.',
         sites:[
           {x:92,y:112,label:'서부 귀환 신호',kind:'unknown'},
           {x:244,y:168,label:'백색 재 검문소',kind:'facility'},
@@ -138,8 +138,8 @@
       {
         id:'op-deadzone-recovery',label:'검문소 아래의 구조 신호',code:'DZ-OUTBOUND-R05',region:'북미 데드존 · 검문소 지하',
         incident:'evt-deadzone-recovery',scenario:'deadzone-recovery',unlockVerdict:'DZ-VR-04',classification:'BLACK / VERDICT GATED',status:'SEALED UNTIL DZ-VR-04',
-        summary:'검문소 07 지하의 존재하지 않는 층으로 내려가, 최초 구조 신호와 먼저 도착해 있던 회수팀을 쫓는 전진 회수 작전이다.',
-        directive:'DZ-VR-04 판정 기록을 복호화하기 전에는 출발 좌표를 개방하지 않는다. 물리 견인선이 끊기면 미래 흔적을 따라가지 말고 현 위치를 봉쇄한다.',
+        summary:'검문소 07 지하의 존재하지 않는 층으로 내려가는 전진 회수 작전이다. 맨 처음 들어온 구조 신호와, 먼저 도착해 있던 회수팀을 쫓는다.',
+        directive:'DZ-VR-04 판정 기록의 암호를 풀기 전에는 출발 좌표를 열지 않는다. 물리 견인선이 끊기면 미래의 흔적을 따라가지 말고, 지금 있는 자리를 막는다.',
         objectives:['검문소 07 지하 출발 좌표 확인','매몰 검문소 06 시간 기록 격리','팀 호출 부호와 가족 음성 분리','역행 고속도로 물리 장력 유지','원신호 송신기 회수 또는 봉쇄'],
         sites:[
           {x:82,y:92,label:'지하 출발 좌표',kind:'facility'},
@@ -182,7 +182,7 @@
       },
       {
         id:'op-immortality',label:'불멸을 향해',code:'OP-IMMORTALITY',region:'유럽 북해권',
-        summary:'유닛2가 들어간 때부터 피의 호수를 찾고 마지막으로 통신하기까지를 복구해 이은 작전 경로다.',
+        summary:'유닛2가 들어가 피의 호수를 찾고, 마지막으로 통신하기까지의 작전 경로다. 기록을 되살려 이어 붙였다.',
         sites:[
           {x:104,y:410,label:'진입 지점',kind:'facility'},
           {x:302,y:330,label:'버려진 텐트',kind:'incident'},
@@ -202,7 +202,7 @@
       },
       {
         id:'op-interline-night-patrol',scenario:'interline-night-patrol',label:'선간 지대 야간 순찰',code:'VSK-IL-01',region:'베스카 격리 구역 · 위치 미확정',
-        summary:'N.H.C가 베스카 격리 구역의 선 사이(선간 지대), 곧 두 이웃 나라 차단선 사이를 밤에 돈 순찰이다. 좌표는 이 작전도 안에서만 통하는 상대 위치다.',
+        summary:'현장을 지키는 N.H.C가 밤에 돈 순찰이다. 베스카 격리 구역의 선 사이(선간 지대), 곧 두 이웃 나라 차단선 사이를 돌았다. 좌표는 이 작전도 안에서만 통하는 상대 위치다.',
         sites:[
           {x:78,y:334,label:'외곽 집결점',kind:'facility'},
           {x:222,y:278,label:'이웃국 제1 초소',kind:'facility'},
@@ -222,7 +222,7 @@
       },
       {
         id:'op-red-moat-negotiation',scenario:'red-moat-negotiation',label:'붉은 해자 협상',code:'ORV-BLOCKADE-01',region:'오르비나 봉쇄 구역 · 위치 미확정',
-        summary:'오르비나 결계 바깥에서 사절을 넘겨받고 경계를 재고 말길을 시험한 일, 그리고 포위 지휘소의 결정까지를 적었다.',
+        summary:'오르비나 결계 바깥에서 있었던 일을 차례로 적었다. 사절을 넘겨받고, 경계를 재고, 말길을 시험했다. 끝은 포위 지휘소의 결정이다.',
         sites:[
           {x:74,y:275,label:'사절 인계선',kind:'facility'},
           {x:224,y:217,label:'결계 가장자리',kind:'anomaly'},
@@ -242,7 +242,7 @@
       },
       {
         id:'op-empty-seat-returner-screening',scenario:'empty-seat-returner-screening',label:'빈 의자 귀환자 심사',code:'VACANT-RETURN-01',region:'공석 구역 · 위치 미확정',
-        summary:'외곽 관측선에서 기억 대조실을 거쳐 인계선까지, 한 방향으로만 이어지는 검문소 절차를 적었다.',
+        summary:'외곽 관측선에서 기억 대조실을 거쳐 인계선까지 가는 검문소 절차다. 길은 한 방향으로만 이어진다.',
         sites:[
           {x:70,y:340,label:'외곽 관측선',kind:'facility'},
           {x:230,y:290,label:'무장 해제·봉인·삼중 계수',kind:'facility'},

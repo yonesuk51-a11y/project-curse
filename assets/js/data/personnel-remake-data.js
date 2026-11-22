@@ -32,22 +32,22 @@
     'ezekiel-kalp':{name:'엘리아스 카르프',unit:'아크 제2회수구역',role:'아크 회수구역장',recordFunction:'연구 자산 회수와 생존자 구조를 같은 명령서에 넣은 지휘관.',incident:'2006 북해 회수선 실종사건'},
     // 2026-09-24 사용자 설정글 반영: 이름을 사쿠마 유타로 되돌리고 전직 형사·U.A.C 정보원 출신·현 하이문 리더로 적는다.
     'sakuma-yuta':{name:'사쿠마 유타',unit:'하이문 리더 / 전 U.A.C 정보원',role:'전향 정보원 / 레드 마우스',recordFunction:'전직 형사이자 U.A.C 정보원 출신. 우시노다교의 힘에 매료돼 조직을 등졌고, 교단에 사람과 물자를 대며 그 힘에 다가가려 한다.',incident:'1989 도쿄 기록 및 2006 오리진 실험체 탈출'},
-    reiki:{name:'아마미야 레이',unit:'아크 공간감응 정찰조',recordFunction:'길을 찾을수록 자신의 공간 기억을 잃은 정찰원의 기록.',incident:'2005 아크 제7창고 선행정찰',abilitySource:'리버스 생존 후 공간감응',abilityCost:'감응한 경로 하나마다 개인 장소 기억 하나가 흐려짐'},
+    reiki:{name:'아마미야 레이',unit:'아크 공간감응 정찰조',recordFunction:'길을 찾을수록 자신의 공간 기억을 잃은 정찰원의 기록.',incident:'2005 아크 제7창고 선행정찰',abilitySource:'리버스 생존 후 공간감응',abilityCost:'감지한 길 하나마다 아는 장소의 기억이 하나씩 흐려짐'},
 
-    baranto:{name:'마테오 오르테가',unit:'N.H.C 제4봉쇄군 사령부',role:'제4봉쇄군 사령관',recordFunction:'승리보다 봉쇄선 유지와 철수 결정을 책임지는 현장 지휘관.',incident:'2006 북부 차단선 재편',abilitySource:'선천 생기 / 태양계 활성',abilityCost:'회복을 앞당길수록 이후 체온·면역 기능이 급격히 저하됨'},
-    yohan:{name:'요한 크루거',unit:'제4봉쇄군 지휘통신실',recordFunction:'명령을 전달하는 수행비서. 누가 그 명령을 승인했는지 확인한다.',incident:'2006 상충 철수명령 3건 보류',abilitySource:'선천 생기 / 전격 발현',abilityCost:'장거리 전도 뒤 청각과 단기기억이 순차적으로 끊김'},
-    mason:{name:'마커스 콜',unit:'제4봉쇄군 원거리차단조',role:'지원 저격수 / 코드명 메이슨',recordFunction:'한 발의 성공보다 관측과 철수로를 설계하는 지원 저격수.',incident:'2005 레드울프 이탈 당시 민간 회랑 엄호',abilitySource:'선천 생기 / 투시·초감각',abilityCost:'장시간 투시 뒤 현재 시야와 예측상이 겹쳐 오인사격 위험 증가'},
+    baranto:{name:'마테오 오르테가',unit:'N.H.C 제4봉쇄군 사령부',role:'제4봉쇄군 사령관',recordFunction:'승리보다 봉쇄선 유지와 철수 결정을 책임지는 현장 지휘관.',incident:'2006 북부 차단선 재편',abilitySource:'선천 생기 / 태양계 활성',abilityCost:'회복을 앞당길수록 그 뒤에 체온과 면역력이 급격히 떨어짐'},
+    yohan:{name:'요한 크루거',unit:'제4봉쇄군 지휘통신실',recordFunction:'명령을 전달하는 수행비서. 누가 그 명령을 승인했는지 확인한다.',incident:'2006 상충 철수명령 3건 보류',abilitySource:'선천 생기 / 전격 발현',abilityCost:'전기를 멀리 보낸 뒤에는 청각과 단기기억이 차례로 끊김'},
+    mason:{name:'마커스 콜',unit:'제4봉쇄군 원거리차단조',role:'지원 저격수 / 코드명 메이슨',recordFunction:'한 발의 성공보다 관측과 철수로를 설계하는 지원 저격수.',incident:'2005 레드울프 이탈 당시 민간 회랑 엄호',abilitySource:'선천 생기 / 투시·초감각',abilityCost:'오래 투시하면 지금 시야에 앞날의 모습이 겹쳐 잘못 쏠 위험이 커짐'},
 
-    frux:{name:'알렉세이 프루신',unit:'U.A.C 중앙조정국',role:'중앙조정국장 / 프룩스',recordFunction:'관리자. 국가·기관·민간 회랑의 상충 권한을 봉인문 한 장으로 임시 조정한다.',incident:'2006 북미 시설 동시폐쇄 승인',abilitySource:'의식 유물 / 봉인부적',abilityCost:'효력이 강할수록 부적 작성자의 이름과 소속이 기록망에서 지워짐'},
+    frux:{name:'알렉세이 프루신',unit:'U.A.C 중앙조정국',role:'중앙조정국장 / 프룩스',recordFunction:'관리자. 국가·기관·민간 회랑의 상충 권한을 봉인문 한 장으로 임시 조정한다.',incident:'2006 북미 시설 동시폐쇄 승인',abilitySource:'의식 유물 / 봉인부적',abilityCost:'부적이 셀수록 부적을 적은 사람의 이름과 소속이 기록망에서 지워짐'},
     pierce:{name:'에드워드 애쉬포드',unit:'U.A.C 감독위원회',recordFunction:'기관의 비밀 작전과 공개 책임 사이에서 표결하는 위원회 대표.',incident:'2006 위버멘시 폐기 결의'},
     natalia:{name:'나탈리아 볼코바',unit:'U.A.C 정보조정실',recordFunction:'서로 모순되는 기관 보고를 지우지 않고 병기하는 정보조정관.',incident:'2006 구출자 10명 신원대조표 작성'},
 
 
-    'alma-millen':{name:'웨이드 밀렌',unit:'S.O.N 레드울프망',role:'레드울프 이탈대 지휘관',recordFunction:'구조한 사람까지 처분하는 체제에 반기를 든 전직 N.H.C 지휘관.',incident:'2005 레드울프 이탈 / 2006 위버멘시 습격',abilitySource:'리버스 생존 / 무형 이계 접속',abilityCost:'이계에 머문 시간만큼 현실의 신체상과 타인의 얼굴 인식이 흐려짐'},
+    'alma-millen':{name:'웨이드 밀렌',unit:'S.O.N 레드울프망',role:'레드울프 이탈대 지휘관',recordFunction:'구조한 사람까지 처분하는 체제에 반기를 든 전직 N.H.C 지휘관.',incident:'2005 레드울프 이탈 / 2006 위버멘시 습격',abilitySource:'리버스 생존 / 무형 이계 접속',abilityCost:'이계에 머문 시간만큼 현실의 몸 감각과 남의 얼굴을 알아보는 힘이 흐려짐'},
 
-    'mizumi-yanami':{name:'야나미 미즈호',unit:'혈교 / 혈좌 주장자',role:'혈좌 주장자',recordFunction:'교주라는 호칭이 한 사람의 직책인지 계승 가능한 좌석인지 흔드는 인물.',incident:'2003 피의 강 결계 현장',abilitySource:'교단 계약 / 혈좌 의식',abilityCost:'타인의 피를 움직일수록 자신의 기억이 결계 참여자에게 분산'},
-    'apostle-luke-eugene':{name:'루시앙 유진',unit:'우시노다 제1석 주장자',role:'제1석 주장자 / 삼권능 모방자',recordFunction:'첫 번째 사도가 한 인간인지 시대마다 되풀이되는 좌석인지 판정할 수 없게 만드는 존재.',incident:'1986 피의 호수 삼권능 흔적',abilitySource:'기원 불명 / 삼중 권능 모방',abilityCost:'복제한 기술마다 고유한 기억과 신체 특징 하나가 일시 소실'},
-    'apostle-uro':{name:'우로 카인',unit:'우시노다 뇌영석 주장자',role:'뇌영석 주장자',recordFunction:'그림자와 기록선 자체를 전력 통로로 바꾸는 계승 경쟁자.',incident:'2006 시에나 계보문양 대조',abilitySource:'유물 계승 / 그림자뇌격',abilityCost:'전력을 흘린 지도·사진의 경로가 실제 기억 속 장소와 뒤섞임'},
+    'mizumi-yanami':{name:'야나미 미즈호',unit:'혈교 / 혈좌 주장자',role:'혈좌 주장자',recordFunction:'교주라는 호칭이 한 사람의 직책인지 계승 가능한 좌석인지 흔드는 인물.',incident:'2003 피의 강 결계 현장',abilitySource:'교단 계약 / 혈좌 의식',abilityCost:'남의 피를 움직일수록 자기 기억이 결계에 함께한 사람들에게 흩어짐'},
+    'apostle-luke-eugene':{name:'루시앙 유진',unit:'우시노다 제1석 주장자',role:'제1석 주장자 / 삼권능 모방자',recordFunction:'첫 번째 사도가 한 인간인지 시대마다 되풀이되는 좌석인지 판정할 수 없게 만드는 존재.',incident:'1986 피의 호수 삼권능 흔적',abilitySource:'기원 불명 / 삼중 권능 모방',abilityCost:'흉내 낸 기술마다 자기만의 기억과 몸의 특징 하나가 잠시 소실됨'},
+    'apostle-uro':{name:'우로 카인',unit:'우시노다 뇌영석 주장자',role:'뇌영석 주장자',recordFunction:'그림자와 기록선 자체를 전력 통로로 바꾸는 계승 경쟁자.',incident:'2006 시에나 계보문양 대조',abilitySource:'유물 계승 / 그림자뇌격',abilityCost:'번개를 흘려보낸 지도·사진 속 길이 실제 기억 속 장소와 뒤섞임'},
 
   };
 

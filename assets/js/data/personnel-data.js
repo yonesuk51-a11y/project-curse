@@ -36,31 +36,31 @@
   };
 
   const legacyRecords=[
-    {id:'alma-damian',name:'알마 데미안',group:'alma',role:'가문 기록·재정 감사관',status:'active',certainty:'partial',overview:'알마 가문의 계약과 자금 이동을 추적하는 감사관이다.',relationships:[{target:'alma-wade',relation:'아들',certainty:'partial'},{target:'alma-koenig',relation:'형제',certainty:'partial'},{target:'alma-bennett',relation:'형제',certainty:'partial'},{target:'alma-griffon',relation:'형제',certainty:'partial'}],limits:['가족 관계와 직책은 보완 신원 기록을 바탕으로 잠정 복원한 것이다.']},
+    {id:'alma-damian',name:'알마 데미안',group:'alma',role:'가문 기록·재정 감사관',status:'active',certainty:'partial',overview:'알마 가문의 계약과 자금 이동을 추적하는 감사관이다.',relationships:[{target:'alma-wade',relation:'아들',certainty:'partial'},{target:'alma-koenig',relation:'형제',certainty:'partial'},{target:'alma-bennett',relation:'형제',certainty:'partial'},{target:'alma-griffon',relation:'형제',certainty:'partial'}],limits:['가족 관계와 직책은 보완 신원 기록을 보고 임시로 적어 넣은 것이다.']},
     {
       id:'alma-bennett',name:'알마 베넷',group:'alma',role:'격리구역 외상간호사',status:'active',certainty:'partial',
       overview:'격리구역에서 오염 상처를 치료하는 알마 가문의 의료인이다.',
       relationships:[{target:'alma-wade',relation:'딸',certainty:'partial'},{target:'alma-koenig',relation:'남매',certainty:'partial'},{target:'alma-damian',relation:'남매',certainty:'partial'},{target:'alma-griffon',relation:'남매',certainty:'partial'}],
-      limits:['가족 관계와 의료 경력은 보완 신원 기록을 바탕으로 잠정 복원한 것이다.']
+      limits:['가족 관계와 의료 경력은 보완 신원 기록을 보고 임시로 적어 넣은 것이다.']
     },
     {
       id:'alma-griffon',name:'알마 그리폰',group:'alma',role:'격리설비 기술자',status:'active',certainty:'partial',
       overview:'격리문과 음압설비를 수리하는 알마 가문의 기술자다.',
       relationships:[{target:'alma-wade',relation:'아들',certainty:'partial'},{target:'alma-koenig',relation:'형제',certainty:'partial'},{target:'alma-damian',relation:'형제',certainty:'partial'},{target:'alma-bennett',relation:'남매',certainty:'partial'}],
-      limits:['가족 관계와 기술 경력은 보완 신원 기록을 바탕으로 잠정 복원한 것이다.']
+      limits:['가족 관계와 기술 경력은 보완 신원 기록을 보고 임시로 적어 넣은 것이다.']
     },
     {
       id:'alma-wade',name:'알마 웨이드',group:'alma',role:'가문 의료관리자',status:'active',certainty:'partial',
       overview:'알마 가문의 의료기록과 노출 이력을 관리하는 의사다.',
       relationships:[{target:'alma-kara',relation:'딸',certainty:'partial'},{target:'alma-koenig',relation:'어머니',certainty:'partial'},{target:'alma-damian',relation:'어머니',certainty:'partial'},{target:'alma-bennett',relation:'어머니',certainty:'partial'},{target:'alma-griffon',relation:'어머니',certainty:'partial'}],
-      limits:['가족 관계와 과거 계약은 보완 신원 기록을 바탕으로 잠정 복원한 것이다.']
+      limits:['가족 관계와 과거 계약은 보완 신원 기록을 보고 임시로 적어 넣은 것이다.']
     },
     {
       id:'alma-kara',name:'알마 카라',group:'fhc-union',secondaryGroups:['alma'],role:'유니온 원로고문',status:'active',certainty:'partial',
       overview:'F.H.C-유니온 초기 계약구조를 설계한 알마 가문의 원로다.',
       affiliations:[{key:'fhc',label:'F.H.C-유니온',role:'소속 인물',certainty:'listed'}],
       relationships:[{target:'alma-wade',relation:'어머니',certainty:'partial'},{target:'jake',relation:'경호 대상',certainty:'partial'}],
-      limits:['가족 관계와 제이크의 전속계약은 보완 신원 기록을 바탕으로 잠정 복원한 것이다.']
+      limits:['가족 관계와 제이크의 전속계약은 보완 신원 기록을 보고 임시로 적어 넣은 것이다.']
     },
     {
       id:'jake',name:'제이크',group:'fhc-union',role:'경호원',status:'unknown',certainty:'listed',
@@ -74,7 +74,7 @@
       overview:'F.H.C-유니온 본부장이자 알마 가문의 장남으로 재정리됐다.',
       affiliations:[{key:'fhc',label:'F.H.C-유니온',role:'본부장',certainty:'listed'}],
       relationships:[{target:'alma-wade',relation:'아들',certainty:'partial'},{target:'alma-kara',relation:'손자',certainty:'partial'},{target:'alma-damian',relation:'형제',certainty:'partial'},{target:'alma-bennett',relation:'남매',certainty:'partial'},{target:'alma-griffon',relation:'형제',certainty:'partial'}],
-      limits:['가족 관계와 지금의 재임 여부는 보완 신원 기록을 바탕으로 잠정 복원한 것이다.']
+      limits:['가족 관계와 지금도 재임 중인지는 보완 신원 기록을 보고 임시로 적어 넣은 것이다.']
     },
     {
       id:'ezekiel-kalp',name:'에제키엘 칼프',group:'fhc-ark',role:'아크의 보스',status:'active',certainty:'listed',
@@ -92,7 +92,7 @@
       ],
       capabilities:['겜블러 표기','오리진 실험체'],
       notes:['“진정한 힘을 목도한 주군을 모시기로 한다”는 동기 문구가 남아 있다.'],
-      limits:['각 소속의 정확한 시간 순서와 “주군”의 신원은 확정되지 않았다.','겜블러라는 표기가 성향과 싸우는 방식, 능력 가운데 무엇을 뜻하는지는 확인되지 않았다.']
+      limits:['소속이 바뀐 정확한 순서와 “주군”이 누구인지는 확정되지 않았다.','겜블러라는 표기가 성향과 싸우는 방식, 능력 가운데 무엇을 뜻하는지는 확인되지 않았다.']
     },
     {id:'reiki',name:'레이키',group:'fhc-ark',role:'소속 인물',status:'deceased',certainty:'listed',overview:'F.H.C-아크 인물군에 사망자로 기재됐다.',affiliations:[{key:'fhc',label:'F.H.C-아크',role:'소속 인물',certainty:'listed'}],limits:['사망 경위는 기록되지 않았다.']},
     {
@@ -147,14 +147,14 @@
       overview:'우시노다교 인물군에서 혈교 교주로 기재된 혈술 사용자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'소속 기록',certainty:'listed'},{key:'blood-cult',label:'혈교',role:'교주',certainty:'listed'}],
       capabilities:['혈술 이동기','혈술 탄도 발사','혈술 강화','피의 강 — 결계'],
-      limits:['야나미 신카와의 관계는 성씨만으로 확정하지 않는다.','피의 강의 범위는 기록되지 않았다. 대가는 혈좌 의식 기록과 같아서, 결계를 펼칠수록 자기 기억이 결계 참여자에게 흩어진다.','젊은 외모를 유지하는 힘의 정체와 대가는 기록되지 않았다.']
+      limits:['야나미 신카와의 관계는 같은 성만 보고 확정하지 않는다.','피의 강의 범위는 기록되지 않았다. 대가는 혈좌 의식 기록과 같다. 결계를 펼칠수록 자기 기억이 결계에 함께한 사람들에게 흩어진다.','젊은 외모를 유지하는 힘의 정체와 대가는 기록되지 않았다.']
     },
     {
       id:'apostle-luke-eugene',name:'루크 유진',group:'ushinoda',role:'제1석 주장자',status:'active',certainty:'listed',
       overview:'우시노다교 제1석 주장자로 기재된 복합 능력 사용자다.',
       affiliations:[{key:'ushinoda',label:'우시노다교',role:'제1석 주장자',certainty:'listed'}],
       capabilities:['기술 모방 — 그림자·타락·혈액','제6안','예지'],
-      limits:['사도 번호가 강함의 순위를 뜻하는지는 확인되지 않았다.','흉내 낸 능력마다의 범위와 제6안이 하는 일은 기록되지 않았다.']
+      limits:['사도 번호가 강함의 순위를 뜻하는지는 확인되지 않았다.','흉내 낸 능력마다 어디까지 되는지와 제6안이 하는 일은 기록되지 않았다.']
     },
     {
       id:'apostle-uro',name:'우로',group:'ushinoda',role:'제10사도',status:'active',certainty:'listed',
