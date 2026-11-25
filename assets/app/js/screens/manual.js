@@ -128,7 +128,7 @@
     // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
     'ability-grade': 'L0–L4. 등급은 세기가 아니라 얼마나 지켜볼지다.',
     fitness: '관측 신뢰도·이름 반응·계수·오염 내성·교전·남은 기억 — A–E.',
-    service: '기억 대조 일치율, 진입·귀환, 누적 노출, 체력 검정, 웃음 반응.',
+    service: '기억 대조 일치율, 진입·귀환, 누적 노출, 체력 검정, 웃음·공격 반응.',
     skills: '저격부터 통역까지 열네 자격. 한 사람이 셋까지.',
     'minor-abilities': '작고 쓸모 있는 능력 열 가지와 그 대가.',
     'field-abilities': '교전을 돕지만 혼자 상황을 바꾸지 못하는 능력 여덟.',
@@ -1132,7 +1132,7 @@
         ),
         field('누적 노출 (분)', num('exposure', 9999, savedService.exposure), '작전 인원 한도는 한 해 30분.'),
         field('체력 검정', select('physical', pick(serviceSec.physical), savedService.physical || '')),
-        field('웃음 반응 검사', select('laugh', pick(serviceSec.laugh), savedService.laugh || '')),
+        field('웃음·공격 반응 검사', select('laugh', pick(serviceSec.laugh), savedService.laugh || '')),
         h('fieldset.tc-man-skills', null,
           h('legend', { text: '자격·특기 (셋까지)' }),
           skillRows.map(([name]) => h('label', null,
@@ -1243,7 +1243,7 @@
       }
       if (sv.exposure !== '') out.push(`누적 노출 : ${sv.exposure}분${Number(sv.exposure) > 30 ? ' — 한 해 한도 30분 기준 초과 기록 있음' : ''}`);
       if (sv.physical) out.push(`체력 검정 : ${sv.physical}`);
-      if (sv.laugh) out.push(`웃음 반응 : ${sv.laugh}`);
+      if (sv.laugh) out.push(`웃음·공격 반응 : ${sv.laugh}`);
       if (sv.pair) out.push(`대조 짝   : ${sv.pair}${sv.pairLine ? ` — "${sv.pairLine}"` : ''}`);
       if (sv.lost) out.push(`잃은 것   : ${sv.lost}`);
       if (sv.kept) out.push(`남은 것   : ${sv.kept}`);

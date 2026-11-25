@@ -447,8 +447,8 @@
     if (sv.lost) y = serviceRow(g, '잃은 것', sv.lost, y, { size: 28, width: 480, color: INK.text2 });
     if (sv.kept) y = serviceRow(g, '남은 것', sv.kept, y, { size: 28, width: 480 });
 
-    // 체력 검정·웃음 반응
-    const tests = [['체력 검정', sv.physical], ['웃음 반응 검사', sv.laugh]].filter(([, value]) => value);
+    // 체력 검정·웃음·공격 반응
+    const tests = [['체력 검정', sv.physical], ['웃음·공격 반응 검사', sv.laugh]].filter(([, value]) => value);
     if (tests.length) {
       const cell = Math.floor((WIDTH - 112) / 2);
       tests.forEach(([name, value], index) => {

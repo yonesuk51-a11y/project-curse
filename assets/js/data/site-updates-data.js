@@ -16,6 +16,13 @@
   root.ProjectCurseSiteUpdates = freeze({
     entries: [
       {
+        date: '2026-11-25',
+        at: '2026-11-25T23:54:31+09:00',
+        title: '웃는 피탈자의 새 이름 — 테이커',
+        text: '괴이로 바뀌지 않고 살인 충동만 남은 사람을 이제 테이커(Taker)라고 부른다. 판정을 통과하고, 계획을 세워 아는 사람부터 노린다. 검문소 검사도 웃음·공격 반응 검사로 바뀌었다.',
+        links: [{ label: '테이커', route: 'history', parts: ['ref', 'rule-laughing'] }]
+      },
+      {
         date: '2026-11-22',
         at: '2026-11-22T13:01:00+09:00',
         title: '자캐에 쓰기',

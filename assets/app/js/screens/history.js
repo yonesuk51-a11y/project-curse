@@ -236,7 +236,7 @@
     );
   }
 
-  // 웃는 피탈자(2026-11-21 사용자 설정) — 괴이화 없이 남을 해치며 기뻐한다. 판정을 통과한다. 첫 기록과 교범 항목으로 잇는다.
+  // 테이커(2026-11-21 사용자 설정, 2026-11-25 '웃는 피탈자'에서 이름을 바꿈) — 괴이화 없이 살인 충동만 남는다. 판정을 통과한다. 첫 기록과 교범 항목으로 잇는다.
   function laughingBlock(item) {
     if (!item) return null;
     const index = item.record ? findIndex(item.record) : -1;
