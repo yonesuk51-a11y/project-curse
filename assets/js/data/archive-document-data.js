@@ -29,24 +29,24 @@
             '괴이는 모든 분류 가운데 가장 많은 수를 차지한다. 이들은 저마다 다른 방식으로 사냥하는 포식자다. 하위 유형 대부분은 아직 제대로 파악되지 않았다. 기원은 밝혀지지 않았다. 다만 아주 오래전부터 있어 왔고, 서로 구분되는 독립 종으로 자리 잡은 것으로 보인다.',
             '괴이의 기원이 주술적이며 이계의 무언가와 연결돼 있다는 견해도 있다. 몇몇 교단의 교리는 신의 영향과 그 사자들을 중심으로 짜여 있다. 이들이 말하는 사자는 곧 타락한 생명체를 뜻한다.'
           ],groups:[
-            {title:'개 / IMAGE-007CF',sourceOnly:true,sourceLabels:['기록 내용','생존 특성'],image:{src:'../../assets/resources/archive-enex/feral-classification/c7befa50c0dc4cb9cb4738edfddc52ca.webp',alt:'어두운 숲에서 포착된 순수형 괴이',caption:'FERALS / PURE / IMAGE-007CF'},table:{headers:['분류'],rows:[
+            {title:'개 / IMAGE-007CF',sourceOnly:true,sourceLabels:['기록 내용','생존 특성'],image:{src:'../../assets/resources/archive-enex/feral-classification/c7befa50c0dc4cb9cb4738edfddc52ca.webp',alt:'어두운 숲에서 찍힌 순수형 괴이',caption:'FERALS / PURE / IMAGE-007CF'},table:{headers:['분류'],rows:[
               ['Ferals / Pure']
             ]},paragraphs:[
               '아직 인간을 섭취하지 않은 순수형 괴이다. 대부분 다른 동물과 비슷한 야생 생활을 한다.',
               '살아 있는 살점을 흡수해 몸속에 쌓아 둔다. 이것을 살아남기 위한 또 하나의 수단으로 쓴다. 이 때문에 개체마다 서로 다른 형태의 불멸성이 나타난다.'
             ]},
-            {title:'실패한 의식 사례 / IMAGE-012CF',sourceOnly:true,sourceLabels:['개체 구성','발생 조건','위험 특성'],image:{src:'../../assets/resources/archive-enex/feral-classification/76dee84dd67b2de185391c67a3fec272.webp',alt:'실내에서 포착된 불순형 타락 생명체',caption:'FERALS / UNPURE / IMAGE-012CF'},table:{headers:['분류'],rows:[
+            {title:'실패한 의식 사례 / IMAGE-012CF',sourceOnly:true,sourceLabels:['개체 구성','발생 조건','위험 특성'],image:{src:'../../assets/resources/archive-enex/feral-classification/76dee84dd67b2de185391c67a3fec272.webp',alt:'실내에서 찍힌 불순형 타락 생명체',caption:'FERALS / UNPURE / IMAGE-012CF'},table:{headers:['분류'],rows:[
               ['Ferals / Unpure']
             ]},paragraphs:[
               '불순형 괴이는 인간의 신체를 기반으로 만들어지거나 인간 신체의 일부를 지닌다.',
               '순수형 개체가 살아 있는 인간 또는 시체를 섭취했을 때 나타난다. 인간이 타락에 완전히 굴복했을 때도 생긴다.',
               '불순형은 예측하기 어렵고 공격성이 강해 순수형보다 위험하다고 여겨진다. 부분적·완전한 인간 모방, 살점과 혈액을 다루는 법에 관해 남아 있는 지식 같은 특성도 보일 수 있다.'
             ]},
-            {title:'그림자의 품에 안긴 죽음 / IMAGE-018CF',sourceOnly:true,sourceLabels:['분류 기록','생태 기록'],image:{src:'../../assets/resources/archive-enex/feral-classification/c95eb47340d0a9110f9d9b56ca23e079.webp',alt:'사람의 뒤에서 포착된 그림자형 타락 생명체',caption:'FERALS / IMAGE-018CF'},paragraphs:[
+            {title:'그림자의 품에 안긴 죽음 / IMAGE-018CF',sourceOnly:true,sourceLabels:['분류 기록','생태 기록'],image:{src:'../../assets/resources/archive-enex/feral-classification/c95eb47340d0a9110f9d9b56ca23e079.webp',alt:'사람의 뒤에서 찍힌 그림자형 타락 생명체',caption:'FERALS / IMAGE-018CF'},paragraphs:[
               '괴이는 여러 하위 유형, 즉 서로 다른 종으로 나뉜다.',
               '그림자(Shadow) 역시 괴이로 분류되는 기이한 생명체다. 이들은 다른 괴이와 완전히 다른 생태와 삶의 방식을 지닌다.'
             ]},
-            {title:'그림자의 희생자 / VIDEO-1092C1F2',sourceOnly:true,image:{src:'../../assets/resources/archive-enex/feral-classification/video-1092c1f2-shadow-victim.png',alt:'어두운 실내에서 부분 빙의 상태의 피해자와 관측 장비가 포착된 영상 프레임',caption:'VIDEO-1092C1F2 / SHADOW\'S VICTIM'},paragraphs:[
+            {title:'그림자의 희생자 / VIDEO-1092C1F2',sourceOnly:true,image:{src:'../../assets/resources/archive-enex/feral-classification/video-1092c1f2-shadow-victim.png',alt:'어두운 실내에서 부분 빙의 상태의 피해자와 관측 장비가 찍힌 영상 프레임',caption:'VIDEO-1092C1F2 / SHADOW\'S VICTIM'},paragraphs:[
               '그림자는 부분적인 빙의를 이용해 사냥한다. 피해자를 서서히 광기에 빠뜨린다.',
               '끝내 피해자가 자살하거나 살인을 저지르면 그림자는 그 시체를 차지한다.'
             ]},
@@ -54,7 +54,7 @@
               '일부 괴이는 아직 살아 있는 인간의 신체를 위장 수단이나 미끼로 사용한다.',
               '피해자들은 대부분 이에 저항할 수 없다. 고통받는 상태로 남겨진다.'
             ]},
-            {title:'블러드러커 / IMAGE-412CF',sourceOnly:true,sourceLabels:['이동·사냥 방식','도시 위협'],image:{src:'../../assets/resources/archive-enex/feral-classification/c6ae7deaeec83489dc06eb6bdc655925.webp',alt:'도시 하수도 인근에서 포착된 혈액 이동형 괴이',caption:'FERALS / IMAGE-412CF'},paragraphs:[
+            {title:'블러드러커 / IMAGE-412CF',sourceOnly:true,sourceLabels:['이동·사냥 방식','도시 위협'],image:{src:'../../assets/resources/archive-enex/feral-classification/c6ae7deaeec83489dc06eb6bdc655925.webp',alt:'도시 하수도 근처에서 찍힌 혈액 이동형 괴이',caption:'FERALS / IMAGE-412CF'},paragraphs:[
               '혈액은 괴이에게 이동 수단이자 사냥 방식으로 사용될 수 있다.',
               '이 개체들은 하수도망을 이용한다. 그 때문에 도시 주민들의 생명을 심각하게 위협한다.'
             ]},
@@ -106,7 +106,7 @@
               '대규모 소환 의식은 암흑시대의 재앙이었다.',
               '“날개 달린 천사 수천이 우리의 군대를 집어삼켰다. 내 전사들의 몸 일부는 날개의 어둠 속으로 녹아 사라졌다. 태양이 사라졌다. 오, 주여, 우리를 도우소서.” — 혈기사 다레버, 날짜 미상.'
             ]},
-            {title:'유령 / IMAGE-751CF',sourceOnly:true,sourceLabels:['탐지 특성','위협 기록'],image:{src:'../../assets/resources/archive-enex/feral-classification/acbc4774e85c9c21959567b75c666f28.webp',alt:'폐건물 계단의 반사면에서 포착된 유령',caption:'IMAGE-751CF / GHOST'},paragraphs:[
+            {title:'유령 / IMAGE-751CF',sourceOnly:true,sourceLabels:['탐지 특성','위협 기록'],image:{src:'../../assets/resources/archive-enex/feral-classification/acbc4774e85c9c21959567b75c666f28.webp',alt:'폐건물 계단의 반사면에서 찍힌 유령',caption:'IMAGE-751CF / GHOST'},paragraphs:[
               '늘 위장한 상태로 있는 괴이가 있다. 맨눈으로는 직접 볼 수 없다. 그러나 반사면이나 특정 장비를 통해서는 모습을 확인할 수 있다.',
               '유령은 개체 수가 많지 않다. 그래도 여전히 심각한 위협이다.'
             ]}

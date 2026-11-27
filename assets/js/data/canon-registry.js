@@ -14,7 +14,7 @@
       id:'great-black-forest',primary:'대흑림',english:'Great Black Forest',short:'GBF',
       scope:'남아메리카 내륙 이상권',mapLabel:'대흑림',
       aliases:[
-        {label:'자유의 땅',authority:'현지 관습명',meaning:'의식·주술 지식의 중앙 금지 부재와 성채 피난 관습을 함께 가리킨다.'},
+        {label:'자유의 땅',authority:'현지 관습명',meaning:'의식·주술 지식을 막는 중앙의 금지가 없다는 점과 성채 피난 관습을 함께 가리킨다.'},
         {label:'악몽의 숲',authority:'귀환자 구어',meaning:'생환자의 체험을 가리키는 말이며 지도 경계나 행정권을 뜻하지 않는다.'}
       ],
       legacy:[
