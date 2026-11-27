@@ -10321,7 +10321,7 @@
       "provenance": "RECONSTRUCTED",
       "release": "PROJECT_GENERATED",
       "source": "F.H.C 중앙 지휘 상실·시설별 통제권 상충 기반 분석 재구성 (2026-09-24 지옥 그림체)",
-      "handling": "연구원과 TAD 무장 인원이 맞선 모습으로 상충 명령을 가정해 그렸다. 사건이 실제로 있었는지, 명령의 정당성, 시설을 쥔 쪽과 충돌 결과는 확정하지 않는다.",
+      "handling": "연구원과 TAD 무장 인원이 맞선 모습으로 상충 명령을 가정해 그렸다. 사건이 실제로 있었는지, 명령의 정당성, 시설을 장악한 쪽과 충돌 결과는 확정하지 않는다.",
       "credit": "Project Curse batch A scene brief / Codex image generation",
       "evidence": "assets/resources/ASSET_REGISTRY.md",
       "bytes": 1632972,

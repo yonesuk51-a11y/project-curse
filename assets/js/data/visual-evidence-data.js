@@ -117,7 +117,7 @@
       assetId:'VEA-UAC-OPS-01',className:'RECONSTRUCTED',source:'U.A.C 격리 명령·출입 인증 조정 업무 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'관제 행정실에서 서류를 넘기는 일과 감시 화면으로 조정 업무를 옮겼다. 어떤 명령이 승인됐는지, 직원이 누구인지, 협력 기관을 직접 지휘할 권한이 있는지는 확정하지 않는다.'
     }),
     'assets/resources/derived/fhc-split-command-lab-concept-v1.png':Object.freeze({
-      assetId:'VEA-FHC-SPLIT-01',className:'RECONSTRUCTED',source:'F.H.C 중앙 지휘 상실·시설별 통제권 상충 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'연구원과 TAD 무장 인원이 맞선 모습으로 상충 명령을 가정해 그렸다. 사건이 실제로 있었는지, 명령의 정당성, 시설을 쥔 쪽과 충돌 결과는 확정하지 않는다.'
+      assetId:'VEA-FHC-SPLIT-01',className:'RECONSTRUCTED',source:'F.H.C 중앙 지휘 상실·시설별 통제권 상충 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'연구원과 TAD 무장 인원이 맞선 모습으로 상충 명령을 가정해 그렸다. 사건이 실제로 있었는지, 명령의 정당성, 시설을 장악한 쪽과 충돌 결과는 확정하지 않는다.'
     }),
     'assets/resources/derived/ushinoda-basement-rite-concept-v1.png':Object.freeze({
       assetId:'VEA-USH-RITE-01',className:'RECONSTRUCTED',source:'우시노다교 기관 침투·의식 활동 기반 분석 재구성',date:'2026-09-24',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'사무 건물 지하의 의식으로 몰래 하는 활동을 가정해 그렸다. 참가자가 누구이고 어느 파벌인지, 특정 기관의 공모, 의식의 결과는 확정하지 않는다.'
