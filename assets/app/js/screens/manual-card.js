@@ -447,8 +447,9 @@
     if (sv.lost) y = serviceRow(g, '잃은 것', sv.lost, y, { size: 28, width: 480, color: INK.text2 });
     if (sv.kept) y = serviceRow(g, '남은 것', sv.kept, y, { size: 28, width: 480 });
 
-    // 체력 검정·웃음·공격 반응·마지막 서명·시민 등급(2026-11-27) — 한 줄에 칸 수만큼 나눈다
-    const tests = [['체력 검정', sv.physical], ['웃음·공격 반응 검사', sv.laugh], ['마지막 서명', sv.lastSign], ['시민 등급', sv.citizen]].filter(([, value]) => value);
+    // 체력 검정·정신 이상 수치·마지막 서명·시민 등급(2026-11-27) — 한 줄에 칸 수만큼 나눈다
+    const mental = sv.mental != null && sv.mental !== '' ? `${sv.mental} · ${Number(sv.mental) >= 60 ? '격리' : Number(sv.mental) >= 30 ? '재검사' : '통과'}` : '';
+    const tests = [['체력 검정', sv.physical], ['정신 이상 수치', mental], ['마지막 서명', sv.lastSign], ['시민 등급', sv.citizen]].filter(([, value]) => value);
     if (tests.length) {
       const cell = Math.floor((WIDTH - 112) / Math.max(2, tests.length));
       tests.forEach(([name, value], index) => {

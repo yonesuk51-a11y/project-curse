@@ -128,7 +128,7 @@
     // 2026-11-21 사용자 결정 — 능력 등급·소능력·2030년대 장비
     'ability-grade': 'L0–L4. 등급은 세기가 아니라 얼마나 지켜볼지다.',
     fitness: '관측 신뢰도·이름 반응·계수·오염 내성·교전·남은 기억 — A–E.',
-    service: '기억 대조 일치율, 진입·귀환, 누적 노출, 체력 검정, 웃음·공격 반응.',
+    service: '기억 대조 일치율, 진입·귀환, 누적 노출, 체력 검정, 정신 이상 수치.',
     skills: '저격부터 통역까지 열네 자격. 한 사람이 셋까지.',
     'minor-abilities': '작고 쓸모 있는 능력 열 가지와 그 대가.',
     'field-abilities': '교전을 돕지만 혼자 상황을 바꾸지 못하는 능력 여덟.',
@@ -1136,7 +1136,7 @@
         ),
         field('누적 노출 (분)', num('exposure', 9999, savedService.exposure), '작전 인원 한도는 한 해 30분.'),
         field('체력 검정', select('physical', pick(serviceSec.physical), savedService.physical || '')),
-        field('웃음·공격 반응 검사', select('laugh', pick(serviceSec.laugh), savedService.laugh || '')),
+        field('정신 이상 수치 (0–100)', num('mental', 100, savedService.mental), '0–29 통과 · 30–59 재검사 · 60 이상 격리 재검사'),
         field('마지막 서명', select('lastSign', pick(serviceSec.lastSign), savedService.lastSign || ''), '말할 수 없게 됐을 때 Last Light 시행에 미리 동의하는 서명.'),
         field('시민 등급', select('citizen', pick(serviceSec.citizen), savedService.citizen || ''), '거주·납세·노동·병역·범죄 기록으로 매긴다. 오른쪽 손목 팔찌의 색.'),
         h('fieldset.tc-man-skills', null,
@@ -1197,7 +1197,7 @@
           sightings: clampNum(data.get('sightings'), 999),
           exposure: clampNum(data.get('exposure'), 9999),
           physical: data.get('physical') || '',
-          laugh: data.get('laugh') || '',
+          mental: clampNum(data.get('mental'), 100),
           lastSign: data.get('lastSign') || '',
           citizen: data.get('citizen') || '',
           skills: data.getAll('skill').slice(0, 3),
@@ -1230,6 +1230,12 @@
       const n = Number(value);
       return n >= 90 ? '통과' : n >= 70 ? '재검사' : '관측 자격 정지';
     }
+    // 정신 이상 수치(2026-11-27 사용자 결정) — 높을수록 이상하다
+    function mentalNote(value) {
+      if (value === '' || value == null) return '';
+      const n = Number(value);
+      return n >= 60 ? '격리 재검사' : n >= 30 ? '재검사' : '통과';
+    }
     function countNote(sv) {
       if (sv.entries === '' || sv.returns === '') return '';
       const a = Number(sv.entries);
@@ -1251,7 +1257,7 @@
       }
       if (sv.exposure !== '') out.push(`누적 노출 : ${sv.exposure}분${Number(sv.exposure) > 30 ? ' — 한 해 한도 30분 기준 초과 기록 있음' : ''}`);
       if (sv.physical) out.push(`체력 검정 : ${sv.physical}`);
-      if (sv.laugh) out.push(`웃음·공격 반응 : ${sv.laugh}`);
+      if (sv.mental != null && sv.mental !== '') out.push(`정신 이상 : ${sv.mental} — ${mentalNote(sv.mental)}`);
       if (sv.lastSign) out.push(`마지막 서명 : ${sv.lastSign}`);
       if (sv.citizen) out.push(`시민 등급 : ${sv.citizen}`);
       if (sv.pair) out.push(`대조 짝   : ${sv.pair}${sv.pairLine ? ` — "${sv.pairLine}"` : ''}`);

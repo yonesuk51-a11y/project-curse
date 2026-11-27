@@ -70,7 +70,10 @@ export default function ({ add, read, context, app }) {
     const sec = doc?.sections?.find((item) => item.title === '복무 기록과 계측값');
     const skills = doc?.sections?.find((item) => item.title === '현장 자격과 특기');
     assert.equal(sec?.table?.rows?.length, 5, '계측값 다섯');
-    assert.ok(sec.discharge?.length && sec.physical?.length === 3 && sec.laugh?.length, '고르는 칸 값');
+    assert.ok(sec.discharge?.length && sec.physical?.length === 3 && !sec.laugh, '고르는 칸 값');
+    // 정신 이상 수치(2026-11-27 사용자 결정) — 웃음 검사를 대신한다. 경계값은 교범 표와 같아야 한다.
+    assert.ok(sec.table.rows.some((row) => row[0] === '정신 이상 수치' && row[2].includes('0–29면 통과') && row[2].includes('60 이상')), '정신 이상 수치 기준');
+    assert.ok(/n >= 60 \? '격리 재검사' : n >= 30 \? '재검사' : '통과'/.test(manual), '정신 이상 수치 경계값이 교범과 같다');
     assert.equal(skills?.table?.rows?.length, 14, '자격 열넷');
     assert.ok(manual.includes("item.id === 'service'") && manual.includes("section('복무 기록과 계측값')") && manual.includes("rowsOf('현장 자격과 특기')"), '양식이 데이터에서 읽는다');
     assert.ok(manual.includes('picked >= 3') && manual.includes('.slice(0, 3)'), '자격은 셋까지');
