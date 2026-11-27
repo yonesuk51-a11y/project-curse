@@ -204,7 +204,7 @@ function verify(){
   // D 혼합: canon-faction-owner의 데이터/매체 조건.
   add('canon-faction-owner:data',factionAnalysisSource.includes('ProjectCurseFactionAnalysis'));
   // D 혼합: canon-relation-owner의 데이터/매체 조건.
-  add('canon-relation-owner:data',Array.isArray(canonData?.relations)&&canonData.relations.length===21);
+  add('canon-relation-owner:data',Array.isArray(canonData?.relations)&&canonData.relations.length===24);
   add('canon-direct-current-names',!canon.includes('Urban Anomaly Containment')&&!canon.includes('신디케이트')&&!canon.includes('하이문')&&!canon.includes('normalizeTerms')&&!factionAnalysisSource.includes('신디케이트')&&!factionAnalysisSource.includes('하이문')&&!factionAnalysisSource.includes('normalizeTerms'));
   // D 혼합: home-live-intelligence-feed의 데이터/매체 조건.
   add('home-live-intelligence-feed:data',context.window.ProjectCurseHomeIntelligence?.version===VERSION&&context.window.ProjectCurseHomeIntelligence?.signals?.length===4);
@@ -534,23 +534,26 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   add('uac-official-1993',canonData?.factions?.uac?.event?.includes('1993년 11월 2일'));
   add('fhc-amarion-successor',canonData?.factions?.fhc?.summary?.includes('아마리온의 공간 연구와 사업 기반을 승계'));
   add('amarion-predecessor',canonData?.factions?.amarion?.sub?.includes('F.H.C의 전신 기업')&&!canonData?.factions?.amarion?.summary?.includes('경쟁'));
-  const arfEdges=(canonData?.relations||[]).filter(row=>row.a==='arf'||row.b==='arf');
-  add('ashcrew-hierarchy',arfEdges.some(row=>[row.a,row.b].includes('ashcrew'))&&(canonData?.relations||[]).some(row=>[row.a,row.b].includes('ashcrew')&&[row.a,row.b].includes('cpd')));
-  add('relation-registry-count',canonData?.relations?.length===21,String(canonData?.relations?.length??0));
+  const ashcrewChildren=['arf','cpd','lastlight'];
+  add('ashcrew-hierarchy',ashcrewChildren.every(key=>(canonData?.relations||[]).some(row=>row.a==='ashcrew'&&row.b===key)));
+  add('relation-registry-count',canonData?.relations?.length===24,String(canonData?.relations?.length??0));
   const freewillMapNode=canonData?.relationNodes?.freewill;
   const freewillMapNeighbors=Object.entries(canonData?.relationNodes||{}).filter(([key])=>key!=='freewill').map(([,node])=>Math.hypot(node.x-freewillMapNode?.x,node.y-freewillMapNode?.y));
   add('freewill-relation-map-position',freewillMapNode?.x===14&&freewillMapNode?.y===10&&freewillMapNeighbors.every(distance=>distance>=15));
-  add('faction-analysis-eighteen',factionAnalysis?.order?.join('|')==='uac|nhc|sid|fhc|ashcrew|arf|cpd|syndicate|freewill|ushinoda|haimun|corruption-cult|blood-cult|shadow-cult|first-apostle|southern-blood|deadzone-blood|amarion');
-  add('faction-analysis-groups',factionAnalysis?.groups?.map(group=>group.keys.join(',')).join('|')==='uac,nhc,sid,fhc|ashcrew,arf,cpd|syndicate,freewill,ushinoda,haimun|corruption-cult,blood-cult,shadow-cult,first-apostle,southern-blood,deadzone-blood|amarion');
+  const lastlightMapNode=canonData?.relationNodes?.lastlight;
+  const lastlightMapNeighbors=Object.entries(canonData?.relationNodes||{}).filter(([key])=>key!=='lastlight').map(([,node])=>Math.hypot(node.x-lastlightMapNode?.x,node.y-lastlightMapNode?.y));
+  add('lastlight-relation-map-position',lastlightMapNode?.x===44&&lastlightMapNode?.y===66&&lastlightMapNeighbors.every(distance=>distance>=15));
+  add('faction-analysis-nineteen',factionAnalysis?.order?.join('|')==='uac|nhc|sid|fhc|ashcrew|arf|cpd|lastlight|syndicate|freewill|ushinoda|haimun|corruption-cult|blood-cult|shadow-cult|first-apostle|southern-blood|deadzone-blood|amarion');
+  add('faction-analysis-groups',factionAnalysis?.groups?.map(group=>group.keys.join(',')).join('|')==='uac,nhc,sid,fhc|ashcrew,arf,cpd,lastlight|syndicate,freewill,ushinoda,haimun|corruption-cult,blood-cult,shadow-cult,first-apostle,southern-blood,deadzone-blood|amarion');
   add('faction-analysis-depth',factionAnalysis?.order?.every(key=>factionAnalysis.factions[key]?.overview?.length>=3&&factionAnalysis.factions[key]?.chronology?.length>=5&&factionAnalysis.factions[key]?.relations?.length>=3));
-  add('faction-mark-registry-eighteen',factionMarks?.version===VERSION&&Object.keys(factionMarks?.marks||{}).length===18);
+  add('faction-mark-registry-nineteen',factionMarks?.version===VERSION&&Object.keys(factionMarks?.marks||{}).length===19);
   add('faction-mark-eleven-image-masters',factionMarks?.redesigned?.join('|')==='uac|nhc|sid|fhc|syndicate|ushinoda|haimun|ashcrew|arf|cpd|amarion'&&factionMarks.redesigned.every(key=>factionMarks.marks[key]?.asset===`assets/faction_marks/v3/${key}.png`&&factionMarks.marks[key]?.previousAsset===`assets/faction_marks/${key}.svg`&&factionMarks.marks[key]?.legacyAsset?.endsWith('.webp')&&factionMarks.marks[key]?.symbols?.length>=3));
   add('faction-lineage-six-image-masters',factionMarks?.lineageMarks?.join('|')==='corruption-cult|blood-cult|shadow-cult|first-apostle|southern-blood|deadzone-blood'&&factionMarks.lineageMarks.every(key=>factionMarks.marks[key]?.asset===`assets/faction_marks/v3/${key}.png`&&factionMarks.marks[key]?.previousAsset===`assets/faction_marks/${key}.svg`&&factionMarks.marks[key]?.symbols?.length>=3));
-  add('faction-mark-assets',Object.entries(factionMarks?.marks||{}).every(([key,mark])=>key==='freewill'
+  add('faction-mark-assets',Object.entries(factionMarks?.marks||{}).every(([key,mark])=>['freewill','lastlight'].includes(key)
     ? mark.asset===null&&mark.previousAsset==null&&mark.legacyAsset==null
     : typeof mark.asset==='string'&&existsSync(path(mark.asset))&&typeof mark.previousAsset==='string'&&existsSync(path(mark.previousAsset))&&(!mark.legacyAsset||existsSync(path(mark.legacyAsset)))));
-  const unregisteredFactionMarks=Object.entries(factionMarks?.marks||{}).filter(([,mark])=>mark.asset===null).map(([key])=>key);
-  add('faction-freewill-mark-unregistered-no-fallback',unregisteredFactionMarks.join('|')==='freewill'&&factionMarks?.marks?.freewill?.asset===null&&factionAnalysis?.factions?.freewill?.visual===null&&!factionMarks?.marks?.freewill?.previousAsset&&!factionMarks?.marks?.freewill?.legacyAsset);
+  const unregisteredFactionMarks=Object.entries(factionMarks?.marks||{}).filter(([,mark])=>mark.asset===null).map(([key])=>key).sort();
+  add('faction-freewill-lastlight-marks-unregistered-no-fallback',unregisteredFactionMarks.join('|')==='freewill|lastlight'&&['freewill','lastlight'].every(key=>factionMarks?.marks?.[key]?.asset===null&&factionAnalysis?.factions?.[key]?.visual===null&&!factionMarks?.marks?.[key]?.previousAsset&&!factionMarks?.marks?.[key]?.legacyAsset));
   add('faction-lineage-schema',factionLineage?.version===VERSION&&factionLineage?.schema==='project-curse-faction-lineage-v1'&&factionLineage?.order?.length===7&&factionLineage?.sects?.join('|')==='corruption-cult|blood-cult|shadow-cult');
   add('faction-lineage-rank-boundary',factionLineage?.rules?.some(rule=>rule.includes('교리상 로드좌 1석과 사도석 4석'))&&factionLineage.rules.some(rule=>rule.includes('센티넬은 계급이 아니라'))&&factionLineage.nodes?.['first-apostle']?.kind.includes('세력 아님'));
   add('faction-lineage-command-states',factionLineage?.edges?.some(edge=>edge.from==='blood-cult'&&edge.to==='southern-blood'&&edge.state==='disputed')&&factionLineage.edges.some(edge=>edge.from==='southern-blood'&&edge.to==='deadzone-blood'&&edge.state==='split'));
@@ -683,8 +686,8 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   // D 혼합: faction-three-distinct-field-profiles의 데이터/매체 조건.
   add('faction-three-distinct-field-profiles:data',['uac','ushinoda','blood-cult'].every(key=>factionAnalysis?.factions?.[key]?.profile?.items?.length===3)&&new Set(['uac','ushinoda','blood-cult'].map(key=>factionAnalysis.factions[key].profile.code)).size===3);
   const factionAssessmentFields=['status','lineage','misconception','past','unresolved'];
-  // D 혼합: faction-eighteen-context-assessments의 데이터/매체 조건.
-  add('faction-eighteen-context-assessments:data',factionAnalysis?.order?.length===18&&factionAnalysis.order.every(key=>factionAssessmentFields.every(field=>factionAnalysis.factions[key]?.assessment?.[field])));
+  // D 혼합: faction-nineteen-context-assessments의 데이터/매체 조건.
+  add('faction-nineteen-context-assessments:data',factionAnalysis?.order?.length===19&&factionAnalysis.order.every(key=>factionAssessmentFields.every(field=>factionAnalysis.factions[key]?.assessment?.[field])));
   // D 혼합: faction-first-apostle-visual-boundary의 데이터/매체 조건.
   add('faction-first-apostle-visual-boundary:data',factionAnalysis?.factions?.['first-apostle']?.visual?.className==='RECONSTRUCTED'&&factionAnalysis.factions['first-apostle'].visual.caption.includes('단일 개체 여부'));
   add('faction-nhc-personnel-visual-boundary',factionAnalysis?.factions?.nhc?.visual?.className==='RECONSTRUCTED'&&factionAnalysis.factions.nhc.visual.caption.includes('실제 단체사진')&&factionAnalysis.factions.nhc.visual.caption.includes('소매 표식'));

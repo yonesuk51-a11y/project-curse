@@ -120,9 +120,9 @@
     },
     ashcrew:{
       name:'Ash Crew',sub:'N.H.C 산하 리버스 사후 대응조직',cat:'현장',status:'가동 / N.H.C 산하',zone:'회수·대피·봉인·소각선',risk:'2차 오염 / 처리 실패',
-      summary:'리버스 피해자이자 생존자인 비비안 산체스가 세운 민간 조직이다. 2005년 1월 21일 N.H.C 아래로 들어갔다. A.R.F와 C.P.D를 밑에 두고, 전투 직후의 현장과 생존자, 오염 잔류물을 처리한다.',
-      roles:['리버스 직후 현장 진입','오염 사체와 잔해 봉인','생존자 회수·대피 지원','A.R.F·C.P.D 현장 조율'],
-      links:['N.H.C','A.R.F','C.P.D'],records:['NHC_Manual_891219'],event:'2005년 1월 21일 N.H.C 아래로 들어가면서 A.R.F와 C.P.D를 밑에 두었다.'
+      summary:'리버스 피해자이자 생존자인 비비안 산체스가 세운 민간 조직이다. 2005년 1월 21일 N.H.C 아래로 들어갔다. A.R.F와 C.P.D, Last Light를 밑에 두고, 전투 직후의 현장과 생존자, 오염 잔류물을 처리한다.',
+      roles:['리버스 직후 현장 진입','오염 사체와 잔해 봉인','생존자 회수·대피 지원','A.R.F·C.P.D·Last Light 현장 조율'],
+      links:['N.H.C','A.R.F','C.P.D','Last Light'],records:['NHC_Manual_891219'],event:'2005년 1월 21일 N.H.C 아래로 들어가면서 A.R.F와 C.P.D를 밑에 두었다.'
     },
     arf:{
       name:'A.R.F',sub:'Ash Crew 산하 회수조직',cat:'현장',status:'가동 / 회수',zone:'회수 작전권',risk:'회수물 역오염',
@@ -135,6 +135,13 @@
       summary:'Ash Crew 아래에서 이상한 일이 난 구역의 민간인을 떼어 내 대피시키고, 돌아온 사람을 가려낸다. 일반 치안과 재난 대응을 대신하지 않고 현장 공공기관과 함께 움직인다.',
       roles:['오염 노출자와 일반 피난민 분리','대피 회랑 기록 유지','귀환자 1차 선별','전문 조사조직으로 인계'],
       links:['Ash Crew'],records:['FCR_Archive_890402'],event:'2005년 1월 21일 Ash Crew 산하 현장조직으로 편성됐다.'
+    },
+    lastlight:{
+      name:'Last Light',sub:'Ash Crew 산하 마지막 처치조',cat:'현장',status:'가동 / 처치선',zone:'옐로우존·검문소 뒤편',risk:'되돌릴 수 없는 판정',
+      summary:'Ash Crew 아래에서 되돌릴 수 없는 사람이 숨을 거두게 하고 그 자리에서 태운다. 두 사람의 서명과 본인 동의, 또는 미리 받아 둔 마지막 서명이 있어야 한다.',
+      roles:['되돌릴 수 없는 사람 판정','본인 동의·마지막 서명 확인','시행 뒤 즉시 소각','표준 통지문 발송'],
+      links:['Ash Crew'],records:[],
+      event:'2009년 4월 30일 Ash Crew 산하 현장조직으로 편성됐다.'
     }
   };
 
@@ -150,7 +157,8 @@
     haimun:{name:'P.O.H',sub:'Power Of Haimun',type:'unstable',x:84,y:70,status:'감시 / 범죄망',summary:factions.haimun.summary,records:factions.haimun.records},
     ashcrew:{name:'Ash Crew',sub:'N.H.C 산하',type:'field',x:18,y:69,status:'가동 / 사후 처리',summary:factions.ashcrew.summary,records:factions.ashcrew.records},
     arf:{name:'A.R.F',sub:'Ash Crew 산하 회수',type:'field',x:40,y:82,status:'가동 / 회수',summary:factions.arf.summary,records:factions.arf.records},
-    cpd:{name:'C.P.D',sub:'Ash Crew 산하 민간선',type:'field',x:61,y:83,status:'가동 / 민간선',summary:factions.cpd.summary,records:factions.cpd.records}
+    cpd:{name:'C.P.D',sub:'Ash Crew 산하 민간선',type:'field',x:61,y:83,status:'가동 / 민간선',summary:factions.cpd.summary,records:factions.cpd.records},
+    lastlight:{name:'Last Light',sub:'Ash Crew 산하 처치선',type:'field',x:44,y:66,status:'가동 / 처치선',summary:factions.lastlight.summary,records:factions.lastlight.records}
   };
 
   const relations=[
@@ -165,6 +173,9 @@
     {a:'nhc',b:'ashcrew',label:'산하·지휘',kind:'command',confidence:'confirmed'},
     {a:'ashcrew',b:'arf',label:'산하·회수',kind:'command',confidence:'confirmed'},
     {a:'ashcrew',b:'cpd',label:'산하·민간선',kind:'command',confidence:'confirmed'},
+    {a:'ashcrew',b:'lastlight',label:'상위 조직',kind:'command',confidence:'confirmed'},
+    {a:'lastlight',b:'arf',label:'유품 인계',kind:'cooperation',confidence:'confirmed'},
+    {a:'lastlight',b:'sid',label:'처분 기록 상충',kind:'history',confidence:'confirmed'},
     {a:'sid',b:'haimun',label:'수사·감청',kind:'watch',confidence:'confirmed'},
     {a:'nhc',b:'sid',label:'정보·현장 인계',kind:'cooperation',confidence:'confirmed'},
     {a:'nhc',b:'fhc',label:'시설·TAD 충돌',kind:'hostile',confidence:'confirmed'},
@@ -180,7 +191,7 @@
   const factionTags={
     uac:['institution'],nhc:['field','institution'],sid:['institution'],fhc:['corporate','institution'],
     amarion:['corporate','unstable'],syndicate:['rogue','unstable'],ushinoda:['cult','rogue'],
-    haimun:['rogue','unstable'],ashcrew:['field'],arf:['field'],cpd:['field'],freewill:['corporate']
+    haimun:['rogue','unstable'],ashcrew:['field'],arf:['field'],cpd:['field'],lastlight:['field'],freewill:['corporate']
   };
 
   root.ProjectCurseCanon=freeze({
@@ -205,7 +216,7 @@
     factionTags,
     factionTagLabels:{all:'전체',institution:'기관',field:'현장',cult:'교단',corporate:'기업',rogue:'이탈'},
     unresolved:[
-      'S.I.D·A.R.F·C.P.D의 최종 영문 풀네임',
+      'S.I.D의 최종 영문 풀네임',
       'C.P.D의 정확한 법적 소속과 권한 범위',
       '우시노다교의 최종 영문 철자'
     ]
