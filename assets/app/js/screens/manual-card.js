@@ -447,16 +447,16 @@
     if (sv.lost) y = serviceRow(g, '잃은 것', sv.lost, y, { size: 28, width: 480, color: INK.text2 });
     if (sv.kept) y = serviceRow(g, '남은 것', sv.kept, y, { size: 28, width: 480 });
 
-    // 체력 검정·웃음·공격 반응
-    const tests = [['체력 검정', sv.physical], ['웃음·공격 반응 검사', sv.laugh]].filter(([, value]) => value);
+    // 체력 검정·웃음·공격 반응·마지막 서명(2026-11-27) — 한 줄에 칸 수만큼 나눈다
+    const tests = [['체력 검정', sv.physical], ['웃음·공격 반응 검사', sv.laugh], ['마지막 서명', sv.lastSign]].filter(([, value]) => value);
     if (tests.length) {
-      const cell = Math.floor((WIDTH - 112) / 2);
+      const cell = Math.floor((WIDTH - 112) / Math.max(2, tests.length));
       tests.forEach(([name, value], index) => {
         const x = 56 + index * cell;
         spaced(g, '2px');
         text(g, name, x, y, { family: COND, weight: 600, size: 20, color: INK.text3, width: cell - 20 });
         spaced(g, '0px');
-        text(g, value, x, y + 40, { weight: 600, size: 30, width: 220, color: /불합격|부적합|격리/.test(value) ? INK.redInk : INK.text });
+        text(g, value, x, y + 40, { weight: 600, size: 30, width: Math.min(220, cell - 20), color: /불합격|부적합|격리/.test(value) ? INK.redInk : INK.text });
       });
       y += 76;
     }

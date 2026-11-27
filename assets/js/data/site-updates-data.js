@@ -17,6 +17,13 @@
     entries: [
       {
         date: '2026-11-27',
+        at: '2026-11-27T15:54:33+09:00',
+        title: '테이커가 되어 가는 길 · Last Light',
+        text: '멎지 않는 피와 두통, 가사 상태를 거쳐 테이커가 되고, 사람을 먹은 뒤 괴이가 된다. 사람으로 남은 유예 시간에는 Ash Crew의 마지막 처치조 Last Light가 온다. 등록 양식에 마지막 서명 칸이 붙었다.',
+        links: [{ label: '테이커', route: 'history', parts: ['ref', 'rule-laughing'] }, { label: '마지막 처치', route: 'field-manual', parts: ['lines'] }]
+      },
+      {
+        date: '2026-11-27',
         at: '2026-11-27T12:52:49+09:00',
         title: '블랙 포인트와 다크 버스트',
         text: '정화가 끝난 옐로우존에 남는 검은 얼룩, 블랙 포인트를 건드리면 몇 초 동안 둘레가 어둠에 덮인다. 현장 지침의 현장 편성과 인계에 Ash Crew 작업 수칙이 실렸다.',

@@ -494,6 +494,8 @@
       ['회수와 현장 처리', 'RECOVERY LINE'],
       // 블랙 포인트와 다크 버스트(2026-11-27 사용자 결정) — 정화 구역의 잔류 현상과 Ash Crew 작업 수칙
       ['블랙 포인트와 다크 버스트', 'BLACK POINT'],
+      // 마지막 처치 — Last Light(2026-11-27 사용자 결정) — Ash Crew 셋째 조의 시행 절차
+      ['마지막 처치 — Last Light', 'LAST LIGHT'],
       ['지휘 승계와 인증', 'COMMAND SUCCESSION'],
       ['작전 종료와 기록', 'AFTER ACTION']
     ];
@@ -1135,6 +1137,7 @@
         field('누적 노출 (분)', num('exposure', 9999, savedService.exposure), '작전 인원 한도는 한 해 30분.'),
         field('체력 검정', select('physical', pick(serviceSec.physical), savedService.physical || '')),
         field('웃음·공격 반응 검사', select('laugh', pick(serviceSec.laugh), savedService.laugh || '')),
+        field('마지막 서명', select('lastSign', pick(serviceSec.lastSign), savedService.lastSign || ''), '말할 수 없게 됐을 때 Last Light 시행에 미리 동의하는 서명.'),
         h('fieldset.tc-man-skills', null,
           h('legend', { text: '자격·특기 (셋까지)' }),
           skillRows.map(([name]) => h('label', null,
@@ -1194,6 +1197,7 @@
           exposure: clampNum(data.get('exposure'), 9999),
           physical: data.get('physical') || '',
           laugh: data.get('laugh') || '',
+          lastSign: data.get('lastSign') || '',
           skills: data.getAll('skill').slice(0, 3),
           pair: String(data.get('pair') || '').trim(),
           pairLine: String(data.get('pairLine') || '').trim(),
@@ -1246,6 +1250,7 @@
       if (sv.exposure !== '') out.push(`누적 노출 : ${sv.exposure}분${Number(sv.exposure) > 30 ? ' — 한 해 한도 30분 기준 초과 기록 있음' : ''}`);
       if (sv.physical) out.push(`체력 검정 : ${sv.physical}`);
       if (sv.laugh) out.push(`웃음·공격 반응 : ${sv.laugh}`);
+      if (sv.lastSign) out.push(`마지막 서명 : ${sv.lastSign}`);
       if (sv.pair) out.push(`대조 짝   : ${sv.pair}${sv.pairLine ? ` — "${sv.pairLine}"` : ''}`);
       if (sv.lost) out.push(`잃은 것   : ${sv.lost}`);
       if (sv.kept) out.push(`남은 것   : ${sv.kept}`);

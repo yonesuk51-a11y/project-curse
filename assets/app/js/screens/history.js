@@ -246,6 +246,9 @@
         h('p', { text: item.rule }),
         h('ul.tc-hist-signs', null, item.signs.map((sign) => h('li', { text: sign }))),
         h('p', { text: item.origin }),
+        // 유예 시간과 단계(2026-11-27 사용자 설정)
+        item.graceRule ? h('div.tc-note.tc-note--evidence', null, h('b', null, bi('GRACE PERIOD', '유예 시간')), h('p', { text: item.graceRule })) : null,
+        stageGrid(item.stages, '테이커가 되어 가는 단계'),
         h('div.tc-note.tc-note--danger', null, h('b', null, bi('PASSES THE CHECK', '판정을 통과한다')), h('p', { text: item.detection })),
         h('div.tc-note.tc-note--caution', null, h('b', { text: item.status }), h('p', { text: item.caution })),
         item.record ? h('p', null, index >= 0
