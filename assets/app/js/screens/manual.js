@@ -1138,6 +1138,7 @@
         field('체력 검정', select('physical', pick(serviceSec.physical), savedService.physical || '')),
         field('웃음·공격 반응 검사', select('laugh', pick(serviceSec.laugh), savedService.laugh || '')),
         field('마지막 서명', select('lastSign', pick(serviceSec.lastSign), savedService.lastSign || ''), '말할 수 없게 됐을 때 Last Light 시행에 미리 동의하는 서명.'),
+        field('시민 등급', select('citizen', pick(serviceSec.citizen), savedService.citizen || ''), '기억 대조·누적 노출·판정 이력으로 매긴다. 배급증의 구멍 수.'),
         h('fieldset.tc-man-skills', null,
           h('legend', { text: '자격·특기 (셋까지)' }),
           skillRows.map(([name]) => h('label', null,
@@ -1198,6 +1199,7 @@
           physical: data.get('physical') || '',
           laugh: data.get('laugh') || '',
           lastSign: data.get('lastSign') || '',
+          citizen: data.get('citizen') || '',
           skills: data.getAll('skill').slice(0, 3),
           pair: String(data.get('pair') || '').trim(),
           pairLine: String(data.get('pairLine') || '').trim(),
@@ -1251,6 +1253,7 @@
       if (sv.physical) out.push(`체력 검정 : ${sv.physical}`);
       if (sv.laugh) out.push(`웃음·공격 반응 : ${sv.laugh}`);
       if (sv.lastSign) out.push(`마지막 서명 : ${sv.lastSign}`);
+      if (sv.citizen) out.push(`시민 등급 : ${sv.citizen}`);
       if (sv.pair) out.push(`대조 짝   : ${sv.pair}${sv.pairLine ? ` — "${sv.pairLine}"` : ''}`);
       if (sv.lost) out.push(`잃은 것   : ${sv.lost}`);
       if (sv.kept) out.push(`남은 것   : ${sv.kept}`);
