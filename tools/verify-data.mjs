@@ -651,7 +651,8 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   const lifeIntro=worldHistoryData?.worldFramework?.lifeIntro;
   const lifeAll=[...(zoneLife?.items||[]),...(worldOrder?.items||[]),...(fieldCulture?.items||[])];
   const lifeRefIds=new Set([...lifeAll.map(item=>item.id),...(oral?.items||[]).map(entry=>entry.id),...(worldHistoryData?.worldFramework?.cities||[]).map(city=>city.id),'diary']);
-  add('history-life-themes-hooks-links:data',lifeIntro?.themes?.length===7&&lifeAll.length===78&&lifeIntro.themes.every(theme=>lifeAll.some(item=>item.group===theme))&&lifeAll.every(item=>lifeIntro.themes.includes(item.group)&&item.hook&&item.hook.length<=60&&item.links?.length>=1&&item.links.every(id=>lifeRefIds.has(id)&&id!==item.id))&&lifeAll.filter(item=>item.doc).length===3&&lifeAll.filter(item=>item.doc).every(item=>item.doc.title&&item.doc.lines?.length>=4));
+  // 2026-11-27: 시민 등급에 문서 모양 '등급 조정 안내 문자'를 붙여 문서 모양 넷(사용자 결정).
+  add('history-life-themes-hooks-links:data',lifeIntro?.themes?.length===7&&lifeAll.length===78&&lifeIntro.themes.every(theme=>lifeAll.some(item=>item.group===theme))&&lifeAll.every(item=>lifeIntro.themes.includes(item.group)&&item.hook&&item.hook.length<=60&&item.links?.length>=1&&item.links.every(id=>lifeRefIds.has(id)&&id!==item.id))&&lifeAll.filter(item=>item.doc).length===4&&lifeAll.filter(item=>item.doc).every(item=>item.doc.title&&item.doc.lines?.length>=4));
   // 2026-11-22: 호출부호·다섯째 꼬리표·마지막 편지·선 안 세대(현장), 사람이 들어가는 이유·공익 표어(버티는 체제), 외상(존 안팎)을 더해 70→77항목.
   // 같은 날 사용자 결정 — 설명에 메타 설명을 섞어도 된다. 기록 본문에 섞지 않고 '자캐에 쓰기' 줄(tip)로 따로, 두 문장까지.
   // 같은 날 사용자 결정 — 지금 있는 항목 가운데 쓸 만한 스물둘에도 달았다(모두 29).

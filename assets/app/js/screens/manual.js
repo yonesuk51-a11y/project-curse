@@ -1138,7 +1138,7 @@
         field('체력 검정', select('physical', pick(serviceSec.physical), savedService.physical || '')),
         field('웃음·공격 반응 검사', select('laugh', pick(serviceSec.laugh), savedService.laugh || '')),
         field('마지막 서명', select('lastSign', pick(serviceSec.lastSign), savedService.lastSign || ''), '말할 수 없게 됐을 때 Last Light 시행에 미리 동의하는 서명.'),
-        field('시민 등급', select('citizen', pick(serviceSec.citizen), savedService.citizen || ''), '기억 대조·누적 노출·판정 이력으로 매긴다. 배급증의 구멍 수.'),
+        field('시민 등급', select('citizen', pick(serviceSec.citizen), savedService.citizen || ''), '거주·납세·노동·병역·범죄 기록으로 매긴다. 오른쪽 손목 팔찌의 색.'),
         h('fieldset.tc-man-skills', null,
           h('legend', { text: '자격·특기 (셋까지)' }),
           skillRows.map(([name]) => h('label', null,
