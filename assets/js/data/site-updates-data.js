@@ -16,6 +16,13 @@
   root.ProjectCurseSiteUpdates = freeze({
     entries: [
       {
+        date: '2026-11-27',
+        at: '2026-11-27T12:52:49+09:00',
+        title: '블랙 포인트와 다크 버스트',
+        text: '정화가 끝난 옐로우존에 남는 검은 얼룩, 블랙 포인트를 건드리면 몇 초 동안 둘레가 어둠에 덮인다. 현장 지침의 현장 편성과 인계에 Ash Crew 작업 수칙이 실렸다.',
+        links: [{ label: '현장 편성과 인계', route: 'field-manual', parts: ['lines'] }]
+      },
+      {
         date: '2026-11-25',
         at: '2026-11-25T23:54:31+09:00',
         title: '웃는 피탈자의 새 이름 — 테이커',

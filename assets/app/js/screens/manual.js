@@ -492,6 +492,8 @@
     const blocks = [
       ['민간인 분리와 구조', 'CIVILIAN LINE'],
       ['회수와 현장 처리', 'RECOVERY LINE'],
+      // 블랙 포인트와 다크 버스트(2026-11-27 사용자 결정) — 정화 구역의 잔류 현상과 Ash Crew 작업 수칙
+      ['블랙 포인트와 다크 버스트', 'BLACK POINT'],
       ['지휘 승계와 인증', 'COMMAND SUCCESSION'],
       ['작전 종료와 기록', 'AFTER ACTION']
     ];
