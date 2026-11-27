@@ -57,7 +57,7 @@
       assetId:'VEA-NS-BL-01',className:'RECONSTRUCTED',source:'북해 피의 호수 사건·후대 봉쇄 감시 기록 기반 분석 재구성',date:'2026-08-28',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'유닛2의 원래 기록과 훗날의 봉쇄 감시선을 한 장면에 합쳐 그렸다. 실제 현장 사진, 인원의 외형, 호수가 어떻게 생겼는지는 확정하지 않는다.'
     }),
     'assets/resources/derived/dead-zone-silent-interior-map-termination-concept-v1.png':Object.freeze({
-      assetId:'VEA-DZ-SI-01',className:'RECONSTRUCTED',source:'데드존 최후 지도국·검은 고속도로·지도 종결선 진술 기반 분석 재구성',date:'2026-08-28',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'무응답 내륙에 대한 서로 다른 진술을 한눈에 보이게 합쳐 그렸다. 실제 항법 사진이나 다닐 수 있는 경로, 내륙 세력의 위치로 쓰지 않는다.'
+      assetId:'VEA-DZ-SI-01',className:'RECONSTRUCTED',source:'데드존 최후 지도국·검은 고속도로·지도 종결선 진술 기반 분석 재구성',date:'2026-08-28',integrity:'INTERPRETIVE RECONSTRUCTION',originalState:'missing',handling:'무응답 내륙을 두고 엇갈린 진술을 한눈에 보이게 합쳐 그렸다. 실제 항법 사진이나 다닐 수 있는 경로, 내륙 세력의 위치로 쓰지 않는다.'
     }),
     'assets/resources/8bb53a89c3baf48d8e3ac2b180f80d0b.webp':Object.freeze({
       assetId:'VEA-FER-CLS-A',className:'UNVERIFIED',source:'기존 공개 기록 자산 묶음',date:'UNKNOWN',integrity:'LEGACY COPY',originalState:'available',handling:'같은 분류 도식의 Archive ENEX 사본과 픽셀 구성을 맞춰 볼 수 있다.',comparison:Object.freeze({src:'assets/resources/archive-enex/feral-classification/114223e8cf8c8ea96c6d4ffca6cae2ce.webp',label:'ARCHIVE ENEX SOURCE',className:'ORIGINAL',relationship:'DUPLICATE SOURCE CHECK'})

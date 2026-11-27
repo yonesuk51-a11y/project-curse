@@ -43,7 +43,7 @@
     },
     cooperate:{
       id:'cooperate',code:'LOCAL-COOPERATE',title:'처형 명령 무시·공동 대응',status:'LOCAL COOPERATION LOGGED',tone:'allied',scope:'local-command-verdict',canonEffect:'none',lineageEffect:'none',
-      summary:'현장 지휘부는 처형 명령을 미루고, 지휘관과 함께 잠시 도시 연결부를 막았다. 이것은 이 작전 안에서의 협조일 뿐, 정식 동맹을 뜻하지 않는다.',
+      summary:'현장 지휘부는 처형 명령을 미루고, 지휘관과 함께 잠시 도시 연결부를 막았다. 이것은 이 작전 안에서만 하는 협조일 뿐, 정식 동맹을 뜻하지 않는다.',
       observed:'현장 사본에서 성위대와 합동팀이 움직인 길이 겹쳤고, 데드존 경고 좌표와 맞는 연결부가 막혔다.',
       immediate:'이 작전 지도에서 소환진 두 곳이 멈추고, 허가받지 않은 정보 교환로가 열린 것으로 표시된다.',
       unresolved:'혈맹 강경파가 드러내 놓고 적이 될지, 지휘관이 오래 충성할지, 데드존 혈교가 공식으로 가담할지는 확정되지 않았다.',
