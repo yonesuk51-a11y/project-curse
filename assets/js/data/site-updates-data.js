@@ -16,6 +16,13 @@
   root.ProjectCurseSiteUpdates = freeze({
     entries: [
       {
+        date: '2026-11-28',
+        at: '2026-11-28T07:06:42+09:00',
+        title: '테이커 — 타락 조건·몸 밖의 피·빈도',
+        text: '영혼의 타락은 누적 노출, 기억 대조 70% 미만, 이름을 불러 줄 사람을 잃음 가운데 둘 이상이 겹칠 때 위험하다. 몸 밖의 피는 젖어 있는 동안만 옮긴다. 공식 집계는 10만 명당 한 해 3명이지만, 현장 추정은 그 두세 배다.',
+        links: [{ label: '테이커', route: 'history', parts: ['ref', 'rule-laughing'] }]
+      },
+      {
         date: '2026-11-27',
         at: '2026-11-27T23:15:29+09:00',
         title: 'Last Light — Ash Crew 후속 조치팀',
