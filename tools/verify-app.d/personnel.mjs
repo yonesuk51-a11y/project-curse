@@ -41,7 +41,8 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
   const additionGroupIds = new Set((P.additionGroups || []).map((group) => group.id));
   const legacyIds = new Set(records.map((record) => record.id));
   // 2026-11-22 사용자 승인 — 도래자 둘과 프리윌 호송 분대장 추가로 28명에서 31명.
-  add('addition-register-separate', additions.length === 31 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
+  // 2026-11-28 사용자 캐릭터 로덴(프리윌 하운드울프) 추가로 32명.
+  add('addition-register-separate', additions.length === 32 && additions.every((record) => record.register === 'addition' && !legacyIds.has(record.id) && P.byId[record.id] === record) &&
     new Set(additions.map((record) => record.id)).size === additions.length && P.groups.every((group) => !additionGroupIds.has(group.id)),
     `${additions.length} additions`);
   add('addition-records-complete', additions.every((record) => record.registerYear && record.role && record.overview && record.limits?.length &&
@@ -123,7 +124,7 @@ export default function ({ add, read, context, app, historyIds, archiveIds, opId
     const roster = () => host.querySelectorAll('[data-per-id]');
     const groups = [...P.groups, ...P.additionGroups], everyone = [...records, ...additions];
     const initial = groups.reduce((sum, group) => sum + Math.min(6, everyone.filter((person) => person.group === group.id).length), 0);
-    show([]); assert.equal(roster().length, initial); assert.equal(initial, 46); // 2026-11-22: 도래자·프리윌 인물 셋 추가로 43 -> 46
+    show([]); assert.equal(roster().length, initial); assert.equal(initial, 47); // 2026-11-22: 도래자·프리윌 인물 셋 추가로 43 -> 46, 2026-11-28: 사용자 캐릭터 로덴 추가로 47
     assert.equal(host.querySelectorAll('.tc-per-index [role="tab"]').length, 2);
     assert.equal(host.querySelector('#tc-per-index-tab-legacy').getAttribute('aria-selected'), 'true');
     assert.ok(host.querySelectorAll('.tc-per-roster-fold').every(fold => fold.open === false), '명부 그룹은 제목과 한 줄 설명만 바로 보인다');
