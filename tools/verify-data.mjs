@@ -580,7 +580,8 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   add('history-ten-canon-eras',worldHistoryData?.version===VERSION&&worldHistoryData?.eras?.length===10&&worldHistoryData.eras.map(era=>era.id).join('|')==='deep|origin|exposure|institution|separation|fracture|silence|frontiers|mobilization|aftermath');
   // 2026-11-21: 가상 국가 세 기록을 더해 46건에서 49건, 실제 나라 아포칼립스 네 기록을 더해 53건이 됐다(사용자 추천안 승인).
   // 2026-11-21: 도래자 첫 계약 기록(2016 대흑림 길손 계약)을 더해 59건이 됐다(사용자 추천안 승인).
-  add('history-base-fifty-nine-evidence-records',Object.keys(worldHistoryData?.records||{}).length===59&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
+  // 2026-11-28: 첫 동시기·공백기(1993)를 더해 61건(사용자 추천안 승인).
+  add('history-base-fifty-nine-evidence-records',Object.keys(worldHistoryData?.records||{}).length===61&&Object.values(worldHistoryData.records).every(record=>worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   // D 혼합: history-deep-world-framework의 데이터/매체 조건.
   add('history-deep-world-framework:data',worldHistoryData?.deepHistoryRecords?.length===8&&worldHistoryData?.worldFramework?.ontology?.length===4&&worldHistoryData.worldFramework.abilitySources?.length===7&&worldHistoryData.worldFramework.civilianSystems?.length===5);
   // 2026-09-25 사용자 설정: 리버스 지점의 피탈자. 네 구분에 끼워 넣지 않고, 분류 근거·교범 교전 규칙·해제 조건·의식과 생사를 함께 둔다.
@@ -593,7 +594,7 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   // 2026-11-21: 우시노다교가 무너뜨린 가상 국가 세 기록을 더해 51건에서 54건이 됐다(사용자 추천안 승인).
   // 2026-11-21: 실제 나라 아포칼립스 네 기록을 더해 58건이 됐다.
   // 2026-11-21: 2031 서일본 해안 대지진, 2033 레드존 징집 증언을 더해 60건이 됐다.
-  add('history-sixty-four-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===64);
+  add('history-sixty-four-total-records',Object.keys(worldHistoryData?.records||{}).length+japanTechRecords.length===66);
   add('history-japan-technology-record-depth',japanTechRecords.every(record=>record.id&&record.date&&record.title&&record.summary&&record.author&&record.recipient&&record.purpose&&record.basis&&record.sourceState&&record.fragments?.length>=3&&worldHistoryData.evidenceLevels[record.evidence]&&worldHistoryData.eras.some(era=>era.id===record.era)));
   add('history-japan-technology-chronology',japanTechIds===expectedJapanTechIds,japanTechIds);
   add('history-japan-public-boundaries',japanTechnology?.publicAnchors?.length===4&&japanTechnology.publicAnchors.map(anchor=>anchor.id).join('|')==='fgcs|optical-network|tron|bubble'&&japanTechnology.publicAnchors.every(anchor=>anchor.fact&&anchor.boundary&&anchor.source&&anchor.url.startsWith('https://')));
@@ -636,7 +637,8 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   const worldOrder=worldHistoryData?.worldFramework?.worldOrder;
   // 2026-11-22: 느린 병동을 더해 16→17항목, 사람이 들어가는 이유·공익 표어를 더해 19항목(사용자 추천안 승인).
   // 2026-11-27: 시민 등급을 더해 20항목(사용자 추천안 승인).
-  add('history-world-order:data',worldOrder?.items?.length===20&&worldOrder.items.every(item=>item.id&&item.title&&item.text&&worldHistoryData.evidenceLevels[item.grade])&&new Set([...(zoneLife?.items||[]),...worldOrder.items].map(item=>item.id)).size===56&&worldOrder.items.find(item=>item.id==='wanted-list')?.wanted?.length===5&&worldOrder.items.find(item=>item.id==='obsession-corruption')?.stages?.length===3&&nhcSections.some(s=>s.title==='검문소 표준 배치'&&(s.items||[]).some(t=>t.includes('기생체'))&&(s.items||[]).some(t=>t.includes('자동 판정'))));
+  // 2026-11-28: 버틴 쪽·다시 선 쪽·꺼진 쪽을 더해 21항목(사용자 추천안 승인).
+  add('history-world-order:data',worldOrder?.items?.length===21&&worldOrder.items.every(item=>item.id&&item.title&&item.text&&worldHistoryData.evidenceLevels[item.grade])&&new Set([...(zoneLife?.items||[]),...worldOrder.items].map(item=>item.id)).size===57&&worldOrder.items.find(item=>item.id==='wanted-list')?.wanted?.length===5&&worldOrder.items.find(item=>item.id==='obsession-corruption')?.stages?.length===3&&nhcSections.some(s=>s.title==='검문소 표준 배치'&&(s.items||[]).some(t=>t.includes('기생체'))&&(s.items||[]).some(t=>t.includes('자동 판정'))));
   // 현장의 말과 사람들·카르벤 격리시(2026-11-21 사용자 추천안 승인): 15항목 네 갈래, 표는 칸 수가 맞아야 하고, 도시 구역 판정은 zoneGrading에 있어야 한다.
   const fieldCulture=worldHistoryData?.worldFramework?.fieldCulture;
   // 무대 도시 둘(2026-11-21): 카르벤(일지·2041 기록)과 마로아. 둘 다 여섯 구·소문 셋.
@@ -644,7 +646,7 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   const cityFile=worldCities.find(city=>city.id==='karven');
   const cityGradeCodes=new Set((worldHistoryData?.worldFramework?.zoneGrading?.grades||[]).map(grade=>grade.code));
   // 2026-11-22: 대조 짝·전진기지의 하루·휴가증·검열 편지를 더해 15→19항목, 셋째 도시 다마 감시구를 더해 도시 셋(사용자 추천안 승인).
-  add('history-field-culture-and-city:data',fieldCulture?.items?.length===22&&fieldCulture.items.every(item=>item.id&&item.title&&item.text&&worldHistoryData.evidenceLevels[item.grade]&&(item.tables||[]).every(table=>table.caption&&table.headers?.length>=2&&table.rows?.length&&table.rows.every(row=>row.length===table.headers.length)))&&new Set([...(zoneLife?.items||[]),...(worldOrder?.items||[]),...fieldCulture.items].map(item=>item.id)).size===78&&fieldCulture.items.filter(item=>item.manualSection).every(item=>nhcSections.some(s=>s.title===item.manualSection))&&nhcSections.some(s=>s.title==='작전 종료와 기록'&&(s.items||[]).some(t=>t.includes('소각 확인용')))&&worldCities.length===4&&worldCities.every(city=>city.id&&city.label&&city.hook&&city.region&&city.districts?.length===6&&city.districts.every(d=>d.code&&d.name&&cityGradeCodes.has(d.grade)&&d.places&&d.note)&&city.rumors?.length===3&&city.caution?.includes('실제 도시와 잇지 않는다'))&&Boolean(cityFile?.diary&&worldHistoryData.records[cityFile.record]));
+  add('history-field-culture-and-city:data',fieldCulture?.items?.length===22&&fieldCulture.items.every(item=>item.id&&item.title&&item.text&&worldHistoryData.evidenceLevels[item.grade]&&(item.tables||[]).every(table=>table.caption&&table.headers?.length>=2&&table.rows?.length&&table.rows.every(row=>row.length===table.headers.length)))&&new Set([...(zoneLife?.items||[]),...(worldOrder?.items||[]),...fieldCulture.items].map(item=>item.id)).size===79&&fieldCulture.items.filter(item=>item.manualSection).every(item=>nhcSections.some(s=>s.title===item.manualSection))&&nhcSections.some(s=>s.title==='작전 종료와 기록'&&(s.items||[]).some(t=>t.includes('소각 확인용')))&&worldCities.length===4&&worldCities.every(city=>city.id&&city.label&&city.hook&&city.region&&city.districts?.length===6&&city.districts.every(d=>d.code&&d.name&&cityGradeCodes.has(d.grade)&&d.places&&d.note)&&city.rumors?.length===3&&city.caution?.includes('실제 도시와 잇지 않는다'))&&Boolean(cityFile?.diary&&worldHistoryData.records[cityFile.record]));
   const oral=worldHistoryData?.worldFramework?.oralTestimony;
   // 리버스 아래의 삶(2026-11-21 사용자 결정): 세 묶음 52항목을 주제 일곱 갈래로 다시 나눴다. 갈래마다 항목이 있고, 모든 항목에 한 줄 훅이 있고,
   // 이어지는 기록은 삶 항목·구술 증언·카르벤 격리시·주민 일지 가운데 실제로 있는 것만 가리킨다. 문서 모양은 세 장.
@@ -652,13 +654,13 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   const lifeAll=[...(zoneLife?.items||[]),...(worldOrder?.items||[]),...(fieldCulture?.items||[])];
   const lifeRefIds=new Set([...lifeAll.map(item=>item.id),...(oral?.items||[]).map(entry=>entry.id),...(worldHistoryData?.worldFramework?.cities||[]).map(city=>city.id),'diary']);
   // 2026-11-27: 시민 등급에 문서 모양 '등급 조정 안내 문자'를 붙여 문서 모양 넷(사용자 결정).
-  add('history-life-themes-hooks-links:data',lifeIntro?.themes?.length===7&&lifeAll.length===78&&lifeIntro.themes.every(theme=>lifeAll.some(item=>item.group===theme))&&lifeAll.every(item=>lifeIntro.themes.includes(item.group)&&item.hook&&item.hook.length<=60&&item.links?.length>=1&&item.links.every(id=>lifeRefIds.has(id)&&id!==item.id))&&lifeAll.filter(item=>item.doc).length===4&&lifeAll.filter(item=>item.doc).every(item=>item.doc.title&&item.doc.lines?.length>=4));
+  add('history-life-themes-hooks-links:data',lifeIntro?.themes?.length===7&&lifeAll.length===79&&lifeIntro.themes.every(theme=>lifeAll.some(item=>item.group===theme))&&lifeAll.every(item=>lifeIntro.themes.includes(item.group)&&item.hook&&item.hook.length<=60&&item.links?.length>=1&&item.links.every(id=>lifeRefIds.has(id)&&id!==item.id))&&lifeAll.filter(item=>item.doc).length===4&&lifeAll.filter(item=>item.doc).every(item=>item.doc.title&&item.doc.lines?.length>=4));
   // 2026-11-22: 호출부호·다섯째 꼬리표·마지막 편지·선 안 세대(현장), 사람이 들어가는 이유·공익 표어(버티는 체제), 외상(존 안팎)을 더해 70→77항목.
   // 같은 날 사용자 결정 — 설명에 메타 설명을 섞어도 된다. 기록 본문에 섞지 않고 '자캐에 쓰기' 줄(tip)로 따로, 두 문장까지.
   // 같은 날 사용자 결정 — 지금 있는 항목 가운데 쓸 만한 스물둘에도 달았다(모두 29).
-  const lifeTipIds=['callsigns','triage-tags','last-letters','generations','human-witness','safety-slogans','cost-credit','field-slang','pair-check','base-day','leave-pass','censored-letters','ranks-medals','detection-dogs','nhc-training','cremation-mourning','defector-protection','dog-tags','exorcist-license','zone-couriers','wanted-list','name-keepers','obsession-corruption','slow-ward','proxy-payers','reverse-omens','distance-trap','ration-card','cleanup-crew','citizen-grade'];
+  const lifeTipIds=['callsigns','triage-tags','last-letters','generations','human-witness','safety-slogans','cost-credit','field-slang','pair-check','base-day','leave-pass','censored-letters','ranks-medals','detection-dogs','nhc-training','cremation-mourning','defector-protection','dog-tags','exorcist-license','zone-couriers','wanted-list','name-keepers','obsession-corruption','slow-ward','proxy-payers','reverse-omens','distance-trap','ration-card','cleanup-crew','citizen-grade','three-worlds'];
   // 2026-11-27: 시민 등급에 자캐에 쓰기 줄(모두 30).
-  add('history-life-meta-tips:data',lifeTipIds.length===30&&lifeAll.filter(item=>item.tip).length===30&&lifeTipIds.every(id=>lifeAll.find(item=>item.id===id)?.tip)&&lifeAll.filter(item=>item.tip).every(item=>item.tip.length<=120&&item.tip.split(/[.!?](?:\s|$)/).filter(Boolean).length<=2&&!item.text.includes(item.tip))&&lifeAll.find(item=>item.id==='field-slang')?.tables?.[0]?.rows?.some(row=>row[0]==='돌잡이')&&lifeAll.find(item=>item.id==='field-slang').tables[0].rows.some(row=>row[0]==='외상')&&lifeAll.find(item=>item.id==='triage-tags')?.tables?.[0]?.rows?.length===5&&lifeAll.find(item=>item.id==='cost-credit')?.manualSection==='대가 관리 일지와 억제제');
+  add('history-life-meta-tips:data',lifeTipIds.length===31&&lifeAll.filter(item=>item.tip).length===31&&lifeTipIds.every(id=>lifeAll.find(item=>item.id===id)?.tip)&&lifeAll.filter(item=>item.tip).every(item=>item.tip.length<=120&&item.tip.split(/[.!?](?:\s|$)/).filter(Boolean).length<=2&&!item.text.includes(item.tip))&&lifeAll.find(item=>item.id==='field-slang')?.tables?.[0]?.rows?.some(row=>row[0]==='돌잡이')&&lifeAll.find(item=>item.id==='field-slang').tables[0].rows.some(row=>row[0]==='외상')&&lifeAll.find(item=>item.id==='triage-tags')?.tables?.[0]?.rows?.length===5&&lifeAll.find(item=>item.id==='cost-credit')?.manualSection==='대가 관리 일지와 억제제');
   add('history-oral-testimony:data',oral?.items?.length===6&&Boolean(oral.purpose)&&oral.rule?.includes('사실 확인은 하지 않았다')&&oral.items.every(entry=>entry.speaker&&entry.place&&/^\d{4}\.\d{2}\.\d{2}$/.test(entry.date)&&entry.lines?.length>=2&&entry.limit&&zoneLife?.items?.some(item=>item.id===entry.item)));
   const anchorCall=worldHistoryData?.worldFramework?.anchorCall;
   const reverseMind=worldHistoryData?.worldFramework?.reverseMind;
@@ -670,7 +672,7 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   const proseText=proseRecords.flatMap(record=>record.fragments||[]).map(fragment=>fragment.text).join('\n');
   const proseTypes=new Set(proseRecords.map(record=>record.documentType));
   const fragmentCounts=new Set(proseRecords.map(record=>record.fragments?.length||0));
-  add('history-authored-prose-sixty-four',worldHistoryProse?.version===VERSION&&proseRecords.length===59&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
+  add('history-authored-prose-sixty-four',worldHistoryProse?.version===VERSION&&proseRecords.length===61&&japanTechRecords.length===5&&[...proseRecords,...japanTechRecords].every(record=>record.author&&record.recipient&&record.purpose&&record.fragments?.length>=2));
   add('history-prose-canon-id-parity',Object.keys(worldHistoryProse?.records||{}).sort().join('|')===Object.keys(worldHistoryData?.records||{}).sort().join('|')&&structureData?.owners?.worldHistoryProse==='assets/js/data/world-history-prose-data.js');
   add('history-eight-document-voices',Object.keys(worldHistoryProse?.documentTypes||{}).length===8&&proseTypes.size===8);
   add('history-variable-fragment-structure',fragmentCounts.size>=3&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='log'))&&proseRecords.some(record=>record.fragments?.some(fragment=>fragment.kind==='quote')));
@@ -678,7 +680,7 @@ add('media-provenance-all-552-assets',provenanceAssets.length===552&&repositoryM
   const pre2031ProseIds=Object.keys(worldHistoryProse?.records||{}).filter(id=>/^\d{4}/.test(id)&&Number(id.slice(0,4))<=2030);
   // 2026-11-21: 가상 국가 기록 셋(32→35건)과 2009·2027·2029년 실제 나라 기록 셋(35→38건)에도 정보 한계를 적었다.
   // 2026-11-21: 2016 대흑림 길손 계약에도 정보 한계를 적었다(38→39건).
-  add('history-1975-2030-explicit-record-limits',pre2031ProseIds.length===39&&pre2031ProseIds.every(id=>worldHistoryProse.recordLimits?.[id]&&worldHistoryProse.records[id].archiveLimit===worldHistoryProse.recordLimits[id]));
+  add('history-1975-2030-explicit-record-limits',pre2031ProseIds.length===41&&pre2031ProseIds.every(id=>worldHistoryProse.recordLimits?.[id]&&worldHistoryProse.records[id].archiveLimit===worldHistoryProse.recordLimits[id]));
   // 2026-11-21 도래자(사용자 설정·추천안 승인) — 여섯 종족 모두 어긋남·힘·약속·대가가 있고, 첫 계약 기록이 연표에 있다. 아이·성적 요소 단어 없음.
   {const A=worldHistoryData?.worldFramework?.arrivals;add('history-arrivals-six-races-with-cost',!!A&&A.races.length===6&&new Set(A.races.map(r=>r.id)).size===6&&A.races.every(r=>r.name&&r.look&&r.power&&r.bind&&r.cost&&r.region&&r.work)&&A.contract?.clauses?.length>=3&&worldHistoryData.evidenceLevels[A.dispute?.grade]&&A.dealings.every(d=>worldHistoryData.evidenceLevels[d.grade])&&!!worldHistoryData.records[A.record]&&!/아이|어린|소년|소녀|성적/.test(JSON.stringify(A)));}
   // D 혼합: history-2006-reconstruction-boundary의 데이터/매체 조건.

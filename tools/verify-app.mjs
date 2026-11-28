@@ -91,7 +91,8 @@ const W = context.ProjectCurseWorldHistoryData;
 const P = context.ProjectCurseWorldHistoryProse;
 const J = context.ProjectCurseJapanTechnology;
 const C = context.ProjectCurseWorldHistoryCore;
-add('history-core-eighteen-records', C?.records?.length === 18, C?.records?.length);
+// 2026-11-28: 첫 동시기와 공백기(1993) 두 기록을 더해 20건(사용자 추천안 승인).
+add('history-core-eighteen-records', C?.records?.length === 20, C?.records?.length);
 // 문장 흐름 개정 뒤에는 겹친 문단을 합쳐 문단 수가 줄 수 있다. 사실 보존은 tools/check-prose.mjs가 원문과 대조한다.
 add('history-core-paragraphs-intact', C?.records?.every((record) => record.paragraphs.length >= 1 && record.paragraphs.every((text) => typeof text === 'string' && text.trim().length > 20)));
 const historyRecords = [
@@ -104,7 +105,8 @@ const historyIds = historyRecords.map((record) => record.id);
 // 2026-11-21: 우시노다교가 무너뜨린 가상 국가 세 기록을 더해 51건에서 54건이 됐다(사용자 추천안 승인).
 // 2026-11-21: 실제 나라 아포칼립스 네 기록(2009 북미 망명정부, 2027 비무장지대, 2029 경기 북부 신도시, 2035 도쿄 서부)을 더해 58건이 됐다.
 // 2026-11-21: 서일본 해안 대지진(2031)과 비협력권 레드존 징집 증언(2033)을 더해 60건이 됐다.
-add('history-sixty-four-records', historyIds.length === 64, historyIds.length);
+// 2026-11-28: 첫 동시기·공백기를 더해 66건.
+add('history-sixty-four-records', historyIds.length === 66, historyIds.length);
 // 세 칸 구조(자캐·세계·자료)·자캐 거점·입문 세 단계(2026-11-22 사용자 결정). 상황판은 세계의 '지금'(#terminal-home/now). 첫 방문은 주소가 없을 때만 입문으로 보낸다.
 { const core = read('assets/app/js/pc-core.js'); const home = read('assets/app/js/screens/home.js'); const G = context.ProjectCurseCommunityGuide;
   const dock = app.split('<ol class="tc-dock-list">')[1]?.split('</ol>')[0] || '';
